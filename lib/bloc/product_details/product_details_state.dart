@@ -79,7 +79,7 @@ class ProductDetailsState with _$ProductDetailsState {
       driverDeliveryProofFile1: File(''),
       driverDeliveryProofFile2: File(''),
       driverDeliveryProofImagesList: [],
-      returnList: GetReturnByIdResModel(),
+      returnList: const GetReturnByIdResModel(),
       quantitiesPerRadio: {},
       productIssueData: {},
       userId: '',

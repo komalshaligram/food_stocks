@@ -305,7 +305,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "driver_signature": MessageLookupByLibrary.simpleMessage("חתימת נהג"),
     "driver_signature_missing": MessageLookupByLibrary.simpleMessage(
-      "חסרה חתימת הנהג",
+      "על הנהג לחתום פה",
     ),
     "due_date": MessageLookupByLibrary.simpleMessage("תאריך לתשלום"),
     "duplicate_or_invalid_sku": MessageLookupByLibrary.simpleMessage(
@@ -1135,7 +1135,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "show_order": MessageLookupByLibrary.simpleMessage("הצג הזמנות"),
     "signature": MessageLookupByLibrary.simpleMessage("חתימה"),
-    "signature_missing": MessageLookupByLibrary.simpleMessage("חסרה חתימה"),
+    "signature_missing": MessageLookupByLibrary.simpleMessage("אנא הוסף חתימה"),
     "signature_required": MessageLookupByLibrary.simpleMessage("חובה לחתום"),
     "skip": MessageLookupByLibrary.simpleMessage("דלג"),
     "sku_are_required": MessageLookupByLibrary.simpleMessage("נדרשים SKUs"),

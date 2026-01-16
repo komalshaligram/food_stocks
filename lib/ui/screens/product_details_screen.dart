@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -83,8 +82,6 @@ class ProductDetailsScreenWidget extends StatefulWidget {
   final List<StatusData> statusList;
   const ProductDetailsScreenWidget({super.key, required this.orderId, required this.orderNumber, required this.statusList});
 
-
-
   @override
   State<ProductDetailsScreenWidget> createState() => _ProductDetailsScreenWidgetState();
 }
@@ -154,12 +151,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                     ],
                                   ),
                                 ),
-                              )
-                        // CircularButtonWidget(
-                        //         buttonName: AppLocalizations.of(context)!.total,
-                        //         buttonValue: state.orderData.comaxInvoicePrice != 0.0 ? formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal) : formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal),
-                        //       ),
-                        ),
+                              )),
                     state.isSubUserCreateDuplicateOrder
                         ? GestureDetector(
                             onTap: () {
@@ -187,7 +179,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
             body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.isEmpty ?? false)
                 ? const ProductDetailsScreenShimmerWidget()
                 : SingleChildScrollView(
-                  controller: _scrollController,
+                    controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: SafeArea(
                       child: AnimationLimiter(
@@ -276,9 +268,42 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         ],
                                       ),
                                       15.height,
-                                      state.orderData.bottleQuantities != 0 ? basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}', state.isIncludedVat ? (formatNumber(value: bottleDepositCalculationWithVat(deposit: state.orderData.bottleTax ?? 1, vatPercentage: state.orderData.vatPercentage ?? 1, qty: double.parse(state.orderData.bottleQuantities.toString())).toStringAsFixed(2), local: AppStrings.hebrewLocal)) : '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}') : 0.width,
+                                      state.orderData.bottleQuantities != 0
+                                          ? Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}',
+                                                    style: AppStyles.rkRegularTextStyle(
+                                                      color: AppColors.blackColor,
+                                                      size: AppConstants.font_14,
+                                                    )),
+                                                Text(state.isIncludedVat ? (formatNumber(value: bottleDepositCalculationWithVat(deposit: state.orderData.bottleTax ?? 1, vatPercentage: state.orderData.vatPercentage ?? 1, qty: double.parse(state.orderData.bottleQuantities.toString())).toStringAsFixed(2), local: AppStrings.hebrewLocal)) : '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}', style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_14, fontWeight: FontWeight.w700)),
+                                              ],
+                                            )
+
+                                          // basketRow(
+                                          //         state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.orderData.bottleQuantities}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.orderData.bottleQuantities}${'X'}',
+                                          //         state.isIncludedVat ? (formatNumber(value: bottleDepositCalculationWithVat(deposit: state.orderData.bottleTax ?? 1,
+                                          //             vatPercentage: state.orderData.vatPercentage ?? 1,
+                                          //             qty: double.parse(state.orderData.bottleQuantities.toString())).toStringAsFixed(2), local: AppStrings.hebrewLocal))
+                                          //             : '${AppLocalizations.of(context)!.currency}${state.orderData.bottlePrice}',
+                                          //       )
+                                          : 0.width,
                                       3.height,
-                                      !state.isIncludedVat ? basketRow(AppLocalizations.of(context)!.vat, '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}') : 0.width,
+                                      !state.isIncludedVat
+                                          ? Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(AppLocalizations.of(context)!.vat,
+                                                    style: AppStyles.rkRegularTextStyle(
+                                                      color: AppColors.blackColor,
+                                                      size: AppConstants.font_14,
+                                                    )),
+                                                Text('${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}', style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_14, fontWeight: FontWeight.w700)),
+                                              ],
+                                            )
+                                          // basketRow(AppLocalizations.of(context)!.vat, '${AppLocalizations.of(context)!.currency}${state.orderData.vatAmount}')
+                                          : 0.width,
                                       5.height,
                                       state.orderData.totalRefundAmount != 0.0 ? basketRow(AppLocalizations.of(context)!.refund, '${AppLocalizations.of(context)!.currency}${state.orderData.totalRefundAmount}', color: AppColors.mainColor) : 0.width,
                                       5.height,
@@ -447,7 +472,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                                   );
                                                                 },
                                                               )
-                                                            : state.driverDeliveryProofFile.existsSync() //|| state.proofFile1.path.contains("https")
+                                                            : state.driverDeliveryProofFile.existsSync()
                                                                 ? Image.file(
                                                                     state.driverDeliveryProofFile,
                                                                     fit: BoxFit.cover,
@@ -655,7 +680,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
                               AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
                               AppStrings.supplierOrderNumberString: state.orderData.orderNumber,
-                              AppStrings.driverDeliveryDocumentsImages: state.driverDeliveryProofImagesList,
                               AppStrings.vatString: state.orderData.vatAmount,
                               AppStrings.usersIdString: state.userId,
                               AppStrings.statusList: widget.statusList,
@@ -680,7 +704,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               AppStrings.vatString: state.orderData.vatAmount,
                               AppStrings.usersIdString: state.userId,
                               AppStrings.statusList: widget.statusList,
-                              AppStrings.driverDeliveryDocumentsImages: state.driverDeliveryProofImagesList,
                               AppStrings.sentReturnData: [],
                               AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
                             });
@@ -740,7 +763,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
         };
 
         String getLocalizedReason(String reasonCode, BuildContext context) {
-          return reasonsMap[reasonCode] ?? ''; // Return empty string if not found
+          return reasonsMap[reasonCode] ?? '';
         }
 
         return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) || ((state.orderBySupplierProduct.products?[index].isBottle ?? false) ? sku == skuNumber : false)
@@ -766,7 +789,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               ? SizedBox(
                                   width: 30,
                                   child: Checkbox(
-                                    // value: state.productListIndex.contains(matchedProductIndex == -1 ? index : matchedProductIndex),
                                     value: state.productListIndex.contains(index),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(AppConstants.radius_3),
@@ -783,25 +805,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                     },
                                   ),
                                 )
-                              // ? SizedBox(
-                              //     width: 30,
-                              //     child: Checkbox(
-                              //         value: state.productListIndex.contains(index) || matchedProductIndex != -1 ? true : false, //state.productListIndex.contains(matchedProductIndex),
-                              //
-                              //         shape: RoundedRectangleBorder(
-                              //           borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                              //         ),
-                              //         side: BorderSide(width: 1.0, color: AppColors.greyColor),
-                              //         activeColor: AppColors.mainColor,
-                              //         onChanged: (value) {
-                              //           bloc.add(
-                              //             ProductDetailsEvent.productProblemEvent(
-                              //               isProductProblem: value!,
-                              //               index: matchedProductIndex != -1 ? matchedProductIndex! : index,
-                              //             ),
-                              //           );
-                              //         }),
-                              //   )
                               : 30.width,
                           state.orderBySupplierProduct.products?[index].mainImage != ''
                               ? Image.network(
@@ -901,7 +904,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         final product = state.orderBySupplierProduct.products?[index];
                                         final productQuantity = product?.quantity ?? 1;
 
-                                        // Wait for updated state or timeout after 3 seconds
                                         ProductDetailsState updatedState;
 
                                         try {
@@ -932,7 +934,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                             final returnData = returnProducts.firstWhere((item) => item.reasonToReturn == reason);
                                             if (returnData.totalUnits != null) return returnData.totalUnits!;
                                           } catch (_) {}
-                                          // Default logic
                                           if (radioVal == 1 || radioVal == 5) return productQuantity;
                                           return 1;
                                         }
@@ -1014,14 +1015,12 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                           ),
                                         )
                                       : const SizedBox(),
-                              // (isIssue ?? false)
                               (matchedProduct?.reasonToReturn?.isNotEmpty ?? false)
                                   ? SizedBox(
                                       width: MediaQuery.of(context).size.width > 370 ? MediaQuery.of(context).size.width / 2 : 160,
                                       child: Text(
                                         '${AppLocalizations.of(context)!.issue_text} '
                                         '${getLocalizedReason(matchedProduct!.reasonToReturn.toString(), context)}',
-                                        // '${AppStrings.getLocalizedStrings(matchedProduct!.reasonToReturn.toString().toLocalization(), context)}',
                                         maxLines: 2,
                                         style: AppStyles.rkRegularTextStyle(
                                           color: AppColors.redColor,
@@ -1030,7 +1029,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         ),
                                       ))
                                   : const IgnorePointer(),
-
                               (matchedProduct?.totalUnits != null)
                                   ? Text(
                                       '${matchedProduct?.totalUnits?.toString() ?? ''} ${AppLocalizations.of(context)!.units} ',
@@ -1099,7 +1097,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           maxChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
           minChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
           initialChildSize: 1 - (MediaQuery.of(context).viewPadding.top / getScreenHeight(context)),
-          //shouldCloseOnMinExtent: true,
           builder: (context, scrollController) {
             return BlocProvider(
               create: (context) => ProductDetailsBloc()
@@ -1107,10 +1104,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 ..add(ProductDetailsEvent.getBottomSheetDataEvent(context: context, notes: notes!)),
               child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
                 builder: (context, state) {
-                  // if (state.addNoteController.text.isEmpty) {
-                  //   state.addNoteController.text = notes!;
-                  // }
-
                   return Container(
                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30))),
@@ -1532,18 +1525,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 excludeBarcodes: deletedBarcode != null ? [deletedBarcode] : null,
               ),
             );
-        // context.read<ProductDetailsBloc>().add(
-        //       ProductDetailsEvent.getReturnListEvent(context: context),
-        //     );
-        // context.read<ProductDetailsBloc>().add(
-        //       ProductDetailsEvent.getOrderByIdEvent(
-        //         context: context,
-        //         orderId: orderId!,
-        //       ),
-        //     );
       }
-
-      // onBack()
     });
   }
 
@@ -1774,7 +1756,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         );
                                       },
                                     )
-                                  : state.proofFile.existsSync() //|| state.proofFile1.path.contains("https")
+                                  : state.proofFile.existsSync()
                                       ? Image.file(
                                           state.proofFile,
                                           fit: BoxFit.cover,
@@ -1790,10 +1772,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           8.width,
                           InkWell(
                             onTap: () async {
-                              // state.proofFile1 != null ?
-                              // uploadProofBottomSheet(context: context, file: state.proofFile1, index: 2, language: state.language, productIssueData: productIssueData,
-                              //     selectedRadio: state.selectedRadioTile) :
-
                               if (state.proofFile1 != null && await state.proofFile1!.exists() || state.proofFile1.path.contains("https")) {
                                 uploadProofBottomSheet(
                                   context: context,
@@ -2081,8 +2059,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 cameraDriverProofEvent(context: context, index: index, productIssueData: {}, selectedRadio: 0);
               },
             ),
-            // (file.existsSync()) // <--- Changed here
-            //     ?
             FileSelectionOptionWidget(
               title: AppLocalizations.of(context)!.delete,
               icon: Icons.delete,
@@ -2191,5 +2167,3 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     );
   }
 }
-
-

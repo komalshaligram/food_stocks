@@ -9,7 +9,6 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
 
   const factory ProductDetailsEvent.radioButtonEvent({
     required int selectRadioTile,
-
   }) = _radioButtonEvent;
 
   const factory ProductDetailsEvent.productIncrementEvent({
@@ -17,7 +16,8 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required int listIndex,
     required BuildContext context,
     required int messingQuantity,
-    required int radioValue, required Map<int, Map<String, dynamic>> productIssueData,
+    required int radioValue,
+    required Map<int, Map<String, dynamic>> productIssueData,
   }) = _productIncrementEvent;
 
   const factory ProductDetailsEvent.productDecrementEvent({
@@ -25,24 +25,28 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required int listIndex,
     required int messingQuantity,
     required BuildContext context,
-    required int radioValue, required Map<int, Map<String, dynamic>> productIssueData,
+    required int radioValue,
+    required Map<int, Map<String, dynamic>> productIssueData,
   }) = _productDecrementEvent;
 
-  const factory ProductDetailsEvent.getProductDataEvent(
-      {required BuildContext context,
-        required String orderId,
-        required OrdersBySupplier orderBySupplierProduct,
-        required OrderDatum orderData, required List<StatusData> statusList}) = _getProductDataEvent;
+  const factory ProductDetailsEvent.getProductDataEvent({
+    required BuildContext context,
+    required String orderId,
+    required OrdersBySupplier orderBySupplierProduct,
+    required OrderDatum orderData,
+    required List<StatusData> statusList,
+  }) = _getProductDataEvent;
 
-  const factory ProductDetailsEvent.createIssueEvent(
-      {required BuildContext bottomSheetContext,
-        required BuildContext context,
-        required String supplierId,
-        required String productId,
-        required String issue,
-        required int missingQuantity,
-        required String orderId,
-        required bool isDeliver}) = _createIssueEvent;
+  const factory ProductDetailsEvent.createIssueEvent({
+    required BuildContext bottomSheetContext,
+    required BuildContext context,
+    required String supplierId,
+    required String productId,
+    required String issue,
+    required int missingQuantity,
+    required String orderId,
+    required bool isDeliver,
+  }) = _createIssueEvent;
 
   const factory ProductDetailsEvent.checkAllEvent() = _checkAllEvent;
 
@@ -52,34 +56,38 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
   }) = _getOrderByIdEvent;
 
   const factory ProductDetailsEvent.getBottomSheetDataEvent({
-     required BuildContext context,
+    required BuildContext context,
     required String notes,
   }) = _getBottomSheetDataEvent;
 
-  const factory ProductDetailsEvent.removeIssueEvent(
-      {required BuildContext context,
-        required String supplierId,
-        required String orderId,
-        required List<String> product,
-        required BuildContext bottomSheetContext,
-      }) = _removeIssueEvent;
+  const factory ProductDetailsEvent.removeIssueEvent({
+    required BuildContext context,
+    required String supplierId,
+    required String orderId,
+    required List<String> product,
+    required BuildContext bottomSheetContext,
+  }) = _removeIssueEvent;
 
   const factory ProductDetailsEvent.duplicateOrderEvent({
     required BuildContext context,
     required String orderId,
-    required BuildContext dialogContext
+    required BuildContext dialogContext,
   }) = _duplicateOrderEvent;
 
-  const factory ProductDetailsEvent.getAllCartEvent({required BuildContext context}) =
-  _getAllCartEvent;
+  const factory ProductDetailsEvent.getAllCartEvent({
+    required BuildContext context,
+  }) = _getAllCartEvent;
 
-  const factory ProductDetailsEvent.getPermissionList(
-      {required BuildContext context }) = _getPermissionList;
+  const factory ProductDetailsEvent.getPermissionList({
+    required BuildContext context,
+  }) = _getPermissionList;
 
   factory ProductDetailsEvent.pickDocumentEvent({
     required BuildContext context,
     required bool isFromCamera,
-    required int value, required Map<int, Map<String, dynamic>> productIssueData, required int selectedRadio,
+    required int value,
+    required Map<int, Map<String, dynamic>> productIssueData,
+    required int selectedRadio,
   }) = _pickDocumentEvent;
 
   factory ProductDetailsEvent.getPickDocumentEvent({
@@ -89,7 +97,9 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
 
   factory ProductDetailsEvent.deleteFileEvent({
     required int index,
-    required BuildContext context, required Map<int, Map<String, dynamic>> productIssueData, required int selectedRadio,
+    required BuildContext context,
+    required Map<int, Map<String, dynamic>> productIssueData,
+    required int selectedRadio,
   }) = _deleteFileEvent;
 
   factory ProductDetailsEvent.createReturnEvent({
@@ -124,21 +134,30 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required bool isApproved,
     required String reasonToReturn,
     String? orderId,
-    required List<ReturnProduct> returnProduct, String? returnProductId, required bool isRemoved,
-}) =
-  _updateReturnEvent;
+    required List<ReturnProduct> returnProduct,
+    String? returnProductId,
+    required bool isRemoved,
+  }) = _updateReturnEvent;
 
-  factory ProductDetailsEvent.getReturnListEvent({required BuildContext context, List<String>? excludeBarcodes}) =
-  _getReturnListEvent;
+  factory ProductDetailsEvent.getReturnListEvent({
+    required BuildContext context,
+    List<String>? excludeBarcodes,
+  }) = _getReturnListEvent;
 
   const factory ProductDetailsEvent.getArgumentEvent({
     required dynamic arguments,
-    required BuildContext context, required int productQuantity,
+    required BuildContext context,
+    required int productQuantity,
   }) = _getArgumentEvent;
 
-  factory ProductDetailsEvent.deleteEvent({ required BuildContext context,required BuildContext bottomSheetContext, required String reasonToReturn,required String barcode, String? returnId, required OrdersBySupplier orderSupplierProduct}) =
-  _deleteEvent;
-
+  factory ProductDetailsEvent.deleteEvent({
+    required BuildContext context,
+    required BuildContext bottomSheetContext,
+    required String reasonToReturn,
+    required String barcode,
+    String? returnId,
+    required OrdersBySupplier orderSupplierProduct,
+  }) = _deleteEvent;
 
   factory ProductDetailsEvent.pickProofDocumentEvent({
     required BuildContext context,
@@ -149,7 +168,4 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required int index,
     required BuildContext context,
   }) = _deleteProofFileEvent;
-
-
 }
-

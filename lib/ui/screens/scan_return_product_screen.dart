@@ -107,7 +107,7 @@ class ScanReturnProduct extends StatelessWidget {
                     },
                     fontColors: AppColors.whiteColor,
                   ),
-                  30.height,
+                  10.height,
                 ],
               ),
             ),
