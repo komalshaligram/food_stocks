@@ -110,53 +110,84 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           ),
         );
       } else if (event is _productProblemEvent) {
-        List<int> index = [];
-        bool isAllCheck = false;
-        index = [...state.productListIndex];
-        if (state.productListIndex.contains(event.index)) {
-          index.remove(event.index);
+        var selectedIndices = List<int>.from(state.productListIndex);
+
+        if (selectedIndices.contains(event.index)) {
+          selectedIndices.remove(event.index);
         } else {
-          index.add(event.index);
-        }
-        int length = state.orderBySupplierProduct.products?.length ?? 0;
-
-        if (length == index.length) {
-          isAllCheck = true;
+          selectedIndices.add(event.index);
         }
 
-        emit(state.copyWith(productListIndex: index, isAllCheck: isAllCheck));
-      }
-      // else if (event is _checkAllEvent) {
-      //   List<int> number = [];
-      //   if (state.isAllCheck == false) {
-      //     int length = state.orderBySupplierProduct.products?.length ?? 0;
-      //     number = List<int>.generate(length, (i) => i);
-      //   } else {
-      //     number = [];
-      //   }
-      //   emit(state.copyWith(productListIndex: number, isAllCheck: !state.isAllCheck));
-      // }
-      else if (event is _checkAllEvent) {
-        final fullProductList = state.orderBySupplierProduct.products ?? [];
+        final totalSelectableProducts = state.orderBySupplierProduct.products?.where((p) => !(p.isBottle ?? false) || (p.sku == "5321"))?.length ?? 0;
 
-        final returnProducts = state.returnList?.data?.returnProducts ?? [];
-        final barcodesWithReason = returnProducts.map((e) => e.barcode!.trim()).toSet();
-
-        List<int> updatedIndices = [];
-
-        if (!state.isAllCheck) {
-          updatedIndices = List<int>.generate(fullProductList.length, (i) => i);
-        } else {
-          updatedIndices = fullProductList.asMap().entries.where((entry) => barcodesWithReason.contains(entry.value.barcode!.trim())).map((entry) => entry.key).toList();
-        }
-
-        final isAllCheck = fullProductList.isNotEmpty && fullProductList.length == updatedIndices.length;
+        final isAllSelected = selectedIndices.length == totalSelectableProducts && totalSelectableProducts > 0;
 
         emit(state.copyWith(
-          productListIndex: updatedIndices,
-          isAllCheck: isAllCheck,
+          productListIndex: selectedIndices,
+          isAllCheck: isAllSelected,
         ));
-      } else if (event is _radioButtonEvent) {
+      } else if (event is _checkAllEvent) {
+        final allProducts = state.orderBySupplierProduct.products ?? [];
+
+        final selectableProducts = allProducts.asMap().entries.where((entry) => !(entry.value.isBottle ?? false) || entry.value.sku == "5321").toList();
+
+        final totalSelectable = selectableProducts.length;
+
+        List<int> newSelectedIndices;
+
+        if (!state.isAllCheck) {
+          newSelectedIndices = List.generate(allProducts.length, (i) => i).where((index) => !(allProducts[index].isBottle ?? false) || allProducts[index].sku == "5321").toList();
+        } else {
+          newSelectedIndices = [];
+        }
+
+        final isNowAllSelected = newSelectedIndices.length == totalSelectable && totalSelectable > 0;
+
+        emit(state.copyWith(
+          productListIndex: newSelectedIndices,
+          isAllCheck: isNowAllSelected,
+        ));
+      }
+      // else if (event is _productProblemEvent) {
+      //   List<int> index = [];
+      //   bool isAllCheck = false;
+      //   index = [...state.productListIndex];
+      //   if (state.productListIndex.contains(event.index)) {
+      //     index.remove(event.index);
+      //   } else {
+      //     index.add(event.index);
+      //   }
+      //   int length = state.orderBySupplierProduct.products?.length ?? 0;
+      //
+      //   if (length == index.length) {
+      //     isAllCheck = true;
+      //   }
+      //
+      //   emit(state.copyWith(productListIndex: index, isAllCheck: isAllCheck));
+      // }
+
+      // else if (event is _checkAllEvent) {
+      //   final fullProductList = state.orderBySupplierProduct.products ?? [];
+      //
+      //   final returnProducts = state.returnList?.data?.returnProducts ?? [];
+      //   final barcodesWithReason = returnProducts.map((e) => e.barcode!.trim()).toSet();
+      //
+      //   List<int> updatedIndices = [];
+      //
+      //   if (!state.isAllCheck) {
+      //     updatedIndices = List<int>.generate(fullProductList.length, (i) => i);
+      //   } else {
+      //     updatedIndices = fullProductList.asMap().entries.where((entry) => barcodesWithReason.contains(entry.value.barcode!.trim())).map((entry) => entry.key).toList();
+      //   }
+      //
+      //   final isAllCheck = fullProductList.isNotEmpty && fullProductList.length == updatedIndices.length;
+      //
+      //   emit(state.copyWith(
+      //     productListIndex: updatedIndices,
+      //     isAllCheck: isAllCheck,
+      //   ));
+      // }
+      else if (event is _radioButtonEvent) {
         emit(state.copyWith(selectedRadioTile: event.selectRadioTile, isRefresh: !state.isRefresh, proofFile: File(''), proofFile1: File(''), proofFile2: File('')));
       } else if (event is _productIncrementEvent) {
         final currentQty = event.productIssueData[event.radioValue]!['quantity'] ?? event.messingQuantity;

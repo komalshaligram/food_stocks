@@ -347,9 +347,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400),
                                       ),
                                       Text(
-                                        state.orderData.comaxInvoicePrice != 0.0 ?
-                                        formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal) :
-                                        formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal), // orderDetailsList[index].rivchitInvoicePrice != '0' ? (formatNumber(value: orderDetailsList[index].rivchitInvoicePrice.toString(), local: AppStrings.hebrewLocal)) : (formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal)),
+                                        state.orderData.comaxInvoicePrice != 0.0 ? formatNumber(value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal) : formatNumber(value: (state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0', local: AppStrings.hebrewLocal), // orderDetailsList[index].rivchitInvoicePrice != '0' ? (formatNumber(value: orderDetailsList[index].rivchitInvoicePrice.toString(), local: AppStrings.hebrewLocal)) : (formatNumber(value: orderDetailsList[index].totalAmount.toString(), local: AppStrings.hebrewLocal)),
                                         style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold),
                                       ),
                                     ],
