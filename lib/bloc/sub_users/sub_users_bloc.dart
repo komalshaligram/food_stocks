@@ -18,15 +18,12 @@ part 'sub_users_event.dart';
 part 'sub_users_state.dart';
 part 'sub_users_bloc.freezed.dart';
 
-
 class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
   SubUsersBloc() : super(SubUsersState.initial()) {
     on<SubUsersEvent>((event, emit) async {
-      SharedPreferencesHelper preferences = SharedPreferencesHelper(
-          prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
-      if(event is _getSubUserList){
-
+      if (event is _getSubUserList) {
         if (state.isLoadMore) {
           return;
         }
@@ -35,12 +32,12 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
         }
         try {
           emit(state.copyWith(isShimmering: true));
-          if(state.isPop){
-            emit(state.copyWith(subUserList: [],isPop: false));
+          if (state.isPop) {
+            emit(state.copyWith(subUserList: [], isPop: false));
           }
 
           GetSubUserReqModel req = GetSubUserReqModel(
-             clientId: preferences.getUserId(),
+            clientId: preferences.getUserId(),
             pageLimit: AppConstants.walletLimit,
             pageNum: state.pageNum + 1,
           );
@@ -57,28 +54,17 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
               subUserList.addAll(response.data?.users ?? []);
               emit(state.copyWith(
                 subUserList: subUserList,
-                  isShimmering: false,
-                  pageNum: state.pageNum + 1,
-                  isLoadMore: false,
+                isShimmering: false,
+                pageNum: state.pageNum + 1,
+                isLoadMore: false,
               ));
-              emit(state.copyWith(
-                  isBottomOfProducts: subUserList.length >=
-                      (response.data?.totalRecords ?? 0)
-                      ? true
-                      : false));
+              emit(state.copyWith(isBottomOfProducts: subUserList.length >= (response.data?.totalRecords ?? 0) ? true : false));
             } else {
               emit(state.copyWith(isShimmering: false, isLoadMore: false));
             }
-
           } else {
             emit(state.copyWith(isShimmering: false));
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
@@ -87,47 +73,27 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-
-      }
-
-      else if (event is _RefreshListEvent) {
-        emit(state.copyWith(
-            pageNum: 0, subUserList: [], isBottomOfProducts: false));
+      } else if (event is _RefreshListEvent) {
+        emit(state.copyWith(pageNum: 0, subUserList: [], isBottomOfProducts: false));
         add(SubUsersEvent.getSubUserList(context: event.context));
-      }
-
-      else if(event is _userApproveEvent){
-        emit(state.copyWith(isBottomOfProducts: false,isPop: true,pageNum: 0));
+      } else if (event is _userApproveEvent) {
+        emit(state.copyWith(isBottomOfProducts: false, isPop: true, pageNum: 0));
 
         try {
-          final res = await DioClient(event.context).post(
-              AppUrlEndPoints.verifyClientUrl,
-              data: {AppStrings.clientIdString:preferences.getUserId()}
-          );
+          final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            if(!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)){
+            if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {
               Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
-            }
-            else if(!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)){
+            } else if (!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)) {
               Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
-            }
-            else{
-              Navigator.pushNamed(
-                  event.context, RouteDefine.subUsersProfileScreen.name);
+            } else {
+              Navigator.pushNamed(event.context, RouteDefine.subUsersProfileScreen.name);
             }
           }
-        }
-        catch (e) {
-        }
-
-
+        } catch (e) {}
       }
-
-
-      
-
     });
   }
 }

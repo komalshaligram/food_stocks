@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
-
 import '../utils/constants/app_constants.dart';
 
 class ProductSaleScreenShimmerWidget extends StatelessWidget {
@@ -12,8 +11,7 @@ class ProductSaleScreenShimmerWidget extends StatelessWidget {
       shrinkWrap: true,
       itemCount: AppConstants.saleProductPageLimit,
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: AppConstants.productGridAspectRatio7),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: AppConstants.productGridAspectRatio7),
       itemBuilder: (context, index) {
         return buildProductSaleListItem();
       },
@@ -24,13 +22,10 @@ class ProductSaleScreenShimmerWidget extends StatelessWidget {
     return CommonShimmerWidget(
       child: Container(
         decoration: const BoxDecoration(
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           color: Colors.white,
         ),
-        margin: const EdgeInsets.symmetric(
-            vertical: AppConstants.padding_10,
-            horizontal: AppConstants.padding_5),
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
       ),
     );
   }

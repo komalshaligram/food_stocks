@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../app_utils.dart';
-
 class AppStrings {
   static const appName = 'Tavili';
   static const cropImageString = 'Crop Image';
@@ -42,7 +40,6 @@ class AppStrings {
   static const englishLocal = 'en-US';
   //static const hebrewLocal = 'en-US';
   static const hebrewLocal = 'he-IL';
-
 
   //api req param strings
   static const profileImageString = 'profileImg';
@@ -133,6 +130,7 @@ class AppStrings {
   static const branchValString = 'branchVal';
   static const accountValString = 'accountVal';
   static const surfaceValString = 'surfacesVal';
+  static const driverNameString = 'driverName';
   static const subUserValString = 'subUserNameVal';
   static const isNavigateToProductDetailString = 'isNavigateToProductDetail';
   static const creditCardNumberString = 'creditCardNumber';
@@ -172,14 +170,14 @@ class AppStrings {
   static const isFreelancer = 'isFreelancer';
 
   //payment types
- static const wallet = 'wallet';
- static const creditCard = 'creditCard';
- static const bankTransfer = 'bankTransfer';
+  static const wallet = 'wallet';
+  static const creditCard = 'creditCard';
+  static const bankTransfer = 'bankTransfer';
   static const bankCheck = 'bankCheck';
   static const pending = 'pending';
   static const paid = 'paid';
 
- //types
+  //types
   static const credit = 'credit';
   static const debit = 'debit';
   static const refund = 'refund';
@@ -220,12 +218,12 @@ class AppStrings {
   static const isRegisterFileString = 'isRegisterFile';
   //smartlook keys
   static const userBusinessName = 'User business name';
-  static const userPhoneNum =  "User phone number";
+  static const userPhoneNum = "User phone number";
 
-  static const openText =  "Open";
+  static const openText = "Open";
   static const closedText = "Closed";
   static const inProgressText = "In Progress";
-  static const partiallyClosedText =  "Partially Closed";
+  static const partiallyClosedText = "Partially Closed";
 
   static String getLocalizedStrings(String key, BuildContext context) {
     switch (key) {
@@ -453,7 +451,6 @@ class AppStrings {
         return AppLocalizations.of(context)!.deduction_is_negative;
       case 'something_is_wrong_try_again':
         return AppLocalizations.of(context)!.something_is_wrong_try_again;
-
       case 'accountnotapprove':
         return AppLocalizations.of(context)!.account_not_approve;
       case 'rivchitcredentialsnotset':
@@ -500,17 +497,17 @@ class AppStrings {
         return AppLocalizations.of(context)!.status_not_found;
       case 'clientdetailsnotfound':
         return AppLocalizations.of(context)!.client_details_not_found;
-      case 'checkbdierror' :
+      case 'checkbdierror':
         return AppLocalizations.of(context)!.bdi_error;
-      case 'creditcardpaymentfailed' :
+      case 'creditcardpaymentfailed':
         return AppLocalizations.of(context)!.credit_card_payment_failed;
-      case 'returnnotfound' :
+      case 'returnnotfound':
         return AppLocalizations.of(context)!.return_not_found;
-      case 'returndeletedsuccessfully' :
+      case 'returndeletedsuccessfully':
         return AppLocalizations.of(context)!.return_deleted;
-      case 'returncreatedsuccessfully' :
+      case 'returncreatedsuccessfully':
         return AppLocalizations.of(context)!.return_created_success;
-      case 'returnupdatedsuccessfully' :
+      case 'returnupdatedsuccessfully':
         return AppLocalizations.of(context)!.return_updated_success;
     }
     return key;

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import '../../data/error/exceptions.dart';
@@ -22,7 +21,6 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../bottom_nav/bottom_nav_bloc.dart';
 
 part 'profile_menu_event.dart';
@@ -89,7 +87,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 emit(
                   state.copyWith(
                     UserImageUrl: response.data?.clients?.first.profileImage ?? '',
-                    //  userName: response.data?.clients?.first.clientDetail?.bussinessName ?? '',
                   ),
                 );
               }

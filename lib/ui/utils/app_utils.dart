@@ -1,7 +1,3 @@
-
-
-
-
 import 'dart:io';
 import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -23,8 +19,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:another_flushbar/flushbar.dart';
-
-import 'constants/app_strings.dart';
 
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -63,10 +57,8 @@ String maskCreditCardNumber(String cardNumber) {
 String formatExpiryDate(String text) {
   String separator = '/';
   if (text.length == 1 && int.parse(text) > 1) {
-    // Ensure the first digit (month) is not greater than 1
     text = '0$text$separator';
   } else if (text.length == 2 && int.parse(text) > 12) {
-    // Ensure the entered month is valid (not greater than 12)
     text = '12$separator';
   } else if (text.length > 2) {
     text = '${text.substring(0, 2)}$separator${text.substring(2)}';
@@ -106,32 +98,32 @@ double getChildAspectRatio(BuildContext context, bool isSaleOn) {
   return !isSaleOn
       ? AppConstants.productGridAspectRatio8
       : Platform.isAndroid
-      ? getScreenHeight(context) > 900
-      ? AppConstants.productGridAspectRatio9
-      : getScreenHeight(context) > 820 && getScreenHeight(context) < 900
-      ? AppConstants.productGridAspectRatio51
-      : AppConstants.productGridAspectRatio51
-      : getScreenHeight(context) > 820
-      ? AppConstants.productGridAspectRatio51
-      : AppConstants.productGridAspectRatio51;
+          ? getScreenHeight(context) > 900
+              ? AppConstants.productGridAspectRatio9
+              : getScreenHeight(context) > 820 && getScreenHeight(context) < 900
+                  ? AppConstants.productGridAspectRatio51
+                  : AppConstants.productGridAspectRatio51
+          : getScreenHeight(context) > 820
+              ? AppConstants.productGridAspectRatio51
+              : AppConstants.productGridAspectRatio51;
 }
 
 double getItemHeight(BuildContext context, bool isSaleOn) {
   return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
       ? 350
       : getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550
-      ? 260
-      : isSaleOn
-      ? AppConstants.salesProductItemHeight
-      : AppConstants.withoutSaleItemHeight;
+          ? 260
+          : isSaleOn
+              ? AppConstants.salesProductItemHeight
+              : AppConstants.withoutSaleItemHeight;
 }
 
 double getItemWidth(BuildContext context) {
   return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
       ? 190
       : getScreenWidth(context) > 500
-      ? 160
-      : 140;
+          ? 160
+          : 140;
 }
 
 Widget isPesachLabelShow(bool isPesach, BuildContext context) {
@@ -170,9 +162,7 @@ class CustomSnackBar {
 }
 
 printData(String? message) {
-  // if(kDebugMode){
   debugPrint(message ?? '');
-  // }
 }
 
 customShowUpdateDialog(BuildContext context, String directionality, String storeUrl) {
@@ -226,7 +216,6 @@ bool isValidIsraeliID(String id) {
   id = id.trim();
   if (id.length > 9 || id.length < 5 || int.tryParse(id) == null) return false;
 
-  // Pad string with zeros up to 9 digits
   id = id.length < 9 ? id.padLeft(9, '0') : id;
 
   int sum = 0;
@@ -293,9 +282,7 @@ Future<XFile?> openImagePicker(ImageSource source) async {
           }
         }
       }
-    } else {
-//for ios permission handling
-    }
+    } else {}
     final ImagePicker picker = ImagePicker();
     final XFile? pickedImage = await picker.pickImage(source: source);
     return pickedImage;
@@ -348,7 +335,7 @@ String formatNumber({required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;
 
-  final formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs()); // Format absolute value to avoid trailing minus
+  final formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs());
 
   final String result = isNegative ? '-$formatted' : formatted;
 
@@ -356,12 +343,9 @@ String formatNumber({required String value, required String local}) {
 }
 
 String formatSignedNumber(dynamic value) {
-  final double amount = value is num
-      ? value.toDouble()
-      : double.tryParse(value?.toString() ?? '0') ?? 0;
+  final double amount = value is num ? value.toDouble() : double.tryParse(value?.toString() ?? '0') ?? 0;
 
-  final formatted =
-  NumberFormat.decimalPattern('en_IN').format(amount.abs());
+  final formatted = NumberFormat.decimalPattern('en_IN').format(amount.abs());
 
   return amount.isNegative ? '-$formatted ₪' : '$formatted ₪';
 }
@@ -378,8 +362,6 @@ String formatNumberPositiveToNegative({required String value, required String lo
 
   return isNegative ? ' -$formatted' : formatted;
 }
-
-
 
 String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
   String result = (NumberFormat.compactSimpleCurrency(
@@ -407,25 +389,22 @@ double vatCalculationRefund({
   required double vat,
   double qty = 0,
   double deposit = 0,
-  double? refund, // refund is always negative
+  double? refund,
 }) {
   double priceWithVat = price + ((price * vat) / 100);
   double depositWithVat = (qty * deposit) + ((qty * deposit * vat) / 100);
 
   double total = priceWithVat + depositWithVat;
 
-  // Apply refund logic
   if (refund != null) {
-    // refund is negative, so -refund is positive
     if (total <= -refund) {
-      return 0; // refund greater than total
+      return 0;
     } else {
-      if(total <= -refund){
+      if (total <= -refund) {
         return total + refund;
-      }else {
+      } else {
         return total + refund;
       }
-      // refund is negative, so subtract from total
     }
   }
 
@@ -461,13 +440,86 @@ double bottleDepositCalculationWithVatRefund({
     } else {
       if (depositWithVat <= -refund) {
         return depositWithVat + refund;
-      }else {
+      } else {
         return depositWithVat + refund;
       }
-
     }
   }
 
   return depositWithVat;
 }
 
+String formatInvoiceDate(String date) {
+  if (date.isEmpty) return '';
+
+  if (date.length > 10) {
+    return date.substring(0, 10);
+  }
+  return date;
+}
+
+Widget getPaymentStatusWidget(String status, BuildContext context) => Container(
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppConstants.radius_50),
+        color: status == AppStrings.openText
+            ? AppColors.statusOpenColor
+            : status == AppStrings.closedText
+                ? AppColors.statusCloseColor
+                : status == AppStrings.inProgressText
+                    ? AppColors.statusInProgressColor
+                    : AppColors.statusPartiallyClosedColor,
+      ),
+      child: Text(
+        status == AppStrings.openText
+            ? AppLocalizations.of(context)!.invoice_open
+            : status == AppStrings.closedText
+                ? AppLocalizations.of(context)!.invoice_close
+                : status == AppStrings.inProgressText
+                    ? AppLocalizations.of(context)!.in_progress_text
+                    : AppLocalizations.of(context)!.partially_closed_text,
+        style: AppStyles.rkRegularTextStyle(
+          size: AppConstants.font_12,
+          color: AppColors.whiteColor,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    );
+
+Widget titleText(BuildContext context, String title) => Text(
+      title,
+      style: AppStyles.rkBoldTextStyle(
+        size: AppConstants.smallFont,
+        color: AppColors.blackColor,
+        fontWeight: FontWeight.bold,
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+
+Widget subTitleValueText(BuildContext context, String subTitle) => Text(
+      subTitle,
+      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.normal),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+
+Widget titleGreenText(
+  BuildContext context,
+  String title,
+  ltr,
+) =>
+    Directionality(
+      textDirection: ltr,
+      child: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: AppStyles.rkBoldTextStyle(
+          size: AppConstants.smallFont,
+          color: AppColors.notificationColor,
+          fontWeight: FontWeight.bold,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );

@@ -40,13 +40,13 @@ class CustomDialog extends StatelessWidget {
       child: AlertDialog(
         contentPadding: const EdgeInsets.all(AppConstants.padding_20),
         surfaceTintColor: AppColors.whiteColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
         title: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w400)),
         content: content.isEmpty
             ? const SizedBox.shrink()
             : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-              child: SizedBox(
+                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+                child: SizedBox(
                   height: 200,
                   width: double.maxFinite,
                   child: Column(
@@ -74,7 +74,7 @@ class CustomDialog extends StatelessWidget {
                                     width: 5,
                                     decoration: BoxDecoration(
                                       color: AppColors.blackColor,
-                                      borderRadius: BorderRadius.circular(50),
+                                      borderRadius: BorderRadius.circular(AppConstants.radius_50),
                                     ),
                                   ),
                                   8.width,
@@ -96,7 +96,7 @@ class CustomDialog extends StatelessWidget {
                     ],
                   ),
                 ),
-            ),
+              ),
         actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
         actions: [
           positiveTitle != null
@@ -105,9 +105,9 @@ class CustomDialog extends StatelessWidget {
                   splashColor: Colors.transparent,
                   onTap: positiveOnTap,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                     width: 80,
                     child: isProcessing
                         ? CupertinoActivityIndicator(
@@ -126,13 +126,13 @@ class CustomDialog extends StatelessWidget {
                   splashColor: Colors.transparent,
                   onTap: negativeOnTap,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                     alignment: Alignment.center,
                     width: 80,
                     decoration: BoxDecoration(
                         gradient: AppColors.appMainGradientColor,
                         // color: AppColors.mainColor.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(8.0)),
+                        borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                     child: Text(
                       negativeTitle ?? '',
                       style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),

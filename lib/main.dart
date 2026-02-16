@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/screens/my_app_screen.dart';
 import '../../ui/utils/app_utils.dart';
@@ -48,3 +49,4 @@ void main() async {
     runApp(const MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
+

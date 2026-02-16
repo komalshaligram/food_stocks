@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -9,7 +8,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -180,7 +178,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 productStockUpdateIndex: productStockUpdateIndex,
                 noteController: TextEditingController(text: note),
                 productSupplierList: supplierList,
-                productListIndex: productListIndex, /*isProductLoading: false*/
+                productListIndex: productListIndex,
               ));
               if (supplierList.isNotEmpty) {
                 bool isSupplierSelected = false;
@@ -227,9 +225,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         } on ServerException {
           emit(state.copyWith(isProductLoading: false));
           Navigator.pop(event.context);
-        } catch (e) {
-          // Navigator.pop(event.context);
-        }
+        } catch (e) {}
       } else if (event is _increaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
 
@@ -334,15 +330,12 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             );
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
-              // Navigator.pop(event.context);
               Vibration.vibrate();
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
                 productIsInCart: true,
-                quantity: /*state.productStockList[state.productStockUpdateIndex]
-                    .quantity +*/
-                    _productQuantity,
+                quantity: _productQuantity,
                 productSupplierIds: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
                 totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
@@ -381,7 +374,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 add(const PlanogramProductEvent.setCartCountEvent());
               }
               Vibration.vibrate();
-              //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
@@ -452,57 +444,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
 
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
-            //category search result
-            /*searchList.addAll(response.data?.categoryData?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, isPesach: category.isPesach ?? false, image: category.categoryImage ?? '')).toList() ?? []);
-            //subcategory search result
-            searchList.addAll(response.data?.subCategoryData
-                    ?.map((subCategory) => SearchModel(
-                          searchId: subCategory.id ?? '',
-                          name: subCategory.subCategoryName ?? '',
-                          searchType: SearchTypes.subCategory,
-                          image: '',
-                          categoryId: subCategory.parentCategoryId ?? '',
-                          categoryName: subCategory.parentCategoryName ?? '',
-                          isPesach: subCategory.isPesach ?? false,
-                        ))
-                    .toList() ??
-                []);
-            //company search result
-            searchList.addAll(response.data?.companyData
-                    ?.map((company) => SearchModel(
-                          searchId: company.id ?? '',
-                          name: company.brandName ?? '',
-                          searchType: SearchTypes.company,
-                          image: company.brandLogo ?? '',
-                        ))
-                    .toList() ??
-                []);
-            // supplier search result
-            searchList.addAll(response.data?.supplierData
-                    ?.map((supplier) => SearchModel(
-                          searchId: supplier.id ?? '',
-                          name: supplier.supplierDetail?.companyName ?? '',
-                          searchType: SearchTypes.supplier,
-                          image: supplier.logo ?? '',
-                          isPesach: supplier.isPesach ?? false,
-                        ))
-                    .toList() ??
-                []);
-            //sale search result
-            searchList.addAll(response.data?.saleData
-                    ?.map((sale) => SearchModel(
-                          searchId: sale.id ?? '',
-                          name: sale.productName ?? '',
-                          searchType: SearchTypes.sale,
-                          numberOfUnits: int.parse(sale.numberOfUnit.toString()),
-                          image: sale.mainImage ?? '',
-                          isPesach: sale.isPesach ?? false,
-                          salePrice: double.parse(sale.discountPercentage.toString()),
-                          salesDesc: parse(sale.salesDescription ?? '').body?.text ?? '',
-                        ))
-                    .toList() ??
-                []);*/
-            //supplier products result
+
             searchList.addAll(response.data
                     ?.map((supplier) => SearchModel(
                           searchId: supplier.id ?? '',
@@ -521,12 +463,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 []);
             emit(state.copyWith(searchList: searchList, search: state.searchController.text, isSearching: false));
           } else {
-            // emit(state.copyWith(searchList: []));
             emit(state.copyWith(isSearching: false));
-            // CustomSnackBar.showSnackBar(
-            //     context: event.context,
-            //     title: response.message ?? AppStrings.somethingWrongString,
-            //     type: SnackBarType.SUCCESS);
           }
         } on ServerException {
           CustomSnackBar.showSnackBar(
@@ -741,7 +678,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             final response = GetAllCartResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
-              final cartList = response.data?.data; // Likely a List<dynamic>
+              final cartList = response.data?.data;
 
               if (cartList != null && cartList.isNotEmpty) {
                 for (var item in cartList) {
@@ -760,8 +697,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                         player.play(AssetSource(AppStrings.deleteSound));
 
                         await preferencesHelper.setCartCount(count: preferencesHelper.getCartCount() - 1);
-
-                        // emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: true));
 
                         break;
                       }
@@ -792,12 +727,11 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
           } on ServerException {}
           if (_isProductInCart) {
             try {
-              // emit(state.copyWith(isLoading: true));
               UpdateCartReqModel request = UpdateCartReqModel(
                 productId: event.productId,
                 supplierId: event.productSupplierIds,
                 saleId: state.productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId == '' ? null : state.productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
-                quantity: state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity /*+ _productQuantity*/,
+                quantity: state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity,
                 cartProductId: _cartProductId,
               );
               SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -817,23 +751,17 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   totalPrice: productStockList[event.productListIndex][event.productStockUpdateIndex].totalPrice,
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
-                // isLoading: false,
                 emit(state.copyWith(productStockList: productStockList));
 
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
               } else {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
-                //   emit(state.copyWith(isLoading: false));
               }
             } on ServerException {
-              //  emit(state.copyWith(isLoading: false));
-            } catch (e) {
-              //   emit(state.copyWith(isLoading: false));
-            }
+            } catch (e) {}
           } else {
             try {
-              //  emit(state.copyWith(isLoading: true));
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
                 products: [
                   insert.Product(
@@ -870,24 +798,16 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
 
-                //emit(state.copyWith(isLoading: false, productStockList: productStockList, isCartCountChange: false));
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
               } else if (response.status == AppConstants.code_403) {
-                // emit(state.copyWith(isLoading: false));
-
                 // CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               } else {
-                //  emit(state.copyWith(isLoading: false));
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
             } on ServerException {
-              //   emit(state.copyWith(isLoading: false));
-            } catch (e) {
-              // emit(state.copyWith(isLoading: false));
-            }
+            } catch (e) {}
           }
         }
-        //
       }
     });
   }

@@ -10,7 +10,7 @@ class ManageCreditCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
@@ -18,7 +18,7 @@ class ManageCreditCardShimmer extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
             child: SingleChildScrollView(
-              child:  Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
@@ -48,21 +48,19 @@ class ManageCreditCardShimmer extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-              Container(
-                height: AppConstants.buttonHeight,
-                decoration: BoxDecoration(
-                  color: AppColors.shimmer1Color,
-                  borderRadius:
-                  const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                Container(
+                  height: AppConstants.buttonHeight,
+                  decoration: BoxDecoration(
+                    color: AppColors.shimmer1Color,
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                  ),
                 ),
-              ),
                 15.height,
                 Container(
                   height: AppConstants.buttonHeight,
                   decoration: BoxDecoration(
                     color: AppColors.shimmer1Color,
-                    borderRadius:
-                    const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                   ),
                 ),
                 35.height,
@@ -81,8 +79,7 @@ class ManageCreditCardShimmer extends StatelessWidget {
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -96,11 +93,9 @@ class ManageCreditCardShimmer extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );
   }
 }
-

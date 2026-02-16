@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -177,7 +176,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     var data = await tempImage.toByteData(format: ui.ImageByteFormat.png);
 
     final imageInUnit8List = (data!.buffer.asUint8List());
-    directory = (await getApplicationDocumentsDirectory()).path; // to get path of the file
+    directory = (await getApplicationDocumentsDirectory()).path;
     var path = '$directory/$fieldName.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
 

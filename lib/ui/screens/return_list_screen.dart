@@ -84,8 +84,8 @@ class ReturnListWidget extends StatelessWidget {
                   bloc.add(ReturnEvent.newRequestEvent(context: context));
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(5.0)),
+                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
                   child: Text(
                     AppLocalizations.of(context)!.new_return,
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),
@@ -213,8 +213,8 @@ class ReturnListWidget extends StatelessWidget {
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                    decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(8.0)),
+                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
+                    decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                     child: Text(
                       getStatus(state.statusList, list[index].returnStatusName ?? '', state.language),
                       style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: getStatusColor(state.statusList, list[index].returnStatusName ?? '')),
@@ -233,8 +233,8 @@ class ReturnListWidget extends StatelessWidget {
                           },
                           child: Container(
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), gradient: AppColors.appMainGradientColor),
+                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_7), gradient: AppColors.appMainGradientColor),
                             child: Text(
                               AppLocalizations.of(context)!.open_refund_invoice,
                               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),

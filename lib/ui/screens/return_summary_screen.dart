@@ -46,7 +46,7 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
               title: AppLocalizations.of(context)!.return_summary,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
-                Navigator.pop(context,state.returnProductList);
+                Navigator.pop(context, state.returnProductList);
               },
             ),
           ),
@@ -57,19 +57,19 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
                 state.isShimmer
                     ? const Expanded(child: OrderSummaryScreenShimmerWidget())
                     : Expanded(
-                  child: AnimationLimiter(
-                    child: SizedBox(
-                      height: 200,
-                      child: ListView(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                        children: state.supplierWiseMap.keys.map((supplierId) {
-                          return orderListItem(context: context, bloc: bloc, supplierId: supplierId ?? '');
-                        }).toList(),
+                        child: AnimationLimiter(
+                          child: SizedBox(
+                            height: 200,
+                            child: ListView(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                              children: state.supplierWiseMap.keys.map((supplierId) {
+                                return orderListItem(context: context, bloc: bloc, supplierId: supplierId ?? '');
+                              }).toList(),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -81,7 +81,6 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
   Widget orderListItem({required BuildContext context, required ReturnSummaryBloc bloc, required String supplierId}) {
     return BlocBuilder<ReturnSummaryBloc, ReturnSummaryState>(
       builder: (context1, state) {
-
         return Container(
             height: 160,
             margin: const EdgeInsets.all(AppConstants.padding_10),

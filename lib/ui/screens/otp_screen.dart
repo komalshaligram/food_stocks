@@ -21,8 +21,7 @@ class OTPScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final temp = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
+    final temp = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
     return BlocProvider(
       create: (context) => OtpBloc()..add(const OtpEvent.setOtpTimer()),
@@ -45,7 +44,7 @@ class OTPScreenWidget extends StatefulWidget {
 }
 
 class _OTPScreenWidgetState extends State<OTPScreenWidget> {
-  String _code="";
+  String _code = "";
   late FocusNode myFocusNode;
 
   @override
@@ -53,7 +52,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
     // TODO: implement initState
     super.initState();
     myFocusNode = FocusNode();
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(myFocusNode);
     });
   }
@@ -73,9 +72,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
               preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
               child: CommonAppBar(
                 bgColor: AppColors.whiteColor,
-                title: widget.isRegister
-                    ? AppLocalizations.of(context)!.register
-                    : AppLocalizations.of(context)!.login,
+                title: widget.isRegister ? AppLocalizations.of(context)!.register : AppLocalizations.of(context)!.login,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   bloc.add(const OtpEvent.cancelOtpTimerSubscription());
@@ -90,24 +87,15 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                   children: [
                     30.height,
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: getScreenWidth(context) * 0.12,
-                          right: getScreenWidth(context) * 0.12),
-                      child: Text(
-                          AppLocalizations.of(context)!.enter_the_code_sent_to_phone_num,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: Colors.black)),
+                      padding: EdgeInsets.only(left: getScreenWidth(context) * 0.12, right: getScreenWidth(context) * 0.12),
+                      child: Text(AppLocalizations.of(context)!.enter_the_code_sent_to_phone_num, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black)),
                     ),
                     30.height,
-
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: getScreenWidth(context) * 0.09,
-                          right: getScreenWidth(context) * 0.09),
+                      padding: EdgeInsets.only(left: getScreenWidth(context) * 0.09, right: getScreenWidth(context) * 0.09),
                       child: Directionality(
                         textDirection: TextDirection.ltr,
-                        child:SizedBox(
+                        child: SizedBox(
                           height: 80,
                           child: PinFieldAutoFill(
                             keyboardType: TextInputType.number,
@@ -117,28 +105,20 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             ),
                             currentCode: _code,
                             autoFocus: true,
-                            focusNode:myFocusNode,
-                            enableInteractiveSelection:false ,
+                            focusNode: myFocusNode,
+                            enableInteractiveSelection: false,
                             codeLength: 4,
                             onCodeSubmitted: (code) {
                               bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                           //   SystemChannels.textInput.invokeMethod("TextInput.show");
+                              //   SystemChannels.textInput.invokeMethod("TextInput.show");
                             },
                             onCodeChanged: (code) {
-                              _code= code!;
-                              if(code.length==4){
+                              _code = code!;
+                              if (code.length == 4) {
                                 if (widget.isRegister == true) {
-                                  bloc.add(OtpEvent.registerApiEvent(
-                                      contact: widget.contact,
-                                      otp: _code,
-                                      isRegister: widget.isRegister,
-                                      context: context));
+                                  bloc.add(OtpEvent.registerApiEvent(contact: widget.contact, otp: _code, isRegister: widget.isRegister, context: context));
                                 } else {
-                                  bloc.add(OtpEvent.otpApiEvent(
-                                      contact: widget.contact,
-                                      otp: _code,
-                                      isRegister: widget.isRegister,
-                                      context: context));
+                                  bloc.add(OtpEvent.otpApiEvent(contact: widget.contact, otp: _code, isRegister: widget.isRegister, context: context));
                                 }
                               }
                             },
@@ -148,9 +128,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                     ),
                     15.height,
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: getScreenWidth(context) * 0.11,
-                          right: getScreenWidth(context) * 0.11),
+                      padding: EdgeInsets.only(left: getScreenWidth(context) * 0.11, right: getScreenWidth(context) * 0.11),
                       child: CustomButtonWidget(
                         buttonText: AppLocalizations.of(context)!.next,
                         bGColor: AppColors.mainColor,
@@ -158,36 +136,19 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                         onPressed: state.isLoading
                             ? null
                             : () {
-                          FocusScope.of(context).unfocus();
-                          if (_code.isEmpty) {
-                            CustomSnackBar.showSnackBar(
-                                context: context,
-                                title:
-                                AppLocalizations.of(context)!.please_enter_otp,
-                                type: SnackBarType.failure);
-                          } else if (_code.length != 4) {
-                            CustomSnackBar.showSnackBar(
-                                context: context,
-                                title:
-                                AppLocalizations.of(context)!.enter_4digit_otp,
-                                type: SnackBarType.failure);
-                          } else {
-                            if (widget.isRegister == true) {
-                              bloc.add(OtpEvent.registerApiEvent(
-                                  contact: widget.contact,
-                                  otp: _code,
-                                  isRegister: widget.isRegister,
-                                  context: context));
-                            } else {
-                              bloc.add(OtpEvent.otpApiEvent(
-                                  contact: widget.contact,
-                                  otp: _code,
-                                  isRegister: widget.isRegister,
-                                  context: context));
-                            }
-                          }
-
-                        },
+                                FocusScope.of(context).unfocus();
+                                if (_code.isEmpty) {
+                                  CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_otp, type: SnackBarType.failure);
+                                } else if (_code.length != 4) {
+                                  CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.enter_4digit_otp, type: SnackBarType.failure);
+                                } else {
+                                  if (widget.isRegister == true) {
+                                    bloc.add(OtpEvent.registerApiEvent(contact: widget.contact, otp: _code, isRegister: widget.isRegister, context: context));
+                                  } else {
+                                    bloc.add(OtpEvent.otpApiEvent(contact: widget.contact, otp: _code, isRegister: widget.isRegister, context: context));
+                                  }
+                                }
+                              },
                         fontColors: AppColors.whiteColor,
                       ),
                     ),
@@ -195,26 +156,19 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                     Center(
                       child: Text(
                         AppLocalizations.of(context)!.not_receive_verification_code,
-                        style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont, color: Colors.black),
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
                       ),
                     ),
                     20.height,
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: getScreenWidth(context) * 0.11,
-                          right: getScreenWidth(context) * 0.11),
+                      padding: EdgeInsets.only(left: getScreenWidth(context) * 0.11, right: getScreenWidth(context) * 0.11),
                       child: Container(
                         width: double.maxFinite,
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
-                          color: state.otpTimer != 0
-                              ? AppColors.pageColor
-                              : AppColors.whiteColor,
-                          border:
-                          Border.all(color: AppColors.mainColor, width: 1),
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_10)),
+                          color: state.otpTimer != 0 ? AppColors.pageColor : AppColors.whiteColor,
+                          border: Border.all(color: AppColors.mainColor, width: 1),
+                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                         ),
                         child: MaterialButton(
                           elevation: 0,
@@ -222,37 +176,25 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                           onPressed: state.otpTimer != 0
                               ? null
                               : () {
-                            bloc.add(OtpEvent.logInApiDataEvent(
-                                context: context,isRegister: widget.isRegister,contactNumber: widget.contact));
-                            bloc.add(const OtpEvent.setOtpTimer());
-                          },
+                                  bloc.add(OtpEvent.logInApiDataEvent(context: context, isRegister: widget.isRegister, contactNumber: widget.contact));
+                                  bloc.add(const OtpEvent.setOtpTimer());
+                                },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
                                 width: 40,
                                 alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    border: Border.all(
-                                        color: AppColors.mainColor, width: 1),
-                                    shape: BoxShape.circle),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: AppConstants.padding_5,
-                                    horizontal: AppConstants.padding_5),
+                                decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: AppColors.mainColor, width: 1), shape: BoxShape.circle),
+                                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
                                 child: Text(
                                   '${state.otpTimer}',
-                                  style: AppStyles.rkRegularTextStyle(
-                                      size: AppConstants.font_14,
-                                      color: AppColors.mainColor),
+                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.mainColor),
                                 ),
                               ),
                               Text(
-                                AppLocalizations.of(context)!.send_again
-                                    .toUpperCase(),
-                                style: AppStyles.rkRegularTextStyle(
-                                    size: AppConstants.mediumFont,
-                                    color: AppColors.mainColor),
+                                AppLocalizations.of(context)!.send_again.toUpperCase(),
+                                style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.mainColor),
                               ),
                               40.width,
                             ],

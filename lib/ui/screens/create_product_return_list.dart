@@ -43,7 +43,6 @@ class CreateProductReturnListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<CreateReturnBloc>();
-    // Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocBuilder<CreateReturnBloc, CreateReturnState>(
       builder: (context, state) {
         return PopScope(
@@ -53,9 +52,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
               child: FocusDetector(
-                onFocusGained: () {
-                  // bloc.add(CreateReturnEvent.getReturnListEvent(context: context, product: args ?? {} ));
-                },
+                onFocusGained: () {},
                 child: CommonAppBar(
                   bgColor: AppColors.pageColor,
                   title: AppLocalizations.of(context)!.product_return_list,
@@ -65,8 +62,6 @@ class CreateProductReturnListWidget extends StatelessWidget {
                       context,
                       RouteDefine.returnListScreen.name,
                     );
-                    // Navigator.pop(context, 'refresh');
-                    //Navigator.pushNamedAndRemoveUntil(context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
                   },
                   trailingWidget: state.returnProductList.isNotEmpty
                       ? InkWell(
@@ -76,8 +71,8 @@ class CreateProductReturnListWidget extends StatelessWidget {
                             );
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                            decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(5.0)),
+                            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+                            decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
                             child: Text(
                               AppLocalizations.of(context)!.delete,
                               style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),

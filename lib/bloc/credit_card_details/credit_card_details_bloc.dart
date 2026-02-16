@@ -27,7 +27,6 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
     on<CreditCardDetailsEvent>((event, emit) async {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
-
       if (event is _getArgumentEvent) {
         termsConditionReqModel = event.termsReqModel;
         emit(state.copyWith(isPaymentFail: event.isPaymentFail, termsModel: event.termsReqModel, isFromRegFlow: event.isFromRegFlow));
@@ -42,9 +41,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             data: reqMap,
           );
 
-          // CreditCardResModel response = CreditCardResModel.fromJson(res);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
-
             if (state.isFromRegFlow) {
               add(CreditCardDetailsEvent.termsConditionApiEvent(context: event.context));
             } else {
@@ -53,7 +50,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             }
           } else {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title:AppStrings.messageString.contains('_') ?AppStrings.getLocalizedStrings(res[AppStrings.messageString].toLocalization(), event.context):res[AppStrings.messageString], type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.messageString.contains('_') ? AppStrings.getLocalizedStrings(res[AppStrings.messageString].toLocalization(), event.context) : res[AppStrings.messageString], type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(
@@ -87,11 +84,9 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             owner2IsraelId: state.termsModel.owner2IsraelId,
           );
 
-
           Map<String, dynamic> req = termsConditionReqModel.toJson();
           req.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
@@ -143,7 +138,6 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
       } else if (event is _selectMonthEvent) {
         emit(state.copyWith(selectedMonth: event.month));
       }
-
     });
   }
 }

@@ -208,17 +208,17 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
                   child: CommonAppBar(
                     trailingWidget: Container(
-                      padding: const EdgeInsets.only(left: 2, right: 2, top: 2, bottom: 2),
+                      padding: const EdgeInsets.all(AppConstants.padding_2),
                       decoration: BoxDecoration(
                         color: AppColors.greyColor,
                         border: Border.all(color: AppColors.whiteColor, width: 3),
                         borderRadius: const BorderRadius.all(
-                          Radius.circular(20),
+                          Radius.circular(AppConstants.radius_20),
                         ),
                       ),
                       child: Container(
-                          padding: const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 3),
-                          decoration: BoxDecoration(color: AppColors.greyColor, borderRadius: const BorderRadius.all(Radius.circular(20))),
+                          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_3),
+                          decoration: BoxDecoration(color: AppColors.greyColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_20))),
                           child: Text(
                             '${AppLocalizations.of(context)!.total} :${state.total}',
                             style: TextStyle(color: AppColors.whiteColor),
@@ -427,12 +427,12 @@ class OrderSummaryScreenWidget extends StatelessWidget {
         return Directionality(
           textDirection: language == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
           child: AlertDialog(
-            contentPadding: const EdgeInsets.all(20.0),
+            contentPadding: const EdgeInsets.all(AppConstants.padding_20),
             surfaceTintColor: AppColors.whiteColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
             title: Text(
               text,
-              style: AppStyles.rkRegularTextStyle(size: 16),
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont),
             ),
             actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
             actions: [
@@ -444,9 +444,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   function();
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                   child: Text(
                     AppLocalizations.of(context)!.understand_submit_order,
                     style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),
@@ -461,11 +461,11 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   Navigator.pop(context1);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(gradient: AppColors.connectGradientColor, border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(gradient: AppColors.connectGradientColor, border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                   child: Text(
-                    AppLocalizations.of(context)!.close,
+                    AppLocalizations.of(context)!.closeText,
                     style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor, size: AppConstants.smallFont),
                   ),
                 ),
@@ -664,9 +664,9 @@ class CallAgentDialog extends StatelessWidget {
     return Directionality(
       textDirection: language == 'en' ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
-        contentPadding: const EdgeInsets.all(20.0),
+        contentPadding: const EdgeInsets.all(AppConstants.padding_20),
         surfaceTintColor: AppColors.whiteColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
         content: Text(
           AppLocalizations.of(context)!.return_draft_not_sent,
           // AppStrings.getLocalizedStrings(, context),
@@ -683,8 +683,8 @@ class CallAgentDialog extends StatelessWidget {
                   Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {AppStrings.isbackString: 'orderSummary'});
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(5.0)),
+                  padding: const EdgeInsets.all(AppConstants.padding_8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -705,8 +705,8 @@ class CallAgentDialog extends StatelessWidget {
                   bloc.add(OrderSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: id, index: index));
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(5.0)),
+                  padding: const EdgeInsets.all(AppConstants.padding_8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

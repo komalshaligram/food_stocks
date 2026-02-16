@@ -4,17 +4,20 @@ part of 'otp_bloc.dart';
 class OtpEvent with _$OtpEvent {
   const factory OtpEvent.setOtpTimer() = _setOtpTimerEvent;
 
-  const factory OtpEvent.changeOtpEvent({required String otp}) =
-      _changeOtpEvent;
+  const factory OtpEvent.changeOtpEvent({
+    required String otp,
+  }) = _changeOtpEvent;
 
   const factory OtpEvent.updateOtpTimer() = _UpdateTimerEvent;
+
   const factory OtpEvent.cancelOtpTimerSubscription() = _cancelTimerscriptionEvent;
+
   const factory OtpEvent.otpApiEvent({
     required String contact,
     required String otp,
     required bool isRegister,
     required BuildContext context,
-}) = _otpApiEvent;
+  }) = _otpApiEvent;
 
   const factory OtpEvent.registerApiEvent({
     required String contact,
@@ -28,5 +31,4 @@ class OtpEvent with _$OtpEvent {
     required BuildContext context,
     required bool isRegister,
   }) = _logInApiDataEvent;
-
 }

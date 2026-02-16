@@ -86,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "application_version": MessageLookupByLibrary.simpleMessage(
       "גרסת אפליקציה",
     ),
-    "apply": MessageLookupByLibrary.simpleMessage("Apply"),
+    "apply": MessageLookupByLibrary.simpleMessage("הצג"),
     "approve_for_promotional_info": MessageLookupByLibrary.simpleMessage(
       "אני מאשר קבלת חומר שיווקי על מבצעים במייל, טלפון, SMS, הודעת PUSH, וכדומה מאפליקציית TAVILI ו/או קבוצת חברות סטוק טק.",
     ),
@@ -199,7 +199,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "אין את רשימת הערים",
     ),
     "city": MessageLookupByLibrary.simpleMessage("עיר / עיר של העסק"),
-    "clear": MessageLookupByLibrary.simpleMessage("clear"),
+    "clear": MessageLookupByLibrary.simpleMessage("בָּרוּר"),
     "click_to_scan": MessageLookupByLibrary.simpleMessage(
       "לחץ כאן לסריקת ברקוד של המוצר",
     ),
@@ -208,7 +208,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "client_form_details": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
     "client_info": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
-    "close": MessageLookupByLibrary.simpleMessage("סגור"),
     "closeText": MessageLookupByLibrary.simpleMessage("סגור"),
     "closed_text": MessageLookupByLibrary.simpleMessage("זיכוי סגור"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
@@ -266,6 +265,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "data_for_form": MessageLookupByLibrary.simpleMessage("נתונים עבור טפסים"),
     "data_not_found": MessageLookupByLibrary.simpleMessage("מידע לא נמצא"),
     "date_approved": MessageLookupByLibrary.simpleMessage("תאריך אישור:"),
+    "date_range": MessageLookupByLibrary.simpleMessage("טווח תאריכים"),
     "date_sent": MessageLookupByLibrary.simpleMessage("תאריך שליחה:"),
     "dec": MessageLookupByLibrary.simpleMessage("דצמ"),
     "december": MessageLookupByLibrary.simpleMessage("דֵצֶמבֶּר"),
@@ -384,13 +384,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "KB 1024 משקל הקובץ צריך להיות קטן מ",
     ),
     "files": MessageLookupByLibrary.simpleMessage("קבצים"),
-    "filtering": MessageLookupByLibrary.simpleMessage("Filtering"),
+    "filtering": MessageLookupByLibrary.simpleMessage("סִנוּן"),
     "finish": MessageLookupByLibrary.simpleMessage("לתשלום"),
     "for_order": MessageLookupByLibrary.simpleMessage("להזמנה"),
     "form_create_successful": MessageLookupByLibrary.simpleMessage(
       "יצירת טופס בוצעה בהצלחה",
     ),
-    "form_date": MessageLookupByLibrary.simpleMessage("From Date"),
+    "form_date": MessageLookupByLibrary.simpleMessage("מתאריך"),
     "form_exists_with_name": MessageLookupByLibrary.simpleMessage(
       "שם הטופס כבר קיים. נסה שם חדש",
     ),
@@ -480,6 +480,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invoice_close": MessageLookupByLibrary.simpleMessage("סגור"),
     "invoice_date": MessageLookupByLibrary.simpleMessage("תאריך החשבונית"),
+    "invoice_date_range": MessageLookupByLibrary.simpleMessage(
+      "טווח תאריכים של חשבונית",
+    ),
     "invoice_number": MessageLookupByLibrary.simpleMessage("חשבונית זיכוי"),
     "invoice_open": MessageLookupByLibrary.simpleMessage("פתוח"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("סטטוס חשבונית"),
@@ -538,6 +541,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "maximum_qty": MessageLookupByLibrary.simpleMessage(
       "מקסימום מארזים להזמנה עבור המבצע",
     ),
+    "maximum_three_month_date_range_required":
+        MessageLookupByLibrary.simpleMessage(
+          "טווח תאריכים מקסימלי של 3 חודשים",
+        ),
     "may": MessageLookupByLibrary.simpleMessage("מאי"),
     "menu": MessageLookupByLibrary.simpleMessage("תפריט"),
     "message": MessageLookupByLibrary.simpleMessage("הוֹדָעָה"),
@@ -788,6 +795,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_city": MessageLookupByLibrary.simpleMessage("נא להיכנס לעיר"),
     "please_enter_contact_name": MessageLookupByLibrary.simpleMessage(
       "אנא הזם שם איש קשר",
+    ),
+    "please_enter_driverName": MessageLookupByLibrary.simpleMessage(
+      "נא להזין את שם הנהג",
     ),
     "please_enter_email": MessageLookupByLibrary.simpleMessage(
       "אנא הזן כתובת מייל",
@@ -1047,6 +1057,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "refunded_on_order": MessageLookupByLibrary.simpleMessage("הזמנה שזוכתה"),
     "refunds": MessageLookupByLibrary.simpleMessage("זיכויים"),
+    "refunds_date_range": MessageLookupByLibrary.simpleMessage(
+      "טווח תאריכי החזרים",
+    ),
     "refunds_for_order": MessageLookupByLibrary.simpleMessage(
       "חשבוניות זיכוי עבור הזמנה: ",
     ),
@@ -1133,6 +1146,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_checkbox": MessageLookupByLibrary.simpleMessage(
       "נא סמן את כל תיבת הסימון",
     ),
+    "select_date": MessageLookupByLibrary.simpleMessage("בחר תאריך"),
     "select_issue": MessageLookupByLibrary.simpleMessage("אנא בחר סוג בעיה"),
     "select_next_day_shift": MessageLookupByLibrary.simpleMessage(
       "אנא בחר ביום הבא",
@@ -1195,7 +1209,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "something_is_wrong_try_again": MessageLookupByLibrary.simpleMessage(
       "!משהו השתבש, אנא נסה שנית",
     ),
-    "sorting": MessageLookupByLibrary.simpleMessage("Sorting"),
+    "sorting": MessageLookupByLibrary.simpleMessage("מִיוּן"),
     "status_not_found": MessageLookupByLibrary.simpleMessage("לא נמצא סטטוס"),
     "storage_permission": MessageLookupByLibrary.simpleMessage(
       "אנא אפשר הרשאות אכסון",
@@ -1243,6 +1257,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "this_months_orders": MessageLookupByLibrary.simpleMessage("הזמנות החודש"),
     "this_supplier_have": MessageLookupByLibrary.simpleMessage(" לספק הזה יש"),
     "thursday": MessageLookupByLibrary.simpleMessage("יום חמישי"),
+    "to_date": MessageLookupByLibrary.simpleMessage("עד היום"),
     "token_error": MessageLookupByLibrary.simpleMessage("שגיאת טוקן"),
     "total": MessageLookupByLibrary.simpleMessage("סה”כ"),
     "total_amount_cant_be_zero": MessageLookupByLibrary.simpleMessage(
@@ -1274,7 +1289,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "unit_in_box": MessageLookupByLibrary.simpleMessage("יחידות במארז"),
     "units": MessageLookupByLibrary.simpleMessage("יחידות"),
     "unknown_error": MessageLookupByLibrary.simpleMessage("בעיה לא ידועה"),
-    "until_date": MessageLookupByLibrary.simpleMessage("Until Date"),
+    "until_date": MessageLookupByLibrary.simpleMessage("עד תאריך"),
     "until_time": MessageLookupByLibrary.simpleMessage("עד שעה"),
     "unverified_verification_code": MessageLookupByLibrary.simpleMessage(
       "קוד אימות לא אומת. אנא אמת תחילה",

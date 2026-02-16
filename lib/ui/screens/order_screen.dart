@@ -110,7 +110,12 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                                     child: SlideAnimation(
                                       verticalOffset: 44.0,
                                       child: FadeInAnimation(
-                                        child: orderListItem(state: state, index: index, context: context, orderDetailsList: state.orderDetailsList),
+                                        child: orderListItem(
+                                          state: state,
+                                          index: index,
+                                          context: context,
+                                          orderDetailsList: state.orderDetailsList,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -121,7 +126,11 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                                 child: Center(
                                     child: Text(
                                   AppLocalizations.of(context)!.no_data,
-                                  style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                  style: AppStyles.pVRegularTextStyle(
+                                    size: AppConstants.normalFont,
+                                    color: AppColors.blackColor,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 )),
                               ),
                   ],
@@ -134,19 +143,22 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
     );
   }
 
-  Widget orderListItem({required OrderState state, required int index, required BuildContext context, required List<Datum> orderDetailsList}) {
+  Widget orderListItem({
+    required OrderState state,
+    required int index,
+    required BuildContext context,
+    required List<Datum> orderDetailsList,
+  }) {
     return GestureDetector(
       onTap: () async {
         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         preferencesHelper.setOrderId(productOrderId: orderDetailsList[index].id ?? '');
         if ((orderDetailsList[index].suppliers ?? 0) > 1) {
-          printData("check here if");
           Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name, arguments: {
             AppStrings.orderIdString: orderDetailsList[index].id,
             AppStrings.orderNumberString: orderDetailsList[index].orderNumber,
           });
         } else {
-          printData("check here else");
           Navigator.push(
               context,
               PageRouteBuilder(
@@ -191,14 +203,22 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
               children: [
                 Text(
                   orderDetailsList[index].orderNumber.toString(),
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.normalFont,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 5.width,
                 Expanded(
                   child: Center(
                     child: Text(
                       orderDetailsList[index].supplierName.toString(),
-                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor, fontWeight: FontWeight.normal),
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        color: AppColors.mainColor,
+                        fontWeight: FontWeight.normal,
+                      ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
@@ -222,11 +242,20 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                         width: 1,
                       ),
                     ),
-                    child: Text(
-                      orderDetailsList[index].rivchitInvoicePrice != '0' ?
-                      formatSignedNumber(orderDetailsList[index].rivchitInvoicePrice) :
-                      formatSignedNumber(orderDetailsList[index].totalAmount),
-                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Text(
+                        orderDetailsList[index].rivchitInvoicePrice != '0'
+                            ? formatSignedNumber(orderDetailsList[index].rivchitInvoicePrice)
+                            : formatSignedNumber(
+                                orderDetailsList[index].totalAmount,
+                              ),
+                        style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_14,
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 )
@@ -268,12 +297,14 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                               ),
                               border: Border.all(color: AppColors.lightBorderColor, width: 1),
                             ),
-                            padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: 9),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppConstants.padding_5,
+                              vertical: AppConstants.padding_10,
+                            ),
                             child: Text(
                               AppLocalizations.of(context)!.invoice_charge,
-                              style: TextStyle(color: AppColors.blackColor, fontSize: 10),
+                              style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_10),
                             )))
-
                     : CommonOrderContentWidget(
                         backGroundColor: AppColors.iconBGColor,
                         borderCoder: AppColors.lightBorderColor,
@@ -305,7 +336,11 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             RichText(
               text: TextSpan(
                 text: '${AppLocalizations.of(context)!.payment_type} : ',
-                style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                  color: AppColors.blackColor,
+                  fontSize: AppConstants.font_14,
+                  fontWeight: FontWeight.w400,
+                ),
                 children: <TextSpan>[
                   TextSpan(
                       text: getType((orderDetailsList[index].paymentMethod.toString())) ?? '',

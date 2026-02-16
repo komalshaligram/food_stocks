@@ -1,12 +1,10 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/constants/app_colors.dart';
 
 class CustomTextIconButtonWidget extends StatelessWidget {
@@ -17,27 +15,19 @@ class CustomTextIconButtonWidget extends StatelessWidget {
   final double? titleSize;
   final double? width;
 
-  const CustomTextIconButtonWidget({super.key,
-    required this.title,
-    required this.onPressed,
-    this.svgImage,
-    this.cartCount,
-    this.titleSize,
-    this.width});
+  const CustomTextIconButtonWidget({super.key, required this.title, required this.onPressed, this.svgImage, this.cartCount, this.titleSize, this.width});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(AppConstants.padding_10),
       child: Container(
         height: AppConstants.buttonHeight,
         width: width,
-        decoration: BoxDecoration(
-          gradient: AppColors.appMainGradientColor,
-            borderRadius: BorderRadius.circular(AppConstants.padding_10)),
+        decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.padding_10)),
         clipBehavior: Clip.hardEdge,
         child: MaterialButton(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
           elevation: 0,
           onPressed: onPressed,
           child: Row(
@@ -50,18 +40,12 @@ class CustomTextIconButtonWidget extends StatelessWidget {
                       : Transform(
                           alignment: Alignment.center,
                           transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                          child: SvgPicture.asset(svgImage!,
-                              height: 20,
-                              width: 20,
-                              fit: BoxFit.scaleDown,
-                              colorFilter: ColorFilter.mode(
-                                  AppColors.whiteColor, BlendMode.srcIn)),
+                          child: SvgPicture.asset(svgImage!, height: 20, width: 20, fit: BoxFit.scaleDown, colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn)),
                         ),
                   7.width,
                   Text(
                     title,
-                    style: AppStyles.rkRegularTextStyle(
-                        size: titleSize ?? 18, color: AppColors.whiteColor),
+                    style: AppStyles.rkRegularTextStyle(size: titleSize ?? 18, color: AppColors.whiteColor),
                   ),
                 ],
               ),
@@ -76,20 +60,14 @@ class CustomTextIconButtonWidget extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: AppColors.whiteColor,
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_100)),
+                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                         ),
                         child: Text(
                           '${(cartCount ?? 0) <= 99 ? cartCount : '99+'}',
-                          style: AppStyles.rkRegularTextStyle(
-                              fontWeight: FontWeight.w100,
-                              size: AppConstants.padding_10,
-                              color: AppColors.mainColor),
+                          style: AppStyles.rkRegularTextStyle(fontWeight: FontWeight.w100, size: AppConstants.padding_10, color: AppColors.mainColor),
                         ),
                       ),
-                      crossFadeState: cartCount == 0
-                          ? CrossFadeState.showFirst
-                          : CrossFadeState.showSecond,
+                      crossFadeState: cartCount == 0 ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                       duration: const Duration(milliseconds: 500)),
             ],
           ),

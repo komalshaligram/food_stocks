@@ -34,12 +34,14 @@ class FileUploadEvent with _$FileUploadEvent {
     required int fileIndex,
   }) = _downloadFileEvent;
 
-  factory FileUploadEvent.getProfileFilesAndFormsEvent({required BuildContext context,
-    required bool isUpdate}) = _getProfileFilesAndFormsEvent;
+  factory FileUploadEvent.getProfileFilesAndFormsEvent({
+    required BuildContext context,
+    required bool isUpdate,
+  }) = _getProfileFilesAndFormsEvent;
 
   factory FileUploadEvent.formFileRegisterEvent({
     required BuildContext context,
-    required bool isUpdate
+    required bool isUpdate,
   }) = _formFileRegisterEvent;
 
   factory FileUploadEvent.pdfPreviewEvent({
@@ -49,6 +51,5 @@ class FileUploadEvent with _$FileUploadEvent {
 
   factory FileUploadEvent.updateClientCreditEvent({
     required BuildContext context,
-
   }) = _updateClientCreditEvent;
 }

@@ -525,7 +525,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                       Navigator.pop(context);
                                                     },
                                                     child: const Padding(
-                                                      padding: EdgeInsets.only(top: 10.0),
+                                                      padding: EdgeInsets.only(top: AppConstants.padding_10),
                                                       child: Icon(
                                                         Icons.close,
                                                         color: Colors.white,
@@ -601,7 +601,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
         Align(
           alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
@@ -613,7 +613,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
         ),
         Container(
           height: getItemHeight(context, true),
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,

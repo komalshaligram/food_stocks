@@ -77,7 +77,7 @@ class ScanReturnProduct extends StatelessWidget {
             ),
             Container(
               height: MediaQuery.of(context).size.height / 3.5,
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppConstants.padding_20),
               color: AppColors.greyColor.withOpacity(0.2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

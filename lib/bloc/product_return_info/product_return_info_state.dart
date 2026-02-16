@@ -32,13 +32,12 @@ class ProductReturnInfoState with _$ProductReturnInfoState {
     required TextEditingController addNoteController,
   }) = _ProductReturnInfoState;
 
-
   factory ProductReturnInfoState.initial() => ProductReturnInfoState(
         proofFile: File(''),
         proofFile1: File(''),
         isLoading: false,
         barCode: '',
-        returnProductId:'',
+        returnProductId: '',
         proofFile2: File(''),
         addNoteController: TextEditingController(),
         noOfUnits: '1',

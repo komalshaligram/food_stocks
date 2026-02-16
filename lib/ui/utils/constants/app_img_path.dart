@@ -21,7 +21,6 @@ class AppImagePath {
   static const String placeholderProfile = 'assets/images/user_icon.svg';
 
   ///pngs
-
   static const String successIcon = 'assets/images/icon_success.png';
   static const String imageNotAvailable5 =
       'assets/images/image_not_available5.png';

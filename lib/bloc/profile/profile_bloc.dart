@@ -88,8 +88,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.success);
               emit(state.copyWith());
             }
-          } else {
-          }
+          } else {}
         } on ServerException {
           emit(state.copyWith());
         }
@@ -146,7 +145,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               }
 
               Smartlook.instance.user.setName(response.data?.clients?.first.clientDetail?.ownerName ?? '');
-              //preferences.setIsWalletApproved(walletApproved: response.data?.clients?.first.clientDetail?.isWalletApproved??false);
               preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
               preferences.setPaymentMethodTypes(methods: response.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
@@ -194,14 +192,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         Map<String, dynamic> req = updatedProfileModel.toJson();
         Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
         clientDetail?.removeWhere((key, value) {
-          if (value != null) {
-          }
+          if (value != null) {}
           return value == null;
         });
         req[AppStrings.clientDetailString] = clientDetail;
         req.removeWhere((key, value) {
-          if (value != null) {
-          }
+          if (value != null) {}
           return value == null;
         });
         try {
@@ -258,14 +254,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
           clientDetail?.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
           req[AppStrings.clientDetailString] = clientDetail;
           req.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
           final res = await DioClient(event.context).post(
@@ -288,11 +282,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           }
         } catch (e) {
           emit(state.copyWith(isFileUploading: false));
-          /*  CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-                  AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-              type: SnackBarType.failure);*/
         }
       }
     });

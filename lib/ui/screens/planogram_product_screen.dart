@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/planogram_product/planogram_product_bloc.dart';
@@ -107,7 +106,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                       ),
                                       child: Text(
                                         '${state.cartCount}',
-                                        style: AppStyles.rkRegularTextStyle(size: 10, color: AppColors.whiteColor),
+                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor),
                                       ),
                                     ),
                                   ],
@@ -615,7 +614,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                           Navigator.pop(dialogContext);
                                                         },
                                                         child: const Padding(
-                                                          padding: EdgeInsets.only(top: 10.0),
+                                                          padding: EdgeInsets.only(top: AppConstants.padding_10),
                                                           child: Icon(
                                                             Icons.close,
                                                             color: Colors.white,
@@ -693,7 +692,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         Align(
           alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
+            padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
@@ -705,7 +704,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         ),
         Container(
           height: getItemHeight(context, isSaleOn),
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,

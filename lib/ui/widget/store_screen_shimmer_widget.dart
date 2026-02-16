@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/pesach_banner_shimmer.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
@@ -73,10 +72,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
       height: 90,
       width: 90,
       margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-      decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
     ));
   }
 
@@ -86,10 +82,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
       height: 170,
       width: 140,
       margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-      decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
     ));
   }
 
@@ -101,8 +94,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

@@ -67,27 +67,19 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
           return;
         }
         if (state.isBottomOfProducts) {
-          // emit(state.copyWith(isShimmering:  true, isProgress: true));
-          final cartMap = await fetchCartQuantities(event.context); // fetch once
+          final cartMap = await fetchCartQuantities(event.context);
           for (var product in recommendationProductsList) {
-            //recommendationProductsList
             stockList.add(ProductStockModel(
               maxQty: (product.sale?.isSale ?? false) ? int.tryParse(product.sale?.saleMaxQuantity.toString() ?? '0') ?? 0 : 0,
               productId: product.id ?? '',
               stock: product.productStock.toString(),
-              quantity: cartMap[product.id ?? ''] ?? 0, // initially set quantity to 0
+              quantity: cartMap[product.id ?? ''] ?? 0,
             ));
           }
           productStockList[1].clear();
           productStockList[1].addAll(stockList);
 
-          emit(state.copyWith(
-              recommendationProductsList: recommendationProductsList, //response.data ?? [],
-              productStockList: productStockList,
-              pageNum: state.pageNum + 1,
-              isShimmering: false,
-              isProgress: false,
-              isLoadMore: false));
+          emit(state.copyWith(recommendationProductsList: recommendationProductsList, productStockList: productStockList, pageNum: state.pageNum + 1, isShimmering: false, isProgress: false, isLoadMore: false));
 
           return;
         }
@@ -107,28 +99,21 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
           );
           RecommendationProductsResModel response = RecommendationProductsResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            final cartMap = await fetchCartQuantities(event.context); // fetch once
+            final cartMap = await fetchCartQuantities(event.context);
             recommendationProductsList.addAll(response.data ?? []);
 
             for (var product in recommendationProductsList) {
-              //recommendationProductsList
               stockList.add(ProductStockModel(
                 maxQty: (product.sale?.isSale ?? false) ? int.tryParse(product.sale?.saleMaxQuantity.toString() ?? '0') ?? 0 : 0,
                 productId: product.id ?? '',
                 stock: product.productStock.toString(),
-                quantity: cartMap[product.id ?? ''] ?? 0, // initially set quantity to 0
+                quantity: cartMap[product.id ?? ''] ?? 0,
               ));
             }
             productStockList[1].clear();
             productStockList[1].addAll(stockList);
 
-            emit(state.copyWith(
-                recommendationProductsList: recommendationProductsList, //response.data ?? [],
-                productStockList: productStockList,
-                pageNum: state.pageNum + 1,
-                isShimmering: false,
-                isProgress: false,
-                isLoadMore: false));
+            emit(state.copyWith(recommendationProductsList: recommendationProductsList, productStockList: productStockList, pageNum: state.pageNum + 1, isShimmering: false, isProgress: false, isLoadMore: false));
 
             emit(state.copyWith(isBottomOfProducts: state.recommendationProductsList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
           } else {
@@ -411,7 +396,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
               productId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productId == '' ? event.productId : state.productStockList[state.productListIndex][state.productStockUpdateIndex].productId,
               supplierId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
               saleId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId == '' ? null : state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
-              quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity /*+ _productQuantity*/,
+              quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
               cartProductId: _cartProductId,
             );
             SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -422,7 +407,6 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
-              //  Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
@@ -469,7 +453,6 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
               }
 
               Vibration.vibrate();
-              //   Navigator.pop(event.context);
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                 note: '',
@@ -537,75 +520,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
 
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
-            //category search result
-            /*searchList.addAll(response.data?.categoryData
-                ?.map((category) =>
-                SearchModel(
-                    searchId: category.id ?? '',
-                    name: category.categoryName ?? '',
-                    searchType: SearchTypes.category,
-                    isPesach: category.isPesach??false,
-                    image: category.categoryImage ?? ''))
-                .toList() ??
-                []);
-            //subcategory search result
-            searchList.addAll(response.data?.subCategoryData
-                ?.map((subCategory) =>
-                SearchModel(
-                  searchId: subCategory.id ?? '',
-                  name: subCategory.subCategoryName ?? '',
-                  searchType: SearchTypes.subCategory,
-                  image: '',
-                  categoryId: subCategory.parentCategoryId ?? '',
-                  categoryName: subCategory.parentCategoryName ?? '',
-                  isPesach: subCategory.isPesach??false,
-                ))
-                .toList() ??
-                []);
-            //company search result
-            searchList.addAll(response.data?.companyData
-                ?.map((company) =>
-                SearchModel(
-                  searchId: company.id ?? '',
-                  name: company.brandName ?? '',
-                  searchType: SearchTypes.company,
-                  image: company.brandLogo ?? '',
 
-                ))
-                .toList() ??
-                []);
-            // supplier search result
-            searchList.addAll(response.data?.supplierData
-                ?.map((supplier) =>
-                SearchModel(
-                  searchId: supplier.id ?? '',
-                  name: supplier.supplierDetail?.companyName?? '',
-                  searchType: SearchTypes.supplier,
-                  image: supplier.logo ?? '',
-                  isPesach: supplier.isPesach??false,
-
-                ))
-                .toList() ??
-                []);
-            //sale search result
-            searchList.addAll(response.data?.saleData
-                ?.map((sale) =>
-                SearchModel(
-                  searchId: sale.id ?? '',
-                  name: sale.productName ?? '',
-                  searchType: SearchTypes.sale,
-                  numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
-                  image: sale.mainImage ?? '',
-                  isPesach: sale.isPesach??false,
-
-                  salesDesc:  parse(sale.salesDescription ?? '')
-                      .body
-                      ?.text ??
-                      '',
-                ))
-                .toList() ??
-                []);*/
-            //supplier products result
             searchList.addAll(
               response.data
                       ?.map(
@@ -633,7 +548,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
                   [],
             );
 
-            final cartMap = await fetchCartQuantities(event.context); // fetch once
+            final cartMap = await fetchCartQuantities(event.context);
 
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
 
@@ -708,7 +623,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
                 return ProductStockModel(
                   productId: product.id ?? '',
                   stock: product.productStock.toString(),
-                  quantity: cartMap[product.id] ?? 0, // 0 or cart qty
+                  quantity: cartMap[product.id] ?? 0,
                 );
               }).toList() ??
               [];
@@ -723,41 +638,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
               }).toList() ??
               [];
 
-          // Assign unrelated to other sublists
           productStockList[2].addAll(newRelatedList);
-          // List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-          // List<ProductStockModel> stockList = [];
-          // stockList.addAll(response.data?.map((product) => ProductStockModel(
-          //           productId: product.id ?? '',
-          //           stock: (product.productStock.toString()),
-          //           quantity: 0,
-          //         )) ??
-          //     []);
-          // // productStockList[2].addAll(stockList);
-          //
-          // productStockList[2] = stockList;
-          // try {
-          //   final cartRes = await DioClient(event.context).post(
-          //     '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-          //   );
-          //
-          //   GetAllCartResModel cartResponse = GetAllCartResModel.fromJson(cartRes);
-          //
-          //   if (cartResponse.status == AppConstants.code_200) {
-          //     // Step 4: Match and update quantity
-          //     for (var cartProduct in cartResponse.data?.data ?? []) {
-          //       productStockList[2] = productStockList[2].map((stockItem) {
-          //         // Check if this stockItem matches the current cartProduct
-          //         if (cartProduct.id == stockItem.productId) {
-          //           return stockItem.copyWith(quantity: cartProduct.totalQuantity ?? 0);
-          //         }
-          //         return stockItem;
-          //       }).toList();
-          //     }
-          //   }
-          // } on ServerException {
-          //   // ignore cart failure
-          // }
 
           emit(state.copyWith(relatedProductList: response.data ?? [], isProductLoading: false, isRelatedShimmering: false, productStockList: productStockList));
         } else {
@@ -913,7 +794,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
             final response = GetAllCartResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
-              final cartList = response.data?.data; // Likely a List<dynamic>
+              final cartList = response.data?.data;
 
               if (cartList != null && cartList.isNotEmpty) {
                 for (var item in cartList) {
@@ -966,7 +847,6 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
           } on ServerException {}
           if (_isProductInCart) {
             try {
-              // emit(state.copyWith(isLoading: true));
               UpdateCartReqModel request = UpdateCartReqModel(
                 productId: event.productId,
                 supplierId: event.productSupplierIds,
@@ -991,23 +871,17 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
                   totalPrice: productStockList[event.productListIndex][event.productStockUpdateIndex].totalPrice,
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
-                // isLoading: false,
                 emit(state.copyWith(productStockList: productStockList));
 
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
               } else {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
-                //  emit(state.copyWith(isLoading: false));
               }
             } on ServerException {
-              // emit(state.copyWith(isLoading: false));
-            } catch (e) {
-              //  emit(state.copyWith(isLoading: false));
-            }
+            } catch (e) {}
           } else {
             try {
-              //  emit(state.copyWith(isLoading: true));
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
                 products: [
                   insert.Product(
@@ -1031,13 +905,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
               );
               InsertCartResModel response = InsertCartResModel.fromJson(res);
               if (response.status == AppConstants.code_201) {
-                // add(const RecommendationProductsEvent.setCartCountEvent());
-
-                // if(!state
-                //     .productStockList[event.productListIndex]
-                // [event.productStockUpdateIndex].productIsInCart){
                 add(const RecommendationProductsEvent.setCartCountEvent());
-                // }
 
                 Vibration.vibrate();
                 List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
@@ -1050,29 +918,17 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
 
-                // add(const RecommendationProductsEvent.getCartCountEvent());
-                //
-                // emit(state.copyWith(isLoading: false, productStockList: productStockList, ));
-
                 add(const RecommendationProductsEvent.getCartCountEvent());
-                // isLoading: false,
                 emit(state.copyWith(productStockList: productStockList, duringCelebration: true));
                 await Future.delayed(const Duration(milliseconds: 500));
                 emit(state.copyWith(duringCelebration: false));
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
               } else if (response.status == AppConstants.code_403) {
-                //  emit(state.copyWith(isLoading: false));
-
-                // CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               } else {
-                //  emit(state.copyWith(isLoading: false));
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
             } on ServerException {
-              // emit(state.copyWith(isLoading: false));
-            } catch (e) {
-              //  emit(state.copyWith(isLoading: false));
-            }
+            } catch (e) {}
           }
         }
         //
@@ -1090,7 +946,6 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
             }
           }
         } on ServerException {}
-        //message count
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
 
@@ -1119,9 +974,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
           for (var item in items) item.id ?? '': item.totalQuantity ?? 0,
         };
       }
-    } catch (_) {
-      // ignore failure
-    }
+    } catch (_) {}
     return {};
   }
 }

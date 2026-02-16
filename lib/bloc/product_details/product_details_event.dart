@@ -164,6 +164,7 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required bool isFromCamera,
     required int value,
   }) = _pickProofDocumentEvent;
+
   factory ProductDetailsEvent.deleteProofFileEvent({
     required int index,
     required BuildContext context,

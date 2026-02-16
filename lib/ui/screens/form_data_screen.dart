@@ -119,7 +119,7 @@ class FormDataScreenWidget extends StatelessWidget {
                                 onChanged: (newBusiness) {
                                   bloc.add(FormDataEvent.selectBusinessTypeEvent(business: newBusiness ?? '', haveMultiple: true));
                                   if (!state.haveMultiple) {
-                                /*    state.guarantee1NameController.text = '';
+                                    /*    state.guarantee1NameController.text = '';
                                     state.guarantee1addressController.text = '';
                                     state.guarantee1idController.text = '';
                                     state.guarantee1PhoneController.text = '';
@@ -134,30 +134,35 @@ class FormDataScreenWidget extends StatelessWidget {
                                 value: state.business,
                               ),
                               7.height,
-                              state.haveMultiple?CustomContainerWidget(
-                                name: AppLocalizations.of(context)!.select_number_of_owners,
-                              ):0.height,
-                              state.haveMultiple?  CommonDropDownButton(
-                                items: state.ownerList.map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                                onChanged: (v) {
-                                  debugPrint('owners:$v');
-                                  bloc.add(FormDataEvent.selectOwnerNoEvent(owner: v ?? ''));
-                                }, value: state.owner,
-                              ):0.height,
+                              state.haveMultiple
+                                  ? CustomContainerWidget(
+                                      name: AppLocalizations.of(context)!.select_number_of_owners,
+                                    )
+                                  : 0.height,
+                              state.haveMultiple
+                                  ? CommonDropDownButton(
+                                      items: state.ownerList.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (v) {
+                                        debugPrint('owners:$v');
+                                        bloc.add(FormDataEvent.selectOwnerNoEvent(owner: v ?? ''));
+                                      },
+                                      value: state.owner,
+                                    )
+                                  : 0.height,
                               30.height,
                               CustomButtonWidget(
                                 buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
                                 bGColor: AppColors.mainColor,
                                 onPressed: () {
                                   if (state.business != AppLocalizations.of(context)!.type_of_business) {
-                                      if (_formKey.currentState!.validate()) {
-                                        bloc.add(FormDataEvent.verifyAgentEvent(context: context));
-                                      }
+                                    if (_formKey.currentState!.validate()) {
+                                      bloc.add(FormDataEvent.verifyAgentEvent(context: context));
+                                    }
                                   } else {
                                     CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
                                   }
@@ -176,5 +181,4 @@ class FormDataScreenWidget extends StatelessWidget {
       },
     );
   }
-
 }

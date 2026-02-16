@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../ui/utils/constants/app_styles.dart';
 
@@ -13,18 +12,7 @@ class ButtonWidget extends StatelessWidget {
   final double radius;
   final Color borderColor;
 
-
-  const ButtonWidget(
-      {super.key,
-      required this.buttonText,
-      this.onPressed,
-      this.bGColor = Colors.white,
-      this.fontColors = Colors.white,
-      this.width,
-      this.height = 50,
-      this.fontSize = 18,
-      this.radius = 10,
-      this.borderColor = Colors.white});
+  const ButtonWidget({super.key, required this.buttonText, this.onPressed, this.bGColor = Colors.white, this.fontColors = Colors.white, this.width, this.height = 50, this.fontSize = 18, this.radius = 10, this.borderColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +21,13 @@ class ButtonWidget extends StatelessWidget {
       height: height,
       alignment: Alignment.center,
       clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-          border: Border.all(color: borderColor),
-          color: bGColor,
-          borderRadius: BorderRadius.all(Radius.circular(radius))),
+      decoration: BoxDecoration(border: Border.all(color: borderColor), color: bGColor, borderRadius: BorderRadius.all(Radius.circular(radius))),
       child: MaterialButton(
         height: height,
         elevation: 0,
         minWidth: width,
         onPressed: onPressed,
-        child:  Text(
+        child: Text(
           buttonText,
           style: AppStyles.rkRegularTextStyle(
             size: fontSize,

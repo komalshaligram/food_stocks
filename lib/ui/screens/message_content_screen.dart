@@ -45,7 +45,7 @@ class MessageContentScreen extends StatelessWidget {
 }
 
 class MessageContentScreenWidget extends StatelessWidget {
-   MessageContentScreenWidget({super.key});
+  MessageContentScreenWidget({super.key});
   var inputFormat = DateFormat('dd.MM.yyyy');
 
   @override
@@ -54,7 +54,6 @@ class MessageContentScreenWidget extends StatelessWidget {
     return BlocListener<MessageContentBloc, MessageContentState>(
       listener: (context, state) {},
       child: BlocBuilder<MessageContentBloc, MessageContentState>(
-
         builder: (context, state) {
           return WillPopScope(
             onWillPop: () {
@@ -85,7 +84,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                         trailingWidget: Center(
                           child: GestureDetector(
                             onTap: () {
-                              deleteMessageDialog(context: context,messageId: state.message.id ?? '');
+                              deleteMessageDialog(context: context, messageId: state.message.id ?? '');
                             },
                             child: Text(
                               AppLocalizations.of(context)!.delete,
@@ -197,18 +196,17 @@ class MessageContentScreenWidget extends StatelessWidget {
                                         10.width,
                                         Text(
                                           (state.message.createdAt ?? '').split(" ").first.toString(),
-                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor,fontWeight: FontWeight.w500),
+                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500),
                                         ),
                                       ],
                                     ),
-
                                     5.height,
                                     Html(
                                       data: state.message.message?.body ?? '',
                                       shrinkWrap: true,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 6,right :6),
+                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                                       child: Text(
                                         parse(state.message.message?.summary ?? '').body?.text ?? '',
                                         style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
@@ -289,39 +287,35 @@ class MessageContentScreenWidget extends StatelessWidget {
     }
   }
 
-  void deleteMessageDialog({
- required BuildContext context,
-    required String messageId
-}) {
-     showDialog(
+  void deleteMessageDialog({required BuildContext context, required String messageId}) {
+    showDialog(
       context: context,
       builder: (context1) => BlocProvider.value(
-        value:  context.read<MessageContentBloc>(),
+        value: context.read<MessageContentBloc>(),
         child: BlocBuilder<MessageContentBloc, MessageContentState>(
-  builder: (context, state) {
-    MessageContentBloc bloc = context.read<MessageContentBloc>();
-    return CommonAlertDialog(
-          isLogOutProcess: state.isLoading,
-          directionality: state.language,
-          title: AppLocalizations.of(context)!.delete,
-          subTitle: AppLocalizations.of(context)!.are_you_sure,
-          positiveTitle: AppLocalizations.of(context)!.yes,
-          negativeTitle: AppLocalizations.of(context)!.no,
-          negativeOnTap: () {
-            Navigator.pop(context1);
+          builder: (context, state) {
+            MessageContentBloc bloc = context.read<MessageContentBloc>();
+            return CommonAlertDialog(
+              isLogOutProcess: state.isLoading,
+              directionality: state.language,
+              title: AppLocalizations.of(context)!.delete,
+              subTitle: AppLocalizations.of(context)!.are_you_sure,
+              positiveTitle: AppLocalizations.of(context)!.yes,
+              negativeTitle: AppLocalizations.of(context)!.no,
+              negativeOnTap: () {
+                Navigator.pop(context1);
+              },
+              positiveOnTap: () async {
+                bloc.add(MessageContentEvent.messageDeleteEvent(
+                  messageId: state.message.id ?? '',
+                  context: context,
+                  dialogContext: context1,
+                ));
+              },
+            );
           },
-          positiveOnTap: () async {
-            bloc.add(MessageContentEvent.messageDeleteEvent(
-              messageId: state.message.id ?? '',
-              context: context,
-              dialogContext: context1,
-            ));
-          },
-        );
-  },
-),
+        ),
       ),
     );
-
   }
 }

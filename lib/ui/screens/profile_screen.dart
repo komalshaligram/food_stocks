@@ -381,7 +381,7 @@ class ProfileScreenWidget extends StatelessWidget {
               directionality: directionality,
               title: AppLocalizations.of(context)!.delete_account,
               subTitle: AppLocalizations.of(context)!.delete_pop_up_msg,
-              positiveTitle: AppLocalizations.of(context)!.close,
+              positiveTitle: AppLocalizations.of(context)!.closeText,
               positiveOnTap: () async {
                 Navigator.pop(context1);
                 bloc.add(ProfileEvent.deleteAccountEvent(context: context));

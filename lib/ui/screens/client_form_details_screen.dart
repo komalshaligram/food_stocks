@@ -9,7 +9,6 @@ import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-
 import '../../bloc/client_form_details/client_form_details_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -23,7 +22,6 @@ import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../widget/form_data_screen_shimmer_widget.dart';
 
 class ClientFormDetailsRoute {
@@ -42,13 +40,13 @@ class ClientFormDetailsScreen extends StatelessWidget {
         ..add(ClientFormDetailsEvent.getBusinessTypeEvent(context: context))
         ..add(ClientFormDetailsEvent.getBankNameEvent(context: context))
         ..add(ClientFormDetailsEvent.getPdfDataEvent(context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '', termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
-      child: ClientFormDetailsScreenWidget(),
+      child: const ClientFormDetailsScreenWidget(),
     );
   }
 }
 
 class ClientFormDetailsScreenWidget extends StatefulWidget {
-  ClientFormDetailsScreenWidget({super.key});
+  const ClientFormDetailsScreenWidget({super.key});
 
   @override
   State<ClientFormDetailsScreenWidget> createState() => _ClientFormDetailsScreenWidgetState();
@@ -106,7 +104,6 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                   ),
                 ),
               ),
-
               backgroundColor: AppColors.whiteColor,
               titleSpacing: 0,
               elevation: 0,

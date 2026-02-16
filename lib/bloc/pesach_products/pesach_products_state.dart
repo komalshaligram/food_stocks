@@ -56,7 +56,7 @@ class PesachProductsState with _$PesachProductsState {
         productDetails: [],
         productStockUpdateIndex: -1,
         productStockList: [
-          [ProductStockModel(productId: '')],
+          [const ProductStockModel(productId: '')],
           [],
           []
         ],
@@ -86,7 +86,7 @@ class PesachProductsState with _$PesachProductsState {
         isIncludedVat: false,
         isSaleOn: false,
         language: AppStrings.hebrewString,
-    isCartCountChange: false,
-    messageCount: 0,
+        isCartCountChange: false,
+        messageCount: 0,
       );
 }

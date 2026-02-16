@@ -5,10 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/req_model/delivery_confirm/delivery_confirm_req_model.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
@@ -22,8 +20,6 @@ part 'shipment_verification_bloc.freezed.dart';
 class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentVerificationState> {
   ShipmentVerificationBloc() : super(ShipmentVerificationState.initial()) {
     on<ShipmentVerificationEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
       if (event is _signatureEvent) {
         emit(state.copyWith(isSignaturePadActive: true, isDelete: false));
       } else if (event is _driverSignatureEvent) {
@@ -37,7 +33,6 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
         String driverSignUrl = '';
 
         try {
-          // 1. Upload supplier signature
           if (event.signPath.isNotEmpty) {
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrlEndPoints.fileUploadUrl,
@@ -53,7 +48,6 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
             signUrl = signModel.filepath ?? '';
           }
 
-          // 2. Upload driver signature
           if (event.driverSignPath.isNotEmpty) {
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrlEndPoints.fileUploadUrl,
@@ -69,7 +63,6 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
             driverSignUrl = driverSignModel.filepath ?? '';
           }
 
-          // 3. Validate uploaded URLs
           if (signUrl.isEmpty) {
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
@@ -90,18 +83,22 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
             return;
           }
 
-          printData("check here ${event.orderIssueReturnId}");
+          final deliveryConfirmRequest = DeliveryConfirmReqModel(
+            supplierId: event.supplierId,
+            signature: signUrl,
+            driverSignature: driverSignUrl,
+            returningSurface: int.tryParse(state.surfacesController.text) ?? 0,
+            driverDeliveryDocumentsImages: event.driverDeliveryDocumentsImages,
+            sentReturnData: event.sentReturnData,
+            orderIssueReturnId: event.orderIssueReturnId ?? '',
+            driverName: state.driverNameController.text ?? '',
+          );
 
-          // 4. Construct request payload
-          final deliveryConfirmRequest = DeliveryConfirmReqModel(supplierId: event.supplierId, signature: signUrl, driverSignature: driverSignUrl, returningSurface: int.tryParse(state.surfacesController.text) ?? 0, driverDeliveryDocumentsImages: event.driverDeliveryDocumentsImages, sentReturnData: event.sentReturnData, orderIssueReturnId: event.orderIssueReturnId ?? '');
-
-          // 5. Make the delivery confirmation API call
           final response = await DioClient(event.context).post(
             '${AppUrlEndPoints.deliveryConfirmUrl}${event.orderId}',
             data: deliveryConfirmRequest,
           );
           //
-          // // 6. Handle response
           if (response[AppStrings.statusString] == 200) {
             emit(state.copyWith(isLoading: false));
 
@@ -111,7 +108,6 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
               arguments: {
                 AppStrings.pushNavigationString: 'profileScreen',
               },
-              // (route) => route.isFirst,
             );
 
             CustomSnackBar.showSnackBar(

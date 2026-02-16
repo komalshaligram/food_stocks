@@ -101,7 +101,7 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
                   itemCount: state.supplierPermissionList.length,
                   itemBuilder: (context, index) {
                     return  Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
+                      padding: const EdgeInsets.only(bottom: AppConstants.padding_5),
                       child: menuSwitchTile(
                           title: state.supplierPermissionList[index].title,
                           context: context,

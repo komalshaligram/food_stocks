@@ -16,7 +16,7 @@ class MessageState with _$MessageState {
   }) = _MessageState;
 
   factory MessageState.initial() => MessageState(
-    messageList: [],
+        messageList: [],
         isShimmering: false,
         pageNum: 0,
         isBottomOfMessage: false,
@@ -24,7 +24,7 @@ class MessageState with _$MessageState {
         isMessageRead: false,
         deletedMessageList: [],
         refreshController: RefreshController(),
-    language: AppStrings.hebrewString,
-    isRemoveProcess: false,
-  );
+        language: AppStrings.hebrewString,
+        isRemoveProcess: false,
+      );
 }

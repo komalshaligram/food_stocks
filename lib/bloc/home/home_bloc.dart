@@ -50,6 +50,7 @@ import '../../data/model/res_model/product_categories_res_model/product_categori
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
+import '../../ui/widget/common_dialog_with_one_button.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -254,7 +255,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
             final response = ProductSalesResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
-              final cartMap = await fetchCartQuantities(event.context); // fetch once
+              final cartMap = await fetchCartQuantities(event.context);
 
               List<ProductSale> productSaleList = response.data ?? [];
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
@@ -430,7 +431,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 _supplierId = state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds;
 
                 Vibration.vibrate();
-                // Navigator.pop(event.context);
                 List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
                 productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                   note: '',
@@ -567,7 +567,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: preferences.getBusinessName());
                 Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: preferences.getPhoneNumber());
               }
-              //  if(state.recommendedProductsList.isEmpty){
+
+              if(response.data?.clients?.first.supplierCustomerDetails![0].allowOrdersWithoutMinimum == true){
+                emit(state.copyWith(allowOrdersWithoutMinimum: response.data?.clients?.first.supplierCustomerDetails![0].allowOrdersWithoutMinimum,
+                     noMinimumOrderHours: response.data?.clients?.first.supplierCustomerDetails![0].noMinimumOrderHours,
+                    lastOrderAboveMinimumAt: response.data?.clients?.first.supplierCustomerDetails![0].lastOrderAboveMinimumAt,
+                  noMinimumDialogEventKey: DateTime.now().millisecondsSinceEpoch.toString(),));
+              }
               add(HomeEvent.getPermissionList(context: event.context));
               if (!state.isAppOnMaintenance) {
                 add(HomeEvent.generalSettings(context: event.context, dialogContext: event.context, isRetryLoading: false));
@@ -577,8 +583,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               add(HomeEvent.getMessageListEvent(context: event.context));
               add(HomeEvent.getOrderCountEvent(context: event.context));
               add(HomeEvent.checkVersionOfAppEvent(context: event.context));
-
-              //  }
             }
           } catch (e) {}
         } else if (event is _getRecommendationProductsListEvent) {
@@ -653,54 +657,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
             if (response.status == AppConstants.code_200) {
               List<SearchModel> searchList = [];
-              /*//category search result
-              searchList.addAll(response.data?.categoryData?.map((category) => SearchModel(searchId: category.id ?? '', name: category.categoryName ?? '', searchType: SearchTypes.category, image: category.categoryImage ?? '')).toList() ?? []);
-              //subcategory search result
-              searchList.addAll(response.data?.subCategoryData
-                      ?.map((subCategory) => SearchModel(
-                            searchId: subCategory.id ?? '',
-                            name: subCategory.subCategoryName ?? '',
-                            searchType: SearchTypes.subCategory,
-                            image: '',
-                            categoryId: subCategory.parentCategoryId ?? '',
-                            categoryName: subCategory.parentCategoryName ?? '',
-                          ))
-                      .toList() ??
-                  []);
-              //company search result
-              searchList.addAll(response.data?.companyData
-                      ?.map((company) => SearchModel(
-                            searchId: company.id ?? '',
-                            name: company.brandName ?? '',
-                            searchType: SearchTypes.company,
-                            image: company.brandLogo ?? '',
-                          ))
-                      .toList() ??
-                  []);
-              // supplier search result
-              searchList.addAll(response.data?.supplierData
-                      ?.map((supplier) => SearchModel(
-                            searchId: supplier.id ?? '',
-                            name: supplier.supplierDetail?.companyName ?? '',
-                            searchType: SearchTypes.supplier,
-                            image: supplier.logo ?? '',
-                          ))
-                      .toList() ??
-                  []);
-              //sale search result
-              searchList.addAll(response.data?.saleData
-                      ?.map((sale) => SearchModel(
-                            searchId: sale.id ?? '',
-                            name: sale.productName ?? '',
-                            searchType: SearchTypes.sale,
-                            image: sale.mainImage ?? '',
-                            numberOfUnits: int.parse(sale.numberOfUnit.toString()),
-                            salesDesc: parse(sale.salesDescription ?? '').body?.text ?? '',
-                            //  salePrice:double.parse(sale.salePrice.toString()),
-                          ))
-                      .toList() ??
-                  []);*/
-              //supplier products result
+
               searchList.addAll(response.data
                       ?.map((supplier) => SearchModel(
                             searchId: supplier.id ?? '',
@@ -724,7 +681,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                       .toList() ??
                   []);
 
-              final cartMap = await fetchCartQuantities(event.context); // fetch once
+              final cartMap = await fetchCartQuantities(event.context);
 
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
 
@@ -745,18 +702,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(isSearching: false));
             }
           } on ServerException {
-            /*     CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-              type: SnackBarType.failure,
-            );*/
             emit(state.copyWith(isSearching: false));
           } catch (exc) {
-            /* CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-              type: SnackBarType.failure,
-            );*/
             emit(state.copyWith(isSearching: false));
           }
         } else if (event is _updateGlobalSearchEvent) {
@@ -817,12 +764,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             final cartMap = await fetchCartQuantities(event.context);
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
 
-            // Build a fresh list for related products only
             final newRelatedList = response.data?.map((product) {
                   return ProductStockModel(
                     productId: product.id ?? '',
                     stock: product.productStock.toString(),
-                    quantity: cartMap[product.id] ?? 0, // 0 or cart qty
+                    quantity: cartMap[product.id] ?? 0,
                   );
                 }).toList() ??
                 [];
@@ -833,11 +779,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     productId: product.productId ?? '',
                     stock: product.stock.toString(),
                     quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
-                  ); // 0 or cart qty)
+                  );
                 }).toList() ??
                 [];
 
-            // Assign unrelated to other sublists
             productStockList[2].addAll(newRelatedList);
 
             emit(state.copyWith(
@@ -1100,7 +1045,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             } on ServerException {}
             if (_isProductInCart) {
               try {
-                // emit(state.copyWith(isLoading: true));
                 UpdateCartReqModel request = UpdateCartReqModel(
                   productId: event.productId,
                   supplierId: event.productSupplierIds,
@@ -1125,7 +1069,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     totalPrice: productStockList[event.productListIndex][event.productStockUpdateIndex].totalPrice,
                     productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                   );
-                  // isLoading: false,
                   emit(state.copyWith(productStockList: productStockList));
 
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
@@ -1133,16 +1076,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 } else {
                   Navigator.pop(event.context);
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
-                  //     emit(state.copyWith(isLoading: false));
                 }
               } on ServerException {
-                //  emit(state.copyWith(isLoading: false));
-              } catch (e) {
-                //  emit(state.copyWith(isLoading: false));
-              }
+              } catch (e) {}
             } else {
               try {
-                // emit(state.copyWith(isLoading: true));
                 insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
                   products: [
                     insert.Product(
@@ -1181,25 +1119,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     totalPrice: productStockList[event.productListIndex][event.productStockUpdateIndex].totalPrice,
                     productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                   );
-                  // isLoading: false,
                   emit(state.copyWith(productStockList: productStockList, isCartCountChange: false));
 
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
 
                   emit(state.copyWith(isDialog: false));
                 } else if (response.status == AppConstants.code_403) {
-                  // emit(state.copyWith(isLoading: false));
-
-                  // CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
                 } else {
-                  // emit(state.copyWith(isLoading: false));
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
                 }
               } on ServerException {
-                // emit(state.copyWith(isLoading: false));
-              } catch (e) {
-                //   emit(state.copyWith(isLoading: false));
-              }
+              } catch (e) {}
             }
           }
           //
@@ -1217,7 +1147,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
           } on ServerException {}
-          //message count
           try {
             final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
 
@@ -1228,7 +1157,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           } catch (e) {}
         }
-      }
+
+        else if (event is _getRecommendationProductsListEvent) {
+          emit(state.copyWith(noMinimumDialogEventKey: null));
+        }
+
+
+        }
     });
   }
 
@@ -1247,9 +1182,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           for (var item in items) item.id ?? '': item.totalQuantity ?? 0,
         };
       }
-    } catch (_) {
-      // ignore failure
-    }
+    } catch (_) {}
     return {};
   }
 }

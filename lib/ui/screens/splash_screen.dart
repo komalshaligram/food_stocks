@@ -19,12 +19,9 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => SplashBloc()
-        ..add(SplashEvent.splashLoaded(
-            pushNavigation: args?[AppStrings.pushNavigationString] ?? '')),
+      create: (context) => SplashBloc()..add(SplashEvent.splashLoaded(pushNavigation: args?[AppStrings.pushNavigationString] ?? '')),
       child: const SplashScreenWidget(),
     );
   }
@@ -33,32 +30,24 @@ class SplashScreen extends StatelessWidget {
 class SplashScreenWidget extends StatelessWidget {
   const SplashScreenWidget({Key? key}) : super(key: key);
 
-
   void getVersion(SharedPreferencesHelper preferencesHelper) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
     preferencesHelper.setAppVersion(version: version);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
         if (state.isRedirected) {
-          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-              prefs: await SharedPreferences.getInstance());
+          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
           getVersion(preferencesHelper);
 
-
           if (preferencesHelper.getUserLoggedIn()) {
-            Navigator.pushReplacementNamed(
-                context, RouteDefine.bottomNavScreen.name, arguments: {
-              AppStrings.pushNavigationString: state.pushNavigation
-            });
+            Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: state.pushNavigation});
           } else {
-            Navigator.pushReplacementNamed(
-                context, RouteDefine.connectScreen.name);
+            Navigator.pushReplacementNamed(context, RouteDefine.connectScreen.name);
           }
         }
       },

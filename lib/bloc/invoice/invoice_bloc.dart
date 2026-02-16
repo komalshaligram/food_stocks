@@ -39,7 +39,6 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
           final args = ModalRoute.of(event.context)!.settings.arguments as Map<String, dynamic>;
           screenTitleName = args[AppStrings.invoiceTitleNameString] as String;
 
-
           emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
           InvoicesReqModel request = InvoicesReqModel(pageLimit: AppConstants.recommendationProductPageLimit, pageNum: state.pageNum + 1, id: preferences.getUserId());
 

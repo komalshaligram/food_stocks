@@ -67,7 +67,6 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                   Container(
                     height: 50,
                     width: 50,
-                    // margin: EdgeInsets.only(bottom: 10),
                     clipBehavior: Clip.hardEdge,
                     decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
                     child: Center(
@@ -99,7 +98,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                                 ),
                                 child: Text(
                                   '${state.cartCount}',
-                                  style: AppStyles.rkRegularTextStyle(size: 10, color: AppColors.whiteColor),
+                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor),
                                 ),
                               ),
                             ],

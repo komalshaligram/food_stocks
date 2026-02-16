@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
@@ -10,29 +9,20 @@ class WalletScreenShimmerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  CommonShimmerWidget(
-          child: Container(
-            height: getScreenHeight(context) * 0.21,
-            width: double.maxFinite,
-            margin: const EdgeInsets.symmetric(
-                vertical: AppConstants.padding_5,
-                horizontal: AppConstants.padding_10),
-            padding: const EdgeInsets.symmetric(
-                vertical: AppConstants.padding_3,
-                horizontal: AppConstants.padding_10),
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.15),
-                    blurRadius: AppConstants.blur_10),
-              ],
-              borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-            ),
-
-          ),
-        );
-
+    return CommonShimmerWidget(
+      child: Container(
+        height: getScreenHeight(context) * 0.21,
+        width: double.maxFinite,
+        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
+        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_10),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          boxShadow: [
+            BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+          ],
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+        ),
+      ),
+    );
   }
 }

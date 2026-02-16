@@ -37,6 +37,7 @@ import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_search_widget.dart';
 import '../../ui/utils/push_notification_service.dart';
+import '../widget/countdown_timer_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/search_item_widget.dart';
@@ -71,6 +72,8 @@ class HomeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
+      listenWhen: (previous, current) =>
+      previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey,
       listener: (context, state) {
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.updateCartCountEvent(context: context));
@@ -82,17 +85,23 @@ class HomeScreenWidget extends StatelessWidget {
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<HomeBloc>(context).add(HomeEvent.updateMaintenanceEvent(context: context));
         }
+
+        if (state.noMinimumDialogEventKey != null) {
+          allowOrdersWithoutMinimumDialog(context: context, state: state);
+        }
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.pageColor,
+            key: const PageStorageKey('home_screen'),
             body: FocusDetector(
               onFocusGained: () {
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
                 bloc.add(HomeEvent.getProductSalesListEvent(context: context));
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
+
               },
               child: SafeArea(
                 child: Stack(
@@ -125,7 +134,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     clipBehavior: Clip.hardEdge,
                                     child: state.userImageUrl.isNotEmpty
                                         ? ClipRRect(
-                                            borderRadius: BorderRadius.circular(20),
+                                            borderRadius: BorderRadius.circular(AppConstants.radius_10),
                                             child: CachedNetworkImage(
                                               placeholder: (context, url) => const Center(child: CupertinoActivityIndicator()),
                                               imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
@@ -138,7 +147,7 @@ class HomeScreenWidget extends StatelessWidget {
                                             ),
                                           )
                                         : Container(
-                                            decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(40)),
+                                            decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(AppConstants.radius_40)),
                                             child: SvgPicture.asset(
                                               AppImagePath.placeholderProfile,
                                               width: 80,
@@ -156,7 +165,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 ),
                                 Container(
                                   height: 60,
-                                  padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
                                   decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
                                   clipBehavior: Clip.hardEdge,
                                   alignment: Alignment.center,
@@ -227,7 +236,7 @@ class HomeScreenWidget extends StatelessWidget {
                                       return Container(
                                         height: 30,
                                         width: 30,
-                                        margin: const EdgeInsets.only(top: 90, bottom: 30),
+                                        margin: const EdgeInsets.only(top: 90, bottom: AppConstants.padding_30),
                                         decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
                                         child: CupertinoActivityIndicator(
                                           color: AppColors.mainColor,
@@ -275,7 +284,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                       Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
                                                     },
                                                     child: Padding(
-                                                      padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
                                                       child: CachedNetworkImage(
                                                         placeholder: (context, url) => const PesachBannerShimmerWidget(),
                                                         imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
@@ -829,7 +838,6 @@ class HomeScreenWidget extends StatelessWidget {
                                   onScanTap: () async {
                                     String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
                                     if (scanResult != '-1') {
-                                      // -1 result for cancel scanning
                                       showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
                                     }
                                   },
@@ -847,7 +855,7 @@ class HomeScreenWidget extends StatelessWidget {
                                 width: 120,
                                 child: CupertinoActivityIndicator(
                                   color: AppColors.mainColor,
-                                  radius: 20,
+                                  radius: AppConstants.radius_20,
                                 )),
                           )
                         : 0.height
@@ -960,7 +968,7 @@ class HomeScreenWidget extends StatelessWidget {
       backgroundColor: Colors.transparent,
       expand: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radius_10)),
       ),
       isDismissible: false,
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -1043,7 +1051,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                         Navigator.pop(dialogContext);
                                                       },
                                                       child: const Padding(
-                                                        padding: EdgeInsets.only(top: 10.0),
+                                                        padding: EdgeInsets.only(top: AppConstants.padding_10),
                                                         child: Icon(
                                                           Icons.close,
                                                           color: Colors.white,
@@ -1116,7 +1124,7 @@ class HomeScreenWidget extends StatelessWidget {
               Align(
                 alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
+                  padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
                   child: Text(
                     AppLocalizations.of(context)!.related_products,
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
@@ -1128,7 +1136,7 @@ class HomeScreenWidget extends StatelessWidget {
               ),
               Container(
                 height: getItemHeight(context, isSaleOn),
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                padding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, bottom: AppConstants.padding_5),
                 child: ListView.builder(
                   controller: ScrollController(),
                   scrollDirection: Axis.horizontal,
@@ -1257,7 +1265,7 @@ class HomeScreenWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         color: AppColors.pageColor,
-        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1310,6 +1318,70 @@ class HomeScreenWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  allowOrdersWithoutMinimumDialog({
+    required BuildContext context,
+    required HomeState state,
+  }) {
+    final storage = PageStorage.of(context);
+
+    // ❗ already shown for this page
+    if (storage.readState(context, identifier: 'no_min_dialog') == true) {
+      return;
+    }
+
+    storage.writeState(context, true, identifier: 'no_min_dialog');
+
+    // DateTime lastOrderUtc = DateTime.parse(state.lastOrderAboveMinimumAt!);
+    final rawDate = state.lastOrderAboveMinimumAt;
+
+    if (rawDate == null || rawDate.isEmpty) {
+      return;
+    }
+
+    DateTime? lastOrderUtc;
+
+    try {
+      lastOrderUtc = DateTime.parse(rawDate);
+    } catch (e) {
+      debugPrint("Invalid date format: $rawDate");
+      return;
+    }
+
+    int hours = state.noMinimumOrderHours!;
+
+    DateTime endUtc = lastOrderUtc.add(Duration(hours: hours));
+    DateTime nowUtc = DateTime.now().toUtc();
+    Duration remaining = endUtc.difference(nowUtc);
+    int remainingSeconds = remaining.isNegative ? 0 : remaining.inSeconds;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => CountdownTimerDialog(
+        countdown: remainingSeconds,
+        directionality: TextDirection.rtl,
+        title: AppLocalizations.of(dialogContext)!.countdown,
+        onTimerComplete: () {},
+      ),
+    );
+  }
+
+
+
+  int calculateNoMinimumRemainingSeconds({
+    required int noMinimumOrderHours,
+    required String lastOrderAboveMinimumAt,
+  }) {
+    final lastUtc = DateTime.parse(lastOrderAboveMinimumAt); // API is UTC (Z)
+    final expiryUtc = lastUtc.add(Duration(hours: noMinimumOrderHours));
+
+    final nowUtc = DateTime.now().toUtc();
+
+    final diff = expiryUtc.difference(nowUtc);
+
+    return diff.isNegative ? 0 : diff.inSeconds;
   }
 
   appUnderMaintenanceDialog({required BuildContext context, required HomeState state}) {

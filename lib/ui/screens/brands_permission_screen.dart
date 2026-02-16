@@ -22,18 +22,13 @@ class BrandsPermissionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => BrandsPermissionBloc()..add(BrandsPermissionEvent.getPermissionList(
-          context: context,
-          subUserId: args?[AppStrings.subUserIdString] ?? ''
-      )),
+      create: (context) => BrandsPermissionBloc()..add(BrandsPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
       child: const BrandsPermissionScreenWidget(),
     );
   }
 }
-
 
 class BrandsPermissionScreenWidget extends StatelessWidget {
   const BrandsPermissionScreenWidget({super.key});
@@ -60,98 +55,91 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
               child: SingleChildScrollView(
-                child: state.isShimmering ?  const OrderSummaryScreenShimmerWidget(itemCount: 20,containerHeight: 40) :
-                !state.isShimmering && state.brandPermissionList.isEmpty ?
-                SizedBox(
-                  height: getScreenHeight(context) * 0.8,
-                  child: Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.no_data,
-                        style: AppStyles.pVRegularTextStyle(
-                            size: AppConstants.normalFont,
-                            color: AppColors.blackColor,
-                            fontWeight: FontWeight.w400),
-                      )),
-                ):Column(
-                  children: [
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20,vertical: AppConstants.padding_20 ),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: CustomButtonWidget(
-                          width: 150,
-                          height: 40,
-                          fontSize: AppConstants.font_14,
-                          buttonText: !state.isSelectAll ? AppLocalizations.of(context)!.select_all.toUpperCase() : AppLocalizations.of(context)!.select_none.toUpperCase(),
-                          bGColor: AppColors.mainColor,
-                          onPressed:  () {
-                            bloc.add(BrandsPermissionEvent.switchButtonEvent(
-                              context: context, index: -1,
-                            ));
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    10.height,
-                    ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.brandPermissionList.length,
-                      itemBuilder: (context, index) {
-                        return  Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          child: menuSwitchTile(
-                              title: state.brandPermissionList[index].title,
-                              context: context,
-                              isEnable:state.brandPermissionList[index].isEnable,
-                              onChanged: (bool value) {
-                                bloc.add(BrandsPermissionEvent.switchButtonEvent(
-                                    context: context,
-                                    index: index
-                                ));
-                              }),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                child: state.isShimmering
+                    ? const OrderSummaryScreenShimmerWidget(itemCount: 20, containerHeight: 40)
+                    : !state.isShimmering && state.brandPermissionList.isEmpty
+                        ? SizedBox(
+                            height: getScreenHeight(context) * 0.8,
+                            child: Center(
+                                child: Text(
+                              AppLocalizations.of(context)!.no_data,
+                              style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                            )),
+                          )
+                        : Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_20),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: CustomButtonWidget(
+                                    width: 150,
+                                    height: 40,
+                                    fontSize: AppConstants.font_14,
+                                    buttonText: !state.isSelectAll ? AppLocalizations.of(context)!.select_all.toUpperCase() : AppLocalizations.of(context)!.select_none.toUpperCase(),
+                                    bGColor: AppColors.mainColor,
+                                    onPressed: () {
+                                      bloc.add(BrandsPermissionEvent.switchButtonEvent(
+                                        context: context,
+                                        index: -1,
+                                      ));
+                                    },
+                                    fontColors: AppColors.whiteColor,
+                                  ),
+                                ),
+                              ),
+                              10.height,
+                              ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.brandPermissionList.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: AppConstants.padding_5),
+                                    child: menuSwitchTile(
+                                        title: state.brandPermissionList[index].title,
+                                        context: context,
+                                        isEnable: state.brandPermissionList[index].isEnable,
+                                        onChanged: (bool value) {
+                                          bloc.add(BrandsPermissionEvent.switchButtonEvent(context: context, index: index));
+                                        }),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
               ),
             ),
           ),
-          bottomNavigationBar: state.isShimmering || state.brandPermissionList.isEmpty ? const SizedBox() :  Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20,vertical: AppConstants.padding_20 ),
-            child: CustomButtonWidget(
-              buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
-              bGColor: AppColors.mainColor,
-              isLoading: state.isUpdateProcess,
-              onPressed:  () {
-                bloc.add(BrandsPermissionEvent.updateBrandPermissionEvent(context: context));
-
-              },
-              fontColors: AppColors.whiteColor,
-            ),
-          ),
-
+          bottomNavigationBar: state.isShimmering || state.brandPermissionList.isEmpty
+              ? const SizedBox()
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_20),
+                  child: CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
+                    bGColor: AppColors.mainColor,
+                    isLoading: state.isUpdateProcess,
+                    onPressed: () {
+                      bloc.add(BrandsPermissionEvent.updateBrandPermissionEvent(context: context));
+                    },
+                    fontColors: AppColors.whiteColor,
+                  ),
+                ),
         );
       },
     );
   }
-  Widget menuSwitchTile(
-      {required String title,required BuildContext context, required bool isEnable,
-        required void Function(bool)? onChanged}) {
+
+  Widget menuSwitchTile({required String title, required BuildContext context, required bool isEnable, required void Function(bool)? onChanged}) {
     return Container(
       decoration: BoxDecoration(
-          color: AppColors.whiteColor,
+        color: AppColors.whiteColor,
         border: Border(
-          bottom: BorderSide(
-              color: AppColors.greyColor.withOpacity(0.4)),
-        ),),
-      margin: const EdgeInsets.symmetric(
-          vertical: AppConstants.padding_5,
-          horizontal: AppConstants.padding_10),
+          bottom: BorderSide(color: AppColors.greyColor.withOpacity(0.4)),
+        ),
+      ),
+      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
       child: InkWell(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
@@ -159,17 +147,14 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
           onChanged?.call(true);
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.padding_15,
-              vertical: AppConstants.padding_8),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Text(
                   title,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_17, color: AppColors.greyColor),
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_17, color: AppColors.greyColor),
                 ),
               ),
               SizedBox(

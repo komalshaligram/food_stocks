@@ -8,7 +8,6 @@ import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';
 
-
 class BankTransferScreenRoute {
   static Widget get route => const BankTransferScreen();
 }
@@ -20,15 +19,13 @@ class BankTransferScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BankTransferBloc()..add(BankTransferEvent.getBankTransferInfoEvent(context: context)),
-      child:  const BankTransferWidget(),
+      child: const BankTransferWidget(),
     );
   }
 }
 
 class BankTransferWidget extends StatefulWidget {
-   const BankTransferWidget({super.key});
-
-
+  const BankTransferWidget({super.key});
 
   @override
   State<BankTransferWidget> createState() => _BankTransferWidgetState();
@@ -50,8 +47,7 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Align(
-              alignment:
-              context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
               child: Text(
                 AppLocalizations.of(context)!.bank_transfer_information,
                 style: AppStyles.rkRegularTextStyle(
@@ -62,18 +58,17 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
             ),
             actions: [
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 10),
+                padding: const EdgeInsets.only(right: AppConstants.padding_20, left: AppConstants.padding_10),
                 child: GestureDetector(
                     onTap: () {
-                      textController = TextEditingController(text:state.bankTransferDetails);
-                      Clipboard.setData(ClipboardData(text:
-                      textController.text))
-                          .then((_) {
+                      textController = TextEditingController(text: state.bankTransferDetails);
+                      Clipboard.setData(ClipboardData(text: textController.text)).then((_) {
                         textController.clear();
                         CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.copied, type: SnackBarType.success);
                       });
                     },
-                    child: Text(AppLocalizations.of(context)!.copy,
+                    child: Text(
+                      AppLocalizations.of(context)!.copy,
                       style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.smallFont,
                         color: AppColors.redColor,
@@ -87,24 +82,21 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
           ),
           body: SafeArea(
             child: Container(
-              alignment:
-              context.rtl ? Alignment.topRight : Alignment.topLeft,
+              alignment: context.rtl ? Alignment.topRight : Alignment.topLeft,
               margin: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                border: Border.all(color: AppColors.borderColor)
-              ),
-              padding: const EdgeInsets.only(left:10.0,right: 10,top: 8,bottom: 8),
-              child: state.isLoading?const CircularProgressIndicator():
-              SelectableText(state.bankTransferDetails,
-              style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.smallFont,
-                color: AppColors.blackColor,
-              ),
-              ),
+              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(8)), border: Border.all(color: AppColors.borderColor)),
+              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_8),
+              child: state.isLoading
+                  ? const CircularProgressIndicator()
+                  : SelectableText(
+                      state.bankTransferDetails,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.smallFont,
+                        color: AppColors.blackColor,
+                      ),
+                    ),
             ),
           ),
-
         );
       },
     );

@@ -67,7 +67,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
     return BlocBuilder<ShipmentVerificationBloc, ShipmentVerificationState>(
       builder: (context, state) {
-        return  Stack(
+        return Stack(
           children: [
             WillPopScope(
               onWillPop: () async => false,
@@ -80,46 +80,41 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                     title: AppLocalizations.of(context)!.shipment_verification,
                     iconData: Icons.arrow_back_ios_sharp,
                     trailingWidget: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppConstants.padding_10,
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                          border: Border.all(
-                            color: AppColors.borderColor,
-                            width: 1,
-                          ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppConstants.padding_10,
                         ),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
                           decoration: BoxDecoration(
-                            color: AppColors.lightGreyColor,
                             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                             border: Border.all(
-                              color: AppColors.whiteColor,
+                              color: AppColors.borderColor,
                               width: 1,
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Text(
-                                '${AppLocalizations.of(context)!.total}:',
-                                style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
+                            decoration: BoxDecoration(
+                              color: AppColors.lightGreyColor,
+                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                              border: Border.all(
+                                color: AppColors.whiteColor,
+                                width: 1,
                               ),
-                              Text(
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  '${AppLocalizations.of(context)!.total}:',
+                                  style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400),
+                                ),
+                                Text(
                                   formatNumber(value: widget.args?[AppStrings.totalAmountString] ?? '0', local: AppStrings.hebrewLocal),
-                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                      // CircularButtonWidget(
-                      //   buttonName: AppLocalizations.of(context)!.total,
-                      //   buttonValue: formatNumber(value: widget.args?[AppStrings.totalAmountString] ?? '0', local: AppStrings.hebrewLocal),
-                      // ),
-                    ),
+                        )),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -249,8 +244,22 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                     controller: state.surfacesController,
                                     keyboardType: TextInputType.number,
                                     hint: "",
-                                    textInputAction: TextInputAction.done,
+                                    textInputAction: TextInputAction.next,
                                     validator: AppStrings.surfaceValString,
+                                  ),
+                                  8.height,
+                                  CustomContainerWidget(
+                                    name: AppLocalizations.of(context)!.driver_name,
+                                    star: '*',
+                                  ),
+                                  CustomFormField(
+                                    context: context,
+                                    fillColor: AppColors.whiteColor,
+                                    controller: state.driverNameController,
+                                    keyboardType: TextInputType.text,
+                                    hint: "",
+                                    textInputAction: TextInputAction.done,
+                                    validator: AppStrings.driverNameString,
                                   ),
                                   8.height,
                                   Padding(
@@ -399,7 +408,6 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                   8.height,
                                 ],
                               ),
-              
                             ],
                           ),
                         ),
@@ -411,7 +419,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                   child: GestureDetector(
                     onTap: () async {
                       if (!_formKey.currentState!.validate()) return;
-              
+
                       if (!isSign) {
                         CustomSnackBar.showSnackBar(
                           context: context,
@@ -420,33 +428,32 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                         );
                         return;
                       }
-              
-                      // if (!isDriverSign) {
-                      //   CustomSnackBar.showSnackBar(
-                      //     context: context,
-                      //     title: AppLocalizations.of(context)!.driver_signature_missing,
-                      //     type: SnackBarType.failure,
-                      //   );
-                      //   _scrollController.animateTo(
-                      //     _scrollController.position.maxScrollExtent,
-                      //     duration: const Duration(milliseconds: 500),
-                      //     curve: Curves.easeInOut,
-                      //   );
-                      //   return;
-                      // }
-              
+
+                      if (!isDriverSign) {
+                        CustomSnackBar.showSnackBar(
+                          context: context,
+                          title: AppLocalizations.of(context)!.driver_signature_missing,
+                          type: SnackBarType.failure,
+                        );
+                        _scrollController.animateTo(
+                          _scrollController.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                        return;
+                      }
+
                       final signImage = await signatureGlobalKey.currentState!.toImage();
                       final signData = await signImage.toByteData(format: ui.ImageByteFormat.png);
                       final signBytes = signData!.buffer.asUint8List();
                       final dir = (await getApplicationDocumentsDirectory()).path;
                       final signFile = await File('$dir/sign.png').writeAsBytes(signBytes);
-              
+
                       final driverImage = await driverSignatureGlobalKey.currentState!.toImage();
                       final driverData = await driverImage.toByteData(format: ui.ImageByteFormat.png);
                       final driverBytes = driverData!.buffer.asUint8List();
                       final driverFile = await File('$dir/driver_sign.png').writeAsBytes(driverBytes);
-              
-              
+
                       bloc.add(
                         ShipmentVerificationEvent.deliveryConfirmEvent(
                           context: context,
@@ -456,8 +463,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                           orderId: widget.args?[AppStrings.orderIdString],
                           driverDeliveryDocumentsImages: widget.args?[AppStrings.driverDeliveryDocumentsImages],
                           sentReturnData: (widget.args?[AppStrings.sentReturnData] as List<dynamic>?)?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ?? [],
-                          orderIssueReturnId:  widget.args?[AppStrings.orderIssueReturnId],
-                          // widget.args?[AppStrings.sentReturnData]
+                          orderIssueReturnId: widget.args?[AppStrings.orderIssueReturnId],
                         ),
                       );
                     },
@@ -467,7 +473,6 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                       child: CustomButtonWidget(
                         buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
                         bGColor: AppColors.mainColor,
-                        // isLoading: state.isLoading,
                       ),
                     ),
                   ),
@@ -482,13 +487,13 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                     child: Material(
                       color: Colors.transparent,
                       child: Container(
-                        padding: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(AppConstants.padding_5),
                         width: 220,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppConstants.radius_7),
                           boxShadow: const [
-                            BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
+                            BoxShadow(color: Colors.black26, blurRadius: AppConstants.radius_10, offset: Offset(0, 4)),
                           ],
                         ),
                         child: Column(
@@ -509,7 +514,6 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                 color: AppColors.blackColor,
                                 fontSize: AppConstants.font_14,
                                 fontWeight: FontWeight.bold,
-                                // fontFamily: 'YourFontIfAny',
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -530,7 +534,6 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                   ),
                 ),
               ),
-
           ],
         );
       },

@@ -13,18 +13,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/model/res_model/bank_detail_model/bank_detail_model.dart';
 import '../../data/model/res_model/business_name_model/business_name_model.dart';
-import '../../data/model/res_model/file_update_res_model/file_update_res_model.dart';
 import '../../data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
-import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
-import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart' as req_profile;
-import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
+import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -34,7 +30,6 @@ import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:food_stock/data/model/req_model/profile_req_model/profile_model.dart' as req_update;
 import 'package:path/path.dart' as p;
 
 part 'client_form_details_event.dart';

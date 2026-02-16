@@ -161,7 +161,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     ? Center(
                         child: Container(
                           width: width! - 10,
-                          padding: const EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(AppConstants.padding_3),
                           decoration: BoxDecoration(
                             color: AppColors.saleBGColor,
                             border: Border.all(color: AppColors.saleBGColor),
@@ -187,7 +187,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     : (productStock) == '0' || productStock == '0.0'
                         ? Container(
                             alignment: Alignment.center,
-                            padding: const EdgeInsets.only(top: 5.0),
+                            padding: const EdgeInsets.only(top: AppConstants.padding_5),
                             child: Text(
                               AppLocalizations.of(context)!.out_of_stock1,
                               textAlign: TextAlign.center,

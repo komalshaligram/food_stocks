@@ -99,20 +99,15 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
           CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
       } else if (event is _checkAllEvent) {
-        // Number of items - use length of the returnDriverData.data list (or orderBySupplierProduct.products if you want)
         int length = state.returnDriverData.data?.length ?? 0;
 
-        // If currently not all checked, set all to true, else clear all
         final Map<int, bool> updatedCheckedItems = {};
 
         if (!state.isAllCheck) {
-          // mark all true
           for (int i = 0; i < length; i++) {
             updatedCheckedItems[i] = true;
           }
-        } else {
-          // mark all false (empty map)
-        }
+        } else {}
 
         emit(state.copyWith(
           checkedItems: updatedCheckedItems,
@@ -169,23 +164,19 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
 
           if (croppedImage?.path.isEmpty ?? true) return;
 
-          // Get absolute file path safely
           final absoluteCroppedImagePath = await _getAbsoluteFilePath(croppedImage!.path);
           final File croppedFile = File(absoluteCroppedImagePath);
 
-          // Check if file exists
           if (!croppedFile.existsSync()) {
             return;
           }
 
-          // Get file length safely
           final int fileLength = await croppedFile.length();
 
           String imageSize = getFileSizeString(bytes: fileLength);
 
           if (int.parse(imageSize.split(' ').first) == 0) return;
 
-          // Upload file using Dio
           final response = await DioClient(event.context).uploadFileProgressWithFormData(
             path: AppUrlEndPoints.fileUploadUrl,
             formData: FormData.fromMap({
@@ -225,24 +216,19 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
           emit(state.copyWith(driverDeliveryProofUrlsMap: updatedMap, driverDeliveryProofFilesMap: updatedMap1!));
         }
       } else if (event is _deleteProofFileEvent) {
-        // Clone the map with nullable
         Map<int, List<File?>> updatedMap = Map.from(state.driverDeliveryProofFilesMap);
-        // Get the current list or create a list of 3 nulls
         List<File?> files = List<File?>.from(updatedMap[event.index] ?? List.filled(3, null));
-        // Set the selected file index to null
         if (event.fileIndex >= 0 && event.fileIndex < files.length) {
           files[event.fileIndex] = null;
-        } // Update the map
+        }
         updatedMap[event.index] = files;
         emit(state.copyWith(driverDeliveryProofFilesMap: updatedMap!));
       } else if (event is _toggleItemChecked) {
         final updatedCheckedItems = Map<int, bool>.from(state.checkedItems);
         updatedCheckedItems[event.index] = event.isChecked;
 
-        // Determine if all items are checked
         int totalItems = state.returnDriverData.data?.length ?? 0;
 
-        // If count of checkedItems with true is same as totalItems, then all checked
         bool allChecked = updatedCheckedItems.length == totalItems && updatedCheckedItems.values.every((checked) => checked);
 
         emit(state.copyWith(
@@ -255,7 +241,6 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
 
   Future<String> _getAbsoluteFilePath(String path) async {
     if (path.startsWith('/')) {
-      // Already absolute
       return path;
     }
 

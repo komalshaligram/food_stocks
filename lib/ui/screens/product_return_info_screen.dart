@@ -60,8 +60,8 @@ class ReturnListWidget extends StatelessWidget {
                         deleteProductDialog(context: context, returnProductId: state.returnProductId);
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                        decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(5.0)),
+                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+                        decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
                         child: Text(
                           AppLocalizations.of(context)!.delete,
                           style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),
@@ -87,7 +87,7 @@ class ReturnListWidget extends StatelessWidget {
                             margin: EdgeInsets.zero,
                             color: AppColors.whiteColor,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(AppConstants.padding_8),
                               child: Row(
                                 children: [
                                   state.productImg != ''
@@ -148,7 +148,7 @@ class ReturnListWidget extends StatelessWidget {
                                 margin: EdgeInsets.zero,
                                 color: AppColors.whiteColor,
                                 child: Padding(
-                                  padding: const EdgeInsets.all(12),
+                                  padding: const EdgeInsets.all(AppConstants.padding_11),
                                   child: Row(
                                     children: [
                                       GestureDetector(

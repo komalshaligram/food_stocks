@@ -99,7 +99,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             Container(
                               height: 50,
                               width: 50,
-                              // margin: EdgeInsets.only(bottom: 10),
                               clipBehavior: Clip.hardEdge,
                               decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
                               child: Center(
@@ -131,7 +130,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           ),
                                           child: Text(
                                             '${state.cartCount}',
-                                            style: AppStyles.rkRegularTextStyle(size: 10, color: AppColors.whiteColor),
+                                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor),
                                           ),
                                         ),
                                       ],
@@ -296,7 +295,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 children: [
                                                   state.planogramProductList.isNotEmpty
                                                       ? Padding(
-                                                          padding: const EdgeInsets.all(10.0),
+                                                          padding: const EdgeInsets.all(AppConstants.padding_10),
                                                           child: Row(
                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
@@ -945,7 +944,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       ? Center(
                           child: Container(
                             width: width - 10,
-                            padding: const EdgeInsets.all(3),
+                            padding: const EdgeInsets.all(AppConstants.padding_3),
                             decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                             child: Text(
                               "${parse(saleDesc).body?.text}",
@@ -984,7 +983,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           ),
                   ),
                   5.height,
-                  isPesach ? Container(padding: const EdgeInsets.all(3), decoration: BoxDecoration(color: AppColors.pesachBGColor, border: Border.all(color: AppColors.pesachBGColor), borderRadius: const BorderRadius.all(Radius.circular(10))), child: Text(AppLocalizations.of(context)!.pesach)) : 0.height,
+                  isPesach ? Container(padding: const EdgeInsets.all(AppConstants.padding_3), decoration: BoxDecoration(color: AppColors.pesachBGColor, border: Border.all(color: AppColors.pesachBGColor), borderRadius: const BorderRadius.all(Radius.circular(10))), child: Text(AppLocalizations.of(context)!.pesach)) : 0.height,
                   isPesach ? 5.height : 0.height,
                   !isGuestUser
                       ? Center(
@@ -1103,7 +1102,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                           Navigator.pop(context);
                                                         },
                                                         child: const Padding(
-                                                          padding: EdgeInsets.only(top: 10.0),
+                                                          padding: EdgeInsets.only(top: AppConstants.padding_10),
                                                           child: Icon(
                                                             Icons.close,
                                                             color: Colors.white,
@@ -1179,7 +1178,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         Align(
           alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
+            padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
@@ -1191,7 +1190,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         ),
         Container(
           height: getItemHeight(context, isSaleOn),
-          padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+          padding: const EdgeInsets.only(bottom: AppConstants.padding_10, left: AppConstants.padding_10, right: AppConstants.padding_10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,

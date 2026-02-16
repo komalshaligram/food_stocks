@@ -120,7 +120,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       ),
                                       child: Text(
                                         '${state.cartCount}',
-                                        style: AppStyles.rkRegularTextStyle(size: 10, color: AppColors.whiteColor),
+                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor),
                                       ),
                                     ),
                                   ],
@@ -184,7 +184,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                       ? Container(
                                           height: getScreenHeight(context) - 80,
                                           width: getScreenWidth(context),
-                                          margin: const EdgeInsets.only(top: 30),
+                                          margin: const EdgeInsets.only(top: AppConstants.padding_30),
                                           alignment: Alignment.center,
                                           child: Text(
                                             AppLocalizations.of(context)!.this_company_has_no_product,
@@ -206,12 +206,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                           onRefresh: () {
                                             context.read<CompanyProductsBloc>().add(CompanyProductsEvent.refreshListEvent(context: context));
                                           },
-                                          /* onLoading: () {
-                              context.read<CompanyProductsBloc>().add(
-                                  CompanyProductsEvent.getCompanyProductsListEvent(
-                                      context: context));
-                            },*/
-
                                           child: state.isCompanyProductGrid
                                               ? GridView.builder(
                                                   itemCount: state.productList.length,
@@ -472,8 +466,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                         }
                       },
                       onSearchSubmit: (String search) {
-                        //  bloc.add(CompanyProductsEvent.globalSearchEvent(context: context));
-
                         Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
                       },
                       onOutSideTap: () {
@@ -654,8 +646,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       onScanTap: () async {
                         String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
                         if (scanResult != '-1') {
-                          // -1 result for cancel scanning
-
                           if (!state.isGuestUser) {
                             showProductDetails(
                                 context: context,
@@ -866,7 +856,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                           Navigator.pop(dialogContext);
                                                         },
                                                         child: const Padding(
-                                                          padding: EdgeInsets.only(top: 10.0),
+                                                          padding: EdgeInsets.only(top: AppConstants.padding_10),
                                                           child: Icon(
                                                             Icons.close,
                                                             color: Colors.white,
@@ -936,7 +926,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         Align(
           alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
@@ -948,7 +938,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         ),
         Container(
           height: getItemHeight(context, isSaleOn),
-          padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+          padding: const EdgeInsets.only(bottom: AppConstants.padding_10, left: AppConstants.padding_10, right: AppConstants.padding_10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,

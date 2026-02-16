@@ -26,8 +26,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageState.initial()) {
     on<MessageEvent>((event, emit) async {
       if (event is _GetMessageListEvent) {
-        SharedPreferencesHelper preferences = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
+        SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         emit(state.copyWith(language: preferences.getAppLanguage()));
         if (state.isLoadMore) {
           return;
@@ -36,60 +35,33 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           return;
         }
         try {
-          emit(state.copyWith(
-              isShimmering: state.pageNum == 0 ? true : false,
-              isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(
-              //AppUrls.getAllMessagesUrl,
-              AppUrlEndPoints.getNotificationMessageUrl,
-              data: GetMessagesReqModel(
-                      pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.messagePageLimit)
-                  .toJson(),
+          emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getNotificationMessageUrl,
+              data: GetMessagesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.messagePageLimit).toJson(),
               options: Options(
                 headers: {
-                  HttpHeaders.authorizationHeader:
-                      'Bearer ${preferences.getAuthToken()}',
+                  HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}',
                 },
               ));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            List<MessageData> messageList =
-                state.messageList.toList(growable: true);
+            List<MessageData> messageList = state.messageList.toList(growable: true);
             messageList.addAll(response.data
                     ?.map((message) => MessageData(
                           id: message.id,
                           isRead: message.isRead,
-                          message: Message(
-                            id: message.message?.id ?? '',
-                            title: message.message?.title ?? '',
-                            summary: message.message?.summary ?? '',
-                            body: message.message?.body ?? '',
-                            messageImage: message.message?.messageImage ?? '',
-                            subPage: message.message?.subPage?? '',
-                            mainPage: message.message?.mainPage ?? '',
-                            navigationId: message.message?.navigationId ?? ''
-                          ),
+                          message: Message(id: message.message?.id ?? '', title: message.message?.title ?? '', summary: message.message?.summary ?? '', body: message.message?.body ?? '', messageImage: message.message?.messageImage ?? '', subPage: message.message?.subPage ?? '', mainPage: message.message?.mainPage ?? '', navigationId: message.message?.navigationId ?? ''),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
                         ))
                     .toList() ??
                 []);
 
-            emit(state.copyWith(
-                messageList: messageList,
-                pageNum: state.pageNum + 1,
-                isLoadMore: false,
-                isShimmering: false));
-            emit(state.copyWith(
-                isBottomOfMessage: messageList.length ==
-                        (response.metaData?.totalFilteredCount ?? 0)
-                    ? true
-                    : false));
+            emit(state.copyWith(messageList: messageList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false));
+            emit(state.copyWith(isBottomOfMessage: messageList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
-
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
@@ -97,74 +69,47 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
       } else if (event is _refreshListEvent) {
-        emit(state.copyWith(
-            pageNum: 0, messageList: [], isBottomOfMessage: false));
+        emit(state.copyWith(pageNum: 0, messageList: [], isBottomOfMessage: false));
         add(MessageEvent.getMessageListEvent(context: event.context));
-      }
-      else if (event is _removeOrUpdateMessageEvent) {
-        List<MessageData> messageList =
-            state.messageList.toList(growable: true);
-        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
+      } else if (event is _removeOrUpdateMessageEvent) {
+        List<MessageData> messageList = state.messageList.toList(growable: true);
+        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
         if (event.isRead) {
-          if (messageList[messageList.indexOf(messageList
-              .firstWhere((message) => message.id == event.messageId))]
-              .isRead ==
-              false) {
-            await preferencesHelper.setMessageCount(
-                count: preferencesHelper.getMessageCount() - 1);
-            messageList[messageList.indexOf(messageList
-                .firstWhere((message) => message.id == event.messageId))] =
-                messageList[messageList.indexOf(messageList.firstWhere(
-                        (message) => message.id == event.messageId))]
-                    .copyWith(isRead: true);
+          if (messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead == false) {
+            await preferencesHelper.setMessageCount(count: preferencesHelper.getMessageCount() - 1);
+            messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))] = messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].copyWith(isRead: true);
           }
         }
         if (event.isDelete) {
-          String deletedMessageId = messageList
-              .firstWhere((message) => message.id == event.messageId)
-              .id ??
-              '';
+          String deletedMessageId = messageList.firstWhere((message) => message.id == event.messageId).id ?? '';
           messageList.removeWhere((message) => message.id == event.messageId);
           if (deletedMessageId != '') {
-            List<String> deletedMessageList =
-            state.deletedMessageList.toList(growable: true);
+            List<String> deletedMessageList = state.deletedMessageList.toList(growable: true);
             deletedMessageList.add(deletedMessageId);
             emit(state.copyWith(deletedMessageList: deletedMessageList));
           }
         }
         emit(state.copyWith(messageList: messageList));
-      }
-
-      else if(event is _messageDeleteEvent){
+      } else if (event is _messageDeleteEvent) {
         try {
           DeleteMessageReq reqMap = DeleteMessageReq(
             notificationIds: [
               event.messageId,
             ],
           );
-          final response =
-          await DioClient(event.context).post(AppUrlEndPoints.deleteMessageUrl,
-              data: reqMap,
-            );
-
+          final response = await DioClient(event.context).post(
+            AppUrlEndPoints.deleteMessageUrl,
+            data: reqMap,
+          );
 
           if (response[AppStrings.statusString] == AppConstants.code_200) {
-              add(MessageEvent.refreshListEvent(context: event.context));
+            add(MessageEvent.refreshListEvent(context: event.context));
             Navigator.pop(event.dialogContext);
-
           } else {
-            CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response[AppStrings.messageString].toString().toLocalization() ,
-                    event.context),
-                type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
           }
-        }
-        catch(e){
-        }
+        } catch (e) {}
       }
     });
   }

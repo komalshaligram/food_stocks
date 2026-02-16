@@ -113,7 +113,7 @@ class MessageScreenWidget extends StatelessWidget {
                                             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.all(12),
+                                            padding: const EdgeInsets.all(AppConstants.padding_11),
                                             child: SvgPicture.asset(
                                               AppImagePath.delete,
                                               colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),

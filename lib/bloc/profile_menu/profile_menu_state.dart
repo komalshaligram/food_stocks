@@ -30,7 +30,7 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool retryLoading,
   }) = _ProfileMenuState;
 
-  factory ProfileMenuState.initial() => ProfileMenuState(
+  factory ProfileMenuState.initial() => const ProfileMenuState(
         UserImageUrl: '',
         UserCompanyLogoUrl: '',
         userName: '',

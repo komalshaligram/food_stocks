@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,20 +25,19 @@ class BankInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => BankInfoBloc()..add(BankInfoEvent.getBankNameEvent(context: context))
-      ..add(BankInfoEvent.getTermsConditionModelEvent(context: context,
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()))
-        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,isUpdate: args?[AppStrings.updateString]??false)),
+      create: (context) => BankInfoBloc()
+        ..add(BankInfoEvent.getBankNameEvent(context: context))
+        ..add(BankInfoEvent.getTermsConditionModelEvent(context: context, termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()))
+        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false, isUpdate: args?[AppStrings.updateString] ?? false)),
       child: BankInfoWidget(),
     );
   }
 }
 
 class BankInfoWidget extends StatelessWidget {
-   BankInfoWidget({super.key});
+  BankInfoWidget({super.key});
 
   final _formKey = GlobalKey<FormState>();
 
@@ -58,8 +56,7 @@ class BankInfoWidget extends StatelessWidget {
                 },
                 child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
             title: Align(
-              alignment:
-              context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
               child: Text(
                 AppLocalizations.of(context)!.bank_info,
                 style: AppStyles.rkRegularTextStyle(
@@ -74,96 +71,86 @@ class BankInfoWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
-              child: state.isShimmering ? const BankInfoScreenShimmerWidget():
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: getScreenWidth(context) * 0.1),
-                child: Form(
-                  key:_formKey,
-                  child: Column(
-                    children: [
-                      CustomContainerWidget(
-                        name: AppLocalizations.of(context)!.name_of_bank,
+              child: state.isShimmering
+                  ? const BankInfoScreenShimmerWidget()
+                  : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            CustomContainerWidget(
+                              name: AppLocalizations.of(context)!.name_of_bank,
+                            ),
+                            CommonDropDownButton(
+                              items: state.bankList.map((element) {
+                                return DropdownMenuItem<String>(
+                                  value: element.bankName,
+                                  child: Text(element.bankName ?? ''),
+                                );
+                              }).toList(),
+                              onChanged: (newBankName) {
+                                bloc.add(BankInfoEvent.selectBankEvent(bankName: newBankName ?? ''));
+                              },
+                              value: state.bankName,
+                            ),
+                            CustomContainerWidget(
+                              name: AppLocalizations.of(context)!.branch_number,
+                            ),
+                            CustomFormField(
+                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                              context: context,
+                              controller: state.branchController,
+                              keyboardType: TextInputType.number,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: AppStrings.branchValString,
+                            ),
+                            7.height,
+                            CustomContainerWidget(
+                              name: AppLocalizations.of(context)!.account_number,
+                            ),
+                            CustomFormField(
+                              context: context,
+                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                              controller: state.accountNumberController,
+                              keyboardType: TextInputType.number,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.done,
+                              validator: AppStrings.accountValString,
+                            ),
+                            40.height,
+                          ],
+                        ),
                       ),
-                      CommonDropDownButton(
-                        items: state.bankList.map((element) {
-                          return DropdownMenuItem<String>(
-                            value: element.bankName,
-                            child: Text(
-                                element.bankName ?? ''),
-                          );
-                        }).toList(),
-                        onChanged: (newBankName) {
-                          bloc.add(BankInfoEvent.selectBankEvent(bankName: newBankName ?? ''));
-                        },
-                        value: state.bankName,
-                      ),
-                      CustomContainerWidget(
-                        name: AppLocalizations.of(context)!.branch_number,
-                      ),
-                      CustomFormField(
-                        inputFormat: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(16)
-                        ],
-                        context: context,
-                        controller: state.branchController,
-                        keyboardType: TextInputType.number,
-                        hint: "",
-                        fillColor: Colors.transparent,
-                        textInputAction: TextInputAction.next,
-                        validator: AppStrings.branchValString,
-                      ),
-                      7.height,
-                      CustomContainerWidget(
-                        name: AppLocalizations.of(context)!.account_number,
-                      ),
-                      CustomFormField(
-                        context: context,
-                        inputFormat: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(16)
-                        ],
-                        controller: state.accountNumberController,
-                        keyboardType: TextInputType.number,
-                        hint: "",
-                        fillColor: Colors.transparent,
-                        textInputAction: TextInputAction.done,
-                        validator: AppStrings.accountValString,
-                      ),
-                      40.height,
-                    ],
-                  ),
-                ),
-              ),
+                    ),
             ),
           ),
-          bottomSheet:  !state.isShimmering? Container(
-            color: AppColors.whiteColor,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 30),
-              child: CustomButtonWidget(
-                isLoading: state.isApiShimmering ? true: false,
-                buttonText: AppLocalizations.of(context)!
-                    .next
-                    .toUpperCase(),
-                bGColor: AppColors.mainColor,
-                onPressed:  () {
-                  if (_formKey.currentState
-                      ?.validate() ??
-                      false) {
-                    if(!state.isUpdate){
-                      bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
-                    }
-                    else{
-                      bloc.add(BankInfoEvent.addBankInfoEvent(context: context));
-                    }
-                  }
-                },
-                fontColors: AppColors.whiteColor,
-              ),
-            ),
-          ):const SizedBox(),
+          bottomSheet: !state.isShimmering
+              ? Container(
+                  color: AppColors.whiteColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppConstants.padding_30),
+                    child: CustomButtonWidget(
+                      isLoading: state.isApiShimmering ? true : false,
+                      buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                      bGColor: AppColors.mainColor,
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          if (!state.isUpdate) {
+                            bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
+                          } else {
+                            bloc.add(BankInfoEvent.addBankInfoEvent(context: context));
+                          }
+                        }
+                      },
+                      fontColors: AppColors.whiteColor,
+                    ),
+                  ),
+                )
+              : const SizedBox(),
         );
       },
     );

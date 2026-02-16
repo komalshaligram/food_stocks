@@ -23,7 +23,6 @@ import '../../data/error/exceptions.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
@@ -40,7 +39,6 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getFormsListEvent) {
-
         emit(state.copyWith(
           isLoading: true,
           isShimmering: true,
@@ -74,11 +72,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 List<FormAndFileModel> filesList = state.formsAndFilesList.toList(growable: true);
                 int len = response.data?.clientFiles?.toList().length ?? 0;
                 for (int i = 0; i < len; i++) {
-                  filesList.add(FormAndFileModel(
-                      id: response.data?.clientFiles?[i].id,
-                      isForm: false,
-                      // isDownloadable: true,
-                      name: response.data?.clientFiles?[i].fileName));
+                  filesList.add(FormAndFileModel(id: response.data?.clientFiles?[i].id, isForm: false, name: response.data?.clientFiles?[i].fileName));
                 }
                 emit(state.copyWith(formsAndFilesList: filesList, isLoading: false, isShimmering: false));
                 if (state.isUpdate) {
@@ -143,11 +137,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             List<FormAndFileModel> filesList = state.formsAndFilesList.toList(growable: true);
             int len = response.data?.clientFiles?.toList().length ?? 0;
             for (int i = 0; i < len; i++) {
-              filesList.add(FormAndFileModel(
-                  id: response.data?.clientFiles?[i].id,
-                  isForm: false,
-                  // isDownloadable: true,
-                  name: response.data?.clientFiles?[i].fileName));
+              filesList.add(FormAndFileModel(id: response.data?.clientFiles?[i].id, isForm: false, name: response.data?.clientFiles?[i].fileName));
             }
             emit(state.copyWith(formsAndFilesList: filesList, isLoading: false));
           } else {
@@ -199,7 +189,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           if (int.parse(fileSize!.split(' ').first) == 0) {
             return;
           }
-          //     else {
+
           List<FormAndFileModel> formAndFileList = state.formsAndFilesList.toList(growable: true);
           FormData formData;
           String? contentType = 'png';

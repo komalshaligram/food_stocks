@@ -129,8 +129,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           Map<String, dynamic> updatePermissionReq = req.toJson();
 
           updatePermissionReq.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
 

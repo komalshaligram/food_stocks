@@ -42,9 +42,8 @@ class FileUploadScreen extends StatelessWidget {
         ..add(FileUploadEvent.getFormsListEvent(
           context: context,
           isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
-
         )),
-      child:  FileUploadScreenWidget(isRegisterFile: isRegisterFile),
+      child: FileUploadScreenWidget(isRegisterFile: isRegisterFile),
     );
   }
 }
@@ -157,7 +156,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           height: getScreenHeight(context) * 0.05,
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.all(8.0),
+                                          padding: const EdgeInsets.all(AppConstants.padding_8),
                                           child: Column(
                                             children: [
                                               !state.isUpdate
@@ -483,7 +482,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                           child: Icon(
                                             Icons.file_copy_outlined,
                                             color: AppColors.blueColor,
-                                            size: 30,
+                                            size: AppConstants.font_30,
                                           ),
                                         ),
                                         5.height,
@@ -531,7 +530,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                   Icon(
                                     Icons.camera_alt_rounded,
                                     color: AppColors.blueColor,
-                                    size: 30,
+                                    size: AppConstants.font_30,
                                   ),
                                   Text(
                                     AppLocalizations.of(context)!.upload_photo,

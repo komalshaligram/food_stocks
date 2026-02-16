@@ -54,7 +54,7 @@ class InvoiceScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
               child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
             child: SmartRefresher(
               enablePullDown: true,
               controller: state.refreshController,
@@ -121,13 +121,14 @@ class InvoiceScreenWidget extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () {
-
-        printData("check here data ${invoicesList[index].toJson()}");
-
-        Navigator.pushNamed(context, RouteDefine.invoicePdfScreen.name,
-            arguments: {AppStrings.invoiceListString: invoicesList[index], AppStrings.invoiceTitleNameString:
-            context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices :
-            AppLocalizations.of(context)!.my_refunds});
+        Navigator.pushNamed(
+          context,
+          RouteDefine.invoicePdfScreen.name,
+          arguments: {
+            AppStrings.invoiceListString: invoicesList[index],
+            AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
+          },
+        );
       },
       child: Container(
         margin: const EdgeInsets.all(AppConstants.padding_8),
@@ -152,36 +153,120 @@ class InvoiceScreenWidget extends StatelessWidget {
                   titleColor: AppColors.mainColor,
                   valueColor: AppColors.blackColor,
                   valueTextSize: AppConstants.smallFont,
-                  columnPadding: 2,
+                  columnPadding: AppConstants.padding_2,
                   titleMaxLine: 2,
                   maxLine: 2,
                   titleTextSize: AppConstants.smallFont,
                   valueTextWeight: FontWeight.w400,
                 ),
                 4.width,
-                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.invoice_date, value: invoiceDate.replaceRange(10, 16, ''), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
+                CommonOrderContentWidget(
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 2,
+                  titleMaxLine: 2,
+                  maxLine: 2,
+                  title: AppLocalizations.of(context)!.invoice_date,
+                  value: invoiceDate.replaceRange(10, 16, ''),
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextSize: AppConstants.smallFont,
+                  titleTextSize: AppConstants.smallFont,
+                  columnPadding: AppConstants.padding_2,
+                  valueTextWeight: FontWeight.w400,
+                ),
               ],
             ),
             5.height,
             Row(
               children: [
-                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.invoice_status, value: invoiceStatus.toString(), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
+                CommonOrderContentWidget(
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 2,
+                  titleMaxLine: 2,
+                  maxLine: 2,
+                  title: AppLocalizations.of(context)!.invoice_status,
+                  value: invoiceStatus.toString(),
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextSize: AppConstants.smallFont,
+                  titleTextSize: AppConstants.smallFont,
+                  columnPadding: AppConstants.padding_2,
+                  valueTextWeight: FontWeight.w400,
+                ),
                 4.width,
-                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.invoice_amount, value: formatNumber(value: invoicePrice, local: AppStrings.hebrewLocal), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w700),
+                CommonOrderContentWidget(
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 2,
+                  titleMaxLine: 2,
+                  maxLine: 2,
+                  title: AppLocalizations.of(context)!.invoice_amount,
+                  value: formatNumber(value: invoicePrice, local: AppStrings.hebrewLocal),
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextSize: AppConstants.smallFont,
+                  titleTextSize: AppConstants.smallFont,
+                  columnPadding: 2,
+                  valueTextWeight: FontWeight.w700,
+                ),
               ],
             ),
             5.height,
             Row(
               children: [
-                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.invoice_type, value: invoiceType.toCapitalized(), titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
+                CommonOrderContentWidget(
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 2,
+                  titleMaxLine: 2,
+                  maxLine: 2,
+                  title: AppLocalizations.of(context)!.invoice_type,
+                  value: invoiceType.toCapitalized(),
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextSize: AppConstants.smallFont,
+                  titleTextSize: AppConstants.smallFont,
+                  columnPadding: AppConstants.padding_2,
+                  valueTextWeight: FontWeight.w400,
+                ),
                 4.width,
-                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.due_date, value: dueDate.isNotEmpty ? dueDate.replaceRange(10, 16, '') : '', titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
+                CommonOrderContentWidget(
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 2,
+                  titleMaxLine: 2,
+                  maxLine: 2,
+                  title: AppLocalizations.of(context)!.due_date,
+                  value: dueDate.isNotEmpty ? dueDate.replaceRange(10, 16, '') : '',
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextSize: AppConstants.smallFont,
+                  titleTextSize: AppConstants.smallFont,
+                  columnPadding: AppConstants.padding_2,
+                  valueTextWeight: FontWeight.w400,
+                ),
               ],
             ),
             5.height,
             Row(
               children: [
-                CommonOrderContentWidget(backGroundColor: AppColors.iconBGColor, borderCoder: AppColors.lightBorderColor, flexValue: 2, titleMaxLine: 2, maxLine: 2, title: AppLocalizations.of(context)!.supplier_name, value: supplierName, titleColor: AppColors.mainColor, valueColor: AppColors.blackColor, valueTextSize: AppConstants.smallFont, titleTextSize: AppConstants.smallFont, columnPadding: 2, valueTextWeight: FontWeight.w400),
+                CommonOrderContentWidget(
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 2,
+                  titleMaxLine: 2,
+                  maxLine: 2,
+                  title: AppLocalizations.of(context)!.supplier_name,
+                  value: supplierName,
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextSize: AppConstants.smallFont,
+                  titleTextSize: AppConstants.smallFont,
+                  columnPadding: AppConstants.padding_2,
+                  valueTextWeight: FontWeight.w400,
+                ),
               ],
             ),
           ],

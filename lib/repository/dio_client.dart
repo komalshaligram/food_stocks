@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -12,7 +10,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import 'package:provider/provider.dart';
-
 import '../../ui/widget/no_internet_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/model/res_model/refresh_token/refresh_token_model.dart';
@@ -167,6 +164,7 @@ class DioClient {
 
   // GET
   Future get({required String path, Map<String, dynamic>? query, Options? options}) async {
+    printData("check here query ${query}");
     try {
       isInProgress = true;
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -390,7 +388,7 @@ void _handleLogout(BuildContext context) async {
   // CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.logged_out_successfully, type: SnackBarType.success);
   CustomSnackBar.showSnackBar(
     context: context,
-    title: "חשבון לא מאושר",//AppLocalizations.of(context)!.account_not_approve,
+    title: "חשבון לא מאושר", //AppLocalizations.of(context)!.account_not_approve,
     type: SnackBarType.failure,
   );
 }

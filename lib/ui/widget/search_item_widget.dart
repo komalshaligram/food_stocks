@@ -114,19 +114,22 @@ class SearchItemWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Container(
-
             height: (searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company)
                 ? 80
                 : double.parse(productStock.toString()) > 0 || lowStock.isEmpty
                     ? isPesach
                         ? 130
                         : salePrice != 0.0
-                            ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true ? 220 :150
+                            ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true
+                                ? 220
+                                : 150
                             : 120
                     : isPesach
                         ? 130
                         : salePrice != 0.0
-                            ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true ? 220 :150
+                            ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true
+                                ? 220
+                                : 150
                             : 120,
             decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: (isLastItem ?? false) ? BorderSide.none : BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
             padding: EdgeInsets.only(top: AppConstants.padding_5, left: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, right: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, bottom: AppConstants.padding_5),
@@ -298,31 +301,35 @@ class SearchItemWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              minQuantity != '0' ?  Text(
-                                '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
-                                style: AppStyles.rkRegularTextStyle(
-                                  color: AppColors.redColor,
-                                  size: AppConstants.font_14,
-                                ),
-                              ) : IgnorePointer(),
-                              maxQuantity != '0' ?   Text(
-                                '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
-                                style: AppStyles.rkRegularTextStyle(
-                                  color: AppColors.redColor,
-                                  size: AppConstants.font_14,
-                                ),
-                              ) : IgnorePointer(),
+                              minQuantity != '0'
+                                  ? Text(
+                                      '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
+                                      style: AppStyles.rkRegularTextStyle(
+                                        color: AppColors.redColor,
+                                        size: AppConstants.font_14,
+                                      ),
+                                    )
+                                  : IgnorePointer(),
+                              maxQuantity != '0'
+                                  ? Text(
+                                      '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
+                                      style: AppStyles.rkRegularTextStyle(
+                                        color: AppColors.redColor,
+                                        size: AppConstants.font_14,
+                                      ),
+                                    )
+                                  : IgnorePointer(),
                             ],
                           )
                         : const IgnorePointer(),
                     isMixedSale!
                         ? Text(
-                          AppLocalizations.of(context)!.mixedSale,
-                          style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.redColor,
-                            size: AppConstants.font_14,
-                          ),
-                        )
+                            AppLocalizations.of(context)!.mixedSale,
+                            style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.redColor,
+                              size: AppConstants.font_14,
+                            ),
+                          )
                         : const IgnorePointer(),
                     const Spacer(),
                     // 7.height,
@@ -380,7 +387,7 @@ class SearchItemWidget extends StatelessWidget {
         ),
         isShowSeeAll
             ? Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8),
+                padding: const EdgeInsets.only(left: AppConstants.padding_20, right: AppConstants.padding_20, bottom: AppConstants.padding_8),
                 child: CustomButtonWidget(
                   buttonText: AppLocalizations.of(context)!.show_all_results,
                   bGColor: AppColors.mainColor,

@@ -1,4 +1,3 @@
-
 part of 'order_successful_bloc.dart';
 
 @freezed
@@ -16,12 +15,11 @@ class OrderSuccessfulState with _$OrderSuccessfulState {
     required bool isIncludedVat,
   }) = _OrderSuccessfulState;
 
-  factory OrderSuccessfulState.initial() =>
-      const OrderSuccessfulState(
-        seePreviousBtn : false,
+  factory OrderSuccessfulState.initial() => const OrderSuccessfulState(
+        seePreviousBtn: false,
         duringCelebration: true,
         isSubUserCanSeeWallet: false,
-        totalSupplier:0,
+        totalSupplier: 0,
         cartItemList: GetAllCartResModel(),
         totalPayment: 0,
         vatPercentage: 0,
@@ -29,6 +27,4 @@ class OrderSuccessfulState with _$OrderSuccessfulState {
         bottleTax: 0,
         isIncludedVat: false,
       );
-
 }
-

@@ -3,22 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/constants/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';
 import 'custom_button_widget.dart';
 
 class CountdownTimerDialog extends StatefulWidget {
-  final int countdown; // Countdown in seconds
+  final int countdown;
   final VoidCallback onTimerComplete;
   final String title;
   final TextDirection directionality;
 
-  const CountdownTimerDialog({
-    Key? key,
-    required this.countdown,
-    required this.onTimerComplete, required this.title, required this.directionality
-  }) : super(key: key);
+  const CountdownTimerDialog({Key? key, required this.countdown, required this.onTimerComplete, required this.title, required this.directionality}) : super(key: key);
 
   @override
   _CountdownTimerDialogState createState() => _CountdownTimerDialogState();
@@ -29,15 +24,13 @@ class _CountdownTimerDialogState extends State<CountdownTimerDialog> {
   late Timer _timer;
   bool _isClosed = false;
 
-
   @override
   void initState() {
     super.initState();
     _remainingTimeInSeconds = widget.countdown;
 
-    // Start countdown timer
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!mounted) return; // Prevent further actions if the widget is disposed
+      if (!mounted) return;
       setState(() {
         if (_remainingTimeInSeconds > 0) {
           _remainingTimeInSeconds--;
@@ -56,7 +49,6 @@ class _CountdownTimerDialogState extends State<CountdownTimerDialog> {
     super.dispose();
   }
 
-  // Convert remaining time in seconds to HH:MM:SS format
   String get formattedTime {
     int hours = _remainingTimeInSeconds ~/ 3600;
     int minutes = (_remainingTimeInSeconds % 3600) ~/ 60;
@@ -64,16 +56,14 @@ class _CountdownTimerDialogState extends State<CountdownTimerDialog> {
     return '${_pad(hours)}:${_pad(minutes)}:${_pad(seconds)}';
   }
 
-  // Helper function to pad numbers with leading zeros
   String _pad(int number) {
     return number.toString().padLeft(2, '0');
   }
 
-  // Close the dialog safely only once
   void _closeDialog() {
     if (!_isClosed && mounted) {
       _isClosed = true;
-      Navigator.of(context).pop(); // Close the dialog
+      Navigator.of(context).pop();
     }
   }
 
@@ -81,7 +71,7 @@ class _CountdownTimerDialogState extends State<CountdownTimerDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: BorderRadius.circular(AppConstants.radius_5),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -97,10 +87,10 @@ class _CountdownTimerDialogState extends State<CountdownTimerDialog> {
           ),
           20.height,
           CustomButtonWidget(
-            buttonText: AppLocalizations.of(context)!.close,
+            buttonText: AppLocalizations.of(context)!.closeText,
             bGColor: AppColors.mainColor,
             onPressed: () {
-              _closeDialog(); // Close the dialog safely once
+              _closeDialog();
             },
           ),
         ],

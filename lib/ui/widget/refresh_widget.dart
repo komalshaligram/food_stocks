@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 
@@ -15,11 +14,7 @@ class RefreshWidget extends StatelessWidget {
       refresh: Container(
         height: 30,
         width: 30,
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.1),
-              blurRadius: AppConstants.blur_10)
-        ], color: AppColors.whiteColor, shape: BoxShape.circle),
+        decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
         child: CupertinoActivityIndicator(
           color: AppColors.mainColor,
           radius: 10,

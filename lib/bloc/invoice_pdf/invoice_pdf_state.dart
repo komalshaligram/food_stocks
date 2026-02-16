@@ -1,8 +1,7 @@
 part of 'invoice_pdf_bloc.dart';
 
 @freezed
-class InvoicePdfState with _$InvoicePdfState{
-
+class InvoicePdfState with _$InvoicePdfState {
   const factory InvoicePdfState({
     required Invoice invoiceDetailsList,
     required bool isDownloading,
@@ -11,12 +10,11 @@ class InvoicePdfState with _$InvoicePdfState{
     bool? hasValidLink,
   }) = _InvoicePdfState;
 
-  factory InvoicePdfState.initial()=>  const InvoicePdfState(
- invoiceDetailsList: Invoice(),
-    downloadProgress: 0,
-    isDownloading: false,
-    statusList: <StatusData>[],
-    hasValidLink: null,
-  );
-
+  factory InvoicePdfState.initial() => const InvoicePdfState(
+        invoiceDetailsList: Invoice(),
+        downloadProgress: 0,
+        isDownloading: false,
+        statusList: <StatusData>[],
+        hasValidLink: null,
+      );
 }

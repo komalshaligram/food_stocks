@@ -1,9 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../bloc/home/home_bloc.dart';
 import '../../ui/widget/common_product_details_button.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
@@ -151,7 +148,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
               productDetails.first.sale?.saleDescription != ''
                   ? Container(
                       width: getScreenWidth(context) - 50,
-                      padding: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(AppConstants.padding_3),
                       margin: EdgeInsets.zero,
                       decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                       child: Text(
@@ -171,13 +168,13 @@ class CommonProductDetailsWidget extends StatelessWidget {
               (productDetails.first.isPesach ?? false) ? 5.height : 0.height,
               (productDetails.first.isPesach ?? false)
                   ? Container(
-                      padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
                       decoration: BoxDecoration(color: AppColors.pesachBGColor, border: Border.all(color: AppColors.pesachBGColor), borderRadius: const BorderRadius.all(Radius.circular(10))),
                       child: productDetails.first.nmMashlim != ''
                           ? Text('${AppLocalizations.of(context)!.pesach}, ${productDetails.first.nmMashlim}')
                           : Text(
                               AppLocalizations.of(context)!.pesach,
-                              style: const TextStyle(fontSize: 12),
+                              style: const TextStyle(fontSize: AppConstants.font_12),
                             ))
                   : 0.height,
               (productDetails.first.isPesach ?? false) ? 5.height : 0.height,
@@ -243,60 +240,6 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     // width: 90,
                                     height: 150,
                                   ),
-                            /* child: CarouselSlider(
-                                items: productImages
-                                    .map((productImage) => GestureDetector(
-                                  onTap: imageOnTap,
-                                  child: productImage.isNotEmpty ? Image.network(
-                                    "${AppUrls.baseFileUrl}$productImage",
-                                    height: 150,
-                                    fit: BoxFit.contain,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress
-                                          ?.cumulativeBytesLoaded !=
-                                          loadingProgress
-                                              ?.expectedTotalBytes) {
-                                        return CommonShimmerWidget(
-                                          child: Container(
-                                            height: 150,
-                                            width: 150,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.whiteColor,
-                                              borderRadius: const BorderRadius.all(
-                                                  Radius.circular(AppConstants
-                                                      .radius_10)),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return child;
-                                    },
-                                    errorBuilder:
-                                        (context, error, stackTrace) {
-                                      return Image.asset(
-                                        AppImagePath.imageNotAvailable5,
-                                        fit: BoxFit.cover,
-                                        // width: 90,
-                                        height: 150,
-                                      );
-                                    },
-                                  ) : Image.asset(
-                                    AppImagePath.imageNotAvailable5,
-                                    fit: BoxFit.cover,
-                                    // width: 90,
-                                    height: 150,
-                                  ),
-                                ))
-                                    .toList(),
-                                options: CarouselOptions(
-                                    height: 150,
-                                    initialPage: productImageIndex,
-                                    aspectRatio: 16 / 9,
-                                    scrollDirection: Axis.horizontal,
-                                    enableInfiniteScroll: false,
-                                    autoPlayCurve: Curves.decelerate,
-                                    pageSnapping: true)),*/
                           ),
                         ],
                       ),
@@ -314,7 +257,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                         bottom: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1),
                       ),
                     ),
-                    padding: const EdgeInsets.fromLTRB(10, 10, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(AppConstants.padding_10, AppConstants.padding_10, AppConstants.padding_20, 0),
                     child: productStock == '0' || productStock == "-1" || productStock == "0.0"
                         ? Column(
                             children: [
@@ -349,7 +292,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                         ),
                                         !isIncludedVat
                                             ? (productDetails.first.isBottle ?? false)
-                                                ? Container(padding: const EdgeInsets.only(top: 3), child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}'))
+                                                ? Container(padding: const EdgeInsets.only(top: AppConstants.padding_3), child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}'))
                                                 : 0.height
                                             : 0.width,
                                         isIncludedVat
@@ -451,7 +394,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                   children: [
                                     Container(
                                       alignment: Alignment.centerRight,
-                                      margin: const EdgeInsets.only(top: 3),
+                                      margin: const EdgeInsets.only(top: AppConstants.padding_3),
                                       child: Text(
                                         '${AppLocalizations.of(context)!.minimum_box_title} ${productDetails.first.sale?.saleMinQuantity}',
                                         style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
@@ -459,7 +402,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     ),
                                     Container(
                                       alignment: Alignment.centerRight,
-                                      margin: const EdgeInsets.only(top: 3),
+                                      margin: const EdgeInsets.only(top: AppConstants.padding_3),
                                       child: Text(
                                         '${AppLocalizations.of(context)!.maximum_qty}: ${productDetails.first.sale?.saleMaxQuantity}',
                                         style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
@@ -470,7 +413,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               else if ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMaxQuantity == '100' && productDetails.first.sale?.saleMinQuantity != '0')
                                 Container(
                                   alignment: Alignment.centerRight,
-                                  margin: const EdgeInsets.only(top: 3),
+                                  margin: const EdgeInsets.only(top: AppConstants.padding_3),
                                   child: Text(
                                     '${AppLocalizations.of(context)!.minimum_box_title} ${productDetails.first.sale?.saleMinQuantity}',
                                     style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
@@ -479,38 +422,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               else if ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity == '0' && productDetails.first.sale?.saleMaxQuantity != '0' && productDetails.first.sale?.saleMaxQuantity != '100')
                                 Container(
                                   alignment: Alignment.centerRight,
-                                  margin: const EdgeInsets.only(top: 3),
+                                  margin: const EdgeInsets.only(top: AppConstants.padding_3),
                                   child: Text(
                                     '${AppLocalizations.of(context)!.maximum_qty}: ${productDetails.first.sale?.saleMaxQuantity}',
                                     style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
                                   ),
                                 )
-                              else if ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity == '0' &&
-                                      productDetails.first.sale?.saleMaxQuantity == '0')
+                              else if ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity == '0' && productDetails.first.sale?.saleMaxQuantity == '0')
                                 const IgnorePointer()
                               else
                                 const IgnorePointer(),
-
-                              // ((productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMinQuantity != '0')
-                              //     ? Container(
-                              //         alignment: Alignment.centerRight,
-                              //         margin: const EdgeInsets.only(top: 3),
-                              //         child: Text(
-                              //           '${AppLocalizations.of(context)!.minimum_box_title} ${productDetails.first.sale?.saleMinQuantity}',
-                              //           style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
-                              //         ),
-                              //       )
-                              //     : 0.height,
-                              // (productDetails.first.sale?.isSale ?? false) && productDetails.first.sale?.saleMaxQuantity != '0'
-                              //     ? Container(
-                              //         alignment: Alignment.centerRight,
-                              //         margin: const EdgeInsets.only(top: 3),
-                              //         child: Text(
-                              //           '${AppLocalizations.of(context)!.maximum_qty}: ${productDetails.first.sale?.saleMaxQuantity}',
-                              //           style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
-                              //         ),
-                              //       )
-                              //     : 0.height,
                               (productDetails.first.supplierSales?.first.lowStock != '') && (productStock != '0' || productStock != '0.0')
                                   ? Text(
                                       (productDetails.first.supplierSales?.first.lowStock.toString() ?? ''),

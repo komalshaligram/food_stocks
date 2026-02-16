@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 
@@ -8,9 +7,7 @@ class CommonDropDownButton extends StatelessWidget {
   final List<DropdownMenuItem<String>>? items;
   final void Function(String?)? onChanged;
   final Color color;
-  const CommonDropDownButton({super.key,required this.value , required this.items,required this.onChanged,
-  this.color = const Color(0xffD9D9D9)
-  });
+  const CommonDropDownButton({super.key, required this.value, required this.items, required this.onChanged, this.color = const Color(0xffD9D9D9)});
 
   @override
   Widget build(BuildContext context) {
@@ -21,26 +18,21 @@ class CommonDropDownButton extends StatelessWidget {
       ),
       alignment: Alignment.bottomCenter,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.only(
-            left: AppConstants.padding_10,
-            right: AppConstants.padding_10),
+        contentPadding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-              AppConstants.radius_3),
+          borderRadius: BorderRadius.circular(AppConstants.radius_3),
           borderSide: BorderSide(
-            color:color,
+            color: color,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-              AppConstants.radius_3),
+          borderRadius: BorderRadius.circular(AppConstants.radius_3),
           borderSide: BorderSide(
             color: color,
           ),
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-              AppConstants.radius_3),
+          borderRadius: BorderRadius.circular(AppConstants.radius_3),
           borderSide: BorderSide(
             color: color,
           ),

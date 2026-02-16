@@ -45,12 +45,11 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           if (response.status == AppConstants.code_200) {
             await SmsAutoFill().listenForCode();
             preferencesHelper.setIsGuestUser(isGuestUser: false);
-           // preferencesHelper.setUserExist(isUserExist: response.data?.isUserExists??false);
             if (response.user != null) {
               preferencesHelper.setUserId(id: response.user?.id ?? '');
               preferencesHelper.setPhoneNumber(userPhoneNumber: event.contactNumber);
             }
-            Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {AppStrings.contactString: event.contactNumber, AppStrings.isRegisterString: !(response.data?.isUserExists??false)});
+            Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {AppStrings.contactString: event.contactNumber, AppStrings.isRegisterString: !(response.data?.isUserExists ?? false)});
             emit(state.copyWith(isLoading: false));
           } else if (response.status == AppConstants.code_403) {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
@@ -74,11 +73,10 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         }
       } else if (event is _checkVersionOfAppEvent) {
         final checker = StoreVersionChecker();
-        // PackageInfo packageInfo = await PackageInfo.fromPlatform();
         checker.checkUpdate().then((value) {
-          printData(value.currentVersion); //return current app version
-          printData(value.newVersion); //return the new app version
-          printData(value.appURL); //return the app url
+          printData(value.currentVersion);
+          printData(value.newVersion);
+          printData(value.appURL);
           printData(value.errorMessage);
           if (value.canUpdate && Platform.isAndroid) {
             customShowUpdateDialog(event.context, preferencesHelper.getAppLanguage(), value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';

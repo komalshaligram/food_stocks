@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/app_utils.dart';
 import '../utils/constants/app_constants.dart';
 
 class FormDataScreenShimmerWidget extends StatelessWidget {
-
   const FormDataScreenShimmerWidget({super.key});
 
   @override
@@ -15,9 +13,7 @@ class FormDataScreenShimmerWidget extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(
-              left: getScreenWidth(context) * 0.1,
-              right: getScreenWidth(context) * 0.1),
+          padding: EdgeInsets.only(left: getScreenWidth(context) * 0.1, right: getScreenWidth(context) * 0.1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,8 +57,7 @@ class FormDataScreenShimmerWidget extends StatelessWidget {
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -76,8 +71,7 @@ class FormDataScreenShimmerWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

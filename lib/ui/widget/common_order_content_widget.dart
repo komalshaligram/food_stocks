@@ -19,7 +19,22 @@ class CommonOrderContentWidget extends StatelessWidget {
   final int maxLine;
   final int titleMaxLine;
 
-  const CommonOrderContentWidget({super.key, required this.title, required this.value, required this.titleColor, required this.valueColor, this.flexValue, this.valueTextSize = 14, this.valueTextWeight = FontWeight.bold, this.columnPadding = 5, required this.backGroundColor, required this.borderCoder, this.maxLine = 1, this.titleMaxLine = 1, this.titleTextSize = 10});
+  const CommonOrderContentWidget({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.titleColor,
+    required this.valueColor,
+    this.flexValue,
+    this.valueTextSize = 14,
+    this.valueTextWeight = FontWeight.bold,
+    this.columnPadding = 5,
+    required this.backGroundColor,
+    required this.borderCoder,
+    this.maxLine = 1,
+    this.titleMaxLine = 1,
+    this.titleTextSize = 10,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +61,7 @@ class CommonOrderContentWidget extends StatelessWidget {
               ),
               5.height,
               value == ''
-                  ? IgnorePointer()
+                  ? const IgnorePointer()
                   : Text(
                       value,
                       style: AppStyles.rkRegularTextStyle(size: valueTextSize, color: valueColor, fontWeight: valueTextWeight),

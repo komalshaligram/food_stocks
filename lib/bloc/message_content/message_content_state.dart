@@ -12,9 +12,9 @@ class MessageContentState with _$MessageContentState {
 
   factory MessageContentState.initial() => const MessageContentState(
         message: MessageData(),
-    isReadMore: false,
-    isPreview: false,
-    language: AppStrings.hebrewString,
-    isLoading: false
+        isReadMore: false,
+        isPreview: false,
+        language: AppStrings.hebrewString,
+        isLoading: false,
       );
 }

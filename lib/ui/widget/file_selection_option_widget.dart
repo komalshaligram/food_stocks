@@ -1,9 +1,7 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';
@@ -15,12 +13,7 @@ class FileSelectionOptionWidget extends StatelessWidget {
   final Color iconColor;
   final void Function() onTap;
 
-  const FileSelectionOptionWidget({super.key,
-    required this.title,
-    required this.icon,
-    this.lastItem = false,
-    this.iconColor = const Color(0xff000000),
-    required this.onTap});
+  const FileSelectionOptionWidget({super.key, required this.title, required this.icon, this.lastItem = false, this.iconColor = const Color(0xff000000), required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +23,13 @@ class FileSelectionOptionWidget extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                vertical: AppConstants.padding_15,
-                horizontal: AppConstants.padding_10),
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   title,
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.mediumFont,
-                      color: iconColor == AppColors.redColor ? AppColors
-                          .redColor : AppColors.blackColor),
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: iconColor == AppColors.redColor ? AppColors.redColor : AppColors.blackColor),
                 ),
                 Transform(
                   alignment: Alignment.center,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utils/app_utils.dart';
@@ -7,8 +6,8 @@ import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';
 
 class NoDataBottomSheet extends StatelessWidget {
-  const NoDataBottomSheet({super.key,required this.dialogContext});
- final BuildContext dialogContext;
+  const NoDataBottomSheet({super.key, required this.dialogContext});
+  final BuildContext dialogContext;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +31,7 @@ class NoDataBottomSheet extends StatelessWidget {
           SizedBox(
             height: getScreenHeight(context) * 0.7,
             child: Center(
-              child: Text(
-                  AppLocalizations.of(context)!.no_product,
+              child: Text(AppLocalizations.of(context)!.no_product,
                   style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.normalFont,
                     color: AppColors.redColor,

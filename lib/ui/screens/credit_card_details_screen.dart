@@ -129,20 +129,18 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                                   );
                                 }).toList(),
                                 onChanged: (month) {
-                                 if(validateMonth(month.toString(), state.validityController.text.toString())){
-                                   context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.selectMonthEvent(month: month ?? ''));
-                                 }else{
-                                   CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_valid_month, type: SnackBarType.failure);
-                                 }
+                                  if (validateMonth(month.toString(), state.validityController.text.toString())) {
+                                    context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.selectMonthEvent(month: month ?? ''));
+                                  } else {
+                                    CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_valid_month, type: SnackBarType.failure);
+                                  }
                                 },
                                 value: state.selectedMonth,
                               ),
                             ],
                           ),
                         ),
-                        Expanded(
-                            flex: 4,
-                            child: Container())
+                        Expanded(flex: 4, child: Container())
                       ],
                     ),
                   ],
@@ -153,16 +151,16 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
           bottomSheet: Container(
             color: AppColors.whiteColor,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+              padding: const EdgeInsets.all(AppConstants.padding_30),
               child: CustomButtonWidget(
                 buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
                 bGColor: AppColors.mainColor,
                 isLoading: state.isLoading,
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
-                    if(validateMonth(state.selectedMonth, state.validityController.text)){
+                    if (validateMonth(state.selectedMonth, state.validityController.text)) {
                       context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.addCreditCardEvent(context: context));
-                    }else{
+                    } else {
                       CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_valid_month, type: SnackBarType.failure);
                     }
                   }
@@ -176,14 +174,14 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
     );
   }
 
-  bool validateMonth(String month,String year){
-    if(DateTime.now().year.toString().substring(2,4)==year){
-      if(int.parse(month.toString())<int.parse((DateTime.now().month-1).toString())){
+  bool validateMonth(String month, String year) {
+    if (DateTime.now().year.toString().substring(2, 4) == year) {
+      if (int.parse(month.toString()) < int.parse((DateTime.now().month - 1).toString())) {
         return false;
-      }else{
+      } else {
         return true;
       }
-    }else{
+    } else {
       return true;
     }
   }

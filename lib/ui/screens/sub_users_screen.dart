@@ -57,7 +57,7 @@ class SubUserScreenWidget extends StatelessWidget {
                 buttonText: AppLocalizations.of(context)!.new_user,
                 height: 30,
                 width: 70,
-                radius: 5,
+                radius: AppConstants.radius_5,
                 fontSize: AppConstants.font_13,
                 onPressed: () {
                bloc.add(SubUsersEvent.userApproveEvent(context: context));
@@ -177,7 +177,7 @@ class SubUserScreenWidget extends StatelessWidget {
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                size: 16,
+                size: AppConstants.smallFont,
                 color:  AppColors.blackColor,
               ) ,
             ],

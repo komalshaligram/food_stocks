@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_stock/ui/screens/refund_screen.dart';
 import 'package:food_stock/ui/screens/return_summary_screen.dart';
 import 'package:food_stock/ui/screens/scan_return_product_screen.dart';
 import '../../ui/screens/manage_credit_card.dart';
@@ -64,7 +63,6 @@ import '../ui/screens/wallet_screen.dart';
 import '../ui/screens/way_of_payment_screen.dart';
 import '../ui/screens/webview_screen.dart';
 
-
 enum RouteDefine {
   ///ADD NAME OF ROUTE SCREEN
   ///
@@ -107,10 +105,10 @@ enum RouteDefine {
   reorderScreen,
   pesachScreen,
   formDataScreen,
-  bankInfoScreen, privacyPolicyScreen,
+  bankInfoScreen,
+  privacyPolicyScreen,
   previewScreen,
   invoiceScreen,
-  refundScreen,
   invoicePdfScreen,
   refundPdfScreen,
   subUsersScreen,
@@ -150,7 +148,6 @@ class AppRouting {
       RouteDefine.loginScreen.name: (_) => LogInRoute.route,
       RouteDefine.bottomNavScreen.name: (_) => BottomNavRoute.route,
       RouteDefine.homeScreen.name: (_) => HomeRoute.route,
-    //  RouteDefine.menuScreen.name: (_) => MenuRoute.route,
       RouteDefine.basketScreen.name: (_) => BasketRoute.route,
       RouteDefine.basketSummaryScreen.name: (_) => BasketSummaryRoute.route,
       RouteDefine.walletScreen.name: (_) => WalletRoute.route,
@@ -162,22 +159,18 @@ class AppRouting {
       RouteDefine.profileMenuScreen.name: (_) => ProfileMenuRoute.route,
       RouteDefine.orderDetailsScreen.name: (_) => OrderDetailsRoute.route,
       RouteDefine.productDetailsScreen.name: (_) => ProductDetailsRoute.route,
-      RouteDefine.shipmentVerificationScreen.name: (_) =>
-          ShipmentVerificationRoute.route,
+      RouteDefine.shipmentVerificationScreen.name: (_) => ShipmentVerificationRoute.route,
       RouteDefine.storeCategoryScreen.name: (_) => StoreCategoryRoute.route,
       RouteDefine.orderSummaryScreen.name: (_) => OrderSummaryRoute.route,
       RouteDefine.orderSuccessfulScreen.name: (_) => OrderSuccessfulRoute.route,
       RouteDefine.supplierScreen.name: (_) => SupplierRoute.route,
-      RouteDefine.supplierProductsScreen.name: (_) =>
-          SupplierProductsRoute.route,
+      RouteDefine.supplierProductsScreen.name: (_) => SupplierProductsRoute.route,
       RouteDefine.productSaleScreen.name: (_) => ProductSaleRoute.route,
-      RouteDefine.planogramProductScreen.name: (_) =>
-          PlanogramProductRoute.route,
+      RouteDefine.planogramProductScreen.name: (_) => PlanogramProductRoute.route,
       RouteDefine.productCategoryScreen.name: (_) => ProductCategoryRoute.route,
       RouteDefine.companyScreen.name: (_) => CompanyRoute.route,
       RouteDefine.companyProductsScreen.name: (_) => CompanyProductsRoute.route,
-      RouteDefine.recommendationProductsScreen.name: (_) =>
-          RecommendationProductsRoute.route,
+      RouteDefine.recommendationProductsScreen.name: (_) => RecommendationProductsRoute.route,
       RouteDefine.reorderScreen.name: (_) => ReorderRoute.route,
       RouteDefine.formDataScreen.name: (_) => FormDataRoute.route,
       RouteDefine.bankInfoScreen.name: (_) => BankInfoRoute.route,
@@ -185,7 +178,6 @@ class AppRouting {
       RouteDefine.pesachScreen.name: (_) => PesachProductsRoute.route,
       RouteDefine.previewScreen.name: (_) => PreviewScreenRoute.route,
       RouteDefine.invoiceScreen.name: (_) => InvoiceRoute.route,
-      RouteDefine.refundScreen.name: (_) => RefundRoute.route,
       RouteDefine.invoicePdfScreen.name: (_) => InvoicePdfRoute.route,
       RouteDefine.refundPdfScreen.name: (_) => RefundPdfRoute.route,
       RouteDefine.subUsersScreen.name: (_) => SubUsersRoute.route,
@@ -200,28 +192,30 @@ class AppRouting {
       RouteDefine.bankTransferScreen.name: (_) => BankTransferScreenRoute.route,
       RouteDefine.owner1FormScreen.name: (_) => Owner1FormRoute.route,
       RouteDefine.owner2FormScreen.name: (_) => Owner2FormRoute.route,
-      RouteDefine.returnListScreen.name:(_)=>ReturnListRoute.route,
-      RouteDefine.scanReturnProduct.name:(_)=>ScanReturnProductRoute.route,
-      RouteDefine.productReturnInfoScreen.name:(_)=>ProductReturnInfoRoute.route,
-      RouteDefine.createProductReturnListScreen.name:(_)=>CreateProductReturnListRoute.route,
-      RouteDefine.returnSummaryScreen.name:(_)=>ReturnSummaryRoute.route,
-      RouteDefine.clientFormDetailsScreen.name:(_)=>ClientFormDetailsRoute.route,
-      RouteDefine.returnDriverScreen.name:(_)=>ReturnDriverRoute.route,
-      RouteDefine.webViewScreen.name:(_)=>WebViewRoute.route,
-      RouteDefine.orderRefundsScreen.name:(_)=>OrderRefundsRoute.route,
-      RouteDefine.myAccountingCardScreen.name:(_)=>MyAccountingCardRoute.route,
+      RouteDefine.returnListScreen.name: (_) => ReturnListRoute.route,
+      RouteDefine.scanReturnProduct.name: (_) => ScanReturnProductRoute.route,
+      RouteDefine.productReturnInfoScreen.name: (_) => ProductReturnInfoRoute.route,
+      RouteDefine.createProductReturnListScreen.name: (_) => CreateProductReturnListRoute.route,
+      RouteDefine.returnSummaryScreen.name: (_) => ReturnSummaryRoute.route,
+      RouteDefine.clientFormDetailsScreen.name: (_) => ClientFormDetailsRoute.route,
+      RouteDefine.returnDriverScreen.name: (_) => ReturnDriverRoute.route,
+      RouteDefine.webViewScreen.name: (_) => WebViewRoute.route,
+      RouteDefine.orderRefundsScreen.name: (_) => OrderRefundsRoute.route,
+      RouteDefine.myAccountingCardScreen.name: (_) => MyAccountingCardRoute.route,
     };
 
     final routeBuilder = routes[settings.name];
 
     return MaterialPageRoute(
       builder: (context) => routeBuilder!(context),
-      settings:
-          RouteSettings(name: settings.name, arguments: settings.arguments ,),
+      settings: RouteSettings(
+        name: settings.name,
+        arguments: settings.arguments,
+      ),
     );
-
   }
 }
+
 extension RouteExt on Object {
   String get name => toString().substring(toString().indexOf('.') + 1);
 }

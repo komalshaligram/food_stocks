@@ -25,25 +25,24 @@ class ProfileState with _$ProfileState {
   }) = _ProfileState;
 
   factory ProfileState.initial() => ProfileState(
-      image: File(''),
-      isUpdate: false,
-      selectedBusinessType: '',
-      businessTypeList: [],
-      businessNameController: TextEditingController(),
-      businessIdController: TextEditingController(),
-      ownerFirstNameController: TextEditingController(),
-      ownerLastNameController: TextEditingController(),
-      israelIdController: TextEditingController(),
-      contactController: TextEditingController(),
-      isLoading: false,
-      isShimmering: false,
-      isUpdating: false,
-      isFileSizeExceeds: false,
-      isFileUploading: false,
-      UserImageUrl: '',
-      isUploadingProcess: false,
-    language: AppStrings.hebrewString,
-    userId : ''
-  );
+        image: File(''),
+        isUpdate: false,
+        selectedBusinessType: '',
+        businessTypeList: [],
+        businessNameController: TextEditingController(),
+        businessIdController: TextEditingController(),
+        ownerFirstNameController: TextEditingController(),
+        ownerLastNameController: TextEditingController(),
+        israelIdController: TextEditingController(),
+        contactController: TextEditingController(),
+        isLoading: false,
+        isShimmering: false,
+        isUpdating: false,
+        isFileSizeExceeds: false,
+        isFileUploading: false,
+        UserImageUrl: '',
+        isUploadingProcess: false,
+        language: AppStrings.hebrewString,
+        userId: '',
+      );
 }
-

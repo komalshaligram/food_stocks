@@ -49,7 +49,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
         productDetails: [],
         productStockUpdateIndex: -1,
         productStockList: [
-          [ProductStockModel(productId: '')],
+          [const ProductStockModel(productId: '')],
           [],
           []
         ],
@@ -80,7 +80,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
         isSaleOn: false,
         isProgress: false,
         language: AppStrings.hebrewString,
-    isCartCountChange: false,
-    messageCount: 0,
+        isCartCountChange: false,
+        messageCount: 0,
       );
 }

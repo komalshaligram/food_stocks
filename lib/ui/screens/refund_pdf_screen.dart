@@ -39,7 +39,7 @@ class RefundPdfScreen extends StatelessWidget {
 class RefundPdfScreenWidget extends StatelessWidget {
   final RefundInvoiceCommon? invoiceDetailsList; // ← CHANGED TYPE
 
-  RefundPdfScreenWidget({super.key, required this.invoiceDetailsList});
+  const RefundPdfScreenWidget({super.key, required this.invoiceDetailsList});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,6 @@ class RefundPdfScreenWidget extends StatelessWidget {
               ),
             ),
           ),
-
           body: Builder(
             builder: (_) {
               if (state.hasValidLink == null) {

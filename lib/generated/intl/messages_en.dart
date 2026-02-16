@@ -202,7 +202,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cities not available",
     ),
     "city": MessageLookupByLibrary.simpleMessage("City of business"),
-    "clear": MessageLookupByLibrary.simpleMessage("clear"),
+    "clear": MessageLookupByLibrary.simpleMessage("Clear"),
     "click_to_scan": MessageLookupByLibrary.simpleMessage(
       "Click to Scan Products",
     ),
@@ -211,7 +211,6 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "client_form_details": MessageLookupByLibrary.simpleMessage("Client Info"),
     "client_info": MessageLookupByLibrary.simpleMessage("Client Info"),
-    "close": MessageLookupByLibrary.simpleMessage("Close"),
     "closeText": MessageLookupByLibrary.simpleMessage("Close"),
     "closed_text": MessageLookupByLibrary.simpleMessage("Closed"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
@@ -279,6 +278,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "data_for_form": MessageLookupByLibrary.simpleMessage("Data for forms"),
     "data_not_found": MessageLookupByLibrary.simpleMessage("Data not found"),
     "date_approved": MessageLookupByLibrary.simpleMessage("Date Approved:"),
+    "date_range": MessageLookupByLibrary.simpleMessage("Date range"),
     "date_sent": MessageLookupByLibrary.simpleMessage("Date Sent:"),
     "dec": MessageLookupByLibrary.simpleMessage("Jan"),
     "december": MessageLookupByLibrary.simpleMessage("January"),
@@ -521,6 +521,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invoice_close": MessageLookupByLibrary.simpleMessage("Closed"),
     "invoice_date": MessageLookupByLibrary.simpleMessage("Invoice date"),
+    "invoice_date_range": MessageLookupByLibrary.simpleMessage(
+      "Invoice Date Range",
+    ),
     "invoice_number": MessageLookupByLibrary.simpleMessage("Refund invoice"),
     "invoice_open": MessageLookupByLibrary.simpleMessage("Open"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("Invoice status"),
@@ -583,6 +586,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "maximumGrid": MessageLookupByLibrary.simpleMessage("Maximum"),
     "maximumList": MessageLookupByLibrary.simpleMessage("Maximum for sale"),
     "maximum_qty": MessageLookupByLibrary.simpleMessage("Maximum Quantity"),
+    "maximum_three_month_date_range_required":
+        MessageLookupByLibrary.simpleMessage(
+          "Please select maximum of 3 months range",
+        ),
     "may": MessageLookupByLibrary.simpleMessage("Aug"),
     "menu": MessageLookupByLibrary.simpleMessage("Menu"),
     "message": MessageLookupByLibrary.simpleMessage("Message"),
@@ -853,6 +860,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "please_enter_contact_name": MessageLookupByLibrary.simpleMessage(
       "Please enter contact name",
+    ),
+    "please_enter_driverName": MessageLookupByLibrary.simpleMessage(
+      "Please enter driver name",
     ),
     "please_enter_email": MessageLookupByLibrary.simpleMessage(
       "Please enter email",
@@ -1134,6 +1144,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Refunded on order",
     ),
     "refunds": MessageLookupByLibrary.simpleMessage("Refunds"),
+    "refunds_date_range": MessageLookupByLibrary.simpleMessage(
+      "Refunds Date Range",
+    ),
     "refunds_for_order": MessageLookupByLibrary.simpleMessage(
       "Refunds for order: ",
     ),
@@ -1232,6 +1245,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_checkbox": MessageLookupByLibrary.simpleMessage(
       "Please select all checkbox",
     ),
+    "select_date": MessageLookupByLibrary.simpleMessage("Select Date"),
     "select_issue": MessageLookupByLibrary.simpleMessage("Please select issue"),
     "select_next_day_shift": MessageLookupByLibrary.simpleMessage(
       "please select next day shift",
@@ -1362,6 +1376,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "This supplier have ",
     ),
     "thursday": MessageLookupByLibrary.simpleMessage("Thursday"),
+    "to_date": MessageLookupByLibrary.simpleMessage("To Date"),
     "token_error": MessageLookupByLibrary.simpleMessage("Token error"),
     "total": MessageLookupByLibrary.simpleMessage("Total"),
     "total_amount_cant_be_zero": MessageLookupByLibrary.simpleMessage(

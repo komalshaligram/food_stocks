@@ -22,12 +22,9 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => LogInBloc()
-        ..add(LogInEvent.changeAuthEvent(
-            isRegister: args?[AppStrings.isRegisterString] ?? false)),
+      create: (context) => LogInBloc()..add(LogInEvent.changeAuthEvent(isRegister: args?[AppStrings.isRegisterString] ?? false)),
       child: LogInScreenWidget(),
     );
   }
@@ -49,9 +46,7 @@ class LogInScreenWidget extends StatelessWidget {
             preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.whiteColor,
-              title: state.isRegister
-                  ? AppLocalizations.of(context)!.register
-                  : AppLocalizations.of(context)!.login,
+              title: state.isRegister ? AppLocalizations.of(context)!.register : AppLocalizations.of(context)!.login,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -63,23 +58,15 @@ class LogInScreenWidget extends StatelessWidget {
               child: Form(
                 key: _formKey,
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      left: getScreenWidth(context) * 0.1,
-                      right: getScreenWidth(context) * 0.1),
+                  padding: EdgeInsets.only(left: getScreenWidth(context) * 0.1, right: getScreenWidth(context) * 0.1),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       30.height,
-                      Text(AppLocalizations.of(context)!.enter_your_phone,
-                          style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.smallFont,
-                              color: Colors.black)),
+                      Text(AppLocalizations.of(context)!.enter_your_phone, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black)),
                       30.height,
                       CustomFormField(
-                        inputFormat: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(10)
-                        ],
+                        inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
                         context: context,
                         controller: phoneController,
                         keyboardType: TextInputType.phone,
@@ -96,12 +83,8 @@ class LogInScreenWidget extends StatelessWidget {
                         onPressed: state.isLoading
                             ? null
                             : () {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  context.read<LogInBloc>().add(
-                                      LogInEvent.logInApiDataEvent(
-                                          contactNumber: phoneController.text,
-                                          context: context));
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(contactNumber: phoneController.text, context: context));
                                 }
                               },
                         fontColors: AppColors.whiteColor,

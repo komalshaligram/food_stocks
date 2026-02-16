@@ -176,4 +176,10 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.syncCartWithProductStockListEvent({
     required BuildContext context,
   }) = _syncCartWithProductStockListEvent;
+
+  const factory HomeEvent.allowOrdersWithoutMinimumEvent({
+    required BuildContext context,
+  }) = _allowOrdersWithoutMinimumEvent;
+
+  const factory HomeEvent.consumeNoMinimumDialogEvent() = _consumeNoMinimumDialogEvent;
 }

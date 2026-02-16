@@ -20,17 +20,12 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
     return AlertDialog(
       contentPadding: const EdgeInsets.all(AppConstants.padding_15),
       surfaceTintColor: AppColors.whiteColor,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppConstants.radius_10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_10)),
       title: Text(
         title,
-        style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.font_14, color: AppColors.blackColor),
+        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
       ),
-      actionsPadding: const EdgeInsets.only(
-          right: AppConstants.padding_15,
-          bottom: AppConstants.padding_15,
-          left: AppConstants.padding_15),
+      actionsPadding: const EdgeInsets.only(right: AppConstants.padding_15, bottom: AppConstants.padding_15, left: AppConstants.padding_15),
       actions: [
         InkWell(
           highlightColor: Colors.transparent,
@@ -39,15 +34,13 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
             Navigator.pop(context);
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
             alignment: Alignment.center,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_7)),
             width: 80,
             child: Text(
               buttonTitle,
-              style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.mainColor.withOpacity(0.9),
-                  size: AppConstants.smallFont),
+              style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withOpacity(0.9), size: AppConstants.smallFont),
             ),
           ),
         )

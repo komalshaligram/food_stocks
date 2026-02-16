@@ -65,7 +65,6 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
                 image: File(croppedImage?.path ?? pickedFile.path),
                 subUserProfileImage: profileImageModel.filepath ?? '',
               ));
-
             }
           } on ServerException {
             emit(state.copyWith(isFileUploading: false, isUploadingProcess: false));
@@ -77,13 +76,11 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
         emit(state.copyWith(isLoading: true));
 
         try {
-
           SubUserReqModel req = SubUserReqModel(israelId: state.israelIdController.text.trim(), contactName: state.nameController.text.trim(), clientId: preferences.getUserId(), email: state.emailController.text.trim(), phoneNumber: state.phoneNumberController.text.trim(), profileImage: state.subUserProfileImage);
           Map<String, dynamic> subUserReqModel = req.toJson();
 
           subUserReqModel.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
 
@@ -117,7 +114,6 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
 
           final res = await DioClient(event.context).post(AppUrlEndPoints.deleteClientSubUserUrl, data: req);
 
-
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isDeleteProcess: false));
             Navigator.pop(event.dialogContext);
@@ -144,11 +140,9 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           Map<String, dynamic> updateSubUserReq = req.toJson();
 
           updateSubUserReq.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
-
 
           final response = await DioClient(event.context).put(path: AppUrlEndPoints.updateSubUserUrl, data: updateSubUserReq);
 
@@ -181,8 +175,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           Map<String, dynamic> req = updatedSubUserModel.toJson();
 
           req.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
           final res = await DioClient(event.context).post(
@@ -216,8 +209,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             Map<String, dynamic> getSubUserReq = req.toJson();
 
             getSubUserReq.removeWhere((key, value) {
-              if (value != null) {
-              }
+              if (value != null) {}
               return value == null;
             });
 
@@ -227,7 +219,6 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             );
 
             GetSubUserResModel response = GetSubUserResModel.fromJson(res);
-
 
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(

@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/storage/shared_preferences_helper.dart';
-import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/widget/sized_box_widget.dart';
@@ -16,9 +13,8 @@ import '../utils/app_utils.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
-import '../utils/constants/app_urls.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_order_content_widget.dart';
+import '../widget/common_divider_widget.dart';
 
 class InvoicePdfRoute {
   static Widget get route => const InvoicePdfScreen();
@@ -56,20 +52,6 @@ class InvoicePdfScreenWidget extends StatelessWidget {
         final bloc = context.read<InvoicePdfBloc>();
         final String? fullUrl = state.invoiceDetailsList.invoiceLink;
 
-        Widget titleText(BuildContext context, String title) => Text(
-          title,
-          style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        );
-
-        Widget subTitleValueText(BuildContext context, String subTitle) => Text(
-          subTitle,
-          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.normal),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        );
-
         Widget itemOne(InvoicePdfState state) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,49 +63,37 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                     subTitleValueText(context, invoiceDetailsList.invoiceNumber.toString()),
                   ],
                 ),
-
-                invoiceDetailsList.paymentStatus != null
-                    ? Container(
-                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: invoiceDetailsList.paymentStatus == AppStrings.openText ? AppColors.statusOpenColor : AppColors.statusCloseColor,
-                        ),
-                        child: Text(
-                          invoiceDetailsList.paymentStatus == AppStrings.openText ? AppLocalizations.of(context)!.invoice_open : AppLocalizations.of(context)!.invoice_close,
-                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w700),
-                        ),
-                      )
-                    : 0.width
+                invoiceDetailsList.paymentStatus != null ? getPaymentStatusWidget(invoiceDetailsList.paymentStatus!, context) : 0.width
               ],
             );
 
         Widget itemTwo(InvoicePdfState state) => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  titleText(context,AppLocalizations.of(context)!.invoice_date),
-                  subTitleValueText(context, (invoiceDetailsList.invoiceDate ?? '').isNotEmpty ? invoiceDetailsList.invoiceDate!.substring(0, 10) : ''),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  titleText(context,AppLocalizations.of(context)!.due_date),
-                  subTitleValueText(context, (invoiceDetailsList.dueDate ?? '').isNotEmpty ? invoiceDetailsList.dueDate!.substring(0, 10) : '--'),
-                ],
-              ),
-            ),
-
-          ],
-        );
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      titleText(context, AppLocalizations.of(context)!.invoice_date),
+                      subTitleValueText(
+                        context,
+                        (invoiceDetailsList.invoiceDate ?? '').isNotEmpty ? invoiceDetailsList.invoiceDate!.substring(0, 10) : '',
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      titleText(context, AppLocalizations.of(context)!.due_date),
+                      subTitleValueText(context, (invoiceDetailsList.dueDate ?? '').isNotEmpty ? invoiceDetailsList.dueDate!.substring(0, 10) : '--'),
+                    ],
+                  ),
+                ),
+              ],
+            );
 
         Widget itemThree(InvoicePdfState state) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,7 +103,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      titleText(context,AppLocalizations.of(context)!.for_order),
+                      titleText(context, AppLocalizations.of(context)!.for_order),
                       GestureDetector(
                         onTap: () async {
                           Navigator.push(
@@ -182,13 +152,12 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                                     child: Container(
                                       height: 1,
                                       color: AppColors.notificationColor,
-                                      margin: const EdgeInsets.only(top: 4),
+                                      margin: const EdgeInsets.only(top: AppConstants.padding_3),
                                     ),
                                   ),
                                 ],
                               ),
                       ),
-
                     ],
                   ),
                 ),
@@ -196,8 +165,11 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      titleText(context,AppLocalizations.of(context)!.total_invoice_amount),
-                      subTitleValueText(context, '${invoiceDetailsList.invoiceAmount}₪'),
+                      titleText(context, AppLocalizations.of(context)!.total_invoice_amount),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: subTitleValueText(context, formatSignedNumber(invoiceDetailsList.invoiceAmount)),
+                      ),
                     ],
                   ),
                 ),
@@ -252,20 +224,17 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                           child: Column(
                             children: [
                               itemOne(state),
-                              Divider(
+                              const DividerWidget(
                                 height: 20.0,
-                                color: AppColors.borderColor,
                               ),
                               itemTwo(state),
-                              Divider(
+                              const DividerWidget(
                                 height: 20.0,
-                                color: AppColors.borderColor,
                               ),
                               itemThree(state),
                             ],
                           ),
                         ),
-
                         15.height,
                         state.hasValidLink == false || !bloc.isValidLink(fullUrl)
                             ? Center(

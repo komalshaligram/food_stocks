@@ -98,7 +98,6 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
             if (response.product!.isEmpty) {
               CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.product_does_not_exist, type: SnackBarType.failure);
             } else {
-              //  if (state.returnProductList.isNotEmpty) {
               List<ReturnProduct> list = [];
 
               for (int i = 0; i < response.product!.length; i++) {
@@ -107,7 +106,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
               list.addAll(state.returnProductList);
 
               Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {
-                'list': list, /*'data': response.product?.first.toJson()*/
+                'list': list,
               });
             }
           } else {

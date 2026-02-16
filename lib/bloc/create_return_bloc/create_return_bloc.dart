@@ -75,7 +75,6 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           ));
         }
       } else if (event is _navigateToAddProductEvent) {
-        //  emit(state.copyWith(returnProductList: state.returnProductList));
         Navigator.pushReplacementNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': state.returnProductList, 'status': state.isFromPending});
       } else if (event is _deleteEvent) {
         if (state.returnId.isNotEmpty) {
@@ -106,10 +105,9 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
               );
             }
           } catch (e) {
-            // Add specific error handling
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: '${e.toString()}', // You can handle specific exceptions here
+              title: e.toString(),
               type: SnackBarType.failure,
             );
           }
@@ -229,7 +227,6 @@ class CallWaitingForNewOrderSuccessMsgDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         content: Text(
           AppLocalizations.of(context)!.waiting_for_new_order_success_msg,
-          // AppStrings.getLocalizedStrings(, context),
           style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont),
         ),
         actions: [
@@ -247,7 +244,7 @@ class CallWaitingForNewOrderSuccessMsgDialog extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.close,
+                        AppLocalizations.of(context)!.closeText,
                         style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.smallFont,
                           color: AppColors.whiteColor,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
@@ -14,9 +13,7 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.padding_5,
-              vertical: AppConstants.padding_5),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -30,12 +27,10 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
                     child: CommonShimmerWidget(
                       child: Container(
                         height: AppConstants.shimmerTextHeight,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_5),
+                        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                         decoration: BoxDecoration(
                           color: AppColors.whiteColor,
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_5)),
+                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                         ),
                       ),
                     ),
@@ -46,12 +41,10 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
                     child: CommonShimmerWidget(
                       child: Container(
                         height: AppConstants.shimmerTextHeight,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.padding_5),
+                        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                         decoration: BoxDecoration(
                           color: AppColors.whiteColor,
-                          borderRadius: const BorderRadius.all(
-                              Radius.circular(AppConstants.radius_5)),
+                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                         ),
                       ),
                     ),
@@ -67,10 +60,7 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: AppConstants.padding_3),
-                      child: buildDayWiseShiftTime());
+                  return Padding(padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3), child: buildDayWiseShiftTime());
                 },
               ),
               70.height,
@@ -98,12 +88,10 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
               child: CommonShimmerWidget(
                 child: Container(
                   height: AppConstants.shimmerTextHeight,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                  margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,
-                    borderRadius: const BorderRadius.all(
-                        Radius.circular(AppConstants.radius_5)),
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                   ),
                 ),
               ),
@@ -115,8 +103,7 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
                   height: AppConstants.textFormFieldHeight,
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,
-                    borderRadius: const BorderRadius.all(
-                        Radius.circular(AppConstants.radius_5)),
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                   ),
                 ),
               ),
@@ -129,8 +116,7 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
                   height: AppConstants.textFormFieldHeight,
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor,
-                    borderRadius: const BorderRadius.all(
-                        Radius.circular(AppConstants.radius_5)),
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                   ),
                 ),
               ),
@@ -143,8 +129,7 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
                 width: AppConstants.textFormFieldHeight,
                 decoration: BoxDecoration(
                   color: AppColors.whiteColor,
-                  borderRadius:
-                      const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                 ),
               ),
             )),
@@ -160,8 +145,7 @@ class ActivityTimeScreenShimmerWidget extends StatelessWidget {
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         ),
       ),
     );

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -36,7 +34,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           final String statusData = preferencesHelper.getOrderStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
           emit(state.copyWith(statusList: statusList, language: preferencesHelper.getAppLanguage()));
-          GetAllOrderReqModel reqMap = GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.orderPageLimit, userId: preferencesHelper.getUserId());
+          GetAllOrderReqModel reqMap = GetAllOrderReqModel(
+            pageNum: state.pageNum + 1,
+            pageLimit: AppConstants.orderPageLimit,
+            userId: preferencesHelper.getUserId(),
+          );
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.getAllOrderUrl,
             data: reqMap.toJson(),
@@ -48,14 +50,24 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
             List<Datum> orderList = state.orderDetailsList.toList(growable: true);
             if ((response.metaData?.totalFilteredCount ?? 1) > state.orderDetailsList.length) {
               orderList.addAll(response.data ?? []);
-              emit(state.copyWith(orderDetailsList: orderList, isShimmering: false, pageNum: state.pageNum + 1, isLoadMore: false, orderList: response));
+              emit(state.copyWith(
+                orderDetailsList: orderList,
+                isShimmering: false,
+                pageNum: state.pageNum + 1,
+                isLoadMore: false,
+                orderList: response,
+              ));
               emit(state.copyWith(isBottomOfProducts: orderList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
             } else {
               emit(state.copyWith(isShimmering: false, isLoadMore: false));
             }
           } else {
             emit(state.copyWith(isLoadMore: false, isShimmering: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));

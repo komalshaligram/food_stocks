@@ -171,10 +171,8 @@ class CompanyScreenWidget extends StatelessWidget {
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
               decoration: BoxDecoration(
-                //color: AppColors.mainColor,
                 gradient: AppColors.appMainGradientColor,
                 borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
-                // border: Border.all(color: AppColors.whiteColor, width: 1),
               ),
               child: Text(
                 companyName,

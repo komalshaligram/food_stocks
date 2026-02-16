@@ -5,7 +5,6 @@ import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_img_path.dart';
@@ -172,11 +171,10 @@ class CommonSaleListView extends StatelessWidget {
                         if (salesDesc!.isNotEmpty)
                           Container(
                             width: MediaQuery.of(context).size.width / 1.6,
-                            padding: const EdgeInsets.all(3),
+                            padding: const EdgeInsets.all(AppConstants.padding_3),
                             margin: EdgeInsets.zero,
                             decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                             child: Text(
-                              // 'fffggdfgdfgdgdgdgdgdfgdfgdfgdffgdfgdgdfgdffg',
                               "${parse(salesDesc).body?.text}",
                               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w500),
                               maxLines: 4,
@@ -215,30 +213,7 @@ class CommonSaleListView extends StatelessWidget {
                       ],
                     ),
                     5.height,
-                    // if(isFromSale! && minQuantity != '0' || maxQuantity != '0')
-                    //      Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.start,
-                    //         mainAxisAlignment: MainAxisAlignment.start,
-                    //         children: [
-                    //
-                    //             Text(
-                    //               '${AppLocalizations.of(context)!.minimumList}: ${minQuantity.toString()}',
-                    //               style: AppStyles.rkRegularTextStyle(
-                    //                 color: AppColors.redColor,
-                    //                 size: AppConstants.font_14,
-                    //               ),
-                    //             ),
-                    //           Text(
-                    //             '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
-                    //             style: AppStyles.rkRegularTextStyle(
-                    //               color: AppColors.redColor,
-                    //               size: AppConstants.font_14,
-                    //             ),
-                    //           )
-                    //
-                    //         ],
-                    //       )
-                    // else
+
                     if (isFromSale! && minQuantity != '0' && maxQuantity != '100')
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

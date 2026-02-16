@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
@@ -41,8 +40,6 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
           if (response.status == AppConstants.code_200) {
             if (event.isSupplierSingle == 'No' && (response.data?.data?.any((supplier) => supplier.id == event.orderBySupplierId) ?? false)) {
               final filteredList = response.data?.data?.where((supplier) => supplier.id == event.orderBySupplierId).toList();
-
-              printData("check here data ${filteredList}");
 
               emit(
                 state.copyWith(orderSummaryList: response, tempList: filteredList ?? [], totalSupplier: event.totalSupplier!),
@@ -123,9 +120,10 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
 
                 emit(state.copyWith(totalSupplier: state.totalSupplier - 1));
 
-                Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name,
-                    arguments: {AppStrings.showPreviousBtn: state.totalSupplier == 0 || state.totalSupplier == -1 ? false : true,
-                      AppStrings.totalSupplier : state.totalSupplier,});
+                Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name, arguments: {
+                  AppStrings.showPreviousBtn: state.totalSupplier == 0 || state.totalSupplier == -1 ? false : true,
+                  AppStrings.totalSupplier: state.totalSupplier,
+                });
               } else {
                 printData("come here else");
                 final res = await DioClient(event.context).post(

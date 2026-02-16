@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import 'common_shimmer_widget.dart';
@@ -16,19 +15,13 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
             height: 180,
             width: double.maxFinite,
             margin: const EdgeInsets.all(AppConstants.padding_10),
-            padding: const EdgeInsets.symmetric(
-                vertical: AppConstants.padding_10,
-                horizontal: AppConstants.padding_10),
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
               boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.15),
-                    blurRadius: AppConstants.blur_10),
+                BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
               ],
-              borderRadius: const BorderRadius.all(
-                  Radius.circular(AppConstants.radius_5)),
-
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             ),
             child: Container(
               height: 55,
@@ -41,7 +34,6 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
             width: 100,
           ),
         ),
-
         ListView.builder(
           itemCount: 4,
           shrinkWrap: true,
@@ -50,18 +42,13 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
             return CommonShimmerWidget(
               child: Container(
                 margin: const EdgeInsets.all(AppConstants.padding_10),
-                padding: const EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_15,
-                    horizontal: AppConstants.padding_10),
+                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
                 decoration: BoxDecoration(
                   color: AppColors.whiteColor,
                   boxShadow: [
-                    BoxShadow(
-                        color: AppColors.shadowColor.withOpacity(0.15),
-                        blurRadius: AppConstants.blur_10),
+                    BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
                   ],
-                  borderRadius:
-                  const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                 ),
                 child: Container(
                   height: 40,

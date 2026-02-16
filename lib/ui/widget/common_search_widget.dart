@@ -1,12 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
@@ -30,8 +27,8 @@ class CommonSearchWidget extends StatelessWidget {
   final TextEditingController controller;
   final bool isFilterTap;
 
-
-  const CommonSearchWidget({super.key,
+  const CommonSearchWidget({
+    super.key,
     required this.isCategoryExpand,
     required this.isSearching,
     required this.searchResultWidget,
@@ -46,7 +43,7 @@ class CommonSearchWidget extends StatelessWidget {
     required this.onSearchItemTap,
     required this.searchList,
     this.isFilterTap = false,
-    required this.onCloseTap
+    required this.onCloseTap,
   });
 
   @override
@@ -73,14 +70,9 @@ class CommonSearchWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              borderRadius:
-                  const BorderRadius.all(Radius.circular(AppConstants.radius_30)),
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_30)),
               color: AppColors.whiteColor,
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.shadowColor.withOpacity(0.3),
-                    blurRadius: 10)
-              ],
+              boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: AppConstants.radius_10)],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -88,49 +80,41 @@ class CommonSearchWidget extends StatelessWidget {
                 Container(
                   width: getScreenWidth(context),
                   height: 60,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(
-                        Radius.circular(AppConstants.radius_100)),
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                     color: AppColors.whiteColor,
-                    border: Border.all(
-                        color: AppColors.borderColor.withOpacity(0.5)),
-                    boxShadow: [
-                      BoxShadow(
-                          color: AppColors.shadowColor.withOpacity(0.3),
-                          blurRadius: isCategoryExpand ? 0 : 10)
-                    ],
+                    border: Border.all(color: AppColors.borderColor.withOpacity(0.5)),
+                    boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: isCategoryExpand ? 0 : 10)],
                   ),
                   child: Row(
                     children: [
-                      isFilterTap ? 0.width :  InkWell(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: onFilterTap,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: AppConstants.padding_10,
-                              horizontal: AppConstants.padding_10),
-                          width: 40,
-                          child: isBackButton
-                              ? Icon(
-                            Icons.arrow_back_ios,
-                            color: AppColors.greyColor,
-                            size: 26,
-                          )
-                              : Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.rotationY(context.rtl ? 0 : pi),
-                            child: SvgPicture.asset(
-                              AppImagePath.filter,
-                              colorFilter: ColorFilter.mode(
-                                  AppColors.greyColor, BlendMode.srcIn),
+                      isFilterTap
+                          ? 0.width
+                          : InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: onFilterTap,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+                                width: 40,
+                                child: isBackButton
+                                    ? Icon(
+                                        Icons.arrow_back_ios,
+                                        color: AppColors.greyColor,
+                                        size: 26,
+                                      )
+                                    : Transform(
+                                        alignment: Alignment.center,
+                                        transform: Matrix4.rotationY(context.rtl ? 0 : pi),
+                                        child: SvgPicture.asset(
+                                          AppImagePath.filter,
+                                          colorFilter: ColorFilter.mode(AppColors.greyColor, BlendMode.srcIn),
+                                        ),
+                                      ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                       Expanded(
                         child: TextField(
                           controller: controller,
@@ -145,35 +129,33 @@ class CommonSearchWidget extends StatelessWidget {
                             hintText: AppLocalizations.of(context)!.search,
                             constraints: const BoxConstraints(maxHeight: 40),
                             fillColor: AppColors.pageColor,
-                            contentPadding:
-                                const EdgeInsets.only(top: AppConstants.padding_3),
+                            contentPadding: const EdgeInsets.only(top: AppConstants.padding_3),
                             prefixIcon: Transform(
                               alignment: Alignment.center,
-                              transform:
-                              Matrix4.rotationY(context.rtl ? pi : 0),
+                              transform: Matrix4.rotationY(context.rtl ? pi : 0),
                               child: Icon(
                                 Icons.search,
                                 color: AppColors.greyColor,
                               ),
                             ),
-                            suffixIcon: controller.text.isNotEmpty ? GestureDetector(
-                              onTap: (){
-                                onCloseTap();
-                                controller.clear();
-                              },
-                              child: Transform(
-                                alignment: Alignment.center,
-                                transform:
-                                Matrix4.rotationY(context.rtl ? pi : 0),
-                                child: Icon(
-                                  Icons.close,
-                                  color: AppColors.greyColor,
-                                ),
-                              ),
-                            ) : const SizedBox(),
+                            suffixIcon: controller.text.isNotEmpty
+                                ? GestureDetector(
+                                    onTap: () {
+                                      onCloseTap();
+                                      controller.clear();
+                                    },
+                                    child: Transform(
+                                      alignment: Alignment.center,
+                                      transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                                      child: Icon(
+                                        Icons.close,
+                                        color: AppColors.greyColor,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox(),
                           ),
-                          onTapOutside: (event) =>
-                              FocusManager.instance.primaryFocus?.unfocus(),
+                          onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.search,
                           onTap: onSearchTap,
@@ -186,13 +168,10 @@ class CommonSearchWidget extends StatelessWidget {
                         highlightColor: Colors.transparent,
                         onTap: onScanTap,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: AppConstants.padding_10,
-                              horizontal: AppConstants.padding_10),
+                          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
                           child: SvgPicture.asset(
                             AppImagePath.scan,
-                            colorFilter: ColorFilter.mode(
-                                AppColors.greyColor, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(AppColors.greyColor, BlendMode.srcIn),
                           ),
                         ),
                       ),
@@ -203,23 +182,22 @@ class CommonSearchWidget extends StatelessWidget {
                   child: !isCategoryExpand
                       ? 0.height
                       : Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          isSearching
-                              ? LinearProgressIndicator(
-                            color: AppColors.mainColor,
-                            minHeight: 3,
-                            backgroundColor:
-                            AppColors.mainColor.withOpacity(0.5),
-                          )
-                              : 3.height,
-                          Expanded(
-                            child: searchResultWidget,
-                          ),
-                          10.height,
-                        ],
-                      ),
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            isSearching
+                                ? LinearProgressIndicator(
+                                    color: AppColors.mainColor,
+                                    minHeight: 3,
+                                    backgroundColor: AppColors.mainColor.withOpacity(0.5),
+                                  )
+                                : 3.height,
+                            Expanded(
+                              child: searchResultWidget,
+                            ),
+                            10.height,
+                          ],
+                        ),
                 ),
               ],
             ),

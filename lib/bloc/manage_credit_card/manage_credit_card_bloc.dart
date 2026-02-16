@@ -29,7 +29,7 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
           if (resModel.status == AppConstants.code_200) {
             preferencesHelper.setPaymentMethod(method: resModel.data?.clients?.first.clientDetail?.paymentType ?? '');
             preferencesHelper.setPaymentMethodCount(count: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
-            preferencesHelper.setPaymentMethodTypes(methods:resModel.data?.clients?.first.clientDetail?.availablePaymentTypes??[]);
+            preferencesHelper.setPaymentMethodTypes(methods: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
             if (resModel.data?.clients?.first.clientDetail?.creditCard?.expireDate != null) {
               emit(state.copyWith(isLoading: false, creditCardNumberController: TextEditingController(text: maskCreditCardNumber(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.cardNumber ?? '')), validityController: TextEditingController(text: formatExpiryDate(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.expireDate ?? '')), isCreditCardExist: true));
             } else {

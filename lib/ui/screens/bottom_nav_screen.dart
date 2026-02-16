@@ -85,14 +85,9 @@ class BottomNavScreenWidget extends StatelessWidget {
                   bottomNavigationBar: Container(
                     decoration: BoxDecoration(color: Colors.transparent, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)]),
                     child: CurvedNavigationBar(
-                      // mainColor: AppColors.mainColor,
-                      // notificationColor: AppColors.notificationColor,
-                      // screenWidth: getScreenWidth(context),
                       key: _bottomNavigationKey,
                       index: state.index == 4 && !state.isSubUserSeeWallet ? (state.index - 1) : state.index,
                       height: 65.0,
-                      // cartCount: state.cartCount,
-                      // isRTL: context.rtl,
                       items: state.isSubUserSeeWallet
                           ? [
                               navItem(
@@ -272,7 +267,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                                 ),
                                 child: Text(
                                   '${state.cartCount}',
-                                  style: AppStyles.rkRegularTextStyle(size: 10, color: state.index == 2 ? AppColors.mainColor : AppColors.whiteColor),
+                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: state.index == 2 ? AppColors.mainColor : AppColors.whiteColor),
                                 ),
                               ),
                             ],

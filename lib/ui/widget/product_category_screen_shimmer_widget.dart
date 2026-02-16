@@ -11,14 +11,7 @@ class ProductCategoryScreenShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: GridView.builder(
-          shrinkWrap: true,
-          itemCount: AppConstants.productCategoryPageLimit,
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-          gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-          itemBuilder: (context, index) =>
-              buildProductCategoryListItem(context: context)),
+      child: GridView.builder(shrinkWrap: true, itemCount: AppConstants.productCategoryPageLimit, padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10), gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3), itemBuilder: (context, index) => buildProductCategoryListItem(context: context)),
     );
   }
 
@@ -29,14 +22,9 @@ class ProductCategoryScreenShimmerWidget extends StatelessWidget {
         width: getScreenWidth(context),
         margin: const EdgeInsets.all(AppConstants.padding_10),
         decoration: BoxDecoration(
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           color: AppColors.whiteColor,
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10)
-          ],
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
         ),
       ),
     );

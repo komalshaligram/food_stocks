@@ -97,7 +97,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             clipBehavior: Clip.hardEdge,
                             child: state.UserImageUrl.isNotEmpty
                                 ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(AppConstants.radius_20),
                                     child: CachedNetworkImage(
                                       imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.UserImageUrl}',
                                       fit: BoxFit.fill,
@@ -110,7 +110,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     ),
                                   )
                                 : Container(
-                                    decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(40)),
+                                    decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(AppConstants.radius_40)),
                                     child: SvgPicture.asset(
                                       AppImagePath.placeholderProfile,
                                       width: 80,
@@ -123,7 +123,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             child: Text(
                               state.userName,
                               style: AppStyles.rkRegularTextStyle(
-                                size: 20,
+                                size: AppConstants.font_20,
                                 color: AppColors.blackColor,
                               ),
                             ),
@@ -273,13 +273,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         )),
                     10.height,
-                    // Text('Patch Apply',
-                    //     style: AppStyles.rkRegularTextStyle(
-                    //       size: AppConstants.smallFont,
-                    //       color: AppColors.blackColor,
-                    //       fontWeight: FontWeight.bold,
-                    //     )),
-                    // 20.height,
+
                   ],
                 ),
               ),

@@ -16,18 +16,17 @@ class BottomNavState with _$BottomNavState {
     required List<BottomNavModel> navList,
   }) = _BottomNavState;
 
-  factory BottomNavState.initial() => BottomNavState(
-      index: 0,
-      cartCount: 0,
-      isAnimation: false,
-      pushNotificationPath: '',
-      duringCelebration: false,
-      isStoreScreen: '',
-      isGuestUser: false,
-      arg: '',
-      isSubUserSeeWallet: true,
-    isRefreshing: false,
-    navList: []
-
-  );
+  factory BottomNavState.initial() => const BottomNavState(
+        index: 0,
+        cartCount: 0,
+        isAnimation: false,
+        pushNotificationPath: '',
+        duringCelebration: false,
+        isStoreScreen: '',
+        isGuestUser: false,
+        arg: '',
+        isSubUserSeeWallet: true,
+        isRefreshing: false,
+        navList: [],
+      );
 }

@@ -3464,11 +3464,6 @@ class S {
     );
   }
 
-  /// `Close`
-  String get close {
-    return Intl.message('Close', name: 'close', desc: '', args: []);
-  }
-
   /// `Read condition`
   String get read_condition {
     return Intl.message(
@@ -3537,6 +3532,11 @@ class S {
   /// `From Date`
   String get form_date {
     return Intl.message('From Date', name: 'form_date', desc: '', args: []);
+  }
+
+  /// `To Date`
+  String get to_date {
+    return Intl.message('To Date', name: 'to_date', desc: '', args: []);
   }
 
   /// `Until Date`
@@ -4294,6 +4294,16 @@ class S {
     );
   }
 
+  /// `Please enter driver name`
+  String get please_enter_driverName {
+    return Intl.message(
+      'Please enter driver name',
+      name: 'please_enter_driverName',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `How many pallets do you return?`
   String get pallets_return {
     return Intl.message(
@@ -4584,9 +4594,9 @@ class S {
     return Intl.message('Apply', name: 'apply', desc: '', args: []);
   }
 
-  /// `clear`
+  /// `Clear`
   String get clear {
-    return Intl.message('clear', name: 'clear', desc: '', args: []);
+    return Intl.message('Clear', name: 'clear', desc: '', args: []);
   }
 
   /// `Sorting`
@@ -5957,6 +5967,46 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Invoice Date Range`
+  String get invoice_date_range {
+    return Intl.message(
+      'Invoice Date Range',
+      name: 'invoice_date_range',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refunds Date Range`
+  String get refunds_date_range {
+    return Intl.message(
+      'Refunds Date Range',
+      name: 'refunds_date_range',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Date`
+  String get select_date {
+    return Intl.message('Select Date', name: 'select_date', desc: '', args: []);
+  }
+
+  /// `Please select maximum of 3 months range`
+  String get maximum_three_month_date_range_required {
+    return Intl.message(
+      'Please select maximum of 3 months range',
+      name: 'maximum_three_month_date_range_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date range`
+  String get date_range {
+    return Intl.message('Date range', name: 'date_range', desc: '', args: []);
   }
 }
 

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:food_stock/data/model/res_model/status_info_res_model/status_inf
 import 'package:http_parser/http_parser.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../data/model/req_model/delete_return_req/delete_return_req.dart';
 import '../../data/model/req_model/remove_issue/remove_issue_req_model.dart';
 import '../../data/model/res_model/create_return_res_model/create_return_res_model.dart';
@@ -17,24 +15,19 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/error/exceptions.dart';
-
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/req_model/create_issue/create_issue_req_model.dart' as create;
 import '../../data/model/req_model/create_return_req_model/create_return_req_model.dart' as req;
-
 import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
-
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../product_return_info/product_return_info_bloc.dart';
 
 part 'product_details_event.dart';
@@ -147,47 +140,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           productListIndex: newSelectedIndices,
           isAllCheck: isNowAllSelected,
         ));
-      }
-      // else if (event is _productProblemEvent) {
-      //   List<int> index = [];
-      //   bool isAllCheck = false;
-      //   index = [...state.productListIndex];
-      //   if (state.productListIndex.contains(event.index)) {
-      //     index.remove(event.index);
-      //   } else {
-      //     index.add(event.index);
-      //   }
-      //   int length = state.orderBySupplierProduct.products?.length ?? 0;
-      //
-      //   if (length == index.length) {
-      //     isAllCheck = true;
-      //   }
-      //
-      //   emit(state.copyWith(productListIndex: index, isAllCheck: isAllCheck));
-      // }
-
-      // else if (event is _checkAllEvent) {
-      //   final fullProductList = state.orderBySupplierProduct.products ?? [];
-      //
-      //   final returnProducts = state.returnList?.data?.returnProducts ?? [];
-      //   final barcodesWithReason = returnProducts.map((e) => e.barcode!.trim()).toSet();
-      //
-      //   List<int> updatedIndices = [];
-      //
-      //   if (!state.isAllCheck) {
-      //     updatedIndices = List<int>.generate(fullProductList.length, (i) => i);
-      //   } else {
-      //     updatedIndices = fullProductList.asMap().entries.where((entry) => barcodesWithReason.contains(entry.value.barcode!.trim())).map((entry) => entry.key).toList();
-      //   }
-      //
-      //   final isAllCheck = fullProductList.isNotEmpty && fullProductList.length == updatedIndices.length;
-      //
-      //   emit(state.copyWith(
-      //     productListIndex: updatedIndices,
-      //     isAllCheck: isAllCheck,
-      //   ));
-      // }
-      else if (event is _radioButtonEvent) {
+      } else if (event is _radioButtonEvent) {
         emit(state.copyWith(selectedRadioTile: event.selectRadioTile, isRefresh: !state.isRefresh, proofFile: File(''), proofFile1: File(''), proofFile2: File('')));
       } else if (event is _productIncrementEvent) {
         final currentQty = event.productIssueData[event.radioValue]!['quantity'] ?? event.messingQuantity;
@@ -271,7 +224,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             emit(state.copyWith(isRemoveProcess: false));
             Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: 'issue'});
 
-            // Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.success);
           } else {
             emit(state.copyWith(isRemoveProcess: false));
@@ -421,28 +373,24 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           emit(state.copyWith(proofImagesList: imgList));
         }
       } else if (event is _deleteFileEvent) {
-        // Get current proof image list from event map and remove the image path
         List<String> proofImageList = List<String>.from(
           event.productIssueData[event.selectedRadio]!['proofImage'],
         );
 
-        int listIndex = event.index - 1; // Convert from 1-based to 0-based index
+        int listIndex = event.index - 1;
 
         if (listIndex >= 0 && listIndex < proofImageList.length) {
           proofImageList.removeAt(listIndex);
         } else {}
 
-        // Update productIssueData with modified proof image list
         event.productIssueData[event.selectedRadio]!['proofImage'] = proofImageList;
 
-        // Get current proofImagesList and remove corresponding File
         final updatedProofImagesList = List<String>.from(state.proofImagesList);
 
         if (listIndex >= 0 && listIndex < updatedProofImagesList.length) {
           updatedProofImagesList.removeAt(listIndex);
         } else {}
 
-        // Emit new state and clear the corresponding File
         if (event.index == 1) {
           emit(state.copyWith(
             proofFile: File(''),
@@ -472,10 +420,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           final fullProductList = state.orderBySupplierProduct.products ?? [];
           final returnProducts = res.data?.returnProducts ?? [];
 
-          // Safely get excludeBarcodes or empty list if null
           final excludeBarcodes = event.excludeBarcodes ?? [];
 
-          // Convert barcodes to indices
           final returnProductIndices = returnProducts
               .map((returnProd) {
                 return fullProductList.indexWhere((p) => p.barcode!.trim() == returnProd.barcode!.trim());
@@ -483,12 +429,10 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               .where((index) => index != -1)
               .toList();
 
-          // Get existing valid indices
           List<int> filteredSelectedIndices = state.productListIndex.where((idx) {
             return idx >= 0 && idx < fullProductList.length;
           }).toList();
 
-          // Exclude indices (uncheck those)
           final excludeIndices = excludeBarcodes
               .map((barcode) {
                 return fullProductList.indexWhere((p) => p.barcode!.trim() == barcode.trim());
@@ -496,13 +440,10 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               .where((index) => index != -1)
               .toSet();
 
-          // Remove excluded indices from selected list
           filteredSelectedIndices = filteredSelectedIndices.where((idx) => !excludeIndices.contains(idx)).toList();
 
-          // Merge previous + return list without duplicates
           final mergedIndices = {...filteredSelectedIndices, ...returnProductIndices}.toList();
 
-          // ✅ Check if all are selected
           final isAllCheck = fullProductList.isNotEmpty && fullProductList.length == mergedIndices.length;
 
           emit(state.copyWith(
@@ -584,7 +525,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         emit(state.copyWith(isLoading: true));
 
         try {
-          // Prepare updated product model
           req.ReturnProduct updatedProduct = req.ReturnProduct(
             returnProductId: event.returnProductId,
             totalRefund: event.totalRefund,
@@ -601,7 +541,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
           List<req.ReturnProduct> list = [];
 
-          // Handling the update/deletion logic
           if (event.returnProductId != null) {
             bool found = false;
 
@@ -611,10 +550,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                     found = true;
 
                     if (event.isRemoved) {
-                      // Mark the product as removed (do not add it to the list)
-                      return null; // This effectively removes the product
+                      return null;
                     } else {
-                      // Update the product
                       return updatedProduct;
                     }
                   }
@@ -636,12 +573,10 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                 .whereType<req.ReturnProduct>()
                 .toList();
 
-            // If product is not found, add it as updated
             if (!found && !event.isRemoved) {
               list.add(updatedProduct);
             }
           } else {
-            // Add updated product to the list (handle new products here)
             list = [
               ...event.returnProduct.map((product) => req.ReturnProduct(
                     returnProductId: product.returnProductId,
@@ -660,7 +595,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             ];
           }
 
-          // Create request model
           req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
             applicationName: AppStrings.appName,
             clientId: preferencesHelper.getUserId(),
@@ -671,7 +605,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             orderId: event.orderId,
           );
 
-          // Call API to update return
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.updateReturnUrl}${event.returnProduct.first.returnId}',
             data: reqModel.toJson(),
@@ -742,11 +675,10 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               language: preferencesHelper.getAppLanguage(),
             ));
 
-            // Pass deleted barcode back on pop
             Navigator.pop(event.bottomSheetContext, {
               AppStrings.issueString: event.reasonToReturn,
               'refresh': true,
-              'deletedBarcode': event.barcode, // <--- pass barcode here
+              'deletedBarcode': event.barcode,
             });
 
             CustomSnackBar.showSnackBar(
@@ -802,7 +734,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
 
           List<String> proofImages = [];
           if (radioId == 2 || radioId == 4) {
-            final returnProduct = event.arguments as ReturnProduct?; // cast to your actual type
+            final returnProduct = event.arguments as ReturnProduct?;
 
             if (returnProduct != null && returnProduct.reasonToReturn == reasonText) {
               proofImages = returnProduct.proofImages ?? [];
@@ -820,7 +752,11 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       } else if (event is _pickProofDocumentEvent) {
         XFile? image = await openImagePicker(event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (image != null) {
-          CroppedFile? croppedImage = await cropImage(path: image.path, shape: CropStyle.rectangle, quality: AppConstants.fileQuality);
+
+          printData("check here crop image");
+          CroppedFile? croppedImage = await cropImage(path: image.path, shape: CropStyle.rectangle, quality: AppConstants.fileQuality,
+          );
+
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
@@ -859,7 +795,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           updatedList.removeAt(listIndex);
         } else {}
 
-// Clear the corresponding file slot regardless
         if (event.index == 1) {
           emit(state.copyWith(driverDeliveryProofFile: File(''), driverDeliveryProofImagesList: updatedList));
         } else if (event.index == 2) {
@@ -880,7 +815,6 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         }
       }
     } catch (_) {}
-    // Default logic
     if (radioVal == 1 || radioVal == 5) return productQuantity;
     return 1;
   }

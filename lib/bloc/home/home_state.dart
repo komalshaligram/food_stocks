@@ -60,7 +60,11 @@ class HomeState with _$HomeState {
       required bool isDialog,
       required bool showClientDataOnApp,
       required String? buttonEnglishText,
-      required String? buttonHebrewText}) = _HomeState;
+      required String? buttonHebrewText,
+      required bool? allowOrdersWithoutMinimum,
+      required int? noMinimumOrderHours,
+      required String? lastOrderAboveMinimumAt,
+          required String? noMinimumDialogEventKey}) = _HomeState;
 
   factory HomeState.initial() => HomeState(
       userImageUrl: '',
@@ -74,7 +78,7 @@ class HomeState with _$HomeState {
       productDetails: [],
       productStockUpdateIndex: -1,
       productStockList: [
-        [ProductStockModel(productId: '')],
+        [const ProductStockModel(productId: '')],
         [],
         [],
         [],
@@ -125,5 +129,10 @@ class HomeState with _$HomeState {
       isDialog: false,
       showClientDataOnApp: false,
       buttonEnglishText: '',
-      buttonHebrewText: '');
+      buttonHebrewText: '',
+      allowOrdersWithoutMinimum: false,
+      noMinimumOrderHours: 0,
+      lastOrderAboveMinimumAt: '',
+      noMinimumDialogEventKey: ''
+  );
 }

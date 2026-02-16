@@ -11,11 +11,11 @@ class CompanyState with _$CompanyState {
     required bool isBottomOfCompanies,
     required RefreshController refreshController,
     required String language,
-    required bool isProgress
+    required bool isProgress,
   }) = _CompanyState;
 
   factory CompanyState.initial() => CompanyState(
-    companiesList: [],
+        companiesList: [],
         search: '',
         isShimmering: false,
         pageNum: 0,
@@ -23,6 +23,6 @@ class CompanyState with _$CompanyState {
         isBottomOfCompanies: false,
         refreshController: RefreshController(),
         language: '',
-    isProgress: false
+        isProgress: false,
       );
 }

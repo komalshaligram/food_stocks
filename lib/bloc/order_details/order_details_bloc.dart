@@ -6,7 +6,6 @@ import '../../data/model/res_model/status_info_res_model/status_info_res_model.d
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';

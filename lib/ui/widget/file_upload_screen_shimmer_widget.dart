@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import 'common_shimmer_widget.dart';
@@ -19,8 +18,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: 5,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
+              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
               itemBuilder: (context, index) {
                 return buildFileOrForm();
               },
@@ -52,8 +50,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
             width: double.maxFinite,
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
-              borderRadius:
-                  const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             ),
           ),
         ),
@@ -69,8 +66,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
         width: 100,
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
       ),
     );
@@ -84,8 +80,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );
@@ -99,8 +94,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         ),
       ),
     );

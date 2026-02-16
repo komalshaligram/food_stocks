@@ -28,8 +28,7 @@ class BasketSummaryState with _$BasketSummaryState {
     required bool isRemoveProcess,
     required bool isSubUserCanCreateOrder,
     required double refundAmount,
-    required int totalSupplier
-
+    required int totalSupplier,
   }) = _BasketSummaryState;
 
   factory BasketSummaryState.initial() => const BasketSummaryState(
@@ -57,7 +56,7 @@ class BasketSummaryState with _$BasketSummaryState {
         isSaleOn: false,
         isRemoveProcess: false,
         isSubUserCanCreateOrder: false,
-        refundAmount : 0.0,
-        totalSupplier:0
+        refundAmount: 0.0,
+        totalSupplier: 0,
       );
 }

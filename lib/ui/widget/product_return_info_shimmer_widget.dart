@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-
-import '../../ui/widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import 'common_shimmer_widget.dart';
 
 class ProductReturnShimmerWidget extends StatelessWidget {
-  const ProductReturnShimmerWidget({super.key });
+  const ProductReturnShimmerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +23,14 @@ class ProductReturnShimmerWidget extends StatelessWidget {
               height: 100,
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.all(
-                    Radius.circular(AppConstants.radius_10)),
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               ),
             ),
           ),
           10.height,
           buildTextTitle(width: 200),
           5.height,
-          buildTextTitle(width: 150,height: 50),
+          buildTextTitle(width: 150, height: 50),
           10.height,
           buildTextTitle(width: getScreenWidth(context) - 50),
           8.height,
@@ -43,8 +39,7 @@ class ProductReturnShimmerWidget extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.all(
-                    Radius.circular(AppConstants.radius_10)),
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               ),
             ),
           ),
@@ -54,8 +49,7 @@ class ProductReturnShimmerWidget extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.all(
-                    Radius.circular(AppConstants.radius_10)),
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               ),
             ),
           ),
@@ -65,8 +59,7 @@ class ProductReturnShimmerWidget extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.all(
-                    Radius.circular(AppConstants.radius_10)),
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               ),
             ),
           ),
@@ -78,18 +71,22 @@ class ProductReturnShimmerWidget extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemBuilder: (context,i){return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CommonShimmerWidget(child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.whiteColor,
-                  borderRadius: const BorderRadius.all(
-                      Radius.circular(AppConstants.radius_10)),
-                ),
-                height: 150,
-                width: 150,
-              )),
-            );},itemCount: 3,),
+              itemBuilder: (context, i) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CommonShimmerWidget(
+                      child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                    ),
+                    height: 150,
+                    width: 150,
+                  )),
+                );
+              },
+              itemCount: 3,
+            ),
           ),
           buildTextTitle(width: 200),
           10.height,
@@ -98,16 +95,12 @@ class ProductReturnShimmerWidget extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.all(
-                    Radius.circular(AppConstants.radius_10)),
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               ),
             ),
           ),
-
         ],
       ),
-
-
     );
   }
 
@@ -119,8 +112,7 @@ class ProductReturnShimmerWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

@@ -17,7 +17,7 @@ class ProductCategoryState with _$ProductCategoryState {
   }) = _ProductCategoryState;
 
   factory ProductCategoryState.initial() => ProductCategoryState(
-    productCategoryList: [],
+        productCategoryList: [],
         isShimmering: false,
         isLoadMore: false,
         pageNum: 0,
@@ -27,6 +27,6 @@ class ProductCategoryState with _$ProductCategoryState {
         search: '',
         reqSearch: '',
         refreshController: RefreshController(),
-    cartCount: 0
+        cartCount: 0,
       );
 }

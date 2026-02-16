@@ -118,7 +118,7 @@ class StoreScreenWidget extends StatelessWidget {
                             decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
                             child: CupertinoActivityIndicator(
                               color: AppColors.mainColor,
-                              radius: 10,
+                              radius: AppConstants.radius_10,
                             ),
                           );
                         },
@@ -251,7 +251,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                     Navigator.pushNamed(context, RouteDefine.pesachScreen.name);
                                                   },
                                                   child: Padding(
-                                                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
                                                     child: CachedNetworkImage(
                                                       placeholder: (context, url) => const PesachBannerShimmerWidget(),
                                                       imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.pesachBannerURL}',
@@ -1471,7 +1471,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                         Navigator.pop(dialogContext);
                                                       },
                                                       child: const Padding(
-                                                        padding: EdgeInsets.only(top: 10.0),
+                                                        padding: EdgeInsets.only(top: AppConstants.padding_10),
                                                         child: Icon(
                                                           Icons.close,
                                                           color: Colors.white,
@@ -1550,7 +1550,7 @@ class StoreScreenWidget extends StatelessWidget {
               Align(
                 alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
                   child: Text(
                     AppLocalizations.of(context)!.related_products,
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
@@ -1562,7 +1562,7 @@ class StoreScreenWidget extends StatelessWidget {
               ),
               Container(
                 height: getItemHeight(context, isSaleOn),
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                padding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, top: AppConstants.padding_10),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,

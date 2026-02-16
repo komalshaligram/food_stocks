@@ -1,7 +1,7 @@
 part of 'sub_users_profile_bloc.dart';
 
 @freezed
-class SubUsersProfileState with _$SubUsersProfileState{
+class SubUsersProfileState with _$SubUsersProfileState {
   const factory SubUsersProfileState({
     required bool isShimmering,
     required bool isUpdate,
@@ -18,25 +18,23 @@ class SubUsersProfileState with _$SubUsersProfileState{
     required bool isEnable,
     required String subUserId,
     required bool isDeleteProcess,
-
   }) = _SubUsersProfileState;
 
   factory SubUsersProfileState.initial() => SubUsersProfileState(
-    isShimmering: false,
-    language: AppStrings.hebrewString,
-    image: File(''),
-    isUpdate: false,
-    isUploadingProcess: false,
-    subUserProfileImage: '',
-    isFileUploading: false,
-    emailController: TextEditingController(),
-    nameController: TextEditingController(),
-    phoneNumberController: TextEditingController(),
-    israelIdController: TextEditingController(),
-    isLoading: false,
-    isEnable: false,
-    subUserId: '',
-    isDeleteProcess: false,
-
-  );
+        isShimmering: false,
+        language: AppStrings.hebrewString,
+        image: File(''),
+        isUpdate: false,
+        isUploadingProcess: false,
+        subUserProfileImage: '',
+        isFileUploading: false,
+        emailController: TextEditingController(),
+        nameController: TextEditingController(),
+        phoneNumberController: TextEditingController(),
+        israelIdController: TextEditingController(),
+        isLoading: false,
+        isEnable: false,
+        subUserId: '',
+        isDeleteProcess: false,
+      );
 }

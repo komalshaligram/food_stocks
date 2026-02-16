@@ -14,7 +14,8 @@ class DeliveryConfirmReqModel with _$DeliveryConfirmReqModel {
     int? returningSurface,
     required List<String> driverDeliveryDocumentsImages,
     required List<Map<String, dynamic>> sentReturnData,
-    String? orderIssueReturnId
+    String? orderIssueReturnId,
+    String? driverName
   }) = _DeliveryConfirmReqModel;
 
   factory DeliveryConfirmReqModel.fromJson(Map<String, dynamic> json) => _$DeliveryConfirmReqModelFromJson(json);

@@ -54,7 +54,7 @@ class SupplierProductsState with _$SupplierProductsState {
         productDetails: [],
         productStockUpdateIndex: -1,
         productStockList: [
-          [ProductStockModel(productId: '')],
+          [const ProductStockModel(productId: '')],
           [],
           []
         ],
@@ -85,8 +85,8 @@ class SupplierProductsState with _$SupplierProductsState {
         isIncludedVat: false,
         isSaleOn: false,
         language: AppStrings.hebrewString,
-    isCartCountChange: false,
-    cartCount: 0,
-    messageCount: 0,
+        isCartCountChange: false,
+        cartCount: 0,
+        messageCount: 0,
       );
 }

@@ -10,7 +10,7 @@ class RelatedProductShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: getItemHeight( context, false),
+      height: getItemHeight(context, false),
       width: double.maxFinite - 50,
       child: ListView.builder(
         itemCount: 3,
@@ -19,13 +19,12 @@ class RelatedProductShimmerWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return CommonShimmerWidget(
             child: Container(
-              height: getItemHeight( context, false),
-              width:   150,
+              height: getItemHeight(context, false),
+              width: 150,
               margin: const EdgeInsets.all(AppConstants.padding_10),
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.all(
-                    Radius.circular(AppConstants.radius_10)),
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               ),
             ),
           );
@@ -42,8 +41,7 @@ class RelatedProductShimmerWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

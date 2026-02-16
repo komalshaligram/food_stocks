@@ -237,6 +237,7 @@ class SharedPreferencesHelper {
   Future<void> setIsAppOnMaintenance({required bool isAppOnMaintenance}) async {
     await prefs.setBool(appOnMaintenance, isAppOnMaintenance);
   }
+
   Future<void> setClientDataOnApp({required bool showClientDataOnApp}) async {
     await prefs.setBool(clientDataOnApp, showClientDataOnApp);
   }
@@ -332,8 +333,6 @@ class SharedPreferencesHelper {
   Future<void> setUserLogo({required String logoImage}) async {
     await prefs.setString(logo, logoImage);
   }
-
-  //permission
 
   Future<void> setAccountAdmin({required bool isAccountAdmin}) async {
     await prefs.setBool(accountAdmin, isAccountAdmin);
@@ -474,10 +473,10 @@ class SharedPreferencesHelper {
   int getCartCount() {
     return prefs.getInt(userCartCount) ?? 0;
   }
+
   String getMessage() {
     return prefs.getString(orderSuccessMessage) ?? '';
   }
-
 
   int getMessageCount() {
     return prefs.getInt(userMessageCount) ?? 0;
@@ -591,7 +590,6 @@ class SharedPreferencesHelper {
     return prefs.getStringList(paymentMethods) ?? [];
   }
 
-  //permission
   bool getCanAccountAdmin() {
     return prefs.getBool(accountAdmin) ?? true;
   }

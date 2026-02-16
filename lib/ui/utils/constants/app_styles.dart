@@ -6,10 +6,7 @@ class AppStyles {
   static const String _fontFamily = "Rubik";
   static const String _pvFontFamily = "Preahvihear";
 
-  static TextStyle rkRegularTextStyle(
-      {Color color = Colors.black,
-      required double size,
-      FontWeight fontWeight = FontWeight.normal}) {
+  static TextStyle rkRegularTextStyle({Color color = Colors.black, required double size, FontWeight fontWeight = FontWeight.normal}) {
     return TextStyle(
       fontFamily: _fontFamily,
       color: color,
@@ -18,10 +15,7 @@ class AppStyles {
     );
   }
 
-  static TextStyle pVRegularTextStyle(
-      {Color color = Colors.black,
-        required double size,
-        FontWeight fontWeight = FontWeight.normal}) {
+  static TextStyle pVRegularTextStyle({Color color = Colors.black, required double size, FontWeight fontWeight = FontWeight.normal}) {
     return TextStyle(
       fontFamily: _pvFontFamily,
       color: color,
@@ -30,11 +24,7 @@ class AppStyles {
     );
   }
 
-
-  static TextStyle rkBoldTextStyle(
-      {Color color = Colors.black,
-      required double size,
-      FontWeight fontWeight = FontWeight.bold}) {
+  static TextStyle rkBoldTextStyle({Color color = Colors.black, required double size, FontWeight fontWeight = FontWeight.bold}) {
     return TextStyle(
       fontFamily: _fontFamily,
       color: color,

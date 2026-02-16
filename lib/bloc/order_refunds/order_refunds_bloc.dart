@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/data/model/res_model/refund_res/refund_res_model.dart';
@@ -25,8 +24,7 @@ class OrderRefundsBloc extends Bloc<OrderRefundsEvent, OrderRefundsState> {
 
   OrderRefundsBloc() : super(OrderRefundsState.initial()) {
     on<OrderRefundsEvent>((event, emit) async {
-      SharedPreferencesHelper preferences =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getRefundDataEvent) {
         if (state.isBottomOfProducts) {
@@ -37,42 +35,33 @@ class OrderRefundsBloc extends Bloc<OrderRefundsEvent, OrderRefundsState> {
           final String statusData = preferences.getPaymentStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
 
-          printData("check here id ${preferences.getUserId()}");
-
           final args = ModalRoute.of(event.context)?.settings.arguments as Map<String, dynamic>;
 
-          printData("check here ${args}");
-          orderId =
-          args[AppStrings.orderIdString] as String;
-          orderNumber =
-          args[AppStrings.orderNumberString];
+          orderId = args[AppStrings.orderIdString] as String;
+          orderNumber = args[AppStrings.orderNumberString];
 
-          emit(state.copyWith(
-            statusList: statusList,
-            language: preferences.getAppLanguage(),
-            isShimmering: state.pageNum == 0 ? true : false,
-            orderNumber: orderNumber
-          ));
+          emit(
+            state.copyWith(
+              statusList: statusList,
+              language: preferences.getAppLanguage(),
+              isShimmering: state.pageNum == 0 ? true : false,
+              orderNumber: orderNumber,
+            ),
+          );
 
-          final res = await DioClient(event.context)
-              .get(path: AppUrlEndPoints.getAdjustedRefundsInOrder + orderId);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.getAdjustedRefundsInOrder + orderId);
 
           RefundResModel response = RefundResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            printData("check here response ${response.toJson()}");
-            List<RefundInvoiceCommon> invoiceDetailsList =
-            state.invoiceDetailsList.toList(growable: true);
+            List<RefundInvoiceCommon> invoiceDetailsList = state.invoiceDetailsList.toList(growable: true);
 
-            /// NEW API: response.data is directly the list
             invoiceDetailsList.addAll(response.data!);
 
-            /// No openTotalAmount in new API
             emit(state.copyWith(
               invoiceDetailsList: invoiceDetailsList,
               pageNum: state.pageNum + 1,
               isShimmering: false,
-              // openTotalAmount: response.data?.totalOpenRefundAmount ?? '0', // or remove if not needed
             ));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -95,10 +84,7 @@ class OrderRefundsBloc extends Bloc<OrderRefundsEvent, OrderRefundsState> {
         final String statusData = preferences.getOrderStatusInfo();
         final List<StatusData> statusList = StatusData.decode(statusData);
         emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage()));
-      }
-
-      // Pull-to-refresh
-      else if (event is _refreshListEvent) {
+      } else if (event is _refreshListEvent) {
         emit(state.copyWith(
           pageNum: 0,
           invoiceDetailsList: [],

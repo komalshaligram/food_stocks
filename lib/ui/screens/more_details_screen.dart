@@ -69,7 +69,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                 alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.more_details,
-                  style: AppStyles.rkRegularTextStyle(size: 16, color: Colors.black),
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
                 ),
               ),
               backgroundColor: AppColors.whiteColor,
@@ -106,7 +106,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                               valueListenable: listNotifier,
                                               builder: (context, content, child) {
                                                 return Padding(
-                                                  padding: const EdgeInsets.all(15.0),
+                                                  padding: const EdgeInsets.all(AppConstants.padding_15),
                                                   child: SizedBox(
                                                     height: getScreenHeight(context) * 0.9,
                                                     child: Column(
@@ -165,7 +165,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                                   itemCount: list.length,
                                                                   itemBuilder: (context, index) {
                                                                     return Padding(
-                                                                      padding: const EdgeInsets.all(10.0),
+                                                                      padding: const EdgeInsets.all(AppConstants.padding_10),
                                                                       child: GestureDetector(
                                                                         onTap: () {
                                                                           bloc.add(MoreDetailsEvent.selectCityEvent(city: list[index], context: context));

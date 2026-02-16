@@ -7,7 +7,7 @@ class LogInState with _$LogInState {
     required bool isRegister,
   }) = _LogInState;
 
-  factory LogInState.initial() => LogInState(
+  factory LogInState.initial() => const LogInState(
         isRegister: false,
         isLoading: false,
       );

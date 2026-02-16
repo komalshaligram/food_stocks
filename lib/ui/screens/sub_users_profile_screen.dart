@@ -218,7 +218,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
           ),
           bottomNavigationBar: !state.isUpdate && !state.isEnable
               ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_35, vertical: AppConstants.padding_20),
                   child: CustomButtonWidget(
                     buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
                     bGColor: AppColors.mainColor,

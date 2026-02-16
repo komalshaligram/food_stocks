@@ -9,7 +9,7 @@ class BalanceIndicator extends StatelessWidget {
   final int expense;
   final double totalBalance;
 
-  const BalanceIndicator({super.key, required this.pendingBalance ,required this.expense , required this.totalBalance});
+  const BalanceIndicator({super.key, required this.pendingBalance, required this.expense, required this.totalBalance});
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +26,13 @@ class BalanceIndicator extends StatelessWidget {
             showTicks: false,
             startAngle: 270,
             endAngle: 270,
-            axisLineStyle: AxisLineStyle(
-                thicknessUnit: GaugeSizeUnit.factor,
-                thickness: 0.2,
-                color: AppColors.borderColor),
+            axisLineStyle: AxisLineStyle(thicknessUnit: GaugeSizeUnit.factor, thickness: 0.2, color: AppColors.borderColor),
             annotations: [
               GaugeAnnotation(
                 angle: 180,
                 widget: Text(
-                 '${expense.toString()}%',
-                  style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14,
-                      color: AppColors.blackColor,
-                      fontWeight: FontWeight.w600),
+                  '${expense.toString()}%',
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
               ),

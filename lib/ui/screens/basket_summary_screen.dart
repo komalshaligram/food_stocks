@@ -21,6 +21,7 @@ import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
 import '../utils/constants/app_urls.dart';
 import '../widget/common_app_bar.dart';
+import '../widget/common_divider_widget.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
@@ -36,7 +37,16 @@ class BasketSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => BasketSummaryBloc()..add(BasketSummaryEvent.getDataEvent(context: context, cartItemList: args?[AppStrings.getCartListString], orderBySupplierId: args?[AppStrings.orderBySupplierId] ?? '', isSupplierSingle: args?[AppStrings.isSupplierSingle], totalSupplier: args?[AppStrings.totalSupplier])),
+      create: (context) => BasketSummaryBloc()
+        ..add(
+          BasketSummaryEvent.getDataEvent(
+            context: context,
+            cartItemList: args?[AppStrings.getCartListString],
+            orderBySupplierId: args?[AppStrings.orderBySupplierId] ?? '',
+            isSupplierSingle: args?[AppStrings.isSupplierSingle],
+            totalSupplier: args?[AppStrings.totalSupplier],
+          ),
+        ),
       child: const BasketSummaryScreenWidget(),
     );
   }
@@ -156,7 +166,10 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                       paymentMethod: AppStrings.wallet,
                     ));
                   } else {
-                    Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
+                    Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {
+                      AppStrings.isPaymentFail: state.isPaymentFail,
+                      AppStrings.updateString: true,
+                    });
                   }
                 },
                 positiveOnTap2: () {
@@ -244,13 +257,13 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                       child: Material(
                         color: Colors.transparent,
                         child: Container(
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(AppConstants.padding_5),
                           width: 200,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(AppConstants.radius_7),
                             boxShadow: const [
-                              BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4)),
+                              BoxShadow(color: Colors.black26, blurRadius: AppConstants.radius_10, offset: Offset(0, 4)),
                             ],
                           ),
                           child: Column(
@@ -271,7 +284,11 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                                 style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 4),
-                              Text(AppLocalizations.of(context)!.please_wait_text, style: TextStyle(fontSize: AppConstants.font_14, color: AppColors.greyColor)),
+                              Text(AppLocalizations.of(context)!.please_wait_text,
+                                  style: TextStyle(
+                                    fontSize: AppConstants.font_14,
+                                    color: AppColors.greyColor,
+                                  )),
                               const SizedBox(height: 8),
                             ],
                           ),
@@ -390,12 +407,12 @@ class BasketSummaryScreenWidget extends StatelessWidget {
         return Directionality(
           textDirection: language == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
           child: AlertDialog(
-            contentPadding: const EdgeInsets.all(20.0),
+            contentPadding: const EdgeInsets.all(AppConstants.padding_20),
             surfaceTintColor: AppColors.whiteColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
             title: Text(
               text,
-              style: AppStyles.rkRegularTextStyle(size: 16),
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont),
             ),
             actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
             actions: [
@@ -407,9 +424,9 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                   function();
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                   child: Text(
                     AppLocalizations.of(context)!.understand_submit_order,
                     style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),
@@ -424,11 +441,11 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                   Navigator.pop(context1);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(gradient: AppColors.connectGradientColor, border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(8.0)),
+                  decoration: BoxDecoration(gradient: AppColors.connectGradientColor, border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                   child: Text(
-                    AppLocalizations.of(context)!.close,
+                    AppLocalizations.of(context)!.closeText,
                     style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor, size: AppConstants.smallFont),
                   ),
                 ),
@@ -510,16 +527,12 @@ class BasketSummaryScreenWidget extends StatelessWidget {
   Widget orderListItem({required int index, required BuildContext context, required BasketSummaryBloc bloc}) {
     return BlocBuilder<BasketSummaryBloc, BasketSummaryState>(
       builder: (context, state) {
-
         final totalSavingsValue = double.tryParse(
-          state.tempList[index].totalSavings.toString(),
-        ) ?? 0.0;
+              state.tempList[index].totalSavings.toString(),
+            ) ??
+            0.0;
 
-        final savingsSalesValue = totalSavingsValue < 0
-            ? '\u200E-${totalSavingsValue.abs().toStringAsFixed(2)}₪'
-            : '\u200E${totalSavingsValue.toStringAsFixed(2)}₪';
-
-        final isHebrew = Localizations.localeOf(context).languageCode == 'he';
+        final savingsSalesValue = totalSavingsValue < 0 ? '\u200E-${totalSavingsValue.abs().toStringAsFixed(2)}₪' : '\u200E${totalSavingsValue.toStringAsFixed(2)}₪';
 
         return Column(
           children: [
@@ -581,16 +594,12 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                         borderCoder: AppColors.lightBorderColor,
                         flexValue: 7,
                         title: AppLocalizations.of(context)!.total_order,
-
-                        value: '${
-                         vatCalculation(
-                            price: double.parse(state.tempList[index].totalAmount ?? '0'),
-                            vat: state.tempList[index].vatPercentage ?? 0,
-                            qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
-                            deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
-                          ).toStringAsFixed(2)
-
-                        }₪', //refund: 0.0
+                        value: '${vatCalculation(
+                          price: double.parse(state.tempList[index].totalAmount ?? '0'),
+                          vat: state.tempList[index].vatPercentage ?? 0,
+                          qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
+                          deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
+                        ).toStringAsFixed(2)}₪', //refund: 0.0
                         titleColor: AppColors.mainColor,
                         valueColor: AppColors.blackColor,
                         valueTextWeight: FontWeight.w500,
@@ -652,8 +661,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
 
     final isHebrew = Localizations.localeOf(context).languageCode == 'he';
 
-    final rawRefundAmount =
-        state.orderSummaryList.data?.openRefundTotalAmount ?? 0.0;
+    final rawRefundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0.0;
 
     final totalOrderAmount = vatCalculation(
       price: double.parse(state.tempList[index].totalAmount ?? '0'),
@@ -662,17 +670,18 @@ class BasketSummaryScreenWidget extends StatelessWidget {
       deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
     );
 
-    final adjustedAmount = totalOrderAmount.abs() < rawRefundAmount.abs()
-        ? totalOrderAmount
-        : rawRefundAmount;
+    final adjustedAmount = totalOrderAmount.abs() < rawRefundAmount.abs() ? totalOrderAmount : rawRefundAmount;
 
-    final displayAmount =
-        ' -${adjustedAmount.abs().toStringAsFixed(2)}₪';
-
+    final displayAmount = ' -${adjustedAmount.abs().toStringAsFixed(2)}₪';
 
     return Container(
         alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 10),
+        padding: const EdgeInsets.only(
+          left: AppConstants.padding_10,
+          right: AppConstants.padding_10,
+          top: AppConstants.padding_3,
+          bottom: AppConstants.padding_10,
+        ),
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
@@ -680,10 +689,31 @@ class BasketSummaryScreenWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            state.tempList[index].bottleQuantities! > 0 ? basketRow(state.language == AppStrings.englishString ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}${state.tempList[index].bottleQuantities.toString()}' : '${AppLocalizations.of(context)!.bottle_deposit}${state.tempList[index].bottleQuantities.toString()}${'X'}', state.isIncludedVat ? (formatNumber(value: bottleDepositCalculationWithVat(deposit: state.tempList[index].bottleTax!, vatPercentage: state.tempList[index].vatPercentage!, qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0).toStringAsFixed(2), local: AppStrings.hebrewLocal)) : (formatNumber(value: bottleDepositCalculation(deposit: state.tempList[index].bottleTax!, qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0).toStringAsFixed(2), local: AppStrings.hebrewLocal))) : 0.height,
             state.tempList[index].bottleQuantities! > 0
-                ? const Divider(
-                    height: 8,
+                ? basketRow(
+                    state.language == AppStrings.englishString
+                        ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}'
+                            '${state.tempList[index].bottleQuantities.toString()}'
+                        : '${AppLocalizations.of(context)!.bottle_deposit}${state.tempList[index].bottleQuantities.toString()}${'X'}',
+                    state.isIncludedVat
+                        ? (formatNumber(
+                            value: bottleDepositCalculationWithVat(
+                              deposit: state.tempList[index].bottleTax!,
+                              vatPercentage: state.tempList[index].vatPercentage!,
+                              qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
+                            ).toStringAsFixed(2),
+                            local: AppStrings.hebrewLocal,
+                          ))
+                        : (formatNumber(
+                            value: bottleDepositCalculation(
+                              deposit: state.tempList[index].bottleTax!,
+                              qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
+                            ).toStringAsFixed(2),
+                            local: AppStrings.hebrewLocal)))
+                : 0.height,
+            state.tempList[index].bottleQuantities! > 0
+                ? const DividerWidget(
+                    height: 8.0,
                   )
                 : 0.height,
             state.isIncludedVat
@@ -695,24 +725,35 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                       local: AppStrings.hebrewLocal,
                     ),
                   ),
-            state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
+            state.isIncludedVat
+                ? const SizedBox()
+                : const DividerWidget(
+                    height: 8.0,
+                  ),
             state.isIncludedVat
                 ? const SizedBox()
                 : basketRow(
                     AppLocalizations.of(context)!.vat,
                     (formatNumber(
-                      value: totalVatAmountCalculation(price: double.parse(state.tempList[index].totalAmount!), vat: state.tempList[index].vatPercentage!, qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0, deposit: state.tempList[index].bottleTax!).toStringAsFixed(2),
+                      value: totalVatAmountCalculation(
+                        price: double.parse(state.tempList[index].totalAmount!),
+                        vat: state.tempList[index].vatPercentage!,
+                        qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
+                        deposit: state.tempList[index].bottleTax!,
+                      ).toStringAsFixed(2),
                       local: AppStrings.hebrewLocal,
                     ))),
-            state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
             state.isIncludedVat
                 ? const SizedBox()
-                : basketRow(
-                    AppLocalizations.of(context)!.total_refunds,
-                displayAmount
-
+                : const DividerWidget(
+                    height: 8.0,
                   ),
-            state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
+            state.isIncludedVat ? const SizedBox() : basketRow(AppLocalizations.of(context)!.total_refunds, displayAmount),
+            state.isIncludedVat
+                ? const SizedBox()
+                : const DividerWidget(
+                    height: 8.0,
+                  ),
             state.isIncludedVat
                 ? basketRow(
                     AppLocalizations.of(context)!.total_price_with_vat,
@@ -740,14 +781,21 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                       local: AppStrings.hebrewLocal,
                     )),
                     isTitle: true),
-            state.isIncludedVat ? const SizedBox() : const Divider(height: 8),
+            state.isIncludedVat
+                ? const SizedBox()
+                : const DividerWidget(
+                    height: 8.0,
+                  ),
             if (remainingRefund > 0)
               Wrap(
                 alignment: WrapAlignment.center,
-                spacing: 4, // space between texts
+                spacing: 4,
                 children: [
                   Text(
-                    isHebrew ? AppLocalizations.of(context)!.refund_amount_1 : '${AppLocalizations.of(context)!.refund_amount_1} ${remainingRefund.toStringAsFixed(2)}${'₪'}', // ₪ // ${formatNumber(
+                    isHebrew
+                        ? AppLocalizations.of(context)!.refund_amount_1
+                        : '${AppLocalizations.of(context)!.refund_amount_1} '
+                            '${remainingRefund.toStringAsFixed(2)}${'₪'}',
                     style: AppStyles.rkBoldTextStyle(
                       size: AppConstants.font_15,
                       color: AppColors.notificationColor,
@@ -834,9 +882,9 @@ class CallAgentDialog extends StatelessWidget {
     return Directionality(
       textDirection: language == 'en' ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
-        contentPadding: const EdgeInsets.all(20.0),
+        contentPadding: const EdgeInsets.all(AppConstants.padding_20),
         surfaceTintColor: AppColors.whiteColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
         content: Text(
           AppLocalizations.of(context)!.return_draft_not_sent,
           style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont),
@@ -852,8 +900,8 @@ class CallAgentDialog extends StatelessWidget {
                   Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {AppStrings.isbackString: 'orderSummary'});
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(5.0)),
+                  padding: const EdgeInsets.all(AppConstants.padding_8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -874,8 +922,8 @@ class CallAgentDialog extends StatelessWidget {
                   bloc.add(BasketSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: id, index: index));
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(5.0)),
+                  padding: const EdgeInsets.all(AppConstants.padding_8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

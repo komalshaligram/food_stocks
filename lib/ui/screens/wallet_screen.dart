@@ -107,7 +107,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                 title: state.userEmail,
                 directionality: state.language,
                 width: 80,
-                positiveTitle: AppLocalizations.of(context)!.close,
+                positiveTitle: AppLocalizations.of(context)!.closeText,
                 positiveOnTap: () => Navigator.pop(context1),
                 subTitle: AppLocalizations.of(context)!.wallet_information_sent_to_your_email,
               );
@@ -244,12 +244,12 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                             state.isGraphProcess
                                 ? const WalletScreenShimmerWidget()
                                 : Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.all(AppConstants.padding_8),
                                     child: SizedBox(
                                       height: getScreenHeight(context) * 0.21,
                                       width: double.maxFinite,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_2),
                                         child: LineChart(
                                           LineChartData(
                                             borderData: FlBorderData(show: false),
@@ -265,7 +265,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                   tooltipBgColor: Colors.transparent,
                                                   showOnTopOfTheChartBoxArea: false,
                                                   tooltipMargin: 15,
-                                                  tooltipPadding: const EdgeInsets.only(bottom: 6)),
+                                                  tooltipPadding: const EdgeInsets.only(bottom: AppConstants.padding_5)),
                                             ),
                                             lineBarsData: [
                                               LineChartBarData(
@@ -299,7 +299,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                   getTitlesWidget: ((value, meta) {
                                                     String? month = monthMap[value];
                                                     return Padding(
-                                                      padding: const EdgeInsets.only(top: 5),
+                                                      padding: const EdgeInsets.only(top: AppConstants.padding_5),
                                                       child: Text(
                                                         month.toString(),
                                                         style: AppStyles.rkRegularTextStyle(
@@ -651,13 +651,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
         minDate: minDate,
         theme: CalendarTheme(
           selectedColor: AppColors.mainColor,
-          dayNameTextStyle: const TextStyle(color: Colors.black45, fontSize: 10),
+          dayNameTextStyle: const TextStyle(color: Colors.black45, fontSize: AppConstants.font_10),
           inRangeColor: AppColors.lightMainColor,
           inRangeTextStyle: const TextStyle(color: Colors.black),
           selectedTextStyle: const TextStyle(color: Colors.white),
           todayTextStyle: const TextStyle(fontWeight: FontWeight.bold),
           defaultTextStyle: const TextStyle(color: Colors.black, fontSize: 12),
-          radius: 10,
+          radius: AppConstants.radius_10,
           tileSize: 40,
           selectedQuickDateRangeColor: AppColors.mainColor,
           disabledTextStyle: const TextStyle(color: Colors.grey),

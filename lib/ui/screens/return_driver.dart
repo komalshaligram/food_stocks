@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
@@ -149,7 +148,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                       child: Container(
                                         padding: const EdgeInsets.all(AppConstants.padding_5),
                                         decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.padding_3)),
+                                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
                                           color: state.isAllCheck ? AppColors.mainColor : AppColors.lightBorderColor,
                                           border: Border.all(color: AppColors.lightGreyColor),
                                         ),
@@ -228,7 +227,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
 
                                       if (isChecked) ...[
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
                                           child: Text(
                                             AppLocalizations.of(context)!.driver_return_delivery_document_img,
                                             style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),
@@ -236,7 +235,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
                                           child: Text(
                                             '${AppLocalizations.of(context)!.note}: ${AppLocalizations.of(context)!.driver_return_delivery_document_img_note}',
                                             style: AppStyles.rkRegularTextStyle(
@@ -258,7 +257,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                                 final File? file = files[imageIndex];
 
                                                 return Padding(
-                                                  padding: const EdgeInsets.only(right: 8),
+                                                  padding: const EdgeInsets.only(right: AppConstants.padding_8),
                                                   child: InkWell(
                                                     onTap: () {
                                                       if (file != null) {

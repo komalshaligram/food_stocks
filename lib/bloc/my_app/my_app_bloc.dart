@@ -12,7 +12,6 @@ import '../../data/model/req_model/profile_req_model/profile_model.dart'
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
-import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 part 'my_app_state.dart';

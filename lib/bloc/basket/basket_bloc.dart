@@ -7,7 +7,6 @@ import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart' as insert;
 import '../../data/model/req_model/order_send_req_model/order_send_req_model.dart' as order;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
-
 import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';
@@ -55,9 +54,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       if (preferencesHelper.getGuestUser()) {
       } else {
         if (event is _getAllCartEvent) {
-          emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(), updatePaymentMethod: false,
-              isPaymentFail: false, paymentTypesList: preferencesHelper.getPaymentMethodTypes(), context: event.context,
-              isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(), isAllPaymentAvailable: preferencesHelper.getAvailablePayment()));
+          emit(state.copyWith(isSubUserCanCreateOrder: preferencesHelper.getCanCreateOrder(), updatePaymentMethod: false, isPaymentFail: false, paymentTypesList: preferencesHelper.getPaymentMethodTypes(), context: event.context, isSubUserAddToBasket: preferencesHelper.getCanAddToBasket(), isAllPaymentAvailable: preferencesHelper.getAvailablePayment()));
 
           emit(state.copyWith(isShimmering: event.isFromUpdate == true ? false : true, isAnimation: false, language: preferencesHelper.getAppLanguage(), cartCount: preferencesHelper.getCartCount()));
           try {
@@ -73,7 +70,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               if (productStockList.isNotEmpty) {
                 productStockList[0] = [];
               }
-              printData("check here res ${response.data?.data?.length}");
               if (response.data?.data?.isNotEmpty == true) {
                 add(
                   BasketEvent.getSupplierPaymentTypeEvent(
@@ -83,7 +79,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   ),
                 );
               }
-
 
               List<ProductStockModel> stockList = [];
               stockList.addAll(response.data?.data?.map((product) => ProductStockModel(
@@ -122,10 +117,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               await preferencesHelper.setCartCount(count: temp.isEmpty ? preferencesHelper.getCartCount() : temp.length);
 
               emit(state.copyWith(isAnimation: true));
-              emit(state.copyWith(vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0, bottleQty: response.data?.cart?.first.bottleQuantities,
-                  bottleTax: response.data?.bottleTax ?? 0, basketProductList: temp, productStockList: productStockList, totalPayment:
-                  response.data?.cart?.first.totalAmount!.toDouble() ?? 0, supplierCount: response.data?.cart?.first.suppliers ?? 1, supplierId:
-                  response.data?.data?.isNotEmpty == true ?  response.data?.data?.first.suppliers?.first.id ?? '' : '', isAnimation: false, draftReturnExists: response.data?.cart?.first.draftReturnExists! ?? false));
+              emit(state.copyWith(vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0, bottleQty: response.data?.cart?.first.bottleQuantities, bottleTax: response.data?.bottleTax ?? 0, basketProductList: temp, productStockList: productStockList, totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0, supplierCount: response.data?.cart?.first.suppliers ?? 1, supplierId: response.data?.data?.isNotEmpty == true ? response.data?.data?.first.suppliers?.first.id ?? '' : '', isAnimation: false, draftReturnExists: response.data?.cart?.first.draftReturnExists! ?? false));
             } else {
               emit(state.copyWith(isShimmering: false));
             }
@@ -155,8 +147,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           list = [...state.basketProductList];
 
           try {
-
-
             list[event.listIndex].isProcess = true;
             emit(state.copyWith(
               isLoading: true,
@@ -262,7 +252,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               if (response.status == AppConstants.code_201) {
                 Vibration.vibrate();
 
-                //  add(BasketEvent.getAllCartEvent(context: event.context));
                 List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
                 productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
                   note: '',
@@ -619,9 +608,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   Navigator.pop(event.context);
                 }
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
-                /*  if(event.isFromDialog){
-                  Navigator.pop(event.context);
-                }*/
+
                 emit(state.copyWith(
                   isSubmitLoading: false,
                   isRemoveProcess: false,
@@ -867,7 +854,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               final response = GetAllCartResModel.fromJson(res);
 
               if (response.status == AppConstants.code_200) {
-                final cartList = response.data?.data; // Likely a List<dynamic>
+                final cartList = response.data?.data;
 
                 if (cartList != null && cartList.isNotEmpty) {
                   for (var item in cartList) {
@@ -920,7 +907,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             } on ServerException {}
             if (_isProductInCart) {
               try {
-                //   emit(state.copyWith(isLoading: true));
                 UpdateCartReqModel request = UpdateCartReqModel(
                   productId: event.productId,
                   supplierId: event.productSupplierIds,
@@ -945,23 +931,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     totalPrice: productStockList[event.productListIndex][event.productStockUpdateIndex].totalPrice,
                     productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                   );
-                  // isLoading: false,
                   emit(state.copyWith(productStockList: productStockList));
 
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
                 } else {
                   Navigator.pop(event.context);
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
-                  // emit(state.copyWith(isLoading: false));
                 }
               } on ServerException {
-                // emit(state.copyWith(isLoading: false));
-              } catch (e) {
-                //   emit(state.copyWith(isLoading: false));
-              }
+              } catch (e) {}
             } else {
               try {
-                //   emit(state.copyWith(isLoading: true));
                 insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
                   products: [
                     insert.Product(
@@ -985,7 +965,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 );
                 InsertCartResModel response = InsertCartResModel.fromJson(res);
                 if (response.status == AppConstants.code_201) {
-                  // add(const BasketEvent.setCartCountEvent());
                   Vibration.vibrate();
                   List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
                   productStockList[event.productListIndex][event.productStockUpdateIndex] = productStockList[event.productListIndex][event.productStockUpdateIndex].copyWith(
@@ -997,27 +976,17 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                   );
 
-                  // add(const BasketEvent.getCartCountEvent());
-                  // isLoading: false,
                   emit(state.copyWith(
                     productStockList: productStockList,
                   ));
                   await Future.delayed(const Duration(milliseconds: 500));
-                  // emit(state.copyWith(duringCelebration: false));
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
                 } else if (response.status == AppConstants.code_403) {
-                  //  emit(state.copyWith(isLoading: false));
-
-                  // CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
                 } else {
-                  //   emit(state.copyWith(isLoading: false));
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
                 }
               } on ServerException {
-                // emit(state.copyWith(isLoading: false));
-              } catch (e) {
-                //  emit(state.copyWith(isLoading: false));
-              }
+              } catch (e) {}
             }
           }
           //
@@ -1041,9 +1010,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           for (var item in items) item.id ?? '': item.totalQuantity ?? 0,
         };
       }
-    } catch (_) {
-      // ignore failure
-    }
+    } catch (_) {}
     return {};
   }
 }

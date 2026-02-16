@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../data/error/exceptions.dart';
 import '../../data/model/res_model/suppliers_res_model/suppliers_res_model.dart';
 import '../../repository/dio_client.dart';

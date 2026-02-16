@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
@@ -20,7 +19,6 @@ class Owner1FormBloc extends Bloc<Owner1FormEvent, Owner1FormState> {
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getArgumentEvent) {
-        debugPrint("owner:${event.owner}");
         emit(state.copyWith(owner: event.owner, businessID: event.businessTypeId, haveMultiple: event.isFreelancer));
       } else if (event is _navigateToNextScreenEvent) {
         termsConditionReqModel = TermsConditionReqModel(

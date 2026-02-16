@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:food_stock/ui/widget/common_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +13,7 @@ class CommonPdfViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  PreferredSize(
+      appBar: PreferredSize(
         preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
         child: CommonAppBar(
           title: AppLocalizations.of(context)!.refund_invoice,
@@ -22,9 +21,12 @@ class CommonPdfViewer extends StatelessWidget {
               onTap: () async {
                 await Share.share(url);
               },
-              child: Icon(Icons.share,color: AppColors.mainColor,)),
+              child: Icon(
+                Icons.share,
+                color: AppColors.mainColor,
+              )),
           iconData: Icons.arrow_back_ios_sharp,
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
           },
           bgColor: Colors.transparent,

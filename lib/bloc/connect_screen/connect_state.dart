@@ -10,11 +10,11 @@ class ConnectState with _$ConnectState {
     required String mobileErrorMessage,
   }) = _ConnectState;
 
-  factory ConnectState.initial() => ConnectState(
-    isLoginSuccess: false,
-    isRegister: false,
-    errorMessage: '',
-    mobileErrorMessage: ' ',
-    isLoading: false,
-  );
+  factory ConnectState.initial() => const ConnectState(
+        isLoginSuccess: false,
+        isRegister: false,
+        errorMessage: '',
+        mobileErrorMessage: ' ',
+        isLoading: false,
+      );
 }

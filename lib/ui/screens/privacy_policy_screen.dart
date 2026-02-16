@@ -102,7 +102,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                     ) : const CupertinoActivityIndicator(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15,vertical: AppConstants.padding_3),
                     child: Row(
                       mainAxisAlignment: state.isGuarantee1Available?MainAxisAlignment.spaceBetween:MainAxisAlignment.center,
                       children: [
@@ -143,7 +143,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                     ),
                   ),
                   state.isOwner2Available ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15,vertical: AppConstants.padding_3),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -186,7 +186,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                     ),
                   ) : const SizedBox(),
                   Padding(
-                    padding: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(AppConstants.padding_15),
                     child: CustomButtonWidget(
                       height: 50,
                       buttonText: AppLocalizations.of(context)!

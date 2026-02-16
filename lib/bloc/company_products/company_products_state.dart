@@ -55,7 +55,7 @@ class CompanyProductsState with _$CompanyProductsState {
         productDetails: [],
         productStockUpdateIndex: -1,
         productStockList: [
-          [ProductStockModel(productId: '')],
+          [const ProductStockModel(productId: '')],
           [],
           []
         ],
@@ -90,7 +90,7 @@ class CompanyProductsState with _$CompanyProductsState {
         isSaleOn: false,
         isProgress: false,
         language: AppStrings.hebrewString,
-    isCartCountChange: false,
-    messageCount: 0,
+        isCartCountChange: false,
+        messageCount: 0,
       );
 }

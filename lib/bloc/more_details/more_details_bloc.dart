@@ -37,11 +37,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         if (!state.isUpdate) {
           emit(state.copyWith(
             streetNameController: TextEditingController(text: preferencesHelper.getStreetName()),
-            streetNumberController: TextEditingController(text:  preferencesHelper.getStreetNumber()),
+            streetNumberController: TextEditingController(text: preferencesHelper.getStreetNumber()),
             emailController: TextEditingController(text: preferencesHelper.getEmailId()),
             zipController: TextEditingController(text: preferencesHelper.getZip()),
             selectCity: preferencesHelper.getCity(),
-
           ));
         }
         profileModel = event.profileModel;
@@ -68,25 +67,22 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         } catch (e) {
           emit(state.copyWith(isShimmering: false));
         }
-      }
-      else if (event is _registrationApiEvent) {
+      } else if (event is _registrationApiEvent) {
         if (state.isUpdate) {
           ProfileModel updatedProfileModel = ProfileModel(
             cityId: state.cityListResModel?.data?.cities?.firstWhere((city) => city.cityName == state.selectCity).id,
             email: state.emailController.text,
-            clientDetail: ClientDetail(approveSmsAndEmail: state.approveForSMS,zip: state.zipController.text.trim(), streetNumber: state.streetNumberController.text.trim(), streetName: state.streetNameController.text.trim()),
+            clientDetail: ClientDetail(approveSmsAndEmail: state.approveForSMS, zip: state.zipController.text.trim(), streetNumber: state.streetNumberController.text.trim(), streetName: state.streetNameController.text.trim()),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
           clientDetail?.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
           req[AppStrings.clientDetailString] = clientDetail;
           req.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
           try {
@@ -100,7 +96,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(isLoading: false));
               Smartlook.instance.user.setEmail(response.data?.client?.phoneNumber ?? '');
-              //Smartlook.instance.user.setEmail(response.data?.client?.email ?? '');
               preferencesHelper.setEmailId(userEmailId: response.data?.client?.email ?? '');
               if (!preferencesHelper.getSubUser()) {
                 preferencesHelper.setUserName(name: response.data?.client?.clientDetail?.ownerName ?? '');
@@ -188,7 +183,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               }
               Smartlook.instance.user.setIdentifier(profileResModel.data?.client?.clientData?.id ?? '');
               Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.phoneNumber.toString() ?? '');
-             // Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.email ?? '');
               Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
               if (!preferencesHelper.getSubUser()) {
                 preferencesHelper.setUserName(name: profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
@@ -243,7 +237,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (response.status == AppConstants.code_200) {
               preferencesHelper.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
               preferencesHelper.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
-              preferencesHelper.setPaymentMethodTypes(methods:response.data?.clients?.first.clientDetail?.availablePaymentTypes??[]);
+              preferencesHelper.setPaymentMethodTypes(methods: response.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
               emit(state.copyWith(isUpdating: false, selectCity: response.data?.clients?.first.city?.cityName ?? '', emailController: TextEditingController(text: response.data?.clients?.first.email), streetNumberController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetNumber), streetNameController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetName), zipController: TextEditingController(text: response.data?.clients?.first.clientDetail?.zip)));
             } else {
               emit(state.copyWith(isUpdating: false));

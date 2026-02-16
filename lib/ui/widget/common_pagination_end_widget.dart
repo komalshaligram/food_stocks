@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';
@@ -18,8 +17,7 @@ class CommonPaginationEndWidget extends StatelessWidget {
       child: Text(
         pageEndText,
         textAlign: TextAlign.center,
-        style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.smallFont, color: AppColors.textColor),
+        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
       ),
     );
   }

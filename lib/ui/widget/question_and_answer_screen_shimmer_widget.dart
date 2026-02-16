@@ -17,12 +17,8 @@ class QuestionAndAnswerScreenShimmerWidget extends StatelessWidget {
         return Container(
             height: 65,
             width: double.maxFinite,
-            margin: const EdgeInsets.symmetric(
-                vertical: AppConstants.padding_3,
-                horizontal: AppConstants.padding_10),
-            padding: const EdgeInsets.symmetric(
-                vertical: AppConstants.padding_10,
-                horizontal: AppConstants.padding_10),
+            margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_10),
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,8 +29,7 @@ class QuestionAndAnswerScreenShimmerWidget extends StatelessWidget {
                     width: getScreenWidth(context) * 0.3,
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: const BorderRadius.all(
-                          Radius.circular(AppConstants.radius_5)),
+                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                     ),
                   ),
                 ),
@@ -44,8 +39,7 @@ class QuestionAndAnswerScreenShimmerWidget extends StatelessWidget {
                     width: getScreenWidth(context) * 0.5,
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: const BorderRadius.all(
-                          Radius.circular(AppConstants.radius_5)),
+                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                     ),
                   ),
                 ),

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-
 import '../../ui/widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import 'common_shimmer_widget.dart';
 
 class ProductDetailsShimmerWidget extends StatelessWidget {
-  const ProductDetailsShimmerWidget({super.key });
+  const ProductDetailsShimmerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +45,23 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-             Center(
+              Center(
                 child: CommonShimmerWidget(
                   child: Container(
-                    height: getItemHeight( context, false) == 350.0 ? 220 :
-                    getItemHeight(context, false) == 260.0 ? 200 : 150,
-                    width:  getItemHeight( context, false) == 350.0 ? 220 :
-                    getItemHeight(context, false) == 260.0 ? 200 : 150,
+                    height: getItemHeight(context, false) == 350.0
+                        ? 220
+                        : getItemHeight(context, false) == 260.0
+                            ? 200
+                            : 150,
+                    width: getItemHeight(context, false) == 350.0
+                        ? 220
+                        : getItemHeight(context, false) == 260.0
+                            ? 200
+                            : 150,
                     margin: const EdgeInsets.all(AppConstants.padding_10),
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: const BorderRadius.all(
-                          Radius.circular(AppConstants.radius_10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                     ),
                   ),
                 ),
@@ -67,17 +70,11 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(
-                        color: AppColors.borderColor.withOpacity(0.5),
-                        width: 1),
-                    bottom: BorderSide(
-                        width: 1,
-                        color: AppColors.borderColor.withOpacity(0.5)),
+                    top: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1),
+                    bottom: BorderSide(width: 1, color: AppColors.borderColor.withOpacity(0.5)),
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.padding_15,
-                    vertical: AppConstants.padding_20),
+                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -98,22 +95,10 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(
-                                    context.rtl
-                                        ? AppConstants.radius_5
-                                        : AppConstants.radius_50),
-                                bottomLeft: Radius.circular(
-                                    context.rtl
-                                        ? AppConstants.radius_5
-                                        : AppConstants.radius_50),
-                                bottomRight: Radius.circular(
-                                    context.rtl
-                                        ? AppConstants.radius_50
-                                        : AppConstants.radius_5),
-                                topRight: Radius.circular(
-                                    context.rtl
-                                        ? AppConstants.radius_50
-                                        : AppConstants.radius_5),
+                                topLeft: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
+                                bottomLeft: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
+                                bottomRight: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
+                                topRight: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
                               ),
                             ),
                           ),
@@ -125,8 +110,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                             height: 50,
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(AppConstants.radius_5)),
+                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                             ),
                           ),
                         ),
@@ -138,22 +122,10 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(
-                                    context.rtl
-                                        ? AppConstants.radius_50
-                                        : AppConstants.radius_5),
-                                bottomLeft: Radius.circular(
-                                    context.rtl
-                                        ? AppConstants.radius_50
-                                        : AppConstants.radius_5),
-                                bottomRight: Radius.circular(
-                                    context.rtl
-                                        ? AppConstants.radius_5
-                                        : AppConstants.radius_50),
-                                topRight: Radius.circular(
-                                    context.rtl
-                                        ? AppConstants.radius_5
-                                        : AppConstants.radius_50),
+                                topLeft: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
+                                bottomLeft: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
+                                bottomRight: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
+                                topRight: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
                               ),
                             ),
                           ),
@@ -163,10 +135,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                  padding: const EdgeInsets.only(left:10,right:10),
-                  alignment: Alignment.center,
-                  child: buildTextTitle(width: 80)),
+              Container(padding: const EdgeInsets.only(left: 10, right: 10), alignment: Alignment.center, child: buildTextTitle(width: 80)),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: CommonShimmerWidget(
@@ -175,23 +144,17 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                     height: 50,
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
-                      borderRadius: const BorderRadius.all(
-                          Radius.circular(AppConstants.radius_5)),
+                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                     ),
                   ),
                 ),
               ),
             ],
           ),
-          Container(
-            padding: const EdgeInsets.only(left:10,right:10),
-              alignment: Alignment.centerLeft,
-              child: buildTextTitle(width: 80)),
+          Container(padding: const EdgeInsets.only(left: 10, right: 10), alignment: Alignment.centerLeft, child: buildTextTitle(width: 80)),
           const RelatedProductShimmerWidget()
         ],
       ),
-
-
     );
   }
 
@@ -203,8 +166,7 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
         ),
       ),
     );

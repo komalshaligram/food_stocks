@@ -1,22 +1,7 @@
-// Copyright 2022, the Flutter project authors. Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'dart:collection';
 import 'dart:math';
-
 import 'package:flutter/widgets.dart';
 
-/// Shows a confetti (celebratory) animation: paper snippings falling down.
-///
-/// The widget fills the available space (like [SizedBox.expand] would).
-///
-/// When [isStopped] is `true`, the animation will not run. This is useful
-/// when the widget is not visible yet, for example. Provide [colors]
-/// to make the animation look good in context.
-///
-/// This is a partial port of this CodePen by Hemn Chawroka:
-/// https://codepen.io/iprodev/pen/azpWBr
 class Confetti extends StatefulWidget {
   static const _defaultColors = [
     Color(0xff20BF6B),
@@ -33,8 +18,8 @@ class Confetti extends StatefulWidget {
   const Confetti({
     this.colors = _defaultColors,
     this.isStopped = false,
-  required this.snipSize ,
-   required this.snippingCount ,
+    required this.snipSize,
+    required this.snippingCount,
     super.key,
   });
 
@@ -45,7 +30,6 @@ class Confetti extends StatefulWidget {
 class ConfettiPainter extends CustomPainter {
   final defaultPaint = Paint();
 
-
   late final List<_PaperSnipping> _snippings;
 
   Size? _size;
@@ -53,15 +37,12 @@ class ConfettiPainter extends CustomPainter {
   DateTime _lastTime = DateTime.now();
 
   final UnmodifiableListView<Color> colors;
-  int snippingCount ;
-   double snipSize;
+  int snippingCount;
+  double snipSize;
 
-  ConfettiPainter(
-      {required Listenable animation, required Iterable<Color> colors,required this.snippingCount , required this.snipSize})
+  ConfettiPainter({required Listenable animation, required Iterable<Color> colors, required this.snippingCount, required this.snipSize})
       : colors = UnmodifiableListView(colors),
         super(repaint: animation);
-
-
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -71,7 +52,7 @@ class ConfettiPainter extends CustomPainter {
           (i) => _PaperSnipping(
                 frontColor: colors[i % colors.length],
                 bounds: size,
-            snipSize: snipSize,
+                snipSize: snipSize,
               ));
     }
 
@@ -96,11 +77,8 @@ class ConfettiPainter extends CustomPainter {
   }
 }
 
-class _ConfettiState extends State<Confetti>
-    with SingleTickerProviderStateMixin {
+class _ConfettiState extends State<Confetti> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -136,8 +114,6 @@ class _ConfettiState extends State<Confetti>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      // We don't really care about the duration, since we're going to
-      // use the controller on loop anyway.
       duration: const Duration(seconds: 1),
       vsync: this,
     );
@@ -169,8 +145,6 @@ class _PaperSnipping {
   double rotation = _random.nextDouble() * 360 * degToRad;
 
   double cosA = 1.0;
-
-//  final double size = 7.0;
 
   final double oscillationSpeed = 0.5 + _random.nextDouble() * 1.5;
 
@@ -226,7 +200,6 @@ class _PaperSnipping {
     position.x += cos(time * oscillationSpeed) * xSpeed * dt;
     position.y += ySpeed * dt;
     if (position.y > _bounds.height) {
-      // Move the snipping back to the top.
       position.x = _random.nextDouble() * _bounds.width;
       position.y = 0;
     }

@@ -17,13 +17,13 @@ class CommonAlertDialog extends StatelessWidget {
   const CommonAlertDialog({
     super.key,
     required this.title,
-     this.subTitle = '',
+    this.subTitle = '',
     this.positiveOnTap,
     this.negativeOnTap,
     this.positiveTitle,
     this.negativeTitle,
     required this.directionality,
-    this.isLogOutProcess = false
+    this.isLogOutProcess = false,
   });
 
   @override
@@ -31,23 +31,15 @@ class CommonAlertDialog extends StatelessWidget {
     return Directionality(
       textDirection: directionality == 'en' ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
-        contentPadding: const EdgeInsets.all(20.0),
+        contentPadding: const EdgeInsets.all(AppConstants.padding_20),
         surfaceTintColor: AppColors.whiteColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        title: Text(title,
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.mediumFont,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.bold)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
+        title: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor, fontWeight: FontWeight.bold)),
         content: Text(
           subTitle,
-          style: AppStyles.rkRegularTextStyle(
-              color: AppColors.blackColor, size: AppConstants.font_14),
+          style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_14),
         ),
-        actionsPadding: const EdgeInsets.only(
-            right: AppConstants.padding_20,
-            bottom: AppConstants.padding_20,
-            left: AppConstants.padding_20),
+        actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_20, left: AppConstants.padding_20),
         actions: [
           positiveTitle != null
               ? InkWell(
@@ -55,20 +47,22 @@ class CommonAlertDialog extends StatelessWidget {
                   splashColor: Colors.transparent,
                   onTap: positiveOnTap,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                     alignment: Alignment.center,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
-                    width:80,
-                    child: isLogOutProcess ? CupertinoActivityIndicator(
-                      color: AppColors.mainColor,
-                    ):Text(
-                      positiveTitle ?? '',
-                      style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.mainColor.withOpacity(0.9),
-                          size: AppConstants.smallFont,fontWeight: isLogOutProcess?FontWeight.bold:FontWeight.normal),
-                    ),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_7)),
+                    width: 80,
+                    child: isLogOutProcess
+                        ? CupertinoActivityIndicator(
+                            color: AppColors.mainColor,
+                          )
+                        : Text(
+                            positiveTitle ?? '',
+                            style: AppStyles.rkRegularTextStyle(
+                              color: AppColors.mainColor.withOpacity(0.9),
+                              size: AppConstants.smallFont,
+                              fontWeight: isLogOutProcess ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
                   ),
                 )
               : Container(),
@@ -78,19 +72,13 @@ class CommonAlertDialog extends StatelessWidget {
                   splashColor: Colors.transparent,
                   onTap: negativeOnTap,
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                     alignment: Alignment.center,
                     width: 80,
-                    decoration: BoxDecoration(
-                      gradient: AppColors.appMainGradientColor,
-                       // color: AppColors.mainColor.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(8.0)),
+                    decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                     child: Text(
                       negativeTitle ?? '',
-                      style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.whiteColor,
-                          size: AppConstants.smallFont),
+                      style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),
                     ),
                   ),
                 )

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../ui/utils/validation/auth_form_validation.dart';
 import '../utils/constants/app_colors.dart';
+import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';
 
 class CustomFormField extends StatelessWidget {
@@ -10,7 +11,6 @@ class CustomFormField extends StatelessWidget {
     required BuildContext context,
     required TextEditingController controller,
     required TextInputType keyboardType,
-    //   required TextInputAction inputAction,
     required String hint,
     required String validator,
     required Color fillColor,
@@ -48,7 +48,6 @@ class CustomFormField extends StatelessWidget {
     this.textDirection,
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
-        //   _inputAction = inputAction,
         _hint = hint,
         _validator = validator,
         _controller = controller,
@@ -94,7 +93,7 @@ class CustomFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-        textSelectionTheme:  TextSelectionThemeData(
+        textSelectionTheme: TextSelectionThemeData(
           cursorColor: AppColors.mainColor,
           selectionColor: AppColors.mainColor,
           selectionHandleColor: AppColors.mainColor,
@@ -104,8 +103,7 @@ class CustomFormField extends StatelessWidget {
         controller: _controller,
         inputFormatters: inputFormat,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        style: AppStyles.rkRegularTextStyle(
-            color: AppColors.blackColor, size: 16, fontWeight: FontWeight.w400),
+        style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont, fontWeight: FontWeight.w400),
         maxLines: maxLines,
         enabled: isEnabled,
         textInputAction: textInputAction,
@@ -120,29 +118,22 @@ class CustomFormField extends StatelessWidget {
         autofocus: autofocus,
         cursorColor: cursorColor,
         textDirection: textDirection,
-        textAlign:
-            textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
-        validator: (value) =>
-            AuthFormValidation().formValidation(value!, _validator ,context),
+        textAlign: textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
+        validator: (value) => AuthFormValidation().formValidation(value!, _validator, context),
         decoration: InputDecoration(
-            labelStyle: TextStyle(color: AppColors.textColor,overflow: TextOverflow.visible),
+            labelStyle: TextStyle(color: AppColors.textColor, overflow: TextOverflow.visible),
             suffixIcon: postIconBtn,
             prefixIcon: prefixIcon,
             suffix: suffixIcon,
             hintText: _hint,
-            hintTextDirection:
-                textDirection == TextDirection.ltr ? TextDirection.ltr : null,
+            hintTextDirection: textDirection == TextDirection.ltr ? TextDirection.ltr : null,
             filled: true,
             fillColor: _fillColor,
             hintStyle: TextStyle(
               color: AppColors.textColor,
             ),
             errorMaxLines: 2,
-            errorStyle: TextStyle(
-                color: AppColors.redColor,
-                height: height,
-                overflow: TextOverflow.visible,
-                fontWeight: FontWeight.w400),
+            errorStyle: TextStyle(color: AppColors.redColor, height: height, overflow: TextOverflow.visible, fontWeight: FontWeight.w400),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(border),
                 borderSide: isBorderVisible
@@ -151,18 +142,14 @@ class CustomFormField extends StatelessWidget {
                         width: 1,
                       )
                     : BorderSide.none),
-            contentPadding:  EdgeInsets.fromLTRB(10, contentPaddingTop, 10, contentPaddingBottom),
+            contentPadding: EdgeInsets.fromLTRB(AppConstants.padding_10, contentPaddingTop, AppConstants.padding_10, contentPaddingBottom),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(border),
-              borderSide: isBorderVisible
-                  ? BorderSide(color: AppColors.borderColor)
-                  : BorderSide.none,
+              borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(border),
-              borderSide: isBorderVisible
-                  ? BorderSide(color: AppColors.borderColor)
-                  : BorderSide.none,
+              borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none,
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(border),

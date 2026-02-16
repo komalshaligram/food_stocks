@@ -90,7 +90,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                   Container(
                     height: 55,
                     width: 50,
-                    // margin: EdgeInsets.only(bottom: 10),
                     clipBehavior: Clip.hardEdge,
                     decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
                     child: Center(
@@ -122,7 +121,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                 ),
                                 child: Text(
                                   '${state.cartCount}',
-                                  style: AppStyles.rkRegularTextStyle(size: 10, color: AppColors.whiteColor),
+                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor),
                                 ),
                               ),
                             ],
@@ -186,7 +185,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                     ? Container(
                                         height: getScreenHeight(context) - 80,
                                         width: getScreenWidth(context),
-                                        margin: const EdgeInsets.only(top: 30),
+                                        margin: const EdgeInsets.only(top: AppConstants.padding_30),
                                         alignment: Alignment.center,
                                         child: Text(
                                           AppLocalizations.of(context)!.recommendation_products_are_not_available,
@@ -758,7 +757,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                           Navigator.pop(dialogContext);
                                                         },
                                                         child: const Padding(
-                                                          padding: EdgeInsets.only(top: 10.0),
+                                                          padding: EdgeInsets.only(top: AppConstants.padding_10),
                                                           child: Icon(
                                                             Icons.close,
                                                             color: Colors.white,
@@ -837,7 +836,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
         Align(
           alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 10),
+            padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
             child: Text(
               AppLocalizations.of(context)!.related_products,
               style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
@@ -849,7 +848,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
         ),
         Container(
           height: getItemHeight(context, isSaleOn),
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,

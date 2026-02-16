@@ -82,7 +82,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                               width: double.maxFinite,
                               decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(AppConstants.radius_10),
                                 boxShadow: [
                                   BoxShadow(color: AppColors.shadowColor.withOpacity(0.10), blurRadius: AppConstants.blur_10),
                                 ],
@@ -97,7 +97,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                   ),
                                   70.height,
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 20),
+                                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
                                     child: Text(
                                       context.read<OrderSuccessfulBloc>().message,
                                       style: AppStyles.rkRegularTextStyle(size: AppConstants.font_17, color: AppColors.greyColor, fontWeight: FontWeight.normal),
@@ -120,10 +120,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                           ));
                                     },
                                     child: Container(
-                                      margin: const EdgeInsets.only(
-                                        left: 50,
-                                        right: 50,
-                                      ),
+                                      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_50),
                                       decoration: BoxDecoration(
                                         color: AppColors.whiteColor.withOpacity(0.95),
                                         boxShadow: [
@@ -159,10 +156,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                   Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name);
                                 },
                                 child: Container(
-                                  margin: const EdgeInsets.only(
-                                    left: 50,
-                                    right: 50,
-                                  ),
+                                  margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_50),
                                   decoration: BoxDecoration(
                                     color: AppColors.whiteColor.withOpacity(0.95),
                                     boxShadow: [

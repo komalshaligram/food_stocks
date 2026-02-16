@@ -103,7 +103,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
               Smartlook.instance.user.setIdentifier((response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
               Smartlook.instance.user.setEmail(response.data?.user?.phoneNumber ?? '');
-             // Smartlook.instance.user.setEmail(response.data?.user?.email ?? '');
               Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
               if (response.data?.adminType == AppStrings.subUserString) {
                 var res = response.data?.subUserPermissions;
@@ -120,12 +119,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
               }
               emit(state.copyWith(isLoading: false));
-            /*  Navigator.popUntil(event.context, (route) => route.name == RouteDefine.connectScreen.name);
-              Navigator.pushNamed(
-                event.context,
-                RouteDefine.bottomNavScreen.name,
 
-              );*/
               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);
 
               CustomSnackBar.showSnackBar(
@@ -170,7 +164,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
               preferencesHelper.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
               preferencesHelper.setUserId(id: response.data?.user?.id ?? '');
-              /* preferencesHelper.setUserLoggedIn(isLoggedIn: true);*/
               preferencesHelper.setWalletId(userWalletId: response.data?.wallet ?? '');
               emit(state.copyWith(isLoading: false));
               Navigator.popUntil(event.context, (route) => route.name == RouteDefine.connectScreen.name);

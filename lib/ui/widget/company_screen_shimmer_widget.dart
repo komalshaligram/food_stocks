@@ -11,13 +11,12 @@ class CompanyScreenShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: GridView.builder(
-          shrinkWrap: true,
-          itemCount: AppConstants.companyPageLimit,
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-          gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,childAspectRatio:0.9 ),
-          itemBuilder: (context, index) =>
-              buildCompanyListItem(context: context)),
+        shrinkWrap: true,
+        itemCount: AppConstants.companyPageLimit,
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
+        itemBuilder: (context, index) => buildCompanyListItem(context: context),
+      ),
     );
   }
 
@@ -28,14 +27,9 @@ class CompanyScreenShimmerWidget extends StatelessWidget {
         width: getScreenWidth(context),
         margin: const EdgeInsets.all(AppConstants.padding_10),
         decoration: BoxDecoration(
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           color: AppColors.whiteColor,
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
-                blurRadius: AppConstants.blur_10)
-          ],
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
         ),
       ),
     );

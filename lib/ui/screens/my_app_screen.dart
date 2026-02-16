@@ -35,24 +35,40 @@ class MyAppWidget extends StatefulWidget {
 }
 
 class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
-
   final Smartlook smartLook = Smartlook.instance;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await AppConfig.initializeAppConfig(context);
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
+
     WidgetsBinding.instance.addObserver(this);
-    smartLook.start();
-    smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
-    smartLook.sensitivity.changeWidgetClassSensitivity(
-      classType: TextField,
-      isSensitive: false,
-    );
+
+    Future.microtask(() {
+      try {
+        smartLook.start();
+        smartLook.preferences
+            .setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
+        smartLook.sensitivity.changeWidgetClassSensitivity(
+          classType: TextField,
+          isSensitive: false,
+        );
+      } catch (e, s) {
+        // IMPORTANT: log but don't crash the app
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          s,
+          reason: 'Smartlook initialization failed',
+        );
+      }
+    });
+
     super.initState();
   }
+
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

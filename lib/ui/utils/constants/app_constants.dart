@@ -84,6 +84,7 @@ class AppConstants{
   static const double font_20 = 20;
 
  //order status
+  static const int paidStatus = 7;
   static const int onTheWayStatus = 6;
   static const int deliveryStatus = 5;
   static const int cancelStatus = 4;
