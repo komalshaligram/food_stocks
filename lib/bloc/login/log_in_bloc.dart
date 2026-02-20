@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';

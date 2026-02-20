@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';

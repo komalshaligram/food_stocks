@@ -7,11 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/client_form_details/client_form_details_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
@@ -53,9 +51,7 @@ class ClientFormDetailsScreenWidget extends StatefulWidget {
 }
 
 class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenWidget> {
-  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
 
-  final PdfViewerController _pdfViewerController = PdfViewerController();
 
   ui.Image? image;
   bool isImage = false;
@@ -71,16 +67,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
       builder: (context, state) {
         return WillPopScope(
           onWillPop: () async {
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
             Navigator.pop(context);
 
             return Future.value(false);
-
-            // if (!preferencesHelper.getUserLoggedIn()) {
-            //   return Future.value(true);
-            // } else {
-            //   return Future.value(false);
-            // }
           },
           child: Scaffold(
             backgroundColor: AppColors.whiteColor,
@@ -88,10 +77,7 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
               surfaceTintColor: AppColors.whiteColor,
               leading: GestureDetector(
                   onTap: () async {
-                    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                    // if (!preferencesHelper.getUserLoggedIn()) {
                     Navigator.pop(context);
-                    // }
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';

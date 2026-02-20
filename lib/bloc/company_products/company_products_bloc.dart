@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
@@ -91,7 +91,9 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
         }
         try {
           emit(state.copyWith(isRefreshingProduct: true, isProgress: true, isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
-          CompanyProductsReqModel request = CompanyProductsReqModel(brandId: state.companyId, pageLimit: AppConstants.supplierProductPageLimit, pageNum: state.pageNum + 1, sortField: AppStrings.sortFieldString, sortOrder: AppStrings.sortOrderString);
+          CompanyProductsReqModel request = CompanyProductsReqModel(brandId: state.companyId,
+              pageLimit: AppConstants.supplierProductPageLimit, pageNum: state.pageNum + 1,
+              sortField: AppStrings.sortFieldString, sortOrder: AppStrings.sortOrderString);
           final res = await DioClient(event.context).post(AppUrlEndPoints.getCompanyProductsUrl, data: request.toJson());
           CompanyProductsResModel response = CompanyProductsResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -229,41 +231,41 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
               List<ProductSupplierModel> supplierList = [];
 
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
-                    return ProductSupplierModel(
-                      supplierId: supplier.supplierId ?? '',
-                      companyName: supplier.supplierCompanyName ?? '',
-                      basePrice: double.parse(supplier.productPrice ?? ''),
-                      quantity: _productQuantity,
-                      stock: supplier.productStock.toString(),
-                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
-                      selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
-                          ? !supplier.saleProduct!.contains(
-                              supplier.saleProduct?.firstWhere(
-                                    (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
-                                    orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
-                                  ) ??
-                                  const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
-                            )
-                              ? -2
-                              : supplier.saleProduct?.indexOf(
-                                    supplier.saleProduct?.firstWhere(
-                                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
-                                          orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
-                                        ) ??
-                                        const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
-                                  ) ??
-                                  -1
-                          : -1,
-                      supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(productStock: sale.productStock ?? 0, quantity: _productQuantity, saleId: sale.saleId ?? '', saleName: sale.saleName ?? '', maxQty: sale.saleMaxQuantity, saleDescription: parse(sale.salesDescription ?? '').body?.text ?? '', salePrice: double.parse(sale.discountedPrice ?? '0.0'), saleDiscount: double.parse(sale.discountPercentage ?? '0.0'))).toList() ?? [],
-                    );
-                  }).toList() ??
+                return ProductSupplierModel(
+                  supplierId: supplier.supplierId ?? '',
+                  companyName: supplier.supplierCompanyName ?? '',
+                  basePrice: double.parse(supplier.productPrice ?? ''),
+                  quantity: _productQuantity,
+                  stock: supplier.productStock.toString(),
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
+                  selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
+                      ? !supplier.saleProduct!.contains(
+                    supplier.saleProduct?.firstWhere(
+                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
+                      orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                    ) ??
+                        const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                  )
+                      ? -2
+                      : supplier.saleProduct?.indexOf(
+                    supplier.saleProduct?.firstWhere(
+                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
+                      orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                    ) ??
+                        const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                  ) ??
+                      -1
+                      : -1,
+                  supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(productStock: sale.productStock ?? 0, quantity: _productQuantity, saleId: sale.saleId ?? '', saleName: sale.saleName ?? '', maxQty: sale.saleMaxQuantity, saleDescription: parse(sale.salesDescription ?? '').body?.text ?? '', salePrice: double.parse(sale.discountedPrice ?? '0.0'), saleDiscount: double.parse(sale.discountPercentage ?? '0.0'))).toList() ?? [],
+                );
+              }).toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == '0');
               String note = productStockList.isEmpty
                   ? ''
                   : productStockList.indexOf(state.productStockList.last) == productListIndex
-                      ? ''
-                      : productStockList[productListIndex][0].note;
+                  ? ''
+                  : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
 
               emit(state.copyWith(
@@ -539,26 +541,26 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
             List<SearchModel> searchList = [];
 
             searchList.addAll(response.data
-                    ?.map((supplier) => SearchModel(
-                          searchId: supplier.id ?? '',
-                          name: supplier.productName ?? '',
-                          searchType: SearchTypes.product,
-                          image: supplier.mainImage ?? '',
-                          productStock: supplier.productStock.toString(),
-                          numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
-                          priceOfBox: double.parse(supplier.productPrice.toString()),
-                          lowStock: supplier.lowStock.toString(),
-                          isPesach: supplier.isPesach ?? false,
-                          salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
-                          salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
-                          supplierId: supplier.supplierId,
-                          isSale: supplier.sale?.isSale,
-                          saleMinQuantity: supplier.sale?.saleMinQuantity,
-                          saleMaxQuantity: supplier.sale?.saleMaxQuantity,
-                          isMixedSale: supplier.sale?.isMixedSale,
-                          sameSaleProducts: supplier.sale?.sameSaleProducts,
-                        ))
-                    .toList() ??
+                ?.map((supplier) => SearchModel(
+              searchId: supplier.id ?? '',
+              name: supplier.productName ?? '',
+              searchType: SearchTypes.product,
+              image: supplier.mainImage ?? '',
+              productStock: supplier.productStock.toString(),
+              numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+              priceOfBox: double.parse(supplier.productPrice.toString()),
+              lowStock: supplier.lowStock.toString(),
+              isPesach: supplier.isPesach ?? false,
+              salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
+              salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
+              supplierId: supplier.supplierId,
+              isSale: supplier.sale?.isSale,
+              saleMinQuantity: supplier.sale?.saleMinQuantity,
+              saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+              isMixedSale: supplier.sale?.isMixedSale,
+              sameSaleProducts: supplier.sale?.sameSaleProducts,
+            ))
+                .toList() ??
                 []);
 
             final cartMap = await fetchCartQuantities(event.context);
@@ -634,22 +636,22 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
 
           final newRelatedList = response.data?.map((product) {
-                return ProductStockModel(
-                  productId: product.id ?? '',
-                  stock: product.productStock.toString(),
-                  quantity: cartMap[product.id] ?? 0,
-                );
-              }).toList() ??
+            return ProductStockModel(
+              productId: product.id ?? '',
+              stock: product.productStock.toString(),
+              quantity: cartMap[product.id] ?? 0,
+            );
+          }).toList() ??
               [];
 
           productStockList[2] = productStockList[2].map((product) {
-                return product.copyWith(
-                  productSupplierIds: product.productSupplierIds,
-                  productId: product.productId ?? '',
-                  stock: product.stock.toString(),
-                  quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
-                );
-              }).toList() ??
+            return product.copyWith(
+              productSupplierIds: product.productSupplierIds,
+              productId: product.productId ?? '',
+              stock: product.stock.toString(),
+              quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
+            );
+          }).toList() ??
               [];
 
           productStockList[2].addAll(newRelatedList);
@@ -773,9 +775,9 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
           } else {
             productStockList[event.productListIndex][event.productStockUpdateIndex] = productStockList[event.productListIndex][event.productStockUpdateIndex].copyWith(
                 quantity: int.tryParse(quantityString.substring(
-                      0,
-                      quantityString.length - 1,
-                    )) ??
+                  0,
+                  quantityString.length - 1,
+                )) ??
                     0);
             CustomSnackBar.showSnackBar(
               context: event.context,

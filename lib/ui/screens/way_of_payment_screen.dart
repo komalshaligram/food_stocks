@@ -71,7 +71,8 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                 children: [
                   20.height,
                   state.isEnablePayment
-                      ? Column(
+                      ?
+                  Column(
                           children: [
                             radioButtonWidget(context: context, paymentMethod: AppLocalizations.of(context)!.collection_from_bank_account, radioValue: 0),
                             10.height,

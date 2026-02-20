@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
@@ -50,7 +49,6 @@ import '../../data/model/res_model/product_categories_res_model/product_categori
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-import '../../ui/widget/common_dialog_with_one_button.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -568,12 +566,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: preferences.getPhoneNumber());
               }
 
-              if(response.data?.clients?.first.supplierCustomerDetails![0].allowOrdersWithoutMinimum == true){
-                emit(state.copyWith(allowOrdersWithoutMinimum: response.data?.clients?.first.supplierCustomerDetails![0].allowOrdersWithoutMinimum,
-                     noMinimumOrderHours: response.data?.clients?.first.supplierCustomerDetails![0].noMinimumOrderHours,
-                    lastOrderAboveMinimumAt: response.data?.clients?.first.supplierCustomerDetails![0].lastOrderAboveMinimumAt,
-                  noMinimumDialogEventKey: DateTime.now().millisecondsSinceEpoch.toString(),));
-              }
+              // if(response.data?.clients?.first.supplierCustomerDetails![0].allowOrdersWithoutMinimum == true){
+              //   emit(state.copyWith(allowOrdersWithoutMinimum: response.data?.clients?.first.supplierCustomerDetails![0].allowOrdersWithoutMinimum,
+              //        noMinimumOrderHours: response.data?.clients?.first.supplierCustomerDetails![0].noMinimumOrderHours,
+              //       lastOrderAboveMinimumAt: response.data?.clients?.first.supplierCustomerDetails![0].lastOrderAboveMinimumAt,
+              //     noMinimumDialogEventKey: DateTime.now().millisecondsSinceEpoch.toString(),));
+              // }
+              final supplierDetails = response.data?.clients?.first.supplierCustomerDetails![0];
+
+              emit(state.copyWith(
+                allowOrdersWithoutMinimum: supplierDetails?.allowOrdersWithoutMinimum ?? false,
+                noMinimumOrderHours: supplierDetails?.noMinimumOrderHours,
+                lastOrderAboveMinimumAt: supplierDetails?.lastOrderAboveMinimumAt,
+                noMinimumDialogEventKey: DateTime.now().millisecondsSinceEpoch.toString(),
+              ));
               add(HomeEvent.getPermissionList(context: event.context));
               if (!state.isAppOnMaintenance) {
                 add(HomeEvent.generalSettings(context: event.context, dialogContext: event.context, isRetryLoading: false));
@@ -585,7 +591,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               add(HomeEvent.checkVersionOfAppEvent(context: event.context));
             }
           } catch (e) {}
-        } else if (event is _getRecommendationProductsListEvent) {
+        } else if(event is _updateAllowOrdersWithoutMinimum){} else if (event is _getRecommendationProductsListEvent) {
           try {
             emit(state.copyWith(isShimmering: true));
 
@@ -1049,7 +1055,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                   productId: event.productId,
                   supplierId: event.productSupplierIds,
                   saleId: state.productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId == '' ? null : state.productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
-                  quantity: state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity /*+ _productQuantity*/,
+                  quantity: state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity ,
                   cartProductId: _cartProductId,
                 );
                 SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -1106,8 +1112,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 if (response.status == AppConstants.code_201) {
                   add(const HomeEvent.setCartCountEvent());
 
-                  _productId = state.productStockList[event.productListIndex][event.productStockUpdateIndex].productId; //event.productId;
-                  _supplierId = state.productStockList[event.productListIndex][event.productStockUpdateIndex].productSupplierIds; //state.productStockList[event.productListIndex][event.productStockUpdateIndex].productSupplierIds; //event.productSupplierIds;
+                  _productId = state.productStockList[event.productListIndex][event.productStockUpdateIndex].productId;
+                  _supplierId = state.productStockList[event.productListIndex][event.productStockUpdateIndex].productSupplierIds;
 
                   Vibration.vibrate();
                   List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);

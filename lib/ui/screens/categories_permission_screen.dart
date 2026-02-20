@@ -197,9 +197,9 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                   scaleY: 1,
                   child: CupertinoSwitch(
                     onChanged: onChanged,
-                    activeColor: AppColors.mainColor,
+                    activeTrackColor: AppColors.mainColor,
                     thumbColor: AppColors.whiteColor,
-                    trackColor: AppColors.lightBorderColor,
+                    inactiveTrackColor: AppColors.lightBorderColor,
                     value: /*isSelectAll ? true :*/ isEnable,
                   ),
                 ),

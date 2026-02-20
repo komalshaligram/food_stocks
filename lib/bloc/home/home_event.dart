@@ -182,4 +182,8 @@ class HomeEvent with _$HomeEvent {
   }) = _allowOrdersWithoutMinimumEvent;
 
   const factory HomeEvent.consumeNoMinimumDialogEvent() = _consumeNoMinimumDialogEvent;
+
+  const factory HomeEvent.updateAllowOrdersWithoutMinimum(
+      bool value,
+      ) = _updateAllowOrdersWithoutMinimum;
 }

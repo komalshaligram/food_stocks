@@ -297,9 +297,9 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                               onChanged: (newVal) {
                                                bloc.add(MoreDetailsEvent.setApprovalSMSSwitchEvent(context: context, updatedVal: newVal));
                                               },
-                                              activeColor: AppColors.mainColor,
+                                              activeTrackColor: AppColors.mainColor,
                                               thumbColor: AppColors.whiteColor,
-                                              trackColor: AppColors.lightBorderColor,
+                                              inactiveTrackColor: AppColors.lightBorderColor,
                                             ),
                                           ),
                                         ),

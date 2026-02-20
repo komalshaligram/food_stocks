@@ -128,7 +128,8 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "bank") Bank? bank,
     @JsonKey(name: "agent") Agent? agent,
     @JsonKey(name: "showClientDataOnApp") bool? showClientDataOnApp,
-    //bool? isWalletApproved
+    @JsonKey(name: "isWalletApproved")
+    bool? isWalletApproved,
   }) = _ClientDetail;
 
   factory ClientDetail.fromJson(Map<String, dynamic> json) =>

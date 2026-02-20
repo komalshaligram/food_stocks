@@ -1326,14 +1326,12 @@ class HomeScreenWidget extends StatelessWidget {
   }) {
     final storage = PageStorage.of(context);
 
-    // ❗ already shown for this page
     if (storage.readState(context, identifier: 'no_min_dialog') == true) {
       return;
     }
 
     storage.writeState(context, true, identifier: 'no_min_dialog');
 
-    // DateTime lastOrderUtc = DateTime.parse(state.lastOrderAboveMinimumAt!);
     final rawDate = state.lastOrderAboveMinimumAt;
 
     if (rawDate == null || rawDate.isEmpty) {
@@ -1354,16 +1352,27 @@ class HomeScreenWidget extends StatelessWidget {
     DateTime endUtc = lastOrderUtc.add(Duration(hours: hours));
     DateTime nowUtc = DateTime.now().toUtc();
     Duration remaining = endUtc.difference(nowUtc);
-    int remainingSeconds = remaining.isNegative ? 0 : remaining.inSeconds;
+    if (remaining.isNegative || remaining.inSeconds <= 0) {
+      context.read<HomeBloc>().add(
+        const HomeEvent.updateAllowOrdersWithoutMinimum(false),
+      );
+      return;
+    }
+
+    storage.writeState(context, true, identifier: 'no_min_dialog');
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => CountdownTimerDialog(
-        countdown: remainingSeconds,
+        countdown: remaining.inSeconds,
         directionality: TextDirection.rtl,
         title: AppLocalizations.of(dialogContext)!.countdown,
-        onTimerComplete: () {},
+        onTimerComplete: () {
+          context.read<HomeBloc>().add(
+            const HomeEvent.updateAllowOrdersWithoutMinimum(false),
+          );
+        },
       ),
     );
   }
@@ -1374,7 +1383,7 @@ class HomeScreenWidget extends StatelessWidget {
     required int noMinimumOrderHours,
     required String lastOrderAboveMinimumAt,
   }) {
-    final lastUtc = DateTime.parse(lastOrderAboveMinimumAt); // API is UTC (Z)
+    final lastUtc = DateTime.parse(lastOrderAboveMinimumAt);
     final expiryUtc = lastUtc.add(Duration(hours: noMinimumOrderHours));
 
     final nowUtc = DateTime.now().toUtc();

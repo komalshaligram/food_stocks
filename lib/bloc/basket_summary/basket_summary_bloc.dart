@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
@@ -173,7 +173,8 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
           if (response.status == AppConstants.code_200) {
             tempList[event.index] = tempList[event.index].copyWith(isProcess: false);
 
-            emit(state.copyWith(paymentTypesList: response.data?.paymentDetails?.paymentTypes ?? [], bankTransferInfo: response.data!.paymentDetails?.bankTransferPopupText ?? '', tempList: tempList, isDialogOpen: true, orderSummaryList: state.orderSummaryList, showPopUp: true, isLoading: false, index: event.index));
+            emit(state.copyWith(paymentTypesList: response.data?.paymentDetails?.paymentTypes ?? [],
+                bankTransferInfo: response.data!.paymentDetails?.bankTransferPopupText ?? '', tempList: tempList, isDialogOpen: true, orderSummaryList: state.orderSummaryList, showPopUp: true, isLoading: false, index: event.index));
           } else {
             tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
             emit(state.copyWith(isLoading: false, tempList: tempList));

@@ -314,6 +314,50 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
         final double refundAmount = state.orderData.adjustedRefundAmount ?? 0.0;
 
         final double totalAmount = invoiceAmount + refundAmount;
+
+        final bool showDriverProofSection = state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' || state.orderData.orderstatus?.statusName == 'ORDERSTATUS_6' || (state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard);
+
+        final bool disableDriverProofTap = state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' || (state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard);
+
+        final bool isOrderStatusCardType = state.orderData.orderstatus?.orderStatusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard;
+
+        Widget buildDriverProofSlot({
+          required File file,
+          required int index,
+          required bool isDisabled,
+          required String language,
+        }) {
+          return InkWell(
+            onTap: isDisabled
+                ? null
+                : () async {
+                    if (file != null && await file.exists() || file.path.contains("https")) {
+                      uploadDriverProofBottomSheet(context: context, file: file, index: index, language: language, productIssueData: {}, selectedRadio: state.selectedRadioTile);
+                      return;
+                    }
+                    cameraDriverProofEvent(context: context, index: index, productIssueData: {}, selectedRadio: state.selectedRadioTile);
+                  },
+            child: Container(
+              height: 120,
+              width: 120,
+              decoration: BoxDecoration(color: AppColors.whiteColor),
+              alignment: Alignment.center,
+              child: file.path.contains("https")
+                  ? Image.network(
+                      file.path,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(child: SizedBox(width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80, child: CupertinoActivityIndicator(color: AppColors.blackColor)));
+                      },
+                      errorBuilder: (context, error, stackTrace) => Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5)),
+                    )
+                  : file.existsSync()
+                      ? Image.file(file, fit: BoxFit.cover, height: 120, width: 120)
+                      : const Icon(Icons.add, size: 60),
+            ),
+          );
+        }
+
         return FocusDetector(
           onFocusGained: () {
             bloc.add(ProductDetailsEvent.getPermissionList(context: context));
@@ -497,7 +541,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                           color: AppColors.blackColor,
                                         ),
                                       ),
-                                      state.orderData.orderstatus?.orderStatusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard
+                                      isOrderStatusCardType
                                           ? GestureDetector(
                                               onTap: () {
                                                 bloc.add(const ProductDetailsEvent.checkAllEvent());
@@ -551,11 +595,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                                 barcode: state.orderBySupplierProduct.products?[index].barcode,
                                                 orderId: state.orderBySupplierProduct.id,
                                                 language: state.language,
-                                                orderSupplierProduct: state.orderBySupplierProduct);
+                                                orderSupplierProduct: state.orderBySupplierProduct,
+                                                isOrderStatusCardType: isOrderStatusCardType);
                                           }),
-                                      state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' ||
-                                          state.orderData.orderstatus?.statusName == 'ORDERSTATUS_6'
-                                          || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard
+                                      showDriverProofSection
                                           ? Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
                                               child: Text(
@@ -565,9 +608,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                               ),
                                             )
                                           : const IgnorePointer(),
-                                      state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' ||
-                                          state.orderData.orderstatus?.statusName == 'ORDERSTATUS_6'
-                                          || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard
+                                      showDriverProofSection
                                           ? Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
                                               child: Text(
@@ -577,243 +618,33 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                               ),
                                             )
                                           : const IgnorePointer(),
-                                      state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5'
-                                          || state.orderData.orderstatus?.statusName == 'ORDERSTATUS_6' ? 5.height : const IgnorePointer(),
-                                      state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5'
-                                          || state.orderData.orderstatus?.statusName == 'ORDERSTATUS_6'
-                                          || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard
+                                      showDriverProofSection ? 5.height : const IgnorePointer(),
+                                      showDriverProofSection
                                           ? Padding(
                                               padding: const EdgeInsets.all(AppConstants.padding_8),
                                               child: SingleChildScrollView(
                                                 scrollDirection: Axis.horizontal,
                                                 child: Row(
                                                   children: [
-                                                    InkWell(
-                                                      onTap: state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5'
-                                                          || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard
-                                                          ? null
-                                                          : () async {
-                                                              if (state.driverDeliveryProofFile != null && await state.driverDeliveryProofFile!.exists() ||
-                                                                  state.driverDeliveryProofFile.path.contains(
-                                                                    "https",
-                                                                  )) {
-                                                                uploadDriverProofBottomSheet(
-                                                                  context: context,
-                                                                  file: state.driverDeliveryProofFile,
-                                                                  index: 1,
-                                                                  language: state.language,
-                                                                  productIssueData: {},
-                                                                  selectedRadio: state.selectedRadioTile,
-                                                                );
-                                                                return;
-                                                              }
-
-                                                              cameraDriverProofEvent(
-                                                                context: context,
-                                                                index: 1,
-                                                                productIssueData: {},
-                                                                selectedRadio: state.selectedRadioTile,
-                                                              );
-                                                            },
-                                                      child: Container(
-                                                        height: 120,
-                                                        width: 120,
-                                                        decoration: BoxDecoration(
-                                                          color: AppColors.whiteColor,
-                                                        ),
-                                                        alignment: Alignment.center,
-                                                        child: state.driverDeliveryProofFile.path.contains("https")
-                                                            ? Image.network(
-                                                                state.driverDeliveryProofFile.path,
-                                                                loadingBuilder: (context, child, loadingProgress) {
-                                                                  if (loadingProgress == null) {
-                                                                    return child;
-                                                                  } else {
-                                                                    return Center(
-                                                                      child: SizedBox(
-                                                                        width: AppConstants.containerHeight_80,
-                                                                        height: AppConstants.containerHeight_80,
-                                                                        child: CupertinoActivityIndicator(
-                                                                          color: AppColors.blackColor,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                },
-                                                                errorBuilder: (context, error, stackTrace) {
-                                                                  return Container(
-                                                                    width: 100,
-                                                                    height: 100,
-                                                                    color: AppColors.whiteColor,
-                                                                    alignment: Alignment.center,
-                                                                    child: Image.asset(
-                                                                      AppImagePath.imageNotAvailable5,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              )
-                                                            : state.driverDeliveryProofFile.existsSync()
-                                                                ? Image.file(
-                                                                    state.driverDeliveryProofFile,
-                                                                    fit: BoxFit.cover,
-                                                                    height: 120,
-                                                                    width: 120,
-                                                                  )
-                                                                : const Icon(
-                                                                    Icons.add,
-                                                                    size: 60,
-                                                                  ),
-                                                      ),
+                                                    buildDriverProofSlot(
+                                                      file: state.driverDeliveryProofFile,
+                                                      index: 1,
+                                                      isDisabled: disableDriverProofTap,
+                                                      language: state.language,
                                                     ),
                                                     8.width,
-                                                    InkWell(
-                                                      onTap: state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5'
-                                                          || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard
-                                                          ? null
-                                                          : () async {
-                                                              if (state.driverDeliveryProofFile1 != null && await state.driverDeliveryProofFile1!.exists() || state.driverDeliveryProofFile1.path.contains("https")) {
-                                                                uploadDriverProofBottomSheet(
-                                                                  context: context,
-                                                                  file: state.driverDeliveryProofFile1,
-                                                                  index: 2,
-                                                                  language: state.language,
-                                                                  productIssueData: {},
-                                                                  selectedRadio: state.selectedRadioTile,
-                                                                );
-                                                                return;
-                                                              }
-
-                                                              cameraDriverProofEvent(
-                                                                context: context,
-                                                                index: 2,
-                                                                productIssueData: {},
-                                                                selectedRadio: state.selectedRadioTile,
-                                                              );
-                                                            },
-                                                      child: Container(
-                                                        height: 120,
-                                                        width: 120,
-                                                        decoration: BoxDecoration(
-                                                          color: AppColors.whiteColor,
-                                                        ),
-                                                        alignment: Alignment.center,
-                                                        child: state.driverDeliveryProofFile1.path.contains("https")
-                                                            ? Image.network(
-                                                                state.driverDeliveryProofFile1.path,
-                                                                loadingBuilder: (context, child, loadingProgress) {
-                                                                  if (loadingProgress == null) {
-                                                                    return child;
-                                                                  } else {
-                                                                    return Center(
-                                                                      child: SizedBox(
-                                                                        width: AppConstants.containerHeight_80,
-                                                                        height: AppConstants.containerHeight_80,
-                                                                        child: CupertinoActivityIndicator(
-                                                                          color: AppColors.blackColor,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                },
-                                                                errorBuilder: (context, error, stackTrace) {
-                                                                  return Container(
-                                                                    width: 100,
-                                                                    height: 100,
-                                                                    color: AppColors.whiteColor,
-                                                                    alignment: Alignment.center,
-                                                                    child: Image.asset(
-                                                                      AppImagePath.imageNotAvailable5,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              )
-                                                            : state.driverDeliveryProofFile1.existsSync()
-                                                                ? Image.file(
-                                                                    state.driverDeliveryProofFile1,
-                                                                    fit: BoxFit.cover,
-                                                                    height: 120,
-                                                                    width: 120,
-                                                                  )
-                                                                : const Icon(
-                                                                    Icons.add,
-                                                                    size: 60,
-                                                                  ),
-                                                      ),
+                                                    buildDriverProofSlot(
+                                                      file: state.driverDeliveryProofFile1,
+                                                      index: 2,
+                                                      isDisabled: disableDriverProofTap,
+                                                      language: state.language,
                                                     ),
                                                     8.width,
-                                                    InkWell(
-                                                      onTap: state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5'
-                                                          || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard
-                                                          ? null
-                                                          : () async {
-                                                              if (state.driverDeliveryProofFile2 != null && await state.driverDeliveryProofFile2!.exists() || state.driverDeliveryProofFile2.path.contains("https")) {
-                                                                uploadDriverProofBottomSheet(
-                                                                  context: context,
-                                                                  file: state.driverDeliveryProofFile2,
-                                                                  index: 3,
-                                                                  language: state.language,
-                                                                  productIssueData: {},
-                                                                  selectedRadio: state.selectedRadioTile,
-                                                                );
-                                                                return;
-                                                              }
-
-                                                              cameraDriverProofEvent(
-                                                                context: context,
-                                                                index: 3,
-                                                                productIssueData: {},
-                                                                selectedRadio: state.selectedRadioTile,
-                                                              );
-                                                            },
-                                                      child: Container(
-                                                        height: 120,
-                                                        width: 120,
-                                                        decoration: BoxDecoration(
-                                                          color: AppColors.whiteColor,
-                                                        ),
-                                                        alignment: Alignment.center,
-                                                        child: state.driverDeliveryProofFile2.path.contains("https")
-                                                            ? Image.network(
-                                                                state.driverDeliveryProofFile2.path,
-                                                                loadingBuilder: (context, child, loadingProgress) {
-                                                                  if (loadingProgress == null) {
-                                                                    return child;
-                                                                  } else {
-                                                                    return Center(
-                                                                      child: SizedBox(
-                                                                        width: AppConstants.containerHeight_80,
-                                                                        height: AppConstants.containerHeight_80,
-                                                                        child: CupertinoActivityIndicator(
-                                                                          color: AppColors.blackColor,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                },
-                                                                errorBuilder: (context, error, stackTrace) {
-                                                                  return Container(
-                                                                    width: 100,
-                                                                    height: 100,
-                                                                    color: AppColors.whiteColor,
-                                                                    alignment: Alignment.center,
-                                                                    child: Image.asset(
-                                                                      AppImagePath.imageNotAvailable5,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              )
-                                                            : state.driverDeliveryProofFile2.existsSync()
-                                                                ? Image.file(
-                                                                    state.driverDeliveryProofFile2,
-                                                                    fit: BoxFit.cover,
-                                                                    height: 120,
-                                                                    width: 120,
-                                                                  )
-                                                                : const Icon(
-                                                                    Icons.add,
-                                                                    size: 60,
-                                                                  ),
-                                                      ),
+                                                    buildDriverProofSlot(
+                                                      file: state.driverDeliveryProofFile2,
+                                                      index: 3,
+                                                      isDisabled: disableDriverProofTap,
+                                                      language: state.language,
                                                     ),
                                                   ],
                                                 ),
@@ -828,7 +659,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       ),
                     ),
                   ),
-            bottomSheet: state.orderData.orderstatus?.orderStatusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard
+            bottomSheet: isOrderStatusCardType
                 ? Container(
                     padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_20, horizontal: AppConstants.padding_30),
                     color: AppColors.pageColor,
@@ -855,7 +686,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               AppStrings.vatString: state.orderData.vatAmount,
                               AppStrings.usersIdString: state.userId,
                               AppStrings.statusList: widget.statusList,
-                              AppStrings.driverDeliveryDocumentsImages: state.driverDeliveryProofImagesList,
                               AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
                             });
                           } else {
@@ -876,7 +706,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               AppStrings.vatString: state.orderData.vatAmount,
                               AppStrings.usersIdString: state.userId,
                               AppStrings.statusList: widget.statusList,
-                              AppStrings.driverDeliveryDocumentsImages: state.driverDeliveryProofImagesList,
                               AppStrings.sentReturnData: [],
                               AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
                             });
@@ -912,6 +741,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     String? orderId,
     required String language,
     required OrdersBySupplier orderSupplierProduct,
+    required bool isOrderStatusCardType,
   }) {
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
@@ -936,7 +766,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
         };
 
         String getLocalizedReason(String reasonCode, BuildContext context) {
-          return reasonsMap[reasonCode] ?? ''; // Return empty string if not found
+          return reasonsMap[reasonCode] ?? '';
         }
 
         return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) || ((state.orderBySupplierProduct.products?[index].isBottle ?? false) ? sku == skuNumber : false)
@@ -958,7 +788,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       Row(
                         mainAxisAlignment: statusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
                         children: [
-                          statusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard && sku != skuNumber && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
+                          isOrderStatusCardType
                               ? SizedBox(
                                   width: 30,
                                   child: Checkbox(
@@ -978,7 +808,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                     },
                                   ),
                                 )
-                              : 30.width,
+                              : 10.width,
                           state.orderBySupplierProduct.products?[index].mainImage != ''
                               ? Image.network(
                                   '${AppUrlEndPoints.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
@@ -1033,7 +863,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               ),
                               Row(
                                 children: [
-                                  statusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard && isUpdated
+                                  isOrderStatusCardType
                                       ? Text(
                                           '${(updatedUnitQuantity / numberOfUnit).round()}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
                                           style: AppStyles.rkRegularTextStyle(
@@ -1061,7 +891,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                               ),
                                             ),
                                   5.width,
-                                  statusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard && isUpdated
+                                  isOrderStatusCardType
                                       ? Text(
                                           '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()})',
                                           maxLines: 2,
@@ -1094,7 +924,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 ),
                               ),
                               3.height,
-                              statusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard && sku != skuNumber && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
+                              isOrderStatusCardType
                                   ? GestureDetector(
                                       onTap: () async {
                                         final product = state.orderBySupplierProduct.products?[index];

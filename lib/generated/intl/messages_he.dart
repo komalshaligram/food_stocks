@@ -592,7 +592,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "גרף הוצאות חודשיות",
     ),
     "more": MessageLookupByLibrary.simpleMessage("הכל"),
-    "more_details": MessageLookupByLibrary.simpleMessage("פרטים נוספים"),
+    "more_details": MessageLookupByLibrary.simpleMessage("פרטי העסק"),
     "my_accounting_card": MessageLookupByLibrary.simpleMessage("הכרטסת שלי"),
     "my_agent_code": MessageLookupByLibrary.simpleMessage("קוד סוכן"),
     "my_basket": MessageLookupByLibrary.simpleMessage("הסל שלי"),
