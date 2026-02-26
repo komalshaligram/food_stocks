@@ -64,7 +64,8 @@ class HomeState with _$HomeState {
       required bool? allowOrdersWithoutMinimum,
       required int? noMinimumOrderHours,
       required String? lastOrderAboveMinimumAt,
-          required String? noMinimumDialogEventKey}) = _HomeState;
+      required String? noMinimumDialogEventKey,
+          required String? clientAgentId}) = _HomeState;
 
   factory HomeState.initial() => HomeState(
       userImageUrl: '',
@@ -133,6 +134,7 @@ class HomeState with _$HomeState {
       allowOrdersWithoutMinimum: false,
       noMinimumOrderHours: 0,
       lastOrderAboveMinimumAt: '',
-      noMinimumDialogEventKey: ''
+      noMinimumDialogEventKey: '',
+      clientAgentId : ''
   );
 }

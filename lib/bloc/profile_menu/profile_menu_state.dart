@@ -3,8 +3,8 @@ part of 'profile_menu_bloc.dart';
 @freezed
 class ProfileMenuState with _$ProfileMenuState {
   const factory ProfileMenuState({
-    required String UserImageUrl,
-    required String UserCompanyLogoUrl,
+    required String userImageUrl,
+    required String userCompanyLogoUrl,
     required String userName,
     required bool isHebrewLanguage,
     required bool isLogOut,
@@ -28,11 +28,12 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool isSaleOn,
     required double bottlePrice,
     required bool retryLoading,
+    required String? clientAgentId,
   }) = _ProfileMenuState;
 
   factory ProfileMenuState.initial() => const ProfileMenuState(
-        UserImageUrl: '',
-        UserCompanyLogoUrl: '',
+        userImageUrl: '',
+        userCompanyLogoUrl: '',
         userName: '',
         isHebrewLanguage: false,
         isLogOut: false,
@@ -56,5 +57,6 @@ class ProfileMenuState with _$ProfileMenuState {
         isIncludedVat: false,
         isSaleOn: false,
         retryLoading: false,
+        clientAgentId: '',
       );
 }

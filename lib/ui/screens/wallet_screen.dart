@@ -113,6 +113,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
               );
             },
           ).then((value) {
+
             context.read<WalletBloc>().add(const WalletEvent.checkLanguage());
           });
         } else if (state.isAccountPermissionShimmering) {
@@ -160,7 +161,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                 width: getScreenWidth(context),
                                 clipBehavior: Clip.hardEdge,
                                 padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
-                                decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                                decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -270,7 +271,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             lineBarsData: [
                                               LineChartBarData(
                                                 spots: state.monthlyExpenseList,
-                                                color: AppColors.mainColor.withOpacity(0.8),
+                                                color: AppColors.mainColor.withValues(alpha:0.8),
                                                 isCurved: false,
                                                 belowBarData: BarAreaData(
                                                   show: true,
@@ -278,8 +279,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                                     begin: Alignment.topCenter,
                                                     end: Alignment.bottomCenter,
                                                     colors: [
-                                                      AppColors.graphColor.withOpacity(0.2),
-                                                      AppColors.graphColor.withOpacity(0.01),
+                                                      AppColors.graphColor.withValues(alpha:0.2),
+                                                      AppColors.graphColor.withValues(alpha:0.01),
                                                     ],
                                                   ),
                                                   cutOffY: 0.0,
@@ -426,7 +427,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             return showDateRangePickerDialog(
                                               context: context,
                                               offset: const Offset(65, 200),
-                                              barrierColor: AppColors.whiteColor.withOpacity(0.6),
+                                              barrierColor: AppColors.whiteColor.withValues(alpha:0.6),
                                               builder: datePickerBuilder,
                                             );
                                           },

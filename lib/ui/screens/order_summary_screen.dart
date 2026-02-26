@@ -103,13 +103,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                               );
                             },
                           ));
-                      //
                     } catch (e) {
                       CustomSnackBar.showSnackBar(context: context, title: e.toString(), type: SnackBarType.failure);
                     }
-
-                    // Navigator.pop(context1);
-                    // Navigator.pushNamed(context, RouteDefine.orderScreen.name);
                   },
                   positiveTitle: AppLocalizations.of(context)!.show_order,
                   width: 120,
@@ -167,7 +163,10 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                       paymentMethod: AppStrings.wallet,
                     ));
                   } else {
-                    Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
+                    Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name, arguments: {
+                      AppStrings.isPaymentFail: state.isPaymentFail,
+                      AppStrings.updateString: true,
+                    });
                   }
                 },
                 positiveOnTap2: () {
@@ -175,7 +174,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   bankTransferDialog(
                       context: context1,
                       language: state.language,
-                      text: state.bankTransferInfo ?? '',
+                      text: state.bankTransferInfo,
                       function: () {
                         bloc.add(OrderSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: false));
                       });
@@ -242,7 +241,6 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 ),
                 body: SafeArea(
                   child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       (state.tempList.length ?? 0) == 0
                           ? const OrderSummaryScreenShimmerWidget()
@@ -272,7 +270,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                           ? refundShimmer()
                           : Wrap(
                               alignment: WrapAlignment.center,
-                              spacing: 4, // space between texts
+                              spacing: 4,
                               children: [
                                 Text(
                                   isHebrew
@@ -314,7 +312,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             boxShadow: [
-              BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+              BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
             ],
             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           ),
@@ -463,7 +461,13 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(gradient: AppColors.connectGradientColor, border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(AppConstants.radius_7)),
+                  decoration: BoxDecoration(
+                    gradient: AppColors.connectGradientColor,
+                    border: Border.all(color: AppColors.mainColor),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.radius_7,
+                    ),
+                  ),
                   child: Text(
                     AppLocalizations.of(context)!.closeText,
                     style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor, size: AppConstants.smallFont),
@@ -554,7 +558,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             boxShadow: [
-              BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+              BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
             ],
             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           ),
@@ -610,8 +614,8 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                       value: vatCalculation(
                         price: double.parse(state.tempList[index].totalAmount ?? '0'),
                         vat: state.tempList[index].vatPercentage ?? 0,
-                        qty: state.tempList[index].bottleQuantities!.toDouble() ?? 0,
-                        deposit: state.tempList[index].bottleTax!.toDouble() ?? 0,
+                        qty: state.tempList[index].bottleQuantities!.toDouble(),
+                        deposit: state.tempList[index].bottleTax!.toDouble(),
                       ).toStringAsFixed(2),
                       local: AppStrings.hebrewLocal,
                     ),

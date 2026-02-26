@@ -30,15 +30,15 @@ class ReturnDriverRoute {
 }
 
 class ReturnDriverScreen extends StatelessWidget {
-  String orderId;
-  String issue;
-  String orderNumber;
-  bool isNavigateToProductDetailString;
-  OrdersBySupplier productData;
-  OrderDatum orderData;
-  List<StatusData> statusList;
+  final String orderId;
+  final String issue;
+  final String orderNumber;
+  final bool isNavigateToProductDetailString;
+  final OrdersBySupplier productData;
+  final OrderDatum orderData;
+  final List<StatusData> statusList;
 
-  ReturnDriverScreen({
+  const ReturnDriverScreen({
     super.key,
     this.orderId = '',
     this.orderNumber = '',
@@ -321,16 +321,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                     child: CustomButtonWidget(
                       onPressed: () {
                         final checkedItems = state.checkedItems;
-                        final hasAnyChecked = checkedItems.values.any((isChecked) => isChecked);
 
-                        // if (!hasAnyChecked) {
-                        //   CustomSnackBar.showSnackBar(
-                        //     context: context,
-                        //     title: AppLocalizations.of(context)!.select_atleast_one_checkbox,
-                        //     type: SnackBarType.failure,
-                        //   );
-                        //   return;
-                        // }
 
                         bool anyMissingProof = false;
 
@@ -383,18 +374,17 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                           AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
                           AppStrings.deliveryStatusString: args?[AppStrings.deliveryStatusString],
                           AppStrings.totalOrderString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? '0',
-                          AppStrings.deliveryDateString: '-',
                           AppStrings.quantityString: state.orderBySupplierProduct.products?.length.toString() ?? '',
                           AppStrings.totalAmountString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? 0,
                           AppStrings.orderIdString: args?[AppStrings.orderIdString],
                           AppStrings.supplierIdString: state.orderBySupplierProduct.id,
-                          AppStrings.supplierOrderNumberString: state.orderBySupplierProduct.supplierOrderNumber ?? 0,
                           AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
                           AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
                           AppStrings.supplierOrderNumberString: state.orderData.orderNumber,
                           AppStrings.driverDeliveryDocumentsImages: args?[AppStrings.driverDeliveryDocumentsImages],
                           AppStrings.sentReturnData: sentReturnData,
                           AppStrings.orderIssueReturnId: args?[AppStrings.orderIssueReturnId],
+                          AppStrings.availableSurfaceQuantityToReturn: args?[AppStrings.availableSurfaceQuantityToReturn]
                         });
                       },
                       buttonText: AppLocalizations.of(context)!.next,
@@ -425,7 +415,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
         color: AppColors.whiteColor,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.15),
+            color: AppColors.shadowColor.withValues(alpha:0.15),
             blurRadius: AppConstants.blur_10,
           ),
         ],

@@ -4,8 +4,8 @@ import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 
 class StoreCategoryScreenSubcategoryShimmerWidget extends StatelessWidget {
-  int itemCount;
-  StoreCategoryScreenSubcategoryShimmerWidget({super.key, this.itemCount = 18});
+  final int itemCount;
+  const StoreCategoryScreenSubcategoryShimmerWidget({super.key, this.itemCount = 18});
 
   @override
   Widget build(BuildContext context) {

@@ -29,8 +29,14 @@ class BankInfoScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => BankInfoBloc()
         ..add(BankInfoEvent.getBankNameEvent(context: context))
-        ..add(BankInfoEvent.getTermsConditionModelEvent(context: context, termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()))
-        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false, isUpdate: args?[AppStrings.updateString] ?? false)),
+        ..add(BankInfoEvent.getTermsConditionModelEvent(
+          context: context,
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
+        ))
+        ..add(BankInfoEvent.getArgumentEvent(
+          isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,
+          isUpdate: args?[AppStrings.updateString] ?? false,
+        )),
       child: BankInfoWidget(),
     );
   }

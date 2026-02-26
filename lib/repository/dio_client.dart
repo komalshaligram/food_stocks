@@ -164,7 +164,7 @@ class DioClient {
 
   // GET
   Future get({required String path, Map<String, dynamic>? query, Options? options}) async {
-    printData("check here query ${query}");
+    printData("check here query $query");
     try {
       isInProgress = true;
       SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());

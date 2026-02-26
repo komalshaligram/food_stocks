@@ -213,7 +213,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
                     }
                   });
                 }
-              } on ServerException {}
+              } catch(_) {}
               if (response.product!.isNotEmpty) {
                 add(CompanyProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
@@ -319,7 +319,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
           }
         } on ServerException {
           Navigator.pop(event.context);
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _increaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -647,12 +647,11 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
           productStockList[2] = productStockList[2].map((product) {
             return product.copyWith(
               productSupplierIds: product.productSupplierIds,
-              productId: product.productId ?? '',
+              productId: product.productId,
               stock: product.stock.toString(),
               quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
             );
-          }).toList() ??
-              [];
+          }).toList();
 
           productStockList[2].addAll(newRelatedList);
 
@@ -712,7 +711,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } catch (e) {}
+          } catch(_) {}
         }
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -841,7 +840,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
 
                         break;
                       }
-                    } on ServerException {}
+                    } catch(_) {}
                   }
                 }
               }
@@ -865,7 +864,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
                 }
               });
             }
-          } on ServerException {}
+          } catch(_) {}
           if (_isProductInCart) {
             try {
               UpdateCartReqModel request = UpdateCartReqModel(
@@ -899,8 +898,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           } else {
             try {
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
@@ -948,8 +946,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
               } else {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           }
         }
         //
@@ -966,7 +963,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
               emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
             }
           }
-        } on ServerException {}
+        } catch(_) {}
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
 
@@ -975,7 +972,7 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
             await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

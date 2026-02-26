@@ -26,7 +26,12 @@ class Owner1FormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => Owner1FormBloc()..add(Owner1FormEvent.getArgumentEvent(owner: args?[AppStrings.owner] ?? '', businessTypeId: args?[AppStrings.businessTypeIdString] ?? '0', isFreelancer: args?[AppStrings.isFreelancer] ?? '')),
+      create: (context) => Owner1FormBloc()
+        ..add(Owner1FormEvent.getArgumentEvent(
+          owner: args?[AppStrings.owner] ?? '',
+          businessTypeId: args?[AppStrings.businessTypeIdString] ?? '0',
+          isFreelancer: args?[AppStrings.isFreelancer] ?? '',
+        )),
       child: Owner1FormScreenWidget(),
     );
   }
@@ -35,7 +40,7 @@ class Owner1FormScreen extends StatelessWidget {
 class Owner1FormScreenWidget extends StatelessWidget {
   Owner1FormScreenWidget({super.key});
   final _formKey = GlobalKey<FormState>();
-  String ownerName = '';
+  final String ownerName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -192,10 +197,18 @@ class Owner1FormScreenWidget extends StatelessWidget {
                                   }
                                 }
                               } else {
-                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1, type: SnackBarType.failure);
+                                CustomSnackBar.showSnackBar(
+                                  context: context,
+                                  title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1,
+                                  type: SnackBarType.failure,
+                                );
                               }
                             } else {
-                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
+                              CustomSnackBar.showSnackBar(
+                                context: context,
+                                title: AppLocalizations.of(context)!.select_business_type,
+                                type: SnackBarType.failure,
+                              );
                             }
                           },
                           fontColors: AppColors.whiteColor,
@@ -218,7 +231,11 @@ class Owner1FormScreenWidget extends StatelessWidget {
       if (isValidIsraeliID(state.guarantee1idController.text.toString().trim())) {
         return true;
       } else {
-        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1, type: SnackBarType.failure);
+        CustomSnackBar.showSnackBar(
+          context: context,
+          title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1,
+          type: SnackBarType.failure,
+        );
         return false;
       }
     } else {

@@ -143,7 +143,7 @@ class SubUserScreenWidget extends StatelessWidget {
           const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           boxShadow: [
             BoxShadow(
-                color: AppColors.shadowColor.withOpacity(0.15),
+                color: AppColors.shadowColor.withValues(alpha:0.15),
                 blurRadius: AppConstants.blur_10)
           ]),
       margin: const EdgeInsets.symmetric(

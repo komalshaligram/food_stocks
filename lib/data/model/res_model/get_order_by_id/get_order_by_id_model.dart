@@ -49,7 +49,7 @@ class OrderDatum with _$OrderDatum {
     @JsonKey(name: "driverDeliveryDocumentsImages") List<String>? driverDeliveryDocumentsImages,
     @JsonKey(name: "invoiceDetails") InvoiceDetails? invoiceDetails,
     @JsonKey(name: "pendingDeliveryConfirmation")  bool? pendingDeliveryConfirmation,
-
+    @JsonKey(name: "availableSurfaceQuantityToReturn")  int? availableSurfaceQuantityToReturn,
   }) = _OrderDatum;
 
   factory OrderDatum.fromJson(Map<String, dynamic> json) => _$OrderDatumFromJson(json);

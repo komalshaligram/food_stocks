@@ -49,7 +49,6 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     myFocusNode = FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -88,7 +87,10 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                     30.height,
                     Padding(
                       padding: EdgeInsets.only(left: getScreenWidth(context) * 0.12, right: getScreenWidth(context) * 0.12),
-                      child: Text(AppLocalizations.of(context)!.enter_the_code_sent_to_phone_num, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black)),
+                      child: Text(
+                        AppLocalizations.of(context)!.enter_the_code_sent_to_phone_num,
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
+                      ),
                     ),
                     30.height,
                     Padding(
@@ -110,7 +112,6 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             codeLength: 4,
                             onCodeSubmitted: (code) {
                               bloc.add(OtpEvent.changeOtpEvent(otp: code));
-                              //   SystemChannels.textInput.invokeMethod("TextInput.show");
                             },
                             onCodeChanged: (code) {
                               _code = code!;
@@ -138,14 +139,32 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                             : () {
                                 FocusScope.of(context).unfocus();
                                 if (_code.isEmpty) {
-                                  CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_otp, type: SnackBarType.failure);
+                                  CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    title: AppLocalizations.of(context)!.please_enter_otp,
+                                    type: SnackBarType.failure,
+                                  );
                                 } else if (_code.length != 4) {
-                                  CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.enter_4digit_otp, type: SnackBarType.failure);
+                                  CustomSnackBar.showSnackBar(
+                                    context: context,
+                                    title: AppLocalizations.of(context)!.enter_4digit_otp,
+                                    type: SnackBarType.failure,
+                                  );
                                 } else {
                                   if (widget.isRegister == true) {
-                                    bloc.add(OtpEvent.registerApiEvent(contact: widget.contact, otp: _code, isRegister: widget.isRegister, context: context));
+                                    bloc.add(OtpEvent.registerApiEvent(
+                                      contact: widget.contact,
+                                      otp: _code,
+                                      isRegister: widget.isRegister,
+                                      context: context,
+                                    ));
                                   } else {
-                                    bloc.add(OtpEvent.otpApiEvent(contact: widget.contact, otp: _code, isRegister: widget.isRegister, context: context));
+                                    bloc.add(OtpEvent.otpApiEvent(
+                                      contact: widget.contact,
+                                      otp: _code,
+                                      isRegister: widget.isRegister,
+                                      context: context,
+                                    ));
                                   }
                                 }
                               },
@@ -185,7 +204,11 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                               Container(
                                 width: 40,
                                 alignment: Alignment.center,
-                                decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: AppColors.mainColor, width: 1), shape: BoxShape.circle),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  border: Border.all(color: AppColors.mainColor, width: 1),
+                                  shape: BoxShape.circle,
+                                ),
                                 padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
                                 child: Text(
                                   '${state.otpTimer}',

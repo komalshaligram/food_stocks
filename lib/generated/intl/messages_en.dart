@@ -1357,6 +1357,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "suppliers_not_available": MessageLookupByLibrary.simpleMessage(
       "Suppliers not available",
     ),
+    "surface_validation": MessageLookupByLibrary.simpleMessage(
+      "The number of surfaces is too much it is more then what you received from this supplier",
+    ),
     "surfaces_order": MessageLookupByLibrary.simpleMessage(
       "Surfaces for order",
     ),

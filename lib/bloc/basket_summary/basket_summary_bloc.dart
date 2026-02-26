@@ -57,7 +57,7 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
               type: SnackBarType.failure,
             );
           }
-        } on ServerException {}
+        }  catch(_) {}
       } else if (event is _generalSettings) {
         try {
           emit(state.copyWith(retryLoading: event.isRetryLoading));
@@ -133,7 +133,7 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
                 emit(state.copyWith(cartItemList: response));
                 Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name, arguments: {AppStrings.showPreviousBtn: true});
               }
-            } on ServerException {}
+            } catch(_) {}
           } else if (response.status == AppConstants.code_403) {
             tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
             CustomSnackBar.showSnackBar(
@@ -180,7 +180,7 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
             emit(state.copyWith(isLoading: false, tempList: tempList));
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
-        } on ServerException {}
+        } catch(_) {}
       } else if (event is _refreshEvent) {
         emit(state.copyWith(isOrderPending: false, isPaymentFail: false, updatePaymentMethod: false));
       }

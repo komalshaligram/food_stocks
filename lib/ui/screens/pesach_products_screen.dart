@@ -83,7 +83,12 @@ class PesachProductsScreenWidget extends StatelessWidget {
                           height: 50,
                           width: 50,
                           clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.transparent, width: 1),
+                              gradient: AppColors.appMainGradientColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(AppConstants.radius_100),
+                              )),
                           child: Center(
                             child: SvgPicture.asset(
                               AppImagePath.cart,
@@ -160,7 +165,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
               onFocusGained: () {
                 bloc.add(const PesachProductsEvent.getCartCountEvent());
                 bloc.add(PesachProductsEvent.getPermissionList(context: context));
-                //   bloc.add(PesachProductsEvent.getSupplierProductsListEvent(context: context, searchType: state.searchType));
               },
               child: SafeArea(
                 child: NotificationListener<ScrollNotification>(
@@ -175,14 +179,17 @@ class PesachProductsScreenWidget extends StatelessWidget {
                               controller: state.refreshController,
                               header: const RefreshWidget(),
                               footer: CustomFooter(
-                                builder: (context, mode) => state.isGridView ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget(),
+                                builder: (context, mode) => state.isGridView ? const SupplierProductsScreenShimmerWidget() : const StoreCategoryScreenSubcategoryShimmerWidget(),
                               ),
                               enablePullUp: !state.isBottomOfProducts,
                               onRefresh: () {
                                 context.read<PesachProductsBloc>().add(PesachProductsEvent.refreshListEvent(context: context));
                               },
                               onLoading: () {
-                                context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(context: context, searchType: state.searchType));
+                                context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(
+                                      context: context,
+                                      searchType: state.searchType,
+                                    ));
                               },
                               child: SingleChildScrollView(
                                 physics: state.productList.isEmpty ? const NeverScrollableScrollPhysics() : null,
@@ -192,8 +199,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                   children: [
                                     state.isShimmering
                                         ? state.isGridView
-                                            ? SupplierProductsScreenShimmerWidget()
-                                            : StoreCategoryScreenSubcategoryShimmerWidget()
+                                            ? const SupplierProductsScreenShimmerWidget()
+                                            : const StoreCategoryScreenSubcategoryShimmerWidget()
                                         : state.productList.isEmpty
                                             ? Container(
                                                 height: getScreenHeight(context) - 80,
@@ -210,7 +217,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                     shrinkWrap: true,
                                                     physics: const NeverScrollableScrollPhysics(),
                                                     padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context, state.isSaleOn)),
+                                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 3,
+                                                      childAspectRatio: getChildAspectRatio(context, state.isSaleOn),
+                                                    ),
                                                     itemBuilder: (context, index) {
                                                       return CommonProductSaleItemWidget(
                                                           isSale: state.productList[index].sale?.isSale,
@@ -450,7 +460,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       CommonSearchWidget(
                         onCloseTap: () {
                           bloc.add(const PesachProductsEvent.changeCategoryExpansion(isOpened: false));
-                          context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(context: context, searchType: state.searchType));
+                          context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(
+                                context: context,
+                                searchType: state.searchType,
+                              ));
                         },
                         isFilterTap: true,
                         isCategoryExpand: state.isCategoryExpand,
@@ -470,7 +483,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                           }
                         },
                         onSearchSubmit: (String search) {
-                          Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                          Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                            AppStrings.searchString: state.search,
+                            AppStrings.searchType: SearchTypes.product.toString(),
+                          });
                         },
                         onOutSideTap: () {
                           state.searchController.clear();
@@ -550,7 +566,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                               showMinMaxIncreaseQtyConfirmDialog(
                                                 context,
                                                 state.searchList[index].searchId,
-                                                state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                state.searchList[index].saleMinQuantity.toString(),
                                                 index,
                                                 state.searchList[index].supplierId.toString(),
                                                 0,
@@ -584,7 +600,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                 showMinMaxDecreaseQtyConfirmDialog(
                                                   context,
                                                   state.searchList[index].searchId,
-                                                  state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                  state.searchList[index].saleMinQuantity.toString(),
                                                   index,
                                                   state.searchList[index].supplierId.toString(),
                                                   0,
@@ -602,23 +618,47 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                           onSeeAllTap: () async {
                                             debugPrint("searchType: ${state.searchList[index].searchType}");
                                             if (state.searchList[index].searchType == SearchTypes.category) {
-                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
+                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {
+                                                AppStrings.searchString: state.search,
+                                                AppStrings.reqSearchString: state.search,
+                                                AppStrings.searchResultString: state.searchList,
+                                              });
                                               if (searchResult != null) {
-                                                bloc.add(PesachProductsEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                bloc.add(PesachProductsEvent.updateGlobalSearchEvent(
+                                                  search: searchResult[AppStrings.searchString],
+                                                  searchList: searchResult[AppStrings.searchResultString],
+                                                ));
                                               }
                                             } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                                AppStrings.categoryIdString: state.searchList[index].categoryId,
+                                                AppStrings.categoryNameString: state.searchList[index].categoryName,
+                                                AppStrings.searchString: state.search,
+                                                AppStrings.searchResultString: state.searchList,
+                                              });
                                               if (searchResult != null) {
-                                                bloc.add(PesachProductsEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                bloc.add(PesachProductsEvent.updateGlobalSearchEvent(
+                                                  search: searchResult[AppStrings.searchString],
+                                                  searchList: searchResult[AppStrings.searchResultString],
+                                                ));
                                               }
                                             } else {
                                               state.searchList[index].searchType == SearchTypes.company
-                                                  ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                  ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {
+                                                      AppStrings.searchString: state.search,
+                                                    })
                                                   : state.searchList[index].searchType == SearchTypes.supplier
-                                                      ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                      ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {
+                                                          AppStrings.searchString: state.search,
+                                                        })
                                                       : state.searchList[index].searchType == SearchTypes.sale
-                                                          ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                          : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                                          ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {
+                                                              AppStrings.searchString: state.search,
+                                                            })
+                                                          : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                                              AppStrings.searchString: state.search,
+                                                              AppStrings.searchType: SearchTypes.product.toString(),
+                                                            });
                                             }
                                           },
                                           onTap: () async {
@@ -631,7 +671,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                               return;
                                             }
                                             if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
-                                              debugPrint("tap 4");
                                               if (!state.isGuestUser) {
                                                 showProductDetails(
                                                   productListIndex: 0,
@@ -645,19 +684,37 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                               }
                                             } else if (state.searchList[index].searchType == SearchTypes.category) {
-                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                                AppStrings.categoryIdString: state.searchList[index].searchId,
+                                                AppStrings.categoryNameString: state.searchList[index].name,
+                                                AppStrings.searchString: state.searchController.text,
+                                                AppStrings.searchResultString: state.searchList,
+                                              });
                                               if (searchResult != null) {
-                                                bloc.add(PesachProductsEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                bloc.add(PesachProductsEvent.updateGlobalSearchEvent(
+                                                  search: searchResult[AppStrings.searchString],
+                                                  searchList: searchResult[AppStrings.searchResultString],
+                                                ));
                                               }
                                             } else {
-                                              state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                              state.searchList[index].searchType == SearchTypes.company
+                                                  ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
+                                                      AppStrings.companyIdString: state.searchList[index].searchId,
+                                                    })
+                                                  : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                                      AppStrings.supplierIdString: state.searchList[index].searchId,
+                                                    });
                                             }
                                             bloc.add(const PesachProductsEvent.changeCategoryExpansion());
                                           });
                                     },
                                   ),
                         onScanTap: () async {
-                          String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
+                          String scanResult = await scanBarcodeOrQRCode(
+                            context: context,
+                            cancelText: AppLocalizations.of(context)!.cancel,
+                            scanMode: ScanMode.BARCODE,
+                          );
                           if (scanResult != '-1') {
                             // -1 result for cancel scanning
 
@@ -681,7 +738,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                   onNotification: (notification) {
                     if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 400)) {
                       if (!state.isBottomOfProducts) {
-                        context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(context: context, searchType: state.searchType));
+                        context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(
+                              context: context,
+                              searchType: state.searchType,
+                            ));
                       } else {
                         return false;
                       }
@@ -697,13 +757,21 @@ class PesachProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildSupplierProducts({required BuildContext context, required int index, required String productImage, required String productName, required double productPrice, required void Function() onPressed, required bool isRTL}) {
+  Widget buildSupplierProducts({
+    required BuildContext context,
+    required int index,
+    required String productImage,
+    required String productName,
+    required double productPrice,
+    required void Function() onPressed,
+    required bool isRTL,
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
       clipBehavior: Clip.hardEdge,
@@ -768,8 +836,21 @@ class PesachProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  void showProductDetails({required BuildContext context, required String productId, required int productListIndex, int maxQty = 0, bool? isBarcode, String productStock = '0', required bool isSaleOn}) async {
-    context.read<PesachProductsBloc>().add(PesachProductsEvent.getProductDetailsEvent(context: context, productId: productId, productListIndex: productListIndex, isBarcode: isBarcode ?? false));
+  void showProductDetails({
+    required BuildContext context,
+    required String productId,
+    required int productListIndex,
+    int maxQty = 0,
+    bool? isBarcode,
+    String productStock = '0',
+    required bool isSaleOn,
+  }) async {
+    context.read<PesachProductsBloc>().add(PesachProductsEvent.getProductDetailsEvent(
+          context: context,
+          productId: productId,
+          productListIndex: productListIndex,
+          isBarcode: isBarcode ?? false,
+        ));
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -815,13 +896,19 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                         isBottle: state.productDetails.first.isBottle ?? false,
                                         addToOrderTap: () {
                                           if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
-                                            context.read<PesachProductsBloc>().add(PesachProductsEvent.addToCartProductEvent(context: context1, productId: productId));
+                                            context.read<PesachProductsBloc>().add(PesachProductsEvent.addToCartProductEvent(
+                                                  context: context1,
+                                                  productId: productId,
+                                                ));
                                           } else {
-                                            showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString(),
+                                            showMinQtyConfirmDialog(
+                                              context,
+                                              productId,
+                                              state.productDetails.first.sale!.saleMinQuantity.toString(),
                                               state.productDetails.first.sale!.isMixedSale,
-                                              state.productDetails.first.sale!.sameSaleProducts,);
+                                              state.productDetails.first.sale!.sameSaleProducts,
+                                            );
                                           }
-                                          // context.read<PesachProductsBloc>().add(PesachProductsEvent.addToCartProductEvent(context: context1, productId: productId));
                                         },
                                         isLoading: state.isLoading,
                                         imageOnTap: () {
@@ -836,10 +923,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                       height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
                                                       width: getScreenWidth(context),
                                                       child: GestureDetector(
-                                                        onVerticalDragStart: (dragDetails) {
-                                                        },
-                                                        onVerticalDragUpdate: (dragDetails) {
-                                                        },
+                                                        onVerticalDragStart: (dragDetails) {},
+                                                        onVerticalDragUpdate: (dragDetails) {},
                                                         onVerticalDragEnd: (endDetails) {
                                                           Navigator.pop(dialogContext);
                                                         },
@@ -873,13 +958,15 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                         productImages: [state.productDetails.first.mainImage ?? ''],
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'), // state.productDetails.first.sale?.isSale == true ? state.productDetails.first.sale?.salePrice.toString() ?? '' :
                                         productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                        // productPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                         productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                         isMixedSale: state.productDetails.first.sale!.isMixedSale,
                                         onQuantityChanged: (quantity) {
-                                          context.read<PesachProductsBloc>().add(PesachProductsEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                          context.read<PesachProductsBloc>().add(PesachProductsEvent.updateQuantityOfProduct(
+                                                context: context1,
+                                                quantity: quantity,
+                                              ));
                                         },
                                         onQuantityIncreaseTap: () {
                                           context.read<PesachProductsBloc>().add(PesachProductsEvent.increaseQuantityOfProduct(context: context1));
@@ -890,7 +977,10 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                           }
                                         },
                                         onCloseTap: () async {
-                                          context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(context: context1, searchType: state.searchType));
+                                          context.read<PesachProductsBloc>().add(PesachProductsEvent.getSupplierProductsListEvent(
+                                                context: context1,
+                                                searchType: state.searchType,
+                                              ));
                                           Navigator.pop(context1);
                                         },
                                       ),
@@ -965,7 +1055,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                 productStock: relatedProductList.elementAt(i).productStock.toString(),
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
-                quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                quantity: productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity,
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
@@ -1079,8 +1169,13 @@ class PesachProductsScreenWidget extends StatelessWidget {
             buttonTitle: AppLocalizations.of(context)!.ok));
   }
 
-  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale,
-      List? sameSaleProducts,) {
+  showMinQtyConfirmDialog(
+    BuildContext context,
+    String productId,
+    String minBox,
+    bool? isMixedSale,
+    List? sameSaleProducts,
+  ) {
     PesachProductsBloc bloc = context.read<PesachProductsBloc>();
     showDialog(
       context: context,
@@ -1098,7 +1193,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
               directionality: state.language,
               title: mixedSale,
               content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale : isMixedSale,
+              isMixedSale: isMixedSale,
               positiveTitle: AppLocalizations.of(context)!.closeText,
               negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
@@ -1107,8 +1202,9 @@ class PesachProductsScreenWidget extends StatelessWidget {
               },
               positiveOnTap: () async {
                 Navigator.pop(context);
-                bloc.add(PesachProductsEvent.getCartCountNoEvent(context: context,));
-
+                bloc.add(PesachProductsEvent.getCartCountNoEvent(
+                  context: context,
+                ));
               },
             );
           },
@@ -1117,9 +1213,16 @@ class PesachProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxIncreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex,
-      bool? isMixedSale,
-      List? sameSaleProducts,) {
+  showMinMaxIncreaseQtyConfirmDialog(
+    BuildContext context,
+    String productId,
+    String minBox,
+    int index,
+    supplierId,
+    productListIndex,
+    bool? isMixedSale,
+    List? sameSaleProducts,
+  ) {
     PesachProductsBloc bloc = context.read<PesachProductsBloc>();
     showDialog(
       context: context,
@@ -1137,7 +1240,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
               directionality: state.language,
               title: mixedSale,
               content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale : isMixedSale,
+              isMixedSale: isMixedSale,
               positiveTitle: AppLocalizations.of(context)!.closeText,
               negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
@@ -1156,7 +1259,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                   productStockUpdateIndex: index,
                   productSupplierIds: supplierId,
                 ));
-
               },
               positiveOnTap: () async {
                 Navigator.pop(context);
@@ -1169,9 +1271,16 @@ class PesachProductsScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxDecreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex,
-      bool? isMixedSale,
-      List? sameSaleProducts,) {
+  showMinMaxDecreaseQtyConfirmDialog(
+    BuildContext context,
+    String productId,
+    String minBox,
+    int index,
+    supplierId,
+    productListIndex,
+    bool? isMixedSale,
+    List? sameSaleProducts,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) => BlocProvider.value(
@@ -1189,7 +1298,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
               directionality: state.language,
               title: mixedSale,
               content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale : isMixedSale,
+              isMixedSale: isMixedSale,
               positiveTitle: AppLocalizations.of(context)!.closeText,
               negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
@@ -1212,7 +1321,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                     productSupplierIds: supplierId,
                   ),
                 );
-
               },
               positiveOnTap: () async {
                 Navigator.pop(context);

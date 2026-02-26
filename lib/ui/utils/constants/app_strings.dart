@@ -201,6 +201,7 @@ class AppStrings {
   static const supplierOrderNumberString = 'supplierOrderNumber';
   static const driverDeliveryDocumentsImages = 'driverDeliveryDocumentsImages';
   static const orderIssueReturnId = 'orderIssueReturnId';
+  static const availableSurfaceQuantityToReturn = 'availableSurfaceQuantityToReturn';
   static const sentReturnData = 'sentReturnData';
   static const vatString = 'Vat';
   static const usersIdString = 'UserId';

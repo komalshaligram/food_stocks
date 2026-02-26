@@ -177,7 +177,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                   bankTransferDialog(
                       context: context1,
                       language: state.language,
-                      text: state.bankTransferInfo ?? '',
+                      text: state.bankTransferInfo,
                       function: () {
                         bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: false));
                       });
@@ -252,7 +252,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
               if (state.isLoading)
                 Positioned.fill(
                   child: Container(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     child: Center(
                       child: Material(
                         color: Colors.transparent,
@@ -542,7 +542,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 boxShadow: [
-                  BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                  BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
                 ],
                 borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
               ),
@@ -599,7 +599,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                           vat: state.tempList[index].vatPercentage ?? 0,
                           qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
                           deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
-                        ).toStringAsFixed(2)}₪', //refund: 0.0
+                        ).toStringAsFixed(2)}₪',
                         titleColor: AppColors.mainColor,
                         valueColor: AppColors.blackColor,
                         valueTextWeight: FontWeight.w500,

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/error/exceptions.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -77,7 +76,7 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
               totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0,
             ));
           }
-        } on ServerException {}
+        } catch(_) {}
       }
 
       if (event is _goToOrderEvent) {

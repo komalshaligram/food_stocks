@@ -11,7 +11,6 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/activity_time/activity_time_model.dart';
 import '../../data/model/req_model/activity_time/activity_time_req_model.dart';
 import '../../data/model/req_model/profile_details_update_req_model/profile_details_update_req_model.dart';
-import '../../data/model/res_model/activity_time_model/activity_time_res_model.dart' as res;
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -321,26 +320,26 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
       }
 
       if (event is _activityTimeApiEvent) {
-        bool isSnackbarActive = false;
+        bool isSnackBarActive = false;
 
         for (int i = 0; i < state.operationTimeList.length; i++) {
           if (state.operationTimeList[i].monday != [] && state.operationTimeList[i].monday.isNotEmpty) {
             if (state.operationTimeList[i].monday[0].until == AppStrings.timeString && state.operationTimeList[i].monday[0].from != AppStrings.timeString || state.operationTimeList[i].monday[0].until == '24:59') {
               CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_fill_up_closing_time, type: SnackBarType.failure);
-              isSnackbarActive = true;
+              isSnackBarActive = true;
             }
             for (int j = 1; j < state.operationTimeList[i].monday.length; j++) {
               if (state.operationTimeList[i].monday[j] == const Day(from: AppStrings.timeString, until: AppStrings.timeString)) {
                 state.operationTimeList[i].monday.removeAt(j);
               } else if (state.operationTimeList[i].monday[j].until == AppStrings.timeString && state.operationTimeList[i].monday[j].from != AppStrings.timeString || state.operationTimeList[i].monday[j].until == '24:59') {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_fill_up_closing_time, type: SnackBarType.failure);
-                isSnackbarActive = true;
+                isSnackBarActive = true;
               }
             }
           }
         }
 
-        if (isSnackbarActive == false) {
+        if (isSnackBarActive == false) {
           sundayList.addAll(
             state.operationTimeList[0].monday,
           );
@@ -386,7 +385,7 @@ class ActivityTimeBloc extends Bloc<ActivityTimeEvent, ActivityTimeState> {
 
               try {
                 final response1 = await DioClient(event.context).post('${AppUrlEndPoints.operationTimeUrl}/${preferences.getUserId()}', data: reqMap);
-                res.ActivityTimeResModel operationTimeResModel = res.ActivityTimeResModel.fromJson(response1);
+                // res.ActivityTimeResModel operationTimeResModel = res.ActivityTimeResModel.fromJson(response1);
 
                 if (response1[AppStrings.statusString] == AppConstants.code_200) {
                   Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);

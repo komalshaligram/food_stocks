@@ -85,7 +85,10 @@ class ManageCreditCardWidget extends StatelessWidget {
                                         Container(
                                           padding: const EdgeInsets.all(20.0),
                                           width: MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(color: AppColors.blueColor.withOpacity(0.8), borderRadius: BorderRadius.circular(15)),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.blueColor.withValues(alpha: 0.8),
+                                            borderRadius: BorderRadius.circular(15),
+                                          ),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisAlignment: MainAxisAlignment.start,
@@ -104,7 +107,11 @@ class ManageCreditCardWidget extends StatelessWidget {
                                                 style: AppStyles.rkBoldTextStyle(size: AppConstants.font_22, color: AppColors.whiteColor),
                                               ),
                                               15.height,
-                                              Text(state.validityController.text.toString(), style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.whiteColor)),
+                                              Text(state.validityController.text.toString(),
+                                                  style: AppStyles.rkBoldTextStyle(
+                                                    size: AppConstants.font_17,
+                                                    color: AppColors.whiteColor,
+                                                  )),
                                               10.height,
                                             ],
                                           ),

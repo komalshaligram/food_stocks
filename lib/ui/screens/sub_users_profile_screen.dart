@@ -249,7 +249,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
 
   Widget profileMenuTiles({required title, required void Function() onTap, bool isDelete = false}) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)]),
+      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10)]),
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_3),
       child: InkWell(
         onTap: onTap,

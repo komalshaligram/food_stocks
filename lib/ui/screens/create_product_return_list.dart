@@ -209,7 +209,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           boxShadow: [
-            BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+            BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
           ],
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
@@ -240,7 +240,14 @@ class CreateProductReturnListWidget extends StatelessWidget {
                       }
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                      return Container(
+                          width: 100,
+                          height: 100,
+                          color: AppColors.whiteColor,
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                          ));
                     },
                   )
                 : Image.asset(
@@ -266,7 +273,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.mainColor),
                   ),
                   Text(
-                    '${state.returnProductList[index].totalUnits.toString() ?? ''} ${AppLocalizations.of(context)!.units}',
+                    '${state.returnProductList[index].totalUnits.toString()} ${AppLocalizations.of(context)!.units}',
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),
                   ),
                   3.height,

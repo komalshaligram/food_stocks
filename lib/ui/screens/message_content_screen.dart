@@ -34,7 +34,10 @@ class MessageContentScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => MessageContentBloc()
-        ..add(MessageContentEvent.getMessageDataEvent(messageData: args?[AppStrings.messageDataString], isReadMore: args?[AppStrings.isReadMoreString] ?? false))
+        ..add(MessageContentEvent.getMessageDataEvent(
+          messageData: args?[AppStrings.messageDataString],
+          isReadMore: args?[AppStrings.isReadMoreString] ?? false,
+        ))
         ..add(MessageContentEvent.messageUpdateEvent(
           messageId: args?[AppStrings.messageIdString] ?? '',
           context: context,
@@ -46,7 +49,7 @@ class MessageContentScreen extends StatelessWidget {
 
 class MessageContentScreenWidget extends StatelessWidget {
   MessageContentScreenWidget({super.key});
-  var inputFormat = DateFormat('dd.MM.yyyy');
+  final DateFormat inputFormat = DateFormat('dd.MM.yyyy');
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +124,11 @@ class MessageContentScreenWidget extends StatelessWidget {
                                       }
                                     },
                                     errorBuilder: (context, error, stackTrace) {
-                                      return Container(decoration: BoxDecoration(color: AppColors.whiteColor, shape: BoxShape.circle), alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                      return Container(
+                                        decoration: BoxDecoration(color: AppColors.whiteColor, shape: BoxShape.circle),
+                                        alignment: Alignment.center,
+                                        child: Image.asset(AppImagePath.imageNotAvailable5),
+                                      );
                                     },
                                   )
                                 : const SizedBox(),
@@ -150,7 +157,11 @@ class MessageContentScreenWidget extends StatelessWidget {
                               width: double.maxFinite,
                               margin: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, top: AppConstants.padding_15),
                               padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_30),
-                              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)]),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                                color: AppColors.whiteColor,
+                                boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+                              ),
                               child: Container(
                                 color: AppColors.whiteColor,
                                 child: Column(
@@ -178,7 +189,11 @@ class MessageContentScreenWidget extends StatelessWidget {
                                                   }
                                                 },
                                                 errorBuilder: (context, error, stackTrace) {
-                                                  return Container(decoration: BoxDecoration(color: AppColors.whiteColor, shape: BoxShape.circle), alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                                  return Container(
+                                                    decoration: BoxDecoration(color: AppColors.whiteColor, shape: BoxShape.circle),
+                                                    alignment: Alignment.center,
+                                                    child: Image.asset(AppImagePath.imageNotAvailable5),
+                                                  );
                                                 },
                                               )
                                             : const SizedBox(),
@@ -190,13 +205,21 @@ class MessageContentScreenWidget extends StatelessWidget {
                                         Expanded(
                                           child: Text(
                                             state.message.message?.title ?? '',
-                                            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w500),
+                                            style: AppStyles.rkRegularTextStyle(
+                                              size: AppConstants.smallFont,
+                                              color: AppColors.blackColor,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                         ),
                                         10.width,
                                         Text(
                                           (state.message.createdAt ?? '').split(" ").first.toString(),
-                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500),
+                                          style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.font_14,
+                                            color: AppColors.blackColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -226,9 +249,17 @@ class MessageContentScreenWidget extends StatelessWidget {
                                     onPressed: () async {
                                       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
                                       if (preferences.getSubUser()) {
-                                        navigationToScreen(id: state.message.message?.subUserId.toString() ?? '', mainPage: state.message.message?.subUserMainPage.toString() ?? '', subPage: state.message.message?.subUserSubPage.toString() ?? '');
+                                        navigationToScreen(
+                                          id: state.message.message?.subUserId.toString() ?? '',
+                                          mainPage: state.message.message?.subUserMainPage.toString() ?? '',
+                                          subPage: state.message.message?.subUserSubPage.toString() ?? '',
+                                        );
                                       } else {
-                                        navigationToScreen(id: state.message.message?.navigationId.toString() ?? '', mainPage: state.message.message?.mainPage.toString() ?? '', subPage: state.message.message?.subPage.toString() ?? '');
+                                        navigationToScreen(
+                                          id: state.message.message?.navigationId.toString() ?? '',
+                                          mainPage: state.message.message?.mainPage.toString() ?? '',
+                                          subPage: state.message.message?.subPage.toString() ?? '',
+                                        );
                                       }
                                     },
                                     fontColors: AppColors.whiteColor,
@@ -264,10 +295,18 @@ class MessageContentScreenWidget extends StatelessWidget {
         Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.supplierScreen.name, arguments: {AppStrings.companyIdString: id});
       }
       if (mainPage == 'storeScreen') {
-        Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.companyIdString: id, AppStrings.pushNavigationString: 'storeScreen'});
+        Navigator.pushNamed(
+          navigatorKey.currentState!.context,
+          RouteDefine.bottomNavScreen.name,
+          arguments: {AppStrings.companyIdString: id, AppStrings.pushNavigationString: 'storeScreen'},
+        );
       }
       if (mainPage == 'returnScreen') {
-        Navigator.pushNamed(navigatorKey.currentState!.context, RouteDefine.returnListScreen.name, arguments: {AppStrings.companyIdString: id, AppStrings.pushNavigationString: 'returnScreen'});
+        Navigator.pushNamed(
+          navigatorKey.currentState!.context,
+          RouteDefine.returnListScreen.name,
+          arguments: {AppStrings.companyIdString: id, AppStrings.pushNavigationString: 'returnScreen'},
+        );
       }
     } else {
       if (subPage == 'companyProductsScreen') {

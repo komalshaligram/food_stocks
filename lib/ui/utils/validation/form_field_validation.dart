@@ -182,12 +182,24 @@ class FormFieldValidation {
     return null;
   }
 
-  String? surfaceField(String value, BuildContext context) {
-    RegExp regex = RegExp(r'^(?=.*?[0-9]).{0,}$');
+
+  String? surfaceField(
+      String value,
+      int availableSurfaceQuantityToReturn,
+      BuildContext context,
+      ) {
     if (value.isEmpty) {
       return AppLocalizations.of(context)!.please_enter_surfaces;
-    } else if (!regex.hasMatch(value)) {
+    }
+
+    final int? enteredValue = int.tryParse(value);
+
+    if (enteredValue == null) {
       return AppLocalizations.of(context)!.please_enter_surfaces;
+    }
+
+    if (enteredValue > availableSurfaceQuantityToReturn && enteredValue != 0) {
+      return AppLocalizations.of(context)!.surface_validation;
     }
 
     return null;

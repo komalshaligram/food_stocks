@@ -210,7 +210,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                     }
                   });
                 }
-              } on ServerException {}
+              } catch(_) {}
               emit(state.copyWith(isProductLoading: false, productDetails: response.product ?? []));
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0].copyWith(
@@ -317,7 +317,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         } on ServerException {
           Navigator.pop(event.context);
           emit(state.copyWith(isProductLoading: false));
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _increaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -553,7 +553,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
             }
           }
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (event.productStockUpdateIndex != -1) {
@@ -678,7 +678,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
 
                         break;
                       }
-                    } on ServerException {}
+                    } catch(_) {}
                   }
                 }
               }
@@ -702,7 +702,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 }
               });
             }
-          } on ServerException {}
+          } catch(_) {}
           if (_isProductInCart) {
             try {
               UpdateCartReqModel request = UpdateCartReqModel(
@@ -736,8 +736,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           } else {
             try {
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
@@ -780,8 +779,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               } else {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           }
         }
         //
@@ -798,7 +796,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
             }
           }
-        } on ServerException {}
+        } catch(_) {}
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
 
@@ -807,7 +805,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

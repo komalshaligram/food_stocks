@@ -70,8 +70,8 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1),
-                    bottom: BorderSide(width: 1, color: AppColors.borderColor.withOpacity(0.5)),
+                    top: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1),
+                    bottom: BorderSide(width: 1, color: AppColors.borderColor.withValues(alpha:0.5)),
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_20),

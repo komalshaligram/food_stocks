@@ -92,7 +92,7 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
               Navigator.pushNamed(event.context, RouteDefine.subUsersProfileScreen.name);
             }
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

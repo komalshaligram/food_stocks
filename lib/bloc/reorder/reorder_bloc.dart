@@ -191,7 +191,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     }
                   });
                 }
-              } on ServerException {}
+              } catch(_) {}
               emit(state.copyWith(productDetails: response.product ?? [], isProductLoading: false));
 
               if ((event.isBarcode)) {
@@ -894,7 +894,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
             }
           }
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (event.productStockUpdateIndex != -1) {
@@ -1023,7 +1023,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
 
                         break;
                       }
-                    } on ServerException {}
+                    } catch(_) {}
                   }
                 }
               }
@@ -1047,7 +1047,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 }
               });
             }
-          } on ServerException {}
+          } catch(_) {}
           if (_isProductInCart) {
             try {
               // emit(state.copyWith(isLoading: true));
@@ -1167,7 +1167,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
             }
           }
-        } on ServerException {}
+        } catch(_) {}
         //message count
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
@@ -1177,7 +1177,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

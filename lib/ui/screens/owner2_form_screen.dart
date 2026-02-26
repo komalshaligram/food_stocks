@@ -27,7 +27,10 @@ class Owner2FormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => Owner2FormBloc()..add(Owner2FormEvent.getArgumentEvent(reqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
+      create: (context) => Owner2FormBloc()
+        ..add(Owner2FormEvent.getArgumentEvent(
+          reqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
+        )),
       child: Owner2FormScreenWidget(),
     );
   }
@@ -151,7 +154,8 @@ class Owner2FormScreenWidget extends StatelessWidget {
                         ),
                         7.height,
                         CustomContainerWidget(
-                          name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}' : AppLocalizations.of(context)!.guarantee_2_address,
+                          name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}' :
+                          AppLocalizations.of(context)!.guarantee_2_address,
                         ),
                         CustomFormField(
                           context: context,

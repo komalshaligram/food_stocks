@@ -83,7 +83,15 @@ class BottomNavScreenWidget extends StatelessWidget {
                   resizeToAvoidBottomInset: false,
                   backgroundColor: AppColors.pageColor,
                   bottomNavigationBar: Container(
-                    decoration: BoxDecoration(color: Colors.transparent, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)]),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.shadowColor.withValues(alpha: 0.1),
+                          blurRadius: AppConstants.blur_10,
+                        ),
+                      ],
+                    ),
                     child: CurvedNavigationBar(
                       key: _bottomNavigationKey,
                       index: state.index == 4 && !state.isSubUserSeeWallet ? (state.index - 1) : state.index,

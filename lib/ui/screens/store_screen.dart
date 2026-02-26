@@ -115,7 +115,7 @@ class StoreScreenWidget extends StatelessWidget {
                             height: 30,
                             width: 30,
                             margin: const EdgeInsets.only(top: 90),
-                            decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
+                            decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
                             child: CupertinoActivityIndicator(
                               color: AppColors.mainColor,
                               radius: AppConstants.radius_10,
@@ -313,7 +313,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                 width: getScreenWidth(context),
                                                 height: getItemHeight(context, state.isSaleOn),
                                                 child: state.isSaleShimmering
-                                                    ? CommonProductListShimmerWidget()
+                                                    ? const CommonProductListShimmerWidget()
                                                     : AbsorbPointer(
                                                         absorbing: state.isSaleShimmering,
                                                         child: ListView.builder(
@@ -457,7 +457,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                     width: getScreenWidth(context),
                                                     height: getItemHeight(context, state.isSaleOn),
                                                     child: state.isRecommendedShimmering
-                                                        ? CommonProductListShimmerWidget()
+                                                        ? const CommonProductListShimmerWidget()
                                                         : ListView.builder(
                                                             itemCount: state.recommendedProductsList.length,
                                                             shrinkWrap: true,
@@ -597,7 +597,7 @@ class StoreScreenWidget extends StatelessWidget {
                                                     width: getScreenWidth(context),
                                                     height: getItemHeight(context, state.isSaleOn),
                                                     child: state.isPreviousOrderShimmering
-                                                        ? CommonProductListShimmerWidget()
+                                                        ? const CommonProductListShimmerWidget()
                                                         : ListView.builder(
                                                             itemCount: state.previousOrderProductsList.length,
                                                             shrinkWrap: true,
@@ -957,7 +957,7 @@ class StoreScreenWidget extends StatelessWidget {
                                             showMinMaxIncreaseQtyConfirmDialog(
                                               context,
                                               state.searchList[index].searchId,
-                                              state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                              state.searchList[index].saleMinQuantity.toString(),
                                               index,
                                               state.searchList[index].supplierId.toString(),
                                               4,
@@ -991,7 +991,7 @@ class StoreScreenWidget extends StatelessWidget {
                                               showMinMaxDecreaseQtyConfirmDialog(
                                                 context,
                                                 state.searchList[index].searchId,
-                                                state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                state.searchList[index].saleMinQuantity.toString(),
                                                 index,
                                                 state.searchList[index].supplierId.toString(),
                                                 4,
@@ -1109,7 +1109,7 @@ class StoreScreenWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               color: AppColors.whiteColor,
-              boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
+              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10)],
             ),
             child: InkWell(
               onTap: onTap,
@@ -1198,7 +1198,7 @@ class StoreScreenWidget extends StatelessWidget {
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
       clipBehavior: Clip.hardEdge,
@@ -1281,7 +1281,7 @@ class StoreScreenWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               color: AppColors.whiteColor,
-              boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
+              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10)],
             ),
             child: InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
@@ -1357,7 +1357,7 @@ class StoreScreenWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
+        decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1))),
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_15),
         child: Text(
           category,

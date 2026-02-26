@@ -112,7 +112,14 @@ class ReturnListWidget extends StatelessWidget {
                                             }
                                           },
                                           errorBuilder: (context, error, stackTrace) {
-                                            return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                            return Container(
+                                                width: 100,
+                                                height: 100,
+                                                color: AppColors.whiteColor,
+                                                alignment: Alignment.center,
+                                                child: Image.asset(
+                                                  AppImagePath.imageNotAvailable5,
+                                                ));
                                           },
                                         )
                                       : Image.asset(
@@ -153,13 +160,19 @@ class ReturnListWidget extends StatelessWidget {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          //increment event
-                                          context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productIncrementEvent(productQuantity: state.productQty, context: context));
+                                          context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productIncrementEvent(
+                                                productQuantity: state.productQty,
+                                                context: context,
+                                              ));
                                         },
                                         child: Container(
                                           width: AppConstants.padding_30,
                                           height: AppConstants.padding_30,
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_2), border: Border.all(color: AppColors.mainColor), gradient: AppColors.appMainGradientColor),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(AppConstants.radius_2),
+                                            border: Border.all(color: AppColors.mainColor),
+                                            gradient: AppColors.appMainGradientColor,
+                                          ),
                                           child: Icon(
                                             Icons.add,
                                             size: 18,
@@ -178,14 +191,20 @@ class ReturnListWidget extends StatelessWidget {
                                       15.width,
                                       GestureDetector(
                                         onTap: () {
-                                          //decrement event
-                                          context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productDecrementEvent(productQuantity: state.productQty, context: context));
+                                          context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productDecrementEvent(
+                                                productQuantity: state.productQty,
+                                                context: context,
+                                              ));
                                         },
                                         child: Container(
                                           alignment: Alignment.center,
                                           width: AppConstants.padding_30,
                                           height: AppConstants.padding_30,
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.mainColor), gradient: AppColors.appMainGradientColor),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(AppConstants.radius_3),
+                                            border: Border.all(color: AppColors.mainColor),
+                                            gradient: AppColors.appMainGradientColor,
+                                          ),
                                           child: Icon(
                                             Icons.remove,
                                             size: 18,
@@ -219,7 +238,7 @@ class ReturnListWidget extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () async {
-                                    if (state.proofFile != null && await state.proofFile!.exists() || state.proofFile.path.contains("https")) {
+                                    if (state.proofFile != null && await state.proofFile.exists() || state.proofFile.path.contains("https")) {
                                       uploadProofBottomSheet(
                                         context: context,
                                         file: state.proofFile,
@@ -230,8 +249,6 @@ class ReturnListWidget extends StatelessWidget {
                                     }
 
                                     cameraEvent(context: context, index: 1);
-                                    // state.proofFile.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile, index: 1, language: state.language) :
-                                    // cameraEvent(context: context, index: 1);
                                   },
                                   child: Container(
                                     height: 120,
@@ -259,7 +276,14 @@ class ReturnListWidget extends StatelessWidget {
                                               }
                                             },
                                             errorBuilder: (context, error, stackTrace) {
-                                              return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                              return Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  color: AppColors.whiteColor,
+                                                  alignment: Alignment.center,
+                                                  child: Image.asset(
+                                                    AppImagePath.imageNotAvailable5,
+                                                  ));
                                             },
                                           )
                                         : state.proofFile.existsSync()
@@ -278,18 +302,17 @@ class ReturnListWidget extends StatelessWidget {
                                 8.width,
                                 InkWell(
                                   onTap: () async {
-                                    if (state.proofFile1 != null && await state.proofFile1!.exists() || state.proofFile1.path.contains("https")) {
-                                    uploadProofBottomSheet(
-                                    context: context,
-                                    file: state.proofFile1,
-                                    index: 2,
-                                    language: state.language,
-                                    );
-                                    return;
+                                    if (state.proofFile1 != null && await state.proofFile1.exists() || state.proofFile1.path.contains("https")) {
+                                      uploadProofBottomSheet(
+                                        context: context,
+                                        file: state.proofFile1,
+                                        index: 2,
+                                        language: state.language,
+                                      );
+                                      return;
                                     }
 
                                     cameraEvent(context: context, index: 2);
-                                    // state.proofFile1.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile1, index: 2, language: state.language) : cameraEvent(context: context, index: 2);
                                   },
                                   child: Container(
                                     height: 120,
@@ -317,7 +340,14 @@ class ReturnListWidget extends StatelessWidget {
                                               }
                                             },
                                             errorBuilder: (context, error, stackTrace) {
-                                              return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                              return Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  color: AppColors.whiteColor,
+                                                  alignment: Alignment.center,
+                                                  child: Image.asset(
+                                                    AppImagePath.imageNotAvailable5,
+                                                  ));
                                             },
                                           )
                                         : state.proofFile1.existsSync()
@@ -336,18 +366,17 @@ class ReturnListWidget extends StatelessWidget {
                                 8.width,
                                 InkWell(
                                   onTap: () async {
-                                    if (state.proofFile2 != null && await state.proofFile2!.exists() || state.proofFile2.path.contains("https")) {
-                                    uploadProofBottomSheet(
-                                    context: context,
-                                    file: state.proofFile2,
-                                    index: 3,
-                                    language: state.language,
-                                    );
-                                    return;
+                                    if (state.proofFile2 != null && await state.proofFile2.exists() || state.proofFile2.path.contains("https")) {
+                                      uploadProofBottomSheet(
+                                        context: context,
+                                        file: state.proofFile2,
+                                        index: 3,
+                                        language: state.language,
+                                      );
+                                      return;
                                     }
 
                                     cameraEvent(context: context, index: 3);
-                                    // state.proofFile2.existsSync() ? uploadProofBottomSheet(context: context, file: state.proofFile2, index: 3, language: state.language) : cameraEvent(context: context, index: 3);
                                   },
                                   child: Container(
                                     height: 120,
@@ -375,7 +404,14 @@ class ReturnListWidget extends StatelessWidget {
                                               }
                                             },
                                             errorBuilder: (context, error, stackTrace) {
-                                              return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                                              return Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  color: AppColors.whiteColor,
+                                                  alignment: Alignment.center,
+                                                  child: Image.asset(
+                                                    AppImagePath.imageNotAvailable5,
+                                                  ));
                                             },
                                           )
                                         : state.proofFile2.existsSync()
@@ -471,10 +507,6 @@ class ReturnListWidget extends StatelessWidget {
                   Navigator.pop(c);
                   Navigator.pop(context);
                 }
-
-                // await Future.delayed(Duration(milliseconds: 100));
-                // Navigator.pop(c);
-                // Navigator.pop(context);
               },
             );
           },
@@ -537,32 +569,31 @@ class ReturnListWidget extends StatelessWidget {
                         Navigator.pop(context);
                         cameraEvent(context: context, index: index);
                       }),
-                   FileSelectionOptionWidget(
-                          title: AppLocalizations.of(context)!.delete,
-                          icon: Icons.delete,
-                          lastItem: true,
-                          iconColor: Colors.red,
-                          onTap: () async {
-                            Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              builder: (context2) => CommonAlertDialog(
-                                directionality: language,
-                                title: AppLocalizations.of(context)!.remove,
-                                subTitle: AppLocalizations.of(context)!.are_you_sure,
-                                positiveTitle: AppLocalizations.of(context)!.yes,
-                                negativeTitle: AppLocalizations.of(context)!.no,
-                                negativeOnTap: () {
-                                  Navigator.pop(context2);
-                                },
-                                positiveOnTap: () async {
-                                  context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.deleteFileEvent(context: context, index: index));
-                                  Navigator.pop(context2);
-                                },
-                              ),
-                            );
-                          })
-
+                  FileSelectionOptionWidget(
+                      title: AppLocalizations.of(context)!.delete,
+                      icon: Icons.delete,
+                      lastItem: true,
+                      iconColor: Colors.red,
+                      onTap: () async {
+                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          builder: (context2) => CommonAlertDialog(
+                            directionality: language,
+                            title: AppLocalizations.of(context)!.remove,
+                            subTitle: AppLocalizations.of(context)!.are_you_sure,
+                            positiveTitle: AppLocalizations.of(context)!.yes,
+                            negativeTitle: AppLocalizations.of(context)!.no,
+                            negativeOnTap: () {
+                              Navigator.pop(context2);
+                            },
+                            positiveOnTap: () async {
+                              context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.deleteFileEvent(context: context, index: index));
+                              Navigator.pop(context2);
+                            },
+                          ),
+                        );
+                      })
                 ],
               ),
             ),
@@ -579,9 +610,7 @@ class ReturnListWidget extends StatelessWidget {
         CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.camera_permission, type: SnackBarType.failure);
         return;
       }
-    } else if (Platform.isIOS) {
-      // Navigator.pop(context);
-    }
+    } else if (Platform.isIOS) {}
     context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.pickDocumentEvent(context: context, isFromCamera: true, value: index));
   }
 }

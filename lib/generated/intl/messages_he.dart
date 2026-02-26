@@ -1246,6 +1246,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "suppliers_not_available": MessageLookupByLibrary.simpleMessage(
       "לא קיים במלאי",
     ),
+    "surface_validation": MessageLookupByLibrary.simpleMessage(
+      "הזנת מספר משטחים גדול מידי אנא נסה מספר נמוך יותר",
+    ),
     "surfaces_order": MessageLookupByLibrary.simpleMessage("משטחים להזמנה"),
     "terms_of_use": MessageLookupByLibrary.simpleMessage("תנאי שימוש"),
     "this_company_has_no_product": MessageLookupByLibrary.simpleMessage(

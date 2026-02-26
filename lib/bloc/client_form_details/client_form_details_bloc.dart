@@ -132,8 +132,7 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
           } else {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
-        } catch (e) {
-        }
+        } catch(_) {}
       } else if (event is _selectBusinessTypeEvent) {
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
@@ -199,8 +198,8 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
           reqMap = {
             'clientDetail': {
               AppStrings.agentIdString: state.agentCodeController.text != '' ? state.agentCodeController.text : '',
-              AppStrings.businessTypeIdString: businessTypeId ?? '',
-              AppStrings.bankIdString: bankId ?? '',
+              AppStrings.businessTypeIdString: businessTypeId,
+              AppStrings.bankIdString: bankId ,
               AppStrings.branchNumberString: state.branchController.text != '' ? state.branchController.text : '',
               AppStrings.accountNumberString: state.accountNumberController.text != '' ? state.accountNumberController.text : '',
               AppStrings.owner1FullNameString: state.owner1NameController.text != '' ? state.owner1NameController.text : '',
@@ -350,7 +349,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
     FormData formData;
     String? contentType = 'png';
     String type = 'image';
-    String? extension = 'png';
 
     if (fieldName == AppStrings.owner1SignatureString) {
       emit(state.copyWith(owner1SignatureLocal: imagePath.path));

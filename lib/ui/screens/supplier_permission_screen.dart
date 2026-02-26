@@ -144,7 +144,7 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
           color: AppColors.whiteColor,
         border: Border(
           bottom: BorderSide(
-              color: AppColors.greyColor.withOpacity(0.4)),
+              color: AppColors.greyColor.withValues(alpha:0.4)),
         ),),
       margin: const EdgeInsets.symmetric(
           vertical: AppConstants.padding_5,
@@ -176,9 +176,9 @@ class SupplierPermissionScreenWidget extends StatelessWidget {
                   scaleY: 1,
                   child: CupertinoSwitch(
                     onChanged: onChanged,
-                    activeColor: AppColors.mainColor,
+                    activeTrackColor: AppColors.mainColor,
                     thumbColor: AppColors.whiteColor,
-                    trackColor: AppColors.lightBorderColor,
+                    inactiveTrackColor: AppColors.lightBorderColor,
                     value: isEnable,
                   ),
                 ),

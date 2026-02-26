@@ -58,7 +58,11 @@ class ActivityTimeScreenWidget extends StatelessWidget {
             leadingWidth: 60,
             title: Align(
               alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.activity_time, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+              child: Text(AppLocalizations.of(context)!.activity_time,
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont,
+                    color: AppColors.blackColor,
+                  )),
             ),
             leading: GestureDetector(
                 onTap: () {
@@ -305,7 +309,11 @@ class TimeContainer extends StatelessWidget {
         return Container(
           height: 40,
           width: getScreenWidth(context) * 0.26,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.borderColor), color: AppColors.whiteColor),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppConstants.radius_3),
+            border: Border.all(color: AppColors.borderColor),
+            color: AppColors.whiteColor,
+          ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
             child: GestureDetector(
@@ -323,7 +331,13 @@ class TimeContainer extends StatelessWidget {
                       return Container(
                         // height: getScreenHeight(context) * 0.33,
                         padding: const EdgeInsets.only(top: 6.0),
-                        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_20), topRight: Radius.circular(AppConstants.padding_20))),
+                        decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(AppConstants.radius_20),
+                                topRight: Radius.circular(
+                                  AppConstants.padding_20,
+                                ))),
                         child: DefaultTextStyle(
                           style: AppStyles.rkRegularTextStyle(
                             color: AppColors.blackColor,
@@ -351,9 +365,26 @@ class TimeContainer extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                     onTap: () async {
-                                      context.read<ActivityTimeBloc>().add(ActivityTimeEvent.timePickerEvent(context: context, rowIndex: rowIndex, timeIndex: index, openingIndex: openingIndex, time: datetime, previousTime: time, timePickerContext: c1));
+                                      context.read<ActivityTimeBloc>().add(ActivityTimeEvent.timePickerEvent(
+                                            context: context,
+                                            rowIndex: rowIndex,
+                                            timeIndex: index,
+                                            openingIndex: openingIndex,
+                                            time: datetime,
+                                            previousTime: time,
+                                            timePickerContext: c1,
+                                          ));
                                     },
-                                    child: Container(decoration: BoxDecoration(color: AppColors.borderColor.withOpacity(0.6), borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))), padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_30, vertical: AppConstants.padding_5), child: Text(AppLocalizations.of(context)!.ok))),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.borderColor.withValues(alpha: 0.6),
+                                            borderRadius: const BorderRadius.all(Radius.circular(
+                                              AppConstants.radius_5,
+                                            ))),
+                                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_30, vertical: AppConstants.padding_5),
+                                        child: Text(
+                                          AppLocalizations.of(context)!.ok,
+                                        ))),
                                 10.height,
                               ],
                             ),

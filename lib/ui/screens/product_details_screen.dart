@@ -31,19 +31,19 @@ import '../widget/product_details_screen_shimmer_widget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class ProductDetailsRoute {
-  static Widget get route => ProductDetailsScreen();
+  static Widget get route => const ProductDetailsScreen();
 }
 
 class ProductDetailsScreen extends StatelessWidget {
-  String orderId;
-  String issue;
-  String orderNumber;
-  bool isNavigateToProductDetailString;
-  OrdersBySupplier productData;
-  OrderDatum orderData;
-  List<StatusData> statusList;
+  final String orderId;
+  final String issue;
+  final String orderNumber;
+  final bool isNavigateToProductDetailString;
+  final OrdersBySupplier productData;
+  final OrderDatum orderData;
+  final List<StatusData> statusList;
 
-  ProductDetailsScreen({
+  const ProductDetailsScreen({
     super.key,
     this.orderId = '',
     this.orderNumber = '',
@@ -332,7 +332,14 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 ? null
                 : () async {
                     if (file != null && await file.exists() || file.path.contains("https")) {
-                      uploadDriverProofBottomSheet(context: context, file: file, index: index, language: language, productIssueData: {}, selectedRadio: state.selectedRadioTile);
+                      uploadDriverProofBottomSheet(
+                        context: context,
+                        file: file,
+                        index: index,
+                        language: language,
+                        productIssueData: {},
+                        selectedRadio: state.selectedRadioTile,
+                      );
                       return;
                     }
                     cameraDriverProofEvent(context: context, index: index, productIssueData: {}, selectedRadio: state.selectedRadioTile);
@@ -347,9 +354,22 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       file.path,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
-                        return Center(child: SizedBox(width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80, child: CupertinoActivityIndicator(color: AppColors.blackColor)));
+                        return Center(
+                            child: SizedBox(
+                                width: AppConstants.containerHeight_80,
+                                height: AppConstants.containerHeight_80,
+                                child: CupertinoActivityIndicator(
+                                  color: AppColors.blackColor,
+                                )));
                       },
-                      errorBuilder: (context, error, stackTrace) => Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5)),
+                      errorBuilder: (context, error, stackTrace) => Container(
+                          width: 100,
+                          height: 100,
+                          color: AppColors.whiteColor,
+                          alignment: Alignment.center,
+                          child: Image.asset(
+                            AppImagePath.imageNotAvailable5,
+                          )),
                     )
                   : file.existsSync()
                       ? Image.file(file, fit: BoxFit.cover, height: 120, width: 120)
@@ -666,19 +686,22 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     child: CustomButtonWidget(
                       onPressed: () {
                         if (!state.isAllCheck) {
-                          CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_checkbox, type: SnackBarType.failure);
+                          CustomSnackBar.showSnackBar(
+                            context: context,
+                            title: AppLocalizations.of(context)!.select_checkbox,
+                            type: SnackBarType.failure,
+                          );
                         } else {
+                          printData("check here value ${state.orderData.availableSurfaceQuantityToReturn}");
                           if (state.orderData.hasReturnProducts == true) {
                             Navigator.pushNamed(context, RouteDefine.returnDriverScreen.name, arguments: {
                               AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
-                              AppStrings.deliveryStatusString: getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase() ?? '',
+                              AppStrings.deliveryStatusString: getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
                               AppStrings.totalOrderString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? '0',
-                              AppStrings.deliveryDateString: '-',
                               AppStrings.quantityString: state.orderBySupplierProduct.products?.length.toString() ?? '',
                               AppStrings.totalAmountString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? 0,
                               AppStrings.orderIdString: widget.orderId,
                               AppStrings.supplierIdString: state.orderBySupplierProduct.id,
-                              AppStrings.supplierOrderNumberString: state.orderBySupplierProduct.supplierOrderNumber ?? 0,
                               AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
                               AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
                               AppStrings.supplierOrderNumberString: state.orderData.orderNumber,
@@ -687,18 +710,17 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               AppStrings.usersIdString: state.userId,
                               AppStrings.statusList: widget.statusList,
                               AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
+                              AppStrings.availableSurfaceQuantityToReturn: state.orderData.availableSurfaceQuantityToReturn,
                             });
                           } else {
                             Navigator.pushNamed(context, RouteDefine.shipmentVerificationScreen.name, arguments: {
                               AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
-                              AppStrings.deliveryStatusString: getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase() ?? '',
+                              AppStrings.deliveryStatusString: getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
                               AppStrings.totalOrderString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? '0',
-                              AppStrings.deliveryDateString: '-',
                               AppStrings.quantityString: state.orderBySupplierProduct.products?.length.toString() ?? '',
                               AppStrings.totalAmountString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? 0,
                               AppStrings.orderIdString: widget.orderId,
                               AppStrings.supplierIdString: state.orderBySupplierProduct.id,
-                              AppStrings.supplierOrderNumberString: state.orderBySupplierProduct.supplierOrderNumber ?? 0,
                               AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
                               AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
                               AppStrings.supplierOrderNumberString: state.orderData.orderNumber,
@@ -708,6 +730,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               AppStrings.statusList: widget.statusList,
                               AppStrings.sentReturnData: [],
                               AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
+                              AppStrings.availableSurfaceQuantityToReturn: state.orderData.availableSurfaceQuantityToReturn,
                             });
                           }
                         }
@@ -776,7 +799,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 decoration: BoxDecoration(
                   color: AppColors.whiteColor,
                   boxShadow: [
-                    BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                    BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
                   ],
                   borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                 ),
@@ -1012,8 +1035,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                             barcode: barcode,
                                             returnProducts: returnProducts,
                                             notes: returnIndex != -1 ? returnProducts[returnIndex].notes : '',
-                                            returnProductId: returnIndex != -1 ? returnProducts![returnIndex].returnProductId : '',
-                                            returnId: returnIndex != -1 ? returnProducts![returnIndex].returnId : '',
+                                            returnProductId: returnIndex != -1 ? returnProducts[returnIndex].returnProductId : '',
+                                            returnId: returnIndex != -1 ? returnProducts[returnIndex].returnId : '',
                                             orderId: orderId,
                                             language: language,
                                             orderSupplierProduct: orderSupplierProduct);
@@ -1027,7 +1050,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         ),
                                         child: Text(
                                           AppLocalizations.of(context)!.product_issue,
-                                          style: AppStyles.rkRegularTextStyle(color: (matchedProduct?.reasonToReturn?.isNotEmpty ?? false) ? AppColors.whiteColor : AppColors.blackColor, size: AppConstants.font_12, fontWeight: FontWeight.w400),
+                                          style: AppStyles.rkRegularTextStyle(
+                                            color: (matchedProduct?.reasonToReturn?.isNotEmpty ?? false) ? AppColors.whiteColor : AppColors.blackColor,
+                                            size: AppConstants.font_12,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                       ),
                                     )
@@ -1172,7 +1199,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
                               boxShadow: [
-                                BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                                BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
                               ],
                               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                             ),
@@ -1616,7 +1643,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
             decoration: BoxDecoration(
               color: AppColors.pageColor,
               boxShadow: [
-                BoxShadow(color: AppColors.shadowColor.withOpacity(0.10), blurRadius: AppConstants.blur_10),
+                BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.10), blurRadius: AppConstants.blur_10),
               ],
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             ),
@@ -1640,7 +1667,6 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             addProblemController.clear();
                             bloc.add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: val!));
                             bloc.add(ProductDetailsEvent.getPickDocumentEvent(context: context, proofImages: proofImage));
-                            final updatedState = await bloc.stream.firstWhere((s) => true);
                           },
                         ),
                         Column(
@@ -1746,7 +1772,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         children: [
                           InkWell(
                             onTap: () async {
-                              if (state.proofFile != null && await state.proofFile!.exists() || state.proofFile.path.contains("https")) {
+                              if (state.proofFile != null && await state.proofFile.exists() || state.proofFile.path.contains("https")) {
                                 uploadProofBottomSheet(
                                   context: context,
                                   file: state.proofFile,
@@ -1818,7 +1844,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           8.width,
                           InkWell(
                             onTap: () async {
-                              if (state.proofFile1 != null && await state.proofFile1!.exists() || state.proofFile1.path.contains("https")) {
+                              if (state.proofFile1 != null && await state.proofFile1.exists() || state.proofFile1.path.contains("https")) {
                                 uploadProofBottomSheet(
                                   context: context,
                                   file: state.proofFile1,
@@ -1890,7 +1916,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           8.width,
                           InkWell(
                             onTap: () async {
-                              if (state.proofFile2 != null && await state.proofFile2!.exists() || state.proofFile2.path.contains("https")) {
+                              if (state.proofFile2 != null && await state.proofFile2.exists() || state.proofFile2.path.contains("https")) {
                                 uploadProofBottomSheet(
                                   context: context,
                                   file: state.proofFile2,
@@ -2205,7 +2231,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 child: CustomDialog(
                   isProcessing: state.isDuplicateOrderProcess,
                   title: AppLocalizations.of(context)!.you_want_to_duplicate_this_order,
-                  content: [],
+                  content: const [],
                   isMixedSale: false,
                   directionality: state.language,
                   positiveTitle: AppLocalizations.of(context)!.yes,

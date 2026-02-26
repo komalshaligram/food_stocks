@@ -63,7 +63,11 @@ class LogInScreenWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       30.height,
-                      Text(AppLocalizations.of(context)!.enter_your_phone, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black)),
+                      Text(AppLocalizations.of(context)!.enter_your_phone,
+                          style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont,
+                            color: Colors.black,
+                          )),
                       30.height,
                       CustomFormField(
                         inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],

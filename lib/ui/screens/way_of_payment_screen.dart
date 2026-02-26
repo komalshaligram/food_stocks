@@ -125,7 +125,7 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius: BorderRadius.circular(AppConstants.radius_5),
-              boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.10), blurRadius: AppConstants.radius_5)],
+              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.10), blurRadius: AppConstants.radius_5)],
             ),
             child: RadioListTile(
                 value: radioValue,

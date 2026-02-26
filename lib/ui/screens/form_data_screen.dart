@@ -36,7 +36,7 @@ class FormDataScreen extends StatelessWidget {
 class FormDataScreenWidget extends StatelessWidget {
   FormDataScreenWidget({super.key});
   final _formKey = GlobalKey<FormState>();
-  String ownerName = '';
+  final String ownerName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +164,11 @@ class FormDataScreenWidget extends StatelessWidget {
                                       bloc.add(FormDataEvent.verifyAgentEvent(context: context));
                                     }
                                   } else {
-                                    CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
+                                    CustomSnackBar.showSnackBar(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!.select_business_type,
+                                      type: SnackBarType.failure,
+                                    );
                                   }
                                 },
                                 fontColors: AppColors.whiteColor,

@@ -181,7 +181,7 @@ class ReorderScreenWidget extends StatelessWidget {
                         controller: state.refreshController,
                         header: const RefreshWidget(),
                         footer: CustomFooter(
-                          builder: (context, mode) => state.isGridView ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget(),
+                          builder: (context, mode) => state.isGridView ? const SupplierProductsScreenShimmerWidget() : const StoreCategoryScreenSubcategoryShimmerWidget(),
                         ),
                         enablePullUp: !state.isBottomOfProducts,
                         onRefresh: () {
@@ -196,8 +196,8 @@ class ReorderScreenWidget extends StatelessWidget {
                               100.height,
                               state.isShimmering
                                   ? state.isGridView
-                                      ? SupplierProductsScreenShimmerWidget()
-                                      : StoreCategoryScreenSubcategoryShimmerWidget()
+                                      ? const SupplierProductsScreenShimmerWidget()
+                                      : const StoreCategoryScreenSubcategoryShimmerWidget()
                                   : state.previousOrderProductsList.isEmpty
                                       ? Container(
                                           height: getScreenHeight(context) - 80,
@@ -544,7 +544,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                               showMinMaxIncreaseQtyConfirmDialog(
                                                 context,
                                                 state.searchList[index].searchId,
-                                                state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                state.searchList[index].saleMinQuantity.toString(),
                                                 index,
                                                 state.searchList[index].supplierId.toString(),
                                                 0,
@@ -578,7 +578,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                 showMinMaxDecreaseQtyConfirmDialog(
                                                   context,
                                                   state.searchList[index].searchId,
-                                                  state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                  state.searchList[index].saleMinQuantity.toString(),
                                                   index,
                                                   state.searchList[index].supplierId.toString(),
                                                   0,
@@ -713,7 +713,7 @@ class ReorderScreenWidget extends StatelessWidget {
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
       clipBehavior: Clip.hardEdge,
@@ -1098,7 +1098,7 @@ class ReorderScreenWidget extends StatelessWidget {
           return AnimatedCrossFade(
               firstChild: Container(
                 width: getScreenWidth(context),
-                decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
+                decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1))),
                 padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_30),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1159,7 +1159,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: AppColors.iconBGColor,
                                   borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-                                  border: Border.all(color: AppColors.borderColor.withOpacity(0.8), width: 1),
+                                  border: Border.all(color: AppColors.borderColor.withValues(alpha:0.8), width: 1),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1177,7 +1177,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                       child: Container(
                                         width: getScreenWidth(context),
                                         decoration: BoxDecoration(
-                                            border: Border.all(color: AppColors.borderColor.withOpacity(0.5), width: 1),
+                                            border: Border.all(color: AppColors.borderColor.withValues(alpha:0.5), width: 1),
                                             color: AppColors.whiteColor,
                                             borderRadius: const BorderRadius.all(Radius.circular(
                                               AppConstants.radius_5,
@@ -1234,7 +1234,7 @@ class ReorderScreenWidget extends StatelessWidget {
               ),
               secondChild: state.productSupplierList.isEmpty
                   ? Container(
-                      decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
+                      decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1))),
                       padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_30),
                       alignment: Alignment.center,
                       child: Text(
@@ -1245,7 +1245,7 @@ class ReorderScreenWidget extends StatelessWidget {
                   : ConstrainedBox(
                       constraints: BoxConstraints(maxHeight: getScreenHeight(context) * 0.5, maxWidth: getScreenWidth(context)),
                       child: Container(
-                        decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
+                        decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1))),
                         padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1292,7 +1292,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                         boxShadow: [
                                           state.productSupplierList[index].selectedIndex != -1
                                               ? BoxShadow(
-                                                  color: AppColors.shadowColor.withOpacity(0.15),
+                                                  color: AppColors.shadowColor.withValues(alpha:0.15),
                                                   blurRadius: AppConstants.blur_10,
                                                 )
                                               : const BoxShadow()
@@ -1335,7 +1335,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                           color: AppColors.whiteColor,
                                                           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                                                           border: Border.all(
-                                                            color: state.productSupplierList[index].selectedIndex == -2 ? AppColors.mainColor.withOpacity(0.8) : Colors.transparent,
+                                                            color: state.productSupplierList[index].selectedIndex == -2 ? AppColors.mainColor.withValues(alpha:0.8) : Colors.transparent,
                                                             width: 1.5,
                                                           ),
                                                         ),
@@ -1374,7 +1374,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                       splashColor: Colors.transparent,
                                                       highlightColor: Colors.transparent,
                                                       child: Container(
-                                                        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)), border: Border.all(color: state.productSupplierList[index].selectedIndex == subIndex ? AppColors.mainColor.withOpacity(0.8) : Colors.transparent, width: 1.5)),
+                                                        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)), border: Border.all(color: state.productSupplierList[index].selectedIndex == subIndex ? AppColors.mainColor.withValues(alpha:0.8) : Colors.transparent, width: 1.5)),
                                                         padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_5),
                                                         margin: const EdgeInsets.only(top: AppConstants.padding_5, left: AppConstants.padding_5, right: AppConstants.padding_5),
                                                         alignment: Alignment.center,
@@ -1516,7 +1516,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                       padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            color: AppColors.whiteColor.withOpacity(0.3),
+                                            color: AppColors.whiteColor.withValues(alpha:0.3),
                                             border: Border.all(
                                               color: AppColors.borderColor,
                                             )),
@@ -1546,7 +1546,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                         decoration: BoxDecoration(
                                                             color: AppColors.pageColor,
                                                             border: Border(
-                                                              bottom: BorderSide(color: AppColors.borderColor.withOpacity(0.4)),
+                                                              bottom: BorderSide(color: AppColors.borderColor.withValues(alpha:0.4)),
                                                             )),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1599,7 +1599,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                                                                 decoration: BoxDecoration(
                                                                                     color: AppColors.pageColor,
                                                                                     border: Border(
-                                                                                      bottom: BorderSide(color: AppColors.borderColor.withOpacity(0.4)),
+                                                                                      bottom: BorderSide(color: AppColors.borderColor.withValues(alpha:0.4)),
                                                                                     )),
                                                                                 child: Row(
                                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

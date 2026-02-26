@@ -45,7 +45,8 @@ class InvoiceScreenWidget extends StatelessWidget {
             preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
-              title: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
+              title: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices
+                  : AppLocalizations.of(context)!.my_refunds,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -126,7 +127,8 @@ class InvoiceScreenWidget extends StatelessWidget {
           RouteDefine.invoicePdfScreen.name,
           arguments: {
             AppStrings.invoiceListString: invoicesList[index],
-            AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
+            AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ?
+            AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
           },
         );
       },
@@ -136,7 +138,7 @@ class InvoiceScreenWidget extends StatelessWidget {
         decoration: BoxDecoration(
             color: AppColors.whiteColor,
             boxShadow: [
-              BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+              BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
             ],
             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
         child: Column(

@@ -2,26 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/utils/constants/app_constants.dart';
-
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/profile_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
-
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
-
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class ProfileRoute {
   static Widget get route => const ProfileScreen();
@@ -32,8 +27,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
       create: (context) => ProfileBloc()
@@ -41,15 +35,7 @@ class ProfileScreen extends StatelessWidget {
           ProfileEvent.getBusinessTypeListEvent(context: context),
         )
         ..add(
-          ProfileEvent.getProfileDetailsEvent(
-              context: context,
-              isUpdate:
-                  args?.containsKey(AppStrings.isUpdateParamString) ?? false
-                      ? true
-                      : false,
-              mobileNo: args?.containsKey(AppStrings.contactString) ?? false
-                  ? args![AppStrings.contactString]
-                  : ''),
+          ProfileEvent.getProfileDetailsEvent(context: context, isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false, mobileNo: args?.containsKey(AppStrings.contactString) ?? false ? args![AppStrings.contactString] : ''),
         ),
       child: ProfileScreenWidget(),
     );
@@ -67,11 +53,7 @@ class ProfileScreenWidget extends StatelessWidget {
     return BlocListener<ProfileBloc, ProfileState>(
       listener: (context, state) {
         if (state.isFileSizeExceeds) {
-          CustomSnackBar.showSnackBar(
-              context: context,
-              title:
-                  AppLocalizations.of(context)!.file_size_must_be_less_then,
-              type: SnackBarType.failure);
+          CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.file_size_must_be_less_then, type: SnackBarType.failure);
         }
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
@@ -83,16 +65,14 @@ class ProfileScreenWidget extends StatelessWidget {
               leading: GestureDetector(
                   onTap: () {
                     if (!state.isUpdate) {
-                      Navigator.pushNamed(
-                          context, RouteDefine.connectScreen.name);
+                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                     } else {
                       Navigator.pop(context);
                     }
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
-                alignment:
-                    context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.business_details,
                   style: AppStyles.rkRegularTextStyle(
@@ -108,13 +88,11 @@ class ProfileScreenWidget extends StatelessWidget {
             body: state.isShimmering
                 ? const ProfileScreenShimmerWidget()
                 : SingleChildScrollView(
-                  child: Column(
+                    child: Column(
                       children: [
                         SafeArea(
                           child: Padding(
-                            padding: EdgeInsets.only(
-                                left: getScreenWidth(context1) * 0.1,
-                                right: getScreenWidth(context1) * 0.1),
+                            padding: EdgeInsets.only(left: getScreenWidth(context1) * 0.1, right: getScreenWidth(context1) * 0.1),
                             child: Form(
                               key: _formKey,
                               child: Column(
@@ -123,32 +101,23 @@ class ProfileScreenWidget extends StatelessWidget {
                                 children: [
                                   10.height,
                                   CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .type_of_business,
+                                    name: AppLocalizations.of(context)!.type_of_business,
                                   ),
-
                                   CommonDropDownButton(
-                                    items: state
-                                        .businessTypeList
-                                        .map((businessType) {
+                                    items: state.businessTypeList.map((businessType) {
                                       return DropdownMenuItem<String>(
                                         value: businessType.businessType,
-                                        child: Text(
-                                            businessType.businessType??''),
+                                        child: Text(businessType.businessType ?? ''),
                                       );
                                     }).toList(),
                                     onChanged: (newBusinessType) {
-                                      bloc.add(ProfileEvent
-                                          .changeBusinessTypeEvent(
-                                          newBusinessType:
-                                          newBusinessType??''));
+                                      bloc.add(ProfileEvent.changeBusinessTypeEvent(newBusinessType: newBusinessType ?? ''));
                                     },
                                     value: state.selectedBusinessType,
                                   ),
                                   7.height,
                                   CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .business_name,
+                                    name: AppLocalizations.of(context)!.business_name,
                                   ),
                                   CustomFormField(
                                     context: context,
@@ -161,16 +130,12 @@ class ProfileScreenWidget extends StatelessWidget {
                                   ),
                                   7.height,
                                   CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .business_id,
+                                    name: AppLocalizations.of(context)!.business_id,
                                   ),
                                   CustomFormField(
                                     context: context,
                                     controller: state.businessIdController,
-                                    inputFormat: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      LengthLimitingTextInputFormatter(9)
-                                    ],
+                                    inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
                                     keyboardType: TextInputType.number,
                                     hint: "",
                                     fillColor: Colors.transparent,
@@ -179,15 +144,12 @@ class ProfileScreenWidget extends StatelessWidget {
                                   ),
                                   7.height,
                                   CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .owner_first_name,
+                                    name: AppLocalizations.of(context)!.owner_first_name,
                                   ),
                                   CustomFormField(
                                     context: context,
                                     controller: state.ownerFirstNameController,
-                                    inputFormat: [
-                                      LengthLimitingTextInputFormatter(20)
-                                    ],
+                                    inputFormat: [LengthLimitingTextInputFormatter(20)],
                                     keyboardType: TextInputType.text,
                                     hint: "",
                                     fillColor: Colors.transparent,
@@ -196,15 +158,12 @@ class ProfileScreenWidget extends StatelessWidget {
                                   ),
                                   7.height,
                                   CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .owner_last_name,
+                                    name: AppLocalizations.of(context)!.owner_last_name,
                                   ),
                                   CustomFormField(
                                     context: context,
                                     controller: state.ownerLastNameController,
-                                    inputFormat: [
-                                      LengthLimitingTextInputFormatter(20)
-                                    ],
+                                    inputFormat: [LengthLimitingTextInputFormatter(20)],
                                     keyboardType: TextInputType.text,
                                     hint: "",
                                     fillColor: Colors.transparent,
@@ -213,16 +172,12 @@ class ProfileScreenWidget extends StatelessWidget {
                                   ),
                                   7.height,
                                   CustomContainerWidget(
-                                    name:
-                                        AppLocalizations.of(context)!.israel_id,
+                                    name: AppLocalizations.of(context)!.israel_id,
                                   ),
                                   CustomFormField(
                                     context: context,
                                     controller: state.israelIdController,
-                                    inputFormat: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      LengthLimitingTextInputFormatter(9)
-                                    ],
+                                    inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
                                     keyboardType: TextInputType.number,
                                     hint: "",
                                     fillColor: Colors.transparent,
@@ -230,15 +185,12 @@ class ProfileScreenWidget extends StatelessWidget {
                                     validator: AppStrings.idValString,
                                   ),
                                   CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!
-                                        .contact_name,
+                                    name: AppLocalizations.of(context)!.contact_name,
                                   ),
                                   7.height,
                                   CustomFormField(
                                     controller: state.contactController,
-                                    inputFormat: [
-                                      LengthLimitingTextInputFormatter(20)
-                                    ],
+                                    inputFormat: [LengthLimitingTextInputFormatter(20)],
                                     keyboardType: TextInputType.text,
                                     hint: "",
                                     fillColor: Colors.transparent,
@@ -248,76 +200,46 @@ class ProfileScreenWidget extends StatelessWidget {
                                   ),
                                   40.height,
                                   CustomButtonWidget(
-                                    buttonText: state.isUpdate
-                                        ? AppLocalizations.of(context)!
-                                            .save
-                                            .toUpperCase()
-                                        : AppLocalizations.of(context)!
-                                            .next
-                                            .toUpperCase(),
+                                    buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
                                     bGColor: AppColors.mainColor,
                                     isLoading: state.isLoading,
                                     onPressed: state.isLoading
                                         ? null
                                         : () {
-                                            if (state.selectedBusinessType!= AppLocalizations.of(context)?.type_of_business) {
-                                              if(isValidIsraeliID(state.businessIdController.text.toString().trim())) {
-                                                   if(isValidIsraeliID(state.israelIdController.text.toString().trim())) {
-                                                if (_formKey.currentState
-                                                    ?.validate() ??
-                                                    false) {
-                                                  if (state.isUpdate) {
-                                                    bloc.add(ProfileEvent
-                                                        .updateProfileDetailsEvent(
-                                                        context: context1));
-                                                  } else {
-                                                    bloc.add(ProfileEvent
-                                                        .navigateToMoreDetailsScreenEvent(
-                                                        context: context1));
+                                            if (state.selectedBusinessType != AppLocalizations.of(context)?.type_of_business) {
+                                              if (isValidIsraeliID(state.businessIdController.text.toString().trim())) {
+                                                if (isValidIsraeliID(state.israelIdController.text.toString().trim())) {
+                                                  if (_formKey.currentState?.validate() ?? false) {
+                                                    if (state.isUpdate) {
+                                                      bloc.add(ProfileEvent.updateProfileDetailsEvent(context: context1));
+                                                    } else {
+                                                      bloc.add(ProfileEvent.navigateToMoreDetailsScreenEvent(context: context1));
+                                                    }
                                                   }
+                                                } else {
+                                                  CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.failure);
                                                 }
-                                                }else{
-                                                     CustomSnackBar.showSnackBar(
-                                                         context: context,
-                                                         title: AppLocalizations.of(
-                                                             context)!
-                                                             .please_enter_valid_israel_id,
-                                                         type: SnackBarType.failure);
-                                                   }
-                                              }else{
-                                                CustomSnackBar.showSnackBar(
-                                                    context: context,
-                                                    title: AppLocalizations.of(
-                                                        context)!
-                                                        .please_enter_valid_business_id,
-                                                    type: SnackBarType.failure);
+                                              } else {
+                                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_business_id, type: SnackBarType.failure);
                                               }
                                             } else {
-                                              CustomSnackBar.showSnackBar(
-                                                  context: context,
-                                                  title: AppLocalizations.of(
-                                                          context)!
-                                                      .select_business_type,
-                                                  type: SnackBarType.failure);
+                                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
                                             }
                                           },
                                     fontColors: AppColors.whiteColor,
                                   ),
                                   10.height,
-                                 state.isUpdate ?  CustomButtonWidget(
-                                    isFromConnectScreen: true,
-                                    fontColors: AppColors.mainColor,
-                                    borderColor: AppColors.mainColor,
-                                    buttonText: AppLocalizations.of(context)!
-                                        .delete_account
-                                        .toUpperCase(),
-                                    onPressed: () {
-                                      deleteConfirmDialog(
-                                          bloc: bloc,
-                                          context: context,
-                                          directionality: state.language);
-                                    },
-                                  ) : 0.width,
+                                  state.isUpdate
+                                      ? CustomButtonWidget(
+                                          isFromConnectScreen: true,
+                                          fontColors: AppColors.mainColor,
+                                          borderColor: AppColors.mainColor,
+                                          buttonText: AppLocalizations.of(context)!.delete_account.toUpperCase(),
+                                          onPressed: () {
+                                            deleteConfirmDialog(bloc: bloc, context: context, directionality: state.language);
+                                          },
+                                        )
+                                      : 0.width,
                                   20.height,
                                 ],
                               ),
@@ -337,7 +259,7 @@ class ProfileScreenWidget extends StatelessWidget {
                             : 0.width,
                       ],
                     ),
-                ),
+                  ),
           );
         },
       ),
@@ -362,10 +284,7 @@ class ProfileScreenWidget extends StatelessWidget {
               },
               positiveOnTap: () async {
                 Navigator.pop(context);
-                deleteDialog(
-                    context: context,
-                    directionality: directionality,
-                    bloc: bloc);
+                deleteDialog(context: context, directionality: directionality, bloc: bloc);
               },
             ));
   }
@@ -385,7 +304,6 @@ class ProfileScreenWidget extends StatelessWidget {
               positiveOnTap: () async {
                 Navigator.pop(context1);
                 bloc.add(ProfileEvent.deleteAccountEvent(context: context));
-                //Navigator.pushAndRemoveUntil(context, Routes.lo, (route) => false);
               },
             ));
   }

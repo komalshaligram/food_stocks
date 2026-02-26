@@ -9,6 +9,7 @@ class SharedPreferencesHelper {
   static const String userId = "userId";
   static const String userName = "userName";
   static const String userImage = "userImage";
+  static const String agentId = "agentId";
   static const String userCompanyLogo = "companyLogo";
   static const String userCartCount = "cartCount";
   static const String orderSuccessMessage = "ordersuccessMessage";
@@ -87,6 +88,7 @@ class SharedPreferencesHelper {
       await prefs.remove(userId);
       await prefs.remove(userName);
       await prefs.remove(userImage);
+      await prefs.remove(agentId);
       await prefs.remove(userCompanyLogo);
       await prefs.remove(userCartCount);
       await prefs.remove(userMessageCount);
@@ -150,6 +152,10 @@ class SharedPreferencesHelper {
     await prefs.remove(userImage);
   }
 
+  Future<void> removeAgentId() async {
+    await prefs.remove(agentId);
+  }
+
   Future<void> setAuthToken({required String accToken}) async {
     await prefs.setString(accessToken, accToken);
   }
@@ -196,6 +202,10 @@ class SharedPreferencesHelper {
 
   Future<void> setUserImageUrl({required String imageUrl}) async {
     await prefs.setString(userImage, imageUrl);
+  }
+
+  Future<void> setAgentId({required String agent_Id}) async {
+    await prefs.setString(agentId, agent_Id);
   }
 
   Future<void> setUserCompanyLogoUrl({required String logoUrl}) async {
@@ -464,6 +474,10 @@ class SharedPreferencesHelper {
 
   String getUserImageUrl() {
     return prefs.getString(userImage) ?? '';
+  }
+
+  String getAgentId() {
+    return prefs.getString(agentId) ?? '';
   }
 
   String getUserCompanyLogoUrl() {

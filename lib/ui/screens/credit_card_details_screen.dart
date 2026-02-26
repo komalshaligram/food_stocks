@@ -25,7 +25,12 @@ class CreditCardDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => CreditCardDetailsBloc()..add(CreditCardDetailsEvent.getArgumentEvent(isFromRegFlow: args?[AppStrings.isFromRegFlow] ?? false, termsReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(), isPaymentFail: args?[AppStrings.isPaymentFail] ?? false)),
+      create: (context) => CreditCardDetailsBloc()
+        ..add(CreditCardDetailsEvent.getArgumentEvent(
+          isFromRegFlow: args?[AppStrings.isFromRegFlow] ?? false,
+          termsReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
+          isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,
+        )),
       child: CreditCardDetailsScreenWidget(),
     );
   }
@@ -132,7 +137,11 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                                   if (validateMonth(month.toString(), state.validityController.text.toString())) {
                                     context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.selectMonthEvent(month: month ?? ''));
                                   } else {
-                                    CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_valid_month, type: SnackBarType.failure);
+                                    CustomSnackBar.showSnackBar(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!.select_valid_month,
+                                      type: SnackBarType.failure,
+                                    );
                                   }
                                 },
                                 value: state.selectedMonth,

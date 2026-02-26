@@ -63,10 +63,22 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bloc = context.read<ShipmentVerificationBloc>();
+      bloc.state.surfacesController.text = '0';
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     ShipmentVerificationBloc bloc = context.read<ShipmentVerificationBloc>();
     return BlocBuilder<ShipmentVerificationBloc, ShipmentVerificationState>(
       builder: (context, state) {
+        final availableQty = widget.args?[AppStrings.availableSurfaceQuantityToReturn] ?? 0;
+
         return Stack(
           children: [
             WillPopScope(
@@ -140,7 +152,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                     decoration: BoxDecoration(
                                       color: AppColors.whiteColor,
                                       boxShadow: [
-                                        BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                                        BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
                                       ],
                                       borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                                     ),
@@ -246,7 +258,9 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                     hint: "",
                                     textInputAction: TextInputAction.next,
                                     validator: AppStrings.surfaceValString,
+                                    availableQtyVal: availableQty,
                                   ),
+
                                   8.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!.driver_name,
@@ -279,7 +293,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                       decoration: BoxDecoration(
                                         color: AppColors.whiteColor,
                                         boxShadow: [
-                                          BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                                          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
                                         ],
                                         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                                       ),
@@ -351,7 +365,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                       decoration: BoxDecoration(
                                         color: AppColors.whiteColor,
                                         boxShadow: [
-                                          BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                                          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
                                         ],
                                         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                                       ),
@@ -482,7 +496,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
             if (state.isLoading)
               Positioned.fill(
                 child: Container(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   child: Center(
                     child: Material(
                       color: Colors.transparent,

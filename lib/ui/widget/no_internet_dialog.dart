@@ -39,7 +39,7 @@ class NoInternetDialog extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
               alignment: Alignment.center,
               width: AppConstants.containerHeight_80,
-              decoration: BoxDecoration(color: AppColors.mainColor.withOpacity(0.9), borderRadius: BorderRadius.circular(8.0)),
+              decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha:0.9), borderRadius: BorderRadius.circular(8.0)),
               child: Text(
                 AppLocalizations.of(context)!.ok,
                 style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),

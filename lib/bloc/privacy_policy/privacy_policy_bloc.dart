@@ -22,7 +22,7 @@ import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import 'package:http_parser/http_parser.dart';
 import '../../ui/utils/constants/app_urls.dart';
-import 'package:bloc/src/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'privacy_policy_state.dart';
 part 'privacy_policy_event.dart';

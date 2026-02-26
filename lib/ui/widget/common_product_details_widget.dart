@@ -253,8 +253,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1),
-                        bottom: BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1),
+                        top: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1),
+                        bottom: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1),
                       ),
                     ),
                     padding: const EdgeInsets.fromLTRB(AppConstants.padding_10, AppConstants.padding_10, AppConstants.padding_20, 0),

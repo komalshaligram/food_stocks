@@ -24,7 +24,10 @@ class BrandsPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => BrandsPermissionBloc()..add(BrandsPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
+      create: (context) => BrandsPermissionBloc()
+        ..add(
+          BrandsPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? ''),
+        ),
       child: const BrandsPermissionScreenWidget(),
     );
   }
@@ -136,7 +139,7 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         border: Border(
-          bottom: BorderSide(color: AppColors.greyColor.withOpacity(0.4)),
+          bottom: BorderSide(color: AppColors.greyColor.withValues(alpha: 0.4)),
         ),
       ),
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),

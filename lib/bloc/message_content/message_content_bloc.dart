@@ -74,7 +74,7 @@ class MessageContentBloc extends Bloc<MessageContentEvent, MessageContentState> 
 
           if (response[AppStrings.statusString] == AppConstants.code_200) {
           } else {}
-        } on ServerException {}
+        } catch(_) {}
       } else if (event is _imagePreviewEvent) {
         emit(state.copyWith(isPreview: !state.isPreview));
       }

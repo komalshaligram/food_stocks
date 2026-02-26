@@ -115,7 +115,7 @@ class CustomDialog extends StatelessWidget {
                           )
                         : Text(
                             positiveTitle ?? '',
-                            style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withOpacity(0.9), size: AppConstants.smallFont),
+                            style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withValues(alpha:0.9), size: AppConstants.smallFont),
                           ),
                   ),
                 )
@@ -131,7 +131,6 @@ class CustomDialog extends StatelessWidget {
                     width: 80,
                     decoration: BoxDecoration(
                         gradient: AppColors.appMainGradientColor,
-                        // color: AppColors.mainColor.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                     child: Text(
                       negativeTitle ?? '',

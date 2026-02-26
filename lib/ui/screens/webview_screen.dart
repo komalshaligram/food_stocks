@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/utils/constants/app_strings.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../bloc/webview/webview_bloc.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
@@ -130,54 +129,6 @@ class WebViewShimmer extends StatelessWidget {
   }
 }
 
-///////////////////////////////////////////////////
-/// Custom WebView
-///////////////////////////////////////////////////
-// class CustomWebView extends StatefulWidget {
-//   final String url;
-//   const CustomWebView({super.key, required this.url});
-//
-//   @override
-//   State<CustomWebView> createState() => _CustomWebViewState();
-// }
-//
-// class _CustomWebViewState extends State<CustomWebView> {
-//   late final WebViewController controller;
-//   bool isLoading = true;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//
-//     controller = WebViewController()
-//       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-//       ..setBackgroundColor(Colors.white)
-//       ..setNavigationDelegate(
-//         NavigationDelegate(
-//           onPageStarted: (_) {
-//             setState(() => isLoading = true);
-//           },
-//           onPageFinished: (_) {
-//             setState(() => isLoading = false);
-//           },
-//           onWebResourceError: (_) {
-//             setState(() => isLoading = false);
-//           },
-//         ),
-//       )
-//       ..loadRequest(Uri.parse(widget.url));
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Stack(
-//       children: [
-//         WebViewWidget(controller: controller),
-//         if (isLoading) const WebViewShimmer(),
-//       ],
-//     );
-//   }
-// }
 
 class CustomWebView extends StatefulWidget {
   final String url;
@@ -191,56 +142,7 @@ class _CustomWebViewState extends State<CustomWebView> {
   InAppWebViewController? _controller;
   bool isLoading = true;
 
-  // Future<void> _saveCsvFile(String base64Data, String? suggestedFilename) async {
-  //   const prefix = 'base64,';
-  //   final startIndex = base64Data.indexOf(prefix) + prefix.length;
-  //   if (startIndex < prefix.length) {
-  //     debugPrint('Invalid base64 data received');
-  //     return;
-  //   }
-  //   final cleanBase64 = base64Data.substring(startIndex);
-  //   final bytes = base64Decode(cleanBase64);
-  //
-  //   // Generate a nice formatted timestamp
-  //   final now = DateTime.now();
-  //   final formattedDate = '${now.day.toString().padLeft(2, '0')}_'
-  //       '${_getMonthName(now.month)}_'
-  //       '${now.year}_'
-  //       '${now.hour.toString().padLeft(2, '0')}_'
-  //       '${now.minute.toString().padLeft(2, '0')}';
-  //
-  //   // Use suggested filename if available and valid, otherwise fallback to timestamp
-  //   String fileName;
-  //   if (suggestedFilename != null && suggestedFilename.isNotEmpty && suggestedFilename.endsWith('.csv')) {
-  //     final nameWithoutExt = suggestedFilename.replaceAll('.csv', '');
-  //     fileName = '${nameWithoutExt}_$formattedDate.csv';
-  //   } else {
-  //     fileName = 'export_$formattedDate.csv';
-  //   }
-  //
-  //   Directory directory;
-  //   String filePath;
-  //
-  //   if (Platform.isAndroid) {
-  //     final downloadsDir = Directory('/storage/emulated/0/Download');
-  //     if (!await downloadsDir.exists()) {
-  //       await downloadsDir.create(recursive: true);
-  //     }
-  //     directory = downloadsDir;
-  //   } else {
-  //     directory = await getApplicationDocumentsDirectory();
-  //   }
-  //
-  //   filePath = '${directory.path}/$fileName';
-  //   final file = File(filePath);
-  //   await file.writeAsBytes(bytes);
-  //
-  //   debugPrint('CSV saved at: $filePath');
-  //
-  //   if (!mounted) return;
-  //
-  //   CustomSnackBar.showSnackBar(context: context, title: Platform.isAndroid ? 'CSV downloaded!\nSaved as: $fileName\nCheck Downloads folder' : 'CSV saved!\n$fileName\nCheck Files app → On My iPhone → ${AppStrings.appName}', type: SnackBarType.success);
-  // }
+
   Future<void> _saveCsvFile(String base64Data, String? suggestedFilename) async {
     const prefix = 'base64,';
     final startIndex = base64Data.indexOf(prefix) + prefix.length;

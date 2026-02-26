@@ -256,7 +256,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.borderColor),
         borderRadius: BorderRadius.circular(AppConstants.radius_10),
-        color: isSelected ? AppColors.notificationColor.withOpacity(0.08) : null,
+        color: isSelected ? AppColors.notificationColor.withValues(alpha:0.08) : null,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -306,7 +306,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor,
                             boxShadow: [
-                              BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                              BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
                             ],
                             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                           ),
@@ -614,14 +614,14 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                     GestureDetector(
                       onTap: () async {
                         SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                        preferencesHelper.setOrderId(productOrderId: state.invoiceCardList[index].orderId.toString() ?? '');
+                        preferencesHelper.setOrderId(productOrderId: state.invoiceCardList[index].orderId.toString());
                         Navigator.push(
                             context,
                             PageRouteBuilder(
                               pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
                                 statusList: state.statusList,
-                                orderNumber: state.invoiceCardList[index].orderNumber.toString() ?? '',
-                                orderId: state.invoiceCardList[index].orderId.toString() ?? '',
+                                orderNumber: state.invoiceCardList[index].orderNumber.toString(),
+                                orderId: state.invoiceCardList[index].orderId.toString(),
                                 isNavigateToProductDetailString: true,
                               ),
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {

@@ -319,7 +319,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
             emit(state.copyWith(isShimmer: false));
           }
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _updateReturnEvent) {
         emit(state.copyWith(isShimmer: true));
         try {
@@ -406,7 +406,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             );
             emit(state.copyWith(isShimmer: false));
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

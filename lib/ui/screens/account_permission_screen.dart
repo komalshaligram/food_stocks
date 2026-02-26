@@ -24,7 +24,11 @@ class AccountPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => AccountPermissionBloc()..add(AccountPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
+      create: (context) => AccountPermissionBloc()
+        ..add(AccountPermissionEvent.getPermissionList(
+          context: context,
+          subUserId: args?[AppStrings.subUserIdString] ?? '',
+        )),
       child: const AccountPermissionScreenWidget(),
     );
   }
@@ -66,7 +70,11 @@ class AccountPermissionScreenWidget extends StatelessWidget {
                               child: Center(
                                   child: Text(
                                 AppLocalizations.of(context)!.no_data,
-                                style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                style: AppStyles.pVRegularTextStyle(
+                                  size: AppConstants.normalFont,
+                                  color: AppColors.blackColor,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               )),
                             )
                           : Column(
@@ -117,7 +125,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         border: Border(
-          bottom: BorderSide(color: AppColors.greyColor.withOpacity(0.4)),
+          bottom: BorderSide(color: AppColors.greyColor.withValues(alpha: 0.4)),
         ),
       ),
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
@@ -145,9 +153,9 @@ class AccountPermissionScreenWidget extends StatelessWidget {
                   scaleY: 1,
                   child: CupertinoSwitch(
                     onChanged: onChanged,
-                    activeColor: AppColors.mainColor,
+                    activeTrackColor: AppColors.mainColor,
                     thumbColor: AppColors.whiteColor,
-                    trackColor: AppColors.lightBorderColor,
+                    inactiveTrackColor: AppColors.lightBorderColor,
                     value: isEnable,
                   ),
                 ),

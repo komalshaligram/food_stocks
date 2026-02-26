@@ -43,12 +43,12 @@ import '../widget/pesach_banner_shimmer.dart';
 import '../widget/search_item_widget.dart';
 
 class HomeRoute {
-  static Widget get route => HomeScreen();
+  static Widget get route => const HomeScreen();
 }
 
 class HomeScreen extends StatelessWidget {
-  String isSubCategory;
-  HomeScreen({super.key, this.isSubCategory = ''});
+  final String isSubCategory;
+  const HomeScreen({super.key, this.isSubCategory = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class HomeScreenWidget extends StatelessWidget {
-  String isNavigation = '';
+  String isNavigation;
 
   HomeScreenWidget({super.key, this.isNavigation = ''});
   ScrollController controller = ScrollController();
@@ -72,8 +72,7 @@ class HomeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
-      listenWhen: (previous, current) =>
-      previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey,
+      listenWhen: (previous, current) => previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey,
       listener: (context, state) {
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.updateCartCountEvent(context: context));
@@ -101,7 +100,6 @@ class HomeScreenWidget extends StatelessWidget {
                 bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
                 bloc.add(HomeEvent.getProductSalesListEvent(context: context));
                 bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
-
               },
               child: SafeArea(
                 child: Stack(
@@ -128,7 +126,7 @@ class HomeScreenWidget extends StatelessWidget {
                                     width: 60,
                                     decoration: BoxDecoration(
                                       border: Border.all(color: AppColors.whiteColor, width: 0.5),
-                                      boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)],
+                                      boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
                                       shape: BoxShape.circle,
                                     ),
                                     clipBehavior: Clip.hardEdge,
@@ -147,7 +145,11 @@ class HomeScreenWidget extends StatelessWidget {
                                             ),
                                           )
                                         : Container(
-                                            decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(AppConstants.radius_40)),
+                                            decoration: BoxDecoration(
+                                                border: Border.all(color: AppColors.whiteColor, width: 5),
+                                                borderRadius: BorderRadius.circular(
+                                                  AppConstants.radius_40,
+                                                )),
                                             child: SvgPicture.asset(
                                               AppImagePath.placeholderProfile,
                                               width: 80,
@@ -157,16 +159,28 @@ class HomeScreenWidget extends StatelessWidget {
                                           ),
                                   ),
                                 ),
-                                SvgPicture.asset(
-                                  AppImagePath.splashLogo,
-                                  fit: BoxFit.cover,
-                                  width: 100,
-                                  height: 100,
-                                ),
+                                state.clientAgentId == '6989e25de86c03f1e8144404'
+                                    ? Image.asset(
+                                        AppImagePath.clubAgentBlueLogo,
+                                        fit: BoxFit.fill,
+                                        width: 150,
+                                        height: 80,
+                                      )
+                                    : SvgPicture.asset(
+                                        AppImagePath.splashLogo,
+                                        fit: BoxFit.cover,
+                                        width: 100,
+                                        height: 100,
+                                      ),
                                 Container(
                                   height: 60,
                                   padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
-                                  decoration: BoxDecoration(color: AppColors.whiteColor, boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.3), blurRadius: AppConstants.blur_10)], borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                                  decoration: BoxDecoration(
+                                      color: AppColors.whiteColor,
+                                      boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.blur_10)],
+                                      borderRadius: const BorderRadius.all(Radius.circular(
+                                        AppConstants.radius_100,
+                                      ))),
                                   clipBehavior: Clip.hardEdge,
                                   alignment: Alignment.center,
                                   child: Row(
@@ -210,9 +224,17 @@ class HomeScreenWidget extends StatelessWidget {
                                                       child: Container(
                                                         height: 22,
                                                         width: 22,
-                                                        decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
+                                                        decoration: BoxDecoration(
+                                                          gradient: AppColors.appMainGradientColor,
+                                                          border: Border.all(color: AppColors.whiteColor, width: 1),
+                                                          shape: BoxShape.circle,
+                                                        ),
                                                         alignment: Alignment.center,
-                                                        child: Text('${state.messageCount <= 99 ? state.messageCount : '99+'}', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor)),
+                                                        child: Text('${state.messageCount <= 99 ? state.messageCount : '99+'}',
+                                                            style: AppStyles.rkRegularTextStyle(
+                                                              size: AppConstants.font_8,
+                                                              color: AppColors.whiteColor,
+                                                            )),
                                                       ))
                                             ],
                                           ),
@@ -237,7 +259,11 @@ class HomeScreenWidget extends StatelessWidget {
                                         height: 30,
                                         width: 30,
                                         margin: const EdgeInsets.only(top: 90, bottom: AppConstants.padding_30),
-                                        decoration: BoxDecoration(boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)], color: AppColors.whiteColor, shape: BoxShape.circle),
+                                        decoration: BoxDecoration(
+                                          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
+                                          color: AppColors.whiteColor,
+                                          shape: BoxShape.circle,
+                                        ),
                                         child: CupertinoActivityIndicator(
                                           color: AppColors.mainColor,
                                           radius: 10,
@@ -312,7 +338,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   width: getScreenWidth(context),
                                                   height: getItemHeight(context, state.isSaleOn),
                                                   child: state.isProductSaleShimmering
-                                                      ? CommonProductListShimmerWidget()
+                                                      ? const CommonProductListShimmerWidget()
                                                       : AbsorbPointer(
                                                           absorbing: state.isProductSaleShimmering,
                                                           child: ListView.builder(
@@ -424,7 +450,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                                       showProductDetails(
                                                                         isSaleOn: state.isSaleOn,
                                                                         productListIndex: 3,
-                                                                        context: /*Platform.isIOS ? (state.context??context): */ context,
+                                                                        context: context,
                                                                         productId: state.productSalesList[index].id ?? '',
                                                                         productStock: state.productSalesList[index].productStock.toString(),
                                                                       );
@@ -455,7 +481,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                   width: getScreenWidth(context),
                                                   height: getItemHeight(context, state.isSaleOn),
                                                   child: state.isShimmering
-                                                      ? CommonProductListShimmerWidget()
+                                                      ? const CommonProductListShimmerWidget()
                                                       : ListView.builder(
                                                           // Product Recommended
                                                           itemCount: state.recommendedProductsList.length,
@@ -742,7 +768,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                         showMinMaxIncreaseQtyConfirmDialog(
                                                           context,
                                                           state.searchList[index].searchId,
-                                                          state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                          state.searchList[index].saleMinQuantity.toString(),
                                                           index,
                                                           state.searchList[index].supplierId.toString(),
                                                           0,
@@ -776,7 +802,7 @@ class HomeScreenWidget extends StatelessWidget {
                                                           showMinMaxDecreaseQtyConfirmDialog(
                                                             context,
                                                             state.searchList[index].searchId,
-                                                            state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                            state.searchList[index].saleMinQuantity.toString(),
                                                             index,
                                                             state.searchList[index].supplierId.toString(),
                                                             0,
@@ -793,23 +819,53 @@ class HomeScreenWidget extends StatelessWidget {
                                                             : false,
                                                     onSeeAllTap: () async {
                                                       if (state.searchList[index].searchType == SearchTypes.category) {
-                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
+                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {
+                                                          AppStrings.searchString: state.search,
+                                                          AppStrings.reqSearchString: state.search,
+                                                          AppStrings.searchResultString: state.searchList,
+                                                        });
                                                         if (searchResult != null) {
-                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(
+                                                            search: searchResult[AppStrings.searchString],
+                                                            searchList: searchResult[AppStrings.searchResultString],
+                                                          ));
                                                         }
                                                       } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                                          AppStrings.categoryIdString: state.searchList[index].categoryId,
+                                                          AppStrings.categoryNameString: state.searchList[index].categoryName,
+                                                          AppStrings.searchString: state.search,
+                                                          AppStrings.searchResultString: state.searchList,
+                                                        });
                                                         if (searchResult != null) {
-                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(
+                                                            search: searchResult[AppStrings.searchString],
+                                                            searchList: searchResult[AppStrings.searchResultString],
+                                                          ));
                                                         }
                                                       } else {
                                                         state.searchList[index].searchType == SearchTypes.company
-                                                            ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                            ? Navigator.pushNamed(
+                                                                context,
+                                                                RouteDefine.companyScreen.name,
+                                                                arguments: {AppStrings.searchString: state.search},
+                                                              )
                                                             : state.searchList[index].searchType == SearchTypes.supplier
-                                                                ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                                ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {
+                                                                    AppStrings.searchString: state.search,
+                                                                  })
                                                                 : state.searchList[index].searchType == SearchTypes.sale
-                                                                    ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                                    : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                                                    ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {
+                                                                        AppStrings.searchString: state.search,
+                                                                      })
+                                                                    : Navigator.pushNamed(
+                                                                        context,
+                                                                        RouteDefine.supplierProductsScreen.name,
+                                                                        arguments: {
+                                                                          AppStrings.searchString: state.search,
+                                                                          AppStrings.searchType: SearchTypes.product.toString(),
+                                                                        },
+                                                                      );
                                                       }
                                                     },
                                                     onTap: () async {
@@ -822,23 +878,53 @@ class HomeScreenWidget extends StatelessWidget {
                                                         return;
                                                       }
                                                       if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
-                                                        showProductDetails(context: Platform.isIOS ? (state.context ?? context) : context, productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn, productStock: (state.searchList[index].productStock.toString()));
+                                                        showProductDetails(
+                                                          context: Platform.isIOS ? (state.context ?? context) : context,
+                                                          productId: state.searchList[index].searchId,
+                                                          isBarcode: true,
+                                                          productListIndex: 0,
+                                                          isSaleOn: state.isSaleOn,
+                                                          productStock: (state.searchList[index].productStock.toString()),
+                                                        );
                                                       } else if (state.searchList[index].searchType == SearchTypes.category) {
-                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+                                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                                          AppStrings.categoryIdString: state.searchList[index].searchId,
+                                                          AppStrings.categoryNameString: state.searchList[index].name,
+                                                          AppStrings.searchString: state.searchController.text,
+                                                          AppStrings.searchResultString: state.searchList,
+                                                        });
                                                         if (searchResult != null) {
-                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                                          bloc.add(HomeEvent.updateGlobalSearchEvent(
+                                                            search: searchResult[AppStrings.searchString],
+                                                            searchList: searchResult[AppStrings.searchResultString],
+                                                          ));
                                                         }
                                                       } else {
-                                                        state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                                        state.searchList[index].searchType == SearchTypes.company
+                                                            ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId})
+                                                            : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                                                AppStrings.supplierIdString: state.searchList[index].searchId,
+                                                              });
                                                       }
                                                       bloc.add(const HomeEvent.changeCategoryExpansion());
                                                     });
                                               },
                                             ),
                                   onScanTap: () async {
-                                    String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
+                                    String scanResult = await scanBarcodeOrQRCode(
+                                      context: context,
+                                      cancelText: AppLocalizations.of(context)!.cancel,
+                                      scanMode: ScanMode.BARCODE,
+                                    );
                                     if (scanResult != '-1') {
-                                      showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
+                                      showProductDetails(
+                                        context: context,
+                                        productId: scanResult,
+                                        isBarcode: true,
+                                        productStock: '1',
+                                        productListIndex: 0,
+                                        isSaleOn: state.isSaleOn,
+                                      );
                                     }
                                   },
                                 )
@@ -1156,7 +1242,7 @@ class HomeScreenWidget extends StatelessWidget {
                       productStock: relatedProductList.elementAt(i).productStock.toString(),
                       lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                       isPesach: relatedProductList.elementAt(i).isPesach,
-                      quantity: state.productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                      quantity: state.productStockList[2].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity,
                       minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                       maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                       isMixedSale: relatedProductList[i].sale?.isMixedSale,
@@ -1260,7 +1346,13 @@ class HomeScreenWidget extends StatelessWidget {
         }));
   }
 
-  Widget messageListItem({required BuildContext context, required String title, required String content, required String dateTime, required void Function() onTap}) {
+  Widget messageListItem({
+    required BuildContext context,
+    required String title,
+    required String content,
+    required String dateTime,
+    required void Function() onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -1354,8 +1446,8 @@ class HomeScreenWidget extends StatelessWidget {
     Duration remaining = endUtc.difference(nowUtc);
     if (remaining.isNegative || remaining.inSeconds <= 0) {
       context.read<HomeBloc>().add(
-        const HomeEvent.updateAllowOrdersWithoutMinimum(false),
-      );
+            const HomeEvent.updateAllowOrdersWithoutMinimum(false),
+          );
       return;
     }
 
@@ -1370,14 +1462,12 @@ class HomeScreenWidget extends StatelessWidget {
         title: AppLocalizations.of(dialogContext)!.countdown,
         onTimerComplete: () {
           context.read<HomeBloc>().add(
-            const HomeEvent.updateAllowOrdersWithoutMinimum(false),
-          );
+                const HomeEvent.updateAllowOrdersWithoutMinimum(false),
+              );
         },
       ),
     );
   }
-
-
 
   int calculateNoMinimumRemainingSeconds({
     required int noMinimumOrderHours,
@@ -1579,3 +1669,6 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 }
+
+
+

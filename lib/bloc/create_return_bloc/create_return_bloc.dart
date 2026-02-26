@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -185,7 +184,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           }
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _detailReturnEvent) {
         final result = await Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'index': event.index, 'status': state.isFromPending});
         if (result != null) {

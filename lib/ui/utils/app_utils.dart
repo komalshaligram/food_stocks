@@ -150,7 +150,7 @@ class CustomSnackBar {
     required SnackBarType type,
   }) {
     Flushbar(
-      backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withOpacity(0.85) : AppColors.redColor.withOpacity(0.85),
+      backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withValues(alpha:0.85) : AppColors.redColor.withValues(alpha:0.85),
       messageText: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(20),
@@ -288,7 +288,7 @@ Future<XFile?> openImagePicker(ImageSource source) async {
     return pickedImage;
   } on PlatformException {
     return null;
-  } catch (err) {}
+  } catch (_) {}
   return null;
 }
 

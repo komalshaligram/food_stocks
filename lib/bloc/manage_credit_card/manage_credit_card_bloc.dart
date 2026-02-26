@@ -58,7 +58,7 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
             );
             emit(state.copyWith(isDeleteLoading: false));
           }
-        } catch (e) {}
+        } catch(_) {}
         emit(state.copyWith(isDeleteLoading: false));
       }
     });

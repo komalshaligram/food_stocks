@@ -192,7 +192,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
                     }
                   });
                 }
-              } on ServerException {}
+              } catch(_) {}
               if (response.product!.isNotEmpty) {
                 add(RecommendationProductsEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
@@ -691,7 +691,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
               Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
             }
           }
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (event.productStockUpdateIndex != -1) {
@@ -820,7 +820,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
 
                         break;
                       }
-                    } on ServerException {}
+                    } catch(_) {}
                   }
                 }
               }
@@ -844,7 +844,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
                 }
               });
             }
-          } on ServerException {}
+          } catch(_) {}
           if (_isProductInCart) {
             try {
               UpdateCartReqModel request = UpdateCartReqModel(
@@ -878,8 +878,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           } else {
             try {
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
@@ -927,8 +926,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
               } else {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           }
         }
         //
@@ -945,7 +943,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
               emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
             }
           }
-        } on ServerException {}
+        } catch(_) {}
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
 
@@ -954,7 +952,7 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
             await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

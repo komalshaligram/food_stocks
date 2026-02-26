@@ -263,7 +263,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(orderThisMonth: (response.data?.toInt() ?? 0)));
             }
-          } catch (e) {}
+          } catch(_) {}
         } else if (event is _getPermissionList) {
           if (preferencesHelper.getSubUser()) {
             try {
@@ -307,7 +307,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } catch (e) {}
+          } catch(_) {}
         }
       }
     });

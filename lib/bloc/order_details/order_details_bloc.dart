@@ -39,7 +39,7 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
           } else {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
-        } on ServerException {}
+        } catch(_) {}
       }
     });
   }

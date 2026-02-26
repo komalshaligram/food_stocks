@@ -91,15 +91,15 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: AppColors.whiteColor,
                               border: Border.all(color: AppColors.whiteColor, width: 0.5),
-                              boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10)],
+                              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
                               shape: BoxShape.circle,
                             ),
                             clipBehavior: Clip.hardEdge,
-                            child: state.UserImageUrl.isNotEmpty
+                            child: state.userImageUrl.isNotEmpty
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(AppConstants.radius_20),
                                     child: CachedNetworkImage(
-                                      imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.UserImageUrl}',
+                                      imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
                                       fit: BoxFit.fill,
                                       placeholder: (context, url) => const CupertinoActivityIndicator(),
                                       errorWidget: (context, url, error) {
@@ -110,7 +110,10 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     ),
                                   )
                                 : Container(
-                                    decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(AppConstants.radius_40)),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: AppColors.whiteColor, width: 5),
+                                      borderRadius: BorderRadius.circular(AppConstants.radius_40),
+                                    ),
                                     child: SvgPicture.asset(
                                       AppImagePath.placeholderProfile,
                                       width: 80,
@@ -128,12 +131,19 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SvgPicture.asset(
-                            AppImagePath.splashLogo,
-                            fit: BoxFit.cover,
-                            height: 90,
-                            width: 90,
-                          )
+                          state.clientAgentId == '6989e25de86c03f1e8144404'
+                              ? Image.asset(
+                                  AppImagePath.clubAgentBlueLogo,
+                                  fit: BoxFit.fill,
+                                  width: 150,
+                                  height: 80,
+                                )
+                              : SvgPicture.asset(
+                                  AppImagePath.splashLogo,
+                                  fit: BoxFit.cover,
+                                  height: 90,
+                                  width: 90,
+                                )
                         ],
                       ),
                     ),
@@ -143,71 +153,72 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           child: Column(
                             children: AnimationConfiguration.toStaggeredList(
                               duration: const Duration(seconds: 1),
-                              childAnimationBuilder: (widget) => SlideAnimation(duration: const Duration(seconds: 1), verticalOffset: MediaQuery.of(context).size.height / 5, child: FadeInAnimation(child: widget)),
+                              childAnimationBuilder: (widget) => SlideAnimation(
+                                duration: const Duration(seconds: 1),
+                                verticalOffset: MediaQuery.of(context).size.height / 5,
+                                child: FadeInAnimation(child: widget),
+                              ),
                               children: [
                                 15.height,
                                 state.isSubUserSeeOrder
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.my_orders,
                                         onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+                                          Navigator.pushNamed(context, RouteDefine.orderScreen.name, arguments: {
+                                            AppStrings.pushNavigationString: 'profileScreen',
+                                          });
                                         })
                                     : 0.width,
                                 state.isCanSeeInvoices
                                     ? profileMenuTiles(
-                                    title: AppLocalizations.of(context)!.my_accounting_card,
-                                    onTap: () {
-                                      Navigator.pushNamed(context, RouteDefine.myAccountingCardScreen.name,);
-                                    })
+                                        title: AppLocalizations.of(context)!.my_accounting_card,
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            RouteDefine.myAccountingCardScreen.name,
+                                          );
+                                        })
                                     : 0.width,
-                                // state.isCanSeeInvoices
-                                //     ? profileMenuTiles(
-                                //         title: AppLocalizations.of(context)!.my_invoices,
-                                //         onTap: () {
-                                //           Navigator.pushNamed(context, RouteDefine.invoiceScreen.name, arguments: {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices});
-                                //         })
-                                //     : 0.width,
-                                // state.isCanSeeInvoices
-                                //     ? profileMenuTiles(
-                                //         title: AppLocalizations.of(context)!.my_refunds,
-                                //         onTap: () {
-                                //           Navigator.pushNamed(context, RouteDefine.refundScreen.name, arguments:
-                                //           {AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_refunds});
-                                //         })
-                                //     : 0.width,
                                 state.isSubUserSeeReturns
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.returns,
                                         onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+                                          Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {
+                                            AppStrings.pushNavigationString: 'profileScreen',
+                                          });
                                         })
                                     : 0.width,
                                 state.isSubUserUpdateBusinessInfo
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.business_details,
                                         onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.profileScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+                                          Navigator.pushNamed(
+                                            context,
+                                            RouteDefine.profileScreen.name,
+                                            arguments: {AppStrings.isUpdateParamString: true},
+                                          );
                                         })
                                     : 0.width,
                                 state.isSubUserUpdateAdditionalInfo
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.more_details,
                                         onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.moreDetailsScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+                                          Navigator.pushNamed(
+                                            context,
+                                            RouteDefine.moreDetailsScreen.name,
+                                            arguments: {AppStrings.isUpdateParamString: true},
+                                          );
                                         })
                                     : 0.width,
-                                // state.isSubUserUpdateAdditionalInfo
-                                //     ? profileMenuTiles(
-                                //         title: AppLocalizations.of(context)!.client_form_details,
-                                //         onTap: () {
-                                //           Navigator.pushNamed(context, RouteDefine.clientFormDetailsScreen.name, arguments: {AppStrings.isUpdateParamString: true});
-                                //         })
-                                //     : 0.width,
                                 state.isSubUserUpdateTimeInfo
                                     ? profileMenuTiles(
                                         title: AppLocalizations.of(context)!.activity_time,
                                         onTap: () {
-                                          Navigator.pushNamed(context, RouteDefine.activityTimeScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+                                          Navigator.pushNamed(
+                                            context,
+                                            RouteDefine.activityTimeScreen.name,
+                                            arguments: {AppStrings.isUpdateParamString: true},
+                                          );
                                         })
                                     : 0.width,
                                 state.isSubUserSeeFormsFiles
@@ -215,8 +226,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                         title: AppLocalizations.of(context)!.files,
                                         onTap: () {
                                           Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name, arguments: {
-                                          AppStrings.isUpdateParamString: true,
-                                            AppStrings.isRegisterFileString: false});
+                                            AppStrings.isUpdateParamString: true,
+                                            AppStrings.isRegisterFileString: false,
+                                          });
                                         })
                                     : 0.width,
                                 state.isSubUserCanManageSubUser
@@ -250,7 +262,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 profileMenuTiles(
                                     title: AppLocalizations.of(context)!.log_out,
                                     onTap: () {
-                                      !state.isLogOutProcess ? logOutDialog(context: context, directionality: state.language) : const CupertinoActivityIndicator();
+                                      !state.isLogOutProcess ? logOutDialog(context: context, directionality: state.language) :
+                                      const CupertinoActivityIndicator();
                                     }),
                                 menuSwitchTile(
                                     title: AppLocalizations.of(context)!.app_language,
@@ -273,7 +286,6 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         )),
                     10.height,
-
                   ],
                 ),
               ),
@@ -286,7 +298,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
 
   Widget profileMenuTiles({required title, required void Function() onTap, bool isDelete = false}) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)]),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+        boxShadow: [
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
+        ],
+      ),
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
       child: InkWell(
         onTap: onTap,
@@ -312,7 +330,16 @@ class ProfileMenuScreenWidget extends StatelessWidget {
 
   Widget menuSwitchTile({required String title, required bool isHebrewLang, required void Function(bool)? onChanged}) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)]),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha:0.15),
+            blurRadius: AppConstants.blur_10,
+          ),
+        ],
+      ),
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
       child: InkWell(
         splashColor: Colors.transparent,
@@ -337,9 +364,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                   child: CupertinoSwitch(
                     value: isHebrewLang,
                     onChanged: onChanged,
-                    activeColor: AppColors.mainColor,
+                    activeTrackColor: AppColors.mainColor,
                     thumbColor: AppColors.whiteColor,
-                    trackColor: AppColors.lightBorderColor,
+                    inactiveTrackColor: AppColors.lightBorderColor,
                   ),
                 ),
               ),

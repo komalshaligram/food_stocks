@@ -358,7 +358,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                       }
                     });
                   }
-                } on ServerException {}
+                } catch(_) {}
                 if (response.product != []) {
                   add(BasketEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
                 }
@@ -644,8 +644,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                     stock: product.stock.toString(),
                     quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
                   ); // 0 or cart qty)
-                }).toList() ??
-                [];
+                }).toList();
             productStockList[1] = [...productStockList[1], ...newRelatedList];
 
             emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList));
@@ -701,7 +700,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } catch (e) {}
+          } catch (_) {}
         } else if (event is _updateMaintenanceEvent) {
           emit(state.copyWith(isDialogOpen: true));
         } else if (event is _payWithBankTransferEvent) {
@@ -750,7 +749,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
             } else {
               CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
             }
-          } on ServerException {}
+          } catch(_) {}
         } else if (event is _increaseListQuantityOfProductEvent) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
           if (event.productStockUpdateIndex != -1) {
@@ -880,7 +879,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
 
                           break;
                         }
-                      } on ServerException {}
+                      } catch(_) {}
                     }
                   }
                 }
@@ -904,7 +903,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   }
                 });
               }
-            } on ServerException {}
+            } catch(_) {}
             if (_isProductInCart) {
               try {
                 UpdateCartReqModel request = UpdateCartReqModel(
@@ -938,8 +937,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   Navigator.pop(event.context);
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
                 }
-              } on ServerException {
-              } catch (e) {}
+              } catch (_) {}
             } else {
               try {
                 insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
@@ -985,11 +983,9 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                 } else {
                   CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
                 }
-              } on ServerException {
-              } catch (e) {}
+              } catch (_) {}
             }
           }
-          //
         }
       }
     });

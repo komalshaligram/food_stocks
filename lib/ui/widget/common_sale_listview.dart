@@ -70,7 +70,7 @@ class CommonSaleListView extends StatelessWidget {
           color: AppColors.whiteColor,
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           boxShadow: [
-            BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+            BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
           ],
         ),
         clipBehavior: Clip.hardEdge,

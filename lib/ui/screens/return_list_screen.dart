@@ -168,7 +168,7 @@ class ReturnListWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           boxShadow: [
-            BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+            BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
           ],
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
@@ -229,7 +229,7 @@ class ReturnListWidget extends StatelessWidget {
                             if (list[index].rivchitInvoiceLink!.isEmpty) {
                               return;
                             }
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CommonPdfViewer(url: '${AppUrlEndPoints.baseFileUrl}${list[index].rivchitInvoiceLink}' ?? '')));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CommonPdfViewer(url: '${AppUrlEndPoints.baseFileUrl}${list[index].rivchitInvoiceLink}')));
                           },
                           child: Container(
                             alignment: Alignment.center,

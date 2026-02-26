@@ -14,7 +14,7 @@ import '../utils/constants/app_styles.dart';
 import '../utils/constants/app_urls.dart';
 
 class SearchItemWidget extends StatelessWidget {
-  SearchItemWidget({
+  const SearchItemWidget({
     super.key,
     required this.isShowSearchLabel,
     required this.searchType,
@@ -53,7 +53,7 @@ class SearchItemWidget extends StatelessWidget {
   final bool isMoreResults;
   final bool? isLastItem;
   final String productStock;
-  bool isGuestUser = false;
+  final bool isGuestUser;
   final int numberOfUnits;
   final bool isPesach;
   final Function() onTap;
@@ -61,7 +61,7 @@ class SearchItemWidget extends StatelessWidget {
   final String saleDesc;
   final double priceOfBox;
   final double salePrice;
-  bool isShowSeeAll = false;
+  final bool isShowSeeAll;
   final int? quantity;
   final void Function()? onQuantityChanged;
   final void Function()? onQuantityIncreaseTap;
@@ -131,7 +131,7 @@ class SearchItemWidget extends StatelessWidget {
                                 ? 220
                                 : 150
                             : 120,
-            decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: (isLastItem ?? false) ? BorderSide.none : BorderSide(color: AppColors.borderColor.withOpacity(0.5), width: 1))),
+            decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: (isLastItem ?? false) ? BorderSide.none : BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1))),
             padding: EdgeInsets.only(top: AppConstants.padding_5, left: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, right: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, bottom: AppConstants.padding_5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,7 +309,7 @@ class SearchItemWidget extends StatelessWidget {
                                         size: AppConstants.font_14,
                                       ),
                                     )
-                                  : IgnorePointer(),
+                                  : const IgnorePointer(),
                               maxQuantity != '0'
                                   ? Text(
                                       '${AppLocalizations.of(context)!.maximumList}: ${maxQuantity.toString()}',
@@ -318,7 +318,7 @@ class SearchItemWidget extends StatelessWidget {
                                         size: AppConstants.font_14,
                                       ),
                                     )
-                                  : IgnorePointer(),
+                                  : const IgnorePointer(),
                             ],
                           )
                         : const IgnorePointer(),

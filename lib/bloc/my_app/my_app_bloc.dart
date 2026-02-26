@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart'
     as update;
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
@@ -65,7 +63,7 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
             if (response.status == AppConstants.code_200) {
             } else {}
           }
-        } on ServerException {}
+        } catch(_) {}
       }
     });
   }

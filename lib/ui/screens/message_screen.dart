@@ -136,12 +136,16 @@ class MessageScreenWidget extends StatelessWidget {
                                                           child: CustomDialog(
                                                             title: AppLocalizations.of(context)!.are_you_sure,
                                                             content: const [],
-                                                            isMixedSale : false,
+                                                            isMixedSale: false,
                                                             directionality: state.language,
                                                             positiveTitle: AppLocalizations.of(context)!.yes,
                                                             negativeTitle: AppLocalizations.of(context)!.no,
                                                             positiveOnTap: () {
-                                                              bloc.add(MessageEvent.messageDeleteEvent(messageId: state.messageList[index].id.toString(), context: context, dialogContext: context1));
+                                                              bloc.add(MessageEvent.messageDeleteEvent(
+                                                                messageId: state.messageList[index].id.toString(),
+                                                                context: context,
+                                                                dialogContext: context1,
+                                                              ));
                                                             },
                                                             negativeOnTap: () {
                                                               Navigator.pop(context1);
@@ -162,8 +166,15 @@ class MessageScreenWidget extends StatelessWidget {
                                           content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
                                           dateTime: state.messageList[index].updatedAt?.replaceRange(16, 19, '') ?? '',
                                           onTap: () async {
-                                            dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {AppStrings.messageDataString: state.messageList[index], AppStrings.messageIdString: state.messageList[index].id});
-                                            context.read<MessageBloc>().add(MessageEvent.removeOrUpdateMessageEvent(messageId: messageNewData[AppStrings.messageIdString], isRead: messageNewData[AppStrings.messageReadString], isDelete: messageNewData[AppStrings.messageDeleteString]));
+                                            dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
+                                              AppStrings.messageDataString: state.messageList[index],
+                                              AppStrings.messageIdString: state.messageList[index].id,
+                                            });
+                                            context.read<MessageBloc>().add(MessageEvent.removeOrUpdateMessageEvent(
+                                                  messageId: messageNewData[AppStrings.messageIdString],
+                                                  isRead: messageNewData[AppStrings.messageReadString],
+                                                  isDelete: messageNewData[AppStrings.messageDeleteString],
+                                                ));
                                           },
                                           isRead: state.messageList[index].isRead ?? false,
                                         ),
@@ -196,7 +207,7 @@ class MessageScreenWidget extends StatelessWidget {
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
       margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),

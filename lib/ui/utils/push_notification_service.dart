@@ -302,7 +302,6 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import '../../main.dart';
@@ -383,7 +382,7 @@ class PushNotificationService {
     /// 🔹 protected call (ADDED)
     try {
       await registerNotificationListeners();
-    } catch (e, s) {
+    } catch (e) {
       debugPrint("registerNotificationListeners error: $e");
     }
   }

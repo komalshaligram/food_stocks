@@ -37,7 +37,11 @@ class ClientFormDetailsScreen extends StatelessWidget {
         ..add(ClientFormDetailsEvent.getProfileDetailsEvent(context: context))
         ..add(ClientFormDetailsEvent.getBusinessTypeEvent(context: context))
         ..add(ClientFormDetailsEvent.getBankNameEvent(context: context))
-        ..add(ClientFormDetailsEvent.getPdfDataEvent(context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '', termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
+        ..add(ClientFormDetailsEvent.getPdfDataEvent(
+          context: context,
+          pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
+        )),
       child: const ClientFormDetailsScreenWidget(),
     );
   }
@@ -51,8 +55,6 @@ class ClientFormDetailsScreenWidget extends StatefulWidget {
 }
 
 class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenWidget> {
-
-
   ui.Image? image;
   bool isImage = false;
   PdfFormFieldFocusChangeDetails? details;
@@ -130,7 +132,7 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                               CommonDropDownButton(
                                   items: state.businessTypeList.map((business) {
                                     return DropdownMenuItem<String>(
-                                      value: business.businessTypeName ?? '', // ensure non-null
+                                      value: business.businessTypeName ?? '',
                                       child: Text(business.businessTypeName ?? ''),
                                     );
                                   }).toList(),
@@ -156,7 +158,6 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                 onChanged: (newBankName) {
                                   final selectedBank = state.bankList.firstWhere(
                                     (bank) => bank.bankName == newBankName,
-                                    // Replace with actual model or default
                                   );
 
                                   bloc.add(ClientFormDetailsEvent.selectBankEvent(
@@ -398,16 +399,23 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                             Container(
                                                 height: 120,
                                                 width: 120,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor)),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(8),
+                                                    border: Border.all(
+                                                      color: AppColors.borderColor,
+                                                    )),
                                                 child: state.owner1SignatureLocal.isNotEmpty
                                                     ? Image.file(
-                                                        File(state.owner1SignatureLocal //context.read<ClientFormDetailsBloc>().owner1Signature,
-                                                            ),
+                                                        File(state.owner1SignatureLocal),
                                                       )
                                                     : Container(
                                                         height: 120,
                                                         width: 120,
-                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor)),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(8),
+                                                            border: Border.all(
+                                                              color: AppColors.borderColor,
+                                                            )),
                                                         child: CachedNetworkImage(
                                                           height: 100,
                                                           width: 100,
@@ -423,7 +431,10 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                             return Center(
                                                               child: Text(
                                                                 AppStrings.failedToLoadString,
-                                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                                                style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants.smallFont,
+                                                                  color: AppColors.textColor,
+                                                                ),
                                                               ),
                                                             );
                                                           },
@@ -434,7 +445,10 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                               right: -10,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  bloc.add(ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.owner1SignatureString));
+                                                  bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                                    context: context,
+                                                    fieldName: AppStrings.owner1SignatureString,
+                                                  ));
                                                 },
                                                 child: Icon(
                                                   Icons.highlight_remove,
@@ -453,7 +467,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                     bGColor: AppColors.whiteColor,
                                     width: getScreenWidth(context) / 2.2,
                                     onPressed: () {
-                                      bloc.add(ClientFormDetailsEvent.signatureEvent(context: context, fieldName: AppStrings.owner1SignatureString, fieldNameForSign: AppLocalizations.of(context)!.owner1_sign));
+                                      bloc.add(ClientFormDetailsEvent.signatureEvent(
+                                        context: context,
+                                        fieldName: AppStrings.owner1SignatureString,
+                                        fieldNameForSign: AppLocalizations.of(context)!.owner1_sign,
+                                      ));
                                     },
                                     fontColors: AppColors.whiteColor,
                                   ),
@@ -474,7 +492,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                             Container(
                                                 height: 120,
                                                 width: 120,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor)),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(8),
+                                                    border: Border.all(
+                                                      color: AppColors.borderColor,
+                                                    )),
                                                 child: state.owner2SignatureLocal.isNotEmpty
                                                     ? Image.file(
                                                         File(state.owner2SignatureLocal),
@@ -482,7 +504,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                     : Container(
                                                         height: 120,
                                                         width: 120,
-                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor)),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(8),
+                                                            border: Border.all(
+                                                              color: AppColors.borderColor,
+                                                            )),
                                                         child: CachedNetworkImage(
                                                           height: 100,
                                                           width: 100,
@@ -498,7 +524,10 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                             return Center(
                                                               child: Text(
                                                                 AppStrings.failedToLoadString,
-                                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                                                style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants.smallFont,
+                                                                  color: AppColors.textColor,
+                                                                ),
                                                               ),
                                                             );
                                                           },
@@ -509,7 +538,10 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                               right: -10,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  bloc.add(ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.owner2SignatureString));
+                                                  bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                                    context: context,
+                                                    fieldName: AppStrings.owner2SignatureString,
+                                                  ));
                                                 },
                                                 child: Icon(
                                                   Icons.highlight_remove,
@@ -528,7 +560,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                     bGColor: AppColors.whiteColor,
                                     width: getScreenWidth(context) / 2.2,
                                     onPressed: () {
-                                      bloc.add(ClientFormDetailsEvent.signatureEvent(context: context, fieldName: AppStrings.owner2SignatureString, fieldNameForSign: AppLocalizations.of(context)!.owner2_sign));
+                                      bloc.add(ClientFormDetailsEvent.signatureEvent(
+                                        context: context,
+                                        fieldName: AppStrings.owner2SignatureString,
+                                        fieldNameForSign: AppLocalizations.of(context)!.owner2_sign,
+                                      ));
                                     },
                                     fontColors: AppColors.whiteColor,
                                   ),
@@ -549,7 +585,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                             Container(
                                               height: 120,
                                               width: 120,
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor)),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  border: Border.all(
+                                                    color: AppColors.borderColor,
+                                                  )),
                                               child: state.guarantee1SignatureLocal.isNotEmpty
                                                   ? Image.file(
                                                       File(state.guarantee1SignatureLocal),
@@ -557,7 +597,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                   : Container(
                                                       height: 120,
                                                       width: 120,
-                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor)),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(8),
+                                                          border: Border.all(
+                                                            color: AppColors.borderColor,
+                                                          )),
                                                       child: CachedNetworkImage(
                                                         height: 100,
                                                         width: 100,
@@ -585,7 +629,10 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                               right: -10,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  bloc.add(ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.guarantee1SignatureString));
+                                                  bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                                    context: context,
+                                                    fieldName: AppStrings.guarantee1SignatureString,
+                                                  ));
                                                 },
                                                 child: Icon(
                                                   Icons.highlight_remove,
@@ -604,7 +651,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                     bGColor: AppColors.whiteColor,
                                     width: getScreenWidth(context) / 2.2,
                                     onPressed: () {
-                                      bloc.add(ClientFormDetailsEvent.signatureEvent(context: context, fieldName: AppStrings.guarantee1SignatureString, fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign));
+                                      bloc.add(ClientFormDetailsEvent.signatureEvent(
+                                        context: context,
+                                        fieldName: AppStrings.guarantee1SignatureString,
+                                        fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign,
+                                      ));
                                     },
                                     fontColors: AppColors.whiteColor,
                                   ),
@@ -625,16 +676,22 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                             Container(
                                               height: 120,
                                               width: 120,
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor)),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  border: Border.all(
+                                                    color: AppColors.borderColor,
+                                                  )),
                                               child: state.guarantee2SignatureLocal.isNotEmpty
                                                   ? Image.file(
-                                                      File(state.guarantee2SignatureLocal //context.read<ClientFormDetailsBloc>().guarantee2Signature,
-                                                          ),
+                                                      File(state.guarantee2SignatureLocal),
                                                     )
                                                   : Container(
                                                       height: 120,
                                                       width: 120,
-                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor)),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        border: Border.all(color: AppColors.borderColor),
+                                                      ),
                                                       child: CachedNetworkImage(
                                                         height: 100,
                                                         width: 100,
@@ -650,7 +707,10 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                           return Center(
                                                             child: Text(
                                                               AppStrings.failedToLoadString,
-                                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                                              style: AppStyles.rkRegularTextStyle(
+                                                                size: AppConstants.smallFont,
+                                                                color: AppColors.textColor,
+                                                              ),
                                                             ),
                                                           );
                                                         },
@@ -662,7 +722,10 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                               right: -10,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  bloc.add(ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.guarantee2SignatureString));
+                                                  bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                                    context: context,
+                                                    fieldName: AppStrings.guarantee2SignatureString,
+                                                  ));
                                                 },
                                                 child: Icon(
                                                   Icons.highlight_remove,
@@ -681,7 +744,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                     bGColor: AppColors.whiteColor,
                                     width: getScreenWidth(context) / 2.2,
                                     onPressed: () {
-                                      bloc.add(ClientFormDetailsEvent.signatureEvent(context: context, fieldName: AppStrings.guarantee2SignatureString, fieldNameForSign: AppLocalizations.of(context)!.guarantee2_sign));
+                                      bloc.add(ClientFormDetailsEvent.signatureEvent(
+                                        context: context,
+                                        fieldName: AppStrings.guarantee2SignatureString,
+                                        fieldNameForSign: AppLocalizations.of(context)!.guarantee2_sign,
+                                      ));
                                     },
                                     fontColors: AppColors.whiteColor,
                                   ),
@@ -694,18 +761,16 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                 isLoading: state.isLoading,
                                 onPressed: () {
                                   if (state.business != AppLocalizations.of(context)!.type_of_business) {
-                                    // if (isValidIsraeliID(state.owner1israelIdController.text.toString().trim())) {
-                                    //   if (_formKey.currentState!.validate()) {
                                     bool success = validation(state, context);
                                     if (success) {
                                       bloc.add(ClientFormDetailsEvent.updateClientDataEvent(context: context));
                                     }
-                                    // }
-                                    // } else {
-                                    //   CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1, type: SnackBarType.failure);
-                                    // }
                                   } else {
-                                    CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
+                                    CustomSnackBar.showSnackBar(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!.select_business_type,
+                                      type: SnackBarType.failure,
+                                    );
                                   }
                                 },
                                 fontColors: AppColors.whiteColor,
@@ -728,7 +793,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
       if (isValidIsraeliID(state.guarantee1idController.text.toString().trim())) {
         return true;
       } else {
-        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1, type: SnackBarType.failure);
+        CustomSnackBar.showSnackBar(
+          context: context,
+          title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1,
+          type: SnackBarType.failure,
+        );
         return false;
       }
     } else {

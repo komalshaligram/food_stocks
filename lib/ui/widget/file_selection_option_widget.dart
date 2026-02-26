@@ -48,7 +48,7 @@ class FileSelectionOptionWidget extends StatelessWidget {
             : Container(
                 height: 1,
                 width: getScreenWidth(context),
-                color: AppColors.borderColor.withOpacity(0.5),
+                color: AppColors.borderColor.withValues(alpha:0.5),
               ),
       ],
     );

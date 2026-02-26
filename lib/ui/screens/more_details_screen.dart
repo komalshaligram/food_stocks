@@ -28,7 +28,10 @@ class MoreDetailsScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => MoreDetailsBloc()
-        ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(context: context, isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false))
+        ..add(MoreDetailsEvent.getProfileMoreDetailsEvent(
+          context: context,
+          isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
+        ))
         ..add(MoreDetailsEvent.getProfileModelEvent(
           profileModel: args?[AppStrings.profileParamString] ?? const ProfileModel(),
           context: context,
@@ -40,7 +43,7 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  List<String> list = [];
+  // List<String> list = [];
 
   MoreDetailsScreenWidget({super.key});
 
@@ -53,8 +56,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
         builder: (context, state) {
-          if (list.isEmpty) {
-            list = [...state.cityList];
+          // if (list.isEmpty) {
+          //   list = [...state.cityList];
+          // }
+          if (listNotifier.value.isEmpty) {
+            listNotifier.value = [...state.cityList];
           }
           return Scaffold(
             backgroundColor: AppColors.whiteColor,
@@ -100,7 +106,14 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                         backgroundColor: Colors.white,
                                         context: context,
                                         isScrollControlled: true,
-                                        shape: const OutlineInputBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(AppConstants.radius_20), topLeft: Radius.circular(AppConstants.radius_20)), borderSide: BorderSide.none),
+                                        shape: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(AppConstants.radius_20),
+                                              topLeft: Radius.circular(
+                                                AppConstants.radius_20,
+                                              )),
+                                          borderSide: BorderSide.none,
+                                        ),
                                         builder: (context1) {
                                           return ValueListenableBuilder(
                                               valueListenable: listNotifier,
@@ -117,7 +130,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                         Row(
                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                           children: [
-                                                            Text(AppLocalizations.of(context)!.city, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor)),
+                                                            Text(AppLocalizations.of(context)!.city,
+                                                                style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants.mediumFont,
+                                                                  color: AppColors.blackColor,
+                                                                )),
                                                             GestureDetector(
                                                                 onTap: () {
                                                                   Navigator.pop(context1);
@@ -136,8 +153,8 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                             bloc.add(MoreDetailsEvent.citySearchEvent(
                                                               search: value,
                                                             ));
-                                                            list = state.cityList.where((city) => city.contains(value)).toList();
-                                                            listNotifier.value = list;
+                                                            listNotifier.value = state.cityList.where((city) => city.contains(value)).toList();
+                                                            listNotifier.value = listNotifier.value;
                                                           },
                                                           controller: state.cityController,
                                                           keyboardType: TextInputType.text,
@@ -150,29 +167,35 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                           cursorColor: AppColors.mainColor,
                                                         ),
                                                         7.height,
-                                                        list.isEmpty
+                                                        listNotifier.value.isEmpty
                                                             ? Expanded(
                                                                 child: Center(
                                                                   child: Text(
                                                                     AppLocalizations.of(context)!.cities_not_available,
-                                                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                                                    style: AppStyles.rkRegularTextStyle(
+                                                                      size: AppConstants.smallFont,
+                                                                      color: AppColors.textColor,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               )
                                                             : Expanded(
                                                                 child: ListView.builder(
                                                                   shrinkWrap: true,
-                                                                  itemCount: list.length,
+                                                                  itemCount: listNotifier.value.length,
                                                                   itemBuilder: (context, index) {
                                                                     return Padding(
                                                                       padding: const EdgeInsets.all(AppConstants.padding_10),
                                                                       child: GestureDetector(
                                                                         onTap: () {
-                                                                          bloc.add(MoreDetailsEvent.selectCityEvent(city: list[index], context: context));
+                                                                          bloc.add(MoreDetailsEvent.selectCityEvent(
+                                                                            city: listNotifier.value[index],
+                                                                            context: context,
+                                                                          ));
                                                                           Navigator.pop(context1);
                                                                         },
                                                                         child: Text(
-                                                                          list[index].toString(),
+                                                                          listNotifier.value[index].toString(),
                                                                           style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont),
                                                                         ),
                                                                       ),
@@ -216,9 +239,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.streetNameController,
-                                    inputFormat: [
-                                      LengthLimitingTextInputFormatter(50)
-                                    ],
+                                    inputFormat: [LengthLimitingTextInputFormatter(50)],
                                     keyboardType: TextInputType.text,
                                     hint: '',
                                     fillColor: AppColors.whiteColor,
@@ -232,9 +253,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                   CustomFormField(
                                     context: context,
                                     controller: state.streetNumberController,
-                                    inputFormat: [
-                                      LengthLimitingTextInputFormatter(50)
-                                    ],
+                                    inputFormat: [LengthLimitingTextInputFormatter(50)],
                                     keyboardType: TextInputType.number,
                                     hint: '',
                                     fillColor: AppColors.whiteColor,
@@ -253,7 +272,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     hint: "",
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.next,
-                                    validator: state.emailController.text.toString().isNotEmpty?AppStrings.emailValString:'',
+                                    validator: state.emailController.text.toString().isNotEmpty ? AppStrings.emailValString : '',
                                   ),
                                   7.height,
                                   CustomContainerWidget(
@@ -271,7 +290,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                     hint: "",
                                     fillColor: AppColors.whiteColor,
                                     textInputAction: TextInputAction.done,
-                                    validator: state.zipController.text.toString().isNotEmpty?AppStrings.zipValString:'',
+                                    validator: state.zipController.text.toString().isNotEmpty ? AppStrings.zipValString : '',
                                   ),
                                   10.height,
                                   Padding(
@@ -295,7 +314,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                             child: CupertinoSwitch(
                                               value: state.approveForSMS,
                                               onChanged: (newVal) {
-                                               bloc.add(MoreDetailsEvent.setApprovalSMSSwitchEvent(context: context, updatedVal: newVal));
+                                                bloc.add(MoreDetailsEvent.setApprovalSMSSwitchEvent(context: context, updatedVal: newVal));
                                               },
                                               activeTrackColor: AppColors.mainColor,
                                               thumbColor: AppColors.whiteColor,
@@ -319,7 +338,11 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                                 bloc.add(MoreDetailsEvent.registrationApiEvent(context: context));
                                               }
                                             } else {
-                                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_city, type: SnackBarType.failure);
+                                              CustomSnackBar.showSnackBar(
+                                                context: context,
+                                                title: AppLocalizations.of(context)!.please_enter_city,
+                                                type: SnackBarType.failure,
+                                              );
                                             }
                                           },
                                     fontColors: AppColors.whiteColor,

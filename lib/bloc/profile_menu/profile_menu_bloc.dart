@@ -24,9 +24,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
 
 part 'profile_menu_event.dart';
-
 part 'profile_menu_state.dart';
-
 part 'profile_menu_bloc.freezed.dart';
 
 class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
@@ -38,7 +36,23 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         if (event is _getPreferenceDataEvent) {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-          emit(state.copyWith(applicationVersion: packageInfo.version, buildNumber: packageInfo.buildNumber, UserImageUrl: preferences.getUserImageUrl(), language: preferences.getAppLanguage(), isSubUserSeeOrder: preferences.getCanSeeOrder(), isSubUserCanManageSubUser: preferences.getCanManageSubUser(), isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(), isSubUserSeeReturns: preferences.getCanSeeReturns(), isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(), isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(), isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isCanSeeInvoices: preferences.getCanSeeInvoices(), userName: preferences.getBusinessName(), UserCompanyLogoUrl: preferences.getUserCompanyLogoUrl()));
+          emit(state.copyWith(
+            applicationVersion: packageInfo.version,
+            buildNumber: packageInfo.buildNumber,
+            userImageUrl: preferences.getUserImageUrl(),
+            language: preferences.getAppLanguage(),
+            isSubUserSeeOrder: preferences.getCanSeeOrder(),
+            isSubUserCanManageSubUser: preferences.getCanManageSubUser(),
+            isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
+            isSubUserSeeReturns: preferences.getCanSeeReturns(),
+            isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(),
+            isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
+            isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
+            isCanSeeInvoices: preferences.getCanSeeInvoices(),
+            userName: preferences.getBusinessName(),
+            userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
+            clientAgentId: preferences.getAgentId(),
+          ));
         } else if (event is _getAppLanguage) {
           SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
           String appLang = preferencesHelper.getAppLanguage();
@@ -57,10 +71,18 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               Navigator.pop(event.context);
               Navigator.popUntil(event.context, (route) => route.name == RouteDefine.bottomNavScreen.name);
               Navigator.pushNamed(event.context, RouteDefine.connectScreen.name);
-              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.logged_out_successfully, type: SnackBarType.success);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppLocalizations.of(event.context)!.logged_out_successfully,
+                type: SnackBarType.success,
+              );
               emit(state.copyWith(isLogOutProcess: false));
             } else {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.success);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.success,
+              );
               emit(state.copyWith(isLogOutProcess: false));
             }
           } on ServerException {
@@ -86,14 +108,18 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
                 emit(
                   state.copyWith(
-                    UserImageUrl: response.data?.clients?.first.profileImage ?? '',
+                    userImageUrl: response.data?.clients?.first.profileImage ?? '',
                   ),
                 );
               }
             } else {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
             }
-          } catch (e) {}
+          } catch (_) {}
         } else if (event is _getPermissionList) {
           if (preferences.getSubUser()) {
             try {
@@ -119,9 +145,25 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
                 preferences.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
-                emit(state.copyWith(isSubUserSeeOrder: preferences.getCanSeeOrder(), isSubUserCanManageSubUser: preferences.getCanManageSubUser(), isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(), isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(), isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(), isSubUserSeeReturns: preferences.getCanSeeReturns(), isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(), isAccountPermissionShimmering: false, isCanSeeInvoices: preferences.getCanSeeInvoices()));
+                emit(
+                  state.copyWith(
+                    isSubUserSeeOrder: preferences.getCanSeeOrder(),
+                    isSubUserCanManageSubUser: preferences.getCanManageSubUser(),
+                    isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
+                    isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(),
+                    isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
+                    isSubUserSeeReturns: preferences.getCanSeeReturns(),
+                    isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
+                    isAccountPermissionShimmering: false,
+                    isCanSeeInvoices: preferences.getCanSeeInvoices(),
+                  ),
+                );
               } else {
-                CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+                CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure,
+                );
               }
             } catch (e) {
               CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -174,7 +216,16 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               preferences.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
               preferences.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance ?? false);
 
-              emit(state.copyWith(language: preferences.getAppLanguage(), bottlePrice: response.data?.bottlePrice ?? 0.0, isIncludedVat: preferences.getIsIncludedVat(), isSaleOn: preferences.getShowSale(), retryLoading: false, isAppOnMaintenance: preferences.getAppOnMaintenance()));
+              emit(
+                state.copyWith(
+                  language: preferences.getAppLanguage(),
+                  bottlePrice: response.data?.bottlePrice ?? 0.0,
+                  isIncludedVat: preferences.getIsIncludedVat(),
+                  isSaleOn: preferences.getShowSale(),
+                  retryLoading: false,
+                  isAppOnMaintenance: preferences.getAppOnMaintenance(),
+                ),
+              );
             } else {}
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -191,7 +242,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } catch (e) {}
+          } catch (_) {}
         }
       }
     });

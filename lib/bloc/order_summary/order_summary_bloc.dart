@@ -48,7 +48,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
               type: SnackBarType.failure,
             );
           }
-        } on ServerException {}
+        } catch(_) {}
       }
 
       if (event is _orderSendEvent) {
@@ -93,7 +93,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
                 emit(state.copyWith(cartItemList: response));
                 Navigator.pushNamed(event.context, RouteDefine.orderSuccessfulScreen.name, arguments: {AppStrings.showPreviousBtn: true});
               }
-            } on ServerException {}
+            } catch(_) {}
           } else if (response.status == AppConstants.code_403) {
             tempList[state.index] = tempList[state.index].copyWith(isProcess: false);
             CustomSnackBar.showSnackBar(
@@ -139,7 +139,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             emit(state.copyWith(isLoading: false, tempList: tempList));
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
           }
-        } on ServerException {}
+        } catch(_) {}
       } else if (event is _refreshEvent) {
         emit(state.copyWith(isOrderPending: false, isPaymentFail: false, updatePaymentMethod: false));
       }

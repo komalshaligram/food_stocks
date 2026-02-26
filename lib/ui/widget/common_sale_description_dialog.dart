@@ -40,7 +40,7 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
             width: 80,
             child: Text(
               buttonTitle,
-              style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withOpacity(0.9), size: AppConstants.smallFont),
+              style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withValues(alpha:0.9), size: AppConstants.smallFont),
             ),
           ),
         )

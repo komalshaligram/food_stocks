@@ -24,7 +24,10 @@ class CategoriesPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => CategoriesPermissionBloc()..add(CategoriesPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
+      create: (context) => CategoriesPermissionBloc()
+        ..add(
+          CategoriesPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? ''),
+        ),
       child: const CategoriesPermissionScreenWidget(),
     );
   }
@@ -104,7 +107,9 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                                           isEnable: state.categoriesPermissionList[index].isAllowed ?? false,
                                           isSelectAll: state.isSelectAll,
                                           onChanged: (bool value) {
-                                            bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: -1));
+                                            bloc.add(
+                                              CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: -1),
+                                            );
                                           }),
                                       Padding(
                                         padding: const EdgeInsets.only(bottom: AppConstants.padding_15),
@@ -123,7 +128,11 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                                                   isSelectAll: state.isSelectAll,
                                                   isSubCategories: true,
                                                   onChanged: (bool value) {
-                                                    bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: index1));
+                                                    bloc.add(CategoriesPermissionEvent.switchButtonEvent(
+                                                      context: context,
+                                                      categoriesIndex: index,
+                                                      subCategoriesIndex: index1,
+                                                    ));
                                                   });
                                             },
                                           ),
@@ -169,7 +178,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         border: Border(
-          bottom: BorderSide(color: AppColors.greyColor.withOpacity(0.4)),
+          bottom: BorderSide(color: AppColors.greyColor.withValues(alpha: 0.4)),
         ),
       ),
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
@@ -200,7 +209,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                     activeTrackColor: AppColors.mainColor,
                     thumbColor: AppColors.whiteColor,
                     inactiveTrackColor: AppColors.lightBorderColor,
-                    value: /*isSelectAll ? true :*/ isEnable,
+                    value:  isEnable,
                   ),
                 ),
               ),

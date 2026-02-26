@@ -4,8 +4,8 @@ import '../../ui/widget/common_shimmer_widget.dart';
 import '../utils/constants/app_constants.dart';
 
 class SupplierProductsScreenShimmerWidget extends StatelessWidget {
-  int itemCount;
-  SupplierProductsScreenShimmerWidget({super.key, this.itemCount = 18});
+  final int itemCount;
+  const SupplierProductsScreenShimmerWidget({super.key, this.itemCount = 18});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class SupplierProductsScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           color: AppColors.whiteColor,
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10)],
         ),
       ),
     );

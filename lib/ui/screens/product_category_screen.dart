@@ -5,11 +5,9 @@ import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/product_category/product_category_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/widget/common_marquee_widget.dart';
-
 import '../../ui/widget/product_category_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
@@ -34,8 +32,14 @@ class ProductCategoryScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => ProductCategoryBloc()
-        ..add(ProductCategoryEvent.updateGlobalSearchEvent(search: args?[AppStrings.searchString] ?? '', searchList: args?[AppStrings.searchResultString] ?? []))
-        ..add(ProductCategoryEvent.setSearchNavEvent(reqSearch: args?[AppStrings.reqSearchString] ?? '', isFromStoreCategory: args?[AppStrings.fromStoreCategoryString] ?? false))
+        ..add(ProductCategoryEvent.updateGlobalSearchEvent(
+          search: args?[AppStrings.searchString] ?? '',
+          searchList: args?[AppStrings.searchResultString] ?? [],
+        ))
+        ..add(ProductCategoryEvent.setSearchNavEvent(
+          reqSearch: args?[AppStrings.reqSearchString] ?? '',
+          isFromStoreCategory: args?[AppStrings.fromStoreCategoryString] ?? false,
+        ))
         ..add(ProductCategoryEvent.getProductCategoriesListEvent(context: context)),
       child: const ProductCategoryScreenWidget(),
     );
@@ -68,7 +72,12 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                     height: 50,
                     width: 50,
                     clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.transparent, width: 1),
+                        gradient: AppColors.appMainGradientColor,
+                        borderRadius: const BorderRadius.all(Radius.circular(
+                          AppConstants.radius_100,
+                        ))),
                     child: Center(
                       child: SvgPicture.asset(
                         AppImagePath.cart,
@@ -168,11 +177,24 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                                         categoryName: state.productCategoryList[index].categoryName ?? '',
                                         onTap: () async {
                                           if (state.isFromStoreCategory) {
-                                            Navigator.pop(context, {AppStrings.categoryIdString: state.productCategoryList[index].id, AppStrings.categoryNameString: state.productCategoryList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                            Navigator.pop(context, {
+                                              AppStrings.categoryIdString: state.productCategoryList[index].id,
+                                              AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
+                                              AppStrings.searchString: state.search,
+                                              AppStrings.searchResultString: state.searchList,
+                                            });
                                           } else {
-                                            dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.productCategoryList[index].id, AppStrings.categoryNameString: state.productCategoryList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                            dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                              AppStrings.categoryIdString: state.productCategoryList[index].id,
+                                              AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
+                                              AppStrings.searchString: state.search,
+                                              AppStrings.searchResultString: state.searchList,
+                                            });
                                             if (searchResult != null) {
-                                              context.read<ProductCategoryBloc>().add(ProductCategoryEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                              context.read<ProductCategoryBloc>().add(ProductCategoryEvent.updateGlobalSearchEvent(
+                                                    search: searchResult[AppStrings.searchString],
+                                                    searchList: searchResult[AppStrings.searchResultString],
+                                                  ));
                                             }
                                           }
                                         }),
@@ -189,7 +211,13 @@ class ProductCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildProductCategoryListItem({required int index, required String categoryImage, required String categoryName, required BuildContext context, required void Function() onTap}) {
+  Widget buildProductCategoryListItem({
+    required int index,
+    required String categoryImage,
+    required String categoryName,
+    required BuildContext context,
+    required void Function() onTap,
+  }) {
     return Container(
       height: getScreenHeight(context),
       width: getScreenWidth(context),
@@ -198,7 +226,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
+        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
       ),
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
@@ -220,7 +248,11 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                           width: getScreenWidth(context),
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor,
-                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(AppConstants.radius_10),
+                                topRight: Radius.circular(
+                                  AppConstants.radius_10,
+                                )),
                           ),
                         ),
                       );
@@ -246,7 +278,11 @@ class ProductCategoryScreenWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
               decoration: BoxDecoration(
                 gradient: AppColors.appMainGradientColor,
-                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(AppConstants.radius_10),
+                    bottomRight: Radius.circular(
+                      AppConstants.radius_10,
+                    )),
               ),
               child: CommonMarqueeWidget(
                 child: Text(

@@ -17,7 +17,7 @@ class CircularButtonWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
           border: Border.all(
-            color: AppColors.borderColor.withOpacity(0.6),
+            color: AppColors.borderColor.withValues(alpha:0.6),
             width: 1,
           ),
         ),

@@ -4,8 +4,8 @@ import '../utils/constants/app_constants.dart';
 import 'common_shimmer_widget.dart';
 
 class CommonProductListShimmerWidget extends StatelessWidget {
-  int itemCount;
-  CommonProductListShimmerWidget({
+  final int itemCount;
+  const CommonProductListShimmerWidget({
     super.key,
     this.itemCount = 6,
   });

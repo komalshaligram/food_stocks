@@ -15,7 +15,7 @@ class LocaleProvider extends ChangeNotifier {
     }
     _locale = locale;
     debugPrint('lang ${locale.languageCode}');
-    await preferencesHelper.setAppLanguage(languageCode: locale.languageCode);
+    await preferencesHelper.setAppLanguage(languageCode: locale.languageCode); //en
     notifyListeners();
   }
 }

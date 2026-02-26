@@ -116,7 +116,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                     }
                   });
                 }
-              } on ServerException {}
+              } catch(_) {}
               emit(state.copyWith(productDetails: response.product ?? [], isProductLoading: false));
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0].copyWith(
@@ -225,7 +225,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         } on ServerException {
           emit(state.copyWith(isProductLoading: false));
           Navigator.pop(event.context);
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _increaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
 
@@ -574,7 +574,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } catch (e) {}
+          } catch(_) {}
         }
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -700,7 +700,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
 
                         break;
                       }
-                    } on ServerException {}
+                    } catch(_) {}
                   }
                 }
               }
@@ -724,7 +724,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 }
               });
             }
-          } on ServerException {}
+          } catch(_) {}
           if (_isProductInCart) {
             try {
               UpdateCartReqModel request = UpdateCartReqModel(
@@ -758,8 +758,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           } else {
             try {
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
@@ -804,8 +803,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
               } else {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           }
         }
       }

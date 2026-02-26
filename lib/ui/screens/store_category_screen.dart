@@ -179,7 +179,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           controller: state.subCategoryRefreshController,
                                           header: const RefreshWidget(),
                                           footer: CustomFooter(
-                                            builder: (context, mode) => StoreCategoryScreenSubcategoryShimmerWidget(),
+                                            builder: (context, mode) => const StoreCategoryScreenSubcategoryShimmerWidget(),
                                           ),
                                           enablePullUp: !state.isBottomOfSubCategory,
                                           onRefresh: () {
@@ -200,7 +200,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 children: [
                                                   5.height,
                                                   state.isPlanogramShimmering || state.isSubCategoryShimmering
-                                                      ? StoreCategoryScreenSubcategoryShimmerWidget()
+                                                      ? const StoreCategoryScreenSubcategoryShimmerWidget()
                                                       : state.planoGramsList.isEmpty && state.subCategoryList.isEmpty
                                                           ? Container(
                                                               height: getScreenHeight(context) - 160,
@@ -227,7 +227,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                               },
                                                             ),
                                                   state.isSubCategoryShimmering
-                                                      ? StoreCategoryScreenSubcategoryShimmerWidget()
+                                                      ? const StoreCategoryScreenSubcategoryShimmerWidget()
                                                       : ListView.builder(
                                                           itemCount: state.subCategoryList.length,
                                                           shrinkWrap: true,
@@ -251,7 +251,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           controller: state.planogramRefreshController,
                                           header: const RefreshWidget(),
                                           footer: CustomFooter(
-                                            builder: (context, mode) => state.isGridView ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget(),
+                                            builder: (context, mode) => state.isGridView ? const SupplierProductsScreenShimmerWidget() : const StoreCategoryScreenSubcategoryShimmerWidget(),
                                           ),
                                           enablePullUp: !state.isBottomOfProducts,
                                           onRefresh: () {
@@ -266,8 +266,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             children: [
                                               state.isPlanogramShimmering && state.subPlanoGramsList.isEmpty
                                                   ? state.isGridView
-                                                      ? SupplierProductsScreenShimmerWidget(itemCount: 3)
-                                                      : StoreCategoryScreenSubcategoryShimmerWidget(
+                                                      ? const SupplierProductsScreenShimmerWidget(itemCount: 3)
+                                                      : const StoreCategoryScreenSubcategoryShimmerWidget(
                                                           itemCount: 9,
                                                         )
                                                   : state.subPlanoGramsList.isEmpty && state.planogramProductList.isEmpty && !state.isPlanogramProductShimmering
@@ -325,8 +325,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       : const SizedBox(),
                                                   state.isPlanogramProductShimmering && state.planogramProductList.isEmpty
                                                       ? state.isGridView
-                                                          ? SupplierProductsScreenShimmerWidget(itemCount: 10)
-                                                          : StoreCategoryScreenSubcategoryShimmerWidget(itemCount: 10)
+                                                          ? const SupplierProductsScreenShimmerWidget(itemCount: 10)
+                                                          : const StoreCategoryScreenSubcategoryShimmerWidget(itemCount: 10)
                                                       : state.planogramProductList.isEmpty
                                                           ? const SizedBox()
                                                           : Container(
@@ -363,7 +363,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                     quantity: state.productStockList[3][index].quantity.toString(),
                                                                                     productListIndex: 3,
                                                                                     productStockUpdateIndex: index,
-                                                                                    productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                    productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                   ),
                                                                                 );
                                                                           },
@@ -374,7 +374,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                       context: context,
                                                                                       productListIndex: 3,
                                                                                       productStockUpdateIndex: index,
-                                                                                      productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                      productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                     ),
                                                                                   );
 
@@ -384,7 +384,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                       productId: state.planogramProductList[index].productId.toString(),
                                                                                       productListIndex: 3,
                                                                                       productStockUpdateIndex: index,
-                                                                                      productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                      productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                     ),
                                                                                   );
                                                                             } else {
@@ -408,7 +408,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                         context: context,
                                                                                         productListIndex: 3,
                                                                                         productStockUpdateIndex: index,
-                                                                                        productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                        productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                       ),
                                                                                     );
 
@@ -418,7 +418,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                         productId: state.planogramProductList[index].productId.toString(),
                                                                                         productListIndex: 3,
                                                                                         productStockUpdateIndex: index,
-                                                                                        productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                        productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                       ),
                                                                                     );
                                                                               } else {
@@ -478,7 +478,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                     quantity: state.productStockList[3][index].quantity.toString(),
                                                                                     productListIndex: 3,
                                                                                     productStockUpdateIndex: index,
-                                                                                    productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                    productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                   ),
                                                                                 );
                                                                           },
@@ -489,7 +489,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                       context: context,
                                                                                       productListIndex: 3,
                                                                                       productStockUpdateIndex: index,
-                                                                                      productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                      productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                     ),
                                                                                   );
 
@@ -499,7 +499,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                       productId: state.planogramProductList[index].productId.toString(),
                                                                                       productListIndex: 3,
                                                                                       productStockUpdateIndex: index,
-                                                                                      productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                      productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                     ),
                                                                                   );
                                                                             } else {
@@ -523,7 +523,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                         context: context,
                                                                                         productListIndex: 3,
                                                                                         productStockUpdateIndex: index,
-                                                                                        productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                        productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                       ),
                                                                                     );
 
@@ -533,7 +533,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                         productId: state.planogramProductList[index].productId.toString(),
                                                                                         productListIndex: 3,
                                                                                         productStockUpdateIndex: index,
-                                                                                        productSupplierIds: state.planogramProductList[index].product!.supplierId.toString(),
+                                                                                        productSupplierIds: state.planogramProductList[index].product.supplierId.toString(),
                                                                                       ),
                                                                                     );
                                                                               } else {
@@ -680,7 +680,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                               showMinMaxIncreaseQtyConfirmDialog(
                                                 context,
                                                 state.searchList[index].searchId,
-                                                state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                state.searchList[index].saleMinQuantity.toString(),
                                                 index,
                                                 state.searchList[index].supplierId.toString(),
                                                 0,
@@ -714,7 +714,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 showMinMaxDecreaseQtyConfirmDialog(
                                                   context,
                                                   state.searchList[index].searchId,
-                                                  state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                  state.searchList[index].saleMinQuantity.toString(),
                                                   index,
                                                   state.searchList[index].supplierId.toString(),
                                                   0,
@@ -855,7 +855,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               color: AppColors.whiteColor,
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               boxShadow: [
-                BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+                BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
               ],
             ),
             clipBehavior: Clip.hardEdge,
@@ -1453,7 +1453,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       highlightColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withOpacity(0.1), blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.1), blurRadius: AppConstants.blur_10),
         ]),
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_15),

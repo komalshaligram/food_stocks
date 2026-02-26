@@ -299,7 +299,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                     }
                   });
                 }
-              } on ServerException {}
+              } catch(_) {}
               emit(state.copyWith(isProductLoading: false, productDetails: response.product ?? []));
 
               if (event.isBarcode!) {
@@ -833,7 +833,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } catch (e) {}
+          } catch(_) {}
         }
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -961,7 +961,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
 
                         break;
                       }
-                    } on ServerException {}
+                    } catch(_) {}
                   }
                 }
               }
@@ -985,7 +985,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 }
               });
             }
-          } on ServerException {}
+          } catch(_) {}
           if (_isProductInCart) {
             try {
               UpdateCartReqModel request = UpdateCartReqModel(
@@ -1019,8 +1019,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           } else {
             try {
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
@@ -1067,8 +1066,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               } else {
                 CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               }
-            } on ServerException {
-            } catch (e) {}
+            } catch(_) {}
           }
         }
         //
@@ -1085,7 +1083,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
             }
           }
-        } on ServerException {}
+        } catch(_) {}
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
 
@@ -1094,7 +1092,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

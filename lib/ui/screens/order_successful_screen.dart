@@ -84,7 +84,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                 color: AppColors.whiteColor,
                                 borderRadius: BorderRadius.circular(AppConstants.radius_10),
                                 boxShadow: [
-                                  BoxShadow(color: AppColors.shadowColor.withOpacity(0.10), blurRadius: AppConstants.blur_10),
+                                  BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.10), blurRadius: AppConstants.blur_10),
                                 ],
                               ),
                               child: Column(
@@ -93,14 +93,22 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                   SizedBox(height: 180, width: 180, child: Image.asset(AppImagePath.successIcon)),
                                   Text(
                                     AppLocalizations.of(context)!.order_sent_successfully,
-                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_22, color: AppColors.blackColor, fontWeight: FontWeight.w700),
+                                    style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_22,
+                                      color: AppColors.blackColor,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                   70.height,
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
                                     child: Text(
                                       context.read<OrderSuccessfulBloc>().message,
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_17, color: AppColors.greyColor, fontWeight: FontWeight.normal),
+                                      style: AppStyles.rkRegularTextStyle(
+                                        size: AppConstants.font_17,
+                                        color: AppColors.greyColor,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                     ),
                                   ),
                                   50.height,
@@ -122,9 +130,9 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                     child: Container(
                                       margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_50),
                                       decoration: BoxDecoration(
-                                        color: AppColors.whiteColor.withOpacity(0.95),
+                                        color: AppColors.whiteColor.withValues(alpha: 0.95),
                                         boxShadow: [
-                                          BoxShadow(color: AppColors.shadowColor.withOpacity(0.20), blurRadius: AppConstants.blur_10),
+                                          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.20), blurRadius: AppConstants.blur_10),
                                         ],
                                         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_40)),
                                       ),
@@ -138,7 +146,11 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                           padding: const EdgeInsets.all(AppConstants.padding_10),
                                           height: AppConstants.containerHeight_60,
                                           alignment: Alignment.center,
-                                          decoration: BoxDecoration(color: AppColors.navSelectedColor, borderRadius: BorderRadius.circular(AppConstants.radius_40)),
+                                          decoration: BoxDecoration(
+                                              color: AppColors.navSelectedColor,
+                                              borderRadius: BorderRadius.circular(
+                                                AppConstants.radius_40,
+                                              )),
                                           child: Text(
                                             AppLocalizations.of(context)!.back_to_order,
                                             style: AppStyles.rkRegularTextStyle(
@@ -158,9 +170,9 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_50),
                                   decoration: BoxDecoration(
-                                    color: AppColors.whiteColor.withOpacity(0.95),
+                                    color: AppColors.whiteColor.withValues(alpha: 0.95),
                                     boxShadow: [
-                                      BoxShadow(color: AppColors.shadowColor.withOpacity(0.20), blurRadius: AppConstants.blur_10),
+                                      BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.20), blurRadius: AppConstants.blur_10),
                                     ],
                                     borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_40)),
                                   ),
@@ -174,7 +186,11 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                       padding: const EdgeInsets.all(AppConstants.padding_10),
                                       height: AppConstants.containerHeight_60,
                                       alignment: Alignment.center,
-                                      decoration: BoxDecoration(color: AppColors.navSelectedColor, borderRadius: BorderRadius.circular(AppConstants.radius_40)),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.navSelectedColor,
+                                          borderRadius: BorderRadius.circular(
+                                            AppConstants.radius_40,
+                                          )),
                                       child: Text(
                                         AppLocalizations.of(context)!.back_to_home_page,
                                         style: AppStyles.rkRegularTextStyle(

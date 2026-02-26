@@ -106,7 +106,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                               controller: state.refreshController,
                               header: const RefreshWidget(),
                               footer: CustomFooter(
-                                builder: (context, mode) => state.isGridView ? SupplierProductsScreenShimmerWidget() : StoreCategoryScreenSubcategoryShimmerWidget(),
+                                builder: (context, mode) => state.isGridView ? const SupplierProductsScreenShimmerWidget() : const StoreCategoryScreenSubcategoryShimmerWidget(),
                               ),
                               enablePullUp: !state.isBottomOfProducts,
                               onRefresh: () {
@@ -127,8 +127,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                   children: [
                                     state.isShimmering
                                         ? state.isGridView
-                                            ? SupplierProductsScreenShimmerWidget()
-                                            : StoreCategoryScreenSubcategoryShimmerWidget()
+                                            ? const SupplierProductsScreenShimmerWidget()
+                                            : const StoreCategoryScreenSubcategoryShimmerWidget()
                                         : state.productList.isEmpty
                                             ? Container(
                                                 height: getScreenHeight(context) - 80,
@@ -489,7 +489,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                               showMinMaxIncreaseQtyConfirmDialog(
                                                 context,
                                                 state.searchList[index].searchId,
-                                                state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                state.searchList[index].saleMinQuantity.toString(),
                                                 index,
                                                 state.searchList[index].supplierId.toString(),
                                                 0,
@@ -523,7 +523,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 showMinMaxDecreaseQtyConfirmDialog(
                                                   context,
                                                   state.searchList[index].searchId,
-                                                  state.searchList[index].saleMinQuantity.toString() ?? '0',
+                                                  state.searchList[index].saleMinQuantity.toString(),
                                                   index,
                                                   state.searchList[index].supplierId.toString(),
                                                   0,
@@ -625,7 +625,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
       clipBehavior: Clip.hardEdge,

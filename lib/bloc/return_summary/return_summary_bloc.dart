@@ -87,7 +87,7 @@ class ReturnSummaryBloc extends Bloc<ReturnSummaryEvent, ReturnSummaryState> {
               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
             }
           }
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _getSummaryListEvent) {
         Map map = event.list;
         if (map['list'] != null) {

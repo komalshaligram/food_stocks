@@ -520,7 +520,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               type: SnackBarType.failure,
             );
           }
-        } catch (e) {}
+        } catch(_) {}
       } else if (event is _updateReturnEvent) {
         emit(state.copyWith(isLoading: true));
 

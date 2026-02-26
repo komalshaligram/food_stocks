@@ -91,14 +91,13 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
             driverDeliveryDocumentsImages: event.driverDeliveryDocumentsImages,
             sentReturnData: event.sentReturnData,
             orderIssueReturnId: event.orderIssueReturnId ?? '',
-            driverName: state.driverNameController.text ?? '',
+            driverName: state.driverNameController.text,
           );
 
           final response = await DioClient(event.context).post(
             '${AppUrlEndPoints.deliveryConfirmUrl}${event.orderId}',
             data: deliveryConfirmRequest,
           );
-          //
           if (response[AppStrings.statusString] == 200) {
             emit(state.copyWith(isLoading: false));
 

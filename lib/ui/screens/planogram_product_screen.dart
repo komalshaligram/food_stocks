@@ -45,7 +45,10 @@ class PlanogramProductScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => PlanogramProductBloc()
-        ..add(PlanogramProductEvent.getPlanogramProductsEvent(planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(), context: context))
+        ..add(PlanogramProductEvent.getPlanogramProductsEvent(
+          planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(),
+          context: context,
+        ))
         ..add(PlanogramProductEvent.userApproveEvent(context: context)),
       child: const PlanogramProductScreenWidget(),
     );
@@ -77,7 +80,12 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                           height: 50,
                           width: 50,
                           clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.transparent, width: 1),
+                              gradient: AppColors.appMainGradientColor,
+                              borderRadius: const BorderRadius.all(Radius.circular(
+                                AppConstants.radius_100,
+                              ))),
                           child: Center(
                             child: SvgPicture.asset(
                               AppImagePath.cart,
@@ -166,7 +174,12 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                 itemCount: state.planogramProductList.length,
                                 shrinkWrap: true,
                                 padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context, state.isSaleOn)),
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    childAspectRatio: getChildAspectRatio(
+                                      context,
+                                      state.isSaleOn,
+                                    )),
                                 itemBuilder: (context, index) => buildPlanoGramProductItem(
                                     originalPrice: state.planogramProductList[index].productPrice ?? 0.0,
                                     isSale: state.planogramProductList[index].sale?.isSale ?? false,
@@ -303,7 +316,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           );
                                     },
                                     onQuantityDecreaseTap: () {
-                                      // if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
                                       if (state.productStockList[1][index].quantity != 0) {
                                         context.read<PlanogramProductBloc>().add(
                                               PlanogramProductEvent.decreaseListQuantityOfProduct(
@@ -334,11 +346,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           productListIndex: 1,
                                           isSaleOn: state.isSaleOn,
                                         );
-
-                                        // Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
-                                        //
-                                        // context.read<PlanogramProductBloc>().add(
-                                        //     PlanogramProductEvent.getPlanogramProductsEvent(planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(), context: context));
                                       } else {
                                         Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                       }
@@ -369,8 +376,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                       }
                     },
                     onSearchSubmit: (String search) {
-                      //   bloc.add(PlanogramProductEvent.globalSearchEvent(context: context));
-                      Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                      Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                        AppStrings.searchString: state.search,
+                        AppStrings.searchType: SearchTypes.product.toString(),
+                      });
                     },
                     onOutSideTap: () {
                       state.searchController.clear();
@@ -418,23 +427,47 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                               : false,
                                       onSeeAllTap: () async {
                                         if (state.searchList[index].searchType == SearchTypes.category) {
-                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.reqSearchString: state.search, AppStrings.searchResultString: state.searchList});
+                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {
+                                            AppStrings.searchString: state.search,
+                                            AppStrings.reqSearchString: state.search,
+                                            AppStrings.searchResultString: state.searchList,
+                                          });
                                           if (searchResult != null) {
-                                            bloc.add(PlanogramProductEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                            bloc.add(PlanogramProductEvent.updateGlobalSearchEvent(
+                                              search: searchResult[AppStrings.searchString],
+                                              searchList: searchResult[AppStrings.searchResultString],
+                                            ));
                                           }
                                         } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
-                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].categoryId, AppStrings.categoryNameString: state.searchList[index].categoryName, AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                            AppStrings.categoryIdString: state.searchList[index].categoryId,
+                                            AppStrings.categoryNameString: state.searchList[index].categoryName,
+                                            AppStrings.searchString: state.search,
+                                            AppStrings.searchResultString: state.searchList,
+                                          });
                                           if (searchResult != null) {
-                                            bloc.add(PlanogramProductEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                            bloc.add(PlanogramProductEvent.updateGlobalSearchEvent(
+                                              search: searchResult[AppStrings.searchString],
+                                              searchList: searchResult[AppStrings.searchResultString],
+                                            ));
                                           }
                                         } else {
                                           state.searchList[index].searchType == SearchTypes.company
-                                              ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
+                                              ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {
+                                                  AppStrings.searchString: state.search,
+                                                })
                                               : state.searchList[index].searchType == SearchTypes.supplier
-                                                  ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                                  ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {
+                                                      AppStrings.searchString: state.search,
+                                                    })
                                                   : state.searchList[index].searchType == SearchTypes.sale
-                                                      ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
-                                                      : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                                                      ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {
+                                                          AppStrings.searchString: state.search,
+                                                        })
+                                                      : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                                          AppStrings.searchString: state.search,
+                                                          AppStrings.searchType: SearchTypes.product.toString(),
+                                                        });
                                         }
                                       },
                                       onTap: () async {
@@ -447,21 +480,46 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           return;
                                         }
                                         if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product && !state.isGuestUser) {
-                                          showProductDetails(context: context, productStock: state.searchList[index].productStock.toString(), productId: state.searchList[index].searchId, isBarcode: true, productListIndex: 0, isSaleOn: state.isSaleOn);
+                                          showProductDetails(
+                                            context: context,
+                                            productStock: state.searchList[index].productStock.toString(),
+                                            productId: state.searchList[index].searchId,
+                                            isBarcode: true,
+                                            productListIndex: 0,
+                                            isSaleOn: state.isSaleOn,
+                                          );
                                         } else if (state.searchList[index].searchType == SearchTypes.category) {
-                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+                                          dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                            AppStrings.categoryIdString: state.searchList[index].searchId,
+                                            AppStrings.categoryNameString: state.searchList[index].name,
+                                            AppStrings.searchString: state.searchController.text,
+                                            AppStrings.searchResultString: state.searchList,
+                                          });
                                           if (searchResult != null) {
-                                            bloc.add(PlanogramProductEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
+                                            bloc.add(PlanogramProductEvent.updateGlobalSearchEvent(
+                                              search: searchResult[AppStrings.searchString],
+                                              searchList: searchResult[AppStrings.searchResultString],
+                                            ));
                                           }
                                         } else {
-                                          state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                          state.searchList[index].searchType == SearchTypes.company
+                                              ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
+                                                  AppStrings.companyIdString: state.searchList[index].searchId,
+                                                })
+                                              : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                                  AppStrings.supplierIdString: state.searchList[index].searchId,
+                                                });
                                         }
                                         bloc.add(const PlanogramProductEvent.changeCategoryExpansion());
                                       });
                                 },
                               ),
                     onScanTap: () async {
-                      String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
+                      String scanResult = await scanBarcodeOrQRCode(
+                        context: context,
+                        cancelText: AppLocalizations.of(context)!.cancel,
+                        scanMode: ScanMode.BARCODE,
+                      );
                       if (scanResult != '-1') {
                         // -1 result for cancel scanning
 
@@ -532,12 +590,25 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       onQuantityChanged: onQuantityChanged,
       onQuantityIncreaseTap: onQuantityIncreaseTap,
       onQuantityDecreaseTap: onQuantityDecreaseTap,
-        isMixedSale:isMixedSale
+      isMixedSale: isMixedSale,
     );
   }
 
-  void showProductDetails({required BuildContext context, required String productId, bool? isBarcode, String productStock = '0', bool isRelated = false, int productListIndex = -1, required bool isSaleOn}) async {
-    context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getProductDetailsEvent(context: context, productId: productId, isBarcode: isBarcode ?? false, productListIndex: productListIndex));
+  void showProductDetails({
+    required BuildContext context,
+    required String productId,
+    bool? isBarcode,
+    String productStock = '0',
+    bool isRelated = false,
+    int productListIndex = -1,
+    required bool isSaleOn,
+  }) async {
+    context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getProductDetailsEvent(
+          context: context,
+          productId: productId,
+          isBarcode: isBarcode ?? false,
+          productListIndex: productListIndex,
+        ));
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -582,7 +653,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         bottleTax: state.bottleDeposit,
                                         isBottle: (state.productDetails.first.isBottle ?? false),
                                         addToOrderTap: () {
-                                          context.read<PlanogramProductBloc>().add(PlanogramProductEvent.addToCartProductEvent(context: context1, productId: productId));
+                                          context.read<PlanogramProductBloc>().add(PlanogramProductEvent.addToCartProductEvent(
+                                                context: context1,
+                                                productId: productId,
+                                              ));
                                         },
                                         isLoading: state.isLoading,
                                         imageOnTap: () {
@@ -635,7 +709,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                         isMixedSale: state.productDetails.first.sale!.isMixedSale,
                                         onQuantityChanged: (quantity) {
-                                          context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                          context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateQuantityOfProduct(
+                                                context: context1,
+                                                quantity: quantity,
+                                              ));
                                         },
                                         onQuantityIncreaseTap: () {
                                           context.read<PlanogramProductBloc>().add(PlanogramProductEvent.increaseQuantityOfProduct(context: context1));
@@ -648,7 +725,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         onCloseTap: () {
                                           Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
-                                          context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getPlanogramProductsEvent(planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(), context: context));
+                                          context.read<PlanogramProductBloc>().add(PlanogramProductEvent.getPlanogramProductsEvent(
+                                                planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(),
+                                                context: context,
+                                              ));
 
                                           Navigator.pop(context);
                                         },

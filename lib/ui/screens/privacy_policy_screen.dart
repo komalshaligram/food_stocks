@@ -13,7 +13,6 @@ import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 
-
 class PrivacyPolicyRoute {
   static Widget get route => const PrivacyPolicyScreen();
 }
@@ -23,14 +22,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyEvent.getPdfDataEvent(
-          context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()
-      )),
-      child:  const PrivacyPolicyWidget(),
+      create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyEvent.getPdfDataEvent(context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '', termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
+      child: const PrivacyPolicyWidget(),
     );
   }
 }
@@ -53,13 +48,10 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    PrivacyPolicyBloc bloc= context.read<PrivacyPolicyBloc>();
+    PrivacyPolicyBloc bloc = context.read<PrivacyPolicyBloc>();
 
     return BlocListener<PrivacyPolicyBloc, PrivacyPolicyState>(
-
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       child: BlocBuilder<PrivacyPolicyBloc, PrivacyPolicyState>(
         builder: (context, state) {
           return Scaffold(
@@ -72,8 +64,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                   },
                   child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
               title: Align(
-                alignment:
-                context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.privacy_policy,
                   style: AppStyles.rkRegularTextStyle(
@@ -91,117 +82,96 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                 children: [
                   Container(
                     color: AppColors.whiteColor,
-                    height: getScreenHeight(context) - (state.isOwner2Available ?
-                    getScreenHeight(context) * 0.35 : getScreenHeight(context) * 0.28
-                    ),
-                    child: state.pdfPath.isNotEmpty ? SfPdfViewer.memory(
-                      state.pdfPath,
-                      key: _pdfViewerKey,
-                      controller: _pdfViewerController,
-                      canShowSignaturePadDialog: true,
-                    ) : const CupertinoActivityIndicator(),
+                    height: getScreenHeight(context) - (state.isOwner2Available ? getScreenHeight(context) * 0.35 : getScreenHeight(context) * 0.28),
+                    child: state.pdfPath.isNotEmpty
+                        ? SfPdfViewer.memory(
+                            state.pdfPath,
+                            key: _pdfViewerKey,
+                            controller: _pdfViewerController,
+                            canShowSignaturePadDialog: true,
+                          )
+                        : const CupertinoActivityIndicator(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15,vertical: AppConstants.padding_3),
+                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_3),
                     child: Row(
-                      mainAxisAlignment: state.isGuarantee1Available?MainAxisAlignment.spaceBetween:MainAxisAlignment.center,
+                      mainAxisAlignment: state.isGuarantee1Available ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
                       children: [
                         CustomButtonWidget(
-                          fontSize:AppConstants.font_13,
-                          buttonText: AppLocalizations.of(context)!
-                              .owner1_sign
-                              .toCapitalized(),
+                          fontSize: AppConstants.font_13,
+                          buttonText: AppLocalizations.of(context)!.owner1_sign.toCapitalized(),
                           height: 45,
                           bGColor: AppColors.whiteColor,
-                          width: getScreenWidth(context)/2.2,
+                          width: getScreenWidth(context) / 2.2,
                           onPressed: () {
-                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
-                                fieldName: AppStrings.owner1SignatureString,
-                                fieldNameForSign: AppLocalizations.of(context)!
-                                    .owner1_sign
-                            ));
+                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: AppStrings.owner1SignatureString, fieldNameForSign: AppLocalizations.of(context)!.owner1_sign));
                           },
                           fontColors: AppColors.whiteColor,
                         ),
-                        state.isGuarantee1Available?CustomButtonWidget(
-                          fontSize:AppConstants.font_13,
-                          buttonText: AppLocalizations.of(context)!
-                              .guarantee1_sign
-                              .toCapitalized(),
-                          height: 45,
-                          bGColor: AppColors.whiteColor,
-                          width: getScreenWidth(context)/2.2,
-                          onPressed: () {
-                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
-                                fieldName: AppStrings.guarantee1SignatureString,
-                                fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign
-                            ));
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ):const SizedBox(),
+                        state.isGuarantee1Available
+                            ? CustomButtonWidget(
+                                fontSize: AppConstants.font_13,
+                                buttonText: AppLocalizations.of(context)!.guarantee1_sign.toCapitalized(),
+                                height: 45,
+                                bGColor: AppColors.whiteColor,
+                                width: getScreenWidth(context) / 2.2,
+                                onPressed: () {
+                                  bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: AppStrings.guarantee1SignatureString, fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign));
+                                },
+                                fontColors: AppColors.whiteColor,
+                              )
+                            : const SizedBox(),
                       ],
                     ),
                   ),
-                  state.isOwner2Available ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15,vertical: AppConstants.padding_3),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomButtonWidget(
-                          fontSize:AppConstants.font_13,
-                          buttonText: AppLocalizations.of(context)!
-                              .owner2_sign
-                              .toCapitalized(),
-                          height: 45,
-                          bGColor: AppColors.whiteColor,
-                          width: getScreenWidth(context)/2.2,
-                          onPressed: () {
-                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
-                                fieldName: AppStrings.owner2SignatureString,
-                                fieldNameForSign: AppLocalizations.of(context)!
-                                    .owner2_sign
-                            ));
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ),
-                        CustomButtonWidget(
-                          fontSize:AppConstants.font_13,
-                          buttonText: AppLocalizations.of(context)!
-                              .guarantee2_sign
-                              .toCapitalized(),
-                          height: 45,
-                          bGColor: AppColors.whiteColor,
-                          width: getScreenWidth(context)/2.2,
-                          onPressed: () {
-                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context,
-                                fieldName: AppStrings.guarantee2SignatureString,
-                                fieldNameForSign: AppLocalizations.of(context)!
-                                    .guarantee2_sign
-                            ));
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ),
-
-                      ],
-                    ),
-                  ) : const SizedBox(),
+                  state.isOwner2Available
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_3),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomButtonWidget(
+                                fontSize: AppConstants.font_13,
+                                buttonText: AppLocalizations.of(context)!.owner2_sign.toCapitalized(),
+                                height: 45,
+                                bGColor: AppColors.whiteColor,
+                                width: getScreenWidth(context) / 2.2,
+                                onPressed: () {
+                                  bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: AppStrings.owner2SignatureString, fieldNameForSign: AppLocalizations.of(context)!.owner2_sign));
+                                },
+                                fontColors: AppColors.whiteColor,
+                              ),
+                              CustomButtonWidget(
+                                fontSize: AppConstants.font_13,
+                                buttonText: AppLocalizations.of(context)!.guarantee2_sign.toCapitalized(),
+                                height: 45,
+                                bGColor: AppColors.whiteColor,
+                                width: getScreenWidth(context) / 2.2,
+                                onPressed: () {
+                                  bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: AppStrings.guarantee2SignatureString, fieldNameForSign: AppLocalizations.of(context)!.guarantee2_sign));
+                                },
+                                fontColors: AppColors.whiteColor,
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox(),
                   Padding(
                     padding: const EdgeInsets.all(AppConstants.padding_15),
                     child: CustomButtonWidget(
                       height: 50,
-                      buttonText: AppLocalizations.of(context)!
-                          .next
-                          .toUpperCase(),
+                      buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
                       bGColor: AppColors.whiteColor,
                       enable: state.isNextEnable,
                       isLoading: state.isShimmering,
                       onPressed: () {
-                        bloc.add(PrivacyPolicyEvent.navigationEvent(context: context,
+                        bloc.add(PrivacyPolicyEvent.navigationEvent(
+                          context: context,
                         ));
                       },
                       fontColors: AppColors.whiteColor,
                     ),
-                  ) ,
+                  ),
                 ],
               ),
             ),

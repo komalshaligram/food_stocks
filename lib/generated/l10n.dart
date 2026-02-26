@@ -1,5 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:intl/intl.dart';
 import 'intl/messages_all.dart';
 
@@ -1889,6 +1890,16 @@ class S {
     );
   }
 
+  /// `The number of surfaces is too much it is more then what you received from this supplier`
+  String get surface_validation {
+    return Intl.message(
+      'The number of surfaces is too much it is more then what you received from this supplier',
+      name: 'surface_validation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connection timed out`
   String get connection_timed_out {
     return Intl.message(
@@ -3414,16 +3425,6 @@ class S {
     );
   }
 
-  /// `Remaining refund`
-  String get remaining_refund {
-    return Intl.message(
-      'Remaining refund',
-      name: 'remaining_refund',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `You still have a credit balance of:`
   String get refund_amount_1 {
     return Intl.message(
@@ -4254,6 +4255,16 @@ class S {
     return Intl.message(
       'Refunded on Invoices',
       name: 'refunded_on_invoices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remaining refund`
+  String get remaining_refund {
+    return Intl.message(
+      'Remaining refund',
+      name: 'remaining_refund',
       desc: '',
       args: [],
     );

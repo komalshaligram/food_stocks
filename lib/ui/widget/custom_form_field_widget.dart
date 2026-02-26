@@ -6,7 +6,7 @@ import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';
 
 class CustomFormField extends StatelessWidget {
-  CustomFormField({
+  const CustomFormField({
     Key? key,
     required BuildContext context,
     required TextEditingController controller,
@@ -46,6 +46,7 @@ class CustomFormField extends StatelessWidget {
     this.contentPaddingTop = 0.0,
     this.border = 3.0,
     this.textDirection,
+    this.availableQtyVal = 0,
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         _hint = hint,
@@ -67,7 +68,7 @@ class CustomFormField extends StatelessWidget {
   final String? textFieldLabel;
   final double? textFieldLabelSize;
   final FocusNode? focusNode;
-  bool isObscure;
+  final bool isObscure;
   final double? height;
   final double? width;
   final bool isCapitalized;
@@ -88,6 +89,7 @@ class CustomFormField extends StatelessWidget {
   final double contentPaddingBottom;
   final double border;
   final TextDirection? textDirection;
+  final int? availableQtyVal;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +121,7 @@ class CustomFormField extends StatelessWidget {
         cursorColor: cursorColor,
         textDirection: textDirection,
         textAlign: textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
-        validator: (value) => AuthFormValidation().formValidation(value!, _validator, context),
+        validator: (value) => AuthFormValidation().formValidation(value!, _validator, availableQtyVal!, context),
         decoration: InputDecoration(
             labelStyle: TextStyle(color: AppColors.textColor, overflow: TextOverflow.visible),
             suffixIcon: postIconBtn,

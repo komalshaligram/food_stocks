@@ -58,7 +58,7 @@ class CommonAlertDialog extends StatelessWidget {
                         : Text(
                             positiveTitle ?? '',
                             style: AppStyles.rkRegularTextStyle(
-                              color: AppColors.mainColor.withOpacity(0.9),
+                              color: AppColors.mainColor.withValues(alpha:0.9),
                               size: AppConstants.smallFont,
                               fontWeight: isLogOutProcess ? FontWeight.bold : FontWeight.normal,
                             ),

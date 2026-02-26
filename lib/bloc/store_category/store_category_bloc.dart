@@ -339,7 +339,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                     }
                   });
                 }
-              } on ServerException {}
+              } catch(_) {}
               emit(state.copyWith(isProductLoading: false, productDetails: response.product ?? []));
 
               if ((event.isBarcode)) {
@@ -976,7 +976,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }
-          } catch (e) {}
+          } catch(_) {}
         }
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -1106,7 +1106,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
 
                         break;
                       }
-                    } on ServerException {}
+                    } catch(_) {}
                   }
                 }
               }
@@ -1130,7 +1130,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                 }
               });
             }
-          } on ServerException {}
+          } catch(_) {}
           if (_isProductInCart) {
             try {
               //   emit(state.copyWith(isLoading: true));
@@ -1237,7 +1237,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
               emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: false));
             }
           }
-        } on ServerException {}
+        } catch(_) {}
         //message count
         try {
           final res = await DioClient(event.context!).post(AppUrlEndPoints.getUnreadMessageCountUrl, options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
@@ -1247,7 +1247,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

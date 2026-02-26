@@ -65,7 +65,10 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                       ? const SizedBox()
                       : CircularButtonWidget(
                           buttonName: AppLocalizations.of(context)!.total,
-                          buttonValue: formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal),
+                          buttonValue: formatNumber(
+                            value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',
+                            local: AppStrings.hebrewLocal,
+                          ),
                         ),
                 ),
                 onTap: () {
@@ -84,7 +87,16 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                          itemBuilder: (context, index) => AnimationConfiguration.staggeredList(duration: const Duration(seconds: 1), position: index, child: SlideAnimation(child: orderListItem(index: index, context: context, orderByIdList: state.orderByIdList, state: state))),
+                          itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
+                              duration: const Duration(seconds: 1),
+                              position: index,
+                              child: SlideAnimation(
+                                  child: orderListItem(
+                                index: index,
+                                context: context,
+                                orderByIdList: state.orderByIdList,
+                                state: state,
+                              ))),
                         ),
                       ),
               ),
@@ -129,7 +141,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           boxShadow: [
-            BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10),
+            BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
           ],
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
@@ -148,7 +160,11 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 ),
                 Text(
                   getStatus(state.statusData, orderByIdList.data?.ordersBySupplier?[index].deliverStatus?.statusName ?? '', state.language).toTitleCase(),
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: getStatusColor(state.statusData, orderByIdList.data!.ordersBySupplier?[index].deliverStatus?.statusName ?? ''), fontWeight: FontWeight.w700),
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont,
+                    color: getStatusColor(state.statusData, orderByIdList.data!.ordersBySupplier?[index].deliverStatus?.statusName ?? ''),
+                    fontWeight: FontWeight.w700,
+                  ),
                 )
               ],
             ),

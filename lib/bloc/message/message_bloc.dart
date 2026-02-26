@@ -109,7 +109,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           } else {
             CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
           }
-        } catch (e) {}
+        } catch(_) {}
       }
     });
   }

@@ -24,7 +24,7 @@ class ProductCategoryScreenShimmerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           color: AppColors.whiteColor,
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10)],
         ),
       ),
     );

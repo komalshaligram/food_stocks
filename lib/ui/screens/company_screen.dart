@@ -99,7 +99,11 @@ class CompanyScreenWidget extends StatelessWidget {
                                     companyLogo: state.companiesList[index].brandLogo ?? '',
                                     companyName: state.companiesList[index].brandName ?? '',
                                     onTap: () {
-                                      Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.companiesList[index].id ?? '', AppStrings.companyName: state.companiesList[index].brandName ?? '', AppStrings.companyLogo: state.companiesList[index].brandLogo ?? ''});
+                                      Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
+                                        AppStrings.companyIdString: state.companiesList[index].id ?? '',
+                                        AppStrings.companyName: state.companiesList[index].brandName ?? '',
+                                        AppStrings.companyLogo: state.companiesList[index].brandLogo ?? '',
+                                      });
                                     }),
                               ),
                     // state.isLoadMore ? CompanyScreenShimmerWidget() : 0.width,
@@ -113,7 +117,13 @@ class CompanyScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildCompanyListItem({required int index, required String companyLogo, required String companyName, required BuildContext context, required void Function() onTap}) {
+  Widget buildCompanyListItem({
+    required int index,
+    required String companyLogo,
+    required String companyName,
+    required BuildContext context,
+    required void Function() onTap,
+  }) {
     return Container(
       height: getScreenHeight(context),
       width: getScreenWidth(context),
@@ -122,7 +132,7 @@ class CompanyScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withOpacity(0.15), blurRadius: AppConstants.blur_10)],
+        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
       ),
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
@@ -141,7 +151,11 @@ class CompanyScreenWidget extends StatelessWidget {
                           width: getScreenWidth(context),
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor,
-                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(AppConstants.radius_10),
+                                topRight: Radius.circular(
+                                  AppConstants.radius_10,
+                                )),
                           ),
                         ),
                       ),
@@ -172,7 +186,11 @@ class CompanyScreenWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
               decoration: BoxDecoration(
                 gradient: AppColors.appMainGradientColor,
-                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(AppConstants.radius_10),
+                    bottomRight: Radius.circular(
+                      AppConstants.radius_10,
+                    )),
               ),
               child: Text(
                 companyName,

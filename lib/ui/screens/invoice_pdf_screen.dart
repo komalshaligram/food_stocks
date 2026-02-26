@@ -111,8 +111,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                               PageRouteBuilder(
                                 pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
                                   statusList: state.statusList,
-                                  orderNumber: invoiceDetailsList.orderNumber.toString() ?? '',
-                                  orderId: invoiceDetailsList.orderId.toString() ?? '',
+                                  orderNumber: invoiceDetailsList.orderNumber.toString(),
+                                  orderId: invoiceDetailsList.orderId.toString(),
                                   isNavigateToProductDetailString: true,
                                 ),
                                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -260,7 +260,11 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                             child: Container(
                               height: 80,
                               width: 80,
-                              decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                              decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: const BorderRadius.all(Radius.circular(
+                                    AppConstants.radius_10,
+                                  ))),
                               alignment: Alignment.center,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,

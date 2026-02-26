@@ -81,6 +81,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferencesHelper.setWalletId(userWalletId: response.data?.wallet ?? '');
               preferencesHelper.setIsSubUser(isSubUser: (response.data?.adminType == AppStrings.subUserString) ? true : false);
               preferencesHelper.setEmailId(userEmailId: response.data?.user?.email ?? '');
+              preferencesHelper.setAgentId(agent_Id: response.data?.agentId ?? '');
 
               String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
               String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
