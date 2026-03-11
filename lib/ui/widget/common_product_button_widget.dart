@@ -18,7 +18,21 @@ class CommonProductButtonWidget extends StatelessWidget {
   final bool isLoading;
   final Color borderColor;
 
-  const CommonProductButtonWidget({super.key, required this.title, this.onPressed, this.isLoading = false, this.horizontalPadding = 0.0, this.verticalPadding = 0.0, this.textSize = AppConstants.smallFont, this.bgColor = Colors.black, this.textColor = Colors.white, this.height, this.width, this.borderRadius, this.borderColor = Colors.white});
+  const CommonProductButtonWidget({
+    super.key,
+    required this.title,
+    this.onPressed,
+    this.isLoading = false,
+    this.horizontalPadding = 0.0,
+    this.verticalPadding = 0.0,
+    this.textSize = AppConstants.smallFont,
+    this.bgColor = Colors.black,
+    this.textColor = Colors.white,
+    this.height,
+    this.width,
+    this.borderRadius,
+    this.borderColor = Colors.white,
+  });
 
   @override
   Widget build(BuildContext context) {

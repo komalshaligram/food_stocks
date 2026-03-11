@@ -33,7 +33,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
       String imgUrl = '';
       Map map = {};
       List<String> imgList = [];
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getArgumentEvent) {
         map = event.arguments;
         List<RadioModel> tempList = [];
@@ -96,7 +96,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             );
             emit(state.copyWith(
               isFromPending: map['status'] ?? false,
-              language: preferencesHelper.getAppLanguage(),
+              language: preferences.getAppLanguage(),
               radioList: tempList,
               proofFile: File(state.proofImagesList.isNotEmpty ? AppUrlEndPoints.baseFileUrl + state.proofImagesList[0] : ''),
               proofFile1: File(state.proofImagesList.length > 1 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[1]) : ''),
@@ -183,7 +183,11 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
               Navigator.of(event.context).popUntil((route) => route.isFirst);
               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, ModalRoute.withName(RouteDefine.returnListScreen.name));
             } else {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context),
+                type: SnackBarType.failure,
+              );
             }
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -196,7 +200,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
-          String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length());
+          String imageSize = getFileSizeString(
+            bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length(),
+          );
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
@@ -271,9 +277,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           }
           req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
             applicationName: AppStrings.appName,
-            clientId: preferencesHelper.getUserId(),
+            clientId: preferences.getUserId(),
             returnProducts: list,
-            subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
+            subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
             supplierId: '',
             isDraft: true,
           );
@@ -313,13 +319,21 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
 
             await showDialog(
               context: event.context,
-              builder: (_) => CallAgentDialog(phoneNumber: resModel.agentPhoneNumber ?? '', message: res[AppStrings.messageString], language: state.language),
+              builder: (_) => CallAgentDialog(
+                phoneNumber: resModel.agentPhoneNumber ?? '',
+                message: res[AppStrings.messageString],
+                language: state.language,
+              ),
             );
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString], event.context),
+              type: SnackBarType.failure,
+            );
             emit(state.copyWith(isShimmer: false));
           }
-        } catch(_) {}
+        } catch (_) {}
       } else if (event is _updateReturnEvent) {
         emit(state.copyWith(isShimmer: true));
         try {
@@ -345,9 +359,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             applicationName: AppStrings.appName,
             supplierId: '',
             isDraft: !state.isFromPending,
-            clientId: preferencesHelper.getUserId(),
+            clientId: preferences.getUserId(),
             returnProducts: list,
-            subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
+            subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
           );
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId}',
@@ -406,7 +420,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             );
             emit(state.copyWith(isShimmer: false));
           }
-        } catch(_) {}
+        } catch (_) {}
       }
     });
   }

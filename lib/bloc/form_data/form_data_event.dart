@@ -36,4 +36,7 @@ class FormDataEvent with _$FormDataEvent {
     required String businessTypeId,
     required bool isFreelancer,
   }) = _getArgumentEvent;
+  const factory FormDataEvent.generalSettings({
+    required BuildContext context,
+  }) = _generalSettings;
 }

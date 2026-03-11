@@ -12,7 +12,13 @@ class CommonProductDetailsButton extends StatelessWidget {
   final String productStock;
   final void Function()? onAddToOrderPressed;
 
-  const CommonProductDetailsButton({super.key, required this.isLoading, required this.isSupplierAvailable, required this.productStock, this.onAddToOrderPressed});
+  const CommonProductDetailsButton({
+    super.key,
+    required this.isLoading,
+    required this.isSupplierAvailable,
+    required this.productStock,
+    this.onAddToOrderPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

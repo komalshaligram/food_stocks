@@ -35,6 +35,10 @@ class SearchModel with _$SearchModel {
     String? id,
     @JsonKey(name: "supplierId")
     String? supplierId,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _SearchModel;
 
   factory SearchModel.fromJson(Map<String, dynamic> json) =>

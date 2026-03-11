@@ -60,6 +60,7 @@ class StoreCategoryState with _$StoreCategoryState {
     required String language,
     required bool isCartCountChange,
     required int messageCount,
+    required String? clubAgentId,
   }) = _StoreCategoryState;
 
   factory StoreCategoryState.initial() => StoreCategoryState(
@@ -119,5 +120,6 @@ class StoreCategoryState with _$StoreCategoryState {
       isSaleOn: false,
     language :AppStrings.hebrewString,
     isCartCountChange: false,
-    messageCount: 0,);
+    messageCount: 0,
+    clubAgentId: '',);
 }

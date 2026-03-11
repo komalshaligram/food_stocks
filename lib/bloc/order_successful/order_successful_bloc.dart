@@ -21,9 +21,9 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
   String message = '';
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
-      message = preferencesHelper.getMessage();
+      message = preferences.getMessage();
 
       if (event is _getDataEvent) {
         emit(state.copyWith(
@@ -39,13 +39,13 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
           SettingResModel response = SettingResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            if (preferencesHelper.getAppOnMaintenance() && !(response.data?.isAppOnMaintenance ?? false)) {
-              preferencesHelper.setIsAppOnMaintenance(isAppOnMaintenance: false);
+            if (preferences.getAppOnMaintenance() && !(response.data?.isAppOnMaintenance ?? false)) {
+              preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
 
               return;
             }
 
-            preferencesHelper.setIsIncludedVat(isIncludedVat: (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
+            preferences.setIsIncludedVat(isIncludedVat: (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
           }
         } catch (e) {
           CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -60,7 +60,7 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
       if (event is _getAllCartEvent) {
         try {
           final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.getAllCartUrl}${preferencesHelper.getCartId()}',
+            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
           );
 
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);

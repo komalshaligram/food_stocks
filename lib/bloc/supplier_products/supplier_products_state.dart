@@ -42,6 +42,7 @@ class SupplierProductsState with _$SupplierProductsState {
     required bool isCartCountChange,
     required int cartCount,
     required int messageCount,
+    required String? clubAgentId,
   }) = _SupplierProductsState;
 
   factory SupplierProductsState.initial() => SupplierProductsState(
@@ -88,5 +89,6 @@ class SupplierProductsState with _$SupplierProductsState {
         isCartCountChange: false,
         cartCount: 0,
         messageCount: 0,
+        clubAgentId: '',
       );
 }

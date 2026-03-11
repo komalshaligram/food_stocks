@@ -131,7 +131,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                          state.clientAgentId == '6989e25de86c03f1e8144404'
+                          state.clubAgentId == AppStrings.clubAgentIdText
                               ? Image.asset(
                                   AppImagePath.clubAgentBlueLogo,
                                   fit: BoxFit.fill,
@@ -262,8 +262,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                 profileMenuTiles(
                                     title: AppLocalizations.of(context)!.log_out,
                                     onTap: () {
-                                      !state.isLogOutProcess ? logOutDialog(context: context, directionality: state.language) :
-                                      const CupertinoActivityIndicator();
+                                      !state.isLogOutProcess ? logOutDialog(context: context, directionality: state.language) : const CupertinoActivityIndicator();
                                     }),
                                 menuSwitchTile(
                                     title: AppLocalizations.of(context)!.app_language,
@@ -302,7 +301,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
         ],
       ),
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
@@ -335,7 +334,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha:0.15),
+            color: AppColors.shadowColor.withValues(alpha: 0.15),
             blurRadius: AppConstants.blur_10,
           ),
         ],

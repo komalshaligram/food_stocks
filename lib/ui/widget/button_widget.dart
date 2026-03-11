@@ -12,7 +12,18 @@ class ButtonWidget extends StatelessWidget {
   final double radius;
   final Color borderColor;
 
-  const ButtonWidget({super.key, required this.buttonText, this.onPressed, this.bGColor = Colors.white, this.fontColors = Colors.white, this.width, this.height = 50, this.fontSize = 18, this.radius = 10, this.borderColor = Colors.white});
+  const ButtonWidget({
+    super.key,
+    required this.buttonText,
+    this.onPressed,
+    this.bGColor = Colors.white,
+    this.fontColors = Colors.white,
+    this.width,
+    this.height = 50,
+    this.fontSize = 18,
+    this.radius = 10,
+    this.borderColor = Colors.white,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -44,6 +44,7 @@ class CompanyProductsState with _$CompanyProductsState {
     required String language,
     required bool isCartCountChange,
     required int messageCount,
+    required String? clubAgentId,
   }) = _CompanyProductsState;
 
   factory CompanyProductsState.initial() => CompanyProductsState(
@@ -92,5 +93,6 @@ class CompanyProductsState with _$CompanyProductsState {
         language: AppStrings.hebrewString,
         isCartCountChange: false,
         messageCount: 0,
+    clubAgentId: '',
       );
 }

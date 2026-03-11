@@ -54,7 +54,12 @@ class Product with _$Product {
     String? statusId,
     SaleProduct? sale,
     Scales? scales,
-    @JsonKey(name: "supplierSales") List<SupplierSale>? supplierSales,
+    @JsonKey(name: "supplierSales")
+    List<SupplierSale>? supplierSales,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) =>

@@ -24,7 +24,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
   TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
   BankInfoBloc() : super(BankInfoState.initial()) {
     on<BankInfoEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _selectBankEvent) {
         emit(state.copyWith(bankName: event.bankName));
       } else if (event is _getBankNameEvent) {
@@ -51,7 +51,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
         termsConditionReqModel = event.termsConditionReqModel;
       } else if (event is _termsConditionApiEvent) {
         termsConditionReqModel = TermsConditionReqModel(
-            id: preferencesHelper.getUserId(),
+            id: preferences.getUserId(),
             businessTypeId: termsConditionReqModel.businessTypeId,
             owner1FullName: termsConditionReqModel.owner1FullName,
             owner1IsraelId: termsConditionReqModel.owner1IsraelId,
@@ -82,7 +82,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
             path: AppUrlEndPoints.termsConditionUrl,
             formData: FormData.fromMap(
               {
-                AppStrings.userIdString: preferencesHelper.getUserId(),
+                AppStrings.userIdString: preferences.getUserId(),
                 AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
                 AppStrings.owner1FullNameString: termsConditionReqModel.owner1FullName,
                 AppStrings.owner1IsraelIdString: termsConditionReqModel.owner1IsraelId,
@@ -109,9 +109,16 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
             emit(state.copyWith(
               isApiShimmering: false,
             ));
-            Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name, arguments: {AppStrings.privacyPolicyPdfString: response.data ?? '', AppStrings.termsConditionParamString: termsConditionReqModel});
+            Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name, arguments: {
+              AppStrings.privacyPolicyPdfString: response.data ?? '',
+              AppStrings.termsConditionParamString: termsConditionReqModel,
+            });
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message ?? '', event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message ?? '', event.context),
+              type: SnackBarType.failure,
+            );
             emit(state.copyWith(
               isApiShimmering: false,
             ));
@@ -131,7 +138,12 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
       } else if (event is _addBankInfoEvent) {
         emit(state.copyWith(isApiShimmering: true));
         try {
-          BankInfoReqModel reqMap = BankInfoReqModel(branchNumber: state.branchController.text.toString().trim(), bankId: state.bankList.firstWhere((element) => element.bankName == state.bankName).id, accountNumber: state.accountNumberController.text.toString().trim(), clientId: preferencesHelper.getUserId());
+          BankInfoReqModel reqMap = BankInfoReqModel(
+            branchNumber: state.branchController.text.toString().trim(),
+            bankId: state.bankList.firstWhere((element) => element.bankName == state.bankName).id,
+            accountNumber: state.accountNumberController.text.toString().trim(),
+            clientId: preferences.getUserId(),
+          );
 
           final res = await DioClient(event.context).put(
             path: AppUrlEndPoints.addBankInfo,
@@ -139,12 +151,16 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           );
 
           if (res[AppStrings.statusString] == AppConstants.code_200) {
-            preferencesHelper.setPaymentMethod(method: AppStrings.wallet);
+            preferences.setPaymentMethod(method: AppStrings.wallet);
             Navigator.pop(event.context);
             emit(state.copyWith(isApiShimmering: false));
           } else {
             emit(state.copyWith(isApiShimmering: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res['message'].toLocalization(), event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(res['message'].toLocalization(), event.context),
+              type: SnackBarType.failure,
+            );
           }
         } catch (e) {
           emit(state.copyWith(isApiShimmering: false));

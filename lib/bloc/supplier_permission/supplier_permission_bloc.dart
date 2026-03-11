@@ -37,7 +37,11 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
             }
 
             response.data?.forEach((element) {
-              supplierPermissionList.add(PermissionModel(supplierId: element.supplierId, title: element.supplier?.contactName ?? '', isEnable: element.isAllowed ?? false));
+              supplierPermissionList.add(PermissionModel(
+                supplierId: element.supplierId,
+                title: element.supplier?.contactName ?? '',
+                isEnable: element.isAllowed ?? false,
+              ));
             });
             emit(state.copyWith(supplierPermissionList: supplierPermissionList));
           } else {

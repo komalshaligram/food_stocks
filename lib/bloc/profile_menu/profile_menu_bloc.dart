@@ -51,11 +51,10 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             isCanSeeInvoices: preferences.getCanSeeInvoices(),
             userName: preferences.getBusinessName(),
             userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
-            clientAgentId: preferences.getAgentId(),
+            clubAgentId: preferences.getClubAgentId(),
           ));
         } else if (event is _getAppLanguage) {
-          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-          String appLang = preferencesHelper.getAppLanguage();
+          String appLang = preferences.getAppLanguage();
           if (appLang == AppStrings.hebrewString) {
             emit(state.copyWith(isHebrewLanguage: true));
           }
@@ -65,8 +64,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             final response = await DioClient(event.context).put(path: AppUrlEndPoints.logOutUrl, data: {"userId": preferences.getUserId()});
 
             if (response[AppStrings.statusString] == AppConstants.code_200) {
-              SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-              await preferencesHelper.setUserLoggedIn();
+              await preferences.setUserLoggedIn();
               await Provider.of<LocaleProvider>(event.context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
               Navigator.pop(event.context);
               Navigator.popUntil(event.context, (route) => route.name == RouteDefine.bottomNavScreen.name);

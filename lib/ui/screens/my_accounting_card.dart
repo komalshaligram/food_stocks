@@ -460,7 +460,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                   child: Text(
                     tabs[index],
                     style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.smallFont,
+                      size: AppConstants.font_15,
                       color: selected ? AppColors.blackColor : AppColors.whiteColor,
                       fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                     ),
@@ -613,8 +613,8 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                     titleText(context, AppLocalizations.of(context)!.for_order),
                     GestureDetector(
                       onTap: () async {
-                        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                        preferencesHelper.setOrderId(productOrderId: state.invoiceCardList[index].orderId.toString());
+                        SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                        preferences.setOrderId(productOrderId: state.invoiceCardList[index].orderId.toString());
                         Navigator.push(
                             context,
                             PageRouteBuilder(

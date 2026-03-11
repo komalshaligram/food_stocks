@@ -1,5 +1,4 @@
-class AppConstants{
-
+class AppConstants {
   static const double buttonHeight = 50;
   static const double buttonHeightSmall = 27;
   static const double containerHeight = 40;
@@ -17,7 +16,7 @@ class AppConstants{
   static const double containerHeight_130 = 130;
   static const double containerHeight_100 = 100;
   static const double relatedProductItemWidth = 140;
-  static const double withoutSaleItemHeight = 320;
+  static const double withoutSaleItemHeight = 330;
   static const double animationDuration = 8000;
   static const double timeOutDuration = 18000;
   static const double tabletImageHeight = 130;
@@ -29,7 +28,6 @@ class AppConstants{
   static const double bigTabImageWidth = 190;
   static const double smallTabImageWidth = 160;
   static const double normalImageWidth = 140;
-
 
   //padding
   static const double padding_5 = 5;
@@ -67,7 +65,7 @@ class AppConstants{
   static const double radius_20 = 20;
   static const double radius_25 = 25;
 
- //font size
+  //font size
   static const double normalFont = 20;
   static const double smallFont = 16;
   static const double mediumFont = 18;
@@ -83,7 +81,7 @@ class AppConstants{
   static const double font_15 = 15;
   static const double font_20 = 20;
 
- //order status
+  //order status
   static const int paidStatus = 7;
   static const int onTheWayStatus = 6;
   static const int deliveryStatus = 5;
@@ -112,15 +110,15 @@ class AppConstants{
   static const double productGridAspectRatio51 = 0.43;
   static const double productGridAspectRatio9 = 9.5 / 13;
   static const double productGridAspectRatio7 = 7.5 / 13;
-  static const double productGridAspectRatio8 = 0.55;
+  static const double productGridAspectRatio8 = 0.38;
 
   //bottom nav space
   static const double bottomNavSpace = 30;
 
   //product details bottom sheet height
   static const double bottomSheetInitHeight = 1;
-  static const double bottomSheetMaxHeight =  0.75;
-  static const double bottomSheetMaxHeight1 =  0.7;
+  static const double bottomSheetMaxHeight = 0.75;
+  static const double bottomSheetMaxHeight1 = 0.7;
 
   //pagination
   static const int defaultPageLimit = 6;

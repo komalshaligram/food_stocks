@@ -63,8 +63,8 @@ class FileUploadScreenWidget extends StatelessWidget {
         builder: (context, state) {
           return WillPopScope(
             onWillPop: () async {
-              SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-              if (!preferencesHelper.getUserLoggedIn() || state.isUpdate) {
+              SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+              if (!preferences.getUserLoggedIn() || state.isUpdate) {
                 return Future.value(true);
               } else {
                 return Future.value(false);
@@ -89,8 +89,8 @@ class FileUploadScreenWidget extends StatelessWidget {
                 ),
                 leading: GestureDetector(
                     onTap: () async {
-                      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                      if (!preferencesHelper.getUserLoggedIn() || state.isUpdate) {
+                      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                      if (!preferences.getUserLoggedIn() || state.isUpdate) {
                         Navigator.pop(context);
                       }
                     },

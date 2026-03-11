@@ -49,6 +49,10 @@ class RecommendationData with _$RecommendationData {
     int? numberOfUnit,
     @JsonKey(name: "sale")
     Sale? sale,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _RecommendationData;
 
   factory RecommendationData.fromJson(Map<String, dynamic> json) => _$RecommendationDataFromJson(json);

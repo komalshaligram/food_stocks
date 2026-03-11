@@ -50,9 +50,9 @@ class MyAccountingCardBloc extends Bloc<MyAccountingCardEvent, MyAccountingCardS
           if (responseInvoice.status == AppConstants.code_200) {
             emit(state.copyWith(
               isShimmering: false,
-              totalInvoiceAmount: responseInvoice.data!.totalOpenInvoiceAmount!,
-              clientBalance: responseInvoice.data!.clientBalance!,
-              invoiceCardList: responseInvoice.data!.invoices!,
+              totalInvoiceAmount: responseInvoice.data?.totalOpenInvoiceAmount! ?? 0,
+              clientBalance: responseInvoice.data?.clientBalance! ?? 0,
+              invoiceCardList: responseInvoice.data?.invoices! ?? [],
             ));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -96,9 +96,10 @@ class MyAccountingCardBloc extends Bloc<MyAccountingCardEvent, MyAccountingCardS
           if (responseRefund.status == AppConstants.code_200) {
             emit(state.copyWith(
               isShimmering: false,
-              totalRefundAmount: responseRefund.data!.totalOpenRefundInvoiceAmount!,
-              clientBalance: responseRefund.data!.clientBalance!,
-              refundInvoicesCardList: responseRefund.data!.refundInvoices!,
+              totalRefundAmount:
+              responseRefund.data?.totalOpenRefundInvoiceAmount ?? 0,
+              clientBalance: responseRefund.data?.clientBalance! ?? 0,
+              refundInvoicesCardList: responseRefund.data?.refundInvoices! ?? [],
             ));
           } else {
             emit(state.copyWith(isShimmering: false));

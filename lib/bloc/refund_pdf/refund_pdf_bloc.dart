@@ -30,32 +30,29 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
   }
 
   Future<void> _onGetArgument(
-      _GetArgumentEvent event,
-      Emitter<RefundPdfState> emit,
-      ) async {
+    _GetArgumentEvent event,
+    Emitter<RefundPdfState> emit,
+  ) async {
     await _initPrefs();
 
-    // FIXED: Removed unsafe cast. Just assign directly.
     emit(
       state.copyWith(
-        invoiceDetailsList: event.invoiceDetailsList, // Already RefundInvoiceCommon?
+        invoiceDetailsList: event.invoiceDetailsList,
         hasValidLink: null,
       ),
     );
 
-    // Trigger link verification
     add(RefundPdfEvent.verifyInvoiceLink(context: event.context));
   }
 
   Future<void> _onVerifyInvoiceLink(
-      _VerifyInvoiceLink event,
-      Emitter<RefundPdfState> emit,
-      ) async {
+    _VerifyInvoiceLink event,
+    Emitter<RefundPdfState> emit,
+  ) async {
     await _initPrefs();
 
     final currentInvoice = state.invoiceDetailsList;
 
-    // Return early if no invoice data
     if (currentInvoice == null) {
       emit(state.copyWith(hasValidLink: false));
       return;
@@ -63,19 +60,16 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
 
     final initialLink = currentInvoice.invoiceLink;
 
-    // If we already have a valid link, use it
     if (isValidLink(initialLink)) {
       emit(
         state.copyWith(
           hasValidLink: true,
-          // Ensure link is preserved
           invoiceDetailsList: currentInvoice.copyWith(invoiceLink: initialLink),
         ),
       );
       return;
     }
 
-    // Otherwise, try to fetch from API
     try {
       final res = await DioClient(event.context).post(
         AppUrlEndPoints.getRefundInvoiceCopy,

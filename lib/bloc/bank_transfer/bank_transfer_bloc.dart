@@ -10,10 +10,10 @@ part 'bank_transfer_bloc.freezed.dart';
 class BankTransferBloc extends Bloc<BankTransferEvent, BankTransferState> {
   BankTransferBloc() : super(BankTransferState.initial()) {
     on<BankTransferEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getBankTransferInfoEvent) {
         emit(state.copyWith(
-          bankTransferDetails: preferencesHelper.getBankTransferDetail(),
+          bankTransferDetails: preferences.getBankTransferDetail(),
           isLoading: false,
         ));
       }

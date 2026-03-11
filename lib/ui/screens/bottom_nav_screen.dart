@@ -163,8 +163,8 @@ class BottomNavScreenWidget extends StatelessWidget {
                       animationCurve: Curves.decelerate,
                       animationDuration: const Duration(milliseconds: 600),
                       onTap: (index) async {
-                        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                        if (preferencesHelper.getGuestUser()) {
+                        SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                        if (preferences.getGuestUser()) {
                           if (index == 1) {
                             bloc.add(BottomNavEvent.changePage(index: index, context: context));
                           } else {
@@ -209,7 +209,7 @@ class BottomNavScreenWidget extends StatelessWidget {
           index: state.index,
           children: state.isSubUserSeeWallet
               ? [
-                  HomeScreen(
+                  const HomeScreen(
                     isSubCategory: 'false',
                   ),
                   const StoreScreen(),
@@ -218,7 +218,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                   const ProfileMenuScreen(),
                 ]
               : [
-                  HomeScreen(
+                  const HomeScreen(
                     isSubCategory: 'false',
                   ),
                   const StoreScreen(),

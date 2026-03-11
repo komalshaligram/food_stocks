@@ -135,6 +135,10 @@ class CompanyProduct with _$CompanyProduct{
     int? totalSale,
     @JsonKey(name: "lowStock")
     String? lowStock,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _CompanyProduct;
 
   factory CompanyProduct.fromJson(Map<String, dynamic> json) => _$CompanyProductFromJson(json);

@@ -23,7 +23,7 @@ part 'product_category_bloc.freezed.dart';
 class ProductCategoryBloc extends Bloc<ProductCategoryEvent, ProductCategoryState> {
   ProductCategoryBloc() : super(ProductCategoryState.initial()) {
     on<ProductCategoryEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProductCategoriesListEvent) {
         if (state.isLoadMore) {
@@ -34,7 +34,10 @@ class ProductCategoryBloc extends Bloc<ProductCategoryEvent, ProductCategoryStat
         }
         try {
           emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductCategoriesUrl, data: ProductCategoriesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.productCategoryPageLimit, search: state.reqSearch).toJson());
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.getProductCategoriesUrl,
+            data: ProductCategoriesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.productCategoryPageLimit, search: state.reqSearch).toJson(),
+          );
           ProductCategoriesResModel response = ProductCategoriesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             List<Category> productCategoryList = state.productCategoryList.toList(growable: true);
@@ -43,7 +46,11 @@ class ProductCategoryBloc extends Bloc<ProductCategoryEvent, ProductCategoryStat
             emit(state.copyWith(isBottomOfCategories: productCategoryList.length == (response.data?.totalRecords ?? 0) ? true : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.success,
+            );
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
@@ -58,7 +65,7 @@ class ProductCategoryBloc extends Bloc<ProductCategoryEvent, ProductCategoryStat
       } else if (event is _updateGlobalSearchEvent) {
         emit(state.copyWith(search: event.search, searchList: event.searchList));
       } else if (event is _getCartCountEvent) {
-        emit(state.copyWith(cartCount: preferencesHelper.getCartCount()));
+        emit(state.copyWith(cartCount: preferences.getCartCount()));
       }
     });
   }

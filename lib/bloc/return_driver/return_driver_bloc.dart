@@ -28,18 +28,18 @@ part 'return_driver_bloc.freezed.dart';
 class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
   ReturnDriverBloc() : super(ReturnDriverState.initial()) {
     on<ReturnDriverEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getOrderByIdEvent) {
         emit(state.copyWith(
           isShimmering: true,
           isLoading: true,
-          language: preferencesHelper.getAppLanguage(),
-          isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder(),
+          language: preferences.getAppLanguage(),
+          isSubUserCreateDuplicateOrder: preferences.getCanDuplicateOrder(),
         ));
         try {
           final res = await DioClient(event.context).get(
-            path: '${AppUrlEndPoints.getOrderById}${preferencesHelper.getOrderId()}',
+            path: '${AppUrlEndPoints.getOrderById}${preferences.getOrderId()}',
           );
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
@@ -53,7 +53,7 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
                 isLoading: false,
                 isRefresh: !state.isRefresh,
                 driverDeliveryProofImagesList: response.data?.orderData!.first.driverDeliveryDocumentsImages ?? [],
-                userId: preferencesHelper.getUserId(),
+                userId: preferences.getUserId(),
               ),
             );
 
@@ -76,21 +76,31 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
         emit(state.copyWith(
           isShimmering: true,
           isLoading: true,
-          language: preferencesHelper.getAppLanguage(),
-          isSubUserCreateDuplicateOrder: preferencesHelper.getCanDuplicateOrder(),
+          language: preferences.getAppLanguage(),
+          isSubUserCreateDuplicateOrder: preferences.getCanDuplicateOrder(),
         ));
         try {
           final res = await DioClient(event.context).get(
-            path: '${AppUrlEndPoints.getClientPendingReturnProducts}${preferencesHelper.getOrderId()}',
+            path: '${AppUrlEndPoints.getClientPendingReturnProducts}${preferences.getOrderId()}',
           );
 
           GetClientWaitingForNewOrderReturnModel response = GetClientWaitingForNewOrderReturnModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(returnDriverData: response, isShimmering: false, isLoading: false, isRefresh: !state.isRefresh, userId: preferencesHelper.getUserId()));
+            emit(state.copyWith(
+              returnDriverData: response,
+              isShimmering: false,
+              isLoading: false,
+              isRefresh: !state.isRefresh,
+              userId: preferences.getUserId(),
+            ));
           } else {
             emit(state.copyWith(isShimmering: false, isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false, isLoading: false));
@@ -114,25 +124,29 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
           isAllCheck: !state.isAllCheck,
         ));
       } else if (event is _getPermissionList) {
-        if (preferencesHelper.getSubUser()) {
+        if (preferences.getSubUser()) {
           try {
-            final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferencesHelper.getSubUserId()}');
+            final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
-              preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
-              preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
-              preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
-              preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
-              preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
-              preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
-              preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo ?? false);
-              preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
-              preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
-              preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
+              preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+              preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+              preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+              preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+              preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+              preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+              preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo ?? false);
+              preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
+              preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
+              preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
             } else {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
             }
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -141,7 +155,7 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
       } else if (event is _getReturnListEvent) {
         try {
           final response = await DioClient(event.context).get(
-            path: AppUrlEndPoints.getReturnByIdUrl + preferencesHelper.getOrderId(),
+            path: AppUrlEndPoints.getReturnByIdUrl + preferences.getOrderId(),
           );
           GetReturnByIdResModel res = GetReturnByIdResModel.fromJson(response);
           emit(state.copyWith(

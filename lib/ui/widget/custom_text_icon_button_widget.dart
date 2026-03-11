@@ -40,7 +40,14 @@ class CustomTextIconButtonWidget extends StatelessWidget {
                       : Transform(
                           alignment: Alignment.center,
                           transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                          child: SvgPicture.asset(svgImage!, height: 20, width: 20, fit: BoxFit.scaleDown, colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn)),
+                          child: SvgPicture.asset(svgImage!,
+                              height: 20,
+                              width: 20,
+                              fit: BoxFit.scaleDown,
+                              colorFilter: ColorFilter.mode(
+                                AppColors.whiteColor,
+                                BlendMode.srcIn,
+                              )),
                         ),
                   7.width,
                   Text(

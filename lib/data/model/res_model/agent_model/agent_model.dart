@@ -22,35 +22,10 @@ class AgentModel with _$AgentModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-    @JsonKey(name: "Agent")
-    List<Agent>? agent,
+    @JsonKey(name: "agentId")
+    String? agentId,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 }
 
-@freezed
-class Agent with _$Agent {
-  const factory Agent({
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "agentName")
-    String? agentName,
-    @JsonKey(name: "agentPhoneNumber")
-    String? agentPhoneNumber,
-    @JsonKey(name: "isDeleted")
-    bool? isDeleted,
-    @JsonKey(name: "agentNumber")
-    int? agentNumber,
-    @JsonKey(name: "createdAt")
-    String? createdAt,
-    @JsonKey(name: "updatedAt")
-    String? updatedAt,
-    @JsonKey(name: "__v")
-    int? v,
-    @JsonKey(name: "lowerField")
-    String? lowerField,
-  }) = _Agent;
-
-  factory Agent.fromJson(Map<String, dynamic> json) => _$AgentFromJson(json);
-}

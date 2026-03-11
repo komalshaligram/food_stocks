@@ -2,6 +2,7 @@ part of 'store_bloc.dart';
 
 @freezed
 class StoreEvent with _$StoreEvent {
+  const factory StoreEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
   const factory StoreEvent.changeCategoryExpansion({
     bool? isOpened,
   }) = _changeCategoryExpansion;

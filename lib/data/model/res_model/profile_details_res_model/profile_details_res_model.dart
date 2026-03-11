@@ -119,7 +119,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "availablePaymentTypes")
     required List<String> availablePaymentTypes,
     @JsonKey(name: "paymentType")
-    required String paymentType,
+    required String? paymentType,
     String? streetName,
     String? streetNumber,
     String? zip,

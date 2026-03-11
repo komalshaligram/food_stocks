@@ -64,7 +64,11 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
             }
           } else {
             emit(state.copyWith(isShimmering: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
@@ -92,7 +96,7 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
               Navigator.pushNamed(event.context, RouteDefine.subUsersProfileScreen.name);
             }
           }
-        } catch(_) {}
+        } catch (_) {}
       }
     });
   }

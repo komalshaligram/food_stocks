@@ -52,8 +52,18 @@ class StoreCategoryScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => StoreCategoryBloc()
         ..add(StoreCategoryEvent.isCategoryEvent(isSubCategory: (args?[AppStrings.isSubCategory] != null) ? false : true))
-        ..add(StoreCategoryEvent.updateGlobalSearchEvent(search: args?[AppStrings.searchString] ?? '', context: context, searchList: args?[AppStrings.searchResultString] ?? []))
-        ..add(StoreCategoryEvent.changeCategoryDetailsEvent(categoryId: args?[AppStrings.categoryIdString] ?? args?[AppStrings.companyIdString], categoryName: args?[AppStrings.categoryNameString] ?? '', isSubCategory: args?[AppStrings.isSubCategory] ?? '', context: context)),
+        ..add(StoreCategoryEvent.updateGlobalSearchEvent(
+          search: args?[AppStrings.searchString] ?? '',
+          context: context,
+          searchList: args?[AppStrings.searchResultString] ?? [],
+        ))
+        ..add(StoreCategoryEvent.changeCategoryDetailsEvent(
+          categoryId: args?[AppStrings.categoryIdString] ?? args?[AppStrings.companyIdString],
+          categoryName: args?[AppStrings.categoryNameString] ?? '',
+          isSubCategory: args?[AppStrings.isSubCategory] ?? '',
+          context: context,
+        ))
+        ..add(const StoreCategoryEvent.getPreferencesDataEvent()),
       child: StoreCategoryScreenWidget(isSubCategory: args?[AppStrings.isSubCategory] ?? ''),
     );
   }
@@ -100,7 +110,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               height: 50,
                               width: 50,
                               clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(border: Border.all(color: Colors.transparent, width: 1), gradient: AppColors.appMainGradientColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.transparent, width: 1),
+                                  gradient: AppColors.appMainGradientColor,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(AppConstants.radius_100),
+                                  )),
                               child: Center(
                                 child: SvgPicture.asset(
                                   AppImagePath.cart,
@@ -171,7 +186,22 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 80.height,
-                                state.isSubCategory ? buildTopNavigation(isSubCategory: isSubCategory, context: context, categoryName: state.categoryName, search: state.searchController.text, searchList: state.searchList) : buildTopNavigation(isSubCategory: isSubCategory, context: context, categoryName: state.categoryName, subCategoryName: state.subCategoryName, search: state.searchController.text, searchList: state.searchList),
+                                state.isSubCategory
+                                    ? buildTopNavigation(
+                                        isSubCategory: isSubCategory,
+                                        context: context,
+                                        categoryName: state.categoryName,
+                                        search: state.searchController.text,
+                                        searchList: state.searchList,
+                                      )
+                                    : buildTopNavigation(
+                                        isSubCategory: isSubCategory,
+                                        context: context,
+                                        categoryName: state.categoryName,
+                                        subCategoryName: state.subCategoryName,
+                                        search: state.searchController.text,
+                                        searchList: state.searchList,
+                                      ),
                                 Expanded(
                                   child: state.isSubCategory
                                       ? SmartRefresher(
@@ -184,6 +214,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           enablePullUp: !state.isBottomOfSubCategory,
                                           onRefresh: () {
                                             context.read<StoreCategoryBloc>().add(StoreCategoryEvent.subCategoryRefreshListEvent(context: context));
+                                            context.read<StoreCategoryBloc>().add(const StoreCategoryEvent.getPreferencesDataEvent());
                                           },
                                           onLoading: () {
                                             context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getSubCategoryListEvent(context: context));
@@ -237,8 +268,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                               context: context,
                                                               subCategoryName: state.subCategoryList[index].subCategoryName ?? '',
                                                               onTap: () {
-                                                                //get subcategory wise plano grams
-                                                                context.read<StoreCategoryBloc>().add(StoreCategoryEvent.changeSubCategoryDetailsEvent(subCategoryId: state.subCategoryList[index].id ?? '', subCategoryName: state.subCategoryList[index].subCategoryName ?? '', context: context));
+                                                                context.read<StoreCategoryBloc>().add(StoreCategoryEvent.changeSubCategoryDetailsEvent(
+                                                                      subCategoryId: state.subCategoryList[index].id ?? '',
+                                                                      subCategoryName: state.subCategoryList[index].subCategoryName ?? '',
+                                                                      context: context,
+                                                                    ));
                                                               }),
                                                         ),
                                                 ],
@@ -286,7 +320,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                           shrinkWrap: true,
                                                           physics: const NeverScrollableScrollPhysics(),
                                                           itemBuilder: (context, index) {
-                                                            return buildPlanoGramItem(planogramUpdateIndex: 2, isGuestUser: state.isGuestUser, context: context, list: state.subPlanoGramsList, index: index);
+                                                            return buildPlanoGramItem(
+                                                              planogramUpdateIndex: 2,
+                                                              isGuestUser: state.isGuestUser,
+                                                              context: context,
+                                                              list: state.subPlanoGramsList,
+                                                              index: index,
+                                                            );
                                                           },
                                                         ),
                                               Column(
@@ -301,7 +341,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                             children: [
                                                               Text(
                                                                 AppLocalizations.of(context)!.products,
-                                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+                                                                style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants.smallFont,
+                                                                  color: AppColors.blackColor,
+                                                                  fontWeight: FontWeight.w600,
+                                                                ),
                                                               ),
                                                               GestureDetector(
                                                                 onTap: () {
@@ -337,7 +381,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                       shrinkWrap: true,
                                                                       physics: const NeverScrollableScrollPhysics(),
                                                                       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                                                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context, state.isSaleOn)),
+                                                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                          crossAxisCount: 3,
+                                                                          childAspectRatio: getChildAspectRatio(
+                                                                            context,
+                                                                            state.isSaleOn,
+                                                                          )),
                                                                       itemBuilder: (context, index) => CommonProductSaleItemWidget(
                                                                           isSale: state.planogramProductList[index].product.sale?.isSale,
                                                                           isGuestUser: state.isGuestUser,
@@ -356,6 +405,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                           minQuantity: state.planogramProductList[index].product.sale?.saleMinQuantity,
                                                                           maxQuantity: state.planogramProductList[index].product.sale?.saleMaxQuantity,
                                                                           isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
+                                                                          // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
+                                                                          //     AppStrings.clubAgentIdText  ? state.planogramProductList[index].product.sale?.isSale == true
+                                                                          //     ?
+                                                                          // state.planogramProductList[index].product.recommendedConsumerOffer :
+                                                                          // state.planogramProductList[index].product.recommendedRetailPrice : '',
                                                                           onQuantityChanged: () {
                                                                             context.read<StoreCategoryBloc>().add(
                                                                                   StoreCategoryEvent.updateListQuantityOfProduct(
@@ -471,6 +525,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                           minQuantity: state.planogramProductList[index].product.sale?.saleMinQuantity,
                                                                           maxQuantity: state.planogramProductList[index].product.sale?.saleMaxQuantity,
                                                                           isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
+                                                                          // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
+                                                                          //     AppStrings.clubAgentIdText  ? state.planogramProductList[index].product.sale?.isSale == true
+                                                                          //     ?
+                                                                          // state.planogramProductList[index].product.recommendedConsumerOffer :
+                                                                          // state.planogramProductList[index].product.recommendedRetailPrice : '',
                                                                           onQuantityChanged: () {
                                                                             context.read<StoreCategoryBloc>().add(
                                                                                   StoreCategoryEvent.updateListQuantityOfProduct(
@@ -595,7 +654,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           }
                         },
                         onSearchSubmit: (String search) {
-                          Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
+                          Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                            AppStrings.searchString: state.search,
+                            AppStrings.searchType: SearchTypes.product.toString(),
+                          });
                         },
                         onSearchTap: () {
                           if (state.searchController.text.isNotEmpty) {
@@ -645,6 +707,11 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           minQuantity: state.searchList[index].saleMinQuantity,
                                           maxQuantity: state.searchList[index].saleMaxQuantity,
                                           isMixedSale: state.searchList[index].isMixedSale,
+                                          // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
+                                          //     AppStrings.clubAgentIdText  ? state.searchList[index].isSale == true
+                                          //     ?
+                                          // state.searchList[index].recommendedConsumerOffer :
+                                          // state.searchList[index].recommendedRetailPrice : '',
                                           onQuantityChanged: () {
                                             context.read<StoreCategoryBloc>().add(
                                                   StoreCategoryEvent.updateListQuantityOfProduct(
@@ -731,18 +798,36 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   : false,
                                           onSeeAllTap: () async {
                                             if (state.searchList[index].searchType == SearchTypes.category) {
-                                              dynamic result = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {AppStrings.searchString: state.searchController.text, AppStrings.reqSearchString: state.searchController.text, AppStrings.fromStoreCategoryString: true});
+                                              dynamic result = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {
+                                                AppStrings.searchString: state.searchController.text,
+                                                AppStrings.reqSearchString: state.searchController.text,
+                                                AppStrings.fromStoreCategoryString: true,
+                                              });
                                               if (result != null) {
-                                                bloc.add(StoreCategoryEvent.changeCategoryDetailsEvent(categoryId: result[AppStrings.categoryIdString], categoryName: result[AppStrings.categoryNameString], context: context, isSubCategory: ''));
+                                                bloc.add(StoreCategoryEvent.changeCategoryDetailsEvent(
+                                                  categoryId: result[AppStrings.categoryIdString],
+                                                  categoryName: result[AppStrings.categoryNameString],
+                                                  context: context,
+                                                  isSubCategory: '',
+                                                ));
                                               }
                                             } else {
                                               state.searchList[index].searchType == SearchTypes.company
-                                                  ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.searchController.text})
+                                                  ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {
+                                                      AppStrings.searchString: state.searchController.text,
+                                                    })
                                                   : state.searchList[index].searchType == SearchTypes.supplier
-                                                      ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.searchController.text})
+                                                      ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {
+                                                          AppStrings.searchString: state.searchController.text,
+                                                        })
                                                       : state.searchList[index].searchType == SearchTypes.sale
-                                                          ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.searchController.text})
-                                                          : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.searchString: state.searchController.text, AppStrings.searchType: SearchTypes.product.toString()});
+                                                          ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {
+                                                              AppStrings.searchString: state.searchController.text,
+                                                            })
+                                                          : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                                              AppStrings.searchString: state.searchController.text,
+                                                              AppStrings.searchType: SearchTypes.product.toString(),
+                                                            });
                                             }
                                             bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent());
                                           },
@@ -757,24 +842,50 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                             }
                                             if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
                                               if (!state.isGuestUser) {
-                                                showProductDetails(isSaleOn: state.isSaleOn, context: context, productStock: state.searchList[index].productStock.toString(), productId: state.searchList[index].searchId, planoGramIndex: 0, isBarcode: true);
+                                                showProductDetails(
+                                                  isSaleOn: state.isSaleOn,
+                                                  context: context,
+                                                  productStock: state.searchList[index].productStock.toString(),
+                                                  productId: state.searchList[index].searchId,
+                                                  planoGramIndex: 0,
+                                                  isBarcode: true,
+                                                );
                                               } else {
                                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                               }
                                             } else if (state.searchList[index].searchType == SearchTypes.category) {
-                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {AppStrings.categoryIdString: state.searchList[index].searchId, AppStrings.categoryNameString: state.searchList[index].name, AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+                                              dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                                AppStrings.categoryIdString: state.searchList[index].searchId,
+                                                AppStrings.categoryNameString: state.searchList[index].name,
+                                                AppStrings.searchString: state.searchController.text,
+                                                AppStrings.searchResultString: state.searchList,
+                                              });
                                               if (searchResult != null) {
-                                                bloc.add(StoreCategoryEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString], context: context));
+                                                bloc.add(StoreCategoryEvent.updateGlobalSearchEvent(
+                                                  search: searchResult[AppStrings.searchString],
+                                                  searchList: searchResult[AppStrings.searchResultString],
+                                                  context: context,
+                                                ));
                                               }
                                             } else {
-                                              state.searchList[index].searchType == SearchTypes.company ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: state.searchList[index].searchId}) : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.searchList[index].searchId});
+                                              state.searchList[index].searchType == SearchTypes.company
+                                                  ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
+                                                      AppStrings.companyIdString: state.searchList[index].searchId,
+                                                    })
+                                                  : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                                      AppStrings.supplierIdString: state.searchList[index].searchId,
+                                                    });
                                             }
                                             bloc.add(const StoreCategoryEvent.changeCategoryExpansionEvent());
                                           });
                                     },
                                   ),
                         onScanTap: () async {
-                          String result = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
+                          String result = await scanBarcodeOrQRCode(
+                            context: context,
+                            cancelText: AppLocalizations.of(context)!.cancel,
+                            scanMode: ScanMode.BARCODE,
+                          );
                           if (result != '-1') {
                             // -1 result for cancel scanning
                             if (!state.isGuestUser) {
@@ -855,7 +966,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               color: AppColors.whiteColor,
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               boxShadow: [
-                BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
+                BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
               ],
             ),
             clipBehavior: Clip.hardEdge,
@@ -945,7 +1056,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           child: Container(
                             width: width - 10,
                             padding: const EdgeInsets.all(AppConstants.padding_3),
-                            decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                            decoration: BoxDecoration(
+                                color: AppColors.saleBGColor,
+                                border: Border.all(color: AppColors.saleBGColor),
+                                borderRadius: BorderRadius.circular(
+                                  AppConstants.radius_3,
+                                )),
                             child: Text(
                               "${parse(saleDesc).body?.text}",
                               style: AppStyles.rkRegularTextStyle(
@@ -983,12 +1099,28 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           ),
                   ),
                   5.height,
-                  isPesach ? Container(padding: const EdgeInsets.all(AppConstants.padding_3), decoration: BoxDecoration(color: AppColors.pesachBGColor, border: Border.all(color: AppColors.pesachBGColor), borderRadius: const BorderRadius.all(Radius.circular(10))), child: Text(AppLocalizations.of(context)!.pesach)) : 0.height,
+                  isPesach
+                      ? Container(
+                          padding: const EdgeInsets.all(AppConstants.padding_3),
+                          decoration: BoxDecoration(
+                              color: AppColors.pesachBGColor,
+                              border: Border.all(color: AppColors.pesachBGColor),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              )),
+                          child: Text(
+                            AppLocalizations.of(context)!.pesach,
+                          ))
+                      : 0.height,
                   isPesach ? 5.height : 0.height,
                   !isGuestUser
                       ? Center(
                           child: CommonProductButtonWidget(
-                            title: isSale ? "${AppLocalizations.of(context)!.currency}${double.parse(discountPrice).toStringAsFixed(2)}" : "${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(AppConstants.amountFrLength)}",
+                            title: isSale
+                                ? "${AppLocalizations.of(context)!.currency}${double.parse(discountPrice).toStringAsFixed(2)}"
+                                : "${AppLocalizations.of(context)!.currency}${list[index].planogramproducts?[subIndex].productPrice?.toStringAsFixed(
+                                      AppConstants.amountFrLength,
+                                    )}",
                             onPressed: () {
                               showProductDetails(isSaleOn: state.isSaleOn, productStock: list[index].planogramproducts?[subIndex].productStock.toString() ?? '0', context: context, productId: list[index].planogramproducts?[subIndex].id ?? '', planoGramIndex: 0);
                             },
@@ -1016,7 +1148,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     bool isBarcode = false,
     required bool isSaleOn,
   }) async {
-    context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getProductDetailsEvent(context: context, productId: productId, planoGramIndex: planoGramIndex, isBarcode: isBarcode));
+    context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getProductDetailsEvent(
+          context: context,
+          productId: productId,
+          planoGramIndex: planoGramIndex,
+          isBarcode: isBarcode,
+        ));
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1067,11 +1204,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                 if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity) {
                                                   context.read<StoreCategoryBloc>().add(StoreCategoryEvent.addToCartProductEvent(context: context1, productId: productId));
                                                 } else {
-                                                  showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString(),
+                                                  showMinQtyConfirmDialog(
+                                                    context,
+                                                    productId,
+                                                    state.productDetails.first.sale!.saleMinQuantity.toString(),
                                                     state.productDetails.first.sale!.isMixedSale,
-                                                    state.productDetails.first.sale!.sameSaleProducts,);
+                                                    state.productDetails.first.sale!.sameSaleProducts,
+                                                  );
                                                 }
-                                                // context.read<StoreCategoryBloc>().add(StoreCategoryEvent.addToCartProductEvent(productId: productId, context: context1));
                                               },
                                         imageOnTap: () {
                                           showDialog(
@@ -1122,8 +1262,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity,
                                         isMixedSale: state.productDetails.first.sale!.isMixedSale,
+                                        recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
+                                            ? state.productDetails.first.sale?.isSale == true
+                                                ? state.productDetails.first.recommendedConsumerOffer
+                                                : state.productDetails.first.recommendedRetailPrice
+                                            : '',
                                         onQuantityChanged: (quantity) {
-                                          context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                          context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateQuantityOfProduct(
+                                                context: context1,
+                                                quantity: quantity,
+                                              ));
                                         },
                                         onQuantityIncreaseTap: () {
                                           context.read<StoreCategoryBloc>().add(StoreCategoryEvent.increaseQuantityOfProduct(context: context1));
@@ -1149,6 +1297,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                   context,
                                                   isSaleOn,
                                                   productStockList: state.productStockList,
+                                                  state.clubAgentId!,
                                                 )
                                     ],
                                   ),
@@ -1168,7 +1317,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     BuildContext prevContext,
     List<RelatedProductDatum> relatedProductList,
     BuildContext context,
-    bool isSaleOn, {
+    bool isSaleOn,
+    String clubAgentId, {
     required List<List<ProductStockModel>> productStockList,
   }) {
     return Column(
@@ -1209,28 +1359,33 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 productStock: relatedProductList.elementAt(i).productStock.toString(),
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
-                quantity: productStockList[3].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                quantity: productStockList[3].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
+                // recommendedRetailConsumerPricerOffer: clubAgentId ==
+                //     AppStrings.clubAgentIdText  ? relatedProductList.elementAt(i).sale?.isSale == true
+                //     ?
+                // relatedProductList.elementAt(i).recommendedConsumerOffer :
+                // relatedProductList.elementAt(i).recommendedRetailPrice : '',
                 onQuantityChanged: () {
                   context.read<StoreCategoryBloc>().add(
                         StoreCategoryEvent.updateListQuantityOfProduct(
                           context: context,
-                          quantity: productStockList[3].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity.toString(),
+                          quantity: productStockList[3].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity.toString(),
                           productListIndex: 3,
-                          productStockUpdateIndex: productStockList[3].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                          productStockUpdateIndex: productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                           productSupplierIds: relatedProductList[i].supplierId.toString(),
                         ),
                       );
                 },
                 onQuantityIncreaseTap: () {
-                  if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockList[3].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity + 1) {
+                  if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockList[3].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity + 1) {
                     context.read<StoreCategoryBloc>().add(
                           StoreCategoryEvent.increaseListQuantityOfProduct(
                             context: context,
                             productListIndex: 3,
-                            productStockUpdateIndex: productStockList[3].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                            productStockUpdateIndex: productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                             productSupplierIds: relatedProductList[i].supplierId.toString(),
                           ),
                         );
@@ -1240,7 +1395,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             context: context,
                             productId: relatedProductList[i].id.toString(),
                             productListIndex: 3,
-                            productStockUpdateIndex: productStockList[3].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                            productStockUpdateIndex: productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                             productSupplierIds: relatedProductList[i].supplierId.toString(),
                           ),
                         );
@@ -1249,7 +1404,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                       context,
                       relatedProductList[i].id.toString(),
                       relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                      productStockList[3].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                      productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                       relatedProductList[i].supplierId.toString(),
                       3,
                       relatedProductList[i].sale?.isMixedSale,
@@ -1258,13 +1413,13 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   }
                 },
                 onQuantityDecreaseTap: () {
-                  if (productStockList[3].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity != 0) {
-                    if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockList[3].firstWhere((test) => test.productId == relatedProductList.elementAt(i).id).quantity - 1) {
+                  if (productStockList[3].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity != 0) {
+                    if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockList[3].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity - 1) {
                       context.read<StoreCategoryBloc>().add(
                             StoreCategoryEvent.decreaseListQuantityOfProduct(
                               context: context,
                               productListIndex: 3,
-                              productStockUpdateIndex: productStockList[3].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                              productStockUpdateIndex: productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                               productSupplierIds: relatedProductList[i].supplierId.toString(),
                             ),
                           );
@@ -1274,7 +1429,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               context: context,
                               productId: relatedProductList[i].id.toString(),
                               productListIndex: 3,
-                              productStockUpdateIndex: productStockList[3].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                              productStockUpdateIndex: productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                               productSupplierIds: relatedProductList[i].supplierId.toString(),
                             ),
                           );
@@ -1283,7 +1438,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         context,
                         relatedProductList[i].id.toString(),
                         relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                        productStockList[3].indexWhere((test) => test.productId == relatedProductList.elementAt(i).id),
+                        productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                         relatedProductList[i].supplierId.toString(),
                         3,
                         relatedProductList[i].sale?.isMixedSale,
@@ -1312,10 +1467,22 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildTopNavigation({required BuildContext context, required String categoryName, String? subCategoryName, required String search, required String isSubCategory, required List<SearchModel> searchList}) {
+  Widget buildTopNavigation({
+    required BuildContext context,
+    required String categoryName,
+    String? subCategoryName,
+    required String search,
+    required String isSubCategory,
+    required List<SearchModel> searchList,
+  }) {
     return Container(
       width: getScreenWidth(context),
-      margin: EdgeInsets.only(top: AppConstants.padding_10, left: context.rtl ? 0 : AppConstants.padding_10, right: context.rtl ? AppConstants.padding_10 : 0, bottom: AppConstants.padding_10),
+      margin: EdgeInsets.only(
+        top: AppConstants.padding_10,
+        left: context.rtl ? 0 : AppConstants.padding_10,
+        right: context.rtl ? AppConstants.padding_10 : 0,
+        bottom: AppConstants.padding_10,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1352,7 +1519,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           GestureDetector(
             onTap: () {
               if (!(subCategoryName?.isEmpty ?? true)) {
-                BlocProvider.of<StoreCategoryBloc>(context).add(StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(isSubCategory: true, context: context));
+                BlocProvider.of<StoreCategoryBloc>(context).add(StoreCategoryEvent.changeSubCategoryOrPlanogramEvent(
+                  isSubCategory: true,
+                  context: context,
+                ));
               }
             },
             child: Row(
@@ -1362,7 +1532,10 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               children: [
                 Text(
                   categoryName,
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: subCategoryName?.isEmpty ?? true ? AppColors.blackColor : AppColors.mainColor),
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont,
+                    color: subCategoryName?.isEmpty ?? true ? AppColors.blackColor : AppColors.mainColor,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 1.width,
@@ -1379,9 +1552,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           Expanded(
             child: Text(
               subCategoryName ?? '',
-              //textDirection: TextDirection.rtl,
               style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-              // textAlign: TextAlign.end,
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -1414,7 +1585,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         context: context,
                         title: list[index].planogramName ?? '',
                         onTap: () {
-                          Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name, arguments: {AppStrings.planogramProductsParamString: list[index]});
+                          Navigator.pushNamed(context, RouteDefine.planogramProductScreen.name, arguments: {
+                            AppStrings.planogramProductsParamString: list[index],
+                          });
                         },
                         subTitle: (list[index].planogramproducts?.length ?? 0) >= 1 ? AppLocalizations.of(context)!.see_all : ''),
                 5.height,
@@ -1433,7 +1606,21 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
                           itemBuilder: (context, subIndex) {
-                            return buildPlanoGramProductListItem(isSale: list[index].planogramproducts![subIndex].sale?.isSale ?? false, discountPrice: list[index].planogramproducts![subIndex].sale?.salePrice ?? '', saleDesc: list[index].planogramproducts![subIndex].sale?.saleDescription ?? '', isPesach: list[index].planogramproducts?[subIndex].isPesach ?? false, isGuestUser: isGuestUser, planogramUpdateIndex: planogramUpdateIndex, context: context, list: list, index: index, subIndex: subIndex, height: 165, lowStock: list[index].planogramproducts?[subIndex].lowStock.toString() ?? '', width: getScreenWidth(context) / 3.2);
+                            return buildPlanoGramProductListItem(
+                              isSale: list[index].planogramproducts![subIndex].sale?.isSale ?? false,
+                              discountPrice: list[index].planogramproducts![subIndex].sale?.salePrice ?? '',
+                              saleDesc: list[index].planogramproducts![subIndex].sale?.saleDescription ?? '',
+                              isPesach: list[index].planogramproducts?[subIndex].isPesach ?? false,
+                              isGuestUser: isGuestUser,
+                              planogramUpdateIndex: planogramUpdateIndex,
+                              context: context,
+                              list: list,
+                              index: index,
+                              subIndex: subIndex,
+                              height: 165,
+                              lowStock: list[index].planogramproducts?[subIndex].lowStock.toString() ?? '',
+                              width: getScreenWidth(context) / 3.2,
+                            );
                           },
                         ),
                 ),
@@ -1446,14 +1633,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildSubCategoryListItem({required int index, required BuildContext context, required String subCategoryName, required void Function()? onTap}) {
+  Widget buildSubCategoryListItem({required int index, required BuildContext context, required String subCategoryName, required void Function()? onTap,}) {
     return InkWell(
       onTap: onTap,
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)), boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.1), blurRadius: AppConstants.blur_10),
+          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10),
         ]),
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_15),
@@ -1472,19 +1659,14 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  void showConditionDialog({required BuildContext context, required String saleCondition}) {
-    showDialog(
-        context: context,
-        builder: (context) => CommonSaleDescriptionDialog(
-            title: saleCondition,
-            onTap: () {
-              Navigator.pop(context);
-            },
-            buttonTitle: AppLocalizations.of(context)!.ok));
-  }
 
-  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale,
-      List? sameSaleProducts,) {
+  showMinQtyConfirmDialog(
+    BuildContext context,
+    String productId,
+    String minBox,
+    bool? isMixedSale,
+    List? sameSaleProducts,
+  ) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
     showDialog(
       context: context,
@@ -1502,7 +1684,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               directionality: state.language,
               title: mixedSale,
               content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale : isMixedSale,
+              isMixedSale: isMixedSale,
               positiveTitle: AppLocalizations.of(context)!.closeText,
               negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
@@ -1511,7 +1693,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               },
               positiveOnTap: () async {
                 Navigator.pop(context);
-                bloc.add(StoreCategoryEvent.getCartCountEvent(context: context,));
+                bloc.add(StoreCategoryEvent.getCartCountEvent(
+                  context: context,
+                ));
               },
             );
           },
@@ -1520,9 +1704,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxIncreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex,
-      bool? isMixedSale,
-      List? sameSaleProducts,) {
+  showMinMaxIncreaseQtyConfirmDialog(
+    BuildContext context,
+    String productId,
+    String minBox,
+    int index,
+    supplierId,
+    productListIndex,
+    bool? isMixedSale,
+    List? sameSaleProducts,
+  ) {
     StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
     showDialog(
       context: context,
@@ -1540,7 +1731,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               directionality: state.language,
               title: mixedSale,
               content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale : isMixedSale,
+              isMixedSale: isMixedSale,
               positiveTitle: AppLocalizations.of(context)!.closeText,
               negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
@@ -1559,7 +1750,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   productStockUpdateIndex: index,
                   productSupplierIds: supplierId,
                 ));
-
               },
               positiveOnTap: () async {
                 Navigator.pop(context);
@@ -1572,9 +1762,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxDecreaseQtyConfirmDialog(BuildContext context, String productId, String minBox, int index, supplierId, productListIndex,
-      bool? isMixedSale,
-      List? sameSaleProducts,) {
+  showMinMaxDecreaseQtyConfirmDialog(
+    BuildContext context,
+    String productId,
+    String minBox,
+    int index,
+    supplierId,
+    productListIndex,
+    bool? isMixedSale,
+    List? sameSaleProducts,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) => BlocProvider.value(
@@ -1592,7 +1789,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               directionality: state.language,
               title: mixedSale,
               content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale : isMixedSale,
+              isMixedSale: isMixedSale,
               positiveTitle: AppLocalizations.of(context)!.closeText,
               negativeTitle: AppLocalizations.of(context)!.addText,
               negativeOnTap: () async {
@@ -1615,7 +1812,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                     productSupplierIds: supplierId,
                   ),
                 );
-
               },
               positiveOnTap: () async {
                 Navigator.pop(context);

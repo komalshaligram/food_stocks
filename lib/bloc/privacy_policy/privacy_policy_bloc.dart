@@ -45,7 +45,10 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     on<PrivacyPolicyEvent>((event, emit) async {
       if (event is _getPdfDataEvent) {
         termsConditionReqModel = event.termsConditionReqModel;
-        emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false, isGuarantee1Available: (termsConditionReqModel.guarantee1FullName != '') ? true : false));
+        emit(state.copyWith(
+          isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,
+          isGuarantee1Available: (termsConditionReqModel.guarantee1FullName != '') ? true : false,
+        ));
         emit(state.copyWith(pdfPath: base64Decode(event.pdfData)));
       } else if (event is _navigationEvent) {
         try {
@@ -91,7 +94,11 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name, arguments: {AppStrings.isRegisterFileString: true});
           } else {
             emit(state.copyWith(isShimmering: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));

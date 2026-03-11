@@ -8,14 +8,14 @@ class LocaleProvider extends ChangeNotifier {
   Locale? get locale => _locale;
 
   Future<void> setAppLocale({Locale? locale}) async {
-    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     if (locale == null) {
-      String appLang = preferencesHelper.getAppLanguage();
+      String appLang = preferences.getAppLanguage();
       locale = Locale(appLang);
     }
     _locale = locale;
     debugPrint('lang ${locale.languageCode}');
-    await preferencesHelper.setAppLanguage(languageCode: locale.languageCode); //en
+    await preferences.setAppLanguage(languageCode: locale.languageCode); // en // locale.languageCode
     notifyListeners();
   }
 }

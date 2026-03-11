@@ -34,6 +34,7 @@ class CommonSaleListView extends StatelessWidget {
   final String? minQuantity;
   final String? maxQuantity;
   final bool? isMixedSale;
+  // final String? recommendedRetailConsumerPricerOffer;
 
   const CommonSaleListView({
     super.key,
@@ -58,6 +59,7 @@ class CommonSaleListView extends StatelessWidget {
     this.minQuantity,
     this.maxQuantity,
     required this.isMixedSale,
+    // this.recommendedRetailConsumerPricerOffer,
   });
 
   @override
@@ -70,7 +72,7 @@ class CommonSaleListView extends StatelessWidget {
           color: AppColors.whiteColor,
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
           boxShadow: [
-            BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
+            BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
           ],
         ),
         clipBehavior: Clip.hardEdge,
@@ -143,20 +145,57 @@ class CommonSaleListView extends StatelessWidget {
                                       ? Text(
                                           AppLocalizations.of(context)!.out_of_stock1,
                                           textAlign: TextAlign.center,
-                                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
+                                          style: AppStyles.rkBoldTextStyle(
+                                            size: AppConstants.font_12,
+                                            color: AppColors.redColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         )
                                       : lowStock.isNotEmpty
-                                          ? Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400))
+                                          ? Text(lowStock,
+                                              style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.font_12,
+                                                color: AppColors.orangeColor,
+                                                fontWeight: FontWeight.w400,
+                                              ))
                                           : 0.width,
                               isPesach! ? 3.height : 0.height,
                               isPesachLabelShow(isPesach!, context),
+                              // recommendedRetailConsumerPricerOffer != ''
+                              //     ? 3.height : 0.height,
+                              // recommendedRetailConsumerPricerOffer != ''
+                              //     ?
+                              // Center(
+                              //     child: Container(
+                              //         width: MediaQuery.of(context).size.width / 1.6,
+                              //         padding: const EdgeInsets.only(left: 0, right: 0),
+                              //         decoration: BoxDecoration(
+                              //           color: AppColors.clubAgentBGColor,
+                              //           border: Border.all(color: AppColors.clubAgentBGColor),
+                              //           borderRadius: const BorderRadius.all(
+                              //             Radius.circular(
+                              //               5,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //         child: Text(
+                              //           recommendedRetailConsumerPricerOffer!,
+                              //           style: AppStyles.rkRegularTextStyle(
+                              //             size: AppConstants.font_13,
+                              //             color: AppColors.whiteColor
+                              //           ),
+                              //           textAlign: TextAlign.center,
+                              //         )))
+                              //     : const SizedBox(),
                               isPesach! ? 3.height : 0.height,
                               !isGuestUser
                                   ? numberOfUnits != '0'
-                                      ? Text(
-                                          '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
-                                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-                                        )
+                                      ? Text('${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
+                                          style: AppStyles.rkBoldTextStyle(
+                                            size: AppConstants.font_12,
+                                            color: AppColors.blackColor,
+                                            fontWeight: FontWeight.w400,
+                                          ))
                                       : 0.width
                                   : 0.width,
                             ],
@@ -173,7 +212,11 @@ class CommonSaleListView extends StatelessWidget {
                             width: MediaQuery.of(context).size.width / 1.6,
                             padding: const EdgeInsets.all(AppConstants.padding_3),
                             margin: EdgeInsets.zero,
-                            decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                            decoration: BoxDecoration(
+                              color: AppColors.saleBGColor,
+                              border: Border.all(color: AppColors.saleBGColor),
+                              borderRadius: BorderRadius.circular(AppConstants.radius_3),
+                            ),
                             child: Text(
                               "${parse(salesDesc).body?.text}",
                               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w500),
@@ -195,10 +238,14 @@ class CommonSaleListView extends StatelessWidget {
                                           children: <TextSpan>[
                                             TextSpan(
                                               text: '${AppLocalizations.of(context)?.currency}${(price * int.parse(numberOfUnits)).toStringAsFixed(2)} ',
-                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor).copyWith(decoration: TextDecoration.lineThrough),
+                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor).copyWith(
+                                                decoration: TextDecoration.lineThrough,
+                                              ),
                                             ),
                                             TextSpan(
-                                              text: ' ${AppLocalizations.of(context)?.currency}${(discountedPrice * int.parse(numberOfUnits)).toStringAsFixed(2)}',
+                                              text: ' ${AppLocalizations.of(context)?.currency}${(discountedPrice * int.parse(numberOfUnits)).toStringAsFixed(
+                                                2,
+                                              )}',
                                               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor),
                                             ),
                                           ],
@@ -289,7 +336,11 @@ class CommonSaleListView extends StatelessWidget {
                           child: Container(
                             width: 25,
                             height: 25,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_2), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(AppConstants.radius_2),
+                              border: Border.all(color: AppColors.greyColor),
+                              color: AppColors.pageColor,
+                            ),
                             child: const Icon(
                               Icons.add,
                               size: 15,
@@ -315,7 +366,11 @@ class CommonSaleListView extends StatelessWidget {
                             alignment: Alignment.center,
                             width: 25,
                             height: 25,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(AppConstants.radius_3),
+                              border: Border.all(color: AppColors.greyColor),
+                              color: AppColors.pageColor,
+                            ),
                             child: const Icon(
                               Icons.remove,
                               size: 15,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static Color mainColor = const Color(0xff8AC540)/*Color(0xff20BF6B)*/;
+  static Color mainColor = const Color(0xff8AC540);
   static Color notificationColor = const Color(0xff40C057);
-  static Color blueColor = const Color(0xff144D9A)/*Color(0xff1890FF)*/;
+  static Color blueColor = const Color(0xff144D9A);
   static Color borderColor = const Color(0xffD9D9D9);
   static Color whiteColor = const Color(0xffFFFFFF);
   static Color blackColor = const Color(0xff000000);
@@ -21,11 +21,12 @@ class AppColors {
   static Color redColor = const Color(0xffFF4D4F);
   static Color textFieldBorderColor = const Color(0xffCED4DA);
   static Color notesBGColor = const Color(0xffF1F3F5);
-  static Color graphColor = const Color(0xff8AC540)/*Color(0xff1AC769)*/;
+  static Color graphColor = const Color(0xff8AC540);
   static Color shimmer1Color = const Color(0xCCE0E0E0);
   static Color shimmer2Color = const Color(0xffF5F5F5);
   static Color lightMainColor = const Color(0xffd2fcd2);
   static Color pesachBGColor = const Color(0xffF2C94C);
+  static Color clubAgentBGColor = const Color(0xff2596be);
   static Color barCodeLineColor = const Color(0xff20BF6B);
   static Color statusOpenColor = const  Color(0xff40C057);
   static Color statusCloseColor = const  Color(0xff7E93A0);

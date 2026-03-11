@@ -31,7 +31,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
   OtpBloc() : super(OtpState.initial()) {
     on<OtpEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _setOtpTimerEvent) {
         if (state.otpTimer == 0) {
@@ -59,29 +59,31 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
-            OtpReqModel reqMap = OtpReqModel(contact: event.contact, otp: event.otp, tokenId: preferencesHelper.getFCMToken());
+            OtpReqModel reqMap = OtpReqModel(contact: event.contact, otp: event.otp, tokenId: preferences.getFCMToken());
 
             final res = await DioClient(event.context).post(AppUrlEndPoints.loginOTPUrl, data: reqMap);
 
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               _periodicOtpTimerSubscription.cancel();
-              preferencesHelper.setCartId(cartId: response.data?.cartId ?? '');
-              preferencesHelper.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
-              preferencesHelper.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
-              preferencesHelper.setUserId(id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
+              preferences.setCartId(cartId: response.data?.cartId ?? '');
+              preferences.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
+              preferences.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
+              preferences.setUserId(
+                id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '',
+              );
               if (response.data?.adminType == AppStrings.subUserString) {
-                preferencesHelper.setUserName(name: response.data?.user?.contactName ?? '');
+                preferences.setUserName(name: response.data?.user?.contactName ?? '');
               } else {
-                preferencesHelper.setUserName(name: response.data?.user?.clientDetail?.ownerName ?? '');
+                preferences.setUserName(name: response.data?.user?.clientDetail?.ownerName ?? '');
               }
 
-              preferencesHelper.setUserImageUrl(imageUrl: response.data?.user?.profileImage ?? '');
-              preferencesHelper.setUserLoggedIn(isLoggedIn: true);
-              preferencesHelper.setWalletId(userWalletId: response.data?.wallet ?? '');
-              preferencesHelper.setIsSubUser(isSubUser: (response.data?.adminType == AppStrings.subUserString) ? true : false);
-              preferencesHelper.setEmailId(userEmailId: response.data?.user?.email ?? '');
-              preferencesHelper.setAgentId(agent_Id: response.data?.agentId ?? '');
+              preferences.setUserImageUrl(imageUrl: response.data?.user?.profileImage ?? '');
+              preferences.setUserLoggedIn(isLoggedIn: true);
+              preferences.setWalletId(userWalletId: response.data?.wallet ?? '');
+              preferences.setIsSubUser(isSubUser: (response.data?.adminType == AppStrings.subUserString) ? true : false);
+              preferences.setEmailId(userEmailId: response.data?.user?.email ?? '');
+              preferences.setClubAgentId(club_agent_Id: response.data?.agentId ?? '');
 
               String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
               String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
@@ -102,22 +104,24 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 }
               }
 
-              Smartlook.instance.user.setIdentifier((response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
+              Smartlook.instance.user.setIdentifier(
+                (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '',
+              );
               Smartlook.instance.user.setEmail(response.data?.user?.phoneNumber ?? '');
               Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
               if (response.data?.adminType == AppStrings.subUserString) {
                 var res = response.data?.subUserPermissions;
-                preferencesHelper.setSubUserId(id: response.data?.user?.id ?? '');
-                preferencesHelper.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
-                preferencesHelper.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
-                preferencesHelper.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
-                preferencesHelper.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
-                preferencesHelper.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
-                preferencesHelper.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
-                preferencesHelper.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo ?? false);
-                preferencesHelper.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
-                preferencesHelper.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
-                preferencesHelper.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
+                preferences.setSubUserId(id: response.data?.user?.id ?? '');
+                preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+                preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+                preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+                preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+                preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+                preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+                preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo ?? false);
+                preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
+                preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
+                preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
               }
               emit(state.copyWith(isLoading: false));
 
@@ -129,13 +133,21 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 type: SnackBarType.success,
               );
             } else if (response.status == AppConstants.code_400) {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
               emit(state.copyWith(
                 isLoading: false,
               ));
             } else {
               emit(state.copyWith(isLoading: false));
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
             }
           } catch (e) {
             emit(state.copyWith(isLoading: false));
@@ -161,22 +173,30 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
             if (response.status == AppConstants.code_200) {
               _periodicOtpTimerSubscription.cancel();
-              preferencesHelper.setCartId(cartId: response.data?.cartId ?? '');
-              preferencesHelper.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
-              preferencesHelper.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
-              preferencesHelper.setUserId(id: response.data?.user?.id ?? '');
-              preferencesHelper.setWalletId(userWalletId: response.data?.wallet ?? '');
+              preferences.setCartId(cartId: response.data?.cartId ?? '');
+              preferences.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
+              preferences.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
+              preferences.setUserId(id: response.data?.user?.id ?? '');
+              preferences.setWalletId(userWalletId: response.data?.wallet ?? '');
               emit(state.copyWith(isLoading: false));
               Navigator.popUntil(event.context, (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(event.context, RouteDefine.profileScreen.name, arguments: {AppStrings.contactString: event.contact});
             } else if (response.status == AppConstants.code_400) {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
               emit(state.copyWith(
                 isLoading: false,
               ));
             } else {
               emit(state.copyWith(isLoading: false));
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
             }
           } catch (e) {
             emit(state.copyWith(isLoading: false));
@@ -201,8 +221,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           if (response.status == AppConstants.code_200) {
             await SmsAutoFill().listenForCode();
             CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.otp_resend_success, type: SnackBarType.success);
-            preferencesHelper.setUserId(id: response.user?.id ?? '');
-            preferencesHelper.setPhoneNumber(userPhoneNumber: event.contactNumber);
+            preferences.setUserId(id: response.user?.id ?? '');
+            preferences.setPhoneNumber(userPhoneNumber: event.contactNumber);
             emit(state.copyWith(isLoading: false));
           } else if (response.status == AppConstants.code_403) {
             CustomSnackBar.showSnackBar(context: event.context, title: response.message ?? '', type: SnackBarType.failure);
@@ -210,7 +230,11 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               isLoading: false,
             ));
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
             emit(state.copyWith(
               isLoading: false,
             ));

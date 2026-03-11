@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,7 +23,7 @@ part 'form_data_bloc.freezed.dart';
 class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
   FormDataBloc() : super(FormDataState.initial()) {
     on<FormDataEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
       List<String> ownerList = [];
       List<BusinessType> businessTypeList = [];
@@ -39,8 +40,12 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       } else if (event is _selectBusinessTypeEvent) {
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
-            debugPrint('element.haveMultiple${element.haveMultiple}');
-            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
+            emit(state.copyWith(
+              business: event.business,
+              haveMultiple: element.haveMultiple ?? false,
+              ownerList: state.ownerList,
+              owner: state.ownerList.first,
+            ));
           }
         }
       } else if (event is _selectOwnerNoEvent) {
@@ -54,7 +59,15 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           businessTypeList.add(BusinessType(businessTypeName: AppLocalizations.of(event.context)!.type_of_business));
           businessTypeList.addAll(response.data?.businessType?.reversed ?? []);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(isShimmering: false, businessTypeList: businessTypeList, business: businessTypeList.first.businessTypeName.toString(), haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false));
+            emit(state.copyWith(
+              isShimmering: false,
+              businessTypeList: businessTypeList,
+              business: businessTypeList.first.businessTypeName.toString(),
+              haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false,
+            ));
+            add(FormDataEvent.generalSettings(
+              context: event.context,
+            ));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -65,7 +78,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         }
       } else if (event is _navigateToNextScreenEvent) {
         termsConditionReqModel = TermsConditionReqModel(
-          id: preferencesHelper.getUserId(),
+          id: preferences.getUserId(),
           businessTypeId: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
           owner1FullName: state.owner1NameController.text.trim(),
           owner1IsraelId: state.owner1israelIdController.text.trim(),
@@ -82,6 +95,18 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         );
         Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name, arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
       } else if (event is _getAgentEvent) {
+      } else if (event is _generalSettings) {
+        try {
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
+          SettingResModel response = SettingResModel.fromJson(res);
+
+          if (response.status == AppConstants.code_200) {
+            emit(state.copyWith(
+              isRegistrationSuccess: response.data?.registrationSuccessPageSettings?.showRegistrationSuccessPage! ?? false,
+            ));
+            return;
+          }
+        } catch (_) {}
       } else if (event is _verifyAgentEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
@@ -89,10 +114,41 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           final res = await DioClient(event.context).post(AppUrlEndPoints.verifyAgentUrl, data: reqMap);
 
           if (res[AppStrings.statusString] == AppConstants.code_200) {
+            AgentModel response = AgentModel.fromJson(res);
             emit(state.copyWith(isShimmering: false));
-            Navigator.pushNamed(event.context, RouteDefine.owner1FormScreen.name, arguments: {AppStrings.owner: state.owner, AppStrings.isFreelancer: state.haveMultiple, AppStrings.businessTypeIdString: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id});
+            final clubAgentId = response.data?.agentId;
+            preferences.setClubAgentId(club_agent_Id: clubAgentId ?? '');
+            final agentCode = state.agentCodeController.text.trim();
+            if (state.isRegistrationSuccess && agentCode == AppStrings.clubAgentCodeText) {
+              Navigator.pushNamed(
+                event.context,
+                RouteDefine.registrationSuccessScreen.name,
+              );
+            } else if (!state.isRegistrationSuccess && agentCode == AppStrings.clubAgentCodeText) {
+              preferences.setUserLoggedIn(isLoggedIn: true);
+              Navigator.pushNamed(
+                event.context,
+                RouteDefine.bottomNavScreen.name,
+              );
+            } else {
+              Navigator.pushNamed(
+                event.context,
+                RouteDefine.owner1FormScreen.name,
+                arguments: {
+                  AppStrings.owner: state.owner,
+                  AppStrings.isFreelancer: state.haveMultiple,
+                  AppStrings.businessTypeIdString: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
+                },
+              );
+            }
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res['message'].toString().toLocalization(), event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                  res['message'].toString().toLocalization(),
+                  event.context,
+                ),
+                type: SnackBarType.failure);
 
             emit(state.copyWith(isShimmering: false));
           }

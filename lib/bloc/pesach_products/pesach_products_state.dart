@@ -42,6 +42,7 @@ class PesachProductsState with _$PesachProductsState {
     required String language,
     required bool isCartCountChange,
     required int messageCount,
+    required String? clubAgentId,
   }) = _PesachProductsState;
 
   factory PesachProductsState.initial() => PesachProductsState(
@@ -88,5 +89,6 @@ class PesachProductsState with _$PesachProductsState {
         language: AppStrings.hebrewString,
         isCartCountChange: false,
         messageCount: 0,
+    clubAgentId: '',
       );
 }

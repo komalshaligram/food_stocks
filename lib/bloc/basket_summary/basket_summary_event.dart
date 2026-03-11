@@ -38,4 +38,8 @@ class BasketSummaryEvent with _$BasketSummaryEvent {
   const factory BasketSummaryEvent.updateMaintenanceEvent({
     required BuildContext context,
   }) = _updateMaintenanceEvent;
+
+  const factory BasketSummaryEvent.getProfileDetailsEvent({
+    required BuildContext context,
+  }) = _getProfileDetailsEvent;
 }

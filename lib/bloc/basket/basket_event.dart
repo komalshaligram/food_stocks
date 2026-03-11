@@ -2,6 +2,7 @@ part of 'basket_bloc.dart';
 
 @freezed
 class BasketEvent with _$BasketEvent {
+  const factory BasketEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
   const factory BasketEvent.productUpdateEvent({
     required int productWeight,
     required int listIndex,

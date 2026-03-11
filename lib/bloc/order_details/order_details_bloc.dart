@@ -6,7 +6,6 @@ import '../../data/model/res_model/status_info_res_model/status_info_res_model.d
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../data/error/exceptions.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
@@ -21,7 +20,7 @@ part 'order_details_bloc.freezed.dart';
 class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
   OrderDetailsBloc() : super(OrderDetailsState.initial()) {
     on<OrderDetailsEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getOrderByIdEvent) {
         try {
@@ -31,15 +30,19 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
 
-          final String statusData = preferencesHelper.getOrderStatusInfo();
+          final String statusData = preferences.getOrderStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
-          emit(state.copyWith(statusData: statusList, language: preferencesHelper.getAppLanguage()));
+          emit(state.copyWith(statusData: statusList, language: preferences.getAppLanguage()));
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(orderByIdList: response));
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
           }
-        } catch(_) {}
+        } catch (_) {}
       }
     });
   }

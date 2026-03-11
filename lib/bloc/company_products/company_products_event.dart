@@ -2,6 +2,8 @@ part of 'company_products_bloc.dart';
 
 @freezed
 class CompanyProductsEvent with _$CompanyProductsEvent {
+  const factory CompanyProductsEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
+
   const factory CompanyProductsEvent.getCompanyProductsIdEvent({
     required String companyId,
   }) = _getCompanyProductsIdEvent;

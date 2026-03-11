@@ -35,9 +35,7 @@ class ReorderState with _$ReorderState {
     required bool isSubUserAddToBasket,
     required List<String> sortingList,
     required String sortingField,
-    required List<FilterModel> filterList,
     required bool isRefresh,
-    required bool isFilterShimmering,
     required bool isExpansionChanged,
     required bool isIncludedVat,
     required bool isSaleOn,
@@ -45,6 +43,7 @@ class ReorderState with _$ReorderState {
     required String language,
     required bool isCartCountChange,
     required int messageCount,
+    required String? clubAgentId,
   }) = _ReorderState;
 
   factory ReorderState.initial() => ReorderState(
@@ -85,14 +84,13 @@ class ReorderState with _$ReorderState {
         isSubUserAddToBasket: false,
         sortingList: ['Lowes price to Highest price', 'Highest price to Lowes price', 'A - Z', 'Z-A'],
         sortingField: 'Lowes price to Highest price',
-        filterList: [],
         isRefresh: false,
-        isFilterShimmering: false,
         isExpansionChanged: false,
         isIncludedVat: false,
         isSaleOn: false,
         language: AppStrings.hebrewString,
     isCartCountChange: false,
     messageCount: 0,
+    clubAgentId: '',
       );
 }

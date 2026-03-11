@@ -42,6 +42,7 @@ class SearchItemWidget extends StatelessWidget {
     this.minQuantity,
     this.maxQuantity,
     required this.isMixedSale,
+    // this.recommendedRetailConsumerPricerOffer,
   });
 
   final String lowStock;
@@ -70,6 +71,7 @@ class SearchItemWidget extends StatelessWidget {
   final String? minQuantity;
   final String? maxQuantity;
   final bool? isMixedSale;
+  // final String? recommendedRetailConsumerPricerOffer;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,12 @@ class SearchItemWidget extends StatelessWidget {
       children: [
         isShowSearchLabel
             ? Padding(
-                padding: const EdgeInsets.only(left: AppConstants.padding_20, right: AppConstants.padding_20, top: AppConstants.padding_15, bottom: AppConstants.padding_5),
+                padding: const EdgeInsets.only(
+                  left: AppConstants.padding_20,
+                  right: AppConstants.padding_20,
+                  top: AppConstants.padding_15,
+                  bottom: AppConstants.padding_5,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -118,7 +125,7 @@ class SearchItemWidget extends StatelessWidget {
                 ? 80
                 : double.parse(productStock.toString()) > 0 || lowStock.isEmpty
                     ? isPesach
-                        ? 130
+                        ? 230
                         : salePrice != 0.0
                             ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true
                                 ? 220
@@ -131,8 +138,23 @@ class SearchItemWidget extends StatelessWidget {
                                 ? 220
                                 : 150
                             : 120,
-            decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: (isLastItem ?? false) ? BorderSide.none : BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1))),
-            padding: EdgeInsets.only(top: AppConstants.padding_5, left: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, right: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10, bottom: AppConstants.padding_5),
+            decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              border: Border(
+                bottom: (isLastItem ?? false)
+                    ? BorderSide.none
+                    : BorderSide(
+                        color: AppColors.borderColor.withValues(alpha: 0.5),
+                        width: 1,
+                      ),
+              ),
+            ),
+            padding: EdgeInsets.only(
+              top: AppConstants.padding_5,
+              left: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10,
+              right: getScreenHeight(context) > 850 ? AppConstants.padding_20 : AppConstants.padding_10,
+              bottom: AppConstants.padding_5,
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,8 +174,6 @@ class SearchItemWidget extends StatelessWidget {
                       ? Image.network(
                           '${AppUrlEndPoints.baseFileUrl}$searchImage',
                           fit: BoxFit.scaleDown,
-                          // height: getItemHeight(context, false) == 350 ? 80 : getItemHeight(context, false) == 260 ? 150 : 60, //60
-                          //  width: /*getItemWidth(context),*/  150 ,   //50
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) {
                               return child;
@@ -163,7 +183,7 @@ class SearchItemWidget extends StatelessWidget {
                           },
                           errorBuilder: (context, error, stackTrace) {
                             return searchType == SearchTypes.subCategory
-                                ? Image.asset(AppImagePath.imageNotAvailable5, /*height: 60, width: 50,*/ fit: BoxFit.cover)
+                                ? Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover)
                                 : SvgPicture.asset(
                                     AppImagePath.splashLogo,
                                     fit: BoxFit.scaleDown,
@@ -172,11 +192,12 @@ class SearchItemWidget extends StatelessWidget {
                                   );
                           },
                         )
-                      : Image.asset(AppImagePath.imageNotAvailable5, /*height: 60, width: 50,*/ fit: BoxFit.cover),
+                      : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
                 ),
                 10.width,
                 Column(
-                  mainAxisAlignment: searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company ? MainAxisAlignment.center : MainAxisAlignment.start,
+                  mainAxisAlignment: searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company ?
+                  MainAxisAlignment.center : MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
@@ -192,7 +213,6 @@ class SearchItemWidget extends StatelessWidget {
                       ),
                     ),
                     Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
                           width: 200,
@@ -207,13 +227,28 @@ class SearchItemWidget extends StatelessWidget {
                                       : (productStock == '0' || productStock == '0.0')
                                           ? Text(
                                               AppLocalizations.of(context)!.out_of_stock1,
-                                              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
+                                              style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.font_12,
+                                                color: AppColors.redColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
                                             )
-                                          : Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400)),
+                                          : Text(
+                                              lowStock,
+                                              style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.font_12,
+                                                color: AppColors.orangeColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
                               numberOfUnits != 0
                                   ? Text(
                                       '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
-                                      style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                      style: AppStyles.rkBoldTextStyle(
+                                        size: AppConstants.font_12,
+                                        color: AppColors.blackColor,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     )
                                   : 0.width,
                               !isGuestUser
@@ -226,7 +261,9 @@ class SearchItemWidget extends StatelessWidget {
                                                 children: <TextSpan>[
                                                   TextSpan(
                                                     text: '${AppLocalizations.of(context)?.currency}${(priceOfBox * (numberOfUnits)).toStringAsFixed(2)} ',
-                                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor).copyWith(decoration: TextDecoration.lineThrough),
+                                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor).copyWith(
+                                                      decoration: TextDecoration.lineThrough,
+                                                    ),
                                                   ),
                                                   TextSpan(
                                                     text: ' ${AppLocalizations.of(context)?.currency}${(salePrice * (numberOfUnits)).toStringAsFixed(2)}',
@@ -236,8 +273,13 @@ class SearchItemWidget extends StatelessWidget {
                                               ),
                                             )
                                           : Text(
-                                              '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
-                                              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blueColor, fontWeight: FontWeight.w400),
+                                              '${AppLocalizations.of(context)?.price_par_box}${' '}${AppLocalizations.of(context)?.currency}'
+                                              '${(priceOfBox * numberOfUnits).toStringAsFixed(2)}',
+                                              style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.font_12,
+                                                color: AppColors.blueColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
                                             )
                                       : 0.width
                                   : 0.width
@@ -250,11 +292,21 @@ class SearchItemWidget extends StatelessWidget {
                                     children: [
                                       Text(
                                         '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                                        style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blueColor, fontWeight: FontWeight.w400).copyWith(decoration: TextDecoration.lineThrough),
+                                        style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.font_12,
+                                          color: AppColors.blueColor,
+                                          fontWeight: FontWeight.w400,
+                                        ).copyWith(
+                                          decoration: TextDecoration.lineThrough,
+                                        ),
                                       ),
                                       Text(
                                         '${AppLocalizations.of(context)!.currency}${salePrice.toString()}',
-                                        style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
+                                        style: AppStyles.rkBoldTextStyle(
+                                          size: AppConstants.font_12,
+                                          color: AppColors.redColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
                                     ],
                                   )
@@ -264,7 +316,11 @@ class SearchItemWidget extends StatelessWidget {
                                             width: 60,
                                             child: Text(
                                               '${AppLocalizations.of(context)!.currency}${priceOfBox.toString()}',
-                                              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blueColor, fontWeight: FontWeight.w400),
+                                              style: AppStyles.rkBoldTextStyle(
+                                                size: AppConstants.font_12,
+                                                color: AppColors.blueColor,
+                                                fontWeight: FontWeight.w400,
+                                              ),
                                             ),
                                           )
                                         : 0.width
@@ -274,12 +330,38 @@ class SearchItemWidget extends StatelessWidget {
                     ),
                     3.height,
                     isPesach ? isPesachLabelShow(isPesach, context) : 0.height,
+                    // recommendedRetailConsumerPricerOffer != '' ? 3.height : const SizedBox(),
+                    // recommendedRetailConsumerPricerOffer != ''
+                    //     ? Center(
+                    //         child: Container(
+                    //             padding: const EdgeInsets.only(left: 5, right: 5),
+                    //             decoration: BoxDecoration(
+                    //               color: AppColors.clubAgentBGColor,
+                    //               border: Border.all(color: AppColors.clubAgentBGColor),
+                    //               borderRadius: const BorderRadius.all(
+                    //                 Radius.circular(
+                    //                   5,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //             child: Text(
+                    //               recommendedRetailConsumerPricerOffer!,
+                    //               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.whiteColor),
+                    //               textAlign: TextAlign.center,
+                    //             )))
+                    //     : const SizedBox(),
                     saleDesc.isNotEmpty
                         ? Container(
                             width: getScreenWidth(context) / 1.5,
                             padding: const EdgeInsets.all(3),
                             margin: const EdgeInsets.only(top: 5),
-                            decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                            decoration: BoxDecoration(
+                              color: AppColors.saleBGColor,
+                              border: Border.all(color: AppColors.saleBGColor),
+                              borderRadius: BorderRadius.circular(
+                                AppConstants.radius_3,
+                              ),
+                            ),
                             child: Center(
                               child: Text(
                                 "${parse(saleDesc).body?.text}",
@@ -322,6 +404,7 @@ class SearchItemWidget extends StatelessWidget {
                             ],
                           )
                         : const IgnorePointer(),
+
                     isMixedSale!
                         ? Text(
                             AppLocalizations.of(context)!.mixedSale,
@@ -342,7 +425,12 @@ class SearchItemWidget extends StatelessWidget {
                           child: Container(
                             width: 25,
                             height: 25,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_2), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(AppConstants.radius_2),
+                                border: Border.all(
+                                  color: AppColors.greyColor,
+                                ),
+                                color: AppColors.pageColor),
                             child: const Icon(
                               Icons.add,
                               size: 15,
@@ -368,7 +456,11 @@ class SearchItemWidget extends StatelessWidget {
                             alignment: Alignment.center,
                             width: 25,
                             height: 25,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(AppConstants.radius_3),
+                              border: Border.all(color: AppColors.greyColor),
+                              color: AppColors.pageColor,
+                            ),
                             child: const Icon(
                               Icons.remove,
                               size: 15,

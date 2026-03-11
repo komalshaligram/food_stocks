@@ -16,13 +16,13 @@ class Owner1FormBloc extends Bloc<Owner1FormEvent, Owner1FormState> {
   Owner1FormBloc() : super(Owner1FormState.initial()) {
     on<Owner1FormEvent>((event, emit) async {
       TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getArgumentEvent) {
         emit(state.copyWith(owner: event.owner, businessID: event.businessTypeId, haveMultiple: event.isFreelancer));
       } else if (event is _navigateToNextScreenEvent) {
         termsConditionReqModel = TermsConditionReqModel(
-          id: preferencesHelper.getUserId(),
+          id: preferences.getUserId(),
           businessTypeId: state.businessID,
           owner1FullName: state.owner1NameController.text.toString(),
           owner1IsraelId: state.owner1israelIdController.text.toString(),

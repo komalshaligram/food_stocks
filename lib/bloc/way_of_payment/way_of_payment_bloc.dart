@@ -11,11 +11,11 @@ part 'way_of_payment_bloc.freezed.dart';
 class WayOfPaymentBloc extends Bloc<WayOfPaymentEvent, WayOfPaymentState> {
   WayOfPaymentBloc() : super(WayOfPaymentState.initial()) {
     on<WayOfPaymentEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _radioButtonEvent) {
         emit(state.copyWith(selectRadioTile: event.selectRadioTile));
       } else if (event is _getArgumentEvent) {
-        emit(state.copyWith(isUpdate: event.isUpdate, termsReqModel: event.termsReqModel, isEnablePayment: preferencesHelper.getAvailablePayment()));
+        emit(state.copyWith(isUpdate: event.isUpdate, termsReqModel: event.termsReqModel, isEnablePayment: preferences.getAvailablePayment()));
       }
     });
   }

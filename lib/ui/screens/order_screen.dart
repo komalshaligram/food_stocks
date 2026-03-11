@@ -151,8 +151,8 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
   }) {
     return GestureDetector(
       onTap: () async {
-        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-        preferencesHelper.setOrderId(productOrderId: orderDetailsList[index].id ?? '');
+        SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+        preferences.setOrderId(productOrderId: orderDetailsList[index].id ?? '');
         if ((orderDetailsList[index].suppliers ?? 0) > 1) {
           Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name, arguments: {
             AppStrings.orderIdString: orderDetailsList[index].id,

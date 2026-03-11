@@ -39,6 +39,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required String language,
     required bool isCartCountChange,
     required int messageCount,
+    required String? clubAgentId,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
@@ -82,5 +83,6 @@ class RecommendationProductsState with _$RecommendationProductsState {
         language: AppStrings.hebrewString,
         isCartCountChange: false,
         messageCount: 0,
+    clubAgentId: '',
       );
 }

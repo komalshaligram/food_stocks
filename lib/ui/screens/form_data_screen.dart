@@ -45,8 +45,8 @@ class FormDataScreenWidget extends StatelessWidget {
       builder: (context, state) {
         return WillPopScope(
           onWillPop: () async {
-            SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-            if (!preferencesHelper.getUserLoggedIn()) {
+            SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+            if (!preferences.getUserLoggedIn()) {
               return Future.value(true);
             } else {
               return Future.value(false);
@@ -58,8 +58,8 @@ class FormDataScreenWidget extends StatelessWidget {
               surfaceTintColor: AppColors.whiteColor,
               leading: GestureDetector(
                   onTap: () async {
-                    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                    if (!preferencesHelper.getUserLoggedIn()) {
+                    SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                    if (!preferences.getUserLoggedIn()) {
                       Navigator.pop(context);
                     }
                   },

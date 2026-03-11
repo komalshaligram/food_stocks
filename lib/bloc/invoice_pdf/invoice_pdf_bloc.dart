@@ -50,7 +50,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
       state.copyWith(
         invoiceDetailsList: event.invoiceDetailsList,
         statusList: statusList,
-        hasValidLink: null, // loading state
+        hasValidLink: null,
       ),
     );
 

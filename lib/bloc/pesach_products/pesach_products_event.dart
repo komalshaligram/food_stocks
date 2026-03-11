@@ -2,6 +2,7 @@ part of 'pesach_products_bloc.dart';
 
 @freezed
 class PesachProductsEvent with _$PesachProductsEvent {
+  const factory PesachProductsEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
   const factory PesachProductsEvent.getSupplierProductsIdEvent({
     required String supplierId,
     required String search,

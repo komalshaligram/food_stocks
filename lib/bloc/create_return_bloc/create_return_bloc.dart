@@ -25,7 +25,7 @@ part 'create_return_bloc.freezed.dart';
 class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
   CreateReturnBloc() : super(CreateReturnState.initial()) {
     on<CreateReturnEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getReturnListEvent) {
         Map map = event.product;
         if (map[AppStrings.isUpdateParamString]) {
@@ -57,7 +57,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
               returnProductList: tempList,
               returnId: map[AppStrings.idString],
               supplierId: res.data?.supplierId ?? '',
-              language: preferencesHelper.getAppLanguage(),
+              language: preferences.getAppLanguage(),
               isFromPending: map['status'],
             ));
           } catch (e) {
@@ -67,14 +67,17 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
 
           emit(state.copyWith(
-            language: preferencesHelper.getAppLanguage(),
+            language: preferences.getAppLanguage(),
             returnProductList: myList,
             returnId: myList.first.returnId!,
             isFromPending: map['status'],
           ));
         }
       } else if (event is _navigateToAddProductEvent) {
-        Navigator.pushReplacementNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': state.returnProductList, 'status': state.isFromPending});
+        Navigator.pushReplacementNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {
+          'list': state.returnProductList,
+          'status': state.isFromPending,
+        });
       } else if (event is _deleteEvent) {
         if (state.returnId.isNotEmpty) {
           DeleteReturnReq req = DeleteReturnReq(ids: [state.returnId]);
@@ -150,9 +153,9 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             applicationName: AppStrings.appName,
             supplierId: state.returnProductList.first.supplierId,
             isDraft: false,
-            clientId: preferencesHelper.getUserId(),
+            clientId: preferences.getUserId(),
             returnProducts: list,
-            subUserId: preferencesHelper.getSubUserId().isNotEmpty ? preferencesHelper.getSubUserId() : null,
+            subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
           );
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId ?? state.returnId}',
@@ -181,12 +184,20 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
               builder: (_) => CallWaitingForNewOrderSuccessMsgDialog(language: state.language),
             );
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
+              type: SnackBarType.failure,
+            );
             emit(state.copyWith(isLoading: false));
           }
-        } catch(_) {}
+        } catch (_) {}
       } else if (event is _detailReturnEvent) {
-        final result = await Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': state.returnProductList, 'index': event.index, 'status': state.isFromPending});
+        final result = await Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {
+          'list': state.returnProductList,
+          'index': event.index,
+          'status': state.isFromPending,
+        });
         if (result != null) {
           emit(state.copyWith(returnProductList: []));
           List<ReturnProduct> list = [];

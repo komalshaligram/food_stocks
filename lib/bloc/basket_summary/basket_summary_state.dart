@@ -29,6 +29,8 @@ class BasketSummaryState with _$BasketSummaryState {
     required bool isSubUserCanCreateOrder,
     required double refundAmount,
     required int totalSupplier,
+    required String? clubAgentId,
+    required bool? isAvailableAllPayments,
   }) = _BasketSummaryState;
 
   factory BasketSummaryState.initial() => const BasketSummaryState(
@@ -58,5 +60,7 @@ class BasketSummaryState with _$BasketSummaryState {
         isSubUserCanCreateOrder: false,
         refundAmount: 0.0,
         totalSupplier: 0,
+    clubAgentId: '',
+        isAvailableAllPayments: false,
       );
 }

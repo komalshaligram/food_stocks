@@ -13,7 +13,10 @@ class CountdownTimerDialog extends StatefulWidget {
   final String title;
   final TextDirection directionality;
 
-  const CountdownTimerDialog({Key? key, required this.countdown, required this.onTimerComplete, required this.title, required this.directionality}) : super(key: key);
+  const CountdownTimerDialog({Key? key, required this.countdown, required this.onTimerComplete, required this.title, required this.directionality})
+      : super(
+          key: key,
+        );
 
   @override
   _CountdownTimerDialogState createState() => _CountdownTimerDialogState();

@@ -2,6 +2,8 @@ part of 'product_sale_bloc.dart';
 
 @freezed
 class ProductSaleEvent with _$ProductSaleEvent {
+  const factory ProductSaleEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
+
   const factory ProductSaleEvent.getProductSalesListEvent({
     required BuildContext context,
   }) = _getProductSalesListEvent;

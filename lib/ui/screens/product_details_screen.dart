@@ -319,7 +319,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
 
         final bool disableDriverProofTap = state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' || (state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard);
 
-        final bool isOrderStatusCardType = state.orderData.orderstatus?.orderStatusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard;
+        final bool isOrderStatusCardType = state.orderData.orderstatus?.orderStatusNumber ==
+            AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber ==
+            AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true &&
+            state.orderData.paymentMethod.toString() == AppStrings.creditCard;
 
         Widget buildDriverProofSlot({
           required File file,
@@ -598,6 +601,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                           physics: const NeverScrollableScrollPhysics(),
                                           padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
                                           itemBuilder: (context, index) {
+
+                                            printData("check here updatedUnitQuantity${state.orderBySupplierProduct.products?[index].updatedUnitQuantity}");
+                                            printData("check here numberOfUnit${state.orderBySupplierProduct.products?[index].numberOfUnit}");
+
                                             return productListItem(
                                                 numberOfUnit: state.orderBySupplierProduct.products?[index].numberOfUnit ?? 0,
                                                 quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
@@ -692,7 +699,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             type: SnackBarType.failure,
                           );
                         } else {
-                          printData("check here value ${state.orderData.availableSurfaceQuantityToReturn}");
+                          // printData("check here value ${state.orderData.availableSurfaceQuantityToReturn}");
                           if (state.orderData.hasReturnProducts == true) {
                             Navigator.pushNamed(context, RouteDefine.returnDriverScreen.name, arguments: {
                               AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
@@ -769,6 +776,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
         ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
+
+
 
         final matchedProductList = state.returnList.data?.returnProducts?.where((test) => test.barcode == barcode);
 
@@ -886,9 +895,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               ),
                               Row(
                                 children: [
-                                  isOrderStatusCardType
+                                  isOrderStatusCardType && isUpdated
                                       ? Text(
-                                          '${(updatedUnitQuantity / numberOfUnit).round()}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                                          '${(updatedUnitQuantity / numberOfUnit).round()}${' '}'
+                                              '${state.orderBySupplierProduct.products?[index].scale.toString()}',
                                           style: AppStyles.rkRegularTextStyle(
                                             color: AppColors.blackColor,
                                             size: AppConstants.font_12,
@@ -896,7 +906,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         )
                                       : sku == skuNumber
                                           ? Text(
-                                              '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${AppLocalizations.of(context)!.units}',
+                                              '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}'
+                                                  '${AppLocalizations.of(context)!.units}',
                                               maxLines: 2,
                                               overflow: TextOverflow.fade,
                                               style: AppStyles.rkRegularTextStyle(
@@ -905,7 +916,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                               ),
                                             )
                                           : Text(
-                                              '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                                              '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}'
+                                                  '${state.orderBySupplierProduct.products?[index].scale.toString()}',
                                               maxLines: 2,
                                               overflow: TextOverflow.fade,
                                               style: AppStyles.rkRegularTextStyle(
@@ -914,7 +926,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                               ),
                                             ),
                                   5.width,
-                                  isOrderStatusCardType
+                                  isOrderStatusCardType && isUpdated
                                       ? Text(
                                           '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()})',
                                           maxLines: 2,
@@ -947,7 +959,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 ),
                               ),
                               3.height,
-                              isOrderStatusCardType
+                              isOrderStatusCardType &&  sku != skuNumber && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
                                   ? GestureDetector(
                                       onTap: () async {
                                         final product = state.orderBySupplierProduct.products?[index];

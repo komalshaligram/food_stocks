@@ -25,7 +25,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
 
   CreditCardDetailsBloc() : super(CreditCardDetailsState.initial()) {
     on<CreditCardDetailsEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getArgumentEvent) {
         termsConditionReqModel = event.termsReqModel;
@@ -34,10 +34,14 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
         emit(state.copyWith(isLoading: true));
 
         try {
-          CreditCardReqModel reqMap = CreditCardReqModel(cardNum: state.creditCardNumberController.text.trim(), expDate_YY: state.validityController.text.trim(), expDate_MM: state.selectedMonth);
+          CreditCardReqModel reqMap = CreditCardReqModel(
+            cardNum: state.creditCardNumberController.text.trim(),
+            expDate_YY: state.validityController.text.trim(),
+            expDate_MM: state.selectedMonth,
+          );
 
           final res = await DioClient(event.context).post(
-            AppUrlEndPoints.updateCreditCardUrl + preferencesHelper.getUserId(),
+            AppUrlEndPoints.updateCreditCardUrl + preferences.getUserId(),
             data: reqMap,
           );
 
@@ -45,12 +49,20 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             if (state.isFromRegFlow) {
               add(CreditCardDetailsEvent.termsConditionApiEvent(context: event.context));
             } else {
-              preferencesHelper.setPaymentMethod(method: AppStrings.creditCard);
+              preferences.setPaymentMethod(method: AppStrings.creditCard);
               Navigator.pop(event.context);
             }
           } else {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.messageString.contains('_') ? AppStrings.getLocalizedStrings(res[AppStrings.messageString].toLocalization(), event.context) : res[AppStrings.messageString], type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.messageString.contains('_')
+                    ? AppStrings.getLocalizedStrings(
+                        res[AppStrings.messageString].toLocalization(),
+                        event.context,
+                      )
+                    : res[AppStrings.messageString],
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(
@@ -65,7 +77,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
         try {
           termsConditionReqModel = TermsConditionReqModel(
             paymentType: AppStrings.creditCard,
-            id: preferencesHelper.getUserId(),
+            id: preferences.getUserId(),
             accountNumber: state.termsModel.accountNumber,
             bankId: state.termsModel.bankId,
             branchNumber: state.termsModel.branchNumber,
@@ -119,7 +131,10 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             emit(state.copyWith(
               isLoading: false,
             ));
-            Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name, arguments: {AppStrings.privacyPolicyPdfString: response.data ?? '', AppStrings.termsConditionParamString: termsConditionReqModel});
+            Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name, arguments: {
+              AppStrings.privacyPolicyPdfString: response.data ?? '',
+              AppStrings.termsConditionParamString: termsConditionReqModel,
+            });
           } else {
             emit(state.copyWith(
               isLoading: false,

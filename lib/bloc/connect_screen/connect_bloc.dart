@@ -13,10 +13,10 @@ part 'connect_bloc.freezed.dart';
 class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
   ConnectBloc() : super(ConnectState.initial()) {
     on<ConnectEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _logInAsGuest) {
-        preferencesHelper.setIsGuestUser(isGuestUser: true);
+        preferences.setIsGuestUser(isGuestUser: true);
         Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: 'storeScreen'});
       }
     });

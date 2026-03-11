@@ -2,6 +2,8 @@ part of 'reorder_bloc.dart';
 
 @freezed
 class ReorderEvent with _$ReorderEvent {
+  const factory ReorderEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
+
   const factory ReorderEvent.getPreviousOrderProductsEvent(
       {required BuildContext context}) = _getPreviousOrderProductsEvent;
 

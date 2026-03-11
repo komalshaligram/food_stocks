@@ -48,7 +48,8 @@ class BasketState with _$BasketState {
       required List<String> paymentTypesList,
       required String supplierId,
       required bool draftReturnExists,
-      required bool updatePaymentMethod}) = _BasketState;
+      required bool updatePaymentMethod,
+        required String? clubAgentId,}) = _BasketState;
 
   factory BasketState.initial() => const BasketState(
         cartItemList: GetAllCartResModel(),
@@ -100,5 +101,6 @@ class BasketState with _$BasketState {
         supplierId: '',
         draftReturnExists: false,
         updatePaymentMethod: false,
+    clubAgentId : '',
       );
 }

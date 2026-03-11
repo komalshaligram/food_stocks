@@ -69,6 +69,10 @@ class Planogramproduct with _$Planogramproduct {
     int? numberOfUnit,
     @JsonKey(name: "sale")
     Sale? sale,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _Planogramproduct;
 
   factory Planogramproduct.fromJson(Map<String, dynamic> json) => _$PlanogramproductFromJson(json);

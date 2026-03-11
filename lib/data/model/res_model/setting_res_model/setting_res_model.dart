@@ -8,9 +8,9 @@ part 'setting_res_model.g.dart';
 @freezed
 class SettingResModel with _$SettingResModel {
   const factory SettingResModel({
-     Data? data,
-     int? status,
-     String? message,
+    Data? data,
+    int? status,
+    String? message,
   }) = _SettingResModel;
 
   factory SettingResModel.fromJson(Map<String, dynamic> json) => _$SettingResModelFromJson(json);
@@ -19,15 +19,16 @@ class SettingResModel with _$SettingResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-     String? pesachBanner,
-     bool? isShowPesachBanner,
-     bool? isShowPesachBadge,
-     double? bottlePrice,
+    String? pesachBanner,
+    bool? isShowPesachBanner,
+    bool? isShowPesachBadge,
+    double? bottlePrice,
     bool? isSaleOn,
     bool? isAppOnMaintenance,
     TaviliRivchitDetails? taviliRivchitDetails,
     List<String>? showVatApplication,
     DataWebViewSettings? dataWebViewSettings,
+    RegistrationSuccessPageSettings? registrationSuccessPageSettings,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -54,5 +55,18 @@ class DataWebViewSettings with _$DataWebViewSettings {
 
   factory DataWebViewSettings.fromJson(Map<String, dynamic> json)
   => _$DataWebViewSettingsFromJson(json);
+}
+
+@freezed
+class RegistrationSuccessPageSettings
+    with _$RegistrationSuccessPageSettings {
+  const factory RegistrationSuccessPageSettings({
+    bool? showRegistrationSuccessPage,
+    String? registrationSuccessPageText,
+  }) = _RegistrationSuccessPageSettings;
+
+  factory RegistrationSuccessPageSettings.fromJson(
+      Map<String, dynamic> json) =>
+      _$RegistrationSuccessPageSettingsFromJson(json);
 }
 

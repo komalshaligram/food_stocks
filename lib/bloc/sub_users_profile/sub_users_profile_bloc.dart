@@ -43,7 +43,9 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
-          String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length());
+          String imageSize = getFileSizeString(
+            bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length(),
+          );
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
@@ -53,7 +55,12 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrlEndPoints.fileUploadUrl,
               formData: FormData.fromMap(
-                {AppStrings.profileImageString: await MultipartFile.fromFile(croppedImage?.path ?? pickedFile.path, contentType: MediaType('image', 'png'))},
+                {
+                  AppStrings.profileImageString: await MultipartFile.fromFile(
+                    croppedImage?.path ?? pickedFile.path,
+                    contentType: MediaType('image', 'png'),
+                  )
+                },
               ),
             );
             FileUploadModel profileImageModel = FileUploadModel.fromJson(response);
@@ -76,7 +83,14 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
         emit(state.copyWith(isLoading: true));
 
         try {
-          SubUserReqModel req = SubUserReqModel(israelId: state.israelIdController.text.trim(), contactName: state.nameController.text.trim(), clientId: preferences.getUserId(), email: state.emailController.text.trim(), phoneNumber: state.phoneNumberController.text.trim(), profileImage: state.subUserProfileImage);
+          SubUserReqModel req = SubUserReqModel(
+            israelId: state.israelIdController.text.trim(),
+            contactName: state.nameController.text.trim(),
+            clientId: preferences.getUserId(),
+            email: state.emailController.text.trim(),
+            phoneNumber: state.phoneNumberController.text.trim(),
+            profileImage: state.subUserProfileImage,
+          );
           Map<String, dynamic> subUserReqModel = req.toJson();
 
           subUserReqModel.removeWhere((key, value) {
@@ -91,13 +105,21 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
 
           SubUserResModel response = SubUserResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.success,
+            );
             emit(
               state.copyWith(isLoading: false, isEnable: true, subUserId: response.data?.id ?? ''),
             );
           } else {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));
@@ -135,7 +157,17 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String version = packageInfo.version;
 
-          UpdateSubUserReqModel req = UpdateSubUserReqModel(id: state.subUserId, email: state.emailController.text, israelId: state.israelIdController.text, contactName: state.nameController.text, phoneNumber: state.phoneNumberController.text, profileImage: state.subUserProfileImage, applicationVersion: version, deviceType: Platform.isAndroid ? AppStrings.androidString : AppStrings.iosString, lastSeen: DateTime.now());
+          UpdateSubUserReqModel req = UpdateSubUserReqModel(
+            id: state.subUserId,
+            email: state.emailController.text,
+            israelId: state.israelIdController.text,
+            contactName: state.nameController.text,
+            phoneNumber: state.phoneNumberController.text,
+            profileImage: state.subUserProfileImage,
+            applicationVersion: version,
+            deviceType: Platform.isAndroid ? AppStrings.androidString : AppStrings.iosString,
+            lastSeen: DateTime.now(),
+          );
 
           Map<String, dynamic> updateSubUserReq = req.toJson();
 
@@ -192,7 +224,11 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           }
         } catch (e) {
           emit(state.copyWith(isFileUploading: false));
-          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
+            type: SnackBarType.failure,
+          );
         }
       } else if (event is _getSubUserByIdEvent) {
         emit(state.copyWith(
@@ -231,7 +267,11 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
               ));
             } else {
               emit(state.copyWith(isShimmering: false));
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
             }
           } on ServerException {
             emit(state.copyWith(isShimmering: false));

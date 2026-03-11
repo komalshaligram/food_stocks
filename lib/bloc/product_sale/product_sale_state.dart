@@ -33,6 +33,7 @@ class ProductSaleState with _$ProductSaleState {
     required bool isCartCountChange,
     required int cartCount,
     required int messageCount,
+    required String? clubAgentId,
   }) = _ProductSaleState;
 
   factory ProductSaleState.initial() => ProductSaleState(
@@ -70,5 +71,6 @@ class ProductSaleState with _$ProductSaleState {
         isCartCountChange: false,
         cartCount: 0,
         messageCount: 0,
+    clubAgentId: '',
       );
 }

@@ -43,6 +43,7 @@ class PlanogramAllProduct with _$PlanogramAllProduct {
     required PlanoProduct product,
     @JsonKey(name: "sortField")
     double? sortField,
+
   }) = _PlanogramAllProduct;
 
   factory PlanogramAllProduct.fromJson(Map<String, dynamic> json) => _$PlanogramAllProductFromJson(json);
@@ -133,6 +134,10 @@ class PlanoProduct with _$PlanoProduct {
     int? totalSale,
     @JsonKey(name: "lowStock")
     String? lowStock,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _PlanoProduct;
 
   factory PlanoProduct.fromJson(Map<String, dynamic> json) => _$PlanoProductFromJson(json);

@@ -31,21 +31,21 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
 
   MoreDetailsBloc() : super(MoreDetailsState.initial()) {
     on<MoreDetailsEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProfileModelEvent) {
         if (!state.isUpdate) {
           emit(state.copyWith(
-            streetNameController: TextEditingController(text: preferencesHelper.getStreetName()),
-            streetNumberController: TextEditingController(text: preferencesHelper.getStreetNumber()),
-            emailController: TextEditingController(text: preferencesHelper.getEmailId()),
-            zipController: TextEditingController(text: preferencesHelper.getZip()),
-            selectCity: preferencesHelper.getCity(),
+            streetNameController: TextEditingController(text: preferences.getStreetName()),
+            streetNumberController: TextEditingController(text: preferences.getStreetNumber()),
+            emailController: TextEditingController(text: preferences.getEmailId()),
+            zipController: TextEditingController(text: preferences.getZip()),
+            selectCity: preferences.getCity(),
           ));
         }
         profileModel = event.profileModel;
         try {
-          emit(state.copyWith(isShimmering: true, language: preferencesHelper.getAppLanguage()));
+          emit(state.copyWith(isShimmering: true, language: preferences.getAppLanguage()));
           final response = await DioClient(event.context).get(path: AppUrlEndPoints.cityListUrl);
           CityListResModel cityListResModel = CityListResModel.fromJson(response);
           if (cityListResModel.status == AppConstants.code_200) {
@@ -72,7 +72,12 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           ProfileModel updatedProfileModel = ProfileModel(
             cityId: state.cityListResModel?.data?.cities?.firstWhere((city) => city.cityName == state.selectCity).id,
             email: state.emailController.text,
-            clientDetail: ClientDetail(approveSmsAndEmail: state.approveForSMS, zip: state.zipController.text.trim(), streetNumber: state.streetNumberController.text.trim(), streetName: state.streetNameController.text.trim()),
+            clientDetail: ClientDetail(
+              approveSmsAndEmail: state.approveForSMS,
+              zip: state.zipController.text.trim(),
+              streetNumber: state.streetNumberController.text.trim(),
+              streetName: state.streetNameController.text.trim(),
+            ),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
@@ -88,7 +93,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           try {
             emit(state.copyWith(isLoading: true));
             final res = await DioClient(event.context).post(
-              "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferencesHelper.getUserId()}",
+              "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
               data: req,
             );
 
@@ -96,9 +101,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(isLoading: false));
               Smartlook.instance.user.setEmail(response.data?.client?.phoneNumber ?? '');
-              preferencesHelper.setEmailId(userEmailId: response.data?.client?.email ?? '');
-              if (!preferencesHelper.getSubUser()) {
-                preferencesHelper.setUserName(name: response.data?.client?.clientDetail?.ownerName ?? '');
+              preferences.setEmailId(userEmailId: response.data?.client?.email ?? '');
+              if (!preferences.getSubUser()) {
+                preferences.setUserName(name: response.data?.client?.clientDetail?.ownerName ?? '');
               }
 
               Navigator.pop(event.context);
@@ -118,9 +123,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           } on ServerException {
             emit(state.copyWith(isLoading: false));
           }
-        } else if (preferencesHelper.getUserId().isNotEmpty) {
+        } else if (preferences.getUserId().isNotEmpty) {
           emit(state.copyWith(isLoading: true));
-          add(MoreDetailsEvent.checkBDIEvent(context: event.context, clientId: preferencesHelper.getUserId()));
+          add(MoreDetailsEvent.checkBDIEvent(context: event.context, clientId: preferences.getUserId()));
         } else {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String version = packageInfo.version;
@@ -141,7 +146,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 bussinessId: profileModel.clientDetail?.bussinessId,
                 deviceType: profileModel.clientDetail?.deviceType,
                 israelId: profileModel.clientDetail?.israelId,
-                tokenId: preferencesHelper.getFCMToken(),
+                tokenId: preferences.getFCMToken(),
                 lastSeen: DateTime.now(),
                 applicationVersion: version,
                 streetName: state.streetNameController.text.trim(),
@@ -160,11 +165,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             if (profileResModel.status == AppConstants.code_200) {
               String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
               String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
-              preferencesHelper.setUserId(id: profileResModel.data?.client?.clientData?.id ?? '');
-              preferencesHelper.setEmailId(userEmailId: profileResModel.data?.client?.clientData?.email ?? '');
-              preferencesHelper.setCartId(cartId: profileResModel.data?.client?.cartId ?? '');
-              preferencesHelper.setAuthToken(accToken: profileResModel.data?.authToken?.accessToken ?? '');
-              preferencesHelper.setRefreshToken(refToken: profileResModel.data?.authToken?.refreshToken ?? '');
+              preferences.setUserId(id: profileResModel.data?.client?.clientData?.id ?? '');
+              preferences.setEmailId(userEmailId: profileResModel.data?.client?.clientData?.email ?? '');
+              preferences.setCartId(cartId: profileResModel.data?.client?.cartId ?? '');
+              preferences.setAuthToken(accToken: profileResModel.data?.authToken?.accessToken ?? '');
+              preferences.setRefreshToken(refToken: profileResModel.data?.authToken?.refreshToken ?? '');
               if (Platform.isAndroid) {
                 if (businessName != '' || businessName != null) {
                   Smartlook.instance.user.properties.removeString(AppStrings.userBusinessName);
@@ -173,10 +178,16 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   Smartlook.instance.user.properties.removeString(AppStrings.userPhoneNum);
                 }
                 Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: profileResModel.data?.client?.clientData?.phoneNumber ?? '');
-                Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? '');
+                Smartlook.instance.user.properties.putString(
+                  AppStrings.userBusinessName,
+                  value: profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? '',
+                );
               } else {
                 if (businessName == '' || businessName == null) {
-                  Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? '');
+                  Smartlook.instance.user.properties.putString(
+                    AppStrings.userBusinessName,
+                    value: profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? '',
+                  );
                 } else if (phoneNumber == '' || phoneNumber == null) {
                   Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: profileResModel.data?.client?.clientData?.phoneNumber ?? '');
                 }
@@ -184,23 +195,27 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               Smartlook.instance.user.setIdentifier(profileResModel.data?.client?.clientData?.id ?? '');
               Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.phoneNumber.toString() ?? '');
               Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
-              if (!preferencesHelper.getSubUser()) {
-                preferencesHelper.setUserName(name: profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
+              if (!preferences.getSubUser()) {
+                preferences.setUserName(name: profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
                 if ((profileResModel.data?.client?.clientData?.profileImage ?? '') != '') {
-                  preferencesHelper.setUserImageUrl(imageUrl: profileResModel.data?.client?.clientData?.profileImage ?? '');
+                  preferences.setUserImageUrl(imageUrl: profileResModel.data?.client?.clientData?.profileImage ?? '');
                 }
               }
               add(MoreDetailsEvent.checkBDIEvent(context: event.context, clientId: profileResModel.data?.client?.clientData?.id ?? ''));
             } else {
               emit(state.copyWith(isLoading: false));
               if (profileResModel.message == AppStrings.rivchitClientErrorString) {
-                preferencesHelper.setEmailId(userEmailId: state.emailController.text);
-                preferencesHelper.setStreetName(streetName: state.streetNameController.text);
-                preferencesHelper.setStreetNumber(streetNumber: state.streetNumberController.text);
-                preferencesHelper.setZipCode(zipCode: state.zipController.text);
-                preferencesHelper.setCity(city: state.selectCity);
+                preferences.setEmailId(userEmailId: state.emailController.text);
+                preferences.setStreetName(streetName: state.streetNameController.text);
+                preferences.setStreetNumber(streetNumber: state.streetNumberController.text);
+                preferences.setZipCode(zipCode: state.zipController.text);
+                preferences.setCity(city: state.selectCity);
 
-                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error, type: SnackBarType.failure);
+                CustomSnackBar.showSnackBar(
+                  context: event.context,
+                  title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
+                  type: SnackBarType.failure,
+                );
                 Navigator.pop(event.context);
               } else {
                 CustomSnackBar.showSnackBar(
@@ -231,17 +246,29 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             emit(state.copyWith(isUpdating: true));
             final res = await DioClient(event.context).post(
               AppUrlEndPoints.getProfileDetailsUrl,
-              data: req.ProfileDetailsReqModel(id: preferencesHelper.getUserId()).toJson(),
+              data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
             );
             res_get.ProfileDetailsResModel response = res_get.ProfileDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
-              preferencesHelper.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
-              preferencesHelper.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
-              preferencesHelper.setPaymentMethodTypes(methods: response.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
-              emit(state.copyWith(isUpdating: false, selectCity: response.data?.clients?.first.city?.cityName ?? '', emailController: TextEditingController(text: response.data?.clients?.first.email), streetNumberController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetNumber), streetNameController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetName), zipController: TextEditingController(text: response.data?.clients?.first.clientDetail?.zip)));
+              preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
+              preferences.setPaymentMethodCount(count: response.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
+              preferences.setPaymentMethodTypes(methods: response.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
+              emit(state.copyWith(
+                  isUpdating: false,
+                  selectCity: response.data?.clients?.first.city?.cityName ?? '',
+                  emailController: TextEditingController(text: response.data?.clients?.first.email),
+                  streetNumberController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetNumber),
+                  streetNameController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetName),
+                  zipController: TextEditingController(
+                    text: response.data?.clients?.first.clientDetail?.zip,
+                  )));
             } else {
               emit(state.copyWith(isUpdating: false));
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
@@ -257,9 +284,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           Map reqMap = {AppStrings.idString: event.clientId};
           final res = await DioClient(event.context).post(AppUrlEndPoints.bdiUrl, data: reqMap);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
-            preferencesHelper.setAvailableAllPayment(isAvailableAllPayment: res['data']['isAvailableAllPayment']);
+            preferences.setAvailableAllPayment(isAvailableAllPayment: res['data']['isAvailableAllPayment']);
           } else {
-            preferencesHelper.setAvailableAllPayment(isAvailableAllPayment: false);
+            preferences.setAvailableAllPayment(isAvailableAllPayment: false);
           }
           emit(state.copyWith(isLoading: false));
           Navigator.pushNamed(

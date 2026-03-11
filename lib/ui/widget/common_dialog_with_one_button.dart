@@ -52,7 +52,12 @@ class CustomOneButtonDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(title, style: AppStyles.rkRegularTextStyle(color: subTitle.isNotEmpty ? AppColors.redColor : AppColors.blackColor, size: AppConstants.smallFont, fontWeight: FontWeight.w600)),
+            Text(title,
+                style: AppStyles.rkRegularTextStyle(
+                  color: subTitle.isNotEmpty ? AppColors.redColor : AppColors.blackColor,
+                  size: AppConstants.smallFont,
+                  fontWeight: FontWeight.w600,
+                )),
             subTitle.isEmpty
                 ? 0.height
                 : Text(subTitle,
@@ -78,7 +83,15 @@ class CustomOneButtonDialog extends StatelessWidget {
                       child: commonButton(positiveTitle: positiveTitle1 ?? '', width: width, positiveOnTap: positiveOnTap1),
                     )
                   : 0.height,
-              positiveTitle2 != null ? Padding(padding: const EdgeInsets.only(bottom: AppConstants.padding_10), child: commonButton(positiveTitle: positiveTitle2 ?? '', width: width, positiveOnTap: positiveOnTap2)) : 0.height,
+              positiveTitle2 != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: AppConstants.padding_10),
+                      child: commonButton(
+                        positiveTitle: positiveTitle2 ?? '',
+                        width: width,
+                        positiveOnTap: positiveOnTap2,
+                      ))
+                  : 0.height,
               positiveTitle3 != null
                   ? Padding(
                       padding: const EdgeInsets.only(bottom: AppConstants.padding_10),

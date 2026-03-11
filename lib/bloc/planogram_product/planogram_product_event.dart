@@ -2,6 +2,8 @@ part of 'planogram_product_bloc.dart';
 
 @freezed
 class PlanogramProductEvent with _$PlanogramProductEvent {
+  const factory PlanogramProductEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
+
   const factory PlanogramProductEvent.getPlanogramProductsEvent({
     required PlanogramDatum planogram,
     required BuildContext context,

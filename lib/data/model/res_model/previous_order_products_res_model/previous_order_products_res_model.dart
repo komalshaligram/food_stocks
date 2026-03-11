@@ -48,6 +48,10 @@ class PreviousOrderProductData with _$PreviousOrderProductData {
     int? numberOfUnit,
     @JsonKey(name: "sale")
     Sale? sale,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _PreviousOrderProductData;
 
   factory PreviousOrderProductData.fromJson(Map<String, dynamic> json) =>

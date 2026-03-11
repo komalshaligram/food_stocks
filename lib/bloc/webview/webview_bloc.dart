@@ -29,7 +29,7 @@ class WebviewBloc extends Bloc<WebViewEvent, WebViewState> {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final preferencesHelper = SharedPreferencesHelper(prefs: prefs);
+      final preferences = SharedPreferencesHelper(prefs: prefs);
 
       final res = await DioClient(event.context)
           .get(path: AppUrlEndPoints.generalSettingUrl);
@@ -39,14 +39,14 @@ class WebviewBloc extends Bloc<WebViewEvent, WebViewState> {
       if (response.status == AppConstants.code_200) {
         emit(state.copyWith(
           isShimmering: false,
-          language: preferencesHelper.getAppLanguage(),
-          isAppOnMaintenance: preferencesHelper.getAppOnMaintenance(),
-          showClientDataOnApp: preferencesHelper.getClientDataOnApp(),
+          language: preferences.getAppLanguage(),
+          isAppOnMaintenance: preferences.getAppOnMaintenance(),
+          showClientDataOnApp: preferences.getClientDataOnApp(),
           screenEnglishTitle:
           response.data?.dataWebViewSettings?.screenEnglishTitle,
           screenHebrewTitle:
           response.data?.dataWebViewSettings?.screenHebrewTitle,
-          userId: preferencesHelper.getUserId(),
+          userId: preferences.getUserId(),
           baseUrl: response.data?.dataWebViewSettings?.baseUrl,
         ));
       } else {

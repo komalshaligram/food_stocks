@@ -55,6 +55,10 @@ class Datum with _$Datum {
     @JsonKey(name: "productPrice") double? productPrice,
     @JsonKey(name: "productPriceString") String? productPriceString,
     @JsonKey(name: "lowStock") String? lowStock,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

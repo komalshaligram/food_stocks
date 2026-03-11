@@ -34,6 +34,7 @@ class PlanogramProductState with _$PlanogramProductState {
     required bool isSubUserAddToBasket,
     required bool isIncludedVat,
     required bool isSaleOn,
+    required String? clubAgentId,
   }) = _PlanogramProductState;
 
   factory PlanogramProductState.initial() => PlanogramProductState(
@@ -72,5 +73,6 @@ class PlanogramProductState with _$PlanogramProductState {
         isSubUserAddToBasket: false,
         isIncludedVat: false,
         isSaleOn: false,
+    clubAgentId: '',
       );
 }

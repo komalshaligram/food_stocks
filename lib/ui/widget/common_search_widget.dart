@@ -72,7 +72,7 @@ class CommonSearchWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_30)),
               color: AppColors.whiteColor,
-              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.3), blurRadius: AppConstants.radius_10)],
+              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.radius_10)],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -85,8 +85,8 @@ class CommonSearchWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                     color: AppColors.whiteColor,
-                    border: Border.all(color: AppColors.borderColor.withValues(alpha:0.5)),
-                    boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.3), blurRadius: isCategoryExpand ? 0 : 10)],
+                    border: Border.all(color: AppColors.borderColor.withValues(alpha: 0.5)),
+                    boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: isCategoryExpand ? 0 : 10)],
                   ),
                   child: Row(
                     children: [
@@ -189,7 +189,7 @@ class CommonSearchWidget extends StatelessWidget {
                                 ? LinearProgressIndicator(
                                     color: AppColors.mainColor,
                                     minHeight: 3,
-                                    backgroundColor: AppColors.mainColor.withValues(alpha:0.5),
+                                    backgroundColor: AppColors.mainColor.withValues(alpha: 0.5),
                                   )
                                 : 3.height,
                             Expanded(

@@ -2,6 +2,7 @@ part of 'supplier_products_bloc.dart';
 
 @freezed
 class SupplierProductsEvent with _$SupplierProductsEvent {
+  const factory SupplierProductsEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
   const factory SupplierProductsEvent.getSupplierProductsIdEvent({
     required String supplierId,
     required String search,

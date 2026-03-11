@@ -55,6 +55,10 @@ class SupplierProductsData with _$SupplierProductsData {
     @JsonKey(name: "isPesach") bool? isPesach,
     @JsonKey(name: "nmMashlim") String? nmMashlim,
     @JsonKey(name: "sale") Sale? sale,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
     String? lowStock,
   }) = _SupplierProductsData;
 

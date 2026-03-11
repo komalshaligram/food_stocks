@@ -14,13 +14,13 @@ part 'owner2_form_bloc.freezed.dart';
 class Owner2FormBloc extends Bloc<Owner2FormEvent, Owner2FormState> {
   Owner2FormBloc() : super(Owner2FormState.initial()) {
     on<Owner2FormEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
       if (event is _getArgumentEvent) {
         emit(state.copyWith(termsConditionReqModel: event.reqModel));
       } else if (event is _navigateToNextScreenEvent) {
         termsConditionReqModel = TermsConditionReqModel(
-          id: preferencesHelper.getUserId(),
+          id: preferences.getUserId(),
           businessTypeId: state.termsConditionReqModel.businessTypeId,
           guarantee1FullName: state.termsConditionReqModel.guarantee1FullName,
           guarantee1IsraelId: state.termsConditionReqModel.guarantee1IsraelId,

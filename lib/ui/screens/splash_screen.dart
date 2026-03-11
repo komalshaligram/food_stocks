@@ -41,10 +41,10 @@ class SplashScreenWidget extends StatelessWidget {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
         if (state.isRedirected) {
-          SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-          getVersion(preferencesHelper);
+          SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+          getVersion(preferences);
 
-          if (preferencesHelper.getUserLoggedIn()) {
+          if (preferences.getUserLoggedIn()) {
             Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: state.pushNavigation});
           } else {
             Navigator.pushReplacementNamed(context, RouteDefine.connectScreen.name);

@@ -81,6 +81,10 @@ class RelatedProductDatum with _$RelatedProductDatum {
     int? totalSale,
     @JsonKey(name: "lowStock")
     String? lowStock,
+    @JsonKey(name: "recommendedRetailPrice")
+    String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer")
+    String? recommendedConsumerOffer,
   }) = _Datum;
 
   factory RelatedProductDatum.fromJson(Map<String, dynamic> json) => _$RelatedProductDatumFromJson(json);

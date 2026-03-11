@@ -2,6 +2,7 @@ part of 'recommendation_products_bloc.dart';
 
 @freezed
 class RecommendationProductsEvent with _$RecommendationProductsEvent {
+  const factory RecommendationProductsEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
   const factory RecommendationProductsEvent.getRecommendationProductsEvent({
     required BuildContext context,
   }) = _getRecommendationProductsEvent;

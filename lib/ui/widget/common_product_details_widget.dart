@@ -37,6 +37,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final Function() onCloseTap;
   final bool isFromBasketScreen;
   final bool? isMixedSale;
+  final String? recommendedRetailConsumerPricerOffer;
 
   const CommonProductDetailsWidget({
     super.key,
@@ -62,6 +63,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.onCloseTap,
     this.isFromBasketScreen = false,
     required this.isMixedSale,
+    this.recommendedRetailConsumerPricerOffer,
   });
 
   @override
@@ -125,7 +127,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   (productDetails.first.sale?.isSale ?? false)
                       ? Text.rich(
                           TextSpan(
-                            text: isIncludedVat ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} (${AppLocalizations.of(context)?.price_includes_vat}):' : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
+                            text: isIncludedVat
+                                ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} '
+                                    '(${AppLocalizations.of(context)?.price_includes_vat}):'
+                                : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: ',
                             children: <TextSpan>[
                               TextSpan(
                                 text: '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} ',
@@ -150,7 +155,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       width: getScreenWidth(context) - 50,
                       padding: const EdgeInsets.all(AppConstants.padding_3),
                       margin: EdgeInsets.zero,
-                      decoration: BoxDecoration(color: AppColors.saleBGColor, border: Border.all(color: AppColors.saleBGColor), borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                      decoration: BoxDecoration(
+                          color: AppColors.saleBGColor,
+                          border: Border.all(color: AppColors.saleBGColor),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.radius_3,
+                          )),
                       child: Text(
                         "${parse(productDetails.first.sale?.saleDescription).body?.text}",
                         style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.w500),
@@ -169,7 +179,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
               (productDetails.first.isPesach ?? false)
                   ? Container(
                       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
-                      decoration: BoxDecoration(color: AppColors.pesachBGColor, border: Border.all(color: AppColors.pesachBGColor), borderRadius: const BorderRadius.all(Radius.circular(10))),
+                      decoration: BoxDecoration(
+                          color: AppColors.pesachBGColor,
+                          border: Border.all(color: AppColors.pesachBGColor),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          )),
                       child: productDetails.first.nmMashlim != ''
                           ? Text('${AppLocalizations.of(context)!.pesach}, ${productDetails.first.nmMashlim}')
                           : Text(
@@ -178,6 +193,26 @@ class CommonProductDetailsWidget extends StatelessWidget {
                             ))
                   : 0.height,
               (productDetails.first.isPesach ?? false) ? 5.height : 0.height,
+              recommendedRetailConsumerPricerOffer != '' ? 3.height : 0.height,
+              recommendedRetailConsumerPricerOffer != ''
+                  ? Center(
+                      child: Container(
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          decoration: BoxDecoration(
+                            color: AppColors.clubAgentBGColor,
+                            border: Border.all(color: AppColors.clubAgentBGColor),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(
+                                5,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            recommendedRetailConsumerPricerOffer!,
+                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.whiteColor),
+                            textAlign: TextAlign.center,
+                          )))
+                  : const SizedBox(),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -193,7 +228,12 @@ class CommonProductDetailsWidget extends StatelessWidget {
                       child: Stack(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: AppConstants.padding_10, right: AppConstants.padding_10, left: AppConstants.padding_10, top: AppConstants.padding_10),
+                            padding: const EdgeInsets.only(
+                              bottom: AppConstants.padding_10,
+                              right: AppConstants.padding_10,
+                              left: AppConstants.padding_10,
+                              top: AppConstants.padding_10,
+                            ),
                             child: productImages.first.isNotEmpty
                                 ? GestureDetector(
                                     onTap: imageOnTap,
@@ -253,8 +293,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1),
-                        bottom: BorderSide(color: AppColors.borderColor.withValues(alpha:0.5), width: 1),
+                        top: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.5), width: 1),
+                        bottom: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.5), width: 1),
                       ),
                     ),
                     padding: const EdgeInsets.fromLTRB(AppConstants.padding_10, AppConstants.padding_10, AppConstants.padding_20, 0),
@@ -288,17 +328,28 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                       children: [
                                         Text(
                                           '${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}',
-                                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_30, color: AppColors.blackColor, fontWeight: FontWeight.w700),
+                                          style: AppStyles.rkBoldTextStyle(
+                                            size: AppConstants.font_30,
+                                            color: AppColors.blackColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
                                         !isIncludedVat
                                             ? (productDetails.first.isBottle ?? false)
-                                                ? Container(padding: const EdgeInsets.only(top: AppConstants.padding_3), child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}'))
+                                                ? Container(
+                                                    padding: const EdgeInsets.only(top: AppConstants.padding_3),
+                                                    child: Text('${AppLocalizations.of(context)?.bottle_deposit}:${AppLocalizations.of(context)!.currency}${totalBottleDeposit.toStringAsFixed(AppConstants.amountFrLength)}'),
+                                                  )
                                                 : 0.height
                                             : 0.width,
                                         isIncludedVat
                                             ? Text(
                                                 '(${AppLocalizations.of(context)!.price_includes_vat})',
-                                                style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                                style: AppStyles.rkBoldTextStyle(
+                                                  size: AppConstants.smallFont,
+                                                  color: AppColors.blackColor,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                               )
                                             : 0.width,
                                       ],
@@ -350,9 +401,16 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                               ),
                                               alignment: Alignment.center,
                                               child: TextField(
-                                                controller: TextEditingController(text: "$productQuantity")..selection = TextSelection.fromPosition(TextPosition(offset: "$productQuantity".length)),
+                                                controller: TextEditingController(text: "$productQuantity")
+                                                  ..selection = TextSelection.fromPosition(TextPosition(
+                                                    offset: "$productQuantity".length,
+                                                  )),
                                                 textAlign: TextAlign.center,
-                                                style: AppStyles.rkBoldTextStyle(size: AppConstants.font_26, color: AppColors.blackColor, fontWeight: FontWeight.w700),
+                                                style: AppStyles.rkBoldTextStyle(
+                                                  size: AppConstants.font_26,
+                                                  color: AppColors.blackColor,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
                                                 maxLength: 5,
                                                 maxLines: 1,
                                                 textInputAction: TextInputAction.done,
@@ -361,7 +419,21 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                                 textDirection: TextDirection.ltr,
                                                 onChanged: onQuantityChanged,
                                                 cursorColor: AppColors.mainColor,
-                                                decoration: const InputDecoration(border: InputBorder.none, enabledBorder: InputBorder.none, focusedBorder: InputBorder.none, errorBorder: InputBorder.none, focusedErrorBorder: InputBorder.none, disabledBorder: InputBorder.none, filled: true, counterText: '', constraints: BoxConstraints(maxHeight: 50, minWidth: 50), fillColor: Colors.transparent, contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 0)),
+                                                decoration: const InputDecoration(
+                                                    border: InputBorder.none,
+                                                    enabledBorder: InputBorder.none,
+                                                    focusedBorder: InputBorder.none,
+                                                    errorBorder: InputBorder.none,
+                                                    focusedErrorBorder: InputBorder.none,
+                                                    disabledBorder: InputBorder.none,
+                                                    filled: true,
+                                                    counterText: '',
+                                                    constraints: BoxConstraints(maxHeight: 50, minWidth: 50),
+                                                    fillColor: Colors.transparent,
+                                                    contentPadding: EdgeInsets.symmetric(
+                                                      horizontal: 0,
+                                                      vertical: 0,
+                                                    )),
                                               )),
                                         ),
                                         5.width,
@@ -441,11 +513,23 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               isMixedSale!
                                   ? Container(
                                       alignment: Alignment.centerRight,
-                                      child: Text(AppLocalizations.of(context)!.mixedSale, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_13, color: AppColors.orangeColor, fontWeight: FontWeight.w400)),
+                                      child: Text(AppLocalizations.of(context)!.mixedSale,
+                                          style: AppStyles.rkBoldTextStyle(
+                                            size: AppConstants.font_13,
+                                            color: AppColors.orangeColor,
+                                            fontWeight: FontWeight.w400,
+                                          )),
                                     )
                                   : const IgnorePointer(),
                               !isSubUserAddToBasket ? 13.height : 0.width,
-                              isSubUserAddToBasket ? CommonProductDetailsButton(isLoading: isLoading, isSupplierAvailable: true, productStock: (productStock.toString()), onAddToOrderPressed: isLoading ? null : addToOrderTap) : 0.width,
+                              isSubUserAddToBasket
+                                  ? CommonProductDetailsButton(
+                                      isLoading: isLoading,
+                                      isSupplierAvailable: true,
+                                      productStock: (productStock.toString()),
+                                      onAddToOrderPressed: isLoading ? null : addToOrderTap,
+                                    )
+                                  : 0.width,
                             ],
                           ),
                   ),

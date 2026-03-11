@@ -6,8 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
+import '../../repository/dio_client.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
@@ -19,6 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:another_flushbar/flushbar.dart';
+
+import 'constants/app_urls.dart';
 
 double getScreenHeight(BuildContext context) {
   final screenHeight = MediaQuery.of(context).size.height;
@@ -67,8 +71,8 @@ String formatExpiryDate(String text) {
 }
 
 Future<String> getBottleTax() async {
-  SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-  var value = preferencesHelper.getBottleTax().toString();
+  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  var value = preferences.getBottleTax().toString();
   return Future.value(value.toString());
 }
 
@@ -130,7 +134,12 @@ Widget isPesachLabelShow(bool isPesach, BuildContext context) {
   if (isPesach) {
     return Container(
         padding: const EdgeInsets.only(left: 5, right: 5),
-        decoration: BoxDecoration(color: AppColors.pesachBGColor, border: Border.all(color: AppColors.pesachBGColor), borderRadius: const BorderRadius.all(Radius.circular(10))),
+        decoration: BoxDecoration(
+            color: AppColors.pesachBGColor,
+            border: Border.all(color: AppColors.pesachBGColor),
+            borderRadius: const BorderRadius.all(Radius.circular(
+              10,
+            ))),
         child: Text(
           AppLocalizations.of(context)!.pesach,
           style: AppStyles.rkRegularTextStyle(
@@ -150,7 +159,7 @@ class CustomSnackBar {
     required SnackBarType type,
   }) {
     Flushbar(
-      backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withValues(alpha:0.85) : AppColors.redColor.withValues(alpha:0.85),
+      backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withValues(alpha: 0.85) : AppColors.redColor.withValues(alpha: 0.85),
       messageText: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(20),
@@ -173,7 +182,11 @@ customShowUpdateDialog(BuildContext context, String directionality, String store
       return PopScope(
         canPop: false,
         child: AlertDialog(
-          title: Text(AppLocalizations.of(context)!.new_version_app_update, style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.mediumFont)),
+          title: Text(AppLocalizations.of(context)!.new_version_app_update,
+              style: AppStyles.rkRegularTextStyle(
+                color: AppColors.blackColor,
+                size: AppConstants.mediumFont,
+              )),
           actions: [
             Align(
               alignment: Alignment.center,
@@ -234,7 +247,17 @@ Future<CroppedFile?> cropImage({required String path, CropStyle shape = CropStyl
     cropStyle: shape,
     compressQuality: quality,
     uiSettings: [
-      AndroidUiSettings(activeControlsWidgetColor: AppColors.mainColor, cropFrameColor: AppColors.greyColor, initAspectRatio: isLogoCrop ?? false ? CropAspectRatioPreset.ratio16x9 : CropAspectRatioPreset.square, hideBottomControls: true, showCropGrid: false, lockAspectRatio: false, toolbarColor: AppColors.blackColor, toolbarTitle: AppStrings.cropImageString, toolbarWidgetColor: AppColors.whiteColor),
+      AndroidUiSettings(
+        activeControlsWidgetColor: AppColors.mainColor,
+        cropFrameColor: AppColors.greyColor,
+        initAspectRatio: isLogoCrop ?? false ? CropAspectRatioPreset.ratio16x9 : CropAspectRatioPreset.square,
+        hideBottomControls: true,
+        showCropGrid: false,
+        lockAspectRatio: false,
+        toolbarColor: AppColors.blackColor,
+        toolbarTitle: AppStrings.cropImageString,
+        toolbarWidgetColor: AppColors.whiteColor,
+      ),
       IOSUiSettings(
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: true,
@@ -523,3 +546,22 @@ Widget titleGreenText(
         overflow: TextOverflow.ellipsis,
       ),
     );
+
+Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
+  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  try {
+    final cartRes = await DioClient(context).post(
+      '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
+    );
+
+    final cartResponse = GetAllCartResModel.fromJson(cartRes);
+
+    if (cartResponse.status == AppConstants.code_200) {
+      final items = cartResponse.data?.data ?? [];
+      return {
+        for (var item in items) item.id ?? '': item.totalQuantity ?? 0,
+      };
+    }
+  } catch (_) {}
+  return {};
+}

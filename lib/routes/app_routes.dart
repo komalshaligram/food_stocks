@@ -51,6 +51,7 @@ import '../ui/screens/product_return_info_screen.dart';
 import '../ui/screens/profile_screen.dart';
 import '../ui/screens/more_details_screen.dart';
 import '../ui/screens/refund_pdf_screen.dart';
+import '../ui/screens/registration_success_screen.dart';
 import '../ui/screens/return_driver.dart';
 import '../ui/screens/return_list_screen.dart';
 import '../ui/screens/shipment_verification_screen.dart';
@@ -132,7 +133,8 @@ enum RouteDefine {
   returnDriverScreen,
   webViewScreen,
   orderRefundsScreen,
-  myAccountingCardScreen
+  myAccountingCardScreen,
+  registrationSuccessScreen,
 }
 
 class AppRouting {
@@ -202,6 +204,7 @@ class AppRouting {
       RouteDefine.webViewScreen.name: (_) => WebViewRoute.route,
       RouteDefine.orderRefundsScreen.name: (_) => OrderRefundsRoute.route,
       RouteDefine.myAccountingCardScreen.name: (_) => MyAccountingCardRoute.route,
+      RouteDefine.registrationSuccessScreen.name: (_) => RegistrationSuccessRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

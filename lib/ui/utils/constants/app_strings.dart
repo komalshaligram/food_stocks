@@ -136,6 +136,7 @@ class AppStrings {
   static const creditCardNumberString = 'creditCardNumber';
   static const creditCardValidityString = 'creditCardValidity';
   static const agentCodeString = 'agentCodeVal';
+
   //page parameters strings
   static const mobileParamString = 'mobileParam';
   static const profileParamString = 'profileParam';
@@ -225,6 +226,12 @@ class AppStrings {
   static const closedText = "Closed";
   static const inProgressText = "In Progress";
   static const partiallyClosedText = "Partially Closed";
+  static const clubAgentIdText = "6989e25de86c03f1e8144404";
+  static const clubAgentCodeText = "998616";
+
+  static String minSaleText(BuildContext context, String minBox) => '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+
+  static String otherSaleText(BuildContext context, String minBox) => '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
 
   static String getLocalizedStrings(String key, BuildContext context) {
     switch (key) {

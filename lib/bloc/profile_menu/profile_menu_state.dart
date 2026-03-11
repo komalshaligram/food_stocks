@@ -28,7 +28,7 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool isSaleOn,
     required double bottlePrice,
     required bool retryLoading,
-    required String? clientAgentId,
+    required String? clubAgentId,
   }) = _ProfileMenuState;
 
   factory ProfileMenuState.initial() => const ProfileMenuState(
@@ -57,6 +57,6 @@ class ProfileMenuState with _$ProfileMenuState {
         isIncludedVat: false,
         isSaleOn: false,
         retryLoading: false,
-        clientAgentId: '',
+        clubAgentId: '',
       );
 }

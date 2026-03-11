@@ -25,8 +25,8 @@ part 'message_bloc.freezed.dart';
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageState.initial()) {
     on<MessageEvent>((event, emit) async {
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _GetMessageListEvent) {
-        SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         emit(state.copyWith(language: preferences.getAppLanguage()));
         if (state.isLoadMore) {
           return;
@@ -51,7 +51,16 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                     ?.map((message) => MessageData(
                           id: message.id,
                           isRead: message.isRead,
-                          message: Message(id: message.message?.id ?? '', title: message.message?.title ?? '', summary: message.message?.summary ?? '', body: message.message?.body ?? '', messageImage: message.message?.messageImage ?? '', subPage: message.message?.subPage ?? '', mainPage: message.message?.mainPage ?? '', navigationId: message.message?.navigationId ?? ''),
+                          message: Message(
+                            id: message.message?.id ?? '',
+                            title: message.message?.title ?? '',
+                            summary: message.message?.summary ?? '',
+                            body: message.message?.body ?? '',
+                            messageImage: message.message?.messageImage ?? '',
+                            subPage: message.message?.subPage ?? '',
+                            mainPage: message.message?.mainPage ?? '',
+                            navigationId: message.message?.navigationId ?? '',
+                          ),
                           createdAt: message.createdAt,
                           updatedAt: message.updatedAt,
                         ))
@@ -73,12 +82,14 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         add(MessageEvent.getMessageListEvent(context: event.context));
       } else if (event is _removeOrUpdateMessageEvent) {
         List<MessageData> messageList = state.messageList.toList(growable: true);
-        SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
         if (event.isRead) {
           if (messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead == false) {
-            await preferencesHelper.setMessageCount(count: preferencesHelper.getMessageCount() - 1);
-            messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))] = messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].copyWith(isRead: true);
+            await preferences.setMessageCount(count: preferences.getMessageCount() - 1);
+            messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))] = messageList[messageList.indexOf(
+              messageList.firstWhere((message) => message.id == event.messageId),
+            )]
+                .copyWith(isRead: true);
           }
         }
         if (event.isDelete) {
@@ -107,9 +118,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             add(MessageEvent.refreshListEvent(context: event.context));
             Navigator.pop(event.dialogContext);
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
+              type: SnackBarType.failure,
+            );
           }
-        } catch(_) {}
+        } catch (_) {}
       }
     });
   }

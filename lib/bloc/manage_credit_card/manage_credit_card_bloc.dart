@@ -20,18 +20,28 @@ part 'manage_credit_card_bloc.freezed.dart';
 class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardState> {
   ManageCreditCardBloc() : super(ManageCreditCardState.initial()) {
     on<ManageCreditCardEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getCreditCardInfoEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferencesHelper.getUserId()).toJson());
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.getProfileDetailsUrl,
+            data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
+          );
           ProfileDetailsResModel resModel = ProfileDetailsResModel.fromJson(res);
           if (resModel.status == AppConstants.code_200) {
-            preferencesHelper.setPaymentMethod(method: resModel.data?.clients?.first.clientDetail?.paymentType ?? '');
-            preferencesHelper.setPaymentMethodCount(count: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
-            preferencesHelper.setPaymentMethodTypes(methods: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
+            preferences.setPaymentMethod(method: resModel.data?.clients?.first.clientDetail?.paymentType ?? '');
+            preferences.setPaymentMethodCount(count: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
+            preferences.setPaymentMethodTypes(methods: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
             if (resModel.data?.clients?.first.clientDetail?.creditCard?.expireDate != null) {
-              emit(state.copyWith(isLoading: false, creditCardNumberController: TextEditingController(text: maskCreditCardNumber(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.cardNumber ?? '')), validityController: TextEditingController(text: formatExpiryDate(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.expireDate ?? '')), isCreditCardExist: true));
+              emit(state.copyWith(
+                isLoading: false,
+                creditCardNumberController: TextEditingController(
+                  text: maskCreditCardNumber(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.cardNumber ?? ''),
+                ),
+                validityController: TextEditingController(text: formatExpiryDate(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.expireDate ?? '')),
+                isCreditCardExist: true,
+              ));
             } else {
               emit(state.copyWith(isCreditCardExist: false, isLoading: false));
             }
@@ -42,11 +52,14 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
           emit(state.copyWith(isLoading: false));
         }
       } else if (event is _addCreditCardEvent) {
-        Navigator.pushNamed(event.context, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: false, AppStrings.isFromRegFlow: false});
+        Navigator.pushNamed(event.context, RouteDefine.creditCardDetailsScreen.name, arguments: {
+          AppStrings.isPaymentFail: false,
+          AppStrings.isFromRegFlow: false,
+        });
       } else if (event is _deleteCreditCardEvent) {
         try {
           emit(state.copyWith(isDeleteLoading: true));
-          Map<String, dynamic> reqMap = {"id": preferencesHelper.getUserId()};
+          Map<String, dynamic> reqMap = {"id": preferences.getUserId()};
           final res = await DioClient(event.context).delete(path: AppUrlEndPoints.deleteCreditCardUrl, data: reqMap);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isCreditCardExist: false, isDeleteLoading: false));
@@ -58,7 +71,7 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
             );
             emit(state.copyWith(isDeleteLoading: false));
           }
-        } catch(_) {}
+        } catch (_) {}
         emit(state.copyWith(isDeleteLoading: false));
       }
     });

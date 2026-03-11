@@ -21,7 +21,7 @@ part 'order_bloc.freezed.dart';
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc() : super(OrderState.initial()) {
     on<OrderEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getAllOrderEvent) {
         if (state.isLoadMore) {
           return;
@@ -31,13 +31,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         }
         try {
           emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
-          final String statusData = preferencesHelper.getOrderStatusInfo();
+          final String statusData = preferences.getOrderStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
-          emit(state.copyWith(statusList: statusList, language: preferencesHelper.getAppLanguage()));
+          emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage()));
           GetAllOrderReqModel reqMap = GetAllOrderReqModel(
             pageNum: state.pageNum + 1,
             pageLimit: AppConstants.orderPageLimit,
-            userId: preferencesHelper.getUserId(),
+            userId: preferences.getUserId(),
           );
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.getAllOrderUrl,

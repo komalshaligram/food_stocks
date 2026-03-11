@@ -49,7 +49,8 @@ class PlanogramProductScreen extends StatelessWidget {
           planogram: args?[AppStrings.planogramProductsParamString] ?? const PlanogramDatum(),
           context: context,
         ))
-        ..add(PlanogramProductEvent.userApproveEvent(context: context)),
+        ..add(PlanogramProductEvent.userApproveEvent(context: context))
+        ..add(const PlanogramProductEvent.getPreferencesDataEvent()),
       child: const PlanogramProductScreenWidget(),
     );
   }
@@ -194,6 +195,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     totalSale: state.planogramProductList[index].totalSale ?? 0,
                                     quantity: state.productStockList[1][index].quantity,
                                     isMixedSale: state.planogramProductList[index].sale?.isMixedSale,
+                                    // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
+                                    //     AppStrings.clubAgentIdText  ? state.planogramProductList[index].sale?.isSale == true
+                                    //     ?
+                                    // state.planogramProductList[index].recommendedConsumerOffer :
+                                    // state.planogramProductList[index].recommendedRetailPrice : '',
                                     onQuantityChanged: () {
                                       context.read<PlanogramProductBloc>().add(
                                             PlanogramProductEvent.updateListQuantityOfProduct(
@@ -284,6 +290,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                     price: double.parse(state.planogramProductList[index].productPrice.toString()),
                                     quantity: state.productStockList[1][index].quantity,
                                     isMixedSale: state.planogramProductList[index].sale?.isMixedSale,
+                                    // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
+                                    //     AppStrings.clubAgentIdText  ? state.planogramProductList[index].sale?.isSale == true
+                                    //     ?
+                                    // state.planogramProductList[index].recommendedConsumerOffer :
+                                    // state.planogramProductList[index].recommendedRetailPrice : '',
                                     onQuantityChanged: () {
                                       context.read<PlanogramProductBloc>().add(
                                             PlanogramProductEvent.updateListQuantityOfProduct(
@@ -569,6 +580,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     required void Function() onQuantityIncreaseTap,
     required void Function() onQuantityDecreaseTap,
     required bool? isMixedSale,
+    // String? recommendedRetailConsumerPricerOffer,
   }) {
     return CommonProductSaleItemWidget(
       originalPrice: originalPrice,
@@ -591,6 +603,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       onQuantityIncreaseTap: onQuantityIncreaseTap,
       onQuantityDecreaseTap: onQuantityDecreaseTap,
       isMixedSale: isMixedSale,
+        // recommendedRetailConsumerPricerOffer : recommendedRetailConsumerPricerOffer
     );
   }
 
@@ -708,6 +721,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                         isMixedSale: state.productDetails.first.sale!.isMixedSale,
+                                        recommendedRetailConsumerPricerOffer: state.clubAgentId ==
+                                            AppStrings.clubAgentIdText  ? state.productDetails.first.sale?.isSale == true
+                                            ?
+                                        state.productDetails.first.recommendedConsumerOffer :
+                                        state.productDetails.first.recommendedRetailPrice : '',
                                         onQuantityChanged: (quantity) {
                                           context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateQuantityOfProduct(
                                                 context: context1,
@@ -743,6 +761,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                   context,
                                                   isSaleOn,
                                                   productStockList: state.productStockList,
+                                          state.clubAgentId!,
                                                 )
                                     ],
                                   ),
@@ -762,7 +781,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     BuildContext prevContext,
     List<RelatedProductDatum> relatedProductList,
     BuildContext context,
-    bool isSaleOn, {
+    bool isSaleOn, String clubAgentId, {
     required List<List<ProductStockModel>> productStockList,
   }) {
     return Column(
@@ -805,6 +824,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 isPesach: relatedProductList.elementAt(i).isPesach,
                 quantity: productStockList[2][i].quantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
+                // recommendedRetailConsumerPricerOffer: clubAgentId ==
+                //     AppStrings.clubAgentIdText  ? relatedProductList.elementAt(i).sale?.isSale == true
+                //     ?
+                // relatedProductList.elementAt(i).recommendedConsumerOffer :
+                // relatedProductList.elementAt(i).recommendedRetailPrice : '',
                 onQuantityChanged: () {
                   context.read<PlanogramProductBloc>().add(
                         PlanogramProductEvent.updateListQuantityOfProduct(
@@ -878,14 +902,5 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     );
   }
 
-  void showConditionDialog({required BuildContext context, required String saleCondition}) {
-    showDialog(
-        context: context,
-        builder: (context) => CommonSaleDescriptionDialog(
-            title: saleCondition,
-            onTap: () {
-              Navigator.pop(context);
-            },
-            buttonTitle: AppLocalizations.of(context)!.ok));
-  }
+
 }

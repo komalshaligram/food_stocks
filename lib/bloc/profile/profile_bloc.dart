@@ -47,7 +47,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
-          String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length());
+          String imageSize = getFileSizeString(
+            bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length(),
+          );
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
@@ -63,7 +65,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             FileUploadModel profileImageModel = FileUploadModel.fromJson(response);
             if (profileImageModel.filepath != '') {
               imgUrl = profileImageModel.filepath ?? '';
-              emit(state.copyWith(isUploadingProcess: false, isFileUploading: false, image: File(croppedImage?.path ?? pickedFile.path), UserImageUrl: profileImageModel.filepath ?? ''));
+              emit(state.copyWith(
+                isUploadingProcess: false,
+                isFileUploading: false,
+                image: File(croppedImage?.path ?? pickedFile.path),
+                UserImageUrl: profileImageModel.filepath ?? '',
+              ));
             }
           } on ServerException {
             emit(state.copyWith(isFileUploading: false, isUploadingProcess: false));
@@ -79,13 +86,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             final response = await DioClient(event.context).put(path: AppUrlEndPoints.logOutUrl, data: {"userId": preferences.getUserId()});
 
             if (response[AppStrings.statusString] == AppConstants.code_200) {
-              SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-              await preferencesHelper.setUserLoggedIn();
+              await preferences.setUserLoggedIn();
               Navigator.pop(event.context);
               Navigator.popUntil(event.context, (route) => route.name == RouteDefine.bottomNavScreen.name);
               Navigator.pushNamed(event.context, RouteDefine.connectScreen.name);
             } else {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context), type: SnackBarType.success);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.success,
+              );
               emit(state.copyWith());
             }
           } else {}
@@ -167,7 +177,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               );
             } else {
               emit(state.copyWith(isUpdating: false));
-              CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
@@ -227,7 +241,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           } else {
             emit(state.copyWith(isLoading: false));
             if (response.message == AppStrings.rivchitClientErrorString) {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error, type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
+                type: SnackBarType.failure,
+              );
             } else {
               CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -246,7 +264,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           } else if (state.UserImageUrl.contains(AppStrings.tempString)) {
             emit(state.copyWith(UserImageUrl: '', image: File('')));
             await preferences.removeProfileImage();
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.removed_successfully, type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppLocalizations.of(event.context)!.removed_successfully,
+              type: SnackBarType.success,
+            );
             return;
           }
           emit(state.copyWith(isFileUploading: true));
@@ -271,7 +293,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             await preferences.removeProfileImage();
             emit(state.copyWith(isFileUploading: false));
             emit(state.copyWith(UserImageUrl: '', image: File('')));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.removed_successfully, type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppLocalizations.of(event.context)!.removed_successfully,
+              type: SnackBarType.success,
+            );
           } else {
             emit(state.copyWith(isFileUploading: false));
             CustomSnackBar.showSnackBar(

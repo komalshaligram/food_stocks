@@ -68,11 +68,15 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
 
           if (categoriesPermissionList[event.categoriesIndex].isAllowed == false) {
             for (int i = 0; i < (categoriesPermissionList[event.categoriesIndex].subCategories?.length ?? 0); i++) {
-              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(isAllowed: false);
+              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(
+                    isAllowed: false,
+                  );
             }
           } else {
             for (int i = 0; i < (categoriesPermissionList[event.categoriesIndex].subCategories?.length ?? 0); i++) {
-              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(isAllowed: true);
+              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(
+                    isAllowed: true,
+                  );
             }
           }
 
@@ -81,7 +85,9 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           if (categoriesPermissionList[event.categoriesIndex].isAllowed ?? false) {
             bool isAllowed = categoriesPermissionList[event.categoriesIndex].subCategories?[event.subCategoriesIndex].isAllowed ?? false;
 
-            categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex] = categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex].copyWith(isAllowed: !isAllowed);
+            categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex] = categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex].copyWith(
+                  isAllowed: !isAllowed,
+                );
           }
 
           emit(state.copyWith(categoriesPermissionList: categoriesPermissionList, isRefresh: !state.isRefresh));
@@ -118,10 +124,17 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
             subCategoryList = [];
             for (int j = 0; j < (state.categoriesPermissionList[i].subCategories?.length ?? 0); j++) {
               if (categories[i] == state.categoriesPermissionList[i].subCategories?[j].subCategoryData?.parentCategoryId) {
-                subCategoryList.add(update.SubCategory(subCategoryId: state.categoriesPermissionList[i].subCategories?[j].subCategoryId, isAllowed: state.categoriesPermissionList[i].subCategories?[j].isAllowed));
+                subCategoryList.add(update.SubCategory(
+                  subCategoryId: state.categoriesPermissionList[i].subCategories?[j].subCategoryId,
+                  isAllowed: state.categoriesPermissionList[i].subCategories?[j].isAllowed,
+                ));
               }
             }
-            updateCategoryPermissionList.add(update.CategoryPermission(subCategories: subCategoryList, isAllowed: state.categoriesPermissionList[i].isAllowed, categoryId: state.categoriesPermissionList[i].categoryId));
+            updateCategoryPermissionList.add(update.CategoryPermission(
+              subCategories: subCategoryList,
+              isAllowed: state.categoriesPermissionList[i].isAllowed,
+              categoryId: state.categoriesPermissionList[i].categoryId,
+            ));
           }
 
           update.UpdatePermissionModel req = update.UpdatePermissionModel(categoryPermissions: updateCategoryPermissionList);

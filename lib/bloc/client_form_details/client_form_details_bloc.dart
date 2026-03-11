@@ -18,7 +18,8 @@ import '../../data/model/req_model/terms_condition/terms_condition_req_model.dar
 import '../../data/model/res_model/bank_detail_model/bank_detail_model.dart';
 import '../../data/model/res_model/business_name_model/business_name_model.dart';
 import '../../data/model/res_model/file_upload_res_model/file_upload_res_model.dart';
-import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
+import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
+import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -53,19 +54,18 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
   TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
   ClientFormDetailsBloc() : super(ClientFormDetailsState.initial()) {
     on<ClientFormDetailsEvent>((event, emit) async {
-      SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       List<BusinessType> businessTypeList = [];
 
       if (event is _getProfileDetailsEvent) {
         try {
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.getProfileDetailsUrl,
-            data: ProfileDetailsReqModel(id: preferencesHelper.getUserId()).toJson(),
+            data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
           );
           ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-
             businessType = res['data']['clients'][0]['clientDetail']['businessType']['businessTypeName'];
             agentId = response.data?.clients?[0].clientDetail?.agent?.id ?? '';
             businessTypeId = res['data']['clients'][0]['clientDetail']['businessType']['_id'];
@@ -81,48 +81,20 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
                 ),
                 business: res['data']['clients'][0]['clientDetail']['businessType']['businessTypeName'],
                 bankName: response.data?.clients?[0].clientDetail?.bank?.bankName ?? '',
-                branchController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.branchNumber ?? '',
-                ),
-                accountNumberController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.accountNumber ?? '',
-                ),
-                owner1NameController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.owner1FullName ?? '',
-                ),
-                owner1israelIdController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.owner1IsraelId ?? '',
-                ),
-                guarantee1NameController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.guarantee1FullName ?? '',
-                ),
-                guarantee1idController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.guarantee1IsraelId ?? '',
-                ),
-                guarantee1addressController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.guarantee1Address ?? '',
-                ),
-                guarantee1PhoneController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.guarantee1PhoneNumber ?? '',
-                ),
-                owner2NameController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.owner2FullName ?? '',
-                ),
-                owner2israelIdController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.owner2IsraelId ?? '',
-                ),
-                guarantee2NameController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.guarantee2FullName ?? '',
-                ),
-                guarantee2idController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.guarantee2IsraelId ?? '',
-                ),
-                guarantee2addressController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.guarantee2Address ?? '',
-                ),
-                guarantee2PhoneController: TextEditingController(
-                  text: response.data?.clients?[0].clientDetail?.guarantee2PhoneNumber ?? '',
-                ),
+                branchController: TextEditingController(text: response.data?.clients?[0].clientDetail?.branchNumber ?? ''),
+                accountNumberController: TextEditingController(text: response.data?.clients?[0].clientDetail?.accountNumber ?? ''),
+                owner1NameController: TextEditingController(text: response.data?.clients?[0].clientDetail?.owner1FullName ?? ''),
+                owner1israelIdController: TextEditingController(text: response.data?.clients?[0].clientDetail?.owner1IsraelId ?? ''),
+                guarantee1NameController: TextEditingController(text: response.data?.clients?[0].clientDetail?.guarantee1FullName ?? ''),
+                guarantee1idController: TextEditingController(text: response.data?.clients?[0].clientDetail?.guarantee1IsraelId ?? ''),
+                guarantee1addressController: TextEditingController(text: response.data?.clients?[0].clientDetail?.guarantee1Address ?? ''),
+                guarantee1PhoneController: TextEditingController(text: response.data?.clients?[0].clientDetail?.guarantee1PhoneNumber ?? ''),
+                owner2NameController: TextEditingController(text: response.data?.clients?[0].clientDetail?.owner2FullName ?? ''),
+                owner2israelIdController: TextEditingController(text: response.data?.clients?[0].clientDetail?.owner2IsraelId ?? ''),
+                guarantee2NameController: TextEditingController(text: response.data?.clients?[0].clientDetail?.guarantee2FullName ?? ''),
+                guarantee2idController: TextEditingController(text: response.data?.clients?[0].clientDetail?.guarantee2IsraelId ?? ''),
+                guarantee2addressController: TextEditingController(text: response.data?.clients?[0].clientDetail?.guarantee2Address ?? ''),
+                guarantee2PhoneController: TextEditingController(text: response.data?.clients?[0].clientDetail?.guarantee2PhoneNumber ?? ''),
                 owner1Signature: response.data?.clients?[0].clientDetail?.owner1Signature ?? '',
                 owner2Signature: response.data?.clients?[0].clientDetail?.owner2Signature ?? '',
                 guarantee1Signature: response.data?.clients?[0].clientDetail?.guarantee1Signature ?? '',
@@ -130,16 +102,23 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
                 // bankName:
                 ));
           } else {
-            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.failure,
+            );
           }
-        } catch(_) {}
+        } catch (_) {}
       } else if (event is _selectBusinessTypeEvent) {
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
-            debugPrint('element.haveMultiple${element.haveMultiple}');
-
             businessTypeId = element.id.toString();
-            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
+            emit(state.copyWith(
+              business: event.business,
+              haveMultiple: element.haveMultiple ?? false,
+              ownerList: state.ownerList,
+              owner: state.ownerList.first,
+            ));
           }
         }
       } else if (event is _selectOwnerNoEvent) {
@@ -153,7 +132,12 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
           businessTypeList.add(BusinessType(businessTypeName: AppLocalizations.of(event.context)!.type_of_business));
           businessTypeList.addAll(response.data?.businessType?.reversed ?? []);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(isShimmering: false, businessTypeList: businessTypeList, business: businessTypeList.first.businessTypeName.toString(), haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false));
+            emit(state.copyWith(
+              isShimmering: false,
+              businessTypeList: businessTypeList,
+              business: businessTypeList.first.businessTypeName.toString(),
+              haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false,
+            ));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -187,7 +171,10 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
         }
       } else if (event is _getPdfDataEvent) {
         termsConditionReqModel = event.termsConditionReqModel;
-        emit(state.copyWith(isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false, isGuarantee1Available: (termsConditionReqModel.guarantee1FullName != '') ? true : false));
+        emit(state.copyWith(
+          isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,
+          isGuarantee1Available: (termsConditionReqModel.guarantee1FullName != '') ? true : false,
+        ));
         emit(state.copyWith(pdfPath: base64Decode(event.pdfData)));
       } else if (event is _signatureEvent) {
         showCustomSignaturePadDialog(event.context, event.fieldName, event.fieldNameForSign);
@@ -199,7 +186,7 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
             'clientDetail': {
               AppStrings.agentIdString: state.agentCodeController.text != '' ? state.agentCodeController.text : '',
               AppStrings.businessTypeIdString: businessTypeId,
-              AppStrings.bankIdString: bankId ,
+              AppStrings.bankIdString: bankId,
               AppStrings.branchNumberString: state.branchController.text != '' ? state.branchController.text : '',
               AppStrings.accountNumberString: state.accountNumberController.text != '' ? state.accountNumberController.text : '',
               AppStrings.owner1FullNameString: state.owner1NameController.text != '' ? state.owner1NameController.text : '',
@@ -221,9 +208,8 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
             }
           };
 
-
           final res = await DioClient(event.context).post(
-            "${AppUrlEndPoints.updateClientInfoDetailsUrl}/${preferencesHelper.getUserId()}",
+            "${AppUrlEndPoints.updateClientInfoDetailsUrl}/${preferences.getUserId()}",
             data: reqMap,
           );
 
@@ -242,25 +228,22 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
           emit(state.copyWith(isLoading: false));
         }
       } else if (event is _deleteFileEvent) {
-        if(event.fieldName == AppStrings.owner1SignatureString) {
+        if (event.fieldName == AppStrings.owner1SignatureString) {
           emit(state.copyWith(
             owner1Signature: '',
             owner1SignatureLocal: '',
           ));
-        }
-        else if(event.fieldName == AppStrings.owner2SignatureString) {
+        } else if (event.fieldName == AppStrings.owner2SignatureString) {
           emit(state.copyWith(
             owner2Signature: '',
             owner2SignatureLocal: '',
           ));
-        }
-        else if(event.fieldName == AppStrings.guarantee1SignatureString) {
+        } else if (event.fieldName == AppStrings.guarantee1SignatureString) {
           emit(state.copyWith(
             guarantee1Signature: '',
             guarantee1SignatureLocal: '',
           ));
-        }
-        else if(event.fieldName == AppStrings.guarantee2SignatureString) {
+        } else if (event.fieldName == AppStrings.guarantee2SignatureString) {
           emit(state.copyWith(
             guarantee2Signature: '',
             guarantee2SignatureLocal: '',
@@ -341,7 +324,7 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
     var data = await tempImage.toByteData(format: ui.ImageByteFormat.png);
 
     final imageInUnit8List = (data!.buffer.asUint8List());
-    directory = (await getApplicationDocumentsDirectory()).path; // to get path of the file
+    directory = (await getApplicationDocumentsDirectory()).path;
     var timestamp = DateTime.now().millisecondsSinceEpoch;
     var path = '$directory/${fieldName}_$timestamp.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
@@ -355,7 +338,13 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
 
       final fileNameWithoutExtension = p.basenameWithoutExtension(state.owner1SignatureLocal);
 
-      formData = FormData.fromMap({AppStrings.fileString: await MultipartFile.fromFile(state.owner1SignatureLocal, filename: "${fileNameWithoutExtension}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}", contentType: MediaType(type, contentType))});
+      formData = FormData.fromMap({
+        AppStrings.fileString: await MultipartFile.fromFile(
+          state.owner1SignatureLocal,
+          filename: "${fileNameWithoutExtension}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}",
+          contentType: MediaType(type, contentType),
+        )
+      });
 
       final res = await DioClient(context).uploadFileProgressWithFormData(
         path: AppUrlEndPoints.fileUploadUrl,
