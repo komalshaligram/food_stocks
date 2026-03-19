@@ -778,12 +778,11 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
           productStockList[2] = productStockList[2].map((product) {
                 return product.copyWith(
                   productSupplierIds: product.productSupplierIds,
-                  productId: product.productId ?? '',
+                  productId: product.productId,
                   stock: product.stock.toString(),
                   quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
                 );
-              }).toList() ??
-              [];
+              }).toList();
 
           productStockList[2].addAll(newRelatedList);
 

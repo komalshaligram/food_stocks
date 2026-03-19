@@ -229,8 +229,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.select_issue, type: SnackBarType.failure);
         }
       } else if (event is _getBottomSheetDataEvent) {
-        if (event.notes != null && event.notes!.isNotEmpty) {
-          state.addNoteController.text = event.notes!;
+        if (event.notes != null && event.notes.isNotEmpty) {
+          state.addNoteController.text = event.notes;
         }
       } else if (event is _removeIssueEvent) {
         emit(state.copyWith(isRemoveProcess: true));
@@ -392,7 +392,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           );
           FileUploadModel signModel = FileUploadModel.fromJson(response);
           if (signModel.filepath != '') {
-            imgUrl = '${signModel.filepath}' ?? '';
+            imgUrl = '${signModel.filepath}';
           }
           imgList.add(imgUrl);
           if (event.value == 1) {
@@ -527,7 +527,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               proofImages: event.proofImages,
               notes: event.notes,
               productName: event.productName,
-              productImage: event.productImage!,
+              productImage: event.productImage,
               barcode: event.barcode,
               totalUnits: event.totalUnits,
               isApproved: event.isApproved,
@@ -588,7 +588,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             proofImages: event.proofImages,
             notes: event.notes,
             productName: event.productName,
-            productImage: event.productImage!,
+            productImage: event.productImage,
             barcode: event.barcode,
             totalUnits: event.totalUnits,
             isApproved: event.isApproved,
@@ -835,7 +835,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           );
           FileUploadModel signModel = FileUploadModel.fromJson(response);
           if (signModel.filepath != '') {
-            imgUrl = '${signModel.filepath}' ?? '';
+            imgUrl = '${signModel.filepath}';
           }
           imgList.add(imgUrl);
           if (event.value == 1) {

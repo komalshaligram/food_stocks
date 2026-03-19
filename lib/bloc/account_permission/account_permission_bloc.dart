@@ -85,7 +85,6 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
 
           updatePermissionReq.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
             }
             return value == null;
           });

@@ -69,7 +69,6 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                     AppStrings.pushNavigationString: 'profileScreen',
                   },
                 );
-                // Navigator.pop(context);
               },
             ),
           ),

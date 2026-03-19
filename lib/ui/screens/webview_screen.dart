@@ -70,9 +70,7 @@ class WebViewScreenWidget extends StatelessWidget {
   }
 }
 
-///////////////////////////////////////////////////
-/// Shimmer Widget (UI like your screenshot)
-///////////////////////////////////////////////////
+
 class WebViewShimmer extends StatelessWidget {
   const WebViewShimmer({super.key});
 
@@ -147,7 +145,6 @@ class _CustomWebViewState extends State<CustomWebView> {
     const prefix = 'base64,';
     final startIndex = base64Data.indexOf(prefix) + prefix.length;
     if (startIndex < prefix.length) {
-      debugPrint('Invalid base64 data received');
       return;
     }
     final cleanBase64 = base64Data.substring(startIndex);
@@ -192,7 +189,6 @@ class _CustomWebViewState extends State<CustomWebView> {
     final file = File(filePath);
     await file.writeAsBytes(bytes);
 
-    debugPrint('CSV saved at: $filePath');
 
     if (!mounted) return;
 
@@ -225,7 +221,7 @@ class _CustomWebViewState extends State<CustomWebView> {
               callback: (args) async {
                 if (args.isNotEmpty) {
                   final String base64 = args[0] as String;
-                  final String filename = args.length > 1 ? args[1] as String : 'export_${DateTime.now().millisecondsSinceEpoch}.csv'; // Better default
+                  final String filename = args.length > 1 ? args[1] as String : 'export_${DateTime.now().millisecondsSinceEpoch}.csv';
 
                   await _saveCsvFile(base64, filename);
                 }
@@ -235,7 +231,7 @@ class _CustomWebViewState extends State<CustomWebView> {
           onLoadStop: (controller, url) async {
             setState(() => isLoading = false);
 
-            // Inject JS to intercept CSV export and send blob as base64
+
             await controller.evaluateJavascript(source: '''
               (function() {
                 // Override common blob download patterns

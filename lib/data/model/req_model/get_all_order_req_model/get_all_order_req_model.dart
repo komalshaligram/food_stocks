@@ -1,22 +1,11 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 
 part 'get_all_order_req_model.freezed.dart';
 part 'get_all_order_req_model.g.dart';
 
-
 @freezed
 class GetAllOrderReqModel with _$GetAllOrderReqModel {
-  const factory GetAllOrderReqModel({
-
-
-    int? pageNum,
-    int? pageLimit,
-    String? userId
-
-  }) = _GetAllOrderReqModel;
+  const factory GetAllOrderReqModel({int? pageNum, int? pageLimit, String? userId}) = _GetAllOrderReqModel;
 
   factory GetAllOrderReqModel.fromJson(Map<String, dynamic> json) => _$GetAllOrderReqModelFromJson(json);
 }

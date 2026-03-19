@@ -26,7 +26,7 @@ import '../widget/product_details_screen_shimmer_widget.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class ReturnDriverRoute {
-  static Widget get route => ReturnDriverScreen();
+  static Widget get route => const ReturnDriverScreen();
 }
 
 class ReturnDriverScreen extends StatelessWidget {
@@ -54,12 +54,7 @@ class ReturnDriverScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ReturnDriverBloc()
         ..add(ReturnDriverEvent.getOrderByIdEvent(context: context, orderId: orderId))
-        ..add(ReturnDriverEvent.getProductDataEvent(
-          context: context,
-          orderId: orderId,
-          orderData: orderData,
-          orderBySupplierProduct: productData,
-        ))
+        ..add(ReturnDriverEvent.getProductDataEvent(context: context, orderId: orderId, orderData: orderData, orderBySupplierProduct: productData))
         ..add(ReturnDriverEvent.getReturnListEvent(context: context)),
       child: ReturnDriverScreenWidget(
         orderId: orderId,
@@ -164,8 +159,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                   ],
                                 ),
                               ),
-
-                              // List of Return Data items
                               ListView.builder(
                                 itemCount: state.returnDriverData.data?.length ?? 0,
                                 shrinkWrap: true,
@@ -173,7 +166,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                 padding: const EdgeInsets.only(top: AppConstants.padding_5, bottom: AppConstants.padding_70),
                                 itemBuilder: (context, dataIndex) {
                                   final returnDataItem = state.returnDriverData.data![dataIndex];
-                                  final bool isChecked = state.checkedItems[dataIndex] ?? false; // Your data-level checked state
+                                  final bool isChecked = state.checkedItems[dataIndex] ?? false;
 
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +181,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                             side: BorderSide(width: 1.0, color: AppColors.greyColor),
                                             activeColor: AppColors.mainColor,
                                             onChanged: (value) {
-                                              // Dispatch toggleItemChecked event with updated checkbox value
                                               bloc.add(ReturnDriverEvent.toggleItemChecked(
                                                 index: dataIndex,
                                                 isChecked: value ?? false,
@@ -196,7 +188,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                             },
                                           ),
                                           Text(
-                                          '${AppLocalizations.of(context)!.return_number_text} ${returnDataItem.returnNumber}',
+                                            '${AppLocalizations.of(context)!.return_number_text} ${returnDataItem.returnNumber}',
                                             style: AppStyles.rkRegularTextStyle(
                                               size: AppConstants.font_14,
                                               color: AppColors.blackColor,
@@ -204,8 +196,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                           ),
                                         ],
                                       ),
-
-                                      // Inner ListView for products of this returnDataItem
                                       ListView.builder(
                                         itemCount: returnDataItem.returnProducts?.length ?? 0,
                                         shrinkWrap: true,
@@ -220,11 +210,9 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                                             totalUnit: product.totalUnits,
                                             createdAt: product.createdAt,
                                             index: productIndex,
-                                            // **No checkbox or image here, only product info**
                                           );
                                         },
                                       ),
-
                                       if (isChecked) ...[
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
@@ -322,7 +310,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                       onPressed: () {
                         final checkedItems = state.checkedItems;
 
-
                         bool anyMissingProof = false;
 
                         checkedItems.forEach((index, isChecked) {
@@ -335,15 +322,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                           }
                         });
 
-                        // if (anyMissingProof) {
-                        //   CustomSnackBar.showSnackBar(
-                        //     context: context,
-                        //     title: AppLocalizations.of(context)!.driver_return_document_image,
-                        //     type: SnackBarType.failure,
-                        //   );
-                        //   return;
-                        // }
-
                         final sentReturnData = <Map<String, dynamic>>[];
                         checkedItems.forEach((index, isChecked) {
                           if (isChecked) {
@@ -352,13 +330,10 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
 
                             final sentReturnId = returnDataItem.id ?? '';
 
-                            // Get uploaded image URLs from the correct map
                             final urls = state.driverDeliveryProofUrlsMap[index] ?? [];
 
-                            // Filter out nulls and collect the list of image URLs
                             final signedReturnReceiptImages = urls.where((url) => url != null && url.isNotEmpty).map((url) => url!).toList();
 
-                            // Only add if there's at least one image
                             if (signedReturnReceiptImages.isNotEmpty) {
                               sentReturnData.add({
                                 'sentReturnId': sentReturnId,
@@ -368,8 +343,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                           }
                         });
 
-
-                        // ✅ Proceed to next screen if all validations pass
                         Navigator.pushNamed(context, RouteDefine.shipmentVerificationScreen.name, arguments: {
                           AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
                           AppStrings.deliveryStatusString: args?[AppStrings.deliveryStatusString],
@@ -415,7 +388,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
         color: AppColors.whiteColor,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha:0.15),
+            color: AppColors.shadowColor.withValues(alpha: 0.15),
             blurRadius: AppConstants.blur_10,
           ),
         ],
@@ -428,8 +401,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Removed Checkbox here!
-
                 productImage != ''
                     ? Image.network(
                         productImage ?? '',
@@ -505,9 +476,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                 10.width,
               ],
             ),
-
-            // Removed image upload UI and checkbox from here,
-            // because it will be handled data-wise in outer widget.
           ],
         ),
       ),
@@ -537,7 +505,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ...
             FileSelectionOptionWidget(
               title: AppLocalizations.of(context)!.camera,
               icon: Icons.camera_alt_rounded,
@@ -608,9 +575,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
         CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.camera_permission, type: SnackBarType.failure);
         return;
       }
-    } else if (Platform.isIOS) {
-      // Navigator.pop(context);
-    }
+    } else if (Platform.isIOS) {}
     context.read<ReturnDriverBloc>().add(ReturnDriverEvent.pickProofDocumentEvent(
           context: context,
           isFromCamera: true,

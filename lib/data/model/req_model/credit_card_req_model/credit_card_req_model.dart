@@ -4,11 +4,9 @@ import 'dart:convert';
 part 'credit_card_req_model.freezed.dart';
 part 'credit_card_req_model.g.dart';
 
-CreditCardReqModel creditCardReqModelFromJson(String str) =>
-    CreditCardReqModel.fromJson(json.decode(str));
+CreditCardReqModel creditCardReqModelFromJson(String str) => CreditCardReqModel.fromJson(json.decode(str));
 
-String creditCardReqModelToJson(CreditCardReqModel data) =>
-    json.encode(data.toJson());
+String creditCardReqModelToJson(CreditCardReqModel data) => json.encode(data.toJson());
 
 @freezed
 class CreditCardReqModel with _$CreditCardReqModel {
@@ -18,6 +16,5 @@ class CreditCardReqModel with _$CreditCardReqModel {
     String? cardNum,
   }) = _CreditCardReqModel;
 
-  factory CreditCardReqModel.fromJson(Map<String, dynamic> json) =>
-      _$CreditCardReqModelFromJson(json);
+  factory CreditCardReqModel.fromJson(Map<String, dynamic> json) => _$CreditCardReqModelFromJson(json);
 }

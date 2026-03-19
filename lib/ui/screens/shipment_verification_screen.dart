@@ -260,7 +260,6 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                     validator: AppStrings.surfaceValString,
                                     availableQtyVal: availableQty,
                                   ),
-
                                   8.height,
                                   CustomContainerWidget(
                                     name: AppLocalizations.of(context)!.driver_name,
@@ -326,7 +325,10 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                                   },
                                                   child: SvgPicture.asset(
                                                     AppImagePath.signature,
-                                                    colorFilter: ColorFilter.mode(state.isSignaturePadActive ? AppColors.mainColor : AppColors.blackColor, BlendMode.srcIn),
+                                                    colorFilter: ColorFilter.mode(
+                                                      state.isSignaturePadActive ? AppColors.mainColor : AppColors.blackColor,
+                                                      BlendMode.srcIn,
+                                                    ),
                                                   ),
                                                 ),
                                                 GestureDetector(

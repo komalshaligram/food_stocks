@@ -773,52 +773,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           }
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
-            //category search result
-            /*searchList.addAll(response.data?.categoryData
-                ?.map((category) => SearchModel(
-                searchId: category.id ?? '',
-                name: category.categoryName ?? '',
-                searchType: SearchTypes.category,
-                isPesach: category.isPesach??false,
-                image: category.categoryImage ?? ''))
-                .toList() ??
-                []);
-            //company search result
-            searchList.addAll(response.data?.companyData
-                ?.map((company) => SearchModel(
-                searchId: company.id ?? '',
-                name: company.brandName ?? '',
-                searchType: SearchTypes.company,
-                image: company.brandLogo ?? ''))
-                .toList() ??
-                []);
-            // supplier search result
-            searchList.addAll(response.data?.supplierData
-                ?.map((supplier) => SearchModel(
-                searchId: supplier.id ?? '',
-                name: supplier.supplierDetail?.companyName?? '',
-                searchType: SearchTypes.supplier,
-                isPesach: supplier.isPesach??false,
 
-                image: supplier.logo ?? ''))
-                .toList() ??
-                []);
-            //sale search result
-            searchList.addAll(response.data?.saleData
-                ?.map((sale) => SearchModel(
-                searchId: sale.id ?? '',
-                name: sale.productName ?? '',
-                searchType: SearchTypes.sale,
-                isPesach: sale.isPesach??false,
-                salesDesc:  parse(sale.salesDescription ?? '')
-                    .body
-                    ?.text ??
-                    '',
-                numberOfUnits: int.parse(sale.numberOfUnit.toString()) ,
-                image: sale.mainImage ?? ''))
-                .toList() ??
-                []);*/
-            //supplier products result
             searchList.addAll(
               response.data
                       ?.map(
@@ -921,9 +876,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           final cartMap = await fetchCartQuantities(event.context);
           for (var product in planogramProductList) {
             stockList.add(ProductStockModel(
-              maxQty: (product.product?.sale?.isSale ?? false) ? int.parse(product.product?.sale?.saleMaxQuantity ?? '0') : 0,
+              maxQty: (product.product.sale?.isSale ?? false) ? int.parse(product.product.sale?.saleMaxQuantity ?? '0') : 0,
               productId: product.productId ?? '',
-              stock: product.product?.productStock.toString() ?? '0',
+              stock: product.product.productStock.toString(),
               quantity: cartMap[product.productId ?? ''] ?? 0,
             ));
           }
@@ -958,11 +913,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             planogramProductList.addAll(response.data ?? []);
 
             for (var product in planogramProductList) {
-              //recommendationProductsList
               stockList.add(ProductStockModel(
-                maxQty: (product.product?.sale?.isSale ?? false) ? int.parse(product.product?.sale?.saleMaxQuantity ?? '0') : 0,
+                maxQty: (product.product.sale?.isSale ?? false) ? int.parse(product.product.sale?.saleMaxQuantity ?? '0') : 0,
                 productId: product.productId ?? '',
-                stock: product.product?.productStock.toString() ?? '0',
+                stock: product.product.productStock.toString(),
                 quantity: cartMap[product.productId ?? ''] ?? 0,
               ));
             }
@@ -1011,7 +965,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
           productStockList[3] = productStockList[3].map((product) {
             return product.copyWith(
               productSupplierIds: product.productSupplierIds,
-              productId: product.productId ?? '',
+              productId: product.productId,
               stock: product.stock.toString(),
               quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
             );
@@ -1344,7 +1298,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             }
           }
         }
-        //
       } else if (event is _getCartCountEvent) {
         try {
           final res = await DioClient(event.context!).post(

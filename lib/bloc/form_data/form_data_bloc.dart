@@ -33,7 +33,6 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       if (event is _selectAgentEvent) {
         emit(state.copyWith(agent: event.agent, ownerList: state.ownerList));
       } else if (event is _getArgumentEvent) {
-        debugPrint("owner:${event.owner}");
         emit(state.copyWith(
           owner: event.owner,
         ));

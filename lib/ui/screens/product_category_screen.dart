@@ -101,7 +101,6 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: AppColors.mainColor,
-                                  //gradient:AppColors.appMainGradientColor,
                                   borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                                   border: Border.all(color: AppColors.whiteColor, width: 1),
                                 ),

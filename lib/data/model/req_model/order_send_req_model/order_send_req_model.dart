@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final orderSendReqModel = orderSendReqModelFromMap(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'order_send_req_model.freezed.dart';
 part 'order_send_req_model.g.dart';
@@ -9,8 +5,7 @@ part 'order_send_req_model.g.dart';
 @freezed
 class OrderSendReqModel with _$OrderSendReqModel {
   const factory OrderSendReqModel({
-    @JsonKey(name: "products")
-    List<Product>? products,
+    @JsonKey(name: "products") List<Product>? products,
     String? paymentMethod,
   }) = _OrderSendReqModel;
 
@@ -20,14 +15,10 @@ class OrderSendReqModel with _$OrderSendReqModel {
 @freezed
 class Product with _$Product {
   const factory Product({
-    @JsonKey(name: "productId")
-    String? productId,
-    @JsonKey(name: "quantity")
-    int? quantity,
-    @JsonKey(name: "supplierId")
-    String? supplierId,
-    @JsonKey(name: "saleId")
-    String? saleId,
+    @JsonKey(name: "productId") String? productId,
+    @JsonKey(name: "quantity") int? quantity,
+    @JsonKey(name: "supplierId") String? supplierId,
+    @JsonKey(name: "saleId") String? saleId,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);

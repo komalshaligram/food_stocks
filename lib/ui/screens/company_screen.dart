@@ -106,7 +106,6 @@ class CompanyScreenWidget extends StatelessWidget {
                                       });
                                     }),
                               ),
-                    // state.isLoadMore ? CompanyScreenShimmerWidget() : 0.width,
                   ],
                 ),
               ),

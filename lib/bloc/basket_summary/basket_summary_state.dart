@@ -60,7 +60,7 @@ class BasketSummaryState with _$BasketSummaryState {
         isSubUserCanCreateOrder: false,
         refundAmount: 0.0,
         totalSupplier: 0,
-    clubAgentId: '',
+        clubAgentId: '',
         isAvailableAllPayments: false,
       );
 }

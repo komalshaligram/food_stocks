@@ -1,6 +1,4 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 
 part 'setting_res_model.freezed.dart';
 part 'setting_res_model.g.dart';
@@ -53,20 +51,15 @@ class DataWebViewSettings with _$DataWebViewSettings {
     String? screenHebrewTitle,
   }) = _DataWebViewSettings;
 
-  factory DataWebViewSettings.fromJson(Map<String, dynamic> json)
-  => _$DataWebViewSettingsFromJson(json);
+  factory DataWebViewSettings.fromJson(Map<String, dynamic> json) => _$DataWebViewSettingsFromJson(json);
 }
 
 @freezed
-class RegistrationSuccessPageSettings
-    with _$RegistrationSuccessPageSettings {
+class RegistrationSuccessPageSettings with _$RegistrationSuccessPageSettings {
   const factory RegistrationSuccessPageSettings({
     bool? showRegistrationSuccessPage,
     String? registrationSuccessPageText,
   }) = _RegistrationSuccessPageSettings;
 
-  factory RegistrationSuccessPageSettings.fromJson(
-      Map<String, dynamic> json) =>
-      _$RegistrationSuccessPageSettingsFromJson(json);
+  factory RegistrationSuccessPageSettings.fromJson(Map<String, dynamic> json) => _$RegistrationSuccessPageSettingsFromJson(json);
 }
-

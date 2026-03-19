@@ -453,7 +453,6 @@ class ReturnListWidget extends StatelessWidget {
                           CustomButtonWidget(
                             buttonText: AppLocalizations.of(context)!.save,
                             bGColor: AppColors.mainColor,
-                            // isLoading: state.isLoading,
                             onPressed: () {
                               context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.navigateReturnEvent(context: context));
                             },

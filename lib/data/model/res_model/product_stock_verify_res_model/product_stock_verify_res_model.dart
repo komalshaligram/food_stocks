@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final productStockVerifyResModel = productStockVerifyResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,11 +5,9 @@ part 'product_stock_verify_res_model.freezed.dart';
 
 part 'product_stock_verify_res_model.g.dart';
 
-ProductStockVerifyResModel productStockVerifyResModelFromJson(String str) =>
-    ProductStockVerifyResModel.fromJson(json.decode(str));
+ProductStockVerifyResModel productStockVerifyResModelFromJson(String str) => ProductStockVerifyResModel.fromJson(json.decode(str));
 
-String productStockVerifyResModelToJson(ProductStockVerifyResModel data) =>
-    json.encode(data.toJson());
+String productStockVerifyResModelToJson(ProductStockVerifyResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProductStockVerifyResModel with _$ProductStockVerifyResModel {
@@ -23,8 +17,7 @@ class ProductStockVerifyResModel with _$ProductStockVerifyResModel {
     @JsonKey(name: "message") String? message,
   }) = _ProductStockVerifyResModel;
 
-  factory ProductStockVerifyResModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductStockVerifyResModelFromJson(json);
+  factory ProductStockVerifyResModel.fromJson(Map<String, dynamic> json) => _$ProductStockVerifyResModelFromJson(json);
 }
 
 @freezed
@@ -33,8 +26,7 @@ class ProductStockVerifyResModelData with _$ProductStockVerifyResModelData {
     @JsonKey(name: "stock") List<Stock>? stock,
   }) = _ProductStockVerifyResModelData;
 
-  factory ProductStockVerifyResModelData.fromJson(Map<String, dynamic> json) =>
-      _$ProductStockVerifyResModelDataFromJson(json);
+  factory ProductStockVerifyResModelData.fromJson(Map<String, dynamic> json) => _$ProductStockVerifyResModelDataFromJson(json);
 }
 
 @freezed
@@ -58,6 +50,5 @@ class StockData with _$StockData {
     @JsonKey(name: "contactName") String? contactName,
   }) = _StockData;
 
-  factory StockData.fromJson(Map<String, dynamic> json) =>
-      _$StockDataFromJson(json);
+  factory StockData.fromJson(Map<String, dynamic> json) => _$StockDataFromJson(json);
 }

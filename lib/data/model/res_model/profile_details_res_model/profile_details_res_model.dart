@@ -1,21 +1,14 @@
-// To parse this JSON data, do
-//
-//     final profileDetailsResModel = profileDetailsResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 import '../../req_model/activity_time/activity_time_req_model.dart';
-import '../business_name_model/business_name_model.dart';
 
 part 'profile_details_res_model.freezed.dart';
 part 'profile_details_res_model.g.dart';
 
-ProfileDetailsResModel profileDetailsResModelFromJson(String str) =>
-    ProfileDetailsResModel.fromJson(json.decode(str));
+ProfileDetailsResModel profileDetailsResModelFromJson(String str) => ProfileDetailsResModel.fromJson(json.decode(str));
 
-String profileDetailsResModelToJson(ProfileDetailsResModel data) =>
-    json.encode(data.toJson());
+String profileDetailsResModelToJson(ProfileDetailsResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProfileDetailsResModel with _$ProfileDetailsResModel {
@@ -25,8 +18,7 @@ class ProfileDetailsResModel with _$ProfileDetailsResModel {
     @JsonKey(name: "message") String? message,
   }) = _ProfileDetailsResModel;
 
-  factory ProfileDetailsResModel.fromJson(Map<String, dynamic> json) =>
-      _$ProfileDetailsResModelFromJson(json);
+  factory ProfileDetailsResModel.fromJson(Map<String, dynamic> json) => _$ProfileDetailsResModelFromJson(json);
 }
 
 @freezed
@@ -53,7 +45,7 @@ class Client with _$Client {
     @JsonKey(name: "profileImage") String? profileImage,
     @JsonKey(name: "adminTypeId") String? adminTypeId,
     @JsonKey(name: "clientDetail") ClientDetail? clientDetail,
-    @JsonKey(name: "supplierCustomerDetails")  List<SupplierCustomerDetails>? supplierCustomerDetails,
+    @JsonKey(name: "supplierCustomerDetails") List<SupplierCustomerDetails>? supplierCustomerDetails,
     @JsonKey(name: "roleDetails") RoleDetails? roleDetails,
     @JsonKey(name: "city") City? city,
     @JsonKey(name: "status") Status? status,
@@ -116,24 +108,19 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "guarantee1Signature") String? guarantee1Signature,
     @JsonKey(name: "guarantee2Signature") String? guarantee2Signature,
     CreditCard? creditCard,
-    @JsonKey(name: "availablePaymentTypes")
-    required List<String> availablePaymentTypes,
-    @JsonKey(name: "paymentType")
-    required String? paymentType,
+    @JsonKey(name: "availablePaymentTypes") required List<String> availablePaymentTypes,
+    @JsonKey(name: "paymentType") required String? paymentType,
     String? streetName,
     String? streetNumber,
     String? zip,
-    @JsonKey(name: "isAvailableAllPayments")
-    bool? isAvailableAllPayments,
+    @JsonKey(name: "isAvailableAllPayments") bool? isAvailableAllPayments,
     @JsonKey(name: "bank") Bank? bank,
     @JsonKey(name: "agent") Agent? agent,
     @JsonKey(name: "showClientDataOnApp") bool? showClientDataOnApp,
-    @JsonKey(name: "isWalletApproved")
-    bool? isWalletApproved,
+    @JsonKey(name: "isWalletApproved") bool? isWalletApproved,
   }) = _ClientDetail;
 
-  factory ClientDetail.fromJson(Map<String, dynamic> json) =>
-      _$ClientDetailFromJson(json);
+  factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);
 }
 
 @freezed
@@ -161,8 +148,7 @@ class SupplierCustomerDetails with _$SupplierCustomerDetails {
     @JsonKey(name: "text") String? text,
   }) = _SupplierCustomerDetails;
 
-  factory SupplierCustomerDetails.fromJson(Map<String, dynamic> json) =>
-      _$SupplierCustomerDetailsFromJson(json);
+  factory SupplierCustomerDetails.fromJson(Map<String, dynamic> json) => _$SupplierCustomerDetailsFromJson(json);
 }
 
 @freezed
@@ -173,16 +159,14 @@ class ClientType with _$ClientType {
     @JsonKey(name: "__v") int? v,
   }) = _ClientType;
 
-  factory ClientType.fromJson(Map<String, dynamic> json) =>
-      _$ClientTypeFromJson(json);
+  factory ClientType.fromJson(Map<String, dynamic> json) => _$ClientTypeFromJson(json);
 }
-
 
 @freezed
 class CreditCard with _$CreditCard {
   const factory CreditCard({
-     String? cardNumber,
-     String? expireDate,
+    String? cardNumber,
+    String? expireDate,
   }) = _CreditCard;
 
   factory CreditCard.fromJson(Map<String, dynamic> json) => _$CreditCardFromJson(json);
@@ -192,11 +176,9 @@ class CreditCard with _$CreditCard {
 class RoleDetails with _$RoleDetails {
   const factory RoleDetails({
     @JsonKey(name: "adminType") String? adminType,
-    // @JsonKey(name: "status") String? status,
   }) = _RoleDetails;
 
-  factory RoleDetails.fromJson(Map<String, dynamic> json) =>
-      _$RoleDetailsFromJson(json);
+  factory RoleDetails.fromJson(Map<String, dynamic> json) => _$RoleDetailsFromJson(json);
 }
 
 @freezed
@@ -216,10 +198,9 @@ class Bank with _$Bank {
     @JsonKey(name: "bankName") String? bankName,
     @JsonKey(name: "bankNumber") String? bankNumber,
     @JsonKey(name: "bankIncrementalNumber") int? bankIncrementalNumber,
-}) = _Bank;
+  }) = _Bank;
 
-factory Bank.fromJson(Map<String, dynamic> json) =>
-_$BankFromJson(json);
+  factory Bank.fromJson(Map<String, dynamic> json) => _$BankFromJson(json);
 }
 
 @freezed
@@ -232,6 +213,5 @@ class Agent with _$Agent {
     @JsonKey(name: "agentCode") String? agentCode,
   }) = _Agent;
 
-  factory Agent.fromJson(Map<String, dynamic> json) =>
-      _$AgentFromJson(json);
+  factory Agent.fromJson(Map<String, dynamic> json) => _$AgentFromJson(json);
 }

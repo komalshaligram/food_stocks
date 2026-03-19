@@ -1,14 +1,10 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'delete_message_req.freezed.dart';
 part 'delete_message_req.g.dart';
 
-
 @freezed
 class DeleteMessageReq with _$DeleteMessageReq {
   const factory DeleteMessageReq({
-
     List<String>? notificationIds,
   }) = _DeleteMessageReq;
 

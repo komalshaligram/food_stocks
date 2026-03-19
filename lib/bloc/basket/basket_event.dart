@@ -146,4 +146,8 @@ class BasketEvent with _$BasketEvent {
     required int productStockUpdateIndex,
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
+
+  const factory BasketEvent.getProfileDetailsEvent({
+    required BuildContext context,
+  }) = _getProfileDetailsEvent;
 }

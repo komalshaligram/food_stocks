@@ -126,7 +126,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             final cartMap = await fetchCartQuantities(event.context);
             previousOrderProductsList.addAll(response.previousProductData ?? []);
             for (var product in previousOrderProductsList) {
-              //recommendationProductsList
               stockList.add(ProductStockModel(
                 maxQty: (product.sale?.isSale ?? false) ? int.parse(product.sale?.saleMaxQuantity ?? '0') : 0,
                 productId: product.id ?? '',
@@ -652,7 +651,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
 
-            //supplier products result
             searchList.addAll(response.data
                     ?.map((supplier) => SearchModel(
                           searchId: supplier.id ?? '',
@@ -766,12 +764,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           productStockList[2] = productStockList[2].map((product) {
                 return product.copyWith(
                   productSupplierIds: product.productSupplierIds,
-                  productId: product.productId ?? '',
+                  productId: product.productId,
                   stock: product.stock.toString(),
                   quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
                 );
-              }).toList() ??
-              [];
+              }).toList();
 
           productStockList[2].addAll(newRelatedList);
 
@@ -998,7 +995,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           } catch (_) {}
           if (_isProductInCart) {
             try {
-              // emit(state.copyWith(isLoading: true));
               UpdateCartReqModel request = UpdateCartReqModel(
                 productId: event.productId,
                 supplierId: event.productSupplierIds,
@@ -1022,7 +1018,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   totalPrice: productStockList[event.productListIndex][event.productStockUpdateIndex].totalPrice,
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
-                // isLoading: false,
                 emit(state.copyWith(productStockList: productStockList));
 
                 CustomSnackBar.showSnackBar(
@@ -1046,7 +1041,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             }
           } else {
             try {
-              // emit(state.copyWith(isLoading: true));
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
                 products: [
                   insert.Product(
@@ -1087,7 +1081,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 emit(state.copyWith(isLoading: false, productStockList: productStockList, duringCelebration: true));
                 await Future.delayed(const Duration(milliseconds: 500));
                 emit(state.copyWith(duringCelebration: false));
-                // isLoading: false,
                 emit(state.copyWith(
                   productStockList: productStockList,
                 ));
@@ -1115,7 +1108,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             }
           }
         }
-        //
       } else if (event is _getCartCountNoEvent) {
         try {
           final res = await DioClient(event.context).post(
@@ -1130,7 +1122,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             }
           }
         } catch (_) {}
-        //message count
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getUnreadMessageCountUrl,
               options: Options(headers: {

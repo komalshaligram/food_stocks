@@ -14,7 +14,6 @@ class ProductSupplierModel with _$ProductSupplierModel {
     @Default(0) int quantity,
     @Default(0.0) double basePrice,
     @Default('0') String stock,
-    // @Default(false) bool isSelected,
     @Default(-1) int selectedIndex,
     @Default(0) int maxQty,
   }) = _ProductSupplierModel;

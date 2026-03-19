@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final productSubcategoriesResModel = productSubcategoriesResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,11 +5,9 @@ part 'product_subcategories_res_model.freezed.dart';
 
 part 'product_subcategories_res_model.g.dart';
 
-ProductSubcategoriesResModel productSubcategoriesResModelFromJson(String str) =>
-    ProductSubcategoriesResModel.fromJson(json.decode(str));
+ProductSubcategoriesResModel productSubcategoriesResModelFromJson(String str) => ProductSubcategoriesResModel.fromJson(json.decode(str));
 
-String productSubcategoriesResModelToJson(ProductSubcategoriesResModel data) =>
-    json.encode(data.toJson());
+String productSubcategoriesResModelToJson(ProductSubcategoriesResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProductSubcategoriesResModel with _$ProductSubcategoriesResModel {
@@ -23,8 +17,7 @@ class ProductSubcategoriesResModel with _$ProductSubcategoriesResModel {
     @JsonKey(name: "message") String? message,
   }) = _ProductSubcategoriesResModel;
 
-  factory ProductSubcategoriesResModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductSubcategoriesResModelFromJson(json);
+  factory ProductSubcategoriesResModel.fromJson(Map<String, dynamic> json) => _$ProductSubcategoriesResModelFromJson(json);
 }
 
 @freezed
@@ -51,6 +44,5 @@ class SubCategory with _$SubCategory {
     String? parentCategoryName,
   }) = _SubCategory;
 
-  factory SubCategory.fromJson(Map<String, dynamic> json) =>
-      _$SubCategoryFromJson(json);
+  factory SubCategory.fromJson(Map<String, dynamic> json) => _$SubCategoryFromJson(json);
 }

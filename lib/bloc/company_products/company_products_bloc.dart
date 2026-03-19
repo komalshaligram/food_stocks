@@ -1076,7 +1076,6 @@ class CompanyProductsBloc extends Bloc<CompanyProductsEvent, CompanyProductsStat
             } catch (_) {}
           }
         }
-        //
       } else if (event is _getCartCountNoEvent) {
         try {
           final res = await DioClient(event.context).post(

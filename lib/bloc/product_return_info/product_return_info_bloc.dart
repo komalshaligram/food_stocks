@@ -217,7 +217,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           );
           FileUploadModel signModel = FileUploadModel.fromJson(response);
           if (signModel.filepath != '') {
-            imgUrl = '${signModel.filepath}' ?? '';
+            imgUrl = '${signModel.filepath}';
           }
           imgList.add(imgUrl);
           if (event.value == 1) {

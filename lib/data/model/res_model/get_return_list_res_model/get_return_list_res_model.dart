@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getReturnListResModel = getReturnListResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -15,12 +11,9 @@ String getReturnListResModelToJson(GetReturnListResModel data) => json.encode(da
 @freezed
 class GetReturnListResModel with _$GetReturnListResModel {
   const factory GetReturnListResModel({
-    @JsonKey(name: "status")
-    int? status,
-    @JsonKey(name: "data")
-    Data? data,
-    @JsonKey(name: "message")
-    String? message,
+    @JsonKey(name: "status") int? status,
+    @JsonKey(name: "data") Data? data,
+    @JsonKey(name: "message") String? message,
   }) = _GetReturnListResModel;
 
   factory GetReturnListResModel.fromJson(Map<String, dynamic> json) => _$GetReturnListResModelFromJson(json);
@@ -29,14 +22,10 @@ class GetReturnListResModel with _$GetReturnListResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-    @JsonKey(name: "returns")
-    List<Return>? returns,
-    @JsonKey(name: "totalRecords")
-    int? totalRecords,
-    @JsonKey(name: "totalPages")
-    int? totalPages,
-    @JsonKey(name: "currentPage")
-    int? currentPage,
+    @JsonKey(name: "returns") List<Return>? returns,
+    @JsonKey(name: "totalRecords") int? totalRecords,
+    @JsonKey(name: "totalPages") int? totalPages,
+    @JsonKey(name: "currentPage") int? currentPage,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -45,41 +34,24 @@ class Data with _$Data {
 @freezed
 class Return with _$Return {
   const factory Return({
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "returnNumber")
-    int? returnNumber,
-    @JsonKey(name: "returnStatusId")
-    String? returnStatusId,
-    @JsonKey(name: "returnStatusName")
-    String? returnStatusName,
-    @JsonKey(name: "returnStatusNumber")
-    int? returnStatusNumber,
-    @JsonKey(name: "applicationName")
-    String? applicationName,
-    @JsonKey(name: "subUserId")
-    String? subUserId,
-    @JsonKey(name: "totalPayment")
-    String? totalPayment,
-    @JsonKey(name: "invoiceDate")
-    dynamic invoiceDate,
-    @JsonKey(name: "rivchitInvoiceNumber")
-    String? rivchitInvoiceNumber,
-    @JsonKey(name: "requestDate")
-    String? createdAt,
-    @JsonKey(name: "productCount")
-    int? productCount,
-    @JsonKey(name: "productUnit")
-    int? productUnit,
-    @JsonKey(name: "clientName")
-    String? clientName,
-    @JsonKey(name: "businessName")
-    String? businessName,
-    @JsonKey(name: "rivchitId")
-    String? rivchitId,
-    @JsonKey(name: "subUserName")
-    String? subUserName,
-    String? rivchitInvoiceLink
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "returnNumber") int? returnNumber,
+    @JsonKey(name: "returnStatusId") String? returnStatusId,
+    @JsonKey(name: "returnStatusName") String? returnStatusName,
+    @JsonKey(name: "returnStatusNumber") int? returnStatusNumber,
+    @JsonKey(name: "applicationName") String? applicationName,
+    @JsonKey(name: "subUserId") String? subUserId,
+    @JsonKey(name: "totalPayment") String? totalPayment,
+    @JsonKey(name: "invoiceDate") dynamic invoiceDate,
+    @JsonKey(name: "rivchitInvoiceNumber") String? rivchitInvoiceNumber,
+    @JsonKey(name: "requestDate") String? createdAt,
+    @JsonKey(name: "productCount") int? productCount,
+    @JsonKey(name: "productUnit") int? productUnit,
+    @JsonKey(name: "clientName") String? clientName,
+    @JsonKey(name: "businessName") String? businessName,
+    @JsonKey(name: "rivchitId") String? rivchitId,
+    @JsonKey(name: "subUserName") String? subUserName,
+    String? rivchitInvoiceLink,
   }) = _Return;
 
   factory Return.fromJson(Map<String, dynamic> json) => _$ReturnFromJson(json);

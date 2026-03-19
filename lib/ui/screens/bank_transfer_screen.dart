@@ -50,10 +50,7 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
               alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
               child: Text(
                 AppLocalizations.of(context)!.bank_transfer_information,
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont,
-                  color: Colors.black,
-                ),
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
               ),
             ),
             actions: [
@@ -69,10 +66,7 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
                     },
                     child: Text(
                       AppLocalizations.of(context)!.copy,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.redColor,
-                      ),
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.redColor),
                     )),
               ),
             ],
@@ -90,10 +84,7 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
                   ? const CircularProgressIndicator()
                   : SelectableText(
                       state.bankTransferDetails,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.blackColor,
-                      ),
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
                     ),
             ),
           ),

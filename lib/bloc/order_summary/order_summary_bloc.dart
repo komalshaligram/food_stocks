@@ -129,9 +129,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           emit(state.copyWith(isLoading: false, tempList: tempList));
         }
       }
-      // else if (event is _payWithBankTransferEvent) {
-      //   add(OrderSummaryEvent.orderSendEvent(context: event.context, paymentMethod: AppStrings.bankTransfer, failPayment: false));
-      // }
       else if (event is _getSupplierPaymentTypeEvent) {
         try {
           List<CartProductDataResModel> tempList = [];

@@ -79,7 +79,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
         if (state.isBottomOfProducts) {
           final cartMap = await fetchCartQuantities(event.context);
           for (var product in productSaleList) {
-            //recommendationProductsList
             stockList.add(ProductStockModel(
               maxQty: (product.sale?.isSale ?? false) ? int.tryParse(product.sale?.saleMaxQuantity.toString() ?? '0') ?? 0 : 0,
               productId: product.id ?? '',
@@ -630,12 +629,11 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           productStockList[2] = productStockList[2].map((product) {
                 return product.copyWith(
                   productSupplierIds: product.productSupplierIds,
-                  productId: product.productId ?? '',
+                  productId: product.productId,
                   stock: product.stock.toString(),
                   quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
                 );
-              }).toList() ??
-              [];
+              }).toList();
 
           productStockList[2].addAll(newRelatedList);
 
@@ -912,7 +910,6 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             } catch (_) {}
           }
         }
-        //
       } else if (event is _getCartCountEvent) {
         try {
           final res = await DioClient(event.context).post(

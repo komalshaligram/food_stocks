@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,6 +64,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
       if (preferences.getGuestUser()) {
       } else {
         if (event is _getAllCartEvent) {
+          add(BasketEvent.getProfileDetailsEvent(context: event.context));
           emit(state.copyWith(
             isSubUserCanCreateOrder: preferences.getCanCreateOrder(),
             updatePaymentMethod: false,
@@ -1196,6 +1200,23 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
               } catch (_) {}
             }
           }
+        } else if (event is _getProfileDetailsEvent) {
+          try {
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl,
+                data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
+                options: Options(
+                  headers: {
+                    HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}',
+                  },
+                ));
+            res_get.ProfileDetailsResModel response = res_get.ProfileDetailsResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              emit(state.copyWith(
+                clubAgentId: preferences.getClubAgentId(),
+                isAvailableAllPayments: response.data?.clients?.first.clientDetail?.isAvailableAllPayments ?? false,
+              ));
+            }
+          } catch (_) {}
         }
       }
     });

@@ -101,7 +101,6 @@ class CommonSaleListView extends StatelessWidget {
                           );
                         },
                         errorWidget: (context, error, stackTrace) {
-                          debugPrint('sale list image error : $error');
                           return Image.asset(AppImagePath.imageNotAvailable5, height: 70, width: 70, fit: BoxFit.cover);
                         },
                       )

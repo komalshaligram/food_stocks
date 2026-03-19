@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getSubUserResModel = getSubUserResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -15,12 +11,9 @@ String getSubUserResModelToJson(GetSubUserResModel data) => json.encode(data.toJ
 @freezed
 class GetSubUserResModel with _$GetSubUserResModel {
   const factory GetSubUserResModel({
-    @JsonKey(name: "status")
-    int? status,
-    @JsonKey(name: "data")
-    Data? data,
-    @JsonKey(name: "message")
-    String? message,
+    @JsonKey(name: "status") int? status,
+    @JsonKey(name: "data") Data? data,
+    @JsonKey(name: "message") String? message,
   }) = _GetSubUserResModel;
 
   factory GetSubUserResModel.fromJson(Map<String, dynamic> json) => _$GetSubUserResModelFromJson(json);
@@ -29,14 +22,10 @@ class GetSubUserResModel with _$GetSubUserResModel {
 @freezed
 class Data with _$Data {
   const factory Data({
-    @JsonKey(name: "users")
-    List<User>? users,
-    @JsonKey(name: "totalRecords")
-    int? totalRecords,
-    @JsonKey(name: "totalPages")
-    int? totalPages,
-    @JsonKey(name: "currentPage")
-    int? currentPage,
+    @JsonKey(name: "users") List<User>? users,
+    @JsonKey(name: "totalRecords") int? totalRecords,
+    @JsonKey(name: "totalPages") int? totalPages,
+    @JsonKey(name: "currentPage") int? currentPage,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
@@ -45,36 +34,21 @@ class Data with _$Data {
 @freezed
 class User with _$User {
   const factory User({
-    @JsonKey(name: "adminType")
-    AdminType? adminType,
-    @JsonKey(name: "lastSeen")
-    String? lastSeen,
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "email")
-    String? email,
-    @JsonKey(name: "contactName")
-    String? contactName,
-    @JsonKey(name: "createdAt")
-    String? createdAt,
-    @JsonKey(name: "updatedAt")
-    String? updatedAt,
-    @JsonKey(name: "createdBy")
-    String? createdBy,
-    @JsonKey(name: "updatedBy")
-    String? updatedBy,
-    @JsonKey(name: "israelId")
-    String? israelId,
-    @JsonKey(name: "userNumber")
-    String? userNumber,
-    @JsonKey(name: "profileImage")
-    String? profileImage,
-    @JsonKey(name: "phoneNumber")
-    String? phoneNumber,
-    @JsonKey(name: "tokenId")
-    String? tokenId,
-    @JsonKey(name: "lastSentOTP")
-    String? lastSentOtp,
+    @JsonKey(name: "adminType") AdminType? adminType,
+    @JsonKey(name: "lastSeen") String? lastSeen,
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "email") String? email,
+    @JsonKey(name: "contactName") String? contactName,
+    @JsonKey(name: "createdAt") String? createdAt,
+    @JsonKey(name: "updatedAt") String? updatedAt,
+    @JsonKey(name: "createdBy") String? createdBy,
+    @JsonKey(name: "updatedBy") String? updatedBy,
+    @JsonKey(name: "israelId") String? israelId,
+    @JsonKey(name: "userNumber") String? userNumber,
+    @JsonKey(name: "profileImage") String? profileImage,
+    @JsonKey(name: "phoneNumber") String? phoneNumber,
+    @JsonKey(name: "tokenId") String? tokenId,
+    @JsonKey(name: "lastSentOTP") String? lastSentOtp,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -83,12 +57,9 @@ class User with _$User {
 @freezed
 class AdminType with _$AdminType {
   const factory AdminType({
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "adminTypeName")
-    String? adminTypeName,
-    @JsonKey(name: "adminType")
-    String? adminType,
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "adminTypeName") String? adminTypeName,
+    @JsonKey(name: "adminType") String? adminType,
   }) = _AdminType;
 
   factory AdminType.fromJson(Map<String, dynamic> json) => _$AdminTypeFromJson(json);

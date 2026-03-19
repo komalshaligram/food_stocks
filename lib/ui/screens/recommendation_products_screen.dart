@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/widget/related_product_title.dart';
 import '../../bloc/recommendation_products/recommendation_products_bloc.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -26,7 +27,6 @@ import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_sale_item_widget.dart';
-import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/confetti.dart';
@@ -466,7 +466,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        // ),
                                       ),
                           )
                         ],
@@ -954,19 +953,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Align(
-          alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
-            child: Text(
-              AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
+        relatedProductTitle(context),
         Container(
           height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
@@ -1097,8 +1084,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
       ],
     );
   }
-
-
 
   showMinQtyConfirmDialog(
     BuildContext context,

@@ -54,5 +54,3 @@ class MyCardInvoice with _$MyCardInvoice {
 
   factory MyCardInvoice.fromJson(Map<String, dynamic> json) => _$MyCardInvoiceFromJson(json);
 }
-
-

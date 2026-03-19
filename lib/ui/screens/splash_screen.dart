@@ -30,10 +30,10 @@ class SplashScreen extends StatelessWidget {
 class SplashScreenWidget extends StatelessWidget {
   const SplashScreenWidget({Key? key}) : super(key: key);
 
-  void getVersion(SharedPreferencesHelper preferencesHelper) async {
+  void getVersion(SharedPreferencesHelper preferences) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
-    preferencesHelper.setAppVersion(version: version);
+    preferences.setAppVersion(version: version);
   }
 
   @override

@@ -76,8 +76,7 @@ class ReturnListWidget extends StatelessWidget {
                   );
                 }
 
-                // Navigator.pop(context);
-                //   Navigator.pushReplacementNamed(context, RouteDefine.profileMenuScreen.name,);
+
               },
               trailingWidget: InkWell(
                 onTap: () {

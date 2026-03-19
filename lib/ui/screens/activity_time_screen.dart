@@ -74,10 +74,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                     Navigator.pop(context);
                   }
                 },
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: AppColors.blackColor,
-                )),
+                child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
           ),
           body: state.isShimmering
               ? const ActivityTimeScreenShimmerWidget()
@@ -203,7 +200,6 @@ class ActivityTimeRow extends StatelessWidget {
                 child: state.operationTimeList.isNotEmpty
                     ? ListView.builder(
                         shrinkWrap: true,
-                        //      scrollDirection: Axis.vertical,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: state.operationTimeList.isNotEmpty ? state.operationTimeList[rowIndex].monday.length : 0,
                         itemBuilder: (context, index) {
@@ -216,10 +212,7 @@ class ActivityTimeRow extends StatelessWidget {
                                           ? Expanded(
                                               child: Text(
                                                 dayString,
-                                                style: AppStyles.rkRegularTextStyle(
-                                                  size: AppConstants.smallFont,
-                                                  color: AppColors.textColor,
-                                                ),
+                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
                                               ),
                                             )
                                           : Expanded(
@@ -248,32 +241,20 @@ class ActivityTimeRow extends StatelessWidget {
                                           ? Container(
                                               height: 40,
                                               width: 40,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.blueColor,
-                                                borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                                              ),
+                                              decoration: BoxDecoration(color: AppColors.blueColor, borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                                               child: GestureDetector(
                                                   onTap: () {
-                                                    context.read<ActivityTimeBloc>().add(ActivityTimeEvent.addMoreTimeZoneEvent(
-                                                          rowIndex: rowIndex,
-                                                          context: context,
-                                                        ));
+                                                    context.read<ActivityTimeBloc>().add(ActivityTimeEvent.addMoreTimeZoneEvent(rowIndex: rowIndex, context: context));
                                                   },
                                                   child: Icon(Icons.add, color: AppColors.whiteColor)),
                                             )
                                           : Container(
                                               height: 40,
                                               width: 40,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.redColor,
-                                                borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                                              ),
+                                              decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_3)),
                                               child: GestureDetector(
                                                   onTap: () {
-                                                    context.read<ActivityTimeBloc>().add(ActivityTimeEvent.deleteTimeZoneEvent(
-                                                          rowIndex: rowIndex,
-                                                          timeIndex: index,
-                                                        ));
+                                                    context.read<ActivityTimeBloc>().add(ActivityTimeEvent.deleteTimeZoneEvent(rowIndex: rowIndex, timeIndex: index));
                                                   },
                                                   child: Icon(Icons.delete, color: AppColors.whiteColor)),
                                             ),
@@ -321,15 +302,12 @@ class TimeContainer extends StatelessWidget {
                 var datetime = '';
                 final DateFormat formatter = DateFormat('HH:mm');
                 datetime = formatter.format(
-                  DateTime.now().add(
-                    Duration(minutes: 30 - DateTime.now().minute % 30),
-                  ),
+                  DateTime.now().add(Duration(minutes: 30 - DateTime.now().minute % 30)),
                 );
                 showCupertinoModalPopup<void>(
                     context: context,
                     builder: (BuildContext c1) {
                       return Container(
-                        // height: getScreenHeight(context) * 0.33,
                         padding: const EdgeInsets.only(top: 6.0),
                         decoration: BoxDecoration(
                             color: AppColors.whiteColor,
@@ -339,10 +317,7 @@ class TimeContainer extends StatelessWidget {
                                   AppConstants.padding_20,
                                 ))),
                         child: DefaultTextStyle(
-                          style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.blackColor,
-                            size: getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.font_22,
-                          ),
+                          style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: getScreenWidth(context) <= 370 ? AppConstants.font_14 : AppConstants.font_22),
                           child: SafeArea(
                             top: false,
                             child: Column(
@@ -382,9 +357,7 @@ class TimeContainer extends StatelessWidget {
                                               AppConstants.radius_5,
                                             ))),
                                         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_30, vertical: AppConstants.padding_5),
-                                        child: Text(
-                                          AppLocalizations.of(context)!.ok,
-                                        ))),
+                                        child: Text(AppLocalizations.of(context)!.ok))),
                                 10.height,
                               ],
                             ),
@@ -403,15 +376,9 @@ class TimeContainer extends StatelessWidget {
                             : time == '24:59'
                                 ? ''
                                 : time,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: getScreenWidth(context) <= 370 ? AppConstants.smallFont : AppConstants.mediumFont,
-                          color: AppColors.blackColor,
-                        )),
+                        style: AppStyles.rkRegularTextStyle(size: getScreenWidth(context) <= 370 ? AppConstants.smallFont : AppConstants.mediumFont, color: AppColors.blackColor)),
                   ),
-                  Icon(
-                    CupertinoIcons.clock,
-                    color: AppColors.greyColor,
-                  ),
+                  Icon(CupertinoIcons.clock, color: AppColors.greyColor),
                 ],
               ),
             ),

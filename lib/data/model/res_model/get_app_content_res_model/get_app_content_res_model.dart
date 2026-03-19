@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getAppContentResModel = getAppContentResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,11 +5,9 @@ part 'get_app_content_res_model.freezed.dart';
 
 part 'get_app_content_res_model.g.dart';
 
-GetAppContentResModel getAppContentResModelFromJson(String str) =>
-    GetAppContentResModel.fromJson(json.decode(str));
+GetAppContentResModel getAppContentResModelFromJson(String str) => GetAppContentResModel.fromJson(json.decode(str));
 
-String getAppContentResModelToJson(GetAppContentResModel data) =>
-    json.encode(data.toJson());
+String getAppContentResModelToJson(GetAppContentResModel data) => json.encode(data.toJson());
 
 @freezed
 class GetAppContentResModel with _$GetAppContentResModel {
@@ -24,8 +18,7 @@ class GetAppContentResModel with _$GetAppContentResModel {
     @JsonKey(name: "message") String? message,
   }) = _GetAppContentResModel;
 
-  factory GetAppContentResModel.fromJson(Map<String, dynamic> json) =>
-      _$GetAppContentResModelFromJson(json);
+  factory GetAppContentResModel.fromJson(Map<String, dynamic> json) => _$GetAppContentResModelFromJson(json);
 }
 
 @freezed
@@ -39,8 +32,7 @@ class Content with _$Content {
     @JsonKey(name: "createdBy") String? createdBy,
   }) = _Content;
 
-  factory Content.fromJson(Map<String, dynamic> json) =>
-      _$ContentFromJson(json);
+  factory Content.fromJson(Map<String, dynamic> json) => _$ContentFromJson(json);
 }
 
 @freezed
@@ -51,6 +43,5 @@ class MetaData with _$MetaData {
     @JsonKey(name: "totalRecords") int? totalRecords,
   }) = _MetaData;
 
-  factory MetaData.fromJson(Map<String, dynamic> json) =>
-      _$MetaDataFromJson(json);
+  factory MetaData.fromJson(Map<String, dynamic> json) => _$MetaDataFromJson(json);
 }

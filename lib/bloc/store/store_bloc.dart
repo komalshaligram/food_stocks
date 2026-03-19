@@ -90,9 +90,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
-      } else if (event is _changeSupplierSelectionExpansionEvent) {
+      }
+      else if (event is _changeSupplierSelectionExpansionEvent) {
         emit(state.copyWith(isSelectSupplier: event.isSelectSupplier ?? !state.isSelectSupplier));
-      } else if (event is _getProductCategoriesListEvent) {
+      }
+      else if (event is _getProductCategoriesListEvent) {
         emit(state.copyWith(
           isGuestUser: preferences.getGuestUser(),
           isSubUserAddToBasket: preferences.getCanAddToBasket(),
@@ -134,9 +136,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _changeSearchListEvent) {
+      }
+      else if (event is _changeSearchListEvent) {
         emit(state.copyWith(searchList: event.newSearchList));
-      } else if (event is _getProductSalesListEvent) {
+      }
+      else if (event is _getProductSalesListEvent) {
         try {
           emit(state.copyWith(isSaleShimmering: true));
 
@@ -174,7 +178,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (_) {
           emit(state.copyWith(isShimmering: false, isSaleShimmering: false));
         }
-      } else if (event is _getRecommendationProductsListEvent) {
+      }
+      else if (event is _getRecommendationProductsListEvent) {
         try {
           emit(state.copyWith(isRecommendedShimmering: true));
           final res = await DioClient(event.context).post(
@@ -184,7 +189,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           RecommendationProductsResModel response = RecommendationProductsResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            final cartMap = await fetchCartQuantities(event.context); // fetch once
+            final cartMap = await fetchCartQuantities(event.context);
 
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
 
@@ -223,7 +228,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             isShimmering: false,
           ));
         }
-      } else if (event is _getSuppliersListEvent) {
+      }
+      else if (event is _getSuppliersListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
@@ -247,7 +253,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _getCompaniesListEvent) {
+      }
+      else if (event is _getCompaniesListEvent) {
         try {
           emit(state.copyWith(isShimmering: true));
           final res = await DioClient(event.context).post(
@@ -272,7 +279,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isShimmering: false));
         }
-      } else if (event is _getProductDetailsEvent) {
+      }
+      else if (event is _getProductDetailsEvent) {
         emit(state.copyWith(isCartCountChange: false));
         add(const StoreEvent.removeRelatedProductEvent());
 
@@ -481,7 +489,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           Navigator.pop(event.context);
           emit(state.copyWith(isProductLoading: false));
         }
-      } else if (event is _increaseQuantityOfProduct) {
+      }
+      else if (event is _increaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity < double.parse(productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString())) {
@@ -510,7 +519,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
           }
         }
-      } else if (event is _decreaseQuantityOfProduct) {
+      }
+      else if (event is _decreaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 0) {
@@ -519,7 +529,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(productStockList: productStockList));
           } else {}
         }
-      } else if (event is _updateQuantityOfProduct) {
+      }
+      else if (event is _updateQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
           String quantityString = event.quantity;
@@ -542,13 +553,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _changeNoteOfProduct) {
+      }
+      else if (event is _changeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
-          productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(note: /*event.newNote*/ state.noteController.text);
+          productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(note: state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
-      } else if (event is _addToCartProductEvent) {
+      }
+      else if (event is _addToCartProductEvent) {
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds.isEmpty) {
           return;
         }
@@ -681,10 +694,12 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isLoading: false));
           }
         }
-      } else if (event is _setCartCountEvent) {
+      }
+      else if (event is _setCartCountEvent) {
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
         emit(state.copyWith(isCartCountChange: true));
-      } else if (event is _supplierSelectionEvent) {
+      }
+      else if (event is _supplierSelectionEvent) {
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
@@ -694,7 +709,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           supplierList[event.supplierIndex] = supplierList[event.supplierIndex].copyWith(selectedIndex: event.supplierSaleIndex);
           emit(state.copyWith(productSupplierList: supplierList, productStockList: productStockList));
         }
-      } else if (event is _globalSearchEvent) {
+      }
+      else if (event is _globalSearchEvent) {
         emit(state.copyWith(search: state.searchController.text, bottlePrice: preferences.getBottleTax()));
         try {
           GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(
@@ -773,11 +789,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } catch (exc) {
           emit(state.copyWith(isSearching: false));
         }
-      } else if (event is _updateImageIndexEvent) {
+      }
+      else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
-      } else if (event is _updateGlobalSearchEvent) {
+      }
+      else if (event is _updateGlobalSearchEvent) {
         emit(state.copyWith(searchController: TextEditingController(text: event.search), searchList: event.searchList));
-      } else if (event is _resetGlobalSearchEvent) {
+      }
+      else if (event is _resetGlobalSearchEvent) {
         List<SearchModel> searchList = [];
         searchList.addAll(state.productCategoryList.map((category) => SearchModel(
               searchId: category.id ?? '',
@@ -786,7 +805,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               image: category.categoryImage ?? '',
             )));
         emit(state.copyWith(searchList: searchList, searchController: TextEditingController()));
-      } else if (event is _getPreviousOrderProductsListEvent) {
+      }
+      else if (event is _getPreviousOrderProductsListEvent) {
         if (!preferences.getGuestUser()) {
           try {
             emit(state.copyWith(isPreviousOrderShimmering: true));
@@ -832,7 +852,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(isShimmering: false, isPreviousOrderShimmering: false));
           }
         }
-      } else if (event is _relatedProductsEvent) {
+      }
+      else if (event is _relatedProductsEvent) {
         emit(state.copyWith(isRelatedShimmering: true));
         final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
 
@@ -853,12 +874,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           productStockList[2] = productStockList[2].map((product) {
                 return product.copyWith(
                   productSupplierIds: product.productSupplierIds,
-                  productId: product.productId ?? '',
+                  productId: product.productId,
                   stock: product.stock.toString(),
                   quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
                 );
-              }).toList() ??
-              [];
+              }).toList();
 
           productStockList[2].addAll(newRelatedList);
 
@@ -876,11 +896,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             type: SnackBarType.success,
           );
         }
-      } else if (event is _removeRelatedProductEvent) {
+      }
+      else if (event is _removeRelatedProductEvent) {
         emit(state.copyWith(relatedProductList: []));
-      } else if (event is _updateMaintenanceEvent) {
+      }
+      else if (event is _updateMaintenanceEvent) {
         emit(state.copyWith(isDialogOpen: true));
-      } else if (event is _generalSettings) {
+      }
+      else if (event is _generalSettings) {
         try {
           emit(state.copyWith(pesachBannerShimmering: true, retryLoading: event.isRetryLoading));
 
@@ -929,7 +952,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));
           CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
-      } else if (event is _getPermissionList) {
+      }
+      else if (event is _getPermissionList) {
         if (preferences.getSubUser()) {
           try {
             final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
@@ -963,7 +987,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
         }
-      } else if (event is _userApproveEvent) {
+      }
+      else if (event is _userApproveEvent) {
         if (!preferences.getGuestUser()) {
           try {
             final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
@@ -978,7 +1003,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             }
           } catch (_) {}
         }
-      } else if (event is _increaseListQuantityOfProductEvent) {
+      }
+      else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
 
         if (event.productStockUpdateIndex != -1) {
@@ -1013,7 +1039,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             );
           }
         }
-      } else if (event is _decreaseListQuantityOfProductEvent) {
+      }
+      else if (event is _decreaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (event.productStockUpdateIndex != -1) {
           if (productStockList[event.productListIndex][event.productStockUpdateIndex].quantity > 0) {
@@ -1024,7 +1051,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(productStockList: productStockList));
           } else {}
         }
-      } else if (event is _updateListQuantityOfProductEvent) {
+      }
+      else if (event is _updateListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (event.productStockUpdateIndex != -1) {
           String quantityString = event.quantity;
@@ -1052,7 +1080,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _addToCartListProductEvent) {
+      }
+      else if (event is _addToCartListProductEvent) {
         _isProductInCart = false;
 
         if (event.productSupplierIds.isEmpty) {
@@ -1229,7 +1258,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             } catch (_) {}
           }
         }
-      } else if (event is _getCartCountEvent) {
+      }
+      else if (event is _getCartCountEvent) {
         try {
           final res = await DioClient(event.context).post(
             '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',

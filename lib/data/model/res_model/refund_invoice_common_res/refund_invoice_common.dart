@@ -17,8 +17,7 @@ class RefundInvoiceCommon with _$RefundInvoiceCommon {
     @JsonKey(name: "remainingAmount") String? remainingAmount,
   }) = _RefundInvoiceCommon;
 
-  factory RefundInvoiceCommon.fromJson(Map<String, dynamic> json) =>
-      _$RefundInvoiceCommonFromJson(json);
+  factory RefundInvoiceCommon.fromJson(Map<String, dynamic> json) => _$RefundInvoiceCommonFromJson(json);
 }
 
 @freezed
@@ -30,8 +29,7 @@ class RefundedOrderCommon with _$RefundedOrderCommon {
     @JsonKey(name: "status") String? status,
   }) = _RefundedOrderCommon;
 
-  factory RefundedOrderCommon.fromJson(Map<String, dynamic> json) =>
-      _$RefundedOrderCommonFromJson(json);
+  factory RefundedOrderCommon.fromJson(Map<String, dynamic> json) => _$RefundedOrderCommonFromJson(json);
 }
 
 @freezed
@@ -50,6 +48,5 @@ class RefundedInvoiceCommon with _$RefundedInvoiceCommon {
     @JsonKey(name: "status") String? status,
   }) = _RefundedInvoiceCommon;
 
-  factory RefundedInvoiceCommon.fromJson(Map<String, dynamic> json) =>
-      _$RefundedInvoiceCommonFromJson(json);
+  factory RefundedInvoiceCommon.fromJson(Map<String, dynamic> json) => _$RefundedInvoiceCommonFromJson(json);
 }

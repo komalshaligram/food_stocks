@@ -250,7 +250,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                               productSupplierIds: state.planogramProductList[index].sale!.supplierId.toString(),
                                             ),
                                           );
-                                      // }
                                     },
                                     onPressed: () {
                                       if (!state.isGuestUser) {
@@ -532,12 +531,10 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                         scanMode: ScanMode.BARCODE,
                       );
                       if (scanResult != '-1') {
-                        // -1 result for cancel scanning
 
                         if (!state.isGuestUser) {
                           showProductDetails(
                               context: context,
-                              // productStock: '1',
                               productId: scanResult,
                               isBarcode: true,
                               productStock: '1',
@@ -603,7 +600,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       onQuantityIncreaseTap: onQuantityIncreaseTap,
       onQuantityDecreaseTap: onQuantityDecreaseTap,
       isMixedSale: isMixedSale,
-        // recommendedRetailConsumerPricerOffer : recommendedRetailConsumerPricerOffer
+      // recommendedRetailConsumerPricerOffer : recommendedRetailConsumerPricerOffer
     );
   }
 
@@ -721,11 +718,11 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                         isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                        recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                                            AppStrings.clubAgentIdText  ? state.productDetails.first.sale?.isSale == true
-                                            ?
-                                        state.productDetails.first.recommendedConsumerOffer :
-                                        state.productDetails.first.recommendedRetailPrice : '',
+                                        recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
+                                            ? state.productDetails.first.sale?.isSale == true
+                                                ? state.productDetails.first.recommendedConsumerOffer
+                                                : state.productDetails.first.recommendedRetailPrice
+                                            : '',
                                         onQuantityChanged: (quantity) {
                                           context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateQuantityOfProduct(
                                                 context: context1,
@@ -761,7 +758,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                                   context,
                                                   isSaleOn,
                                                   productStockList: state.productStockList,
-                                          state.clubAgentId!,
+                                                  state.clubAgentId!,
                                                 )
                                     ],
                                   ),
@@ -781,7 +778,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     BuildContext prevContext,
     List<RelatedProductDatum> relatedProductList,
     BuildContext context,
-    bool isSaleOn, String clubAgentId, {
+    bool isSaleOn,
+    String clubAgentId, {
     required List<List<ProductStockModel>> productStockList,
   }) {
     return Column(
@@ -901,6 +899,4 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       ],
     );
   }
-
-
 }

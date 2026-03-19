@@ -800,12 +800,11 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
           productStockList[2] = productStockList[2].map((product) {
                 return product.copyWith(
                   productSupplierIds: product.productSupplierIds,
-                  productId: product.productId ?? '',
+                  productId: product.productId,
                   stock: product.stock.toString(),
                   quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
-                ); // 0 or cart qty)
-              }).toList() ??
-              [];
+                );
+              }).toList();
 
           productStockList[2].addAll(newRelatedList);
 
@@ -1124,7 +1123,6 @@ class RecommendationProductsBloc extends Bloc<RecommendationProductsEvent, Recom
             } catch (_) {}
           }
         }
-        //
       } else if (event is _getCartCountNoEvent) {
         try {
           final res = await DioClient(event.context).post(

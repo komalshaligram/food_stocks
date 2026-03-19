@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/widget/related_product_title.dart';
 import '../../bloc/store_category/store_category_bloc.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -29,7 +30,6 @@ import '../utils/constants/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
-import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
 import '../widget/custom_dialog.dart';
@@ -139,7 +139,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
                                             color: AppColors.mainColor,
-                                            //gradient:AppColors.appMainGradientColor,
                                             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
                                             border: Border.all(color: AppColors.whiteColor, width: 1),
                                           ),
@@ -442,15 +441,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                     ),
                                                                                   );
                                                                             } else {
-                                                                              showMinMaxIncreaseQtyConfirmDialog(
-                                                                                context,
-                                                                                state.planogramProductList[index].productId ?? '',
-                                                                                state.planogramProductList[index].product.sale?.saleMinQuantity.toString() ?? '0',
-                                                                                index,
-                                                                                state.planogramProductList[index].product.supplierId.toString(),
-                                                                                3,
-                                                                                state.planogramProductList[index].product.sale?.isMixedSale,
-                                                                                state.planogramProductList[index].product.sale?.sameSaleProducts,
+                                                                              showMinMaxQtyConfirmDialog(
+                                                                                context: context,
+                                                                                productId: state.planogramProductList[index].productId ?? '',
+                                                                                minBox: state.planogramProductList[index].product.sale?.saleMinQuantity.toString() ?? '0',
+                                                                                index: index,
+                                                                                supplierId: state.planogramProductList[index].product.supplierId.toString(),
+                                                                                productListIndex: 3,
+                                                                                isIncrease: true,
+                                                                                isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
+                                                                                sameSaleProducts: state.planogramProductList[index].product.sale?.sameSaleProducts,
                                                                               );
                                                                             }
                                                                           },
@@ -476,15 +476,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                       ),
                                                                                     );
                                                                               } else {
-                                                                                showMinMaxDecreaseQtyConfirmDialog(
-                                                                                  context,
-                                                                                  state.planogramProductList[index].productId ?? '',
-                                                                                  state.planogramProductList[index].product.sale?.saleMinQuantity.toString() ?? '0',
-                                                                                  index,
-                                                                                  state.planogramProductList[index].product.supplierId.toString(),
-                                                                                  3,
-                                                                                  state.planogramProductList[index].product.sale?.isMixedSale,
-                                                                                  state.planogramProductList[index].product.sale?.sameSaleProducts,
+                                                                                showMinMaxQtyConfirmDialog(
+                                                                                  context: context,
+                                                                                  productId: state.planogramProductList[index].productId ?? '',
+                                                                                  minBox: state.planogramProductList[index].product.sale?.saleMinQuantity.toString() ?? '0',
+                                                                                  index: index,
+                                                                                  supplierId: state.planogramProductList[index].product.supplierId.toString(),
+                                                                                  productListIndex: 3,
+                                                                                  isIncrease: false,
+                                                                                  isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
+                                                                                  sameSaleProducts: state.planogramProductList[index].product.sale?.sameSaleProducts,
                                                                                 );
                                                                               }
                                                                             }
@@ -562,15 +563,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                     ),
                                                                                   );
                                                                             } else {
-                                                                              showMinMaxIncreaseQtyConfirmDialog(
-                                                                                context,
-                                                                                state.planogramProductList[index].productId ?? '',
-                                                                                state.planogramProductList[index].product.sale?.saleMinQuantity.toString() ?? '0',
-                                                                                index,
-                                                                                state.planogramProductList[index].product.supplierId.toString(),
-                                                                                3,
-                                                                                state.planogramProductList[index].product.sale?.isMixedSale,
-                                                                                state.planogramProductList[index].product.sale?.sameSaleProducts,
+                                                                              showMinMaxQtyConfirmDialog(
+                                                                                context: context,
+                                                                                productId: state.planogramProductList[index].productId ?? '',
+                                                                                minBox: state.planogramProductList[index].product.sale?.saleMinQuantity.toString() ?? '0',
+                                                                                index: index,
+                                                                                supplierId: state.planogramProductList[index].product.supplierId.toString(),
+                                                                                productListIndex: 3,
+                                                                                isIncrease: true,
+                                                                                isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
+                                                                                sameSaleProducts: state.planogramProductList[index].product.sale?.sameSaleProducts,
                                                                               );
                                                                             }
                                                                           },
@@ -596,15 +598,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                                                       ),
                                                                                     );
                                                                               } else {
-                                                                                showMinMaxDecreaseQtyConfirmDialog(
-                                                                                  context,
-                                                                                  state.planogramProductList[index].productId ?? '',
-                                                                                  state.planogramProductList[index].product.sale?.saleMinQuantity.toString() ?? '0',
-                                                                                  index,
-                                                                                  state.planogramProductList[index].product.supplierId.toString(),
-                                                                                  3,
-                                                                                  state.planogramProductList[index].product.sale?.isMixedSale,
-                                                                                  state.planogramProductList[index].product.sale?.sameSaleProducts,
+                                                                                showMinMaxQtyConfirmDialog(
+                                                                                  context: context,
+                                                                                  productId: state.planogramProductList[index].productId ?? '',
+                                                                                  minBox: state.planogramProductList[index].product.sale?.saleMinQuantity.toString() ?? '0',
+                                                                                  index: index,
+                                                                                  supplierId: state.planogramProductList[index].product.supplierId.toString(),
+                                                                                  productListIndex: 3,
+                                                                                  isIncrease: false,
+                                                                                  isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
+                                                                                  sameSaleProducts: state.planogramProductList[index].product.sale?.sameSaleProducts,
                                                                                 );
                                                                               }
                                                                             }
@@ -744,15 +747,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                     ),
                                                   );
                                             } else {
-                                              showMinMaxIncreaseQtyConfirmDialog(
-                                                context,
-                                                state.searchList[index].searchId,
-                                                state.searchList[index].saleMinQuantity.toString(),
-                                                index,
-                                                state.searchList[index].supplierId.toString(),
-                                                0,
-                                                state.searchList[index].isMixedSale,
-                                                state.searchList[index].sameSaleProducts,
+                                              showMinMaxQtyConfirmDialog(
+                                                context: context,
+                                                productId: state.searchList[index].searchId,
+                                                minBox: state.searchList[index].saleMinQuantity.toString(),
+                                                index: index,
+                                                supplierId: state.searchList[index].supplierId.toString(),
+                                                productListIndex: 0,
+                                                isIncrease: true,
+                                                isMixedSale: state.searchList[index].isMixedSale,
+                                                sameSaleProducts: state.searchList[index].sameSaleProducts,
                                               );
                                             }
                                           },
@@ -778,15 +782,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                       ),
                                                     );
                                               } else {
-                                                showMinMaxDecreaseQtyConfirmDialog(
-                                                  context,
-                                                  state.searchList[index].searchId,
-                                                  state.searchList[index].saleMinQuantity.toString(),
-                                                  index,
-                                                  state.searchList[index].supplierId.toString(),
-                                                  0,
-                                                  state.searchList[index].isMixedSale,
-                                                  state.searchList[index].sameSaleProducts,
+                                                showMinMaxQtyConfirmDialog(
+                                                  context: context,
+                                                  productId: state.searchList[index].searchId,
+                                                  minBox: state.searchList[index].saleMinQuantity.toString(),
+                                                  index: index,
+                                                  supplierId: state.searchList[index].supplierId.toString(),
+                                                  productListIndex: 0,
+                                                  isIncrease: false,
+                                                  isMixedSale: state.searchList[index].isMixedSale,
+                                                  sameSaleProducts: state.searchList[index].sameSaleProducts,
                                                 );
                                               }
                                             }
@@ -887,7 +892,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             scanMode: ScanMode.BARCODE,
                           );
                           if (result != '-1') {
-                            // -1 result for cancel scanning
                             if (!state.isGuestUser) {
                               showProductDetails(
                                 isSaleOn: state.isSaleOn,
@@ -1087,7 +1091,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                               lowStock,
                               style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
                             ),
-                  // 2.height,
                   Expanded(
                     child: list[index].planogramproducts?[subIndex].totalSale == 0
                         ? 0.width
@@ -1325,19 +1328,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Align(
-          alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
-            child: Text(
-              AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
+        relatedProductTitle(context),
         Container(
           height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.only(bottom: AppConstants.padding_10, left: AppConstants.padding_10, right: AppConstants.padding_10),
@@ -1400,15 +1391,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           ),
                         );
                   } else {
-                    showMinMaxIncreaseQtyConfirmDialog(
-                      context,
-                      relatedProductList[i].id.toString(),
-                      relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                      productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                      relatedProductList[i].supplierId.toString(),
-                      3,
-                      relatedProductList[i].sale?.isMixedSale,
-                      relatedProductList[i].sale?.sameSaleProducts,
+                    showMinMaxQtyConfirmDialog(
+                      context: context,
+                      productId: relatedProductList[i].id.toString(),
+                      minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
+                      index: productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                      supplierId: relatedProductList[i].supplierId.toString(),
+                      productListIndex: 3,
+                      isIncrease: true,
+                      isMixedSale: relatedProductList[i].sale?.isMixedSale,
+                      sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts,
                     );
                   }
                 },
@@ -1434,15 +1426,16 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             ),
                           );
                     } else {
-                      showMinMaxDecreaseQtyConfirmDialog(
-                        context,
-                        relatedProductList[i].id.toString(),
-                        relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                        productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                        relatedProductList[i].supplierId.toString(),
-                        3,
-                        relatedProductList[i].sale?.isMixedSale,
-                        relatedProductList[i].sale?.sameSaleProducts,
+                      showMinMaxQtyConfirmDialog(
+                        context: context,
+                        productId: relatedProductList[i].id.toString(),
+                        minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
+                        index: productStockList[3].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                        supplierId: relatedProductList[i].supplierId.toString(),
+                        productListIndex: 3,
+                        isIncrease: false,
+                        isMixedSale: relatedProductList[i].sale?.isMixedSale,
+                        sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts,
                       );
                     }
                   }
@@ -1633,7 +1626,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget buildSubCategoryListItem({required int index, required BuildContext context, required String subCategoryName, required void Function()? onTap,}) {
+  Widget buildSubCategoryListItem({
+    required int index,
+    required BuildContext context,
+    required String subCategoryName,
+    required void Function()? onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       splashColor: Colors.transparent,
@@ -1659,7 +1657,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-
   showMinQtyConfirmDialog(
     BuildContext context,
     String productId,
@@ -1676,9 +1673,9 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           builder: (context1, state) {
             String mixedSale = '';
             if (isMixedSale!) {
-              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+              mixedSale = AppStrings.minSaleText(context, minBox);
             } else {
-              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+              mixedSale = AppStrings.otherSaleText(context, minBox);
             }
             return CustomDialog(
               directionality: state.language,
@@ -1704,104 +1701,57 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     );
   }
 
-  showMinMaxIncreaseQtyConfirmDialog(
-    BuildContext context,
-    String productId,
-    String minBox,
-    int index,
-    supplierId,
-    productListIndex,
+  void showMinMaxQtyConfirmDialog({
+    required BuildContext context,
+    required String productId,
+    required String minBox,
+    required int index,
+    required dynamic supplierId,
+    required int productListIndex,
+    required bool isIncrease,
     bool? isMixedSale,
     List? sameSaleProducts,
-  ) {
-    StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
+  }) {
+    final StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
+    final bool mixedSaleFlag = isMixedSale ?? false;
+
     showDialog(
       context: context,
       builder: (dialogContext) => BlocProvider.value(
-        value: context.read<StoreCategoryBloc>(),
+        value: bloc,
         child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
           builder: (context1, state) {
-            String mixedSale = '';
-            if (isMixedSale!) {
-              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
-            } else {
-              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
-            }
+            final String mixedSale = mixedSaleFlag ? AppStrings.minSaleText(context, minBox) : AppStrings.otherSaleText(context, minBox);
+
             return CustomDialog(
               directionality: state.language,
               title: mixedSale,
-              content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale: isMixedSale,
+              content: mixedSaleFlag ? (sameSaleProducts ?? []) : [],
+              isMixedSale: mixedSaleFlag,
               positiveTitle: AppLocalizations.of(context)!.closeText,
               negativeTitle: AppLocalizations.of(context)!.addText,
-              negativeOnTap: () async {
+              negativeOnTap: () {
                 Navigator.pop(dialogContext);
-                bloc.add(StoreCategoryEvent.increaseListQuantityOfProduct(
-                  context: context,
-                  productListIndex: productListIndex,
-                  productStockUpdateIndex: index,
-                  productSupplierIds: supplierId,
-                ));
 
-                bloc.add(StoreCategoryEvent.addToCartListProductEvent(
-                  context: context,
-                  productId: productId,
-                  productListIndex: productListIndex,
-                  productStockUpdateIndex: index,
-                  productSupplierIds: supplierId,
-                ));
-              },
-              positiveOnTap: () async {
-                Navigator.pop(context);
-                // Navigator.pop(dialogContext);
-              },
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  showMinMaxDecreaseQtyConfirmDialog(
-    BuildContext context,
-    String productId,
-    String minBox,
-    int index,
-    supplierId,
-    productListIndex,
-    bool? isMixedSale,
-    List? sameSaleProducts,
-  ) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => BlocProvider.value(
-        value: context.read<StoreCategoryBloc>(),
-        child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(
-          builder: (context1, state) {
-            String mixedSale = '';
-            if (isMixedSale!) {
-              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
-            } else {
-              mixedSale = '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
-            }
-            StoreCategoryBloc bloc = context.read<StoreCategoryBloc>();
-            return CustomDialog(
-              directionality: state.language,
-              title: mixedSale,
-              content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale: isMixedSale,
-              positiveTitle: AppLocalizations.of(context)!.closeText,
-              negativeTitle: AppLocalizations.of(context)!.addText,
-              negativeOnTap: () async {
-                Navigator.pop(dialogContext);
-                bloc.add(
-                  StoreCategoryEvent.decreaseListQuantityOfProduct(
-                    context: context,
-                    productListIndex: productListIndex,
-                    productStockUpdateIndex: index,
-                    productSupplierIds: supplierId,
-                  ),
-                );
+                if (isIncrease) {
+                  bloc.add(
+                    StoreCategoryEvent.increaseListQuantityOfProduct(
+                      context: context,
+                      productListIndex: productListIndex,
+                      productStockUpdateIndex: index,
+                      productSupplierIds: supplierId,
+                    ),
+                  );
+                } else {
+                  bloc.add(
+                    StoreCategoryEvent.decreaseListQuantityOfProduct(
+                      context: context,
+                      productListIndex: productListIndex,
+                      productStockUpdateIndex: index,
+                      productSupplierIds: supplierId,
+                    ),
+                  );
+                }
 
                 bloc.add(
                   StoreCategoryEvent.addToCartListProductEvent(
@@ -1813,9 +1763,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                   ),
                 );
               },
-              positiveOnTap: () async {
-                Navigator.pop(context);
-                // Navigator.pop(dialogContext);
+              positiveOnTap: () {
+                Navigator.pop(dialogContext);
               },
             );
           },

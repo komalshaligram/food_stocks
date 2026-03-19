@@ -37,7 +37,7 @@ class RefundPdfScreen extends StatelessWidget {
 }
 
 class RefundPdfScreenWidget extends StatelessWidget {
-  final RefundInvoiceCommon? invoiceDetailsList; // ← CHANGED TYPE
+  final RefundInvoiceCommon? invoiceDetailsList;
 
   const RefundPdfScreenWidget({super.key, required this.invoiceDetailsList});
 

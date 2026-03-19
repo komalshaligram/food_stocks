@@ -99,7 +99,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
                 owner2Signature: response.data?.clients?[0].clientDetail?.owner2Signature ?? '',
                 guarantee1Signature: response.data?.clients?[0].clientDetail?.guarantee1Signature ?? '',
                 guarantee2Signature: response.data?.clients?[0].clientDetail?.guarantee2Signature ?? ''
-                // bankName:
                 ));
           } else {
             CustomSnackBar.showSnackBar(

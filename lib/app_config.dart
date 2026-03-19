@@ -7,32 +7,18 @@ class AppConfig {
   final String appBaseUrl;
   final Color primaryColor;
 
-  AppConfig(
-      {required this.flavor,
-        required this.appName,
-        required this.appBaseUrl,
-        required this.primaryColor});
+  AppConfig({required this.flavor, required this.appName, required this.appBaseUrl, required this.primaryColor});
 
   factory AppConfig.dev() {
-    return AppConfig(
-        flavor: 'dev',
-        appName: 'Tavili-Dev',
-        appBaseUrl: 'https://devapi.foodstock.shtibel.com/api',
-        primaryColor: Colors.blue);
+    return AppConfig(flavor: 'dev', appName: 'Tavili-Dev', appBaseUrl: 'https://devapi.foodstock.shtibel.com/api', primaryColor: Colors.blue);
   }
 
   factory AppConfig.stag() {
-    return AppConfig(
-        flavor: 'prod',
-        appName: 'Tavili',
-        appBaseUrl: 'https://api.foodstock.shtibel.com/api',
-        primaryColor: Colors.red);
+    return AppConfig(flavor: 'prod', appName: 'Tavili', appBaseUrl: 'https://api.foodstock.shtibel.com/api', primaryColor: Colors.red);
   }
 
-
   static Future<void> initializeAppConfig(BuildContext context) async {
-    final String? flavor =
-    await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
+    final String? flavor = await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
     switch (flavor) {
       case 'dev':
         AppConfigManager.setAppConfig(AppConfig.dev());
@@ -49,8 +35,7 @@ class AppConfig {
   }
 
   static Future<String> getAppUrl() async {
-    final String? flavor =
-    await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
+    final String? flavor = await const MethodChannel('flavor').invokeMethod<String>('getFlavor');
     switch (flavor) {
       case 'dev':
         return AppConfig.dev().appBaseUrl;

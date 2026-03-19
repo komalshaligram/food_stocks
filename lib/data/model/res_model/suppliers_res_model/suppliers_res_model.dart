@@ -1,5 +1,3 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -7,11 +5,9 @@ part 'suppliers_res_model.freezed.dart';
 
 part 'suppliers_res_model.g.dart';
 
-SuppliersResModel suppliersResModelFromJson(String str) =>
-    SuppliersResModel.fromJson(json.decode(str));
+SuppliersResModel suppliersResModelFromJson(String str) => SuppliersResModel.fromJson(json.decode(str));
 
-String suppliersResModelToJson(SuppliersResModel data) =>
-    json.encode(data.toJson());
+String suppliersResModelToJson(SuppliersResModel data) => json.encode(data.toJson());
 
 @freezed
 class SuppliersResModel with _$SuppliersResModel {
@@ -22,8 +18,7 @@ class SuppliersResModel with _$SuppliersResModel {
     @JsonKey(name: "message") String? message,
   }) = _SuppliersResModel;
 
-  factory SuppliersResModel.fromJson(Map<String, dynamic> json) =>
-      _$SuppliersResModelFromJson(json);
+  factory SuppliersResModel.fromJson(Map<String, dynamic> json) => _$SuppliersResModelFromJson(json);
 }
 
 @freezed
@@ -85,14 +80,10 @@ class SupplierDetail with _$SupplierDetail {
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
     @JsonKey(name: "totalIncome") int? totalIncome,
     @JsonKey(name: "incomeByThisMonth") int? incomeByThisMonth,
-
-
   }) = _SupplierDetail;
 
-  factory SupplierDetail.fromJson(Map<String, dynamic> json) =>
-      _$SupplierDetailFromJson(json);
+  factory SupplierDetail.fromJson(Map<String, dynamic> json) => _$SupplierDetailFromJson(json);
 }
-
 
 @freezed
 class SuplierPolicy with _$SuplierPolicy {
@@ -106,8 +97,7 @@ class SuplierPolicy with _$SuplierPolicy {
     @JsonKey(name: "createdAt") DateTime? createdAt,
   }) = _SuplierPolicy;
 
-  factory SuplierPolicy.fromJson(Map<String, dynamic> json) =>
-      _$SuplierPolicyFromJson(json);
+  factory SuplierPolicy.fromJson(Map<String, dynamic> json) => _$SuplierPolicyFromJson(json);
 }
 
 @freezed
@@ -129,6 +119,5 @@ class MetaData with _$MetaData {
     @JsonKey(name: "totalRecords") int? totalRecords,
   }) = _MetaData;
 
-  factory MetaData.fromJson(Map<String, dynamic> json) =>
-      _$MetaDataFromJson(json);
+  factory MetaData.fromJson(Map<String, dynamic> json) => _$MetaDataFromJson(json);
 }

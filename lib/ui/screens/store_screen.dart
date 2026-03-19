@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/widget/related_product_title.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../routes/app_routes.dart';
@@ -41,6 +42,7 @@ import '../widget/pesach_banner_shimmer.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/search_item_widget.dart';
 import '../widget/store_screen_shimmer_widget.dart';
+import 'build_list_title.dart';
 
 class StoreRoute {
   static Widget get route => const StoreScreen();
@@ -95,8 +97,7 @@ class StoreScreenWidget extends StatelessWidget {
               if (!state.isAppOnMaintenance) {
                 bloc.add(StoreEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
               }
-              // bloc.add(StoreEvent.getCompaniesListEvent(context: context));
-              //   bloc.add(StoreEvent.getSuppliersListEvent(context: context));
+
               bloc.add(StoreEvent.getProductSalesListEvent(context: context));
               bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
               bloc.add(StoreEvent.getPreviousOrderProductsListEvent(context: context));
@@ -340,7 +341,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                     : AbsorbPointer(
                                                         absorbing: state.isSaleShimmering,
                                                         child: ListView.builder(
-                                                          // Product Sale
                                                           itemCount: state.productSalesList.length,
                                                           shrinkWrap: true,
                                                           scrollDirection: Axis.horizontal,
@@ -607,7 +607,6 @@ class StoreScreenWidget extends StatelessWidget {
                                                                       productListIndex: 1,
                                                                     );
 
-                                                                    // bloc.add(StoreEvent.getRecommendationProductsListEvent(context: context));
                                                                   } else {
                                                                     Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                                   }
@@ -1034,7 +1033,6 @@ class StoreScreenWidget extends StatelessWidget {
                           scanMode: ScanMode.BARCODE,
                         );
                         if (scanResult != '-1') {
-                          // -1 result for cancel scanning
                           showProductDetails(
                             context: context,
                             productId: scanResult,
@@ -1056,34 +1054,7 @@ class StoreScreenWidget extends StatelessWidget {
     );
   }
 
-  Padding buildListTitles({required BuildContext context, required String title, required void Function() onTap, required subTitle}) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: AppConstants.padding_10,
-        right: AppConstants.padding_10,
-        top: AppConstants.padding_10,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: onTap,
-            child: Text(
-              title,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
-            ),
-          ),
-          GestureDetector(
-            onTap: onTap,
-            child: Text(
-              subTitle,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget buildCategoryListItem({required String categoryName, required void Function() onTap, required String categoryImage, required bool isHomePreference}) {
     return !isHomePreference
@@ -1093,7 +1064,6 @@ class StoreScreenWidget extends StatelessWidget {
             width: 105,
             margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_10),
             clipBehavior: Clip.hardEdge,
-            // alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               color: AppColors.whiteColor,
@@ -1144,17 +1114,14 @@ class StoreScreenWidget extends StatelessWidget {
                     left: 0,
                     right: 0,
                     child: Container(
-                      // height: 20,
                       alignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_2),
                       decoration: BoxDecoration(
                         gradient: AppColors.appMainGradientColor,
-                        //    color: AppColors.mainColor,
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(AppConstants.radius_10),
                           bottomRight: Radius.circular(AppConstants.radius_10),
                         ),
-                        // border: Border.all(color: AppColors.whiteColor, width: 1),
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: CommonMarqueeWidget(
@@ -1248,7 +1215,7 @@ class StoreScreenWidget extends StatelessWidget {
               child: CommonProductButtonWidget(
                 title: "${price.toStringAsFixed(0)}%",
                 onPressed: onButtonTap,
-                // height: 35,
+
                 textColor: AppColors.whiteColor,
                 bgColor: AppColors.mainColor,
                 borderRadius: AppConstants.radius_3,
@@ -1551,19 +1518,7 @@ class StoreScreenWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Align(
-                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-                  child: Text(
-                    AppLocalizations.of(context)!.related_products,
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
+              relatedProductTitle(context),
               Container(
                 height: getItemHeight(context, isSaleOn),
                 padding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, top: AppConstants.padding_10),

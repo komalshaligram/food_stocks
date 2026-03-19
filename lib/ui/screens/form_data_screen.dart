@@ -148,7 +148,6 @@ class FormDataScreenWidget extends StatelessWidget {
                                         );
                                       }).toList(),
                                       onChanged: (v) {
-                                        debugPrint('owners:$v');
                                         bloc.add(FormDataEvent.selectOwnerNoEvent(owner: v ?? ''));
                                       },
                                       value: state.owner,

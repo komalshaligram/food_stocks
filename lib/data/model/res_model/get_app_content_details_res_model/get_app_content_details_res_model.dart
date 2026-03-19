@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final getAppContentDetailsResModel = getAppContentDetailsResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,11 +5,9 @@ part 'get_app_content_details_res_model.freezed.dart';
 
 part 'get_app_content_details_res_model.g.dart';
 
-GetAppContentDetailsResModel getAppContentDetailsResModelFromJson(String str) =>
-    GetAppContentDetailsResModel.fromJson(json.decode(str));
+GetAppContentDetailsResModel getAppContentDetailsResModelFromJson(String str) => GetAppContentDetailsResModel.fromJson(json.decode(str));
 
-String getAppContentDetailsResModelToJson(GetAppContentDetailsResModel data) =>
-    json.encode(data.toJson());
+String getAppContentDetailsResModelToJson(GetAppContentDetailsResModel data) => json.encode(data.toJson());
 
 @freezed
 class GetAppContentDetailsResModel with _$GetAppContentDetailsResModel {
@@ -23,8 +17,7 @@ class GetAppContentDetailsResModel with _$GetAppContentDetailsResModel {
     @JsonKey(name: "data") List<Datum>? data,
   }) = _GetAppContentDetailsResModel;
 
-  factory GetAppContentDetailsResModel.fromJson(Map<String, dynamic> json) =>
-      _$GetAppContentDetailsResModelFromJson(json);
+  factory GetAppContentDetailsResModel.fromJson(Map<String, dynamic> json) => _$GetAppContentDetailsResModelFromJson(json);
 }
 
 @freezed

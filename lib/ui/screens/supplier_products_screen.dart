@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/widget/related_product_title.dart';
 import '../../bloc/supplier_products/supplier_products_bloc.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
@@ -28,7 +29,6 @@ import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
-import '../widget/common_sale_description_dialog.dart';
 import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/custom_dialog.dart';
@@ -151,7 +151,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                         )),
                                                     itemBuilder: (context, index) {
                                                       return CommonProductSaleItemWidget(
-                                                          //  imageHeight: isTablet(context) ? 100 : 70,
                                                           isGuestUser: state.isGuestUser,
                                                           height: AppConstants.salesProductItemHeight,
                                                           width: 140,
@@ -264,8 +263,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                                 productId: state.searchType == SearchTypes.product.toString() ? state.productList[index].id ?? '' : state.productList[index].productId ?? '',
                                                                 productStock: state.productList[index].productStock.toString(),
                                                               );
-                                                              // context.read<SupplierProductsBloc>().add(
-                                                              //     SupplierProductsEvent.getSupplierProductsListEvent(context: context, searchType: state.searchType));
+
                                                             } else {
                                                               Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                             }
@@ -387,8 +385,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                             productStock: state.productList[index].productStock.toString(),
                                                             isSaleOn: state.isSaleOn,
                                                           );
-                                                          // context.read<SupplierProductsBloc>().add(
-                                                          //     SupplierProductsEvent.getSupplierProductsListEvent(context: context, searchType: state.searchType));
+
                                                         } else {
                                                           Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                                                         }
@@ -668,7 +665,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             scanMode: ScanMode.BARCODE,
                           );
                           if (scanResult != '-1') {
-                            // -1 result for cancel scanning
                             if (!state.isGuestUser) {
                               showProductDetails(
                                 productListIndex: 0,
@@ -979,19 +975,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Align(
-          alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
-            child: Text(
-              AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
+        relatedProductTitle(context),
         Container(
           height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),

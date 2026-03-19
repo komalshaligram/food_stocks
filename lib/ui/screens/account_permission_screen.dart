@@ -24,11 +24,7 @@ class AccountPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => AccountPermissionBloc()
-        ..add(AccountPermissionEvent.getPermissionList(
-          context: context,
-          subUserId: args?[AppStrings.subUserIdString] ?? '',
-        )),
+      create: (context) => AccountPermissionBloc()..add(AccountPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
       child: const AccountPermissionScreenWidget(),
     );
   }
@@ -60,10 +56,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
                 child: SingleChildScrollView(
                   child: state.isShimmering
-                      ? const OrderSummaryScreenShimmerWidget(
-                          itemCount: 10,
-                          containerHeight: 40,
-                        )
+                      ? const OrderSummaryScreenShimmerWidget(itemCount: 10, containerHeight: 40)
                       : !state.isShimmering && state.permissionList.isEmpty
                           ? SizedBox(
                               height: getScreenHeight(context) * 0.8,
@@ -141,10 +134,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text(
-                  title,
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_17, color: AppColors.greyColor),
-                ),
+                child: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_17, color: AppColors.greyColor)),
               ),
               SizedBox(
                 width: 45,

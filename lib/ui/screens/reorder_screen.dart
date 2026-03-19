@@ -3,12 +3,12 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/widget/related_product_title.dart';
 import '../../bloc/reorder/reorder_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../ui/utils/constants/app_img_path.dart';
-import '../../ui/widget/common_check_box_widget.dart';
 import '../../ui/widget/refresh_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:html/parser.dart';
@@ -26,7 +26,6 @@ import '../utils/constants/app_styles.dart';
 import '../utils/constants/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/common_drop_down_button.dart';
 import '../widget/common_product_button_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/common_product_sale_item_widget.dart';
@@ -35,9 +34,7 @@ import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
-import '../widget/custom_button_widget.dart';
 import '../widget/custom_dialog.dart';
-import '../widget/filter_bottom_sheet_shimmer_widget.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/search_item_widget.dart';
@@ -456,7 +453,6 @@ class ReorderScreenWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // ),
                       ),
                       CommonSearchWidget(
                         onCloseTap: () {
@@ -481,7 +477,6 @@ class ReorderScreenWidget extends StatelessWidget {
                           }
                         },
                         onSearchSubmit: (String search) {
-                          // bloc.add(ReorderEvent.globalSearchEvent(context: context));
                           Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
                             AppStrings.searchString: state.search,
                             AppStrings.searchType: SearchTypes.product.toString(),
@@ -723,7 +718,6 @@ class ReorderScreenWidget extends StatelessWidget {
                             scanMode: ScanMode.BARCODE,
                           );
                           if (scanResult != '-1') {
-                            // -1 result for cancel scanning
                             showProductDetails(
                               context: context,
                               productId: scanResult,
@@ -1018,19 +1012,7 @@ class ReorderScreenWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Align(
-          alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
-            child: Text(
-              AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
+        relatedProductTitle(context),
         Container(
           height: getItemHeight(context, isSaleOn),
           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),

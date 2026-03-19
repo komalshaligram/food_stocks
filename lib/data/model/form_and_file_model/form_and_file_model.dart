@@ -13,7 +13,6 @@ class FormAndFileModel with _$FormAndFileModel {
     String? localUrl,
     bool? isForm,
     String? sampleUrl,
-    // bool? isDownloadable,
   }) = _FormAndFileModel;
 
   factory FormAndFileModel.fromJson(Map<String, dynamic> json) =>

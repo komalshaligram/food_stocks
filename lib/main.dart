@@ -18,10 +18,10 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 @pragma('vm:entry-point')
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   printData("__________BackgroundHandler______");
-    await Firebase.initializeApp();
-    printData("Handling in main${message.toString()}");
-    printData("Handling a background message:${message.messageId}");
-    printData("Handling a background message:${message.data.toString()}");
+  await Firebase.initializeApp();
+  printData("Handling in main${message.toString()}");
+  printData("Handling a background message:${message.messageId}");
+  printData("Handling a background message:${message.data.toString()}");
 }
 
 void main() async {
@@ -34,10 +34,8 @@ void main() async {
     if (Platform.isAndroid) {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    SharedPreferencesHelper preferencesHelper =
-    SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     if (!preferencesHelper.getUserLoggedIn()) {
       await Permission.notification.isDenied.then((isPermissionDenied) async {
         if (isPermissionDenied) {
@@ -48,4 +46,3 @@ void main() async {
     runApp(const MyApp());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
-

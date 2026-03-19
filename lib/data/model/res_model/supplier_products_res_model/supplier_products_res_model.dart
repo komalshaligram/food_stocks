@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final supplierProductsResModel = supplierProductsResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,11 +5,9 @@ part 'supplier_products_res_model.freezed.dart';
 
 part 'supplier_products_res_model.g.dart';
 
-SupplierProductsResModel supplierProductsResModelFromJson(String str) =>
-    SupplierProductsResModel.fromJson(json.decode(str));
+SupplierProductsResModel supplierProductsResModelFromJson(String str) => SupplierProductsResModel.fromJson(json.decode(str));
 
-String supplierProductsResModelToJson(SupplierProductsResModel data) =>
-    json.encode(data.toJson());
+String supplierProductsResModelToJson(SupplierProductsResModel data) => json.encode(data.toJson());
 
 @freezed
 class SupplierProductsResModel with _$SupplierProductsResModel {
@@ -24,8 +18,7 @@ class SupplierProductsResModel with _$SupplierProductsResModel {
     @JsonKey(name: "message") String? message,
   }) = _SupplierProductsResModel;
 
-  factory SupplierProductsResModel.fromJson(Map<String, dynamic> json) =>
-      _$SupplierProductsResModelFromJson(json);
+  factory SupplierProductsResModel.fromJson(Map<String, dynamic> json) => _$SupplierProductsResModelFromJson(json);
 }
 
 @freezed
@@ -34,7 +27,6 @@ class SupplierProductsData with _$SupplierProductsData {
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "category") String? category,
     @JsonKey(name: "subcategories") String? subcategories,
-    //@JsonKey(name: "subsubcategories") String? subsubcategories,
     @JsonKey(name: "casetypes") String? casetypes,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "sku") String? sku,
@@ -55,39 +47,26 @@ class SupplierProductsData with _$SupplierProductsData {
     @JsonKey(name: "isPesach") bool? isPesach,
     @JsonKey(name: "nmMashlim") String? nmMashlim,
     @JsonKey(name: "sale") Sale? sale,
-    @JsonKey(name: "recommendedRetailPrice")
-    String? recommendedRetailPrice,
-    @JsonKey(name: "recommendedConsumerOffer")
-    String? recommendedConsumerOffer,
+    @JsonKey(name: "recommendedRetailPrice") String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer") String? recommendedConsumerOffer,
     String? lowStock,
   }) = _SupplierProductsData;
 
-  factory SupplierProductsData.fromJson(Map<String, dynamic> json) =>
-      _$SupplierProductsDataFromJson(json);
+  factory SupplierProductsData.fromJson(Map<String, dynamic> json) => _$SupplierProductsDataFromJson(json);
 }
-
 
 @freezed
 class Sale with _$Sale {
   const factory Sale({
-    @JsonKey(name: "isSale")
-    required bool isSale,
-    @JsonKey(name: "isMixedSale")
-    bool? isMixedSale,
-    @JsonKey(name: "sameSaleProducts")
-    List<dynamic>? sameSaleProducts,
-    @JsonKey(name: "salePrice")
-    required String salePrice,
-    @JsonKey(name: "saleFromDate")
-    required String saleFromDate,
-    @JsonKey(name: "saleUntilDate")
-    required String saleUntilDate,
-    @JsonKey(name: "saleMaxQuantity")
-    required String saleMaxQuantity,
-    @JsonKey(name: "saleMinQuantity")
-    required String saleMinQuantity,
-    @JsonKey(name: "saleDescription")
-    required String saleDescription,
+    @JsonKey(name: "isSale") required bool isSale,
+    @JsonKey(name: "isMixedSale") bool? isMixedSale,
+    @JsonKey(name: "sameSaleProducts") List<dynamic>? sameSaleProducts,
+    @JsonKey(name: "salePrice") required String salePrice,
+    @JsonKey(name: "saleFromDate") required String saleFromDate,
+    @JsonKey(name: "saleUntilDate") required String saleUntilDate,
+    @JsonKey(name: "saleMaxQuantity") required String saleMaxQuantity,
+    @JsonKey(name: "saleMinQuantity") required String saleMinQuantity,
+    @JsonKey(name: "saleDescription") required String saleDescription,
   }) = _Sale;
 
   factory Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
@@ -101,6 +80,5 @@ class MetaData with _$MetaData {
     @JsonKey(name: "totalFilteredPage") int? totalFilteredPage,
   }) = _MetaData;
 
-  factory MetaData.fromJson(Map<String, dynamic> json) =>
-      _$MetaDataFromJson(json);
+  factory MetaData.fromJson(Map<String, dynamic> json) => _$MetaDataFromJson(json);
 }

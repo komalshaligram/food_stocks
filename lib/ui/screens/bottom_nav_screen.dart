@@ -98,64 +98,17 @@ class BottomNavScreenWidget extends StatelessWidget {
                       height: 65.0,
                       items: state.isSubUserSeeWallet
                           ? [
-                              navItem(
-                                pos: 0,
-                                img: AppImagePath.home,
-                                isRTL: context.rtl,
-                                state: state,
-                              ),
-                              navItem(
-                                pos: 1,
-                                img: AppImagePath.store,
-                                isRTL: context.rtl,
-                                state: state,
-                              ),
-                              navItem(
-                                pos: 2,
-                                img: AppImagePath.cart,
-                                isRTL: context.rtl,
-                                state: state,
-                                isCart: true,
-                              ),
-                              navItem(
-                                pos: 3,
-                                img: AppImagePath.wallet,
-                                isRTL: context.rtl,
-                                state: state,
-                              ),
-                              navItem(
-                                pos: 4,
-                                img: AppImagePath.profile,
-                                isRTL: context.rtl,
-                                state: state,
-                              ),
+                              navItem(pos: 0, img: AppImagePath.home, isRTL: context.rtl, state: state),
+                              navItem(pos: 1, img: AppImagePath.store, isRTL: context.rtl, state: state),
+                              navItem(pos: 2, img: AppImagePath.cart, isRTL: context.rtl, state: state, isCart: true),
+                              navItem(pos: 3, img: AppImagePath.wallet, isRTL: context.rtl, state: state),
+                              navItem(pos: 4, img: AppImagePath.profile, isRTL: context.rtl, state: state),
                             ]
                           : [
-                              navItem(
-                                pos: 0,
-                                img: AppImagePath.home,
-                                isRTL: context.rtl,
-                                state: state,
-                              ),
-                              navItem(
-                                pos: 1,
-                                img: AppImagePath.store,
-                                isRTL: context.rtl,
-                                state: state,
-                              ),
-                              navItem(
-                                pos: 2,
-                                img: AppImagePath.cart,
-                                isRTL: context.rtl,
-                                state: state,
-                                isCart: true,
-                              ),
-                              navItem(
-                                pos: 3,
-                                img: AppImagePath.profile,
-                                isRTL: context.rtl,
-                                state: state,
-                              ),
+                              navItem(pos: 0, img: AppImagePath.home, isRTL: context.rtl, state: state),
+                              navItem(pos: 1, img: AppImagePath.store, isRTL: context.rtl, state: state),
+                              navItem(pos: 2, img: AppImagePath.cart, isRTL: context.rtl, state: state, isCart: true),
+                              navItem(pos: 3, img: AppImagePath.profile, isRTL: context.rtl, state: state),
                             ],
                       color: AppColors.whiteColor,
                       buttonBackgroundColor: AppColors.whiteColor,

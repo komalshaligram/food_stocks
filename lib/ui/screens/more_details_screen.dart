@@ -43,7 +43,6 @@ class MoreDetailsScreen extends StatelessWidget {
 
 class MoreDetailsScreenWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  // List<String> list = [];
 
   MoreDetailsScreenWidget({super.key});
 
@@ -56,9 +55,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
       listener: (context, state) {},
       child: BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
         builder: (context, state) {
-          // if (list.isEmpty) {
-          //   list = [...state.cityList];
-          // }
+
           if (listNotifier.value.isEmpty) {
             listNotifier.value = [...state.cityList];
           }
@@ -226,7 +223,6 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                                           Text(
                                             state.selectCity,
                                             style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-                                            // textAlign: TextAlign.right,
                                           ),
                                         ],
                                       ),

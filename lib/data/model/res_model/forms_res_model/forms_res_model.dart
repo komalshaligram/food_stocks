@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final formsResModel = formsResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,8 +5,7 @@ part 'forms_res_model.freezed.dart';
 
 part 'forms_res_model.g.dart';
 
-FormsResModel formsResModelFromJson(String str) =>
-    FormsResModel.fromJson(json.decode(str));
+FormsResModel formsResModelFromJson(String str) => FormsResModel.fromJson(json.decode(str));
 
 String formsResModelToJson(FormsResModel data) => json.encode(data.toJson());
 
@@ -22,8 +17,7 @@ class FormsResModel with _$FormsResModel {
     @JsonKey(name: "message") String? message,
   }) = _FormsResModel;
 
-  factory FormsResModel.fromJson(Map<String, dynamic> json) =>
-      _$FormsResModelFromJson(json);
+  factory FormsResModel.fromJson(Map<String, dynamic> json) => _$FormsResModelFromJson(json);
 }
 
 @freezed
@@ -49,6 +43,5 @@ class ClientForm with _$ClientForm {
     bool? isShownInMobile,
   }) = _ClientForm;
 
-  factory ClientForm.fromJson(Map<String, dynamic> json) =>
-      _$ClientFormFromJson(json);
+  factory ClientForm.fromJson(Map<String, dynamic> json) => _$ClientFormFromJson(json);
 }

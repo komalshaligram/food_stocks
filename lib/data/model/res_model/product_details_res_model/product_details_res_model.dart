@@ -4,11 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'product_details_res_model.freezed.dart';
 part 'product_details_res_model.g.dart';
 
-ProductDetailsResModel productDetailsResModelFromJson(String str) =>
-    ProductDetailsResModel.fromJson(json.decode(str));
+ProductDetailsResModel productDetailsResModelFromJson(String str) => ProductDetailsResModel.fromJson(json.decode(str));
 
-String productDetailsResModelToJson(ProductDetailsResModel data) =>
-    json.encode(data.toJson());
+String productDetailsResModelToJson(ProductDetailsResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProductDetailsResModel with _$ProductDetailsResModel {
@@ -18,8 +16,7 @@ class ProductDetailsResModel with _$ProductDetailsResModel {
     String? message,
   }) = _ProductDetailsResModel;
 
-  factory ProductDetailsResModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductDetailsResModelFromJson(json);
+  factory ProductDetailsResModel.fromJson(Map<String, dynamic> json) => _$ProductDetailsResModelFromJson(json);
 }
 
 @freezed
@@ -54,16 +51,12 @@ class Product with _$Product {
     String? statusId,
     SaleProduct? sale,
     Scales? scales,
-    @JsonKey(name: "supplierSales")
-    List<SupplierSale>? supplierSales,
-    @JsonKey(name: "recommendedRetailPrice")
-    String? recommendedRetailPrice,
-    @JsonKey(name: "recommendedConsumerOffer")
-    String? recommendedConsumerOffer,
+    @JsonKey(name: "supplierSales") List<SupplierSale>? supplierSales,
+    @JsonKey(name: "recommendedRetailPrice") String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer") String? recommendedConsumerOffer,
   }) = _Product;
 
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      _$ProductFromJson(json);
+  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 }
 
 @freezed
@@ -80,8 +73,7 @@ class SaleProduct with _$SaleProduct {
     String? saleDescription,
   }) = _SaleProduct;
 
-  factory SaleProduct.fromJson(Map<String, dynamic> json) =>
-      _$SaleProductFromJson(json);
+  factory SaleProduct.fromJson(Map<String, dynamic> json) => _$SaleProductFromJson(json);
 }
 
 @freezed
@@ -94,8 +86,7 @@ class Scales with _$Scales {
     int? scaleNumber,
   }) = _Scales;
 
-  factory Scales.fromJson(Map<String, dynamic> json) =>
-      _$ScalesFromJson(json);
+  factory Scales.fromJson(Map<String, dynamic> json) => _$ScalesFromJson(json);
 }
 
 @freezed
@@ -111,8 +102,7 @@ class SupplierSale with _$SupplierSale {
     String? lowStock,
   }) = _SupplierSale;
 
-  factory SupplierSale.fromJson(Map<String, dynamic> json) =>
-      _$SupplierSaleFromJson(json);
+  factory SupplierSale.fromJson(Map<String, dynamic> json) => _$SupplierSaleFromJson(json);
 }
 
 @freezed

@@ -377,7 +377,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                             }
                                           }
                                         } else {
-                                          //for ios permission
                                         }
 
                                         state.walletTransactionsList.isNotEmpty
@@ -453,7 +452,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                           pickerBuilder: (BuildContext context, dynamic Function(DateRange?) onDateRangeChanged) {
                                             return const Text('');
                                           },
-                                          // pickerBuilder: datePickerBuilder,
                                         )),
                                   ),
                                 ],
@@ -469,7 +467,6 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                       : state.walletTransactionsList.isNotEmpty
                                           ? ListView.builder(
                                               itemCount: state.walletTransactionsList.length,
-                                              // scrollDirection: Axis.vertical,
                                               shrinkWrap: true,
                                               physics: const NeverScrollableScrollPhysics(),
                                               itemBuilder: (context, index) {

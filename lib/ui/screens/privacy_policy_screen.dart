@@ -24,7 +24,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => PrivacyPolicyBloc()..add(PrivacyPolicyEvent.getPdfDataEvent(context: context, pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '', termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
+      create: (context) => PrivacyPolicyBloc()
+        ..add(PrivacyPolicyEvent.getPdfDataEvent(
+          context: context,
+          pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
+        )),
       child: const PrivacyPolicyWidget(),
     );
   }
@@ -104,7 +109,11 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                           bGColor: AppColors.whiteColor,
                           width: getScreenWidth(context) / 2.2,
                           onPressed: () {
-                            bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: AppStrings.owner1SignatureString, fieldNameForSign: AppLocalizations.of(context)!.owner1_sign));
+                            bloc.add(PrivacyPolicyEvent.signatureEvent(
+                              context: context,
+                              fieldName: AppStrings.owner1SignatureString,
+                              fieldNameForSign: AppLocalizations.of(context)!.owner1_sign,
+                            ));
                           },
                           fontColors: AppColors.whiteColor,
                         ),
@@ -116,7 +125,11 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                                 bGColor: AppColors.whiteColor,
                                 width: getScreenWidth(context) / 2.2,
                                 onPressed: () {
-                                  bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: AppStrings.guarantee1SignatureString, fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign));
+                                  bloc.add(PrivacyPolicyEvent.signatureEvent(
+                                    context: context,
+                                    fieldName: AppStrings.guarantee1SignatureString,
+                                    fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign,
+                                  ));
                                 },
                                 fontColors: AppColors.whiteColor,
                               )
@@ -137,7 +150,11 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                                 bGColor: AppColors.whiteColor,
                                 width: getScreenWidth(context) / 2.2,
                                 onPressed: () {
-                                  bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: AppStrings.owner2SignatureString, fieldNameForSign: AppLocalizations.of(context)!.owner2_sign));
+                                  bloc.add(PrivacyPolicyEvent.signatureEvent(
+                                    context: context,
+                                    fieldName: AppStrings.owner2SignatureString,
+                                    fieldNameForSign: AppLocalizations.of(context)!.owner2_sign,
+                                  ));
                                 },
                                 fontColors: AppColors.whiteColor,
                               ),
@@ -148,7 +165,11 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
                                 bGColor: AppColors.whiteColor,
                                 width: getScreenWidth(context) / 2.2,
                                 onPressed: () {
-                                  bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: AppStrings.guarantee2SignatureString, fieldNameForSign: AppLocalizations.of(context)!.guarantee2_sign));
+                                  bloc.add(PrivacyPolicyEvent.signatureEvent(
+                                    context: context,
+                                    fieldName: AppStrings.guarantee2SignatureString,
+                                    fieldNameForSign: AppLocalizations.of(context)!.guarantee2_sign,
+                                  ));
                                 },
                                 fontColors: AppColors.whiteColor,
                               ),

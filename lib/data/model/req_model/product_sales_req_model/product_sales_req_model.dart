@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final productSalesReqModel = productSalesReqModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,11 +5,9 @@ part 'product_sales_req_model.freezed.dart';
 
 part 'product_sales_req_model.g.dart';
 
-ProductSalesReqModel productSalesReqModelFromJson(String str) =>
-    ProductSalesReqModel.fromJson(json.decode(str));
+ProductSalesReqModel productSalesReqModelFromJson(String str) => ProductSalesReqModel.fromJson(json.decode(str));
 
-String productSalesReqModelToJson(ProductSalesReqModel data) =>
-    json.encode(data.toJson());
+String productSalesReqModelToJson(ProductSalesReqModel data) => json.encode(data.toJson());
 
 @freezed
 class ProductSalesReqModel with _$ProductSalesReqModel {
@@ -23,6 +17,5 @@ class ProductSalesReqModel with _$ProductSalesReqModel {
     @JsonKey(name: "search") String? search,
   }) = _ProductSalesReqModel;
 
-  factory ProductSalesReqModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductSalesReqModelFromJson(json);
+  factory ProductSalesReqModel.fromJson(Map<String, dynamic> json) => _$ProductSalesReqModelFromJson(json);
 }

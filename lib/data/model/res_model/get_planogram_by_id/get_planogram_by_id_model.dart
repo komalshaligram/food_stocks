@@ -1,11 +1,7 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 
 part 'get_planogram_by_id_model.freezed.dart';
 part 'get_planogram_by_id_model.g.dart';
-
 
 @freezed
 class GetPlanogramByIdModel with _$GetPlanogramByIdModel {

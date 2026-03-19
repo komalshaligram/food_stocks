@@ -1,18 +1,12 @@
-// To parse this JSON data, do
-//
-//     final profileDetailsUpdateResModel = profileDetailsUpdateResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
 part 'profile_details_update_res_model.freezed.dart';
 part 'profile_details_update_res_model.g.dart';
 
-ProfileDetailsUpdateResModel profileDetailsUpdateResModelFromJson(String str) =>
-    ProfileDetailsUpdateResModel.fromJson(json.decode(str));
+ProfileDetailsUpdateResModel profileDetailsUpdateResModelFromJson(String str) => ProfileDetailsUpdateResModel.fromJson(json.decode(str));
 
-String profileDetailsUpdateResModelToJson(ProfileDetailsUpdateResModel data) =>
-    json.encode(data.toJson());
+String profileDetailsUpdateResModelToJson(ProfileDetailsUpdateResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProfileDetailsUpdateResModel with _$ProfileDetailsUpdateResModel {
@@ -22,8 +16,7 @@ class ProfileDetailsUpdateResModel with _$ProfileDetailsUpdateResModel {
     @JsonKey(name: "message") String? message,
   }) = _ProfileDetailsUpdateResModel;
 
-  factory ProfileDetailsUpdateResModel.fromJson(Map<String, dynamic> json) =>
-      _$ProfileDetailsUpdateResModelFromJson(json);
+  factory ProfileDetailsUpdateResModel.fromJson(Map<String, dynamic> json) => _$ProfileDetailsUpdateResModelFromJson(json);
 }
 
 @freezed
@@ -80,8 +73,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
   }) = _ClientDetail;
 
-  factory ClientDetail.fromJson(Map<String, dynamic> json) =>
-      _$ClientDetailFromJson(json);
+  factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);
 }
 
 @freezed
@@ -96,8 +88,7 @@ class OperationTime with _$OperationTime {
     List<Day>? saturdayAndHolidays,
   }) = _OperationTime;
 
-  factory OperationTime.fromJson(Map<String, dynamic> json) =>
-      _$OperationTimeFromJson(json);
+  factory OperationTime.fromJson(Map<String, dynamic> json) => _$OperationTimeFromJson(json);
 }
 
 @freezed

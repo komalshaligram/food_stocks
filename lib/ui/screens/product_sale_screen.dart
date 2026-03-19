@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:food_stock/ui/widget/related_product_title.dart';
 import '../../bloc/product_sale/product_sale_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/widget/common_product_sale_item_widget.dart';
-import '../../ui/widget/common_sale_description_dialog.dart';
 import '../../ui/widget/common_sale_listview.dart';
 import '../../ui/widget/product_sale_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
@@ -618,19 +618,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Align(
-          alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-            child: Text(
-              AppLocalizations.of(context)!.related_products,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
+        relatedProductTitle(context),
         Container(
           height: getItemHeight(context, true),
           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
@@ -759,7 +747,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
       ],
     );
   }
-
 
   showMinQtyConfirmDialog(
     BuildContext context,

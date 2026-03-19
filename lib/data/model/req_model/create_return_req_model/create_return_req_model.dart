@@ -6,8 +6,7 @@ part 'create_return_req_model.g.dart';
 @freezed
 class CreateReturnReqModel with _$CreateReturnReqModel {
   const factory CreateReturnReqModel({
-    @JsonKey(name:"returnProducts")
-    List<ReturnProduct>? returnProducts,
+    @JsonKey(name: "returnProducts") List<ReturnProduct>? returnProducts,
     String? applicationName,
     String? clientId,
     String? supplierId,

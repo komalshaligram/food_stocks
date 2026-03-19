@@ -169,9 +169,7 @@ class SupplierScreenWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
               decoration: BoxDecoration(
                 gradient: AppColors.appMainGradientColor,
-                //  color: AppColors.mainColor,
                 borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
-                // border: Border.all(color: AppColors.whiteColor, width: 1),
               ),
               child: Text(
                 supplierName,

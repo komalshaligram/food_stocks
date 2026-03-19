@@ -29,14 +29,8 @@ class BankInfoScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => BankInfoBloc()
         ..add(BankInfoEvent.getBankNameEvent(context: context))
-        ..add(BankInfoEvent.getTermsConditionModelEvent(
-          context: context,
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
-        ))
-        ..add(BankInfoEvent.getArgumentEvent(
-          isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,
-          isUpdate: args?[AppStrings.updateString] ?? false,
-        )),
+        ..add(BankInfoEvent.getTermsConditionModelEvent(context: context, termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()))
+        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false, isUpdate: args?[AppStrings.updateString] ?? false)),
       child: BankInfoWidget(),
     );
   }
@@ -65,10 +59,7 @@ class BankInfoWidget extends StatelessWidget {
               alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
               child: Text(
                 AppLocalizations.of(context)!.bank_info,
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont,
-                  color: Colors.black,
-                ),
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
               ),
             ),
             backgroundColor: AppColors.whiteColor,
@@ -85,24 +76,17 @@ class BankInfoWidget extends StatelessWidget {
                         key: _formKey,
                         child: Column(
                           children: [
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.name_of_bank,
-                            ),
+                            CustomContainerWidget(name: AppLocalizations.of(context)!.name_of_bank),
                             CommonDropDownButton(
                               items: state.bankList.map((element) {
-                                return DropdownMenuItem<String>(
-                                  value: element.bankName,
-                                  child: Text(element.bankName ?? ''),
-                                );
+                                return DropdownMenuItem<String>(value: element.bankName, child: Text(element.bankName ?? ''));
                               }).toList(),
                               onChanged: (newBankName) {
                                 bloc.add(BankInfoEvent.selectBankEvent(bankName: newBankName ?? ''));
                               },
                               value: state.bankName,
                             ),
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.branch_number,
-                            ),
+                            CustomContainerWidget(name: AppLocalizations.of(context)!.branch_number),
                             CustomFormField(
                               inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
                               context: context,
@@ -114,9 +98,7 @@ class BankInfoWidget extends StatelessWidget {
                               validator: AppStrings.branchValString,
                             ),
                             7.height,
-                            CustomContainerWidget(
-                              name: AppLocalizations.of(context)!.account_number,
-                            ),
+                            CustomContainerWidget(name: AppLocalizations.of(context)!.account_number),
                             CustomFormField(
                               context: context,
                               inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],

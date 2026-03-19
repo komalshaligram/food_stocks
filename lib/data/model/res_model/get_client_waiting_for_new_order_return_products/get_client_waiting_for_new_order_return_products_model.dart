@@ -4,22 +4,18 @@ part 'get_client_waiting_for_new_order_return_products_model.freezed.dart';
 part 'get_client_waiting_for_new_order_return_products_model.g.dart';
 
 @freezed
-class GetClientWaitingForNewOrderReturnModel
-    with _$GetClientWaitingForNewOrderReturnModel {
+class GetClientWaitingForNewOrderReturnModel with _$GetClientWaitingForNewOrderReturnModel {
   const factory GetClientWaitingForNewOrderReturnModel({
     @JsonKey(name: "status") int? status,
     @JsonKey(name: "message") String? message,
     @JsonKey(name: "data") List<GetClientWaitingForNewOrderReturnData>? data,
   }) = _GetClientWaitingForNewOrderReturnModel;
 
-  factory GetClientWaitingForNewOrderReturnModel.fromJson(
-      Map<String, dynamic> json) =>
-      _$GetClientWaitingForNewOrderReturnModelFromJson(json);
+  factory GetClientWaitingForNewOrderReturnModel.fromJson(Map<String, dynamic> json) => _$GetClientWaitingForNewOrderReturnModelFromJson(json);
 }
 
 @freezed
-class GetClientWaitingForNewOrderReturnData
-    with _$GetClientWaitingForNewOrderReturnData {
+class GetClientWaitingForNewOrderReturnData with _$GetClientWaitingForNewOrderReturnData {
   const factory GetClientWaitingForNewOrderReturnData({
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "returnNumber") int? returnNumber,
@@ -41,20 +37,16 @@ class GetClientWaitingForNewOrderReturnData
     @JsonKey(name: "rivchitInvoiceNumber") int? rivchitInvoiceNumber,
     @JsonKey(name: "rivchitInvoiceAmount") double? rivchitInvoiceAmount,
     @JsonKey(name: "referenceRivchitInvoiceId") int? referenceRivchitInvoiceId,
-    @JsonKey(name: "referenceSupplierInvoiceId")
-    int? referenceSupplierInvoiceId,
+    @JsonKey(name: "referenceSupplierInvoiceId") int? referenceSupplierInvoiceId,
     @JsonKey(name: "errorMessage") List<dynamic>? errorMessage,
     @JsonKey(name: "isDeleted") bool? isDeleted,
     @JsonKey(name: "createdAt") String? createdAt,
     @JsonKey(name: "updatedAt") String? updatedAt,
     @JsonKey(name: "__v") int? v,
-    @JsonKey(name: "returnProducts")
-    List<GetClientReturnProduct>? returnProducts,
+    @JsonKey(name: "returnProducts") List<GetClientReturnProduct>? returnProducts,
   }) = _GetClientWaitingForNewOrderReturnData;
 
-  factory GetClientWaitingForNewOrderReturnData.fromJson(
-      Map<String, dynamic> json) =>
-      _$GetClientWaitingForNewOrderReturnDataFromJson(json);
+  factory GetClientWaitingForNewOrderReturnData.fromJson(Map<String, dynamic> json) => _$GetClientWaitingForNewOrderReturnDataFromJson(json);
 }
 
 @freezed
@@ -79,6 +71,5 @@ class GetClientReturnProduct with _$GetClientReturnProduct {
     @JsonKey(name: "__v") int? v,
   }) = _GetClientReturnProduct;
 
-  factory GetClientReturnProduct.fromJson(Map<String, dynamic> json) =>
-      _$GetClientReturnProductFromJson(json);
+  factory GetClientReturnProduct.fromJson(Map<String, dynamic> json) => _$GetClientReturnProductFromJson(json);
 }

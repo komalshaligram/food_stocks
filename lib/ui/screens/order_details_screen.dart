@@ -193,7 +193,6 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                   valueColor: AppColors.blackColor,
                   valueTextSize: AppConstants.smallFont,
                   valueTextWeight: FontWeight.w500,
-                  // columnPadding: AppConstants.padding_8,
                 ),
                 5.width,
                 CommonOrderContentWidget(

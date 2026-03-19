@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final filesResModel = filesResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,8 +5,7 @@ part 'files_res_model.freezed.dart';
 
 part 'files_res_model.g.dart';
 
-FilesResModel filesResModelFromJson(String str) =>
-    FilesResModel.fromJson(json.decode(str));
+FilesResModel filesResModelFromJson(String str) => FilesResModel.fromJson(json.decode(str));
 
 String filesResModelToJson(FilesResModel data) => json.encode(data.toJson());
 
@@ -22,8 +17,7 @@ class FilesResModel with _$FilesResModel {
     @JsonKey(name: "message") String? message,
   }) = _FilesResModel;
 
-  factory FilesResModel.fromJson(Map<String, dynamic> json) =>
-      _$FilesResModelFromJson(json);
+  factory FilesResModel.fromJson(Map<String, dynamic> json) => _$FilesResModelFromJson(json);
 }
 
 @freezed
@@ -45,6 +39,5 @@ class ClientFile with _$ClientFile {
     @JsonKey(name: "__v") int? v,
   }) = _ClientFile;
 
-  factory ClientFile.fromJson(Map<String, dynamic> json) =>
-      _$ClientFileFromJson(json);
+  factory ClientFile.fromJson(Map<String, dynamic> json) => _$ClientFileFromJson(json);
 }

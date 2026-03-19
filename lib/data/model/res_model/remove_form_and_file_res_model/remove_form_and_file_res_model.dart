@@ -5,11 +5,9 @@ part 'remove_form_and_file_res_model.freezed.dart';
 
 part 'remove_form_and_file_res_model.g.dart';
 
-RemoveFormAndFileResModel removeFormAndFileResModelFromJson(String str) =>
-    RemoveFormAndFileResModel.fromJson(json.decode(str));
+RemoveFormAndFileResModel removeFormAndFileResModelFromJson(String str) => RemoveFormAndFileResModel.fromJson(json.decode(str));
 
-String removeFormAndFileResModelToJson(RemoveFormAndFileResModel data) =>
-    json.encode(data.toJson());
+String removeFormAndFileResModelToJson(RemoveFormAndFileResModel data) => json.encode(data.toJson());
 
 @freezed
 class RemoveFormAndFileResModel with _$RemoveFormAndFileResModel {
@@ -18,6 +16,5 @@ class RemoveFormAndFileResModel with _$RemoveFormAndFileResModel {
     String? message,
   }) = _RemoveFormAndFileResModel;
 
-  factory RemoveFormAndFileResModel.fromJson(Map<String, dynamic> json) =>
-      _$RemoveFormAndFileResModelFromJson(json);
+  factory RemoveFormAndFileResModel.fromJson(Map<String, dynamic> json) => _$RemoveFormAndFileResModelFromJson(json);
 }

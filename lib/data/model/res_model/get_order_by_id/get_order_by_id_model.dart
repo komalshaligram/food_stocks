@@ -48,8 +48,8 @@ class OrderDatum with _$OrderDatum {
     String? paymentMethod,
     @JsonKey(name: "driverDeliveryDocumentsImages") List<String>? driverDeliveryDocumentsImages,
     @JsonKey(name: "invoiceDetails") InvoiceDetails? invoiceDetails,
-    @JsonKey(name: "pendingDeliveryConfirmation")  bool? pendingDeliveryConfirmation,
-    @JsonKey(name: "availableSurfaceQuantityToReturn")  int? availableSurfaceQuantityToReturn,
+    @JsonKey(name: "pendingDeliveryConfirmation") bool? pendingDeliveryConfirmation,
+    @JsonKey(name: "availableSurfaceQuantityToReturn") int? availableSurfaceQuantityToReturn,
   }) = _OrderDatum;
 
   factory OrderDatum.fromJson(Map<String, dynamic> json) => _$OrderDatumFromJson(json);
@@ -67,7 +67,15 @@ class Client with _$Client {
 
 @freezed
 class Status with _$Status {
-  const factory Status({@JsonKey(name: "_id") String? id, @JsonKey(name: "statusName") String? statusName, @JsonKey(name: "createdAt") String? createdAt, @JsonKey(name: "updatedAt") String? updatedAt, @JsonKey(name: "__v") int? v, @JsonKey(name: "isDeleted") bool? isDeleted, @JsonKey(name: "orderStatusNumber") int? orderStatusNumber}) = _Status;
+  const factory Status({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "statusName") String? statusName,
+    @JsonKey(name: "createdAt") String? createdAt,
+    @JsonKey(name: "updatedAt") String? updatedAt,
+    @JsonKey(name: "__v") int? v,
+    @JsonKey(name: "isDeleted") bool? isDeleted,
+    @JsonKey(name: "orderStatusNumber") int? orderStatusNumber,
+  }) = _Status;
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);
 }
@@ -186,7 +194,6 @@ class InvoiceDetails with _$InvoiceDetails {
     String? status,
     String? orderId,
     int? orderNumber,
-    // Change this to String? to match the API ("1.00")
     @JsonKey(name: 'invoiceAmount') String? invoiceAmount,
   }) = _InvoiceDetails;
 

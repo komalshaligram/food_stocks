@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final businessTypeModel = businessTypeModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,11 +5,9 @@ part 'business_type_model.freezed.dart';
 
 part 'business_type_model.g.dart';
 
-BusinessTypeModel businessTypeModelFromJson(String str) =>
-    BusinessTypeModel.fromJson(json.decode(str));
+BusinessTypeModel businessTypeModelFromJson(String str) => BusinessTypeModel.fromJson(json.decode(str));
 
-String businessTypeModelToJson(BusinessTypeModel data) =>
-    json.encode(data.toJson());
+String businessTypeModelToJson(BusinessTypeModel data) => json.encode(data.toJson());
 
 @freezed
 class BusinessTypeModel with _$BusinessTypeModel {

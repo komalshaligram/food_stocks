@@ -40,7 +40,9 @@ import '../../ui/utils/push_notification_service.dart';
 import '../widget/countdown_timer_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
+import '../widget/related_product_title.dart';
 import '../widget/search_item_widget.dart';
+import 'build_list_title.dart';
 
 class HomeRoute {
   static Widget get route => const HomeScreen();
@@ -56,7 +58,8 @@ class HomeScreen extends StatelessWidget {
       create: (context) => HomeBloc()
         ..add(HomeEvent.getProfileDetailsEvent(context: context))
         ..add(HomeEvent.getProductSalesListEvent(context: context))
-        ..add(const HomeEvent.getPreferencesDataEvent()),
+        ..add(const HomeEvent.getPreferencesDataEvent())
+        ..add(HomeEvent.getCartCountEvent(context: context)),
       child: HomeScreenWidget(isNavigation: isSubCategory),
     );
   }
@@ -72,8 +75,7 @@ class HomeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
-      listenWhen: (previous, current) => previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey || previous.isCartCountChange
-          != current.isCartCountChange || previous.cartCount != current.cartCount,
+      listenWhen: (previous, current) => previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey,
       listener: (context, state) {
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.updateCartCountEvent(context: context));
@@ -85,8 +87,7 @@ class HomeScreenWidget extends StatelessWidget {
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<HomeBloc>(context).add(HomeEvent.updateMaintenanceEvent(context: context));
         }
-
-        if (state.noMinimumDialogEventKey != null) {
+        if (state.noMinimumDialogEventKey != null && state.allowOrdersWithoutMinimum!) {
           allowOrdersWithoutMinimumDialog(context: context, state: state);
         }
       },
@@ -490,7 +491,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                   child: state.isShimmering
                                                       ? const CommonProductListShimmerWidget()
                                                       : ListView.builder(
-                                                          // Product Recommended
                                                           itemCount: state.recommendedProductsList.length,
                                                           shrinkWrap: true,
                                                           scrollDirection: Axis.horizontal,
@@ -676,7 +676,6 @@ class HomeScreenWidget extends StatelessWidget {
                                                 ],
                                               ),
                                         AppConstants.bottomNavSpace.height,
-                                        //dashboard stats
                                       ],
                                     ),
                                   ),
@@ -729,7 +728,6 @@ class HomeScreenWidget extends StatelessWidget {
                                               ),
                                             )
                                           : ListView.builder(
-                                              // Search
                                               itemCount: state.searchList.length,
                                               shrinkWrap: true,
                                               itemBuilder: (listViewContext, index) {
@@ -747,7 +745,12 @@ class HomeScreenWidget extends StatelessWidget {
                                                     searchName: state.searchList[index].name,
                                                     searchImage: state.searchList[index].image,
                                                     searchType: state.searchList[index].searchType,
-                                                    isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
+                                                    isMoreResults: state.searchList
+                                                        .where(
+                                                          (search) => search.searchType == state.searchList[index].searchType,
+                                                        )
+                                                        .toList()
+                                                        .isNotEmpty,
                                                     isLastItem: state.searchList.length - 1 == index,
                                                     quantity: state.productStockList[0][index].quantity,
                                                     isSale: state.searchList[index].isSale,
@@ -1035,35 +1038,6 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Padding buildListTitles({required BuildContext context, required String title, required void Function() onTap, required subTitle}) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: AppConstants.padding_10,
-        right: AppConstants.padding_10,
-        top: AppConstants.padding_10,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: onTap,
-            child: Text(
-              title,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
-            ),
-          ),
-          GestureDetector(
-            onTap: onTap,
-            child: Text(
-              subTitle,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void showProductDetails({
     required BuildContext context,
     required String productId,
@@ -1242,19 +1216,7 @@ class HomeScreenWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Align(
-                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: AppConstants.padding_8, right: AppConstants.padding_8, top: AppConstants.padding_10),
-                  child: Text(
-                    AppLocalizations.of(context)!.related_products,
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
+              relatedProductTitle(context),
               Container(
                 height: getItemHeight(context, isSaleOn),
                 padding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, bottom: AppConstants.padding_5),
@@ -1479,7 +1441,6 @@ class HomeScreenWidget extends StatelessWidget {
     try {
       lastOrderUtc = DateTime.parse(rawDate);
     } catch (e) {
-      debugPrint("Invalid date format: $rawDate");
       return;
     }
 

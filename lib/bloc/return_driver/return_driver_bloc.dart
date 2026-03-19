@@ -227,7 +227,7 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
 
           updatedMap[event.index] = urls;
 
-          emit(state.copyWith(driverDeliveryProofUrlsMap: updatedMap, driverDeliveryProofFilesMap: updatedMap1!));
+          emit(state.copyWith(driverDeliveryProofUrlsMap: updatedMap, driverDeliveryProofFilesMap: updatedMap1));
         }
       } else if (event is _deleteProofFileEvent) {
         Map<int, List<File?>> updatedMap = Map.from(state.driverDeliveryProofFilesMap);
@@ -236,7 +236,7 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
           files[event.fileIndex] = null;
         }
         updatedMap[event.index] = files;
-        emit(state.copyWith(driverDeliveryProofFilesMap: updatedMap!));
+        emit(state.copyWith(driverDeliveryProofFilesMap: updatedMap));
       } else if (event is _toggleItemChecked) {
         final updatedCheckedItems = Map<int, bool>.from(state.checkedItems);
         updatedCheckedItems[event.index] = event.isChecked;

@@ -1,20 +1,14 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'get_all_order_res_model.freezed.dart';
 part 'get_all_order_res_model.g.dart';
 
-
 @freezed
 class GetAllOrderResModel with _$GetAllOrderResModel {
   const factory GetAllOrderResModel({
-    @JsonKey(name: "status")
-    int? status,
-    @JsonKey(name: "data")
-    List<Datum>? data,
-    @JsonKey(name: "metaData")
-    MetaData? metaData,
-    @JsonKey(name: "message")
-    String? message,
+    @JsonKey(name: "status") int? status,
+    @JsonKey(name: "data") List<Datum>? data,
+    @JsonKey(name: "metaData") MetaData? metaData,
+    @JsonKey(name: "message") String? message,
   }) = _GetAllOrderResModel;
 
   factory GetAllOrderResModel.fromJson(Map<String, dynamic> json) => _$GetAllOrderResModelFromJson(json);
@@ -23,38 +17,24 @@ class GetAllOrderResModel with _$GetAllOrderResModel {
 @freezed
 class Datum with _$Datum {
   const factory Datum({
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "createdAt")
-    String? createdAt,
-    @JsonKey(name: "status")
-    Status? status,
-    @JsonKey(name: "client")
-    Client? client,
-    @JsonKey(name: "noOfIssues")
-    String? noOfIssues,
-    @JsonKey(name: "orderNumber")
-    String? orderNumber,
-    @JsonKey(name: "totalAmount")
-    String? totalAmount,
-    @JsonKey(name: "totalWeight")
-    String? totalWeight,
-    @JsonKey(name: "surfaceWeight")
-    String? surfaceWeight,
-    @JsonKey(name: "products")
-    int? products,
-    @JsonKey(name: "suppliers")
-    int? suppliers,
-    @JsonKey(name: "supplierName")
-    String? supplierName,
-    @JsonKey(name: "isIssue")
-    String? isIssue,
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "createdAt") String? createdAt,
+    @JsonKey(name: "status") Status? status,
+    @JsonKey(name: "client") Client? client,
+    @JsonKey(name: "noOfIssues") String? noOfIssues,
+    @JsonKey(name: "orderNumber") String? orderNumber,
+    @JsonKey(name: "totalAmount") String? totalAmount,
+    @JsonKey(name: "totalWeight") String? totalWeight,
+    @JsonKey(name: "surfaceWeight") String? surfaceWeight,
+    @JsonKey(name: "products") int? products,
+    @JsonKey(name: "suppliers") int? suppliers,
+    @JsonKey(name: "supplierName") String? supplierName,
+    @JsonKey(name: "isIssue") String? isIssue,
     String? comaxInvoicePrice,
     String? rivchitInvoicePrice,
     String? totalRefundAmount,
     String? dueDate,
     String? paymentMethod,
-
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -63,10 +43,8 @@ class Datum with _$Datum {
 @freezed
 class Client with _$Client {
   const factory Client({
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "clientName")
-    String? clientName,
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "clientName") String? clientName,
   }) = _Client;
 
   factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
@@ -75,12 +53,9 @@ class Client with _$Client {
 @freezed
 class Status with _$Status {
   const factory Status({
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "statusName")
-    String? statusName,
-    @JsonKey(name: "orderStatusNumber")
-    int? orderStatusNo,
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "statusName") String? statusName,
+    @JsonKey(name: "orderStatusNumber") int? orderStatusNo,
   }) = _Status;
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);
@@ -89,12 +64,9 @@ class Status with _$Status {
 @freezed
 class MetaData with _$MetaData {
   const factory MetaData({
-    @JsonKey(name: "currentPage")
-    int? currentPage,
-    @JsonKey(name: "totalFilteredCount")
-    int? totalFilteredCount,
-    @JsonKey(name: "totalFilteredPage")
-    int? totalFilteredPage,
+    @JsonKey(name: "currentPage") int? currentPage,
+    @JsonKey(name: "totalFilteredCount") int? totalFilteredCount,
+    @JsonKey(name: "totalFilteredPage") int? totalFilteredPage,
   }) = _MetaData;
 
   factory MetaData.fromJson(Map<String, dynamic> json) => _$MetaDataFromJson(json);

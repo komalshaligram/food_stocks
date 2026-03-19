@@ -276,13 +276,4 @@ class InvoiceScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-  String? getType(String type, BuildContext context) {
-    if (type == AppStrings.pending) {
-      return AppLocalizations.of(context)!.pending;
-    } else if (type == AppStrings.paid) {
-      return AppLocalizations.of(context)!.paid;
-    }
-    return '';
-  }
 }

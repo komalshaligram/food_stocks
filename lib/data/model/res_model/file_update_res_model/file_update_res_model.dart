@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final fileUpdateResModel = fileUpdateResModelFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
@@ -9,22 +5,19 @@ part 'file_update_res_model.freezed.dart';
 
 part 'file_update_res_model.g.dart';
 
-FileUpdateResModel fileUpdateResModelFromJson(String str) =>
-    FileUpdateResModel.fromJson(json.decode(str));
+FileUpdateResModel fileUpdateResModelFromJson(String str) => FileUpdateResModel.fromJson(json.decode(str));
 
-String fileUpdateResModelToJson(FileUpdateResModel data) =>
-    json.encode(data.toJson());
+String fileUpdateResModelToJson(FileUpdateResModel data) => json.encode(data.toJson());
 
 @freezed
 class FileUpdateResModel with _$FileUpdateResModel {
   const factory FileUpdateResModel({
-   int? status,
-   Data? data,
-   String? message,
+    int? status,
+    Data? data,
+    String? message,
   }) = _FileUpdateResModel;
 
-  factory FileUpdateResModel.fromJson(Map<String, dynamic> json) =>
-      _$FileUpdateResModelFromJson(json);
+  factory FileUpdateResModel.fromJson(Map<String, dynamic> json) => _$FileUpdateResModelFromJson(json);
 }
 
 @freezed
@@ -82,8 +75,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "updatedAt") DateTime? updatedAt,
   }) = _ClientDetail;
 
-  factory ClientDetail.fromJson(Map<String, dynamic> json) =>
-      _$ClientDetailFromJson(json);
+  factory ClientDetail.fromJson(Map<String, dynamic> json) => _$ClientDetailFromJson(json);
 }
 
 @freezed
@@ -98,6 +90,5 @@ class OperationTime with _$OperationTime {
     @JsonKey(name: "Sunday") dynamic sunday,
   }) = _OperationTime;
 
-  factory OperationTime.fromJson(Map<String, dynamic> json) =>
-      _$OperationTimeFromJson(json);
+  factory OperationTime.fromJson(Map<String, dynamic> json) => _$OperationTimeFromJson(json);
 }

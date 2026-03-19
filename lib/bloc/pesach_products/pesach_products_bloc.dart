@@ -78,7 +78,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           return;
         }
         if (state.isBottomOfProducts) {
-          final cartMap = await fetchCartQuantities(event.context); // fetch once
+          final cartMap = await fetchCartQuantities(event.context);
           for (var product in productList) {
             stockList.add(ProductStockModel(
               maxQty: (product.sale?.isSale ?? false) ? int.tryParse(product.sale?.saleMaxQuantity.toString() ?? '0') ?? 0 : 0,
@@ -118,7 +118,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           Map<String, dynamic> req = request.toJson();
           req.removeWhere((key, value) {
             if (value != null) {
-              debugPrint("[$key] = $value");
             }
             return value == '';
           });
@@ -606,10 +605,8 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               );
             }
           } on ServerException {
-            debugPrint('url1 = ');
             emit(state.copyWith(isLoading: false));
           } catch (e) {
-            debugPrint('err = $e');
             emit(state.copyWith(isLoading: false));
           }
         }
@@ -746,12 +743,11 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           productStockList[2] = productStockList[2].map((product) {
                 return product.copyWith(
                   productSupplierIds: product.productSupplierIds,
-                  productId: product.productId ?? '',
+                  productId: product.productId,
                   stock: product.stock.toString(),
                   quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
                 );
-              }).toList() ??
-              [];
+              }).toList();
 
           productStockList[2].addAll(newRelatedList);
 
