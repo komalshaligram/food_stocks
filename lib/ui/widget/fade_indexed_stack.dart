@@ -5,12 +5,7 @@ class FadeIndexedStack extends StatefulWidget {
   final List<Widget> children;
   final Duration duration;
 
-  const FadeIndexedStack({
-    super.key,
-    required this.index,
-    required this.children,
-    this.duration = const Duration(milliseconds: 450),
-  });
+  const FadeIndexedStack({super.key, required this.index, required this.children, this.duration = const Duration(milliseconds: 450)});
 
   @override
   State<FadeIndexedStack> createState() => _FadeIndexedStackState();
@@ -36,13 +31,7 @@ class _FadeIndexedStackState extends State<FadeIndexedStack> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _controller,
-      child: IndexedStack(
-        index: widget.index,
-        children: widget.children,
-      ),
-    );
+    return FadeTransition(opacity: _controller, child: IndexedStack(index: widget.index, children: widget.children));
   }
 
   @override

@@ -21,10 +21,7 @@ class ConnectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ConnectBloc(),
-      child: const ConnectScreenWidget(),
-    );
+    return BlocProvider(create: (context) => ConnectBloc(), child: const ConnectScreenWidget());
   }
 }
 
@@ -38,52 +35,36 @@ class ConnectScreenWidget extends StatelessWidget {
       onWillPop: () {
         return Future.value(false);
       },
-      child: BlocBuilder<ConnectBloc, ConnectState>(
-        builder: (context, state) {
-          return Scaffold(
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 38, right: 38),
-                child: Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: getScreenHeight(context) * 0.15,
-                      ),
-                      SvgPicture.asset(
-                        AppImagePath.splashLogo,
-                        height: getScreenHeight(context) * 0.18,
-                        width: getScreenWidth(context) * 0.48,
-                      ),
-                      SizedBox(
-                        height: getScreenHeight(context) * 0.01,
-                      ),
-                      CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.login,
-                        fontColors: AppColors.mainColor,
-                        borderColor: AppColors.mainColor,
-                        isFromConnectScreen: true,
-                        onPressed: () {
-                          Navigator.pushNamed(context, RouteDefine.loginScreen.name, arguments: {AppStrings.isRegisterString: false});
-                        },
-                      ),
-                      20.height,
-                      GestureDetector(
-                          onTap: () {
-                            bloc.add(ConnectEvent.logInAsGuest(context: context));
-                          },
-                          child: Text(
-                            AppLocalizations.of(context)!.login_as_guest,
-                            style: TextStyle(color: AppColors.mainColor, fontSize: AppConstants.mediumFont),
-                          ))
-                    ],
-                  ),
-                ),
+      child: BlocBuilder<ConnectBloc, ConnectState>(builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 38, right: 38),
+              child: Center(
+                child: Column(children: [
+                  SizedBox(height: getScreenHeight(context) * 0.15),
+                  SvgPicture.asset(AppImagePath.splashLogo, height: getScreenHeight(context) * 0.18, width: getScreenWidth(context) * 0.48),
+                  SizedBox(height: getScreenHeight(context) * 0.01),
+                  CustomButtonWidget(
+                      buttonText: AppLocalizations.of(context)!.login,
+                      fontColors: AppColors.mainColor,
+                      borderColor: AppColors.mainColor,
+                      isFromConnectScreen: true,
+                      onPressed: () {
+                        Navigator.pushNamed(context, RouteDefine.loginScreen.name, arguments: {AppStrings.isRegisterString: false});
+                      }),
+                  20.height,
+                  GestureDetector(
+                      onTap: () {
+                        bloc.add(ConnectEvent.logInAsGuest(context: context));
+                      },
+                      child: Text(AppLocalizations.of(context)!.login_as_guest, style: TextStyle(color: AppColors.mainColor, fontSize: AppConstants.mediumFont)))
+                ]),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      }),
     );
   }
 }

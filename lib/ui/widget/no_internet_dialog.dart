@@ -13,15 +13,11 @@ class NoInternetDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: AppColors.pageColor,
       surfaceTintColor: AppColors.whiteColor,
-      contentPadding: const EdgeInsets.all(20.0),
+      contentPadding: const EdgeInsets.all(AppConstants.padding_20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      title: Icon(
-        Icons.wifi_off,
-        size: 40,
-        color: AppColors.mainColor,
-      ),
+      title: Icon(Icons.wifi_off, size: 40, color: AppColors.mainColor),
       content: Padding(
-        padding: const EdgeInsets.only(bottom: 5.0),
+        padding: const EdgeInsets.only(bottom: AppConstants.padding_5),
         child: Text(
           AppLocalizations.of(context)!.no_internet_connection,
           textAlign: TextAlign.center,
@@ -36,14 +32,11 @@ class NoInternetDialog extends StatelessWidget {
           onTap: positiveOnTap,
           child: Center(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              padding: const EdgeInsets.all(AppConstants.padding_10),
               alignment: Alignment.center,
               width: AppConstants.containerHeight_80,
-              decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha:0.9), borderRadius: BorderRadius.circular(8.0)),
-              child: Text(
-                AppLocalizations.of(context)!.ok,
-                style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),
-              ),
+              decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha: 0.9), borderRadius: BorderRadius.circular(8.0)),
+              child: Text(AppLocalizations.of(context)!.ok, style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont)),
             ),
           ),
         )

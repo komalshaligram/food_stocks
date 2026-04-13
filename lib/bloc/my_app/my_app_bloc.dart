@@ -5,8 +5,7 @@ import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/model/req_model/profile_req_model/profile_model.dart'
-    as update;
+import '../../data/model/req_model/profile_req_model/profile_model.dart' as update;
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -19,51 +18,41 @@ part 'my_app_bloc.freezed.dart';
 class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
   MyAppBloc() : super(MyAppState.initial()) {
     on<MyAppEvent>((event, emit) async {
-      SharedPreferencesHelper preferences =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _updateProfileDetailsEvent) {
-        if(preferences.getAuthToken().isEmpty){
+        if (preferences.getAuthToken().isEmpty) {
           return;
         }
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
         String version = packageInfo.version;
         update.ProfileModel updatedProfileModel = update.ProfileModel(
           clientDetail: update.ClientDetail(
-              deviceType: Platform.isAndroid
-                  ? AppStrings.androidString
-                  : AppStrings.iosString,
-              tokenId: preferences.getFCMToken(),
-              lastSeen: DateTime.now(),
-              applicationVersion: version),
+            deviceType: Platform.isAndroid ? AppStrings.androidString : AppStrings.iosString,
+            tokenId: preferences.getFCMToken(),
+            lastSeen: DateTime.now(),
+            applicationVersion: version,
+          ),
         );
         Map<String, dynamic> req = updatedProfileModel.toJson();
-        Map<String, dynamic>? clientDetail =
-            updatedProfileModel.clientDetail?.toJson();
+        Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
 
         clientDetail?.removeWhere((key, value) {
-          if (value != null) {
-          }
+          if (value != null) {}
           return value == null;
         });
 
         req[AppStrings.clientDetailString] = clientDetail;
         req.removeWhere((key, value) {
-          if (value != null) {
-          }
+          if (value != null) {}
           return value == null;
         });
         try {
-          final res = await DioClient(event.context).post(
-            "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
-            data: req,
-          );
+          final res = await DioClient(event.context).post("${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}", data: req);
           if (res != null) {
-            ProfileDetailsUpdateResModel response =
-                ProfileDetailsUpdateResModel.fromJson(res);
-            if (response.status == AppConstants.code_200) {
-            } else {}
+            ProfileDetailsUpdateResModel response = ProfileDetailsUpdateResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {}
           }
-        } catch(_) {}
+        } catch (_) {}
       }
     });
   }

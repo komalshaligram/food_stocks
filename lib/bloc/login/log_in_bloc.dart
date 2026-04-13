@@ -35,13 +35,8 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
         preferences.setIsGuestUser(isGuestUser: false);
         try {
           LoginReqModel reqMap = LoginReqModel(contact: event.contactNumber, applicationName: AppStrings.appName);
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.existingUserLoginUrl,
-            data: reqMap,
-          );
-
+          final res = await DioClient(event.context).post(AppUrlEndPoints.existingUserLoginUrl, data: reqMap);
           LoginResModel response = LoginResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             await SmsAutoFill().listenForCode();
             preferences.setIsGuestUser(isGuestUser: false);
@@ -60,27 +55,19 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
               type: SnackBarType.failure,
             );
-            emit(state.copyWith(
-              isLoading: false,
-            ));
+            emit(state.copyWith(isLoading: false));
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
               type: SnackBarType.failure,
             );
-            emit(state.copyWith(
-              isLoading: false,
-            ));
+            emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
-          emit(state.copyWith(
-            isLoading: false,
-          ));
+          emit(state.copyWith(isLoading: false));
         } catch (e) {
-          emit(state.copyWith(
-            isLoading: false,
-          ));
+          emit(state.copyWith(isLoading: false));
         }
       } else if (event is _checkVersionOfAppEvent) {
         final checker = StoreVersionChecker();

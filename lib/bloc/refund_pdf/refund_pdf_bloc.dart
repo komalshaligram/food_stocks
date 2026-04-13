@@ -21,7 +21,6 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
   }
 
   SharedPreferencesHelper? preferencesHelper;
-
   Future<void> _initPrefs() async {
     if (preferencesHelper == null) {
       final prefs = await SharedPreferences.getInstance();
@@ -35,38 +34,21 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
   ) async {
     await _initPrefs();
 
-    emit(
-      state.copyWith(
-        invoiceDetailsList: event.invoiceDetailsList,
-        hasValidLink: null,
-      ),
-    );
-
+    emit(state.copyWith(invoiceDetailsList: event.invoiceDetailsList, hasValidLink: null));
     add(RefundPdfEvent.verifyInvoiceLink(context: event.context));
   }
 
-  Future<void> _onVerifyInvoiceLink(
-    _VerifyInvoiceLink event,
-    Emitter<RefundPdfState> emit,
-  ) async {
+  Future<void> _onVerifyInvoiceLink(_VerifyInvoiceLink event, Emitter<RefundPdfState> emit) async {
     await _initPrefs();
-
     final currentInvoice = state.invoiceDetailsList;
-
     if (currentInvoice == null) {
       emit(state.copyWith(hasValidLink: false));
       return;
     }
 
     final initialLink = currentInvoice.invoiceLink;
-
     if (isValidLink(initialLink)) {
-      emit(
-        state.copyWith(
-          hasValidLink: true,
-          invoiceDetailsList: currentInvoice.copyWith(invoiceLink: initialLink),
-        ),
-      );
+      emit(state.copyWith(hasValidLink: true, invoiceDetailsList: currentInvoice.copyWith(invoiceLink: initialLink)));
       return;
     }
 
@@ -81,29 +63,13 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
       );
 
       final response = RefundInvoiceResModel.fromJson(res);
-
       if (response.status == AppConstants.code_200 && isValidLink(response.data)) {
-        emit(
-          state.copyWith(
-            hasValidLink: true,
-            invoiceDetailsList: currentInvoice.copyWith(invoiceLink: response.data),
-          ),
-        );
+        emit(state.copyWith(hasValidLink: true, invoiceDetailsList: currentInvoice.copyWith(invoiceLink: response.data)));
       } else {
-        emit(
-          state.copyWith(
-            hasValidLink: false,
-            invoiceDetailsList: currentInvoice.copyWith(invoiceLink: ""),
-          ),
-        );
+        emit(state.copyWith(hasValidLink: false, invoiceDetailsList: currentInvoice.copyWith(invoiceLink: "")));
       }
     } catch (_) {
-      emit(
-        state.copyWith(
-          hasValidLink: false,
-          invoiceDetailsList: currentInvoice.copyWith(invoiceLink: ""),
-        ),
-      );
+      emit(state.copyWith(hasValidLink: false, invoiceDetailsList: currentInvoice.copyWith(invoiceLink: "")));
     }
   }
 

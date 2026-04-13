@@ -14,25 +14,23 @@ class StoreScreenShimmerWidget extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            80.height,
-            buildListTitles(),
-            buildListItems(context),
-            buildListTitles(),
-            buildListItems(context),
-            5.height,
-            const PesachBannerShimmerWidget(),
-            5.height,
-            buildListTitles(),
-            buildListItems(context),
-            buildListTitles(),
-            buildListItems(context, height: 120),
-            buildListTitles(),
-            buildListItems(context, height: 120),
-            90.height,
-          ],
-        ),
+        child: Column(children: [
+          80.height,
+          buildListTitles(),
+          buildListItems(context),
+          buildListTitles(),
+          buildListItems(context),
+          5.height,
+          const PesachBannerShimmerWidget(),
+          5.height,
+          buildListTitles(),
+          buildListItems(context),
+          buildListTitles(),
+          buildListItems(context, height: 120),
+          buildListTitles(),
+          buildListItems(context, height: 120),
+          90.height,
+        ]),
       ),
     );
   }
@@ -43,12 +41,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
         width: getScreenWidth(context),
         height: height ?? 110,
         margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(AppConstants.radius_10),
-          ),
-          color: AppColors.whiteColor,
-        ),
+        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)), color: AppColors.whiteColor),
       ),
     );
   }
@@ -56,13 +49,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
   Widget buildListTitles() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          buildTextFieldTitle(),
-          buildTextFieldTitle(),
-        ],
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [buildTextFieldTitle(), buildTextFieldTitle()]),
     );
   }
 
@@ -92,10 +79,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
         height: AppConstants.shimmerTextHeight,
         width: 100,
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
       ),
     );
   }

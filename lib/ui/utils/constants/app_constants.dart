@@ -38,6 +38,8 @@ class AppConstants {
   static const double padding_35 = 35;
   static const double padding_8 = 8;
   static const double padding_3 = 3;
+  static const double padding_4 = 4;
+  static const double padding_6 = 6;
   static const double padding_50 = 50;
   static const double padding_55 = 55;
   static const double padding_60 = 60;
@@ -56,7 +58,9 @@ class AppConstants {
   static const double radius_5 = 5;
   static const double radius_6 = 6;
   static const double radius_7 = 7;
+  static const double radius_8 = 8;
   static const double radius_10 = 10;
+  static const double radius_15 = 15;
   static const double radius_100 = 100;
   static const double radius_200 = 200;
   static const double radius_50 = 50;

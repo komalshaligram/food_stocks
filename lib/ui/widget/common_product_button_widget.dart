@@ -44,10 +44,10 @@ class CommonProductButtonWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
       decoration: BoxDecoration(
-          gradient: AppColors.appMainGradientColor,
-          //  color: bgColor,
-          border: Border.all(color: borderColor),
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_7))),
+        gradient: AppColors.appMainGradientColor,
+        border: Border.all(color: borderColor),
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_7)),
+      ),
       child: GestureDetector(
         onDoubleTap: onPressed,
         onTap: () {
@@ -57,20 +57,17 @@ class CommonProductButtonWidget extends StatelessWidget {
           }
         },
         child: MaterialButton(
-          elevation: 0,
-          height: height ?? AppConstants.buttonHeightSmall,
-          minWidth: width,
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-          onPressed: null,
-          child: isLoading
-              ? const CupertinoActivityIndicator(
-                  color: Colors.white,
-                )
-              : Text(
-                  title,
-                  style: AppStyles.rkRegularTextStyle(size: textSize, color: textColor, fontWeight: FontWeight.w600),
-                ),
-        ),
+            elevation: 0,
+            height: height ?? AppConstants.buttonHeightSmall,
+            minWidth: width,
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+            onPressed: null,
+            child: isLoading
+                ? CupertinoActivityIndicator(color: AppColors.whiteColor)
+                : Text(
+                    title,
+                    style: AppStyles.rkRegularTextStyle(size: textSize, color: textColor, fontWeight: FontWeight.w600),
+                  )),
       ),
     );
   }

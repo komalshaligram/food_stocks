@@ -10,7 +10,6 @@ import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
-import '../utils/constants/app_styles.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
@@ -37,75 +36,64 @@ class InvoiceScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<InvoiceBloc, InvoiceState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.pageColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-            child: CommonAppBar(
-              bgColor: AppColors.pageColor,
-              title: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices
-                  : AppLocalizations.of(context)!.my_refunds,
-              iconData: Icons.arrow_back_ios_sharp,
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
+    return BlocBuilder<InvoiceBloc, InvoiceState>(builder: (context, state) {
+      return Scaffold(
+        backgroundColor: AppColors.pageColor,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+          child: CommonAppBar(
+            bgColor: AppColors.pageColor,
+            title: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices :
+            AppLocalizations.of(context)!.my_refunds,
+            iconData: Icons.arrow_back_ios_sharp,
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
-          body: SafeArea(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-            child: SmartRefresher(
-              enablePullDown: true,
-              controller: state.refreshController,
-              header: const RefreshWidget(),
-              footer: CustomFooter(
-                  builder: (context, mode) => const OrderSummaryScreenShimmerWidget(
-                        containerHeight: 140,
-                      )),
-              enablePullUp: !state.isBottomOfProducts,
-              onRefresh: () {
-                context.read<InvoiceBloc>().add(InvoiceEvent.refreshListEvent(context: context));
-              },
-              onLoading: () {
-                context.read<InvoiceBloc>().add(InvoiceEvent.getInvoicesDataEvent(context: context));
-              },
-              child: state.isShimmering
-                  ? const OrderSummaryScreenShimmerWidget(
-                      containerHeight: 140,
-                    )
-                  : !state.isShimmering && state.invoiceDetailsList.isEmpty
-                      ? SizedBox(
-                          height: getScreenHeight(context) * 0.8,
-                          child: Center(
-                              child: Text(
-                            AppLocalizations.of(context)!.no_data,
-                            style: AppStyles.pVRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-                          )),
-                        )
-                      : ListView.builder(
-                          itemCount: state.invoiceDetailsList.length,
-                          shrinkWrap: true,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => invoiceList(
-                            index: index,
-                            invoicesList: state.invoiceDetailsList,
-                            context: context,
-                            invoiceType: state.invoiceDetailsList[index].invoiceType.toString(),
-                            invoiceDate: state.invoiceDetailsList[index].invoiceDate.toString(),
-                            invoicePrice: state.invoiceDetailsList[index].invoiceAmount.toString(),
-                            invoiceNumber: state.invoiceDetailsList[index].invoiceNumber.toString(),
-                            invoiceStatus: state.statusList.isNotEmpty ? getStatus(state.statusList, state.invoiceDetailsList[index].paymentStatus.toString(), state.language).toCapitalized() : '',
-                            supplierName: state.invoiceDetailsList[index].supplierName ?? '',
-                            dueDate: state.invoiceDetailsList[index].dueDate.toString(),
-                          ),
+        ),
+        body: SafeArea(
+            child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+          child: SmartRefresher(
+            enablePullDown: true,
+            controller: state.refreshController,
+            header: const RefreshWidget(),
+            footer: CustomFooter(builder: (context, mode) => const OrderSummaryScreenShimmerWidget(containerHeight: 140)),
+            enablePullUp: !state.isBottomOfProducts,
+            onRefresh: () {
+              context.read<InvoiceBloc>().add(InvoiceEvent.refreshListEvent(context: context));
+            },
+            onLoading: () {
+              context.read<InvoiceBloc>().add(InvoiceEvent.getInvoicesDataEvent(context: context));
+            },
+            child: state.isShimmering
+                ? const OrderSummaryScreenShimmerWidget(containerHeight: 140)
+                : !state.isShimmering && state.invoiceDetailsList.isEmpty
+                    ? SizedBox(
+                        height: getScreenHeight(context) * 0.8,
+                        child: noDataWidget(AppLocalizations.of(context)!.no_data),
+                      )
+                    : ListView.builder(
+                        itemCount: state.invoiceDetailsList.length,
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (context, index) => invoiceList(
+                          index: index,
+                          invoicesList: state.invoiceDetailsList,
+                          context: context,
+                          invoiceType: state.invoiceDetailsList[index].invoiceType.toString(),
+                          invoiceDate: state.invoiceDetailsList[index].invoiceDate.toString(),
+                          invoicePrice: state.invoiceDetailsList[index].invoiceAmount.toString(),
+                          invoiceNumber: state.invoiceDetailsList[index].invoiceNumber.toString(),
+                          invoiceStatus: state.statusList.isNotEmpty ? getStatus(state.statusList, state.invoiceDetailsList[index].paymentStatus.toString(), state.language).toCapitalized() : '',
+                          supplierName: state.invoiceDetailsList[index].supplierName ?? '',
+                          dueDate: state.invoiceDetailsList[index].dueDate.toString(),
                         ),
-            ),
-          )),
-        );
-      },
-    );
+                      ),
+          ),
+        )),
+      );
+    });
   }
 
   Widget invoiceList({
@@ -127,8 +115,7 @@ class InvoiceScreenWidget extends StatelessWidget {
           RouteDefine.invoicePdfScreen.name,
           arguments: {
             AppStrings.invoiceListString: invoicesList[index],
-            AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ?
-            AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
+            AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
           },
         );
       },
@@ -136,143 +123,131 @@ class InvoiceScreenWidget extends StatelessWidget {
         margin: const EdgeInsets.all(AppConstants.padding_8),
         padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_8, horizontal: AppConstants.padding_8),
         decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            boxShadow: [
-              BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
-            ],
-            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 2,
-                  title: AppLocalizations.of(context)!.invoice_number,
-                  value: invoiceNumber,
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                  columnPadding: AppConstants.padding_2,
-                  titleMaxLine: 2,
-                  maxLine: 2,
-                  titleTextSize: AppConstants.smallFont,
-                  valueTextWeight: FontWeight.w400,
-                ),
-                4.width,
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 2,
-                  titleMaxLine: 2,
-                  maxLine: 2,
-                  title: AppLocalizations.of(context)!.invoice_date,
-                  value: invoiceDate.replaceRange(10, 16, ''),
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                  titleTextSize: AppConstants.smallFont,
-                  columnPadding: AppConstants.padding_2,
-                  valueTextWeight: FontWeight.w400,
-                ),
-              ],
-            ),
-            5.height,
-            Row(
-              children: [
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 2,
-                  titleMaxLine: 2,
-                  maxLine: 2,
-                  title: AppLocalizations.of(context)!.invoice_status,
-                  value: invoiceStatus.toString(),
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                  titleTextSize: AppConstants.smallFont,
-                  columnPadding: AppConstants.padding_2,
-                  valueTextWeight: FontWeight.w400,
-                ),
-                4.width,
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 2,
-                  titleMaxLine: 2,
-                  maxLine: 2,
-                  title: AppLocalizations.of(context)!.invoice_amount,
-                  value: formatNumber(value: invoicePrice, local: AppStrings.hebrewLocal),
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                  titleTextSize: AppConstants.smallFont,
-                  columnPadding: 2,
-                  valueTextWeight: FontWeight.w700,
-                ),
-              ],
-            ),
-            5.height,
-            Row(
-              children: [
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 2,
-                  titleMaxLine: 2,
-                  maxLine: 2,
-                  title: AppLocalizations.of(context)!.invoice_type,
-                  value: invoiceType.toCapitalized(),
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                  titleTextSize: AppConstants.smallFont,
-                  columnPadding: AppConstants.padding_2,
-                  valueTextWeight: FontWeight.w400,
-                ),
-                4.width,
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 2,
-                  titleMaxLine: 2,
-                  maxLine: 2,
-                  title: AppLocalizations.of(context)!.due_date,
-                  value: dueDate.isNotEmpty ? dueDate.replaceRange(10, 16, '') : '',
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                  titleTextSize: AppConstants.smallFont,
-                  columnPadding: AppConstants.padding_2,
-                  valueTextWeight: FontWeight.w400,
-                ),
-              ],
-            ),
-            5.height,
-            Row(
-              children: [
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 2,
-                  titleMaxLine: 2,
-                  maxLine: 2,
-                  title: AppLocalizations.of(context)!.supplier_name,
-                  value: supplierName,
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                  titleTextSize: AppConstants.smallFont,
-                  columnPadding: AppConstants.padding_2,
-                  valueTextWeight: FontWeight.w400,
-                ),
-              ],
-            ),
-          ],
+          color: AppColors.whiteColor,
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Row(children: [
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 2,
+              title: AppLocalizations.of(context)!.invoice_number,
+              value: invoiceNumber,
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextSize: AppConstants.smallFont,
+              columnPadding: AppConstants.padding_2,
+              titleMaxLine: 2,
+              maxLine: 2,
+              titleTextSize: AppConstants.smallFont,
+              valueTextWeight: FontWeight.w400,
+            ),
+            4.width,
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 2,
+              titleMaxLine: 2,
+              maxLine: 2,
+              title: AppLocalizations.of(context)!.invoice_date,
+              value: invoiceDate.replaceRange(10, 16, ''),
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextSize: AppConstants.smallFont,
+              titleTextSize: AppConstants.smallFont,
+              columnPadding: AppConstants.padding_2,
+              valueTextWeight: FontWeight.w400,
+            ),
+          ]),
+          5.height,
+          Row(children: [
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 2,
+              titleMaxLine: 2,
+              maxLine: 2,
+              title: AppLocalizations.of(context)!.invoice_status,
+              value: invoiceStatus.toString(),
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextSize: AppConstants.smallFont,
+              titleTextSize: AppConstants.smallFont,
+              columnPadding: AppConstants.padding_2,
+              valueTextWeight: FontWeight.w400,
+            ),
+            4.width,
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 2,
+              titleMaxLine: 2,
+              maxLine: 2,
+              title: AppLocalizations.of(context)!.invoice_amount,
+              value: formatNumber(value: invoicePrice, local: AppStrings.hebrewLocal),
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextSize: AppConstants.smallFont,
+              titleTextSize: AppConstants.smallFont,
+              columnPadding: 2,
+              valueTextWeight: FontWeight.w700,
+            ),
+          ]),
+          5.height,
+          Row(children: [
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 2,
+              titleMaxLine: 2,
+              maxLine: 2,
+              title: AppLocalizations.of(context)!.invoice_type,
+              value: invoiceType.toCapitalized(),
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextSize: AppConstants.smallFont,
+              titleTextSize: AppConstants.smallFont,
+              columnPadding: AppConstants.padding_2,
+              valueTextWeight: FontWeight.w400,
+            ),
+            4.width,
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 2,
+              titleMaxLine: 2,
+              maxLine: 2,
+              title: AppLocalizations.of(context)!.due_date,
+              value: dueDate.isNotEmpty ? dueDate.replaceRange(10, 16, '') : '',
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextSize: AppConstants.smallFont,
+              titleTextSize: AppConstants.smallFont,
+              columnPadding: AppConstants.padding_2,
+              valueTextWeight: FontWeight.w400,
+            ),
+          ]),
+          5.height,
+          Row(children: [
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 2,
+              titleMaxLine: 2,
+              maxLine: 2,
+              title: AppLocalizations.of(context)!.supplier_name,
+              value: supplierName,
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextSize: AppConstants.smallFont,
+              titleTextSize: AppConstants.smallFont,
+              columnPadding: AppConstants.padding_2,
+              valueTextWeight: FontWeight.w400,
+            ),
+          ]),
+        ]),
       ),
     );
   }

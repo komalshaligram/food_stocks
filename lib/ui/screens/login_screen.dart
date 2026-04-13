@@ -38,69 +38,60 @@ class LogInScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LogInBloc, LogInState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-            child: CommonAppBar(
-              bgColor: AppColors.whiteColor,
-              title: state.isRegister ? AppLocalizations.of(context)!.register : AppLocalizations.of(context)!.login,
-              iconData: Icons.arrow_back_ios_sharp,
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
+    return BlocBuilder<LogInBloc, LogInState>(builder: (context, state) {
+      return Scaffold(
+        backgroundColor: AppColors.whiteColor,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+          child: CommonAppBar(
+            bgColor: AppColors.whiteColor,
+            title: state.isRegister ? AppLocalizations.of(context)!.register : AppLocalizations.of(context)!.login,
+            iconData: Icons.arrow_back_ios_sharp,
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.only(left: getScreenWidth(context) * 0.1, right: getScreenWidth(context) * 0.1),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      30.height,
-                      Text(AppLocalizations.of(context)!.enter_your_phone,
-                          style: AppStyles.rkRegularTextStyle(
-                            size: AppConstants.smallFont,
-                            color: Colors.black,
-                          )),
-                      30.height,
-                      CustomFormField(
-                        inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
-                        context: context,
-                        controller: phoneController,
-                        keyboardType: TextInputType.phone,
-                        hint: AppStrings.hintNumberString,
-                        fillColor: AppColors.whiteColor,
-                        textInputAction: TextInputAction.done,
-                        validator: AppStrings.mobileValString,
-                      ),
-                      30.height,
-                      CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.next,
-                        bGColor: AppColors.mainColor,
-                        isLoading: state.isLoading,
-                        onPressed: state.isLoading
-                            ? null
-                            : () {
-                                if (_formKey.currentState?.validate() ?? false) {
-                                  context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(contactNumber: phoneController.text, context: context));
-                                }
-                              },
-                        fontColors: AppColors.whiteColor,
-                      ),
-                    ],
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: EdgeInsets.only(left: getScreenWidth(context) * 0.1, right: getScreenWidth(context) * 0.1),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  30.height,
+                  Text(AppLocalizations.of(context)!.enter_your_phone, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+                  30.height,
+                  CustomFormField(
+                    inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
+                    context: context,
+                    controller: phoneController,
+                    keyboardType: TextInputType.phone,
+                    hint: AppStrings.hintNumberString,
+                    fillColor: AppColors.whiteColor,
+                    textInputAction: TextInputAction.done,
+                    validator: AppStrings.mobileValString,
                   ),
-                ),
+                  30.height,
+                  CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.next,
+                    bGColor: AppColors.mainColor,
+                    isLoading: state.isLoading,
+                    onPressed: state.isLoading
+                        ? null
+                        : () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(contactNumber: phoneController.text, context: context));
+                            }
+                          },
+                    fontColors: AppColors.whiteColor,
+                  ),
+                ]),
               ),
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 }

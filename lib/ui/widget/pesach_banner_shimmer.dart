@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/utils/constants/app_constants.dart';
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import 'common_shimmer_widget.dart';
@@ -12,10 +13,8 @@ class PesachBannerShimmerWidget extends StatelessWidget {
       child: Container(
         height: 70,
         width: getScreenWidth(context),
-        padding: const EdgeInsets.only(left: 8.0, right: 8),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+        decoration: BoxDecoration(color: AppColors.whiteColor),
       ),
     );
   }

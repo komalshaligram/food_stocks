@@ -51,31 +51,25 @@ class SplashScreenWidget extends StatelessWidget {
           }
         }
       },
-      child: BlocBuilder<SplashBloc, SplashState>(
-        builder: (context, state) {
-          return Scaffold(
-            body: SafeArea(
-              child: Center(
-                child: AnimatedOpacity(
+      child: BlocBuilder<SplashBloc, SplashState>(builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: Center(
+              child: AnimatedOpacity(
+                curve: Curves.decelerate,
+                opacity: state.isAnimate ? 1 : 0,
+                duration: const Duration(milliseconds: 1000),
+                child: AnimatedScale(
                   curve: Curves.decelerate,
-                  opacity: state.isAnimate ? 1 : 0,
-                  duration: const Duration(milliseconds: 1000),
-                  child: AnimatedScale(
-                    curve: Curves.decelerate,
-                    scale: state.isAnimate ? 1 : 1.2,
-                    duration: const Duration(milliseconds: 600),
-                    child: SvgPicture.asset(
-                      AppImagePath.splashLogo,
-                      height: getScreenHeight(context) * 0.30,
-                      width: getScreenWidth(context) * 0.65,
-                    ),
-                  ),
+                  scale: state.isAnimate ? 1 : 1.2,
+                  duration: const Duration(milliseconds: 600),
+                  child: SvgPicture.asset(AppImagePath.splashLogo, height: getScreenHeight(context) * 0.30, width: getScreenWidth(context) * 0.65),
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      }),
     );
   }
 }

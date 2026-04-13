@@ -28,40 +28,26 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
           return;
         }
         try {
-          emit(state.copyWith(
-              isShimmering: state.pageNum == 0 ? true : false,
-              isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getSuppliersUrl,
+          emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getSuppliersUrl,
               data: SuppliersReqModel(
-                      pageNum: state.pageNum + 1,
-                      pageLimit: AppConstants.supplierPageLimit,
-                      search: state.search)
-                  .toJson());
+                pageNum: state.pageNum + 1,
+                pageLimit: AppConstants.supplierPageLimit,
+                search: state.search,
+              ).toJson());
           SuppliersResModel response = SuppliersResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            List<Datum> supplierList =
-                state.suppliersList.toList(growable: true);
+            List<Datum> supplierList = state.suppliersList.toList(growable: true);
             supplierList.addAll(response.data ?? []);
-            emit(state.copyWith(
-                suppliersList: supplierList,
-                pageNum: state.pageNum + 1,
-                isLoadMore: false,
-                isShimmering: false));
-            emit(state.copyWith(
-                isBottomOfSuppliers: state.suppliersList.length ==
-                        (response.metaData?.totalRecords ?? 0)
-                    ? true
-                    : false));
+            emit(state.copyWith(suppliersList: supplierList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false));
+            emit(state.copyWith(isBottomOfSuppliers: state.suppliersList.length == (response.metaData?.totalRecords ?? 0) ? true : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ??
-                        response.message!,
-                    event.context),
-                type: SnackBarType.success);
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.success,
+            );
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
@@ -69,8 +55,7 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
       } else if (event is _refreshListEvent) {
-        emit(state.copyWith(
-            pageNum: 0, suppliersList: [], isBottomOfSuppliers: false));
+        emit(state.copyWith(pageNum: 0, suppliersList: [], isBottomOfSuppliers: false));
         add(SupplierEvent.getSuppliersListEvent(context: event.context));
       } else if (event is _setSearchEvent) {
         emit(state.copyWith(search: event.search));

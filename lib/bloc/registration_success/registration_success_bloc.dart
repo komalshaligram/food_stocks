@@ -27,7 +27,6 @@ class RegistrationSuccessBloc extends Bloc<RegistrationSuccessEvent, Registratio
           if (response.status == AppConstants.code_200) {
             if (preferences.getAppOnMaintenance() && !(response.data?.isAppOnMaintenance ?? false)) {
               preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
-
               return;
             }
             emit(state.copyWith(registrationSuccessMessage: response.data?.registrationSuccessPageSettings?.registrationSuccessPageText! ?? ''));

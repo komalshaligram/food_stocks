@@ -211,6 +211,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "client_form_details": MessageLookupByLibrary.simpleMessage("Client Info"),
     "client_info": MessageLookupByLibrary.simpleMessage("Client Info"),
+    "clients_minimum_order": MessageLookupByLibrary.simpleMessage("Min :"),
+    "clients_no_minimum": MessageLookupByLibrary.simpleMessage("NO MINIMUM"),
+    "clients_set_minimum": MessageLookupByLibrary.simpleMessage("SET MINIMUM"),
+    "clients_switch": MessageLookupByLibrary.simpleMessage("SWITCH"),
     "closeText": MessageLookupByLibrary.simpleMessage("Close"),
     "closed_text": MessageLookupByLibrary.simpleMessage("Closed"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
@@ -232,6 +236,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirm_minimum_box": MessageLookupByLibrary.simpleMessage(
       ", are you sure you don’t want to get the sale price?",
+    ),
+    "confirmation_minimum": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to set to minimum order?",
+    ),
+    "confirmation_no_minimum": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to set to no minimum order for one hour?",
     ),
     "connection_error": MessageLookupByLibrary.simpleMessage(
       "Connection error",
@@ -613,6 +623,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "minimum_boxes_detail": MessageLookupByLibrary.simpleMessage(
       "The minimum boxes for this sale is: ",
     ),
+    "minimum_order": MessageLookupByLibrary.simpleMessage("Minimum order :"),
     "missing_quantity_not_more_than_original":
         MessageLookupByLibrary.simpleMessage(
           "missing quantity can\'t be more then original quantity",
@@ -643,6 +654,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "my_agent_code": MessageLookupByLibrary.simpleMessage("My Agent Code"),
     "my_basket": MessageLookupByLibrary.simpleMessage("My Basket"),
+    "my_clients": MessageLookupByLibrary.simpleMessage("My Clients"),
     "my_invoices": MessageLookupByLibrary.simpleMessage("My invoices"),
     "my_orders": MessageLookupByLibrary.simpleMessage("My Orders"),
     "my_refunds": MessageLookupByLibrary.simpleMessage("My refunds"),
@@ -679,6 +691,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_refund_data": MessageLookupByLibrary.simpleMessage(
       "No refund data found",
+    ),
+    "no_suppliers_found": MessageLookupByLibrary.simpleMessage(
+      "No Suppliers Found",
     ),
     "not_add_more_than_max_qty": MessageLookupByLibrary.simpleMessage(
       "You can not add more than maximum quantity",
@@ -1363,6 +1378,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "surfaces_order": MessageLookupByLibrary.simpleMessage(
       "Surfaces for order",
     ),
+    "switch_agent_message": MessageLookupByLibrary.simpleMessage(
+      "You are now connected as an agent",
+    ),
+    "switch_back_to_agent_view": MessageLookupByLibrary.simpleMessage(
+      "Switch back to agent view",
+    ),
+    "switch_client_message": MessageLookupByLibrary.simpleMessage(
+      "You are now connected as: ",
+    ),
     "terms_of_use": MessageLookupByLibrary.simpleMessage(
       "Terms and Conditions",
     ),
@@ -1487,6 +1511,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "you_can_not_update_order": MessageLookupByLibrary.simpleMessage(
       "Invalid Supplier ID",
+    ),
+    "you_can_send_the_order": MessageLookupByLibrary.simpleMessage(
+      "you can send the order",
+    ),
+    "you_cant_send_the_order": MessageLookupByLibrary.simpleMessage(
+      "you can\'t send the order",
     ),
     "you_have": MessageLookupByLibrary.simpleMessage("You have"),
     "you_have_reached_maximum_quantity": MessageLookupByLibrary.simpleMessage(

@@ -14,26 +14,15 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
     required int productListIndex,
   }) = _getProductDetailsEvent;
 
-  const factory RecommendationProductsEvent.increaseQuantityOfProduct({
-    required BuildContext context,
-  }) = _increaseQuantityOfProduct;
+  const factory RecommendationProductsEvent.increaseQuantityOfProduct({required BuildContext context}) = _increaseQuantityOfProduct;
 
-  const factory RecommendationProductsEvent.decreaseQuantityOfProduct({
-    required BuildContext context,
-  }) = _decreaseQuantityOfProduct;
+  const factory RecommendationProductsEvent.decreaseQuantityOfProduct({required BuildContext context}) = _decreaseQuantityOfProduct;
 
-  const factory RecommendationProductsEvent.updateQuantityOfProduct({
-    required BuildContext context,
-    required String quantity,
-  }) = _updateQuantityOfProduct;
+  const factory RecommendationProductsEvent.updateQuantityOfProduct({required BuildContext context, required String quantity}) = _updateQuantityOfProduct;
 
-  const factory RecommendationProductsEvent.changeNoteOfProduct({
-    required String newNote,
-  }) = _changeNoteOfProduct;
+  const factory RecommendationProductsEvent.changeNoteOfProduct({required String newNote}) = _changeNoteOfProduct;
 
-  const factory RecommendationProductsEvent.changeSupplierSelectionExpansionEvent({
-    bool? isSelectSupplier,
-  }) = _changeSupplierSelectionExpansionEvent;
+  const factory RecommendationProductsEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
   const factory RecommendationProductsEvent.supplierSelectionEvent({
     required int supplierIndex,
@@ -41,58 +30,35 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
     required int supplierSaleIndex,
   }) = _supplierSelectionEvent;
 
-  const factory RecommendationProductsEvent.addToCartProductEvent({
-    required BuildContext context,
-    required String productId,
-  }) = _addToCartProductEvent;
+  const factory RecommendationProductsEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 
   const factory RecommendationProductsEvent.setCartCountEvent() = _setCartCountEvent;
 
-  const factory RecommendationProductsEvent.updateImageIndexEvent({
-    required int index,
-  }) = _updateImageIndexEvent;
+  const factory RecommendationProductsEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
 
   const factory RecommendationProductsEvent.toggleNoteEvent() = _toggleNoteEvent;
 
-  const factory RecommendationProductsEvent.refreshListEvent({
-    required BuildContext context,
-  }) = _refreshListEvent;
+  const factory RecommendationProductsEvent.refreshListEvent({required BuildContext context}) = _refreshListEvent;
 
   const factory RecommendationProductsEvent.getCartCountEvent() = _getCartCountEvent;
 
   const factory RecommendationProductsEvent.getGridListView() = _getGridListView;
 
-  const factory RecommendationProductsEvent.changeCategoryExpansion({
-    bool? isOpened,
-  }) = _changeCategoryExpansion;
+  const factory RecommendationProductsEvent.changeCategoryExpansion({bool? isOpened}) = _changeCategoryExpansion;
 
-  const factory RecommendationProductsEvent.globalSearchEvent({
-    required BuildContext context,
-  }) = _globalSearchEvent;
+  const factory RecommendationProductsEvent.globalSearchEvent({required BuildContext context}) = _globalSearchEvent;
 
-  const factory RecommendationProductsEvent.updateGlobalSearchEvent({
-    required String search,
-    required List<SearchModel> searchList,
-  }) = _updateGlobalSearchEvent;
+  const factory RecommendationProductsEvent.updateGlobalSearchEvent({required String search, required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
-  const factory RecommendationProductsEvent.getProductCategoriesListEvent({
-    required BuildContext context,
-  }) = _getProductCategoriesListEvent;
+  const factory RecommendationProductsEvent.getProductCategoriesListEvent({required BuildContext context}) = _getProductCategoriesListEvent;
 
-  const factory RecommendationProductsEvent.relatedProductsEvent({
-    required BuildContext context,
-    required String productId,
-  }) = _relatedProductsEvent;
+  const factory RecommendationProductsEvent.relatedProductsEvent({required BuildContext context, required String productId}) = _relatedProductsEvent;
 
   const factory RecommendationProductsEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;
 
-  const factory RecommendationProductsEvent.getPermissionList({
-    required BuildContext context,
-  }) = _getPermissionList;
+  const factory RecommendationProductsEvent.getPermissionList({required BuildContext context}) = _getPermissionList;
 
-  const factory RecommendationProductsEvent.userApproveEvent({
-    required BuildContext context,
-  }) = _userApproveEvent;
+  const factory RecommendationProductsEvent.userApproveEvent({required BuildContext context}) = _userApproveEvent;
 
   const factory RecommendationProductsEvent.updateListQuantityOfProduct({
     required BuildContext context,
@@ -124,7 +90,5 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
 
-  const factory RecommendationProductsEvent.getCartCountNoEvent({
-    required BuildContext context,
-  }) = _getCartCountNoEvent;
+  const factory RecommendationProductsEvent.getCartCountNoEvent({required BuildContext context}) = _getCartCountNoEvent;
 }

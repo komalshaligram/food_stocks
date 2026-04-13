@@ -23,28 +23,15 @@ class BasketEvent with _$BasketEvent {
     required bool isFromDelete,
   }) = _removeCartProductEvent;
 
-  const factory BasketEvent.getAllCartEvent({
-    required BuildContext context,
-    required bool isFromUpdate,
-  }) = _getAllCartEvent;
+  const factory BasketEvent.getAllCartEvent({required BuildContext context, required bool isFromUpdate}) = _getAllCartEvent;
 
-  const factory BasketEvent.clearCartEvent({
-    required BuildContext context,
-  }) = _clearCartEvent;
+  const factory BasketEvent.clearCartEvent({required BuildContext context}) = _clearCartEvent;
 
-  const factory BasketEvent.payWithBankTransferEvent({
-    required BuildContext context,
-    required bool isFromRemovePopUp,
-    required String id,
-  }) = _payWithBankTransferEvent;
+  const factory BasketEvent.payWithBankTransferEvent({required BuildContext context, required bool isFromRemovePopUp, required String id}) = _payWithBankTransferEvent;
 
-  const factory BasketEvent.setCartCountEvent({
-    required bool isClearCart,
-  }) = _setCartCountEvent;
+  const factory BasketEvent.setCartCountEvent({required bool isClearCart}) = _setCartCountEvent;
 
-  const factory BasketEvent.updateImageIndexEvent({
-    required int index,
-  }) = _updateImageIndexEvent;
+  const factory BasketEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
 
   const factory BasketEvent.orderSendEvent({
     required BuildContext context,
@@ -53,18 +40,12 @@ class BasketEvent with _$BasketEvent {
     required String paymentMethod,
     required bool isFromRemovePopUp,
   }) = _orderSendEvent;
-  const factory BasketEvent.increaseQuantityOfProduct({
-    required BuildContext context,
-  }) = _increaseQuantityOfProduct;
 
-  const factory BasketEvent.decreaseQuantityOfProduct({
-    required BuildContext context,
-  }) = _decreaseQuantityOfProduct;
+  const factory BasketEvent.increaseQuantityOfProduct({required BuildContext context}) = _increaseQuantityOfProduct;
 
-  const factory BasketEvent.updateQuantityOfProduct({
-    required BuildContext context,
-    required String quantity,
-  }) = _updateQuantityOfProduct;
+  const factory BasketEvent.decreaseQuantityOfProduct({required BuildContext context}) = _decreaseQuantityOfProduct;
+
+  const factory BasketEvent.updateQuantityOfProduct({required BuildContext context, required String quantity}) = _updateQuantityOfProduct;
 
   const factory BasketEvent.getProductDetailsEvent({
     required BuildContext context,
@@ -73,49 +54,25 @@ class BasketEvent with _$BasketEvent {
     required String productId,
   }) = _getProductDetailsEvent;
 
-  const factory BasketEvent.addToCartProductEvent({
-    required BuildContext context,
-    required String productId,
-  }) = _addToCartProductEvent;
+  const factory BasketEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 
-  const factory BasketEvent.supplierSelectionEvent({
-    required int supplierIndex,
-    required BuildContext context,
-    required int supplierSaleIndex,
-  }) = _supplierSelectionEvent;
+  const factory BasketEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
-  const factory BasketEvent.relatedProductsEvent({
-    required BuildContext context,
-    required String productId,
-  }) = _relatedProductsEvent;
+  const factory BasketEvent.relatedProductsEvent({required BuildContext context, required String productId}) = _relatedProductsEvent;
 
   const factory BasketEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;
 
   const factory BasketEvent.refreshEvent() = _refreshEvent;
 
-  const factory BasketEvent.getPermissionList({
-    required BuildContext context,
-  }) = _getPermissionList;
+  const factory BasketEvent.getPermissionList({required BuildContext context}) = _getPermissionList;
 
-  const factory BasketEvent.userApproveEvent({
-    required BuildContext context,
-  }) = _userApproveEvent;
+  const factory BasketEvent.userApproveEvent({required BuildContext context}) = _userApproveEvent;
 
-  const factory BasketEvent.generalSettings({
-    required BuildContext context,
-    required BuildContext dialogContext,
-    required bool isRetryLoading,
-  }) = _generalSettings;
+  const factory BasketEvent.generalSettings({required BuildContext context, required BuildContext dialogContext, required bool isRetryLoading}) = _generalSettings;
 
-  const factory BasketEvent.updateMaintenanceEvent({
-    required BuildContext context,
-  }) = _updateMaintenanceEvent;
+  const factory BasketEvent.updateMaintenanceEvent({required BuildContext context}) = _updateMaintenanceEvent;
 
-  const factory BasketEvent.getSupplierPaymentTypeEvent({
-    required BuildContext context,
-    required String id,
-    required int index,
-  }) = _getSupplierPaymentTypeEvent;
+  const factory BasketEvent.getSupplierPaymentTypeEvent({required BuildContext context, required String id, required int index}) = _getSupplierPaymentTypeEvent;
 
   const factory BasketEvent.updateListQuantityOfProduct({
     required BuildContext context,
@@ -147,7 +104,5 @@ class BasketEvent with _$BasketEvent {
     required String productSupplierIds,
   }) = _addToCartListProductEvent;
 
-  const factory BasketEvent.getProfileDetailsEvent({
-    required BuildContext context,
-  }) = _getProfileDetailsEvent;
+  const factory BasketEvent.getProfileDetailsEvent({required BuildContext context}) = _getProfileDetailsEvent;
 }

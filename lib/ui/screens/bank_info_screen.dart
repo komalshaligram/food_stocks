@@ -44,103 +44,96 @@ class BankInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BankInfoBloc bloc = context.read<BankInfoBloc>();
-    return BlocBuilder<BankInfoBloc, BankInfoState>(
-      builder: (context, state) {
-        return Scaffold(
+    return BlocBuilder<BankInfoBloc, BankInfoState>(builder: (context, state) {
+      return Scaffold(
+        backgroundColor: AppColors.whiteColor,
+        appBar: AppBar(
+          surfaceTintColor: AppColors.whiteColor,
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child:  Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
+          title: Align(
+            alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+            child: Text(AppLocalizations.of(context)!.bank_info, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+          ),
           backgroundColor: AppColors.whiteColor,
-          appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
-            leading: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
-            title: Align(
-              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(
-                AppLocalizations.of(context)!.bank_info,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
-              ),
-            ),
-            backgroundColor: AppColors.whiteColor,
-            titleSpacing: 0,
-            elevation: 0,
-          ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: state.isShimmering
-                  ? const BankInfoScreenShimmerWidget()
-                  : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.name_of_bank),
-                            CommonDropDownButton(
-                              items: state.bankList.map((element) {
-                                return DropdownMenuItem<String>(value: element.bankName, child: Text(element.bankName ?? ''));
-                              }).toList(),
-                              onChanged: (newBankName) {
-                                bloc.add(BankInfoEvent.selectBankEvent(bankName: newBankName ?? ''));
-                              },
-                              value: state.bankName,
-                            ),
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.branch_number),
-                            CustomFormField(
-                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
-                              context: context,
-                              controller: state.branchController,
-                              keyboardType: TextInputType.number,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.branchValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.account_number),
-                            CustomFormField(
-                              context: context,
-                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
-                              controller: state.accountNumberController,
-                              keyboardType: TextInputType.number,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.done,
-                              validator: AppStrings.accountValString,
-                            ),
-                            40.height,
-                          ],
+          titleSpacing: 0,
+          elevation: 0,
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: state.isShimmering
+                ? const BankInfoScreenShimmerWidget()
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(children: [
+                        CustomContainerWidget(name: AppLocalizations.of(context)!.name_of_bank),
+                        CommonDropDownButton(
+                          items: state.bankList.map((element) {
+                            return DropdownMenuItem<String>(value: element.bankName, child: Text(element.bankName ?? ''));
+                          }).toList(),
+                          onChanged: (newBankName) {
+                            bloc.add(BankInfoEvent.selectBankEvent(bankName: newBankName ?? ''));
+                          },
+                          value: state.bankName,
                         ),
-                      ),
-                    ),
-            ),
-          ),
-          bottomSheet: !state.isShimmering
-              ? Container(
-                  color: AppColors.whiteColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppConstants.padding_30),
-                    child: CustomButtonWidget(
-                      isLoading: state.isApiShimmering ? true : false,
-                      buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
-                      bGColor: AppColors.mainColor,
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          if (!state.isUpdate) {
-                            bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
-                          } else {
-                            bloc.add(BankInfoEvent.addBankInfoEvent(context: context));
-                          }
-                        }
-                      },
-                      fontColors: AppColors.whiteColor,
+                        CustomContainerWidget(name: AppLocalizations.of(context)!.branch_number),
+                        CustomFormField(
+                          inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                          context: context,
+                          controller: state.branchController,
+                          keyboardType: TextInputType.number,
+                          hint: "",
+                          fillColor: Colors.transparent,
+                          textInputAction: TextInputAction.next,
+                          validator: AppStrings.branchValString,
+                        ),
+                        7.height,
+                        CustomContainerWidget(name: AppLocalizations.of(context)!.account_number),
+                        CustomFormField(
+                          context: context,
+                          inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                          controller: state.accountNumberController,
+                          keyboardType: TextInputType.number,
+                          hint: "",
+                          fillColor: Colors.transparent,
+                          textInputAction: TextInputAction.done,
+                          validator: AppStrings.accountValString,
+                        ),
+                        40.height,
+                      ]),
                     ),
                   ),
-                )
-              : const SizedBox(),
-        );
-      },
-    );
+          ),
+        ),
+        bottomSheet: !state.isShimmering
+            ? Container(
+                color: AppColors.whiteColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(AppConstants.padding_30),
+                  child: CustomButtonWidget(
+                    isLoading: state.isApiShimmering ? true : false,
+                    buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                    bGColor: AppColors.mainColor,
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        if (!state.isUpdate) {
+                          bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
+                        } else {
+                          bloc.add(BankInfoEvent.addBankInfoEvent(context: context));
+                        }
+                      }
+                    },
+                    fontColors: AppColors.whiteColor,
+                  ),
+                ),
+              )
+            : const SizedBox(),
+      );
+    });
   }
 }

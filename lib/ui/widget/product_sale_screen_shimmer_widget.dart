@@ -21,10 +21,7 @@ class ProductSaleScreenShimmerWidget extends StatelessWidget {
   Widget buildProductSaleListItem() {
     return CommonShimmerWidget(
       child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          color: Colors.white,
-        ),
+        decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(AppConstants.radius_10)), color: Colors.white),
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
       ),
     );

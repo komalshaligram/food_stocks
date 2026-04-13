@@ -11,13 +11,12 @@ class SupplierScreenShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: GridView.builder(
-          shrinkWrap: true,
-          itemCount: AppConstants.supplierPageLimit,
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-          itemBuilder: (context, index) => buildSupplierListItem(
-                context: context,
-              )),
+        shrinkWrap: true,
+        itemCount: AppConstants.supplierPageLimit,
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        itemBuilder: (context, index) => buildSupplierListItem(context: context),
+      ),
     );
   }
 

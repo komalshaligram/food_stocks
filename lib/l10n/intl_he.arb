@@ -600,6 +600,9 @@
   "my_invoices" : "החשבוניות שלי",
   "my_refunds" : "הזיכויים שלי",
   "savings_for_sales": "חיסכון במבצעים",
+  "minimum_order": "מינימום הזמנה :",
+  "you_can_send_the_order": "אתה יכול לשדר את ההזמנה",
+  "you_cant_send_the_order": "אתה מתחת למינימום",
   "not_minimum_order": "Not minimum order",
   "show_all_results": "הצג את כל התוצאות ",
   "bank_transfer_information": "פרטי חשבון להעברה בנקאית",
@@ -684,5 +687,16 @@
   "refunds_date_range": "טווח תאריכי החזרים",
   "select_date": "בחר תאריך",
   "maximum_three_month_date_range_required": "טווח תאריכים מקסימלי של 3 חודשים",
-  "date_range": "טווח תאריכים"
+  "date_range": "טווח תאריכים",
+  "my_clients" :"הלקוחות שלי",
+  "switch_back_to_agent_view" :"עבור חזרה למשתמש שלי",
+  "clients_switch" :"התחבר",
+  "clients_set_minimum" :"הגדר מינימום",
+  "clients_minimum_order" : "מינימום :",
+  "clients_no_minimum" : "אין מינימום",
+  "confirmation_no_minimum" : "האם אתה בטוח שברצונך לעדכן שלא יהיה מינימום הזמנה בשעה הקרובה?",
+  "confirmation_minimum" : "האם אתה בטוח שאתה רוצה לעדכן שכן יהיה מינימום הזמנה?",
+  "switch_client_message" : "אתה מחובר עכשיו כלקוח: ",
+  "switch_agent_message" : "אתה עכשיו מחובר כסוכן",
+  "no_suppliers_found" : "לא נמצאו ספקים"
 }

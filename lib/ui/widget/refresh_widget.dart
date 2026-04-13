@@ -19,10 +19,7 @@ class RefreshWidget extends StatelessWidget {
           color: AppColors.whiteColor,
           shape: BoxShape.circle,
         ),
-        child: CupertinoActivityIndicator(
-          color: AppColors.mainColor,
-          radius: 10,
-        ),
+        child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: 10),
       ),
       complete: 0.width,
     );

@@ -13,7 +13,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/supplier_screen_shimmer_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../utils/constants/app_styles.dart';
 import '../utils/constants/app_urls.dart';
 import '../widget/refresh_widget.dart';
@@ -42,74 +41,67 @@ class SupplierScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SupplierBloc, SupplierState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.pageColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-            child: CommonAppBar(
-              bgColor: AppColors.pageColor,
-              title: AppLocalizations.of(context)!.suppliers,
-              iconData: Icons.arrow_back_ios_sharp,
-              onTap: () {
-                Navigator.pop(context);
-              },
+    return BlocBuilder<SupplierBloc, SupplierState>(builder: (context, state) {
+      return Scaffold(
+        backgroundColor: AppColors.pageColor,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+          child: CommonAppBar(
+            bgColor: AppColors.pageColor,
+            title: AppLocalizations.of(context)!.suppliers,
+            iconData: Icons.arrow_back_ios_sharp,
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        body: SafeArea(
+          child: SmartRefresher(
+            enablePullDown: true,
+            controller: state.refreshController,
+            header: const RefreshWidget(),
+            footer: CustomFooter(builder: (context, mode) => const SupplierScreenShimmerWidget()),
+            enablePullUp: !state.isBottomOfSuppliers,
+            onRefresh: () {
+              context.read<SupplierBloc>().add(SupplierEvent.refreshListEvent(context: context));
+            },
+            onLoading: () {
+              context.read<SupplierBloc>().add(SupplierEvent.getSuppliersListEvent(context: context));
+            },
+            child: SingleChildScrollView(
+              child: Column(children: [
+                state.isShimmering
+                    ? const SupplierScreenShimmerWidget()
+                    : state.suppliersList.isEmpty
+                        ? Container(
+                            height: getScreenHeight(context) - 80,
+                            width: getScreenWidth(context),
+                            alignment: Alignment.center,
+                            child: noDataWidget(AppLocalizations.of(context)!.suppliers_not_available),
+                          )
+                        : GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.suppliersList.length,
+                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
+                            itemBuilder: (context, index) => buildSupplierListItem(
+                                index: index,
+                                context: context,
+                                supplierLogo: state.suppliersList[index].logo ?? '',
+                                supplierName: state.suppliersList[index].supplierDetail?.companyName ?? '',
+                                onTap: () {
+                                  Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                    AppStrings.supplierIdString: state.suppliersList[index].id ?? '',
+                                  });
+                                }),
+                          ),
+              ]),
             ),
           ),
-          body: SafeArea(
-            child: SmartRefresher(
-              enablePullDown: true,
-              controller: state.refreshController,
-              header: const RefreshWidget(),
-              footer: CustomFooter(
-                builder: (context, mode) => const SupplierScreenShimmerWidget(),
-              ),
-              enablePullUp: !state.isBottomOfSuppliers,
-              onRefresh: () {
-                context.read<SupplierBloc>().add(SupplierEvent.refreshListEvent(context: context));
-              },
-              onLoading: () {
-                context.read<SupplierBloc>().add(SupplierEvent.getSuppliersListEvent(context: context));
-              },
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    state.isShimmering
-                        ? const SupplierScreenShimmerWidget()
-                        : state.suppliersList.isEmpty
-                            ? Container(
-                                height: getScreenHeight(context) - 80,
-                                width: getScreenWidth(context),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  AppLocalizations.of(context)!.suppliers_not_available,
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                ),
-                              )
-                            : GridView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: state.suppliersList.length,
-                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
-                                itemBuilder: (context, index) => buildSupplierListItem(
-                                    index: index,
-                                    context: context,
-                                    supplierLogo: state.suppliersList[index].logo ?? '',
-                                    supplierName: state.suppliersList[index].supplierDetail?.companyName ?? '',
-                                    onTap: () {
-                                      Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {AppStrings.supplierIdString: state.suppliersList[index].id ?? ''});
-                                    }),
-                              ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget buildSupplierListItem({required int index, required String supplierLogo, required String supplierName, required BuildContext context, required void Function() onTap}) {
@@ -121,66 +113,58 @@ class SupplierScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         color: AppColors.whiteColor,
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10)],
+        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
       ),
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
-        child: Column(
-          children: [
-            Expanded(
-              child: supplierLogo.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo",
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.center,
-                      placeholder: (context, url) => CommonShimmerWidget(
-                        child: Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
-                          ),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => Container(
+        child: Column(children: [
+          Expanded(
+            child: supplierLogo.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo",
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.center,
+                    placeholder: (context, url) => CommonShimmerWidget(
+                      child: Container(
                         height: getScreenHeight(context),
                         width: getScreenWidth(context),
-                        color: AppColors.whiteColor,
-                        child: Image.asset(
-                          AppImagePath.imageNotAvailable5,
-                          fit: BoxFit.cover,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
                         ),
                       ),
-                    )
-                  : Container(
+                    ),
+                    errorWidget: (context, url, error) => Container(
                       height: getScreenHeight(context),
                       width: getScreenWidth(context),
                       color: AppColors.whiteColor,
-                      child: Image.asset(
-                        AppImagePath.imageNotAvailable5,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
                     ),
+                  )
+                : Container(
+                    height: getScreenHeight(context),
+                    width: getScreenWidth(context),
+                    color: AppColors.whiteColor,
+                    child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
+                  ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
+            decoration: BoxDecoration(
+              gradient: AppColors.appMainGradientColor,
+              borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
             ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
-              decoration: BoxDecoration(
-                gradient: AppColors.appMainGradientColor,
-                borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
-              ),
-              child: Text(
-                supplierName,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
+            child: Text(
+              supplierName,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }

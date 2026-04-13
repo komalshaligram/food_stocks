@@ -73,12 +73,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           isLoadMore: state.pageNum == 0 ? false : true,
         ));
         try {
-          GetAllOrderReqModel reqMap = GetAllOrderReqModel(
-            pageNum: state.pageNum + 1,
-            pageLimit: AppConstants.orderPageLimit,
-            userId: preferences.getUserId(),
-          );
-
+          GetAllOrderReqModel reqMap = GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.orderPageLimit, userId: preferences.getUserId());
           final res = await DioClient(event.context).post(AppUrlEndPoints.getReturnListUrl, data: reqMap);
           GetReturnListResModel response = GetReturnListResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -110,34 +105,21 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         preferences.setReturnProductList(returnList: '');
         Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': <ReturnProduct>[]});
       } else if (event is _openScannerEvent) {
-        String scanResult = await scanBarcodeOrQRCode(
-          context: event.context,
-          cancelText: AppLocalizations.of(event.context)!.cancel,
-          scanMode: ScanMode.BARCODE,
-        );
+        String scanResult = await scanBarcodeOrQRCode(context: event.context, cancelText: AppLocalizations.of(event.context)!.cancel, scanMode: ScanMode.BARCODE);
         if (scanResult != '-1') {
           emit(state.copyWith(barCodeController: TextEditingController(text: scanResult)));
         }
       } else if (event is _scanProductEvent) {
         try {
           emit(state.copyWith(isLoading: true));
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getProductDetailsUrl,
-            data: ProductDetailsReqModel(params: event.barCode, isReturn: true).toJson(),
-          );
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.barCode, isReturn: true).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false, barCodeController: TextEditingController(text: event.barCode)));
             if (response.product!.isEmpty) {
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppLocalizations.of(event.context)!.product_does_not_exist,
-                type: SnackBarType.failure,
-              );
+              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.product_does_not_exist, type: SnackBarType.failure);
             } else {
               List<ReturnProduct> list = [];
-
               for (int i = 0; i < response.product!.length; i++) {
                 list.add(ReturnProduct(
                   productName: response.product![i].productName,
@@ -149,10 +131,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
                 ));
               }
               list.addAll(state.returnProductList);
-
-              Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {
-                'list': list,
-              });
+              Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list});
             }
           } else {
             emit(state.copyWith(isLoading: false));

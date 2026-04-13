@@ -12,38 +12,17 @@ class CommonDropDownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      icon: Icon(
-        Icons.keyboard_arrow_down,
-        color: AppColors.blackColor,
-      ),
+      icon: Icon(Icons.keyboard_arrow_down, color: AppColors.blackColor),
       alignment: Alignment.bottomCenter,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppConstants.radius_3),
-          borderSide: BorderSide(
-            color: color,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppConstants.radius_3),
-          borderSide: BorderSide(
-            color: color,
-          ),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppConstants.radius_3),
-          borderSide: BorderSide(
-            color: color,
-          ),
-        ),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3), borderSide: BorderSide(color: color)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3), borderSide: BorderSide(color: color)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3), borderSide: BorderSide(color: color)),
       ),
       isExpanded: true,
       elevation: 0,
-      style: TextStyle(
-        fontSize: AppConstants.smallFont,
-        color: AppColors.blackColor,
-      ),
+      style: TextStyle(fontSize: AppConstants.smallFont, color: AppColors.blackColor),
       value: value,
       items: items,
       onChanged: onChanged,

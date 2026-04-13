@@ -51,8 +51,31 @@ class Return with _$Return {
     @JsonKey(name: "businessName") String? businessName,
     @JsonKey(name: "rivchitId") String? rivchitId,
     @JsonKey(name: "subUserName") String? subUserName,
+    @JsonKey(name: "returnProducts") List<ReturnProducts>? returnProducts,
     String? rivchitInvoiceLink,
   }) = _Return;
 
   factory Return.fromJson(Map<String, dynamic> json) => _$ReturnFromJson(json);
 }
+
+@freezed
+class ReturnProducts with _$ReturnProducts {
+  const factory ReturnProducts({
+    @JsonKey(name: "productName") String? productName,
+    @JsonKey(name: "barcode") String? barcode,
+    @JsonKey(name: "notes") String? notes,
+    @JsonKey(name: "totalUnits") int? totalUnits,
+    @JsonKey(name: "totalRefund") int? totalRefund,
+    @JsonKey(name: "isApproved") bool? isApproved,
+    @JsonKey(name: "proofImages") List<String>? proofImages,
+    String? reasonToReturn,
+    @JsonKey(name: "productImage") String? productImg,
+    String? returnId,
+    String? supplierId,
+    String? supplierName,
+    @JsonKey(name: "_id") String? returnProductId,
+  }) = _ReturnProducts;
+
+  factory ReturnProducts.fromJson(Map<String, dynamic> json) => _$ReturnProductsFromJson(json);
+}
+

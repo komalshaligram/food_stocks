@@ -53,12 +53,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             cityListResModel.data?.cities?.forEach((element) {
               temp.add(element.cityName.toString());
             });
-            emit(state.copyWith(
-              isShimmering: false,
-              cityList: temp,
-              filterList: temp,
-              cityListResModel: cityListResModel,
-            ));
+            emit(state.copyWith(isShimmering: false, cityList: temp, filterList: temp, cityListResModel: cityListResModel));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -92,11 +87,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           });
           try {
             emit(state.copyWith(isLoading: true));
-            final res = await DioClient(event.context).post(
-              "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
-              data: req,
-            );
-
+            final res = await DioClient(event.context).post("${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}", data: req);
             req_update.ProfileDetailsUpdateResModel response = req_update.ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(isLoading: false));
@@ -105,13 +96,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
               if (!preferences.getSubUser()) {
                 preferences.setUserName(name: response.data?.client?.clientDetail?.ownerName ?? '');
               }
-
               Navigator.pop(event.context);
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppLocalizations.of(event.context)!.updated_successfully,
-                type: SnackBarType.success,
-              );
+              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.updated_successfully, type: SnackBarType.success);
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -159,9 +145,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           try {
             emit(state.copyWith(isLoading: true));
             final response = await DioClient(event.context).post(AppUrlEndPoints.registrationUrl, data: reqMap);
-
             res.ProfileResModel profileResModel = res.ProfileResModel.fromJson(response);
-
             if (profileResModel.status == AppConstants.code_200) {
               String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
               String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
@@ -210,12 +194,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 preferences.setStreetNumber(streetNumber: state.streetNumberController.text);
                 preferences.setZipCode(zipCode: state.zipController.text);
                 preferences.setCity(city: state.selectCity);
-
-                CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
-                  type: SnackBarType.failure,
-                );
+                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error, type: SnackBarType.failure);
                 Navigator.pop(event.context);
               } else {
                 CustomSnackBar.showSnackBar(
@@ -227,11 +206,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             }
           } catch (e) {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: e.toString(),
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
         }
       } else if (event is _citySearchEvent) {
@@ -244,10 +219,7 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         if (state.isUpdate) {
           try {
             emit(state.copyWith(isUpdating: true));
-            final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getProfileDetailsUrl,
-              data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
-            );
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
             res_get.ProfileDetailsResModel response = res_get.ProfileDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
@@ -289,16 +261,9 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             preferences.setAvailableAllPayment(isAvailableAllPayment: false);
           }
           emit(state.copyWith(isLoading: false));
-          Navigator.pushNamed(
-            event.context,
-            RouteDefine.formDataScreen.name,
-          );
+          Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
         } catch (e) {
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.internal_server_error,
-            type: SnackBarType.failure,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.internal_server_error, type: SnackBarType.failure);
           emit(state.copyWith(isLoading: false));
         }
       }

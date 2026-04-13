@@ -30,66 +30,37 @@ class OrderRefundsBloc extends Bloc<OrderRefundsEvent, OrderRefundsState> {
         if (state.isBottomOfProducts) {
           return;
         }
-
         try {
           final String statusData = preferences.getPaymentStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
-
           final args = ModalRoute.of(event.context)?.settings.arguments as Map<String, dynamic>;
-
           orderId = args[AppStrings.orderIdString] as String;
           orderNumber = args[AppStrings.orderNumberString];
-
-          emit(
-            state.copyWith(
-              statusList: statusList,
-              language: preferences.getAppLanguage(),
-              isShimmering: state.pageNum == 0 ? true : false,
-              orderNumber: orderNumber,
-            ),
-          );
-
+          emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: state.pageNum == 0 ? true : false, orderNumber: orderNumber));
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.getAdjustedRefundsInOrder + orderId);
-
           RefundResModel response = RefundResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             List<RefundInvoiceCommon> invoiceDetailsList = state.invoiceDetailsList.toList(growable: true);
-
             invoiceDetailsList.addAll(response.data!);
-
-            emit(state.copyWith(
-              invoiceDetailsList: invoiceDetailsList,
-              pageNum: state.pageNum + 1,
-              isShimmering: false,
-            ));
+            emit(state.copyWith(invoiceDetailsList: invoiceDetailsList, pageNum: state.pageNum + 1, isShimmering: false));
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                response.message?.toLocalization() ?? response.message!,
-                event.context,
-              ),
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
               type: SnackBarType.failure,
             );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
         }
-
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-
         final String statusData = preferences.getOrderStatusInfo();
         final List<StatusData> statusList = StatusData.decode(statusData);
         emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage()));
       } else if (event is _refreshListEvent) {
-        emit(state.copyWith(
-          pageNum: 0,
-          invoiceDetailsList: [],
-          isBottomOfProducts: false,
-        ));
+        emit(state.copyWith(pageNum: 0, invoiceDetailsList: [], isBottomOfProducts: false));
         add(OrderRefundsEvent.getRefundDataEvent(context: event.context));
       }
     });

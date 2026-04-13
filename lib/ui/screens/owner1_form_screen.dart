@@ -45,185 +45,151 @@ class Owner1FormScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Owner1FormBloc bloc = context.read<Owner1FormBloc>();
-    return BlocBuilder<Owner1FormBloc, Owner1FormState>(
-      builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () async {
-            SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-            if (!preferences.getUserLoggedIn()) {
-              return Future.value(true);
-            } else {
-              return Future.value(false);
-            }
-          },
-          child: Scaffold(
-            backgroundColor: AppColors.whiteColor,
-            appBar: AppBar(
-              surfaceTintColor: AppColors.whiteColor,
-              leading: GestureDetector(
-                  onTap: () async {
-                    SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                    if (!preferences.getUserLoggedIn()) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
-              title: Align(
-                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-                child: Text(
-                  AppLocalizations.of(context)!.data_for_form,
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              backgroundColor: AppColors.whiteColor,
-              titleSpacing: 0,
-              elevation: 0,
+    return BlocBuilder<Owner1FormBloc, Owner1FormState>(builder: (context, state) {
+      return WillPopScope(
+        onWillPop: () async {
+          SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+          if (!preferences.getUserLoggedIn()) {
+            return Future.value(true);
+          } else {
+            return Future.value(false);
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.whiteColor,
+          appBar: AppBar(
+            surfaceTintColor: AppColors.whiteColor,
+            leading: GestureDetector(
+                onTap: () async {
+                  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                  if (!preferences.getUserLoggedIn()) {
+                    Navigator.pop(context);
+                  }
+                },
+                child:  Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
+            title: Align(
+              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+              child: Text(AppLocalizations.of(context)!.data_for_form, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
             ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        10.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.owner1_full_name,
-                        ),
-                        CustomFormField(
-                          context: context,
-                          controller: state.owner1NameController,
-                          keyboardType: TextInputType.text,
-                          hint: "",
-                          fillColor: Colors.transparent,
-                          textInputAction: TextInputAction.next,
-                          validator: AppStrings.ownerNameValString,
-                        ),
-                        7.height,
-                        CustomContainerWidget(
-                          name: AppLocalizations.of(context)!.owner_1_israel_id,
-                        ),
-                        CustomFormField(
-                          context: context,
-                          controller: state.owner1israelIdController,
-                          keyboardType: TextInputType.number,
-                          inputFormat: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          hint: "",
-                          fillColor: Colors.transparent,
-                          textInputAction: TextInputAction.next,
-                          validator: AppStrings.idValString,
-                        ),
-                        7.height,
-                        state.haveMultiple
-                            ? Column(
-                                children: [
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!.guarantee_1_full_name,
-                                  ),
-                                  CustomFormField(
-                                    context: context,
-                                    controller: state.guarantee1NameController,
-                                    keyboardType: TextInputType.text,
-                                    hint: "",
-                                    fillColor: Colors.transparent,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.guaranteeNameString,
-                                  ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!.guarantee_1_israel_id,
-                                  ),
-                                  CustomFormField(
-                                    context: context,
-                                    controller: state.guarantee1idController,
-                                    inputFormat: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                    hint: "",
-                                    fillColor: Colors.transparent,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.idValString,
-                                  ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_1_address}${1}' : AppLocalizations.of(context)!.guarantee_1_address,
-                                  ),
-                                  CustomFormField(
-                                    context: context,
-                                    controller: state.guarantee1addressController,
-                                    keyboardType: TextInputType.text,
-                                    hint: "",
-                                    fillColor: Colors.transparent,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.addressValString,
-                                  ),
-                                  7.height,
-                                  CustomContainerWidget(
-                                    name: AppLocalizations.of(context)!.guarantee_1_phone_number,
-                                  ),
-                                  CustomFormField(
-                                    inputFormat: [LengthLimitingTextInputFormatter(10)],
-                                    context: context,
-                                    controller: state.guarantee1PhoneController,
-                                    keyboardType: TextInputType.number,
-                                    hint: "",
-                                    fillColor: Colors.transparent,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.mobileValString,
-                                  ),
-                                ],
-                              )
-                            : const SizedBox(),
-                        40.height,
-                        CustomButtonWidget(
-                          buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
-                          bGColor: AppColors.mainColor,
-                          onPressed: () {
-                            if (state.business != AppLocalizations.of(context)!.type_of_business) {
-                              if (isValidIsraeliID(state.owner1israelIdController.text.toString().trim())) {
-                                if (_formKey.currentState!.validate()) {
-                                  bool success = validation(state, context);
-                                  if (success) {
-                                    bloc.add(Owner1FormEvent.navigateToNextScreenEvent(context: context));
-                                  }
-                                }
-                              } else {
-                                CustomSnackBar.showSnackBar(
-                                  context: context,
-                                  title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1,
-                                  type: SnackBarType.failure,
-                                );
-                              }
-                            } else {
-                              CustomSnackBar.showSnackBar(
-                                context: context,
-                                title: AppLocalizations.of(context)!.select_business_type,
-                                type: SnackBarType.failure,
-                              );
-                            }
-                          },
-                          fontColors: AppColors.whiteColor,
-                        ),
-                        20.height,
-                      ],
+            backgroundColor: AppColors.whiteColor,
+            titleSpacing: 0,
+            elevation: 0,
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
+                child: Form(
+                  key: _formKey,
+                  child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    10.height,
+                    CustomContainerWidget(name: AppLocalizations.of(context)!.owner1_full_name),
+                    CustomFormField(
+                      context: context,
+                      controller: state.owner1NameController,
+                      keyboardType: TextInputType.text,
+                      hint: "",
+                      fillColor: Colors.transparent,
+                      textInputAction: TextInputAction.next,
+                      validator: AppStrings.ownerNameValString,
                     ),
-                  ),
+                    7.height,
+                    CustomContainerWidget(name: AppLocalizations.of(context)!.owner_1_israel_id),
+                    CustomFormField(
+                      context: context,
+                      controller: state.owner1israelIdController,
+                      keyboardType: TextInputType.number,
+                      inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                      hint: "",
+                      fillColor: Colors.transparent,
+                      textInputAction: TextInputAction.next,
+                      validator: AppStrings.idValString,
+                    ),
+                    7.height,
+                    state.haveMultiple
+                        ? Column(
+                            children: [
+                              CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_full_name),
+                              CustomFormField(
+                                context: context,
+                                controller: state.guarantee1NameController,
+                                keyboardType: TextInputType.text,
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.guaranteeNameString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_israel_id),
+                              CustomFormField(
+                                context: context,
+                                controller: state.guarantee1idController,
+                                inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                                keyboardType: TextInputType.number,
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.idValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(
+                                name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_1_address}${1}' : AppLocalizations.of(context)!.guarantee_1_address,
+                              ),
+                              CustomFormField(
+                                context: context,
+                                controller: state.guarantee1addressController,
+                                keyboardType: TextInputType.text,
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.addressValString,
+                              ),
+                              7.height,
+                              CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_phone_number),
+                              CustomFormField(
+                                inputFormat: [LengthLimitingTextInputFormatter(10)],
+                                context: context,
+                                controller: state.guarantee1PhoneController,
+                                keyboardType: TextInputType.number,
+                                hint: "",
+                                fillColor: Colors.transparent,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.mobileValString,
+                              ),
+                            ],
+                          )
+                        : const SizedBox(),
+                    40.height,
+                    CustomButtonWidget(
+                      buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                      bGColor: AppColors.mainColor,
+                      onPressed: () {
+                        if (state.business != AppLocalizations.of(context)!.type_of_business) {
+                          if (isValidIsraeliID(state.owner1israelIdController.text.toString().trim())) {
+                            if (_formKey.currentState!.validate()) {
+                              bool success = validation(state, context);
+                              if (success) {
+                                bloc.add(Owner1FormEvent.navigateToNextScreenEvent(context: context));
+                              }
+                            }
+                          } else {
+                            CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1, type: SnackBarType.failure);
+                          }
+                        } else {
+                          CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
+                        }
+                      },
+                      fontColors: AppColors.whiteColor,
+                    ),
+                    20.height,
+                  ]),
                 ),
               ),
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   bool validation(Owner1FormState state, BuildContext context) {
@@ -231,11 +197,7 @@ class Owner1FormScreenWidget extends StatelessWidget {
       if (isValidIsraeliID(state.guarantee1idController.text.toString().trim())) {
         return true;
       } else {
-        CustomSnackBar.showSnackBar(
-          context: context,
-          title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1,
-          type: SnackBarType.failure,
-        );
+        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1, type: SnackBarType.failure);
         return false;
       }
     } else {

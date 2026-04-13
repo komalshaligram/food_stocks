@@ -64,8 +64,10 @@ class HomeState with _$HomeState {
     required bool? allowOrdersWithoutMinimum,
     required int? noMinimumOrderHours,
     required String? lastOrderAboveMinimumAt,
+    required String? lastOrderAboveMinimumText,
     required String? noMinimumDialogEventKey,
     required String? clubAgentId,
+    required List<SupplierCustomerDetails> supplierCustomerDetails,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -135,7 +137,9 @@ class HomeState with _$HomeState {
         allowOrdersWithoutMinimum: false,
         noMinimumOrderHours: 0,
         lastOrderAboveMinimumAt: '',
+        lastOrderAboveMinimumText: '',
         noMinimumDialogEventKey: '',
         clubAgentId: '',
+        supplierCustomerDetails: [],
       );
 }

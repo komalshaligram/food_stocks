@@ -38,14 +38,7 @@ class ButtonWidget extends StatelessWidget {
         elevation: 0,
         minWidth: width,
         onPressed: onPressed,
-        child: Text(
-          buttonText,
-          style: AppStyles.rkRegularTextStyle(
-            size: fontSize,
-            color: fontColors,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        child: Text(buttonText, style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors, fontWeight: FontWeight.w400)),
       ),
     );
   }

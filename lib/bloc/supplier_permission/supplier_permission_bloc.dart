@@ -26,7 +26,6 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isShimmering: false));
             List<PermissionModel> supplierPermissionList = [];
-
             emit(state.copyWith(isSelectAll: true));
 
             for (int i = 0; i < (response.data?.length ?? 0); i++) {
@@ -37,11 +36,7 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
             }
 
             response.data?.forEach((element) {
-              supplierPermissionList.add(PermissionModel(
-                supplierId: element.supplierId,
-                title: element.supplier?.contactName ?? '',
-                isEnable: element.isAllowed ?? false,
-              ));
+              supplierPermissionList.add(PermissionModel(supplierId: element.supplierId, title: element.supplier?.contactName ?? '', isEnable: element.isAllowed ?? false));
             });
             emit(state.copyWith(supplierPermissionList: supplierPermissionList));
           } else {
@@ -69,7 +64,6 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
           }
           emit(state.copyWith(supplierPermissionList: supplierPermissionList, isRefresh: !state.isRefresh));
         }
-
         emit(state.copyWith(isSelectAll: true));
 
         for (int i = 0; i < (supplierPermissionList.length); i++) {
@@ -81,25 +75,19 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
       } else if (event is _updateSupplierPermissionEvent) {
         try {
           emit(state.copyWith(isUpdateProcess: true));
-
           List<SupplierPermission> updateSupplierPermission = [];
           for (var element in state.supplierPermissionList) {
             updateSupplierPermission.add(SupplierPermission(supplierId: element.supplierId, isAllowed: element.isEnable));
           }
-
           UpdatePermissionModel req = UpdatePermissionModel(supplierPermissions: updateSupplierPermission);
-
           Map<String, dynamic> updatePermissionReq = req.toJson();
-
           updatePermissionReq.removeWhere((key, value) {
             if (value != null) {
               debugPrint("[$key] = $value");
             }
             return value == null;
           });
-
           final response = await DioClient(event.context).put(path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
-
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);

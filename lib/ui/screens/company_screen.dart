@@ -28,11 +28,10 @@ class CompanyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => CompanyBloc()
-        ..add(CompanyEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
-        ..add(CompanyEvent.getCompaniesListEvent(context: context)),
-      child: const CompanyScreenWidget(),
-    );
+        create: (context) => CompanyBloc()
+          ..add(CompanyEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
+          ..add(CompanyEvent.getCompaniesListEvent(context: context)),
+        child: const CompanyScreenWidget());
   }
 }
 
@@ -41,79 +40,73 @@ class CompanyScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CompanyBloc, CompanyState>(
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.pageColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-            child: CommonAppBar(
-              bgColor: AppColors.pageColor,
-              title: AppLocalizations.of(context)?.companies ?? '',
-              iconData: Icons.arrow_back_ios_sharp,
-              onTap: () {
-                Navigator.pop(context);
-              },
+    return BlocBuilder<CompanyBloc, CompanyState>(builder: (context, state) {
+      return Scaffold(
+        backgroundColor: AppColors.pageColor,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+          child: CommonAppBar(
+            bgColor: AppColors.pageColor,
+            title: AppLocalizations.of(context)?.companies ?? '',
+            iconData: Icons.arrow_back_ios_sharp,
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        body: SafeArea(
+          child: SmartRefresher(
+            enablePullDown: true,
+            controller: state.refreshController,
+            header: const RefreshWidget(),
+            footer: CustomFooter(builder: (context, mode) => const CompanyScreenShimmerWidget()),
+            enablePullUp: !state.isBottomOfCompanies,
+            onRefresh: () {
+              context.read<CompanyBloc>().add(CompanyEvent.refreshListEvent(context: context));
+            },
+            onLoading: () {
+              context.read<CompanyBloc>().add(CompanyEvent.getCompaniesListEvent(context: context));
+            },
+            child: SingleChildScrollView(
+              physics: state.companiesList.isEmpty ? const NeverScrollableScrollPhysics() : null,
+              child: Column(children: [
+                state.isShimmering
+                    ? const CompanyScreenShimmerWidget()
+                    : state.companiesList.isEmpty
+                        ? Container(
+                            height: getScreenHeight(context) - 80,
+                            width: getScreenWidth(context),
+                            alignment: Alignment.center,
+                            child: Text(
+                              AppLocalizations.of(context)?.companies_not_available ?? '',
+                              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                            ),
+                          )
+                        : GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.companiesList.length,
+                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
+                            itemBuilder: (context, index) => buildCompanyListItem(
+                                index: index,
+                                context: context,
+                                companyLogo: state.companiesList[index].brandLogo ?? '',
+                                companyName: state.companiesList[index].brandName ?? '',
+                                onTap: () {
+                                  Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
+                                    AppStrings.companyIdString: state.companiesList[index].id ?? '',
+                                    AppStrings.companyName: state.companiesList[index].brandName ?? '',
+                                    AppStrings.companyLogo: state.companiesList[index].brandLogo ?? '',
+                                  });
+                                }),
+                          ),
+              ]),
             ),
           ),
-          body: SafeArea(
-            child: SmartRefresher(
-              enablePullDown: true,
-              controller: state.refreshController,
-              header: const RefreshWidget(),
-              footer: CustomFooter(
-                builder: (context, mode) => const CompanyScreenShimmerWidget(),
-              ),
-              enablePullUp: !state.isBottomOfCompanies,
-              onRefresh: () {
-                context.read<CompanyBloc>().add(CompanyEvent.refreshListEvent(context: context));
-              },
-              onLoading: () {
-                context.read<CompanyBloc>().add(CompanyEvent.getCompaniesListEvent(context: context));
-              },
-              child: SingleChildScrollView(
-                physics: state.companiesList.isEmpty ? const NeverScrollableScrollPhysics() : null,
-                child: Column(
-                  children: [
-                    state.isShimmering
-                        ? const CompanyScreenShimmerWidget()
-                        : state.companiesList.isEmpty
-                            ? Container(
-                                height: getScreenHeight(context) - 80,
-                                width: getScreenWidth(context),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  AppLocalizations.of(context)?.companies_not_available ?? '',
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                ),
-                              )
-                            : GridView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: state.companiesList.length,
-                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
-                                itemBuilder: (context, index) => buildCompanyListItem(
-                                    index: index,
-                                    context: context,
-                                    companyLogo: state.companiesList[index].brandLogo ?? '',
-                                    companyName: state.companiesList[index].brandName ?? '',
-                                    onTap: () {
-                                      Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
-                                        AppStrings.companyIdString: state.companiesList[index].id ?? '',
-                                        AppStrings.companyName: state.companiesList[index].brandName ?? '',
-                                        AppStrings.companyLogo: state.companiesList[index].brandLogo ?? '',
-                                      });
-                                    }),
-                              ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget buildCompanyListItem({
@@ -136,71 +129,54 @@ class CompanyScreenWidget extends StatelessWidget {
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
-        child: Column(
-          children: [
-            Expanded(
-              child: companyLogo.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: "${AppUrlEndPoints.baseFileUrl}$companyLogo",
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.center,
-                      placeholder: (context, url) => CommonShimmerWidget(
-                        child: Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(AppConstants.radius_10),
-                                topRight: Radius.circular(
-                                  AppConstants.radius_10,
-                                )),
+        child: Column(children: [
+          Expanded(
+            child: companyLogo.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: "${AppUrlEndPoints.baseFileUrl}$companyLogo",
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.center,
+                    placeholder: (context, url) => CommonShimmerWidget(
+                          child: Container(
+                            height: getScreenHeight(context),
+                            width: getScreenWidth(context),
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
+                            ),
                           ),
                         ),
-                      ),
-                      errorWidget: (context, url, error) {
-                        return Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          color: AppColors.whiteColor,
-                          child: Image.asset(
-                            AppImagePath.imageNotAvailable5,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
-                    )
-                  : Container(
-                      height: getScreenHeight(context),
-                      width: getScreenWidth(context),
-                      color: AppColors.whiteColor,
-                      child: Image.asset(
-                        AppImagePath.imageNotAvailable5,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    errorWidget: (context, url, error) {
+                      return Container(
+                        height: getScreenHeight(context),
+                        width: getScreenWidth(context),
+                        color: AppColors.whiteColor,
+                        child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
+                      );
+                    })
+                : Container(
+                    height: getScreenHeight(context),
+                    width: getScreenWidth(context),
+                    color: AppColors.whiteColor,
+                    child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
+                  ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
+            decoration: BoxDecoration(
+              gradient: AppColors.appMainGradientColor,
+              borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
             ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
-              decoration: BoxDecoration(
-                gradient: AppColors.appMainGradientColor,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(AppConstants.radius_10),
-                    bottomRight: Radius.circular(
-                      AppConstants.radius_10,
-                    )),
-              ),
-              child: Text(
-                companyName,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
+            child: Text(
+              companyName,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }

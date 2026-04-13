@@ -33,18 +33,11 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       if (event is _selectAgentEvent) {
         emit(state.copyWith(agent: event.agent, ownerList: state.ownerList));
       } else if (event is _getArgumentEvent) {
-        emit(state.copyWith(
-          owner: event.owner,
-        ));
+        emit(state.copyWith(owner: event.owner));
       } else if (event is _selectBusinessTypeEvent) {
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
-            emit(state.copyWith(
-              business: event.business,
-              haveMultiple: element.haveMultiple ?? false,
-              ownerList: state.ownerList,
-              owner: state.ownerList.first,
-            ));
+            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
           }
         }
       } else if (event is _selectOwnerNoEvent) {
@@ -64,9 +57,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
               business: businessTypeList.first.businessTypeName.toString(),
               haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false,
             ));
-            add(FormDataEvent.generalSettings(
-              context: event.context,
-            ));
+            add(FormDataEvent.generalSettings(context: event.context));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -100,9 +91,7 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           SettingResModel response = SettingResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(
-              isRegistrationSuccess: response.data?.registrationSuccessPageSettings?.showRegistrationSuccessPage! ?? false,
-            ));
+            emit(state.copyWith(isRegistrationSuccess: response.data?.registrationSuccessPageSettings?.showRegistrationSuccessPage! ?? false));
             return;
           }
         } catch (_) {}
@@ -116,19 +105,13 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
             AgentModel response = AgentModel.fromJson(res);
             emit(state.copyWith(isShimmering: false));
             final clubAgentId = response.data?.agentId;
-            preferences.setClubAgentId(club_agent_Id: clubAgentId ?? '');
+            preferences.setClubAgentId(clubAgentId: clubAgentId ?? '');
             final agentCode = state.agentCodeController.text.trim();
             if (state.isRegistrationSuccess && agentCode == AppStrings.clubAgentCodeText) {
-              Navigator.pushNamed(
-                event.context,
-                RouteDefine.registrationSuccessScreen.name,
-              );
+              Navigator.pushNamed(event.context, RouteDefine.registrationSuccessScreen.name);
             } else if (!state.isRegistrationSuccess && agentCode == AppStrings.clubAgentCodeText) {
               preferences.setUserLoggedIn(isLoggedIn: true);
-              Navigator.pushNamed(
-                event.context,
-                RouteDefine.bottomNavScreen.name,
-              );
+              Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name);
             } else {
               Navigator.pushNamed(
                 event.context,
@@ -142,13 +125,10 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
             }
           } else {
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                  res['message'].toString().toLocalization(),
-                  event.context,
-                ),
-                type: SnackBarType.failure);
-
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(res['message'].toString().toLocalization(), event.context),
+              type: SnackBarType.failure,
+            );
             emit(state.copyWith(isShimmering: false));
           }
         } on ServerException {

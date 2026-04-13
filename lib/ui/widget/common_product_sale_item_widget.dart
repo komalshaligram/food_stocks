@@ -74,9 +74,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
       ),
       clipBehavior: Clip.hardEdge,
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
@@ -85,58 +83,42 @@ class CommonProductSaleItemWidget extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: onButtonTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                Center(
-                  child: !isGuestUser
-                      ? saleImage.isNotEmpty
-                          ? CachedNetworkImage(
-                              imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
-                              height: getItemHeight(context, false) == 350.0
-                                  ? 190
-                                  : getItemHeight(context, false) == 260.0
-                                      ? 125
-                                      : imageHeight,
-                              fit: BoxFit.fitHeight,
-                              placeholder: (context, url) {
-                                return CommonShimmerWidget(
-                                  child: Container(
-                                    height: getItemHeight(context, false) == 350.0
-                                        ? 190
-                                        : getItemHeight(context, false) == 260.0
-                                            ? 125
-                                            : imageHeight,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.whiteColor,
-                                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorWidget: (context, error, stackTrace) {
-                                return Image.asset(AppImagePath.imageNotAvailable5,
-                                    height: getItemHeight(context, false) == 260.0
-                                        ? 125
-                                        : getItemHeight(context, false) == 350.0
-                                            ? 190
-                                            : imageHeight,
-                                    width: 70,
-                                    fit: BoxFit.cover);
-                              },
-                            )
-                          : Image.asset(
-                              AppImagePath.imageNotAvailable5,
-                              height: getItemHeight(context, false) == 260.0
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(children: [
+            Center(
+              child: !isGuestUser
+                  ? saleImage.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: "${AppUrlEndPoints.baseFileUrl}$saleImage",
+                          height: getItemHeight(context, false) == 350.0
+                              ? 190
+                              : getItemHeight(context, false) == 260.0
                                   ? 125
-                                  : getItemHeight(context, false) == 350.0
-                                      ? 190
-                                      : imageHeight,
-                              width: 70,
-                            )
+                                  : imageHeight,
+                          fit: BoxFit.fitHeight,
+                          placeholder: (context, url) {
+                            return CommonShimmerWidget(
+                              child: Container(
+                                height: getItemHeight(context, false) == 350.0
+                                    ? 190
+                                    : getItemHeight(context, false) == 260.0
+                                        ? 125
+                                        : imageHeight,
+                                width: 70,
+                                decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                              ),
+                            );
+                          },
+                          errorWidget: (context, error, stackTrace) {
+                            return Image.asset(AppImagePath.imageNotAvailable5,
+                                height: getItemHeight(context, false) == 260.0
+                                    ? 125
+                                    : getItemHeight(context, false) == 350.0
+                                        ? 190
+                                        : imageHeight,
+                                width: 70,
+                                fit: BoxFit.cover);
+                          })
                       : Image.asset(
                           AppImagePath.imageNotAvailable5,
                           height: getItemHeight(context, false) == 260.0
@@ -145,239 +127,173 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                                   ? 190
                                   : imageHeight,
                           width: 70,
-                        ),
-                ),
-                2.height,
-                Text(
-                  productName,
-                  style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.font_12,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                2.height,
-                description.isNotEmpty
-                    ? Center(
-                        child: Container(
-                          width: width! - 10,
-                          padding: const EdgeInsets.all(AppConstants.padding_3),
-                          decoration: BoxDecoration(
-                            color: AppColors.saleBGColor,
-                            border: Border.all(color: AppColors.saleBGColor),
-                            borderRadius: BorderRadius.circular(
-                              AppConstants.radius_3,
-                            ),
-                          ),
-                          child: Text(
-                            "${parse(description).body?.text}",
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_10,
-                              color: AppColors.whiteColor,
-                            ),
-                            maxLines: 3,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      )
-                    : 0.height,
-                isGuestUser
-                    ? 0.height
-                    : (productStock) == '0' || productStock == '0.0'
-                        ? Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.only(top: AppConstants.padding_5),
-                            child: Text(
-                              AppLocalizations.of(context)!.out_of_stock1,
-                              textAlign: TextAlign.center,
-                              style: AppStyles.rkBoldTextStyle(
-                                size: AppConstants.font_12,
-                                color: AppColors.redColor,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          )
-                        : lowStock.isNotEmpty
-                            ? Text(
-                                lowStock,
-                                style: AppStyles.rkBoldTextStyle(
-                                  size: AppConstants.font_12,
-                                  color: AppColors.orangeColor,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              )
-                            : 0.width,
-                1.height,
-                Center(child: isPesachLabelShow(isPesach!, context)),
-                3.height,
-                // recommendedRetailConsumerPricerOffer != ''
-                //     ?
-                //     Center(
-                //         child: Container(
-                //             padding: const EdgeInsets.only(left: 5, right: 5),
-                //             decoration: BoxDecoration(
-                //               color: AppColors.clubAgentBGColor,
-                //               border: Border.all(color: AppColors.clubAgentBGColor),
-                //               borderRadius: const BorderRadius.all(
-                //                 Radius.circular(
-                //                   5,
-                //                 ),
-                //               ),
-                //             ),
-                //             child: Text(
-                //               recommendedRetailConsumerPricerOffer!,
-                //               style: AppStyles.rkRegularTextStyle(
-                //                 size: AppConstants.font_13,
-                //                   color: AppColors.whiteColor
-                //               ),
-                //               textAlign: TextAlign.center,
-                //             )))
-                //     : const SizedBox(),
-                isPesach! ? 2.height : 0.height,
-                !isGuestUser
-                    ? isSale!
-                        ? Center(
-                            child: Text(
-                              "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
-                              style: AppStyles.rkBoldTextStyle(
-                                size: AppConstants.font_12,
-                                color: AppColors.blackColor,
-                                fontWeight: FontWeight.w600,
-                              ).copyWith(decoration: TextDecoration.lineThrough),
-                            ),
-                          )
-                        : 0.width
-                    : 0.width,
-              ],
+                        )
+                  : Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      height: getItemHeight(context, false) == 260.0
+                          ? 125
+                          : getItemHeight(context, false) == 350.0
+                              ? 190
+                              : imageHeight,
+                      width: 70,
+                    ),
             ),
-            !isGuestUser
+            2.height,
+            Text(
+              productName,
+              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            2.height,
+            description.isNotEmpty
                 ? Center(
-                    child: CommonProductButtonWidget(
-                      title: isSale! ? "${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}" : "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
-                      onPressed: onButtonTap,
-                      // height: 35,
-                      width: 110,
-                      textColor: AppColors.whiteColor,
-                      bgColor: AppColors.mainColor,
-                      borderRadius: AppConstants.radius_3,
-                      textSize: AppConstants.font_12,
-                    ),
-                  )
-                : 0.width,
-            // 3.height,
-            if (isSale! && minQuantity.toString() != '0' && maxQuantity.toString() != '100')
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${AppLocalizations.of(context)!.minGrid}: ${minQuantity.toString()} / ${AppLocalizations.of(context)!.maxGrid}: ${maxQuantity.toString()}',
-                    style: AppStyles.rkRegularTextStyle(
-                      color: AppColors.redColor,
-                      size: AppConstants.font_10,
-                    ),
-                  ),
-                ],
-              )
-            else if (isSale! && maxQuantity.toString() == '100' && minQuantity.toString() != '0')
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${AppLocalizations.of(context)!.minimumGrid}: ${minQuantity.toString()}',
-                    style: AppStyles.rkRegularTextStyle(
-                      color: AppColors.redColor,
-                      size: AppConstants.font_10,
-                    ),
-                  ),
-                ],
-              )
-            else if (isSale! && minQuantity.toString() == '0' && maxQuantity.toString() != '0' && maxQuantity.toString() != '100')
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${AppLocalizations.of(context)!.maximumGrid}: ${maxQuantity.toString()}',
-                    style: AppStyles.rkRegularTextStyle(
-                      color: AppColors.redColor,
-                      size: AppConstants.font_10,
-                    ),
-                  ),
-                ],
-              )
-            else if (isSale! && minQuantity.toString() == '0' && maxQuantity.toString() == '0')
-              const IgnorePointer()
-            else
-              const IgnorePointer(),
-
-            isMixedSale!
-                ? Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.mixedSale,
-                      style: AppStyles.rkRegularTextStyle(
-                        color: AppColors.redColor,
-                        size: AppConstants.font_10,
+                    child: Container(
+                      width: width! - 10,
+                      padding: const EdgeInsets.all(AppConstants.padding_3),
+                      decoration: BoxDecoration(
+                        color: AppColors.saleBGColor,
+                        border: Border.all(color: AppColors.saleBGColor),
+                        borderRadius: BorderRadius.circular(AppConstants.radius_3),
+                      ),
+                      child: Text(
+                        "${parse(description).body?.text}",
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor),
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   )
-                : const IgnorePointer(),
-            const Spacer(),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: onQuantityIncreaseTap,
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppConstants.radius_2),
-                      border: Border.all(color: AppColors.greyColor),
-                      color: AppColors.pageColor,
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 15,
-                    ),
+                : 0.height,
+            isGuestUser
+                ? 0.height
+                : (productStock) == '0' || productStock == '0.0'
+                    ? Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(top: AppConstants.padding_5),
+                        child: Text(
+                          AppLocalizations.of(context)!.out_of_stock1,
+                          textAlign: TextAlign.center,
+                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
+                        ),
+                      )
+                    : lowStock.isNotEmpty
+                        ? Text(
+                            lowStock,
+                            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
+                          )
+                        : 0.width,
+            1.height,
+            Center(child: isPesachLabelShow(isPesach!, context)),
+            3.height,
+            // recommendedRetailConsumerPricerOffer != ''
+            //     ?
+            //     Center(
+            //         child: Container(
+            //             padding: const EdgeInsets.only(left: 5, right: 5),
+            //             decoration: BoxDecoration(
+            //               color: AppColors.clubAgentBGColor,
+            //               border: Border.all(color: AppColors.clubAgentBGColor),
+            //               borderRadius: const BorderRadius.all(
+            //                 Radius.circular(
+            //                   5,
+            //                 ),
+            //               ),
+            //             ),
+            //             child: Text(
+            //               recommendedRetailConsumerPricerOffer!,
+            //               style: AppStyles.rkRegularTextStyle(
+            //                 size: AppConstants.font_13,
+            //                   color: AppColors.whiteColor
+            //               ),
+            //               textAlign: TextAlign.center,
+            //             )))
+            //     : const SizedBox(),
+            isPesach! ? 2.height : 0.height,
+            !isGuestUser
+                ? isSale!
+                    ? Center(
+                        child: Text(
+                          "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
+                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600).copyWith(
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      )
+                    : 0.width
+                : 0.width,
+          ]),
+          !isGuestUser
+              ? Center(
+                  child: CommonProductButtonWidget(
+                    title: isSale! ? "${AppLocalizations.of(context)!.currency}${discountedPrice.toStringAsFixed(2)}" : "${AppLocalizations.of(context)!.currency}${originalPrice?.toStringAsFixed(2)}",
+                    onPressed: onButtonTap,
+                    width: 110,
+                    textColor: AppColors.whiteColor,
+                    bgColor: AppColors.mainColor,
+                    borderRadius: AppConstants.radius_3,
+                    textSize: AppConstants.font_12,
                   ),
-                ),
-                15.width,
-                Text(
-                  quantity.toString(),
-                  style: AppStyles.rkRegularTextStyle(
-                    color: AppColors.blackColor,
-                    size: AppConstants.font_17,
-                  ),
-                ),
-                15.width,
-                GestureDetector(
-                  onTap: onQuantityDecreaseTap,
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 25,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                      border: Border.all(color: AppColors.greyColor),
-                      color: AppColors.pageColor,
-                    ),
-                    child: const Icon(
-                      Icons.remove,
-                      size: 15,
-                    ),
-                  ),
-                ),
-              ],
+                )
+              : 0.width,
+          if (isSale! && minQuantity.toString() != '0' && maxQuantity.toString() != '100')
+            Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                '${AppLocalizations.of(context)!.minGrid}: ${minQuantity.toString()} / ${AppLocalizations.of(context)!.maxGrid}: ${maxQuantity.toString()}',
+                style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_10),
+              ),
+            ])
+          else if (isSale! && maxQuantity.toString() == '100' && minQuantity.toString() != '0')
+            Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                '${AppLocalizations.of(context)!.minimumGrid}: ${minQuantity.toString()}',
+                style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_10),
+              ),
+            ])
+          else if (isSale! && minQuantity.toString() == '0' && maxQuantity.toString() != '0' && maxQuantity.toString() != '100')
+            Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                '${AppLocalizations.of(context)!.maximumGrid}: ${maxQuantity.toString()}',
+                style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_10),
+              ),
+            ])
+          else if (isSale! && minQuantity.toString() == '0' && maxQuantity.toString() == '0')
+            const IgnorePointer()
+          else
+            const IgnorePointer(),
+          isMixedSale!
+              ? Center(
+                  child: Text(AppLocalizations.of(context)!.mixedSale, style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_10)),
+                )
+              : const IgnorePointer(),
+          const Spacer(),
+          Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+            GestureDetector(
+              onTap: onQuantityIncreaseTap,
+              child: Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_2), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                child: const Icon(Icons.add, size: 15),
+              ),
             ),
-            5.height,
-          ],
-        ),
+            15.width,
+            Text(quantity.toString(), style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_17)),
+            15.width,
+            GestureDetector(
+              onTap: onQuantityDecreaseTap,
+              child: Container(
+                alignment: Alignment.center,
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
+                child: const Icon(Icons.remove, size: 15),
+              ),
+            ),
+          ]),
+          5.height,
+        ]),
       ),
     );
   }

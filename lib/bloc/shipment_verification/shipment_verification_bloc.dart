@@ -28,7 +28,6 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
         emit(state.copyWith(isDelete: true));
       } else if (event is _deliveryConfirmEvent) {
         emit(state.copyWith(isLoading: true));
-
         String signUrl = '';
         String driverSignUrl = '';
 
@@ -36,14 +35,8 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
           if (event.signPath.isNotEmpty) {
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrlEndPoints.fileUploadUrl,
-              formData: FormData.fromMap({
-                AppStrings.signatureString: await MultipartFile.fromFile(
-                  event.signPath,
-                  contentType: MediaType('image', 'png'),
-                ),
-              }),
+              formData: FormData.fromMap({AppStrings.signatureString: await MultipartFile.fromFile(event.signPath, contentType: MediaType('image', 'png'))}),
             );
-
             final signModel = FileUploadModel.fromJson(response);
             signUrl = signModel.filepath ?? '';
           }
@@ -51,35 +44,21 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
           if (event.driverSignPath.isNotEmpty) {
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrlEndPoints.fileUploadUrl,
-              formData: FormData.fromMap({
-                AppStrings.signatureString: await MultipartFile.fromFile(
-                  event.driverSignPath,
-                  contentType: MediaType('image', 'png'),
-                ),
-              }),
+              formData: FormData.fromMap({AppStrings.signatureString: await MultipartFile.fromFile(event.driverSignPath, contentType: MediaType('image', 'png'))}),
             );
-
             final driverSignModel = FileUploadModel.fromJson(response);
             driverSignUrl = driverSignModel.filepath ?? '';
           }
 
           if (signUrl.isEmpty) {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.signature_missing,
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.signature_missing, type: SnackBarType.failure);
             return;
           }
 
           if (driverSignUrl.isEmpty) {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.driver_signature_missing,
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.driver_signature_missing, type: SnackBarType.failure);
             return;
           }
 
@@ -94,37 +73,20 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
             driverName: state.driverNameController.text,
           );
 
-          final response = await DioClient(event.context).post(
-            '${AppUrlEndPoints.deliveryConfirmUrl}${event.orderId}',
-            data: deliveryConfirmRequest,
-          );
+          final response = await DioClient(event.context).post('${AppUrlEndPoints.deliveryConfirmUrl}${event.orderId}', data: deliveryConfirmRequest);
           if (response[AppStrings.statusString] == 200) {
             emit(state.copyWith(isLoading: false));
-
-            Navigator.pushReplacementNamed(
-              event.context,
-              RouteDefine.orderScreen.name,
-              arguments: {
-                AppStrings.pushNavigationString: 'profileScreen',
-              },
-            );
-
+            Navigator.pushReplacementNamed(event.context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                response[AppStrings.messageString].toString().toLocalization(),
-                event.context,
-              ),
+              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
               type: SnackBarType.success,
             );
           } else {
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                response[AppStrings.messageString].toString().toLocalization(),
-                event.context,
-              ),
+              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
               type: SnackBarType.failure,
             );
           }

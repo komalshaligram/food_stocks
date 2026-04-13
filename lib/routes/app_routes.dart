@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_stock/ui/screens/my_clients_screen.dart';
 import 'package:food_stock/ui/screens/return_summary_screen.dart';
 import 'package:food_stock/ui/screens/scan_return_product_screen.dart';
 import '../../ui/screens/manage_credit_card.dart';
@@ -135,6 +136,7 @@ enum RouteDefine {
   orderRefundsScreen,
   myAccountingCardScreen,
   registrationSuccessScreen,
+  myClientsScreen,
 }
 
 class AppRouting {
@@ -205,6 +207,7 @@ class AppRouting {
       RouteDefine.orderRefundsScreen.name: (_) => OrderRefundsRoute.route,
       RouteDefine.myAccountingCardScreen.name: (_) => MyAccountingCardRoute.route,
       RouteDefine.registrationSuccessScreen.name: (_) => RegistrationSuccessRoute.route,
+      RouteDefine.myClientsScreen.name: (_) => MyClientsRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

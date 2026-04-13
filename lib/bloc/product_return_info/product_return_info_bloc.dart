@@ -47,6 +47,20 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         tempList.add(model2);
         tempList.add(model3);
         tempList.add(model4);
+
+        final Map<String, String> reasonsMap = {
+          'Product did not arrive at all': AppLocalizations.of(event.context)!.product_did_not_arrive_at_all,
+          'המוצר לא הגיע בכלל': AppLocalizations.of(event.context)!.product_did_not_arrive_at_all,
+          'Product arrived damaged': AppLocalizations.of(event.context)!.product_arrived_damaged,
+          'המוצר הגיע פגום': AppLocalizations.of(event.context)!.product_arrived_damaged,
+          'Product arrived incomplete': AppLocalizations.of(event.context)!.product_arrived_incomplete,
+          'המוצר הגיע לא שלם': AppLocalizations.of(event.context)!.product_arrived_incomplete,
+          'Expiration date issue': AppLocalizations.of(event.context)!.expiration_date_issue,
+          'בעיית תאריך תפוגה': AppLocalizations.of(event.context)!.expiration_date_issue,
+          'Wrong product received': AppLocalizations.of(event.context)!.wrong_product_received,
+          'התקבל מוצר שגוי': AppLocalizations.of(event.context)!.wrong_product_received,
+        };
+
         if (map.isNotEmpty) {
           if (map['list'] != null) {
             List<ReturnProduct> tempProductList = [];
@@ -71,11 +85,19 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
               );
             }
             int index = map['index'] ?? 0;
-            int radioIndex = tempList.indexWhere((e) => e.text.toLowerCase() == tempProductList[index].reasonToReturn?.toLowerCase()).toInt();
+            String backendReason = tempProductList[index].reasonToReturn ?? '';
+            String normalizedReason = reasonsMap[backendReason] ?? backendReason;
+            int radioIndex = tempList.indexWhere(
+              (e) => e.text.toLowerCase().trim() == normalizedReason.toLowerCase().trim(),
+            );
+
+            int selectedId = radioIndex >= 0 ? tempList[radioIndex].id : 0;
+
+            List<String> proofList = tempProductList[index].proofImages ?? [];
 
             emit(
               state.copyWith(
-                selectedRadioTile: radioIndex + 1,
+                selectedRadioTile: selectedId,
                 returnId: tempProductList.elementAt(index).returnId ?? '',
                 supplierName: tempProductList.elementAt(index).supplierName ?? '',
                 supplierId: tempProductList.elementAt(index).supplierId ?? '',
@@ -87,20 +109,18 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 productImg: (tempProductList.elementAt(index).productImg ?? ''),
                 mainIndex: tempProductList[index].proofImages == null ? -1 : index,
                 productQty: tempProductList[index].totalUnits ?? 1,
-                proofImagesList: tempProductList.elementAt(index).proofImages ?? [],
+                proofImagesList: proofList,
                 reason: tempProductList.elementAt(index).reasonToReturn ?? '',
-                addNoteController: TextEditingController(
-                  text: tempProductList.elementAt(index).notes ?? '',
-                ),
+                addNoteController: TextEditingController(text: tempProductList.elementAt(index).notes ?? ''),
               ),
             );
             emit(state.copyWith(
               isFromPending: map['status'] ?? false,
               language: preferences.getAppLanguage(),
               radioList: tempList,
-              proofFile: File(state.proofImagesList.isNotEmpty ? AppUrlEndPoints.baseFileUrl + state.proofImagesList[0] : ''),
-              proofFile1: File(state.proofImagesList.length > 1 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[1]) : ''),
-              proofFile2: File(state.proofImagesList.length > 2 ? (AppUrlEndPoints.baseFileUrl + state.proofImagesList[2]) : ''),
+              proofFile: proofList.isNotEmpty ? File(AppUrlEndPoints.baseFileUrl + proofList[0]) : File(''),
+              proofFile1: proofList.length > 1 ? File(AppUrlEndPoints.baseFileUrl + proofList[1]) : File(''),
+              proofFile2: proofList.length > 2 ? File(AppUrlEndPoints.baseFileUrl + proofList[2]) : File(''),
             ));
           }
         }
@@ -156,14 +176,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
       } else if (event is _removeProductEvent) {
         if (state.returnProductList.length > 1) {
           final updatedList = List<ReturnProduct>.from(state.returnProductList);
-
           updatedList.removeWhere((returnProduct) => returnProduct.returnProductId == event.returnProductId);
-
           emit(state.copyWith(returnProductList: updatedList));
-
-          add(ProductReturnInfoEvent.updateReturnEvent(
-            context: event.context,
-          ));
+          add(ProductReturnInfoEvent.updateReturnEvent(context: event.context));
         }
       } else if (event is _deleteEvent) {
         List<ReturnProduct> list = [];
@@ -174,10 +189,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         } else {
           DeleteReturnReq req = DeleteReturnReq(ids: [state.returnProductList.first.returnId ?? '']);
           try {
-            final res = await DioClient(event.context).post(
-              AppUrlEndPoints.deleteReturnUrl,
-              data: req.toJson(),
-            );
+            final res = await DioClient(event.context).post(AppUrlEndPoints.deleteReturnUrl, data: req.toJson());
             if (res[AppStrings.statusString] == AppConstants.code_200) {
               emit(state.copyWith(returnProductList: []));
               Navigator.of(event.context).popUntil((route) => route.isFirst);
@@ -200,15 +212,12 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
-          String imageSize = getFileSizeString(
-            bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length(),
-          );
+          String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length());
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
           imgList.addAll(state.proofImagesList);
-
           final response = await DioClient(event.context).uploadFileProgressWithFormData(
             path: AppUrlEndPoints.fileUploadUrl,
             formData: FormData.fromMap(
@@ -239,19 +248,13 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
         }
       } else if (event is _productIncrementEvent) {
         if (state.updateId.isEmpty) {
-          emit(state.copyWith(
-            productQty: event.productQuantity.round() + 1,
-          ));
+          emit(state.copyWith(productQty: event.productQuantity.round() + 1));
         } else {
-          emit(state.copyWith(
-            productQty: event.productQuantity.round() + 1,
-          ));
+          emit(state.copyWith(productQty: event.productQuantity.round() + 1));
         }
       } else if (event is _productDecrementEvent) {
         if (event.productQuantity >= 1) {
-          emit(state.copyWith(
-            productQty: event.productQuantity.round() - 1,
-          ));
+          emit(state.copyWith(productQty: event.productQuantity.round() - 1));
         }
       } else if (event is _radioButtonEvent) {
         emit(state.copyWith(selectedRadioTile: event.selectRadioTile, reason: event.reason));
@@ -283,10 +286,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             supplierId: '',
             isDraft: true,
           );
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.createReturnUrl,
-            data: reqModel.toJson(),
-          );
+          final res = await DioClient(event.context).post(AppUrlEndPoints.createReturnUrl, data: reqModel.toJson());
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
             List<ReturnProduct> list = [];
@@ -316,14 +316,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             });
           } else if (resModel.status == AppConstants.code_403) {
             emit(state.copyWith(isShimmer: false));
-
             await showDialog(
               context: event.context,
-              builder: (_) => CallAgentDialog(
-                phoneNumber: resModel.agentPhoneNumber ?? '',
-                message: res[AppStrings.messageString],
-                language: state.language,
-              ),
+              builder: (_) => CallAgentDialog(phoneNumber: resModel.agentPhoneNumber ?? '', message: res[AppStrings.messageString], language: state.language),
             );
           } else {
             CustomSnackBar.showSnackBar(
@@ -363,10 +358,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             returnProducts: list,
             subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
           );
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId}',
-            data: reqModel.toJson(),
-          );
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId}', data: reqModel.toJson());
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
             List<ReturnProduct> list = [];
@@ -389,13 +381,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 ));
               }
             }
-
-            emit(state.copyWith(
-              returnProductList: list,
-              isShimmer: false,
-              returnId: state.returnProductList.first.returnId ?? '',
-            ));
-
+            emit(state.copyWith(returnProductList: list, isShimmer: false, returnId: state.returnProductList.first.returnId ?? ''));
             Navigator.pushReplacementNamed(event.context, RouteDefine.createProductReturnListScreen.name, arguments: {
               'list': list,
               AppStrings.isUpdateParamString: false,
@@ -403,14 +389,9 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
             });
           } else if (resModel.status == AppConstants.code_403) {
             emit(state.copyWith(isShimmer: false));
-
             await showDialog(
               context: event.context,
-              builder: (_) => CallAgentDialog(
-                phoneNumber: resModel.agentPhoneNumber ?? '',
-                message: res[AppStrings.messageString],
-                language: state.language,
-              ),
+              builder: (_) => CallAgentDialog(phoneNumber: resModel.agentPhoneNumber ?? '', message: res[AppStrings.messageString], language: state.language),
             );
           } else {
             CustomSnackBar.showSnackBar(
@@ -430,7 +411,6 @@ class CallAgentDialog extends StatelessWidget {
   final String phoneNumber;
   final String message;
   final String language;
-
   const CallAgentDialog({Key? key, required this.phoneNumber, required this.message, required this.language}) : super(key: key);
 
   @override
@@ -452,7 +432,6 @@ class CallAgentDialog extends StatelessWidget {
               InkWell(
                 onTap: () async {
                   final Uri callUri = Uri(scheme: 'tel', path: phoneNumber);
-
                   if (await canLaunchUrl(callUri)) {
                     await launchUrl(callUri);
                   }
@@ -464,18 +443,11 @@ class CallAgentDialog extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.call,
-                        color: AppColors.whiteColor,
-                        size: AppConstants.smallFont,
-                      ),
+                      Icon(Icons.call, color: AppColors.whiteColor, size: AppConstants.smallFont),
                       const SizedBox(width: 6),
                       Text(
                         AppLocalizations.of(context)!.call_the_agent,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.whiteColor,
-                        ),
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor),
                       ),
                     ],
                   ),

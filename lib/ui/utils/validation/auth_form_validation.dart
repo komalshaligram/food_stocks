@@ -5,9 +5,7 @@ import 'form_field_validation.dart';
 class AuthFormValidation {
   FormFieldValidation formFieldValidation = FormFieldValidation();
 
-  String? formValidation(String value, String field, int availableQtyVal, BuildContext context,{
-  int? availableQty,
-  }) {
+  String? formValidation(String value, String field, int availableQtyVal, BuildContext context, {int? availableQty}) {
     switch (field) {
       case AppStrings.emailValString:
         return formFieldValidation.emailField(value, context);

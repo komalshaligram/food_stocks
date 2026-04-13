@@ -24,10 +24,7 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
       if (event is _getCreditCardInfoEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getProfileDetailsUrl,
-            data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
-          );
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
           ProfileDetailsResModel resModel = ProfileDetailsResModel.fromJson(res);
           if (resModel.status == AppConstants.code_200) {
             preferences.setPaymentMethod(method: resModel.data?.clients?.first.clientDetail?.paymentType ?? '');

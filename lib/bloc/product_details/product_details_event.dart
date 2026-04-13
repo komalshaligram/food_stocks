@@ -2,14 +2,9 @@ part of 'product_details_bloc.dart';
 
 @freezed
 class ProductDetailsEvent with _$ProductDetailsEvent {
-  const factory ProductDetailsEvent.productProblemEvent({
-    required bool isProductProblem,
-    required int index,
-  }) = _productProblemEvent;
+  const factory ProductDetailsEvent.productProblemEvent({required bool isProductProblem, required int index}) = _productProblemEvent;
 
-  const factory ProductDetailsEvent.radioButtonEvent({
-    required int selectRadioTile,
-  }) = _radioButtonEvent;
+  const factory ProductDetailsEvent.radioButtonEvent({required int selectRadioTile}) = _radioButtonEvent;
 
   const factory ProductDetailsEvent.productIncrementEvent({
     required int productQuantity,
@@ -50,15 +45,9 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
 
   const factory ProductDetailsEvent.checkAllEvent() = _checkAllEvent;
 
-  const factory ProductDetailsEvent.getOrderByIdEvent({
-    required BuildContext context,
-    required String orderId,
-  }) = _getOrderByIdEvent;
+  const factory ProductDetailsEvent.getOrderByIdEvent({required BuildContext context, required String orderId}) = _getOrderByIdEvent;
 
-  const factory ProductDetailsEvent.getBottomSheetDataEvent({
-    required BuildContext context,
-    required String notes,
-  }) = _getBottomSheetDataEvent;
+  const factory ProductDetailsEvent.getBottomSheetDataEvent({required BuildContext context, required String notes}) = _getBottomSheetDataEvent;
 
   const factory ProductDetailsEvent.removeIssueEvent({
     required BuildContext context,
@@ -78,9 +67,7 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required BuildContext context,
   }) = _getAllCartEvent;
 
-  const factory ProductDetailsEvent.getPermissionList({
-    required BuildContext context,
-  }) = _getPermissionList;
+  const factory ProductDetailsEvent.getPermissionList({required BuildContext context}) = _getPermissionList;
 
   factory ProductDetailsEvent.pickDocumentEvent({
     required BuildContext context,
@@ -90,10 +77,7 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required int selectedRadio,
   }) = _pickDocumentEvent;
 
-  factory ProductDetailsEvent.getPickDocumentEvent({
-    required BuildContext context,
-    required List<String>? proofImages,
-  }) = _getPickDocumentEvent;
+  factory ProductDetailsEvent.getPickDocumentEvent({required BuildContext context, required List<String>? proofImages}) = _getPickDocumentEvent;
 
   factory ProductDetailsEvent.deleteFileEvent({
     required int index,
@@ -139,10 +123,7 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required bool isRemoved,
   }) = _updateReturnEvent;
 
-  factory ProductDetailsEvent.getReturnListEvent({
-    required BuildContext context,
-    List<String>? excludeBarcodes,
-  }) = _getReturnListEvent;
+  factory ProductDetailsEvent.getReturnListEvent({required BuildContext context, List<String>? excludeBarcodes}) = _getReturnListEvent;
 
   const factory ProductDetailsEvent.getArgumentEvent({
     required dynamic arguments,
@@ -159,14 +140,7 @@ class ProductDetailsEvent with _$ProductDetailsEvent {
     required OrdersBySupplier orderSupplierProduct,
   }) = _deleteEvent;
 
-  factory ProductDetailsEvent.pickProofDocumentEvent({
-    required BuildContext context,
-    required bool isFromCamera,
-    required int value,
-  }) = _pickProofDocumentEvent;
+  factory ProductDetailsEvent.pickProofDocumentEvent({required BuildContext context, required bool isFromCamera, required int value}) = _pickProofDocumentEvent;
 
-  factory ProductDetailsEvent.deleteProofFileEvent({
-    required int index,
-    required BuildContext context,
-  }) = _deleteProofFileEvent;
+  factory ProductDetailsEvent.deleteProofFileEvent({required int index, required BuildContext context}) = _deleteProofFileEvent;
 }

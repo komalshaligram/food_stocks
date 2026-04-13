@@ -24,12 +24,8 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
 
       if (event is _getOrderByIdEvent) {
         try {
-          final res = await DioClient(event.context).get(
-            path: '${AppUrlEndPoints.getOrderById}${event.orderId}',
-          );
-
+          final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getOrderById}${event.orderId}');
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
-
           final String statusData = preferences.getOrderStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
           emit(state.copyWith(statusData: statusList, language: preferences.getAppLanguage()));

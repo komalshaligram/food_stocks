@@ -21,19 +21,13 @@ class WebviewBloc extends Bloc<WebViewEvent, WebViewState> {
     on<_updateMaintenanceEvent>(_onUpdateMaintenance);
   }
 
-  Future<void> _onGeneralSettings(
-      _generalSettings event,
-      Emitter<WebViewState> emit,
-      ) async {
+  Future<void> _onGeneralSettings(_generalSettings event, Emitter<WebViewState> emit) async {
     emit(state.copyWith(isShimmering: true));
 
     try {
       final prefs = await SharedPreferences.getInstance();
       final preferences = SharedPreferencesHelper(prefs: prefs);
-
-      final res = await DioClient(event.context)
-          .get(path: AppUrlEndPoints.generalSettingUrl);
-
+      final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
       final response = SettingResModel.fromJson(res);
 
       if (response.status == AppConstants.code_200) {
@@ -42,10 +36,8 @@ class WebviewBloc extends Bloc<WebViewEvent, WebViewState> {
           language: preferences.getAppLanguage(),
           isAppOnMaintenance: preferences.getAppOnMaintenance(),
           showClientDataOnApp: preferences.getClientDataOnApp(),
-          screenEnglishTitle:
-          response.data?.dataWebViewSettings?.screenEnglishTitle,
-          screenHebrewTitle:
-          response.data?.dataWebViewSettings?.screenHebrewTitle,
+          screenEnglishTitle: response.data?.dataWebViewSettings?.screenEnglishTitle,
+          screenHebrewTitle: response.data?.dataWebViewSettings?.screenHebrewTitle,
           userId: preferences.getUserId(),
           baseUrl: response.data?.dataWebViewSettings?.baseUrl,
         ));
@@ -56,22 +48,14 @@ class WebviewBloc extends Bloc<WebViewEvent, WebViewState> {
       emit(state.copyWith(isShimmering: false));
     } catch (e) {
       emit(state.copyWith(isShimmering: false));
-      CustomSnackBar.showSnackBar(
-        context: event.context,
-        title: e.toString(),
-        type: SnackBarType.failure,
-      );
+      CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
     }
   }
 
-  void _onUpdateMaintenance(
-      _updateMaintenanceEvent event,
-      Emitter<WebViewState> emit,
-      ) {
+  void _onUpdateMaintenance(_updateMaintenanceEvent event, Emitter<WebViewState> emit) {
     emit(state.copyWith(isDialogOpen: true));
   }
 }
-
 
 // OLD CODE
 

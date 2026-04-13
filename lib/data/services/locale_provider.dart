@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LocaleProvider extends ChangeNotifier {
   Locale? _locale;
-
   Locale? get locale => _locale;
 
   Future<void> setAppLocale({Locale? locale}) async {

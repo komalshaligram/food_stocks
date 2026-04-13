@@ -43,33 +43,27 @@ class CommonOrderContentWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: backGroundColor,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(AppConstants.radius_5),
-            ),
+            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
             border: Border.all(color: borderCoder, width: 1),
           ),
           padding: EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: columnPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                title,
-                style: AppStyles.rkRegularTextStyle(size: titleTextSize, color: titleColor, fontWeight: FontWeight.normal),
-                maxLines: titleMaxLine,
-                overflow: TextOverflow.ellipsis,
-              ),
-              5.height,
-              value == ''
-                  ? const IgnorePointer()
-                  : Text(
-                      value,
-                      style: AppStyles.rkRegularTextStyle(size: valueTextSize, color: valueColor, fontWeight: valueTextWeight),
-                      maxLines: maxLine,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-            ],
-          ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+            Text(
+              title,
+              style: AppStyles.rkRegularTextStyle(size: titleTextSize, color: titleColor, fontWeight: FontWeight.normal),
+              maxLines: titleMaxLine,
+              overflow: TextOverflow.ellipsis,
+            ),
+            5.height,
+            value == ''
+                ? const IgnorePointer()
+                : Text(
+                    value,
+                    style: AppStyles.rkRegularTextStyle(size: valueTextSize, color: valueColor, fontWeight: valueTextWeight),
+                    maxLines: maxLine,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+          ]),
         ));
   }
 }

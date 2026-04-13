@@ -1,5 +1,4 @@
 class AppImagePath {
-
   ///svg
   static const String splashLogo = 'assets/images/tavili_splash_logo.svg';
   static const String clubAgentLogo = 'assets/images/tavili_club_agent_logo.png';
@@ -24,7 +23,6 @@ class AppImagePath {
 
   ///pngs
   static const String successIcon = 'assets/images/icon_success.png';
-  static const String imageNotAvailable5 =
-      'assets/images/image_not_available5.png';
+  static const String imageNotAvailable5 = 'assets/images/image_not_available5.png';
   static const String chipIcon = 'assets/images/chip.png';
 }

@@ -13,23 +13,19 @@ class RelatedProductShimmerWidget extends StatelessWidget {
       height: getItemHeight(context, false),
       width: double.maxFinite - 50,
       child: ListView.builder(
-        itemCount: 3,
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return CommonShimmerWidget(
-            child: Container(
-              height: getItemHeight(context, false),
-              width: 150,
-              margin: const EdgeInsets.all(AppConstants.padding_10),
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          itemCount: 3,
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return CommonShimmerWidget(
+              child: Container(
+                height: getItemHeight(context, false),
+                width: 150,
+                margin: const EdgeInsets.all(AppConstants.padding_10),
+                decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
               ),
-            ),
-          );
-        },
-      ),
+            );
+          }),
     );
   }
 
@@ -39,10 +35,7 @@ class RelatedProductShimmerWidget extends StatelessWidget {
         height: height ?? AppConstants.shimmerTextHeight,
         width: width,
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
       ),
     );
   }

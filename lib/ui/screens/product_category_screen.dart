@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/product_category/product_category_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -32,14 +31,8 @@ class ProductCategoryScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => ProductCategoryBloc()
-        ..add(ProductCategoryEvent.updateGlobalSearchEvent(
-          search: args?[AppStrings.searchString] ?? '',
-          searchList: args?[AppStrings.searchResultString] ?? [],
-        ))
-        ..add(ProductCategoryEvent.setSearchNavEvent(
-          reqSearch: args?[AppStrings.reqSearchString] ?? '',
-          isFromStoreCategory: args?[AppStrings.fromStoreCategoryString] ?? false,
-        ))
+        ..add(ProductCategoryEvent.updateGlobalSearchEvent(search: args?[AppStrings.searchString] ?? '', searchList: args?[AppStrings.searchResultString] ?? []))
+        ..add(ProductCategoryEvent.setSearchNavEvent(reqSearch: args?[AppStrings.reqSearchString] ?? '', isFromStoreCategory: args?[AppStrings.fromStoreCategoryString] ?? false))
         ..add(ProductCategoryEvent.getProductCategoriesListEvent(context: context)),
       child: const ProductCategoryScreenWidget(),
     );
@@ -51,163 +44,129 @@ class ProductCategoryScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
-      builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () {
-            Navigator.pop(context, {AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
-            return Future.value(false);
-          },
-          child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-            floatingActionButton: FloatingActionButton(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              onPressed: () {
-                Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
-              },
-              child: Stack(
-                children: [
-                  Container(
-                    height: 50,
-                    width: 50,
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.transparent, width: 1),
-                        gradient: AppColors.appMainGradientColor,
-                        borderRadius: const BorderRadius.all(Radius.circular(
-                          AppConstants.radius_100,
-                        ))),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        AppImagePath.cart,
-                        height: 26,
-                        width: 26,
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
-                      ),
-                    ),
-                  ),
-                  state.cartCount != 0
-                      ? Positioned(
-                          top: 5,
-                          right: context.rtl ? null : 0,
-                          left: context.rtl ? 0 : null,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 18,
-                                width: 24,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.mainColor,
-                                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                                  border: Border.all(color: AppColors.whiteColor, width: 1),
-                                ),
-                                child: Text(
-                                  '${state.cartCount}',
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor),
-                                ),
-                              ),
-                            ],
+    return BlocBuilder<ProductCategoryBloc, ProductCategoryState>(builder: (context, state) {
+      return WillPopScope(
+        onWillPop: () {
+          Navigator.pop(context, {AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+          return Future.value(false);
+        },
+        child: Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+          floatingActionButton: FloatingActionButton(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            onPressed: () {
+              Navigator.pushNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
+            },
+            child: Stack(children: [
+              cartImageWidget(),
+              state.cartCount != 0
+                  ? Positioned(
+                      top: 5,
+                      right: context.rtl ? null : 0,
+                      left: context.rtl ? 0 : null,
+                      child: Stack(children: [
+                        Container(
+                          height: 18,
+                          width: 24,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: AppColors.mainColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                            border: Border.all(color: AppColors.whiteColor, width: 1),
                           ),
-                        )
-                      : 0.width,
-                ],
-              ),
-            ),
-            backgroundColor: AppColors.pageColor,
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-              child: CommonAppBar(
+                          child: Text('${state.cartCount}', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor)),
+                        ),
+                      ]),
+                    )
+                  : 0.width,
+            ]),
+          ),
+          backgroundColor: AppColors.pageColor,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+            child: CommonAppBar(
                 bgColor: AppColors.pageColor,
                 title: AppLocalizations.of(context)!.categories,
                 iconData: Icons.arrow_back_ios_sharp,
                 onTap: () {
                   Navigator.pop(context, {AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
+                }),
+          ),
+          body: FocusDetector(
+            onFocusGained: () {
+              context.read<ProductCategoryBloc>().add(const ProductCategoryEvent.getCartCountEvent());
+            },
+            child: SafeArea(
+              child: SmartRefresher(
+                enablePullDown: true,
+                controller: state.refreshController,
+                header: const RefreshWidget(),
+                footer: CustomFooter(
+                  builder: (context, mode) => const ProductCategoryScreenShimmerWidget(),
+                ),
+                enablePullUp: !state.isBottomOfCategories,
+                onRefresh: () {
+                  context.read<ProductCategoryBloc>().add(ProductCategoryEvent.refreshListEvent(context: context));
                 },
-              ),
-            ),
-            body: FocusDetector(
-              onFocusGained: () {
-                context.read<ProductCategoryBloc>().add(const ProductCategoryEvent.getCartCountEvent());
-              },
-              child: SafeArea(
-                child: SmartRefresher(
-                  enablePullDown: true,
-                  controller: state.refreshController,
-                  header: const RefreshWidget(),
-                  footer: CustomFooter(
-                    builder: (context, mode) => const ProductCategoryScreenShimmerWidget(),
-                  ),
-                  enablePullUp: !state.isBottomOfCategories,
-                  onRefresh: () {
-                    context.read<ProductCategoryBloc>().add(ProductCategoryEvent.refreshListEvent(context: context));
-                  },
-                  onLoading: () {
-                    context.read<ProductCategoryBloc>().add(ProductCategoryEvent.getProductCategoriesListEvent(context: context));
-                  },
-                  child: SingleChildScrollView(
-                    physics: state.productCategoryList.isEmpty ? const NeverScrollableScrollPhysics() : null,
-                    child: Column(
-                      children: [
-                        state.isShimmering
-                            ? const ProductCategoryScreenShimmerWidget()
-                            : state.productCategoryList.isEmpty
-                                ? Container(
-                                    height: getScreenHeight(context) - 80,
-                                    width: getScreenWidth(context),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      AppLocalizations.of(context)!.categories_not_available,
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                    ),
-                                  )
-                                : GridView.builder(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: state.productCategoryList.length,
-                                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
-                                    itemBuilder: (context, index) => buildProductCategoryListItem(
-                                        index: index,
-                                        context: context,
-                                        categoryImage: state.productCategoryList[index].categoryImage ?? '',
-                                        categoryName: state.productCategoryList[index].categoryName ?? '',
-                                        onTap: () async {
-                                          if (state.isFromStoreCategory) {
-                                            Navigator.pop(context, {
-                                              AppStrings.categoryIdString: state.productCategoryList[index].id,
-                                              AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
-                                              AppStrings.searchString: state.search,
-                                              AppStrings.searchResultString: state.searchList,
-                                            });
-                                          } else {
-                                            dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
-                                              AppStrings.categoryIdString: state.productCategoryList[index].id,
-                                              AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
-                                              AppStrings.searchString: state.search,
-                                              AppStrings.searchResultString: state.searchList,
-                                            });
-                                            if (searchResult != null) {
-                                              context.read<ProductCategoryBloc>().add(ProductCategoryEvent.updateGlobalSearchEvent(
-                                                    search: searchResult[AppStrings.searchString],
-                                                    searchList: searchResult[AppStrings.searchResultString],
-                                                  ));
-                                            }
-                                          }
-                                        }),
-                                  ),
-                      ],
-                    ),
-                  ),
+                onLoading: () {
+                  context.read<ProductCategoryBloc>().add(ProductCategoryEvent.getProductCategoriesListEvent(context: context));
+                },
+                child: SingleChildScrollView(
+                  physics: state.productCategoryList.isEmpty ? const NeverScrollableScrollPhysics() : null,
+                  child: Column(children: [
+                    state.isShimmering
+                        ? const ProductCategoryScreenShimmerWidget()
+                        : state.productCategoryList.isEmpty
+                            ? Container(
+                                height: getScreenHeight(context) - 80,
+                                width: getScreenWidth(context),
+                                alignment: Alignment.center,
+                                child: noDataWidget(AppLocalizations.of(context)!.categories_not_available),
+                              )
+                            : GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.productCategoryList.length,
+                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
+                                itemBuilder: (context, index) => buildProductCategoryListItem(
+                                    index: index,
+                                    context: context,
+                                    categoryImage: state.productCategoryList[index].categoryImage ?? '',
+                                    categoryName: state.productCategoryList[index].categoryName ?? '',
+                                    onTap: () async {
+                                      if (state.isFromStoreCategory) {
+                                        Navigator.pop(context, {
+                                          AppStrings.categoryIdString: state.productCategoryList[index].id,
+                                          AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
+                                          AppStrings.searchString: state.search,
+                                          AppStrings.searchResultString: state.searchList,
+                                        });
+                                      } else {
+                                        dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
+                                          AppStrings.categoryIdString: state.productCategoryList[index].id,
+                                          AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
+                                          AppStrings.searchString: state.search,
+                                          AppStrings.searchResultString: state.searchList,
+                                        });
+                                        if (searchResult != null) {
+                                          context.read<ProductCategoryBloc>().add(ProductCategoryEvent.updateGlobalSearchEvent(
+                                                search: searchResult[AppStrings.searchString],
+                                                searchList: searchResult[AppStrings.searchResultString],
+                                              ));
+                                        }
+                                      }
+                                    }),
+                              ),
+                  ]),
                 ),
               ),
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget buildProductCategoryListItem({
@@ -230,71 +189,52 @@ class ProductCategoryScreenWidget extends StatelessWidget {
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
-        child: Column(
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
-                child: Image.network(
-                  "${AppUrlEndPoints.baseFileUrl}$categoryImage",
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
-                      return CommonShimmerWidget(
-                        child: Container(
-                          height: getScreenHeight(context),
-                          width: getScreenWidth(context),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(AppConstants.radius_10),
-                                topRight: Radius.circular(
-                                  AppConstants.radius_10,
-                                )),
-                          ),
-                        ),
-                      );
-                    }
-                    return child;
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
+        child: Column(children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
+              child: Image.network("${AppUrlEndPoints.baseFileUrl}$categoryImage", fit: BoxFit.cover, alignment: Alignment.center, loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
+                  return CommonShimmerWidget(
+                    child: Container(
                       height: getScreenHeight(context),
                       width: getScreenWidth(context),
-                      color: AppColors.whiteColor,
-                      child: Image.asset(
-                        AppImagePath.imageNotAvailable5,
-                        fit: BoxFit.cover,
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                }
+                return child;
+              }, errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: getScreenHeight(context),
+                  width: getScreenWidth(context),
+                  color: AppColors.whiteColor,
+                  child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
+                );
+              }),
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
+            decoration: BoxDecoration(
+              gradient: AppColors.appMainGradientColor,
+              borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
+            ),
+            child: CommonMarqueeWidget(
+              child: Text(
+                categoryName,
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
             ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
-              decoration: BoxDecoration(
-                gradient: AppColors.appMainGradientColor,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(AppConstants.radius_10),
-                    bottomRight: Radius.circular(
-                      AppConstants.radius_10,
-                    )),
-              ),
-              child: CommonMarqueeWidget(
-                child: Text(
-                  categoryName,
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }

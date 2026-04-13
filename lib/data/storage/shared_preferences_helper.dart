@@ -9,7 +9,9 @@ class SharedPreferencesHelper {
   static const String userId = "userId";
   static const String userName = "userName";
   static const String userImage = "userImage";
-  static const String clubAgentId = "clubAgentId";
+  static const String clubAgentIdKey = "clubAgentId";
+  static const String isAgentKey = "isAgent";
+  static const String isAgentSwitchToAssignedStoreKey = "isAgentSwitchToAssignedStore";
   static const String userCompanyLogo = "companyLogo";
   static const String userCartCount = "cartCount";
   static const String orderSuccessMessage = "ordersuccessMessage";
@@ -44,7 +46,6 @@ class SharedPreferencesHelper {
   static const String fax = 'fax';
   static const String zip = 'zip';
   static const String logo = 'logo';
-
   static const String accountAdmin = 'accountAdmin';
   static const String seeWallet = 'seeWallet';
   static const String addBasket = 'addBasket';
@@ -74,7 +75,6 @@ class SharedPreferencesHelper {
   static const String productReturnList = 'productReturnList';
 
   final SharedPreferences prefs;
-
   SharedPreferencesHelper({required this.prefs});
 
   Future<void> setAppLanguage({required String languageCode}) async {
@@ -88,7 +88,9 @@ class SharedPreferencesHelper {
       await prefs.remove(userId);
       await prefs.remove(userName);
       await prefs.remove(userImage);
-      await prefs.remove(clubAgentId);
+      await prefs.remove(clubAgentIdKey);
+      await prefs.remove(isAgentKey);
+      await prefs.remove(isAgentSwitchToAssignedStoreKey);
       await prefs.remove(userCompanyLogo);
       await prefs.remove(userCartCount);
       await prefs.remove(userMessageCount);
@@ -110,7 +112,6 @@ class SharedPreferencesHelper {
       await prefs.remove(zip);
       await prefs.remove(logo);
       await prefs.remove(isWalletApproved);
-
       await prefs.remove(accountAdmin);
       await prefs.remove(seeWallet);
       await prefs.remove(createOrder);
@@ -153,7 +154,15 @@ class SharedPreferencesHelper {
   }
 
   Future<void> removeClubAgentId() async {
-    await prefs.remove(clubAgentId);
+    await prefs.remove(clubAgentIdKey);
+  }
+
+  Future<void> removeIsAgent() async {
+    await prefs.remove(isAgentKey);
+  }
+
+  Future<void> removeIsAgentSwitchToAssignedStore() async {
+    await prefs.remove(isAgentSwitchToAssignedStoreKey);
   }
 
   Future<void> setAuthToken({required String accToken}) async {
@@ -204,8 +213,16 @@ class SharedPreferencesHelper {
     await prefs.setString(userImage, imageUrl);
   }
 
-  Future<void> setClubAgentId({required String club_agent_Id}) async {
-    await prefs.setString(clubAgentId, club_agent_Id);
+  Future<void> setClubAgentId({required String clubAgentId}) async {
+    await prefs.setString(clubAgentIdKey, clubAgentId);
+  }
+
+  Future<void> setIsAgent({required bool isAgent}) async {
+    await prefs.setBool(isAgentKey, isAgent);
+  }
+
+  Future<void> setIsAgentSwitchToAssignedStore({required bool isAgentSwitchToAssignedStore}) async {
+    await prefs.setBool(isAgentSwitchToAssignedStoreKey, isAgentSwitchToAssignedStore);
   }
 
   Future<void> setUserCompanyLogoUrl({required String logoUrl}) async {
@@ -477,7 +494,15 @@ class SharedPreferencesHelper {
   }
 
   String getClubAgentId() {
-    return prefs.getString(clubAgentId) ?? '';
+    return prefs.getString(clubAgentIdKey) ?? '';
+  }
+
+  bool getIsAgent() {
+    return prefs.getBool(isAgentKey) ?? true;
+  }
+
+  bool getIsAgentSwitchToAssignedStore() {
+    return prefs.getBool(isAgentSwitchToAssignedStoreKey) ?? true;
   }
 
   String getUserCompanyLogoUrl() {

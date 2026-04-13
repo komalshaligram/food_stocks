@@ -4,8 +4,5 @@ part of 'registration_success_bloc.dart';
 class RegistrationSuccessEvent with _$RegistrationSuccessEvent {
   const factory RegistrationSuccessEvent.celebrationEvent() = _celebrationEvent;
 
-  const factory RegistrationSuccessEvent.generalSettings({
-    required BuildContext context,
-  }) = _generalSettings;
-
+  const factory RegistrationSuccessEvent.generalSettings({required BuildContext context}) = _generalSettings;
 }

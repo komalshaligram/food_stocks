@@ -11,52 +11,37 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            10.height,
-            ListView.builder(
+        child: Column(children: [
+          10.height,
+          ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: 5,
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
               itemBuilder: (context, index) {
                 return buildFileOrForm();
-              },
-            ),
-            40.height,
-            buildButton(),
-            20.height,
-          ],
-        ),
+              }),
+          40.height,
+          buildButton(),
+          20.height,
+        ]),
       ),
     );
   }
 
   Widget buildFileOrForm() {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            buildTextFieldTitle(),
-            buildDownloadButton(),
-          ],
+    return Column(children: [
+      Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [buildTextFieldTitle(), buildDownloadButton()]),
+      10.height,
+      CommonShimmerWidget(
+        child: Container(
+          height: 130,
+          width: double.maxFinite,
+          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
         ),
-        10.height,
-        CommonShimmerWidget(
-          child: Container(
-            height: 130,
-            width: double.maxFinite,
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-            ),
-          ),
-        ),
-        20.height,
-      ],
-    );
+      ),
+      20.height,
+    ]);
   }
 
   Widget buildDownloadButton() {
@@ -64,10 +49,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: 35,
         width: 100,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
       ),
     );
   }
@@ -78,10 +60,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
         height: AppConstants.shimmerTextHeight,
         width: 140,
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
       ),
     );
   }
@@ -92,10 +71,7 @@ class FileUploadScreenShimmerWidget extends StatelessWidget {
         height: AppConstants.buttonHeight,
         width: double.maxFinite,
         margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
       ),
     );
   }

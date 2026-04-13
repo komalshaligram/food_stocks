@@ -34,29 +34,14 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           final String statusData = preferences.getOrderStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
           emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage()));
-          GetAllOrderReqModel reqMap = GetAllOrderReqModel(
-            pageNum: state.pageNum + 1,
-            pageLimit: AppConstants.orderPageLimit,
-            userId: preferences.getUserId(),
-          );
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getAllOrderUrl,
-            data: reqMap.toJson(),
-          );
-
+          GetAllOrderReqModel reqMap = GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.orderPageLimit, userId: preferences.getUserId());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getAllOrderUrl, data: reqMap.toJson());
           GetAllOrderResModel response = GetAllOrderResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             List<Datum> orderList = state.orderDetailsList.toList(growable: true);
             if ((response.metaData?.totalFilteredCount ?? 1) > state.orderDetailsList.length) {
               orderList.addAll(response.data ?? []);
-              emit(state.copyWith(
-                orderDetailsList: orderList,
-                isShimmering: false,
-                pageNum: state.pageNum + 1,
-                isLoadMore: false,
-                orderList: response,
-              ));
+              emit(state.copyWith(orderDetailsList: orderList, isShimmering: false, pageNum: state.pageNum + 1, isLoadMore: false, orderList: response));
               emit(state.copyWith(isBottomOfProducts: orderList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
             } else {
               emit(state.copyWith(isShimmering: false, isLoadMore: false));

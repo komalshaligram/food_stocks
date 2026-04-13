@@ -604,6 +604,9 @@
   "minimumList" : "Minimum for sale",
   "maximumList" : "Maximum for sale",
   "savings_for_sales": "Savings for sales",
+  "minimum_order": "Minimum order :",
+  "you_can_send_the_order": "you can send the order",
+  "you_cant_send_the_order": "you can't send the order",
   "not_minimum_order": "Not minimum order",
   "show_all_results": "Show All Results",
   "bank_transfer_information": "Bank transfer information",
@@ -688,5 +691,16 @@
   "refunds_date_range": "Refunds Date Range",
   "select_date": "Select Date",
   "maximum_three_month_date_range_required": "Please select maximum of 3 months range",
-  "date_range": "Date range"
+  "date_range": "Date range",
+  "my_clients" :"My Clients",
+  "switch_back_to_agent_view" :"Switch back to agent view",
+  "clients_switch" :"SWITCH",
+  "clients_set_minimum" :"SET MINIMUM",
+  "clients_minimum_order" : "Min :",
+  "clients_no_minimum" : "NO MINIMUM",
+  "confirmation_no_minimum" : "Are you sure you want to set to no minimum order for one hour?",
+  "confirmation_minimum" : "Are you sure you want to set to minimum order?",
+  "switch_client_message" : "You are now connected as: ",
+  "switch_agent_message" : "You are now connected as an agent",
+  "no_suppliers_found" : "No Suppliers Found"
 }

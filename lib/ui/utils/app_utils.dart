@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
@@ -21,7 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:another_flushbar/flushbar.dart';
-
+import 'constants/app_img_path.dart';
 import 'constants/app_urls.dart';
 
 double getScreenHeight(BuildContext context) {
@@ -34,10 +35,7 @@ double getScreenWidth(BuildContext context) {
   return screenWidth;
 }
 
-enum SnackBarType {
-  success,
-  failure,
-}
+enum SnackBarType { success, failure }
 
 bool isTablet(BuildContext context) {
   bool isTablet = false;
@@ -86,6 +84,7 @@ Color getStatusColor(List<StatusData> statusList, String status) {
 }
 
 String getStatus(List<StatusData> statusList, String currentStatus, String language) {
+
   String status = '';
   if (currentStatus.isEmpty) {
     return status;
@@ -96,6 +95,26 @@ String getStatus(List<StatusData> statusList, String currentStatus, String langu
     status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameEnglish ?? '';
   }
   return status;
+}
+
+String getLocalizedReason({
+  required String apiReason,
+  required BuildContext context,
+}) {
+  final map = {
+    'Product did not arrive at all': AppLocalizations.of(context)!.product_did_not_arrive_at_all,
+    'המוצר לא הגיע בכלל': AppLocalizations.of(context)!.product_did_not_arrive_at_all,
+    'Product arrived damaged': AppLocalizations.of(context)!.product_arrived_damaged,
+    'המוצר הגיע פגום': AppLocalizations.of(context)!.product_arrived_damaged,
+    'Product arrived incomplete': AppLocalizations.of(context)!.product_arrived_incomplete,
+    'המוצר הגיע לא שלם': AppLocalizations.of(context)!.product_arrived_incomplete,
+    'Expiration date issue': AppLocalizations.of(context)!.expiration_date_issue,
+    'בעיית תאריך תפוגה': AppLocalizations.of(context)!.expiration_date_issue,
+    'Wrong product received': AppLocalizations.of(context)!.wrong_product_received,
+    'התקבל מוצר שגוי': AppLocalizations.of(context)!.wrong_product_received,
+  };
+
+  return map[apiReason] ?? apiReason;
 }
 
 double getChildAspectRatio(BuildContext context, bool isSaleOn) {
@@ -135,17 +154,11 @@ Widget isPesachLabelShow(bool isPesach, BuildContext context) {
     return Container(
         padding: const EdgeInsets.only(left: 5, right: 5),
         decoration: BoxDecoration(
-            color: AppColors.pesachBGColor,
-            border: Border.all(color: AppColors.pesachBGColor),
-            borderRadius: const BorderRadius.all(Radius.circular(
-              10,
-            ))),
-        child: Text(
-          AppLocalizations.of(context)!.pesach,
-          style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.font_13,
-          ),
-        ));
+          color: AppColors.pesachBGColor,
+          border: Border.all(color: AppColors.pesachBGColor),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Text(AppLocalizations.of(context)!.pesach, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13)));
   } else {
     return 0.height;
   }
@@ -153,11 +166,7 @@ Widget isPesachLabelShow(bool isPesach, BuildContext context) {
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
-  static void showSnackBar({
-    required BuildContext context,
-    required String title,
-    required SnackBarType type,
-  }) {
+  static void showSnackBar({required BuildContext context, required String title, required SnackBarType type}) {
     Flushbar(
       backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withValues(alpha: 0.85) : AppColors.redColor.withValues(alpha: 0.85),
       messageText: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
@@ -176,46 +185,42 @@ printData(String? message) {
 
 customShowUpdateDialog(BuildContext context, String directionality, String storeUrl) {
   return showDialog(
-    barrierDismissible: false,
-    context: context,
-    builder: (context1) {
-      return PopScope(
-        canPop: false,
-        child: AlertDialog(
-          title: Text(AppLocalizations.of(context)!.new_version_app_update,
-              style: AppStyles.rkRegularTextStyle(
-                color: AppColors.blackColor,
-                size: AppConstants.mediumFont,
-              )),
-          actions: [
-            Align(
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: () {
-                  _launchUrl(storeUrl);
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                  alignment: Alignment.center,
-                  width: AppConstants.containerHeight_80,
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
-                  child: Text(
-                    AppLocalizations.of(context)!.update,
-                    style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.font_14),
-                  ),
-                ),
+      barrierDismissible: false,
+      context: context,
+      builder: (context1) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+              title: Text(
+                AppLocalizations.of(context)!.new_version_app_update,
+                style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.mediumFont),
               ),
-            )
-          ],
-        ),
-      );
-    },
-  );
+              actions: [
+                Align(
+                  alignment: Alignment.center,
+                  child: GestureDetector(
+                    onTap: () {
+                      _launchUrl(storeUrl);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                      alignment: Alignment.center,
+                      width: AppConstants.containerHeight_80,
+                      decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                        AppLocalizations.of(context)!.update,
+                        style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.font_14),
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+        );
+      });
 }
 
 Future<void> _launchUrl(String storeUrl) async {
   Uri url = Uri.parse(storeUrl);
-
   try {
     launchUrl(url);
   } on PlatformException catch (e) {
@@ -228,7 +233,6 @@ Future<void> _launchUrl(String storeUrl) async {
 bool isValidIsraeliID(String id) {
   id = id.trim();
   if (id.length > 9 || id.length < 5 || int.tryParse(id) == null) return false;
-
   id = id.length < 9 ? id.padLeft(9, '0') : id;
 
   int sum = 0;
@@ -237,7 +241,6 @@ bool isValidIsraeliID(String id) {
     int step = digit * ((i % 2) + 1);
     sum += (step > 9) ? step - 9 : step;
   }
-
   return sum % 10 == 0;
 }
 
@@ -305,7 +308,7 @@ Future<XFile?> openImagePicker(ImageSource source) async {
           }
         }
       }
-    } else {}
+    }
     final ImagePicker picker = ImagePicker();
     final XFile? pickedImage = await picker.pickImage(source: source);
     return pickedImage;
@@ -348,41 +351,29 @@ String splitNumber(String price) {
 
 extension StringCasingExtension on String {
   String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
-
   String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
-
   String toLocalization() => contains('.') ? split('.')[1].toLowerCase() : this;
 }
 
 String formatNumber({required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;
-
   final formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs());
-
   final String result = isNegative ? '-$formatted' : formatted;
-
   return splitNumber(result);
 }
 
 String formatSignedNumber(dynamic value) {
   final double amount = value is num ? value.toDouble() : double.tryParse(value?.toString() ?? '0') ?? 0;
-
   final formatted = NumberFormat.decimalPattern('en_IN').format(amount.abs());
-
   return amount.isNegative ? '-$formatted ₪' : '$formatted ₪';
 }
 
 String formatNumberPositiveToNegative({required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;
-
-  String formatted = NumberFormat.simpleCurrency(
-    locale: local,
-  ).format(number.abs());
-
+  String formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs());
   formatted = formatted.replaceAll(RegExp(r'\s+'), '');
-
   return isNegative ? ' -$formatted' : formatted;
 }
 
@@ -391,32 +382,18 @@ String formatNumberForWallet({required String value, required String local, requ
     locale: local,
     decimalDigits: 1,
   ).format(double.parse(value)));
-
   String result1 = value.split('.')[0] + AppLocalizations.of(context)!.currency;
-
   return result1;
 }
 
-double vatCalculation({
-  required double price,
-  required double vat,
-  double qty = 0,
-  double deposit = 0,
-}) {
+double vatCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
   double result = price + ((price * vat) / 100) + (qty * deposit) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-double vatCalculationRefund({
-  required double price,
-  required double vat,
-  double qty = 0,
-  double deposit = 0,
-  double? refund,
-}) {
+double vatCalculationRefund({required double price, required double vat, double qty = 0, double deposit = 0, double? refund}) {
   double priceWithVat = price + ((price * vat) / 100);
   double depositWithVat = (qty * deposit) + ((qty * deposit * vat) / 100);
-
   double total = priceWithVat + depositWithVat;
 
   if (refund != null) {
@@ -430,7 +407,6 @@ double vatCalculationRefund({
       }
     }
   }
-
   return total;
 }
 
@@ -449,12 +425,7 @@ double bottleDepositCalculationWithVat({required double deposit, required double
   return result;
 }
 
-double bottleDepositCalculationWithVatRefund({
-  required double deposit,
-  required double qty,
-  double vatPercentage = 1,
-  double? refund,
-}) {
+double bottleDepositCalculationWithVatRefund({required double deposit, required double qty, double vatPercentage = 1, double? refund}) {
   double depositWithVat = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
 
   if (refund != null) {
@@ -468,13 +439,11 @@ double bottleDepositCalculationWithVatRefund({
       }
     }
   }
-
   return depositWithVat;
 }
 
 String formatInvoiceDate(String date) {
   if (date.isEmpty) return '';
-
   if (date.length > 10) {
     return date.substring(0, 10);
   }
@@ -501,21 +470,13 @@ Widget getPaymentStatusWidget(String status, BuildContext context) => Container(
                 : status == AppStrings.inProgressText
                     ? AppLocalizations.of(context)!.in_progress_text
                     : AppLocalizations.of(context)!.partially_closed_text,
-        style: AppStyles.rkRegularTextStyle(
-          size: AppConstants.font_12,
-          color: AppColors.whiteColor,
-          fontWeight: FontWeight.w400,
-        ),
+        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
       ),
     );
 
 Widget titleText(BuildContext context, String title) => Text(
       title,
-      style: AppStyles.rkBoldTextStyle(
-        size: AppConstants.smallFont,
-        color: AppColors.blackColor,
-        fontWeight: FontWeight.bold,
-      ),
+      style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
@@ -527,21 +488,12 @@ Widget subTitleValueText(BuildContext context, String subTitle) => Text(
       overflow: TextOverflow.ellipsis,
     );
 
-Widget titleGreenText(
-  BuildContext context,
-  String title,
-  ltr,
-) =>
-    Directionality(
+Widget titleGreenText(BuildContext context, String title, ltr) => Directionality(
       textDirection: ltr,
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: AppStyles.rkBoldTextStyle(
-          size: AppConstants.smallFont,
-          color: AppColors.notificationColor,
-          fontWeight: FontWeight.bold,
-        ),
+        style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.bold),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
@@ -550,10 +502,7 @@ Widget titleGreenText(
 Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
   SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
   try {
-    final cartRes = await DioClient(context).post(
-      '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-    );
-
+    final cartRes = await DioClient(context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
     final cartResponse = GetAllCartResModel.fromJson(cartRes);
 
     if (cartResponse.status == AppConstants.code_200) {
@@ -565,3 +514,33 @@ Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
   } catch (_) {}
   return {};
 }
+
+Widget noDataWidget(String title) => Center(
+      child: Text(title, textAlign: TextAlign.center, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
+    );
+
+Widget cartImageWidget() => Container(
+      height: 50,
+      width: 50,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.transparent, width: 1),
+        gradient: AppColors.appMainGradientColor,
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+      ),
+      child: Center(
+        child: SvgPicture.asset(
+          AppImagePath.cart,
+          height: 26,
+          width: 26,
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
+        ),
+      ),
+    );
+
+void inProgressSnackBarWidget(BuildContext context) => CustomSnackBar.showSnackBar(
+      context: context,
+      title: AppStrings.getLocalizedStrings('Oops! in progress', context),
+      type: SnackBarType.success,
+    );

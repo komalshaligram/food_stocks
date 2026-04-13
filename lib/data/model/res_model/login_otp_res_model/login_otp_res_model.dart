@@ -20,6 +20,8 @@ class Data with _$Data {
     @JsonKey(name: "authToken") AuthToken? authToken,
     @JsonKey(name: "cartId") String? cartId,
     @JsonKey(name: "agentId") String? agentId,
+    @JsonKey(name: "isAgent") bool? isAgent,
+    @JsonKey(name: "isAgentSwitchToAssignedStore") bool? isAgentSwitchToAssignedStore,
     @JsonKey(name: "wallet") String? wallet,
     String? adminType,
     SubUserPermissions? subUserPermissions,

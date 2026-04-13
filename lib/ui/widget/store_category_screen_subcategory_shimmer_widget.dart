@@ -24,10 +24,7 @@ class StoreCategoryScreenSubcategoryShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.buttonHeight,
         width: double.maxFinite,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.radius_10),
       ),

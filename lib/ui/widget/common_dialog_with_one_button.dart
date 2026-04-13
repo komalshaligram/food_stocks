@@ -44,33 +44,21 @@ class CustomOneButtonDialog extends StatelessWidget {
     return Directionality(
       textDirection: directionality == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
-        contentPadding: const EdgeInsets.all(AppConstants.padding_20),
-        surfaceTintColor: AppColors.whiteColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
+          contentPadding: const EdgeInsets.all(AppConstants.padding_20),
+          surfaceTintColor: AppColors.whiteColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
+          title: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
             Text(title,
                 style: AppStyles.rkRegularTextStyle(
                   color: subTitle.isNotEmpty ? AppColors.redColor : AppColors.blackColor,
                   size: AppConstants.smallFont,
                   fontWeight: FontWeight.w600,
                 )),
-            subTitle.isEmpty
-                ? 0.height
-                : Text(subTitle,
-                    style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14,
-                      color: AppColors.blackColor,
-                    ))
-          ],
-        ),
-        actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
-        actions: [
-          Column(
-            children: [
+            subTitle.isEmpty ? 0.height : Text(subTitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor))
+          ]),
+          actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
+          actions: [
+            Column(children: [
               positiveTitle != null
                   ? Padding(
                       padding: const EdgeInsets.only(bottom: AppConstants.padding_10),
@@ -86,11 +74,8 @@ class CustomOneButtonDialog extends StatelessWidget {
               positiveTitle2 != null
                   ? Padding(
                       padding: const EdgeInsets.only(bottom: AppConstants.padding_10),
-                      child: commonButton(
-                        positiveTitle: positiveTitle2 ?? '',
-                        width: width,
-                        positiveOnTap: positiveOnTap2,
-                      ))
+                      child: commonButton(positiveTitle: positiveTitle2 ?? '', width: width, positiveOnTap: positiveOnTap2),
+                    )
                   : 0.height,
               positiveTitle3 != null
                   ? Padding(
@@ -98,10 +83,8 @@ class CustomOneButtonDialog extends StatelessWidget {
                       child: commonButton(positiveTitle: positiveTitle3 ?? '', width: width, positiveOnTap: positiveOnTap3),
                     )
                   : 0.height,
-            ],
-          ),
-        ],
-      ),
+            ]),
+          ]),
     );
   }
 }
@@ -118,10 +101,7 @@ commonButton({Function()? positiveOnTap, required double width, required String 
         alignment: Alignment.center,
         width: width,
         decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_7)),
-        child: Text(
-          positiveTitle,
-          style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),
-        ),
+        child: Text(positiveTitle, style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont)),
       ),
     ),
   );

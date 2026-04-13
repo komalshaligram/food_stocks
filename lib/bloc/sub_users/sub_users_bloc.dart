@@ -35,29 +35,14 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
           if (state.isPop) {
             emit(state.copyWith(subUserList: [], isPop: false));
           }
-
-          GetSubUserReqModel req = GetSubUserReqModel(
-            clientId: preferences.getUserId(),
-            pageLimit: AppConstants.walletLimit,
-            pageNum: state.pageNum + 1,
-          );
-
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getAllSubUserUrl,
-            data: req,
-          );
+          GetSubUserReqModel req = GetSubUserReqModel(clientId: preferences.getUserId(), pageLimit: AppConstants.walletLimit, pageNum: state.pageNum + 1);
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getAllSubUserUrl, data: req);
           GetSubUserResModel response = GetSubUserResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             List<User> subUserList = state.subUserList.toList(growable: true);
             if ((response.data?.totalRecords ?? 1) > state.subUserList.length) {
               subUserList.addAll(response.data?.users ?? []);
-              emit(state.copyWith(
-                subUserList: subUserList,
-                isShimmering: false,
-                pageNum: state.pageNum + 1,
-                isLoadMore: false,
-              ));
+              emit(state.copyWith(subUserList: subUserList, isShimmering: false, pageNum: state.pageNum + 1, isLoadMore: false));
               emit(state.copyWith(isBottomOfProducts: subUserList.length >= (response.data?.totalRecords ?? 0) ? true : false));
             } else {
               emit(state.copyWith(isShimmering: false, isLoadMore: false));
@@ -82,11 +67,9 @@ class SubUsersBloc extends Bloc<SubUsersEvent, SubUsersState> {
         add(SubUsersEvent.getSubUserList(context: event.context));
       } else if (event is _userApproveEvent) {
         emit(state.copyWith(isBottomOfProducts: false, isPop: true, pageNum: 0));
-
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {
               Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);

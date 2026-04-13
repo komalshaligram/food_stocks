@@ -30,54 +30,36 @@ class CustomTextIconButtonWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
           elevation: 0,
           onPressed: onPressed,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  svgImage == null
-                      ? 0.height
-                      : Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                          child: SvgPicture.asset(svgImage!,
-                              height: 20,
-                              width: 20,
-                              fit: BoxFit.scaleDown,
-                              colorFilter: ColorFilter.mode(
-                                AppColors.whiteColor,
-                                BlendMode.srcIn,
-                              )),
-                        ),
-                  7.width,
-                  Text(
-                    title,
-                    style: AppStyles.rkRegularTextStyle(size: titleSize ?? 18, color: AppColors.whiteColor),
-                  ),
-                ],
-              ),
-              10.width,
-              cartCount == null
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Row(children: [
+              svgImage == null
                   ? 0.height
-                  : AnimatedCrossFade(
-                      firstChild: 16.height,
-                      secondChild: Container(
-                        height: 16,
-                        width: 24,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                        ),
-                        child: Text(
-                          '${(cartCount ?? 0) <= 99 ? cartCount : '99+'}',
-                          style: AppStyles.rkRegularTextStyle(fontWeight: FontWeight.w100, size: AppConstants.padding_10, color: AppColors.mainColor),
-                        ),
+                  : Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                      child: SvgPicture.asset(svgImage!, height: 20, width: 20, fit: BoxFit.scaleDown, colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn)),
+                    ),
+              7.width,
+              Text(title, style: AppStyles.rkRegularTextStyle(size: titleSize ?? 18, color: AppColors.whiteColor)),
+            ]),
+            10.width,
+            cartCount == null
+                ? 0.height
+                : AnimatedCrossFade(
+                    firstChild: 16.height,
+                    secondChild: Container(
+                      height: 16,
+                      width: 24,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+                      child: Text(
+                        '${(cartCount ?? 0) <= 99 ? cartCount : '99+'}',
+                        style: AppStyles.rkRegularTextStyle(fontWeight: FontWeight.w100, size: AppConstants.padding_10, color: AppColors.mainColor),
                       ),
-                      crossFadeState: cartCount == 0 ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                      duration: const Duration(milliseconds: 500)),
-            ],
-          ),
+                    ),
+                    crossFadeState: cartCount == 0 ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                    duration: const Duration(milliseconds: 500)),
+          ]),
         ),
       ),
     );

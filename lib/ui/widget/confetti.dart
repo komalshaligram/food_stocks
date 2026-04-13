@@ -3,25 +3,14 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 class Confetti extends StatefulWidget {
-  static const _defaultColors = [
-    Color(0xff20BF6B),
-    Color(0xff868E96),
-    Color(0xff0050bc),
-    Color(0xff000000),
-  ];
+  static const _defaultColors = [Color(0xff20BF6B), Color(0xff868E96), Color(0xff0050bc), Color(0xff000000)];
 
   final bool isStopped;
   final int snippingCount;
   final List<Color> colors;
   final double snipSize;
 
-  const Confetti({
-    this.colors = _defaultColors,
-    this.isStopped = false,
-    required this.snipSize,
-    required this.snippingCount,
-    super.key,
-  });
+  const Confetti({this.colors = _defaultColors, this.isStopped = false, required this.snipSize, required this.snippingCount, super.key});
 
   @override
   State<Confetti> createState() => _ConfettiState();
@@ -29,13 +18,9 @@ class Confetti extends StatefulWidget {
 
 class ConfettiPainter extends CustomPainter {
   final defaultPaint = Paint();
-
   late final List<_PaperSnipping> _snippings;
-
   Size? _size;
-
   DateTime _lastTime = DateTime.now();
-
   final UnmodifiableListView<Color> colors;
   int snippingCount;
   double snipSize;
@@ -47,13 +32,7 @@ class ConfettiPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (_size == null) {
-      _snippings = List.generate(
-          snippingCount,
-          (i) => _PaperSnipping(
-                frontColor: colors[i % colors.length],
-                bounds: size,
-                snipSize: snipSize,
-              ));
+      _snippings = List.generate(snippingCount, (i) => _PaperSnipping(frontColor: colors[i % colors.length], bounds: size, snipSize: snipSize));
     }
 
     final didResize = _size != null && _size != size;
@@ -83,12 +62,7 @@ class _ConfettiState extends State<Confetti> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: ConfettiPainter(
-        snippingCount: widget.snippingCount,
-        colors: widget.colors,
-        animation: _controller,
-        snipSize: widget.snipSize,
-      ),
+      painter: ConfettiPainter(snippingCount: widget.snippingCount, colors: widget.colors, animation: _controller, snipSize: widget.snipSize),
       willChange: true,
       child: const SizedBox(),
     );
@@ -113,10 +87,7 @@ class _ConfettiState extends State<Confetti> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    );
+    _controller = AnimationController(duration: const Duration(seconds: 1), vsync: this);
 
     if (!widget.isStopped) {
       _controller.repeat();
@@ -126,30 +97,17 @@ class _ConfettiState extends State<Confetti> with SingleTickerProviderStateMixin
 
 class _PaperSnipping {
   static final Random _random = Random();
-
   static const degToRad = pi / 180;
-
   static const backSideBlend = Color(0x70EEEEEE);
-
   Size _bounds;
 
-  late final _Vector position = _Vector(
-    _random.nextDouble() * _bounds.width,
-    _random.nextDouble() * _bounds.height,
-  );
-
+  late final _Vector position = _Vector(_random.nextDouble() * _bounds.width, _random.nextDouble() * _bounds.height);
   final double rotationSpeed = 800 + _random.nextDouble() * 600;
-
   final double angle = _random.nextDouble() * 360 * degToRad;
-
   double rotation = _random.nextDouble() * 360 * degToRad;
-
   double cosA = 1.0;
-
   final double oscillationSpeed = 0.5 + _random.nextDouble() * 1.5;
-
   final double xSpeed = 40;
-
   final double ySpeed = 50 + _random.nextDouble() * 60;
 
   late List<_Vector> corners = List.generate(4, (i) {
@@ -158,20 +116,12 @@ class _PaperSnipping {
   });
 
   double time = _random.nextDouble();
-
   final Color frontColor;
-
   late final Color backColor = Color.alphaBlend(backSideBlend, frontColor);
-
   final paint = Paint()..style = PaintingStyle.fill;
-
   double snipSize;
 
-  _PaperSnipping({
-    required this.frontColor,
-    required Size bounds,
-    required this.snipSize,
-  }) : _bounds = bounds;
+  _PaperSnipping({required this.frontColor, required Size bounds, required this.snipSize}) : _bounds = bounds;
 
   void draw(Canvas canvas) {
     if (cosA > 0) {
@@ -180,16 +130,7 @@ class _PaperSnipping {
       paint.color = backColor;
     }
 
-    final path = Path()
-      ..addPolygon(
-        List.generate(
-            4,
-            (index) => Offset(
-                  position.x + corners[index].x * snipSize,
-                  position.y + corners[index].y * snipSize * cosA,
-                )),
-        true,
-      );
+    final path = Path()..addPolygon(List.generate(4, (index) => Offset(position.x + corners[index].x * snipSize, position.y + corners[index].y * snipSize * cosA)), true);
     canvas.drawPath(path, paint);
   }
 

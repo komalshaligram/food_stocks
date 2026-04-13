@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:focus_detector/focus_detector.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../ui/screens/product_details_screen.dart';
 import '../../ui/utils/app_utils.dart';
@@ -29,10 +28,7 @@ class OrderDetailsScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => OrderDetailsBloc()..add(OrderDetailsEvent.getOrderByIdEvent(context: context, orderId: args?[AppStrings.orderIdString] ?? '')),
-      child: OrderDetailsScreenWidget(
-        orderId: args?[AppStrings.orderIdString] ?? '',
-        orderNumber: args?[AppStrings.orderNumberString] ?? '',
-      ),
+      child: OrderDetailsScreenWidget(orderId: args?[AppStrings.orderIdString] ?? '', orderNumber: args?[AppStrings.orderNumberString] ?? ''),
     );
   }
 }
@@ -47,63 +43,47 @@ class OrderDetailsScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<OrderDetailsBloc, OrderDetailsState>(
       listener: (context, state) {},
-      child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
-        builder: (context, state) {
-          return Scaffold(
-            backgroundColor: AppColors.pageColor,
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-              child: CommonAppBar(
+      child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.pageColor,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+            child: CommonAppBar(
                 bgColor: AppColors.pageColor,
                 title: orderNumber.toString(),
                 iconData: Icons.arrow_back_ios_sharp,
                 trailingWidget: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppConstants.padding_10,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
                   child: (state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
                       ? const SizedBox()
                       : CircularButtonWidget(
                           buttonName: AppLocalizations.of(context)!.total,
-                          buttonValue: formatNumber(
-                            value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0',
-                            local: AppStrings.hebrewLocal,
-                          ),
+                          buttonValue: formatNumber(value: state.orderByIdList.data!.orderData!.first.totalAmount?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal),
                         ),
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                },
-              ),
-            ),
-            body: SafeArea(
-              child: FocusDetector(
-                onFocusGained: () {},
-                child: (state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
-                    ? const OrderSummaryScreenShimmerWidget()
-                    : AnimationLimiter(
-                        child: ListView.builder(
-                          itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                          itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
-                              duration: const Duration(seconds: 1),
-                              position: index,
-                              child: SlideAnimation(
-                                  child: orderListItem(
-                                index: index,
-                                context: context,
-                                orderByIdList: state.orderByIdList,
-                                state: state,
-                              ))),
-                        ),
+                }),
+          ),
+          body: SafeArea(
+            child: (state.orderByIdList.data?.ordersBySupplier?.length ?? 0) == 0
+                ? const OrderSummaryScreenShimmerWidget()
+                : AnimationLimiter(
+                    child: ListView.builder(
+                      itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                      itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
+                        duration: const Duration(seconds: 1),
+                        position: index,
+                        child: SlideAnimation(child: orderListItem(index: index, context: context, orderByIdList: state.orderByIdList, state: state)),
                       ),
-              ),
-            ),
-          );
-        },
-      ),
+                    ),
+                  ),
+          ),
+        );
+      }),
     );
   }
 
@@ -124,14 +104,8 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 const begin = Offset(0.0, 1.0);
                 const end = Offset.zero;
                 const curve = Curves.bounceIn;
-                var tween = Tween(
-                  begin: begin,
-                  end: end,
-                ).chain(CurveTween(curve: curve));
-                return SlideTransition(
-                  position: animation.drive(tween),
-                  child: child,
-                );
+                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                return SlideTransition(position: animation.drive(tween), child: child);
               },
             ));
       },
@@ -140,76 +114,65 @@ class OrderDetailsScreenWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          boxShadow: [
-            BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
-          ],
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  orderByIdList.data!.ordersBySupplier![index].supplierName!.toString(),
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_14,
-                    color: AppColors.blackColor,
-                  ),
-                ),
-                Text(
-                  getStatus(state.statusData, orderByIdList.data?.ordersBySupplier?[index].deliverStatus?.statusName ?? '', state.language).toTitleCase(),
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
-                    color: getStatusColor(state.statusData, orderByIdList.data!.ordersBySupplier?[index].deliverStatus?.statusName ?? ''),
-                    fontWeight: FontWeight.w700,
-                  ),
-                )
-              ],
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(
+              orderByIdList.data!.ordersBySupplier![index].supplierName!.toString(),
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
             ),
-            7.height,
-            Row(
-              children: [
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 1,
-                  title: AppLocalizations.of(context)!.products,
-                  value: orderByIdList.data!.ordersBySupplier![index].products!.length.toString(),
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextWeight: FontWeight.w700,
-                  valueTextSize: AppConstants.smallFont,
-                ),
-                5.width,
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 4,
-                  title: AppLocalizations.of(context)!.delivery_date,
-                  value: orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate != '' ? orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString() : '-',
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextSize: AppConstants.smallFont,
-                  valueTextWeight: FontWeight.w500,
-                ),
-                5.width,
-                CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 4,
-                  title: AppLocalizations.of(context)!.total_order,
-                  value: formatNumber(value: orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal),
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextWeight: FontWeight.w500,
-                  valueTextSize: AppConstants.smallFont,
-                ),
-              ],
+            Text(
+              getStatus(state.statusData, orderByIdList.data?.ordersBySupplier?[index].deliverStatus?.statusName ?? '', state.language).toTitleCase(),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont,
+                  color: getStatusColor(
+                    state.statusData,
+                    orderByIdList.data!.ordersBySupplier?[index].deliverStatus?.statusName ?? '',
+                  ),
+                  fontWeight: FontWeight.w700),
+            )
+          ]),
+          7.height,
+          Row(children: [
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 1,
+              title: AppLocalizations.of(context)!.products,
+              value: orderByIdList.data!.ordersBySupplier![index].products!.length.toString(),
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextWeight: FontWeight.w700,
+              valueTextSize: AppConstants.smallFont,
             ),
-          ],
-        ),
+            5.width,
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 4,
+              title: AppLocalizations.of(context)!.delivery_date,
+              value: orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate != '' ? orderByIdList.data!.ordersBySupplier![index].orderDeliveryDate.toString() : '-',
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextSize: AppConstants.smallFont,
+              valueTextWeight: FontWeight.w500,
+            ),
+            5.width,
+            CommonOrderContentWidget(
+              backGroundColor: AppColors.iconBGColor,
+              borderCoder: AppColors.lightBorderColor,
+              flexValue: 4,
+              title: AppLocalizations.of(context)!.total_order,
+              value: formatNumber(value: orderByIdList.data!.ordersBySupplier![index].totalPayment?.toStringAsFixed(2) ?? '0', local: AppStrings.hebrewLocal),
+              titleColor: AppColors.mainColor,
+              valueColor: AppColors.blackColor,
+              valueTextWeight: FontWeight.w500,
+              valueTextSize: AppConstants.smallFont,
+            ),
+          ]),
+        ]),
       ),
     );
   }

@@ -35,61 +35,53 @@ class _BankTransferWidgetState extends State<BankTransferWidget> {
   TextEditingController textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BankTransferBloc, BankTransferState>(
-      builder: (context, state) {
-        return Scaffold(
+    return BlocBuilder<BankTransferBloc, BankTransferState>(builder: (context, state) {
+      return Scaffold(
+        backgroundColor: AppColors.whiteColor,
+        appBar: AppBar(
+          surfaceTintColor: AppColors.whiteColor,
+          leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
+          title: Align(
+            alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+            child: Text(AppLocalizations.of(context)!.bank_transfer_information, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: AppConstants.padding_20, left: AppConstants.padding_10),
+              child: GestureDetector(
+                  onTap: () {
+                    textController = TextEditingController(text: state.bankTransferDetails);
+                    Clipboard.setData(ClipboardData(text: textController.text)).then((_) {
+                      textController.clear();
+                      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.copied, type: SnackBarType.success);
+                    });
+                  },
+                  child: Text(AppLocalizations.of(context)!.copy, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.redColor))),
+            ),
+          ],
           backgroundColor: AppColors.whiteColor,
-          appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
-            leading: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(Icons.arrow_back_ios, color: Colors.black)),
-            title: Align(
-              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(
-                AppLocalizations.of(context)!.bank_transfer_information,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
-              ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: AppConstants.padding_20, left: AppConstants.padding_10),
-                child: GestureDetector(
-                    onTap: () {
-                      textController = TextEditingController(text: state.bankTransferDetails);
-                      Clipboard.setData(ClipboardData(text: textController.text)).then((_) {
-                        textController.clear();
-                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.copied, type: SnackBarType.success);
-                      });
-                    },
-                    child: Text(
-                      AppLocalizations.of(context)!.copy,
-                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.redColor),
-                    )),
-              ),
-            ],
-            backgroundColor: AppColors.whiteColor,
-            titleSpacing: 0,
-            elevation: 0,
+          titleSpacing: 0,
+          elevation: 0,
+        ),
+        body: SafeArea(
+          child: Container(
+            alignment: context.rtl ? Alignment.topRight : Alignment.topLeft,
+            margin: const EdgeInsets.all(AppConstants.padding_20),
+            decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_8)), border: Border.all(color: AppColors.borderColor)),
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_8),
+            child: state.isLoading
+                ? const CircularProgressIndicator()
+                : SelectableText(
+                    state.bankTransferDetails,
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
+                  ),
           ),
-          body: SafeArea(
-            child: Container(
-              alignment: context.rtl ? Alignment.topRight : Alignment.topLeft,
-              margin: const EdgeInsets.all(20),
-              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(8)), border: Border.all(color: AppColors.borderColor)),
-              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_8),
-              child: state.isLoading
-                  ? const CircularProgressIndicator()
-                  : SelectableText(
-                      state.bankTransferDetails,
-                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-                    ),
-            ),
-          ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 }

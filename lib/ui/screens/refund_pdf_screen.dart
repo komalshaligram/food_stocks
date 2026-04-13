@@ -22,85 +22,66 @@ class RefundPdfScreen extends StatelessWidget {
     final Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
-      create: (context) => RefundPdfBloc()
-        ..add(
-          RefundPdfEvent.getArgumentEvent(
-            invoiceDetailsList: args?[AppStrings.invoiceListString],
-            context: context,
-          ),
-        ),
-      child: RefundPdfScreenWidget(
-        invoiceDetailsList: args?[AppStrings.invoiceListString],
-      ),
+      create: (context) => RefundPdfBloc()..add(RefundPdfEvent.getArgumentEvent(invoiceDetailsList: args?[AppStrings.invoiceListString], context: context)),
+      child: RefundPdfScreenWidget(invoiceDetailsList: args?[AppStrings.invoiceListString]),
     );
   }
 }
 
 class RefundPdfScreenWidget extends StatelessWidget {
   final RefundInvoiceCommon? invoiceDetailsList;
-
   const RefundPdfScreenWidget({super.key, required this.invoiceDetailsList});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RefundPdfBloc, RefundPdfState>(
-      builder: (context, state) {
-        final bloc = context.read<RefundPdfBloc>();
-        final String? fullUrl = state.invoiceDetailsList?.invoiceLink;
+    return BlocBuilder<RefundPdfBloc, RefundPdfState>(builder: (context, state) {
+      final bloc = context.read<RefundPdfBloc>();
+      final String? fullUrl = state.invoiceDetailsList?.invoiceLink;
 
-        return Scaffold(
-          backgroundColor: AppColors.pageColor,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-            child: CommonAppBar(
-              bgColor: AppColors.pageColor,
-              title: AppLocalizations.of(context)!.my_refunds,
-              iconData: Icons.arrow_back_ios_sharp,
-              onTap: () => Navigator.pop(context),
-              trailingWidget: GestureDetector(
-                onTap: () async {
-                  if (bloc.isValidLink(fullUrl)) {
-                    await Share.share(fullUrl!);
-                    return;
-                  }
+      return Scaffold(
+        backgroundColor: AppColors.pageColor,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+          child: CommonAppBar(
+            bgColor: AppColors.pageColor,
+            title: AppLocalizations.of(context)!.my_refunds,
+            iconData: Icons.arrow_back_ios_sharp,
+            onTap: () => Navigator.pop(context),
+            trailingWidget: GestureDetector(
+              onTap: () async {
+                if (bloc.isValidLink(fullUrl)) {
+                  await Share.share(fullUrl!);
+                  return;
+                }
 
-                  bloc.add(RefundPdfEvent.verifyInvoiceLink(context: context));
-                  await Future.delayed(const Duration(milliseconds: 500));
+                bloc.add(RefundPdfEvent.verifyInvoiceLink(context: context));
+                await Future.delayed(const Duration(milliseconds: 500));
 
-                  final newUrl = bloc.state.invoiceDetailsList?.invoiceLink;
-
-                  if (bloc.isValidLink(newUrl)) {
-                    await Share.share(newUrl!);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("No Invoice PDF found")),
-                    );
-                  }
-                },
-                child: Icon(Icons.download_outlined, color: AppColors.mainColor),
-              ),
+                final newUrl = bloc.state.invoiceDetailsList?.invoiceLink;
+                if (bloc.isValidLink(newUrl)) {
+                  await Share.share(newUrl!);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("No Invoice PDF found")),
+                  );
+                }
+              },
+              child: Icon(Icons.download_outlined, color: AppColors.mainColor),
             ),
           ),
-          body: Builder(
-            builder: (_) {
-              if (state.hasValidLink == null) {
-                return const SizedBox.shrink();
-              }
+        ),
+        body: Builder(builder: (_) {
+          if (state.hasValidLink == null) {
+            return const SizedBox.shrink();
+          }
 
-              if (state.hasValidLink == false || !bloc.isValidLink(fullUrl)) {
-                return Center(
-                  child: Text(AppLocalizations.of(context)!.no_invoice_file),
-                );
-              }
+          if (state.hasValidLink == false || !bloc.isValidLink(fullUrl)) {
+            return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
+          }
 
-              return SfPdfViewer.network(
-                fullUrl!,
-                canShowScrollStatus: true,
-              );
-            },
-          ),
-        );
-      },
-    );
+          return SfPdfViewer.network(fullUrl!, canShowScrollStatus: true);
+        }),
+      );
+    });
   }
 }

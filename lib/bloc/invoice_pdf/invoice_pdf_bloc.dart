@@ -38,22 +38,11 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
     Emitter<InvoicePdfState> emit,
   ) async {
     await _initPrefs();
-
     final args = ModalRoute.of(event.context)!.settings.arguments as Map<String, dynamic>;
-
     screenTitleName = args[AppStrings.invoiceTitleNameString] as String;
-
     final String statusData = preferencesHelper!.getOrderStatusInfo();
     final List<StatusData> statusList = StatusData.decode(statusData);
-
-    emit(
-      state.copyWith(
-        invoiceDetailsList: event.invoiceDetailsList,
-        statusList: statusList,
-        hasValidLink: null,
-      ),
-    );
-
+    emit(state.copyWith(invoiceDetailsList: event.invoiceDetailsList, statusList: statusList, hasValidLink: null));
     add(InvoicePdfEvent.verifyInvoiceLink(context: event.context));
   }
 
@@ -62,16 +51,9 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
     Emitter<InvoicePdfState> emit,
   ) async {
     await _initPrefs();
-
     final initialLink = state.invoiceDetailsList.invoiceLink;
-
     if (isValidLink(initialLink)) {
-      emit(
-        state.copyWith(
-          hasValidLink: true,
-          invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: initialLink),
-        ),
-      );
+      emit(state.copyWith(hasValidLink: true, invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: initialLink)));
       return;
     }
 
@@ -84,32 +66,14 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
           rivchitApiKey: state.invoiceDetailsList.rivchitApiKey,
         ),
       );
-
       final response = RefundInvoiceResModel.fromJson(res);
-
       if (response.status == AppConstants.code_200 && isValidLink(response.data)) {
-        emit(
-          state.copyWith(
-            hasValidLink: true,
-            invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: response.data),
-          ),
-        );
+        emit(state.copyWith(hasValidLink: true, invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: response.data)));
         return;
       }
-
-      emit(
-        state.copyWith(
-          hasValidLink: false,
-          invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: ""),
-        ),
-      );
+      emit(state.copyWith(hasValidLink: false, invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: "")));
     } catch (_) {
-      emit(
-        state.copyWith(
-          hasValidLink: false,
-          invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: ""),
-        ),
-      );
+      emit(state.copyWith(hasValidLink: false, invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: "")));
     }
   }
 

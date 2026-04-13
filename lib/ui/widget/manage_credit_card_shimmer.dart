@@ -10,66 +10,49 @@ class ManageCreditCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 2,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 200,
-                    padding: const EdgeInsets.all(20.0),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(color: AppColors.shimmer1Color, borderRadius: BorderRadius.circular(15)),
-                  ),
-                  buildTextFieldTitle(),
-                  buildTextField(),
-                  10.height,
-                  buildTextFieldTitle(),
-                  buildTextField(),
-                ],
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(
+        flex: 2,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
+          child: SingleChildScrollView(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                height: 200,
+                padding: const EdgeInsets.all(20.0),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(color: AppColors.shimmer1Color, borderRadius: BorderRadius.circular(15)),
               ),
-            ),
+              buildTextFieldTitle(),
+              buildTextField(),
+              10.height,
+              buildTextFieldTitle(),
+              buildTextField(),
+            ]),
           ),
         ),
-        50.height,
-        Expanded(
-          flex: 1,
-          child: Container(
-            color: AppColors.whiteColor,
-            padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  height: AppConstants.buttonHeight,
-                  decoration: BoxDecoration(
-                    color: AppColors.shimmer1Color,
-                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-                  ),
-                ),
-                15.height,
-                Container(
-                  height: AppConstants.buttonHeight,
-                  decoration: BoxDecoration(
-                    color: AppColors.shimmer1Color,
-                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-                  ),
-                ),
-                35.height,
-              ],
+      ),
+      50.height,
+      Expanded(
+        flex: 1,
+        child: Container(
+          color: AppColors.whiteColor,
+          padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(
+              height: AppConstants.buttonHeight,
+              decoration: BoxDecoration(color: AppColors.shimmer1Color, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
             ),
-          ),
+            15.height,
+            Container(
+              height: AppConstants.buttonHeight,
+              decoration: BoxDecoration(color: AppColors.shimmer1Color, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+            ),
+            35.height,
+          ]),
         ),
-      ],
-    );
+      ),
+    ]);
   }
 
   Widget buildTextField() {
@@ -77,10 +60,7 @@ class ManageCreditCardShimmer extends StatelessWidget {
       child: Container(
         height: AppConstants.textFormFieldHeight,
         width: double.maxFinite,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
       ),
     );
   }
@@ -91,10 +71,7 @@ class ManageCreditCardShimmer extends StatelessWidget {
         height: AppConstants.shimmerTextHeight,
         width: 140,
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
       ),
     );
   }

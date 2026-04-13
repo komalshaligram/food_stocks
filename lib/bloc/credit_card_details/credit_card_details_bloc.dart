@@ -39,12 +39,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             expDate_YY: state.validityController.text.trim(),
             expDate_MM: state.selectedMonth,
           );
-
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.updateCreditCardUrl + preferences.getUserId(),
-            data: reqMap,
-          );
-
+          final res = await DioClient(event.context).post(AppUrlEndPoints.updateCreditCardUrl + preferences.getUserId(), data: reqMap);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             if (state.isFromRegFlow) {
               add(CreditCardDetailsEvent.termsConditionApiEvent(context: event.context));
@@ -65,13 +60,9 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
                 type: SnackBarType.failure);
           }
         } on ServerException {
-          emit(state.copyWith(
-            isLoading: false,
-          ));
+          emit(state.copyWith(isLoading: false));
         } catch (e) {
-          emit(state.copyWith(
-            isLoading: false,
-          ));
+          emit(state.copyWith(isLoading: false));
         }
       } else if (event is _termsConditionApiEvent) {
         try {
@@ -125,30 +116,21 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
               },
             ),
           );
-
           TermsConditionResModel response = TermsConditionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(
-              isLoading: false,
-            ));
+            emit(state.copyWith(isLoading: false));
             Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name, arguments: {
               AppStrings.privacyPolicyPdfString: response.data ?? '',
               AppStrings.termsConditionParamString: termsConditionReqModel,
             });
           } else {
-            emit(state.copyWith(
-              isLoading: false,
-            ));
+            emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
-          emit(state.copyWith(
-            isLoading: false,
-          ));
+          emit(state.copyWith(isLoading: false));
         } catch (e) {
           CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
-          emit(state.copyWith(
-            isLoading: false,
-          ));
+          emit(state.copyWith(isLoading: false));
         }
       } else if (event is _selectMonthEvent) {
         emit(state.copyWith(selectedMonth: event.month));

@@ -8,33 +8,23 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CommonShimmerWidget(
-          child: Container(
-            height: 180,
-            width: double.maxFinite,
-            margin: const EdgeInsets.all(AppConstants.padding_10),
-            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              boxShadow: [
-                BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
-              ],
-              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-            ),
-            child: Container(
-              height: 55,
-            ),
+    return Column(children: [
+      CommonShimmerWidget(
+        child: Container(
+          height: 180,
+          width: double.maxFinite,
+          margin: const EdgeInsets.all(AppConstants.padding_10),
+          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+          decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           ),
+          child: Container(height: 55),
         ),
-        const CommonShimmerWidget(
-          child: SizedBox(
-            height: 25,
-            width: 100,
-          ),
-        ),
-        ListView.builder(
+      ),
+      const CommonShimmerWidget(child: SizedBox(height: 25, width: 100)),
+      ListView.builder(
           itemCount: 4,
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
@@ -45,19 +35,13 @@ class ProductDetailsScreenShimmerWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
                 decoration: BoxDecoration(
                   color: AppColors.whiteColor,
-                  boxShadow: [
-                    BoxShadow(color: AppColors.shadowColor.withValues(alpha:0.15), blurRadius: AppConstants.blur_10),
-                  ],
+                  boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
                   borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                 ),
-                child: Container(
-                  height: 40,
-                ),
+                child: Container(height: 40),
               ),
             );
-          },
-        ),
-      ],
-    );
+          }),
+    ]);
   }
 }

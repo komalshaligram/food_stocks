@@ -12,16 +12,7 @@ class CommonAppBar extends StatelessWidget {
   final double? height;
   final Color bgColor;
 
-  const CommonAppBar({
-    super.key,
-    required this.title,
-    required this.iconData,
-    this.onTap,
-    this.trailingWidget,
-    this.height,
-    this.width,
-    required this.bgColor,
-  });
+  const CommonAppBar({super.key, required this.title, required this.iconData, this.onTap, this.trailingWidget, this.height, this.width, required this.bgColor});
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +26,14 @@ class CommonAppBar extends StatelessWidget {
         child: InkWell(
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
           onTap: onTap,
-          child: Icon(
-            iconData,
-            size: 26,
-            color: AppColors.blackColor,
-          ),
+          child: Icon(iconData, size: 26, color: AppColors.blackColor),
         ),
       ),
       actions: [
         SizedBox(height: height, width: width, child: trailingWidget ?? const SizedBox()),
         const Padding(padding: EdgeInsets.all(AppConstants.padding_10)),
       ],
-      title: Text(
-        title,
-        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-      ),
+      title: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
     );
   }
 }

@@ -46,6 +46,7 @@ class CartProductDataResModel with _$CartProductDataResModel {
     @JsonKey(name: "totalQuantity") String? totalQuantity,
     @JsonKey(name: "totalAmount") String? totalAmount,
     @JsonKey(name: "notMinimumOrder") bool? notMinimumOrder,
+    @JsonKey(name: "minOrderAmount") int? minOrderAmount,
     @JsonKey(name: "totalSavings") String? totalSavings,
     @JsonKey(name: "vatPercentage") double? vatPercentage,
     @JsonKey(name: "bottleTax") double? bottleTax,

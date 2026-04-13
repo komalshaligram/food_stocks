@@ -53,11 +53,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
     on<PesachProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getPreferencesDataEvent) {
-        emit(
-          state.copyWith(
-            clubAgentId: preferences.getClubAgentId(),
-          ),
-        );
+        emit(state.copyWith(clubAgentId: preferences.getClubAgentId()));
       }
       if (event is _getSupplierProductsListEvent) {
         emit(state.copyWith(
@@ -89,7 +85,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           }
           productStockList[1].clear();
           productStockList[1].addAll(stockList);
-
           emit(state.copyWith(
             productList: productList,
             productStockList: productStockList,
@@ -117,8 +112,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
 
           Map<String, dynamic> req = request.toJson();
           req.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == '';
           });
 
@@ -130,11 +124,9 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: req);
           response = PesachProductsResModel.fromJson(res);
           emit(state.copyWith(searchType: event.searchType.toString()));
-
           if (response.status == AppConstants.code_200) {
             final cartMap = await fetchCartQuantities(event.context);
             productList.addAll(response.data ?? []);
-
             for (var product in productList) {
               stockList.add(ProductStockModel(
                 maxQty: (product.sale?.isSale ?? false) ? int.tryParse(product.sale?.saleMaxQuantity.toString() ?? '0') ?? 0 : 0,
@@ -145,7 +137,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             }
             productStockList[1].clear();
             productStockList[1].addAll(stockList);
-
             emit(state.copyWith(
               productList: productList,
               productStockList: productStockList,
@@ -154,11 +145,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               isProgress: false,
               isLoadMore: false,
             ));
-
-            emit(state.copyWith(
-              isBottomOfProducts: productList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false,
-              isProgress: false,
-            ));
+            emit(state.copyWith(isBottomOfProducts: productList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false, isProgress: false));
           } else {
             emit(state.copyWith(isLoadMore: false, isProgress: false));
             CustomSnackBar.showSnackBar(
@@ -168,25 +155,13 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             );
           }
         } on ServerException {
-          emit(state.copyWith(
-            isLoadMore: false,
-            isProgress: false,
-          ));
+          emit(state.copyWith(isLoadMore: false, isProgress: false));
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
       } else if (event is _refreshListEvent) {
         add(PesachProductsEvent.getPermissionList(context: event.context));
-        emit(state.copyWith(
-            pageNum: 0,
-            isProgress: false,
-            productList: [],
-            productStockList: [
-              state.productStockList[0],
-              [],
-              [],
-            ],
-            isBottomOfProducts: false));
+        emit(state.copyWith(pageNum: 0, isProgress: false, productList: [], productStockList: [state.productStockList[0], [], []], isBottomOfProducts: false));
         if (!state.isProgress) {
           add(PesachProductsEvent.getSupplierProductsListEvent(context: event.context, searchType: state.searchType));
         }
@@ -198,14 +173,8 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
 
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
-
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getProductDetailsUrl,
-            data: ProductDetailsReqModel(params: event.productId).toJson(),
-          );
-
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             //new changes
             //0 for barcode and search
@@ -220,16 +189,9 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               } else {
                 productStockUpdateIndex = state.productStockList[productListIndex].indexWhere((productStock) => productStock.productId == event.productId);
               }
-
-              emit(state.copyWith(
-                productListIndex: productListIndex,
-                productStockUpdateIndex: productStockUpdateIndex,
-              ));
-
+              emit(state.copyWith(productListIndex: productListIndex, productStockUpdateIndex: productStockUpdateIndex));
               try {
-                final res = await DioClient(event.context).post(
-                  '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-                );
+                final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == AppConstants.code_200) {
                   response.data?.data?.forEach((cartProduct) {
@@ -253,7 +215,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                   productSaleId: '',
                   productSupplierIds: '',
                 );
-
                 emit(state.copyWith(productStockList: productStockList));
               }
               if (response.product!.isNotEmpty) {
@@ -261,7 +222,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               }
 
               List<ProductSupplierModel> supplierList = [];
-
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
                     return ProductSupplierModel(
                       supplierId: supplier.supplierId ?? '',
@@ -333,7 +293,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                   }).toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == '0');
-
               emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockList: state.productStockList,
@@ -372,12 +331,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                   if (supplierSaleIndex == -1) {
                     supplierSaleIndex = -2;
                   }
-
-                  add(PesachProductsEvent.supplierSelectionEvent(
-                    supplierIndex: supplierIndex,
-                    context: event.context,
-                    supplierSaleIndex: supplierSaleIndex,
-                  ));
+                  add(PesachProductsEvent.supplierSelectionEvent(supplierIndex: supplierIndex, context: event.context, supplierSaleIndex: supplierSaleIndex));
                 }
               }
             } else {
@@ -405,18 +359,13 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             }
             if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != 0) {
               if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >= productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
-                CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-                  type: SnackBarType.failure,
-                );
+                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                 return;
               }
             }
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
               quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity + 1,
             );
-
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
           } else {
@@ -432,10 +381,9 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
         if (state.productStockUpdateIndex != -1) {
           if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 0) {
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity - 1);
-
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
-          } else {}
+          }
         }
       } else if (event is _updateQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -452,7 +400,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             emit(state.copyWith(productStockList: productStockList));
           } else {
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0);
-
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
@@ -468,11 +415,9 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-
           productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(productSupplierIds: supplierList[event.supplierIndex].supplierId, totalPrice: event.supplierSaleIndex == -2 ? supplierList[event.supplierIndex].basePrice : supplierList[event.supplierIndex].supplierSales[event.supplierSaleIndex].salePrice, stock: supplierList[event.supplierIndex].stock, quantity: supplierList[event.supplierIndex].quantity != 0 ? supplierList[event.supplierIndex].quantity : 1, productSaleId: event.supplierSaleIndex == -2 ? '' : supplierList[event.supplierIndex].supplierSales[event.supplierSaleIndex].saleId);
           supplierList = supplierList.map((supplier) => supplier.copyWith(selectedIndex: -1)).toList();
           supplierList[event.supplierIndex] = supplierList[event.supplierIndex].copyWith(selectedIndex: event.supplierSaleIndex);
-
           emit(state.copyWith(productSupplierList: supplierList, productStockList: productStockList));
         }
       } else if (event is _addToCartProductEvent) {
@@ -485,11 +430,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
         }
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0) {
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
             return;
           }
         }
@@ -503,10 +444,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
               cartProductId: _cartProductId,
             );
-            final res = await DioClient(event.context).post(
-              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
-              data: request,
-            );
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}', data: request);
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
@@ -519,9 +457,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                 totalPrice: productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
-
               emit(state.copyWith(isLoading: false, productStockList: productStockList));
-
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -561,9 +497,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             final res = await DioClient(event.context).post('${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}',
                 data: req,
                 options: Options(
-                  headers: {
-                    HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}',
-                  },
+                  headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
                 ));
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
@@ -640,9 +574,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: globalSearchReqModel.toJson());
-
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
-
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) => SearchModel(
@@ -656,7 +588,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           }
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
-
             searchList.addAll(response.data
                     ?.map((supplier) => SearchModel(
                           searchId: supplier.id ?? '',
@@ -683,9 +614,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                 []);
 
             final cartMap = await fetchCartQuantities(event.context);
-
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-
             final stockList = response.data?.map((searchProduct) {
               final productId = searchProduct.id ?? '';
               return ProductStockModel(
@@ -695,9 +624,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                 quantity: cartMap[productId] ?? 0,
               );
             }).toList();
-
             productStockList[0] = stockList ?? [];
-
             emit(state.copyWith(searchList: searchList, productStockList: productStockList, search: state.searchController.text, isSearching: false));
           } else {
             emit(state.copyWith(isSearching: false));
@@ -721,47 +648,28 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
         emit(state.copyWith(searchController: TextEditingController(text: event.search), searchList: event.searchList));
       } else if (event is _relatedProductsEvent) {
         emit(state.copyWith(isRelatedShimmering: true));
-        final res = await DioClient(event.context).post(
-          AppUrlEndPoints.relatedProductsUrl,
-          data: {AppStrings.mainProductIdString: event.productId},
-        );
+        final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
         RelatedProductResModel response = RelatedProductResModel.fromJson(res);
 
         if (response.status == AppConstants.code_200) {
           final cartMap = await fetchCartQuantities(event.context);
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-
           final newRelatedList = response.data?.map((product) {
-                return ProductStockModel(
-                  productId: product.id ?? '',
-                  stock: product.productStock.toString(),
-                  quantity: cartMap[product.id] ?? 0,
-                );
+                return ProductStockModel(productId: product.id ?? '', stock: product.productStock.toString(), quantity: cartMap[product.id] ?? 0);
               }).toList() ??
               [];
-
           productStockList[2] = productStockList[2].map((product) {
-                return product.copyWith(
-                  productSupplierIds: product.productSupplierIds,
-                  productId: product.productId,
-                  stock: product.stock.toString(),
-                  quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
-                );
-              }).toList();
-
+            return product.copyWith(
+              productSupplierIds: product.productSupplierIds,
+              productId: product.productId,
+              stock: product.stock.toString(),
+              quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
+            );
+          }).toList();
           productStockList[2].addAll(newRelatedList);
-
-          emit(state.copyWith(
-            relatedProductList: response.data ?? [],
-            isProductLoading: false,
-            isRelatedShimmering: false,
-            productStockList: productStockList,
-          ));
+          emit(state.copyWith(relatedProductList: response.data ?? [], isProductLoading: false, isRelatedShimmering: false, productStockList: productStockList));
         } else {
-          emit(state.copyWith(
-            isRelatedShimmering: false,
-            isProductLoading: false,
-          ));
+          emit(state.copyWith(isRelatedShimmering: false, isProductLoading: false));
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
@@ -771,16 +679,12 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
       } else if (event is _removeRelatedProductEvent) {
         emit(state.copyWith(relatedProductList: []));
       } else if (event is _getCartCountEvent) {
-        emit(state.copyWith(
-          cartCount: preferences.getCartCount(),
-          isSubUserAddToBasket: preferences.getCanAddToBasket(),
-        ));
+        emit(state.copyWith(cartCount: preferences.getCartCount(), isSubUserAddToBasket: preferences.getCanAddToBasket()));
       } else if (event is _getPermissionList) {
         if (preferences.getSubUser()) {
           try {
             final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
               preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
@@ -795,9 +699,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
               preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
               preferences.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
-              emit(state.copyWith(
-                isSubUserAddToBasket: res?.canAddToCart ?? false,
-              ));
+              emit(state.copyWith(isSubUserAddToBasket: res?.canAddToCart ?? false));
             } else {
               CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -814,7 +716,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
           try {
             final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
@@ -837,11 +738,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
 
             if (productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty != 0) {
               if (productStockList[event.productListIndex][event.productStockUpdateIndex].quantity >= productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty) {
-                CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-                  type: SnackBarType.failure,
-                );
+                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                 return;
               }
             }
@@ -868,7 +765,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             );
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
-          } else {}
+          }
         }
       } else if (event is _updateListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -904,7 +801,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
         if (event.productSupplierIds.isEmpty) {
           return;
         }
-
         if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty > 0) {
           if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity > state.productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty) {
             CustomSnackBar.showSnackBar(
@@ -915,15 +811,11 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             return;
           }
         }
-
         if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity == 0) {
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-          );
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
 
           if (res != null) {
             final response = GetAllCartResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               final cartList = response.data?.data;
 
@@ -935,20 +827,11 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
 
                     try {
                       final player = AudioPlayer();
-                      final response = await DioClient(event.context).post(
-                        AppUrlEndPoints.removeCartProductUrl,
-                        data: {AppStrings.cartProductIdString: cartProductId},
-                      );
-
+                      final response = await DioClient(event.context).post(AppUrlEndPoints.removeCartProductUrl, data: {AppStrings.cartProductIdString: cartProductId});
                       if (response[AppStrings.statusString] == AppConstants.code_200) {
                         player.play(AssetSource(AppStrings.deleteSound));
-
                         await preferences.setCartCount(count: preferences.getCartCount() - 1);
-
-                        emit(state.copyWith(
-                          cartCount: preferences.getCartCount(),
-                        ));
-
+                        emit(state.copyWith(cartCount: preferences.getCartCount()));
                         break;
                       }
                     } catch (_) {}
@@ -957,17 +840,10 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               }
             }
           }
-
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.record_deleted_successfully,
-            type: SnackBarType.success,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.record_deleted_successfully, type: SnackBarType.success);
         } else {
           try {
-            final res = await DioClient(event.context).post(
-              '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-            );
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               response.data?.data?.forEach((cartProduct) {
@@ -989,10 +865,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                 quantity: state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity,
                 cartProductId: _cartProductId,
               );
-              final res = await DioClient(event.context).post(
-                '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
-                data: request,
-              );
+              final res = await DioClient(event.context).post('${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}', data: request);
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
               if (response.status == AppConstants.code_201) {
                 Vibration.vibrate();
@@ -1039,10 +912,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
                 if (value != null) {}
                 return value == null;
               });
-              final res = await DioClient(event.context).post(
-                '${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}',
-                data: req,
-              );
+              final res = await DioClient(event.context).post('${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}', data: req);
               InsertCartResModel response = InsertCartResModel.fromJson(res);
               if (response.status == AppConstants.code_201) {
                 add(const PesachProductsEvent.setCartCountEvent());
@@ -1080,9 +950,7 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
         }
       } else if (event is _getCartCountNoEvent) {
         try {
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-          );
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
           if (res != null) {
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
@@ -1097,7 +965,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
               options: Options(
                 headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
               ));
-
           MessageCountResModel response = MessageCountResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());

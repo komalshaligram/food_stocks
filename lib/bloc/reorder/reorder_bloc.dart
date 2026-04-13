@@ -54,11 +54,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
     on<ReorderEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getPreferencesDataEvent) {
-        emit(
-          state.copyWith(
-            clubAgentId: preferences.getClubAgentId(),
-          ),
-        );
+        emit(state.copyWith(clubAgentId: preferences.getClubAgentId()));
       }
       if (event is _getPreviousOrderProductsEvent) {
         emit(
@@ -92,7 +88,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           }
           productStockList[1].clear();
           productStockList[1].addAll(stockList);
-
           emit(state.copyWith(
             previousOrderProductsList: previousOrderProductsList,
             productStockList: productStockList,
@@ -112,16 +107,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             isShimmering: state.pageNum == 0 ? true : false,
             isLoadMore: state.pageNum == 0 ? false : true,
           ));
-          PreviousOrderProductsReqModel request = PreviousOrderProductsReqModel(
-            pageLimit: AppConstants.recommendationProductPageLimit,
-            pageNum: state.pageNum + 1,
-          );
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getPreviousOrderProductsUrl,
-            data: request.toJson(),
-          );
+          PreviousOrderProductsReqModel request = PreviousOrderProductsReqModel(pageLimit: AppConstants.recommendationProductPageLimit, pageNum: state.pageNum + 1);
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getPreviousOrderProductsUrl, data: request.toJson());
           PreviousOrderProductsResModel response = PreviousOrderProductsResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             final cartMap = await fetchCartQuantities(event.context);
             previousOrderProductsList.addAll(response.previousProductData ?? []);
@@ -135,7 +123,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             }
             productStockList[1].clear();
             productStockList[1].addAll(stockList);
-
             emit(state.copyWith(
               previousOrderProductsList: previousOrderProductsList,
               productStockList: productStockList,
@@ -144,10 +131,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               isShimmering: false,
               isLoadMore: false,
             ));
-
-            emit(state.copyWith(
-              isBottomOfProducts: state.previousOrderProductsList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false,
-            ));
+            emit(state.copyWith(isBottomOfProducts: state.previousOrderProductsList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false));
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
@@ -184,14 +168,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         _productQuantity = 0;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
-
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getProductDetailsUrl,
-            data: ProductDetailsReqModel(params: event.productId).toJson(),
-          );
-
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             //new changes
             //0 for barcode and search
@@ -200,9 +178,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             if (response.product!.isNotEmpty) {
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               int productListIndex = event.productListIndex;
-
               int productStockUpdateIndex = 0;
-
               if (event.isBarcode) {
                 productStockUpdateIndex = 0;
                 productStockList[0][0] = productStockList[0][0].copyWith(
@@ -214,13 +190,10 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               } else {
                 productStockUpdateIndex = state.productStockList[productListIndex].indexWhere((productStock) => productStock.productId == event.productId);
               }
-
               emit(state.copyWith(productListIndex: productListIndex, productStockUpdateIndex: productStockUpdateIndex));
 
               try {
-                final res = await DioClient(event.context).post(
-                  '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-                );
+                final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == AppConstants.code_200) {
                   response.data?.data?.forEach((cartProduct) {
@@ -234,7 +207,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 }
               } catch (_) {}
               emit(state.copyWith(productDetails: response.product ?? [], isProductLoading: false));
-
               if ((event.isBarcode)) {
                 productStockList[0][0] = productStockList[0][0].copyWith(
                   quantity: _productQuantity,
@@ -242,7 +214,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
                   maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                 );
-
                 emit(state.copyWith(productStockList: productStockList));
               }
 
@@ -322,16 +293,12 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   }).toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == '0');
-
               String note = productStockList.isEmpty
                   ? ''
                   : productStockList.indexOf(state.productStockList.last) == productListIndex
                       ? ''
                       : productStockList[productListIndex][0].note;
-              emit(state.copyWith(
-                productStockList: [],
-              ));
-
+              emit(state.copyWith(productStockList: []));
               emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockList: productStockList,
@@ -371,7 +338,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   if (supplierSaleIndex == -1) {
                     supplierSaleIndex = -2;
                   }
-
                   add(ReorderEvent.supplierSelectionEvent(supplierIndex: supplierIndex, context: event.context, supplierSaleIndex: supplierSaleIndex));
                 }
               }
@@ -381,18 +347,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           } else {
             emit(state.copyWith(isProductLoading: false, productDetails: []));
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context), type: SnackBarType.failure);
           }
         } on ServerException {
           Navigator.pop(event.context);
-          // emit(state.copyWith(isProductLoading: false));
-        } catch (e) {
-          // Navigator.pop(event.context);
-        }
+        } catch (_) {}
       } else if (event is _increaseQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
         if (state.productStockUpdateIndex != -1) {
@@ -424,7 +383,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity - 1);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
-          } else {}
+          }
         }
       } else if (event is _updateQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -461,12 +420,15 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-
-          productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(productSupplierIds: supplierList[event.supplierIndex].supplierId, totalPrice: event.supplierSaleIndex == -2 ? supplierList[event.supplierIndex].basePrice : supplierList[event.supplierIndex].supplierSales[event.supplierSaleIndex].salePrice, stock: supplierList[event.supplierIndex].stock, quantity: supplierList[event.supplierIndex].quantity != 0 ? supplierList[event.supplierIndex].quantity : 1, productSaleId: event.supplierSaleIndex == -2 ? '' : supplierList[event.supplierIndex].supplierSales[event.supplierSaleIndex].saleId);
-
+          productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
+            productSupplierIds: supplierList[event.supplierIndex].supplierId,
+            totalPrice: event.supplierSaleIndex == -2 ? supplierList[event.supplierIndex].basePrice : supplierList[event.supplierIndex].supplierSales[event.supplierSaleIndex].salePrice,
+            stock: supplierList[event.supplierIndex].stock,
+            quantity: supplierList[event.supplierIndex].quantity != 0 ? supplierList[event.supplierIndex].quantity : 1,
+            productSaleId: event.supplierSaleIndex == -2 ? '' : supplierList[event.supplierIndex].supplierSales[event.supplierSaleIndex].saleId,
+          );
           supplierList = supplierList.map((supplier) => supplier.copyWith(selectedIndex: -1)).toList();
           supplierList[event.supplierIndex] = supplierList[event.supplierIndex].copyWith(selectedIndex: event.supplierSaleIndex);
-
           emit(state.copyWith(productSupplierList: supplierList, productStockList: productStockList));
         }
       } else if (event is _addToCartProductEvent) {
@@ -479,11 +441,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         }
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0) {
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
             return;
           }
         }
@@ -497,10 +455,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
               cartProductId: _cartProductId,
             );
-            final res = await DioClient(event.context).post(
-              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
-              data: request,
-            );
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}', data: request);
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
@@ -514,7 +469,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 productSupplierIds: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
               );
               emit(state.copyWith(isLoading: false, productStockList: productStockList, cartCount: preferences.getCartCount()));
-
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -574,7 +528,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 productSaleId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
               );
               add(const ReorderEvent.getCartCountEvent());
-
               emit(state.copyWith(isLoading: false, productStockList: productStockList, duringCelebration: true));
               await Future.delayed(const Duration(milliseconds: 500));
               emit(state.copyWith(duringCelebration: false));
@@ -677,9 +630,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 []);
 
             final cartMap = await fetchCartQuantities(event.context);
-
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-
             final stockList = response.data?.map((searchProduct) {
               final productId = searchProduct.id ?? '';
               return ProductStockModel(
@@ -689,9 +640,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 quantity: cartMap[productId] ?? 0,
               );
             }).toList();
-
             productStockList[0] = stockList ?? [];
-
             emit(state.copyWith(searchList: searchList, productStockList: productStockList, search: state.searchController.text, isSearching: false));
           } else {
             emit(state.copyWith(isSearching: false));
@@ -711,7 +660,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             data: const ProductCategoriesReqModel(pageNum: 1, pageLimit: 18).toJson(),
           );
           ProductCategoriesResModel response = ProductCategoriesResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             searchList.addAll(response.data?.categories?.map((category) => SearchModel(
@@ -722,13 +670,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                     )) ??
                 []);
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference == true) ?? true;
-
-            emit(state.copyWith(
-              isCatVisible: productVisible,
-              productCategoryList: response.data?.categories ?? [],
-              searchList: searchList,
-              isShimmering: false,
-            ));
+            emit(state.copyWith(isCatVisible: productVisible, productCategoryList: response.data?.categories ?? [], searchList: searchList, isShimmering: false));
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
@@ -746,38 +688,23 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         emit(state.copyWith(isRelatedShimmering: true));
         final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
         RelatedProductResModel response = RelatedProductResModel.fromJson(res);
-
         if (response.status == AppConstants.code_200) {
           final cartMap = await fetchCartQuantities(event.context);
-
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-
           final newRelatedList = response.data?.map((product) {
-                return ProductStockModel(
-                  productId: product.id ?? '',
-                  stock: product.productStock.toString(),
-                  quantity: cartMap[product.id] ?? 0,
-                );
+                return ProductStockModel(productId: product.id ?? '', stock: product.productStock.toString(), quantity: cartMap[product.id] ?? 0);
               }).toList() ??
               [];
-
           productStockList[2] = productStockList[2].map((product) {
-                return product.copyWith(
-                  productSupplierIds: product.productSupplierIds,
-                  productId: product.productId,
-                  stock: product.stock.toString(),
-                  quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
-                );
-              }).toList();
-
+            return product.copyWith(
+              productSupplierIds: product.productSupplierIds,
+              productId: product.productId,
+              stock: product.stock.toString(),
+              quantity: event.productId == product.productId ? product.quantity : cartMap[product.productId] ?? 0,
+            );
+          }).toList();
           productStockList[2].addAll(newRelatedList);
-
-          emit(state.copyWith(
-            relatedProductList: response.data ?? [],
-            isProductLoading: false,
-            isRelatedShimmering: false,
-            productStockList: productStockList,
-          ));
+          emit(state.copyWith(relatedProductList: response.data ?? [], isProductLoading: false, isRelatedShimmering: false, productStockList: productStockList));
         } else {
           emit(state.copyWith(isRelatedShimmering: false, isProductLoading: false));
           CustomSnackBar.showSnackBar(
@@ -793,7 +720,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           try {
             final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
             AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               var res = response.data?.permissions;
               preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
@@ -808,9 +734,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
               preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
               preferences.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
-              emit(state.copyWith(
-                isSubUserAddToBasket: res?.canAddToCart ?? false,
-              ));
+              emit(state.copyWith(isSubUserAddToBasket: res?.canAddToCart ?? false));
             } else {
               CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -828,7 +752,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         try {
           final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
           VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {
               Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
@@ -850,11 +773,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
 
             if (productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty != 0) {
               if (productStockList[event.productListIndex][event.productStockUpdateIndex].quantity >= productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty) {
-                CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-                  type: SnackBarType.failure,
-                );
+                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                 return;
               }
             }
@@ -881,7 +800,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             );
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
-          } else {}
+          }
         }
       } else if (event is _updateListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -920,48 +839,30 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
 
         if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty > 0) {
           if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity > state.productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty) {
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
             return;
           }
         }
 
         if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity == 0) {
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-          );
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
 
           if (res != null) {
             final response = GetAllCartResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               final cartList = response.data?.data;
-
               if (cartList != null && cartList.isNotEmpty) {
                 for (var item in cartList) {
                   final productDetails = item.productDetails;
                   if (productDetails != null && productDetails.id == event.productId) {
                     final cartProductId = item.cartProductId;
-
                     try {
                       final player = AudioPlayer();
-                      final response = await DioClient(event.context).post(
-                        AppUrlEndPoints.removeCartProductUrl,
-                        data: {AppStrings.cartProductIdString: cartProductId},
-                      );
-
+                      final response = await DioClient(event.context).post(AppUrlEndPoints.removeCartProductUrl, data: {AppStrings.cartProductIdString: cartProductId});
                       if (response[AppStrings.statusString] == AppConstants.code_200) {
                         player.play(AssetSource(AppStrings.deleteSound));
-
                         await preferences.setCartCount(count: preferences.getCartCount() - 1);
-
-                        emit(state.copyWith(
-                          cartCount: preferences.getCartCount(),
-                        ));
-
+                        emit(state.copyWith(cartCount: preferences.getCartCount()));
                         break;
                       }
                     } catch (_) {}
@@ -970,17 +871,10 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               }
             }
           }
-
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.record_deleted_successfully,
-            type: SnackBarType.success,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.record_deleted_successfully, type: SnackBarType.success);
         } else {
           try {
-            final res = await DioClient(event.context).post(
-              '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-            );
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               response.data?.data?.forEach((cartProduct) {
@@ -1002,10 +896,7 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 quantity: state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity,
                 cartProductId: _cartProductId,
               );
-              final res = await DioClient(event.context).post(
-                '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
-                data: request,
-              );
+              final res = await DioClient(event.context).post('${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}', data: request);
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
               if (response.status == AppConstants.code_201) {
                 Vibration.vibrate();
@@ -1019,7 +910,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
                 emit(state.copyWith(productStockList: productStockList));
-
                 CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -1032,13 +922,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
                   type: SnackBarType.failure,
                 );
-                //     emit(state.copyWith(isLoading: false));
               }
-            } on ServerException {
-              //  emit(state.copyWith(isLoading: false));
-            } catch (e) {
-              //  emit(state.copyWith(isLoading: false));
-            }
+            } catch (_) {}
           } else {
             try {
               insert.InsertCartReqModel insertCartReqModel = insert.InsertCartReqModel(
@@ -1057,14 +942,10 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 if (value != null) {}
                 return value == null;
               });
-              final res = await DioClient(event.context).post(
-                '${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}',
-                data: req,
-              );
+              final res = await DioClient(event.context).post('${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}', data: req);
               InsertCartResModel response = InsertCartResModel.fromJson(res);
               if (response.status == AppConstants.code_201) {
                 add(const ReorderEvent.setCartCountEvent());
-
                 Vibration.vibrate();
                 List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
                 productStockList[event.productListIndex][event.productStockUpdateIndex] = productStockList[event.productListIndex][event.productStockUpdateIndex].copyWith(
@@ -1075,15 +956,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                   totalPrice: productStockList[event.productListIndex][event.productStockUpdateIndex].totalPrice,
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
-
                 add(const ReorderEvent.getCartCountEvent());
-
                 emit(state.copyWith(isLoading: false, productStockList: productStockList, duringCelebration: true));
                 await Future.delayed(const Duration(milliseconds: 500));
                 emit(state.copyWith(duringCelebration: false));
-                emit(state.copyWith(
-                  productStockList: productStockList,
-                ));
+                emit(state.copyWith(productStockList: productStockList));
                 CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -1091,28 +968,20 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 );
               } else if (response.status == AppConstants.code_403) {
                 // emit(state.copyWith(isLoading: false));
-
                 // CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context), type: SnackBarType.failure);
               } else {
-                // emit(state.copyWith(isLoading: false));
                 CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
                   type: SnackBarType.failure,
                 );
               }
-            } on ServerException {
-              // emit(state.copyWith(isLoading: false));
-            } catch (e) {
-              //   emit(state.copyWith(isLoading: false));
-            }
+            } catch (_) {}
           }
         }
       } else if (event is _getCartCountNoEvent) {
         try {
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-          );
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
           if (res != null) {
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
@@ -1127,7 +996,6 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
               options: Options(headers: {
                 HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}',
               }));
-
           MessageCountResModel response = MessageCountResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             await preferences.setMessageCount(count: response.data ?? preferences.getMessageCount());

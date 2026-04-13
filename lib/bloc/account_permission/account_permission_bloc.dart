@@ -36,8 +36,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
               PermissionModel(title: AppLocalizations.of(event.context)!.can_create_order, isEnable: response.data?.permissions?.canCreateOrder ?? false),
               PermissionModel(title: AppLocalizations.of(event.context)!.see_order, isEnable: response.data?.permissions?.canSeeOrders ?? false),
               PermissionModel(title: AppLocalizations.of(event.context)!.can_approve_order, isEnable: response.data?.permissions?.canApproveOrders ?? false),
-              PermissionModel(title: AppLocalizations.of(event.context)!.can_duplicate_order, isEnable: response.data?.permissions?.canDuplicateOrders ??
-                  false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_duplicate_order, isEnable: response.data?.permissions?.canDuplicateOrders ?? false),
               PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_business_info, isEnable: response.data?.permissions?.canSeeAndUpdateBusinessInfo ?? false),
               PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_additional_info, isEnable: response.data?.permissions?.canSeeAndUpdateAdditionalInfo ?? false),
               PermissionModel(title: AppLocalizations.of(event.context)!.can_see_update_times_info, isEnable: response.data?.permissions?.canSeeAndUpdateTimesInfo ?? false),
@@ -82,10 +81,8 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
           ));
 
           Map<String, dynamic> updatePermissionReq = req.toJson();
-
           updatePermissionReq.removeWhere((key, value) {
-            if (value != null) {
-            }
+            if (value != null) {}
             return value == null;
           });
 

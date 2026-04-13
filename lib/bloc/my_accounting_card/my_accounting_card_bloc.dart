@@ -30,23 +30,14 @@ class MyAccountingCardBloc extends Bloc<MyAccountingCardEvent, MyAccountingCardS
           final String statusData = preferences.getPaymentStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
           clientId = preferences.getUserId();
-
-          emit(state.copyWith(
-            statusList: statusList,
-            language: preferences.getAppLanguage(),
-            isShimmering: true,
-          ));
-
+          emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: true));
           final fromInvoice = state.invoicesFrom ?? DateTime.now().subtract(const Duration(days: 90));
           final toInvoice = state.invoicesTo ?? DateTime.now();
-
           final resInvoice = await DioClient(event.context).get(
             path: AppUrlEndPoints.getMyAccountingCardClientInvoicesFromRivchit + clientId,
             query: _dateRange(fromInvoice, toInvoice),
           );
-
           MyAccountCardInvoicesResModel responseInvoice = MyAccountCardInvoicesResModel.fromJson(resInvoice);
-
           if (responseInvoice.status == AppConstants.code_200) {
             emit(state.copyWith(
               isShimmering: false,
@@ -58,17 +49,13 @@ class MyAccountingCardBloc extends Bloc<MyAccountingCardEvent, MyAccountingCardS
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                responseInvoice.message?.toLocalization() ?? responseInvoice.message!,
-                event.context,
-              ),
+              title: AppStrings.getLocalizedStrings(responseInvoice.message?.toLocalization() ?? responseInvoice.message!, event.context),
               type: SnackBarType.failure,
             );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
         }
-
         final String statusData = preferences.getOrderStatusInfo();
         final List<StatusData> statusList = StatusData.decode(statusData);
         emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage()));
@@ -77,27 +64,18 @@ class MyAccountingCardBloc extends Bloc<MyAccountingCardEvent, MyAccountingCardS
           final String statusData = preferences.getPaymentStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
           clientId = preferences.getUserId();
-
-          emit(state.copyWith(
-            statusList: statusList,
-            language: preferences.getAppLanguage(),
-            isShimmering: true,
-          ));
-
+          emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: true));
           final fromRefund = state.refundsFrom ?? DateTime.now().subtract(const Duration(days: 90));
           final toRefund = state.refundsTo ?? DateTime.now();
-
           final resRefund = await DioClient(event.context).get(
             path: AppUrlEndPoints.getMyAccountingCardClientRefundInvoicesFromRivchit + clientId,
             query: _dateRange(fromRefund, toRefund),
           );
-
           MyAccountCardRefundResModel responseRefund = MyAccountCardRefundResModel.fromJson(resRefund);
           if (responseRefund.status == AppConstants.code_200) {
             emit(state.copyWith(
               isShimmering: false,
-              totalRefundAmount:
-              responseRefund.data?.totalOpenRefundInvoiceAmount ?? 0,
+              totalRefundAmount: responseRefund.data?.totalOpenRefundInvoiceAmount ?? 0,
               clientBalance: responseRefund.data?.clientBalance! ?? 0,
               refundInvoicesCardList: responseRefund.data?.refundInvoices! ?? [],
             ));
@@ -105,45 +83,29 @@ class MyAccountingCardBloc extends Bloc<MyAccountingCardEvent, MyAccountingCardS
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                responseRefund.message?.toLocalization() ?? responseRefund.message!,
-                event.context,
-              ),
+              title: AppStrings.getLocalizedStrings(responseRefund.message?.toLocalization() ?? responseRefund.message!, event.context),
               type: SnackBarType.failure,
             );
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
         }
-
         final String statusData = preferences.getOrderStatusInfo();
         final List<StatusData> statusList = StatusData.decode(statusData);
         emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage()));
       } else if (event is _changeTab) {
         emit(state.copyWith(selectedTabIndex: event.index));
       } else if (event is _updateInvoicesDateRange) {
-        emit(state.copyWith(
-          invoicesFrom: event.from,
-          invoicesTo: event.to,
-          isShimmering: true,
-          invoiceCardList: [],
-        ));
-
+        emit(state.copyWith(invoicesFrom: event.from, invoicesTo: event.to, isShimmering: true, invoiceCardList: []));
         add(MyAccountingCardEvent.getClientInvoicesFromRivchitDataEvent(context: event.context));
       } else if (event is _updateRefundsDateRange) {
-        emit(state.copyWith(
-          refundsFrom: event.from,
-          refundsTo: event.to,
-        ));
+        emit(state.copyWith(refundsFrom: event.from, refundsTo: event.to));
         add(MyAccountingCardEvent.getClientRefundInvoicesFromRivchitDataEvent(context: event.context));
       }
     });
   }
 
   Map<String, String> _dateRange(DateTime from, DateTime to) {
-    return {
-      "fromDate": DateFormat('dd/MM/yyyy').format(from),
-      "toDate": DateFormat('dd/MM/yyyy').format(to),
-    };
+    return {"fromDate": DateFormat('dd/MM/yyyy').format(from), "toDate": DateFormat('dd/MM/yyyy').format(to)};
   }
 }

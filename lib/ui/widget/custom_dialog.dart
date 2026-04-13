@@ -38,109 +38,85 @@ class CustomDialog extends StatelessWidget {
     return Directionality(
       textDirection: directionality == AppStrings.englishString ? TextDirection.ltr : TextDirection.rtl,
       child: AlertDialog(
-        contentPadding: const EdgeInsets.all(AppConstants.padding_20),
-        surfaceTintColor: AppColors.whiteColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
-        title: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w400)),
-        content: content.isEmpty
-            ? const SizedBox.shrink()
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-                child: SizedBox(
-                  height: 200,
-                  width: double.maxFinite,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+          contentPadding: const EdgeInsets.all(AppConstants.padding_20),
+          surfaceTintColor: AppColors.whiteColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
+          title: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w400)),
+          content: content.isEmpty
+              ? const SizedBox.shrink()
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+                  child: SizedBox(
+                    height: 200,
+                    width: double.maxFinite,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       if (isMixedSale == true)
                         Text(
                           AppLocalizations.of(context)?.productParticipatingSale ?? '',
-                          style: AppStyles.rkBoldTextStyle(
-                            size: AppConstants.font_14,
-                            color: AppColors.blackColor,
-                          ),
+                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
                         ),
                       2.height,
                       Expanded(
                         child: ListView.builder(
-                          itemCount: content.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_2),
-                              child: Row(
-                                children: [
+                            itemCount: content.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_2),
+                                child: Row(children: [
                                   Container(
                                     height: 5,
                                     width: 5,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.blackColor,
-                                      borderRadius: BorderRadius.circular(AppConstants.radius_50),
-                                    ),
+                                    decoration: BoxDecoration(color: AppColors.blackColor, borderRadius: BorderRadius.circular(AppConstants.radius_50)),
                                   ),
                                   8.width,
                                   Expanded(
                                     child: Text(
                                       content[index],
-                                      style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.smallFont,
-                                        color: AppColors.blackColor,
-                                      ),
+                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
                                     ),
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                                ]),
+                              );
+                            }),
                       ),
-                    ],
+                    ]),
                   ),
                 ),
-              ),
-        actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
-        actions: [
-          positiveTitle != null
-              ? InkWell(
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  onTap: positiveOnTap,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_7)),
-                    width: 80,
-                    child: isProcessing
-                        ? CupertinoActivityIndicator(
-                            color: AppColors.mainColor,
-                          )
-                        : Text(
-                            positiveTitle ?? '',
-                            style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withValues(alpha:0.9), size: AppConstants.smallFont),
-                          ),
-                  ),
-                )
-              : Container(),
-          negativeTitle != null
-              ? InkWell(
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  onTap: negativeOnTap,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
-                    alignment: Alignment.center,
-                    width: 80,
-                    decoration: BoxDecoration(
-                        gradient: AppColors.appMainGradientColor,
-                        borderRadius: BorderRadius.circular(AppConstants.radius_7)),
-                    child: Text(
-                      negativeTitle ?? '',
-                      style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),
+          actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_10, left: AppConstants.padding_20),
+          actions: [
+            positiveTitle != null
+                ? InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: positiveOnTap,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_7)),
+                      width: 80,
+                      child: isProcessing
+                          ? CupertinoActivityIndicator(
+                              color: AppColors.mainColor,
+                            )
+                          : Text(positiveTitle ?? '', style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withValues(alpha: 0.9), size: AppConstants.smallFont)),
                     ),
-                  ),
-                )
-              : Container(),
-        ],
-      ),
+                  )
+                : Container(),
+            negativeTitle != null
+                ? InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: negativeOnTap,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_10),
+                      alignment: Alignment.center,
+                      width: 80,
+                      decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_7)),
+                      child: Text(negativeTitle ?? '', style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont)),
+                    ),
+                  )
+                : Container(),
+          ]),
     );
   }
 }

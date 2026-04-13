@@ -34,11 +34,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           BankDetailModel response = BankDetailModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(
-              isShimmering: false,
-              bankList: response.data?.bankDetail ?? [],
-              bankName: response.data?.bankDetail?.first.bankName ?? '',
-            ));
+            emit(state.copyWith(isShimmering: false, bankList: response.data?.bankDetail ?? [], bankName: response.data?.bankDetail?.first.bankName ?? ''));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -75,9 +71,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
           return value == null;
         });
         try {
-          emit(state.copyWith(
-            isApiShimmering: true,
-          ));
+          emit(state.copyWith(isApiShimmering: true));
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
             path: AppUrlEndPoints.termsConditionUrl,
             formData: FormData.fromMap(
@@ -106,9 +100,7 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
 
           TermsConditionResModel response = TermsConditionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(
-              isApiShimmering: false,
-            ));
+            emit(state.copyWith(isApiShimmering: false));
             Navigator.pushNamed(event.context, RouteDefine.privacyPolicyScreen.name, arguments: {
               AppStrings.privacyPolicyPdfString: response.data ?? '',
               AppStrings.termsConditionParamString: termsConditionReqModel,
@@ -119,19 +111,13 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
               title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message ?? '', event.context),
               type: SnackBarType.failure,
             );
-            emit(state.copyWith(
-              isApiShimmering: false,
-            ));
+            emit(state.copyWith(isApiShimmering: false));
           }
         } on ServerException {
-          emit(state.copyWith(
-            isApiShimmering: false,
-          ));
+          emit(state.copyWith(isApiShimmering: false));
         } catch (e) {
           CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
-          emit(state.copyWith(
-            isApiShimmering: false,
-          ));
+          emit(state.copyWith(isApiShimmering: false));
         }
       } else if (event is _getArgumentEvent) {
         emit(state.copyWith(isPaymentFail: event.isPaymentFail, isUpdate: event.isUpdate));
@@ -145,22 +131,14 @@ class BankInfoBloc extends Bloc<BankInfoEvent, BankInfoState> {
             clientId: preferences.getUserId(),
           );
 
-          final res = await DioClient(event.context).put(
-            path: AppUrlEndPoints.addBankInfo,
-            data: reqMap.toJson(),
-          );
-
+          final res = await DioClient(event.context).put(path: AppUrlEndPoints.addBankInfo, data: reqMap.toJson());
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             preferences.setPaymentMethod(method: AppStrings.wallet);
             Navigator.pop(event.context);
             emit(state.copyWith(isApiShimmering: false));
           } else {
             emit(state.copyWith(isApiShimmering: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res['message'].toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(res['message'].toLocalization(), event.context), type: SnackBarType.failure);
           }
         } catch (e) {
           emit(state.copyWith(isApiShimmering: false));

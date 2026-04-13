@@ -28,11 +28,7 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
             List<PermissionModel> brandPermissionList = [];
 
             response.data?.forEach((element) {
-              brandPermissionList.add(PermissionModel(
-                title: element.brand?.brandName ?? '',
-                isEnable: element.isAllowed ?? false,
-                brandId: element.brand?.id ?? '',
-              ));
+              brandPermissionList.add(PermissionModel(title: element.brand?.brandName ?? '', isEnable: element.isAllowed ?? false, brandId: element.brand?.id ?? ''));
             });
             emit(state.copyWith(isSelectAll: true));
 
@@ -86,7 +82,6 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
           }
 
           UpdatePermissionModel req = UpdatePermissionModel(brandPermissions: updateBrandPermission);
-
           Map<String, dynamic> updatePermissionReq = req.toJson();
 
           updatePermissionReq.removeWhere((key, value) {
@@ -94,19 +89,12 @@ class BrandsPermissionBloc extends Bloc<BrandsPermissionEvent, BrandsPermissionS
             return value == null;
           });
 
-          final response = await DioClient(event.context).put(
-            path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}',
-            data: updatePermissionReq,
-          );
+          final response = await DioClient(event.context).put(path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
 
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.success_message,
-              type: SnackBarType.success,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
           } else {
             emit(state.copyWith(isUpdateProcess: false));
           }

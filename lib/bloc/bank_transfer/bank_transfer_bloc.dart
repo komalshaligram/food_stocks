@@ -12,10 +12,7 @@ class BankTransferBloc extends Bloc<BankTransferEvent, BankTransferState> {
     on<BankTransferEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getBankTransferInfoEvent) {
-        emit(state.copyWith(
-          bankTransferDetails: preferences.getBankTransferDetail(),
-          isLoading: false,
-        ));
+        emit(state.copyWith(bankTransferDetails: preferences.getBankTransferDetail(), isLoading: false));
       }
     });
   }

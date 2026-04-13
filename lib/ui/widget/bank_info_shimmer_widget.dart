@@ -14,22 +14,18 @@ class BankInfoScreenShimmerWidget extends StatelessWidget {
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(left: getScreenWidth(context) * 0.1, right: getScreenWidth(context) * 0.1),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              3.height,
-              buildTextFieldTitle(),
-              buildTextField(),
-              7.height,
-              buildTextFieldTitle(),
-              buildTextField(),
-              7.height,
-              buildTextFieldTitle(),
-              buildTextField(),
-              7.height,
-            ],
-          ),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+            3.height,
+            buildTextFieldTitle(),
+            buildTextField(),
+            7.height,
+            buildTextFieldTitle(),
+            buildTextField(),
+            7.height,
+            buildTextFieldTitle(),
+            buildTextField(),
+            7.height,
+          ]),
         ),
       ),
     );
@@ -40,10 +36,7 @@ class BankInfoScreenShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.textFormFieldHeight,
         width: double.maxFinite,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
       ),
     );
   }
@@ -54,10 +47,7 @@ class BankInfoScreenShimmerWidget extends StatelessWidget {
         height: AppConstants.shimmerTextHeight,
         width: 140,
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
       ),
     );
   }

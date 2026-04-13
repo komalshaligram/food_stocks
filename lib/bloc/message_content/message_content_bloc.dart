@@ -30,15 +30,8 @@ class MessageContentBloc extends Bloc<MessageContentEvent, MessageContentState> 
       } else if (event is _messageDeleteEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          DeleteMessageReq reqMap = DeleteMessageReq(
-            notificationIds: [
-              event.messageId,
-            ],
-          );
-          final response = await DioClient(event.context).post(
-            AppUrlEndPoints.deleteMessageUrl,
-            data: reqMap,
-          );
+          DeleteMessageReq reqMap = DeleteMessageReq(notificationIds: [event.messageId]);
+          final response = await DioClient(event.context).post(AppUrlEndPoints.deleteMessageUrl, data: reqMap);
 
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));
@@ -58,23 +51,15 @@ class MessageContentBloc extends Bloc<MessageContentEvent, MessageContentState> 
         }
       } else if (event is _messageUpdateEvent) {
         try {
-          DeleteMessageReq reqMap = DeleteMessageReq(
-            notificationIds: [
-              event.messageId,
-            ],
-          );
+          DeleteMessageReq reqMap = DeleteMessageReq(notificationIds: [event.messageId]);
           final response = await DioClient(event.context).put(
               path: AppUrlEndPoints.updateMessageUrl,
               data: reqMap.toJson(),
               options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}',
-                },
+                headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
               ));
-
-          if (response[AppStrings.statusString] == AppConstants.code_200) {
-          } else {}
-        } catch(_) {}
+          if (response[AppStrings.statusString] == AppConstants.code_200) {}
+        } catch (_) {}
       } else if (event is _imagePreviewEvent) {
         emit(state.copyWith(isPreview: !state.isPreview));
       }

@@ -5274,6 +5274,36 @@ class S {
     );
   }
 
+  /// `Minimum order :`
+  String get minimum_order {
+    return Intl.message(
+      'Minimum order :',
+      name: 'minimum_order',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `you can send the order`
+  String get you_can_send_the_order {
+    return Intl.message(
+      'you can send the order',
+      name: 'you_can_send_the_order',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `you can't send the order`
+  String get you_cant_send_the_order {
+    return Intl.message(
+      'you can\'t send the order',
+      name: 'you_cant_send_the_order',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Not minimum order`
   String get not_minimum_order {
     return Intl.message(
@@ -6017,6 +6047,106 @@ class S {
   /// `Date range`
   String get date_range {
     return Intl.message('Date range', name: 'date_range', desc: '', args: []);
+  }
+
+  /// `My Clients`
+  String get my_clients {
+    return Intl.message('My Clients', name: 'my_clients', desc: '', args: []);
+  }
+
+  /// `Switch back to agent view`
+  String get switch_back_to_agent_view {
+    return Intl.message(
+      'Switch back to agent view',
+      name: 'switch_back_to_agent_view',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SWITCH`
+  String get clients_switch {
+    return Intl.message('SWITCH', name: 'clients_switch', desc: '', args: []);
+  }
+
+  /// `SET MINIMUM`
+  String get clients_set_minimum {
+    return Intl.message(
+      'SET MINIMUM',
+      name: 'clients_set_minimum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min :`
+  String get clients_minimum_order {
+    return Intl.message(
+      'Min :',
+      name: 'clients_minimum_order',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NO MINIMUM`
+  String get clients_no_minimum {
+    return Intl.message(
+      'NO MINIMUM',
+      name: 'clients_no_minimum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to set to no minimum order for one hour?`
+  String get confirmation_no_minimum {
+    return Intl.message(
+      'Are you sure you want to set to no minimum order for one hour?',
+      name: 'confirmation_no_minimum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to set to minimum order?`
+  String get confirmation_minimum {
+    return Intl.message(
+      'Are you sure you want to set to minimum order?',
+      name: 'confirmation_minimum',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are now connected as: `
+  String get switch_client_message {
+    return Intl.message(
+      'You are now connected as: ',
+      name: 'switch_client_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are now connected as an agent`
+  String get switch_agent_message {
+    return Intl.message(
+      'You are now connected as an agent',
+      name: 'switch_agent_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Suppliers Found`
+  String get no_suppliers_found {
+    return Intl.message(
+      'No Suppliers Found',
+      name: 'no_suppliers_found',
+      desc: '',
+      args: [],
+    );
   }
 }
 

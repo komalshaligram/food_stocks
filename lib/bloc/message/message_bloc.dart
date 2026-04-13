@@ -39,9 +39,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           final res = await DioClient(event.context).post(AppUrlEndPoints.getNotificationMessageUrl,
               data: GetMessagesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.messagePageLimit).toJson(),
               options: Options(
-                headers: {
-                  HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}',
-                },
+                headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
               ));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
 
@@ -82,7 +80,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         add(MessageEvent.getMessageListEvent(context: event.context));
       } else if (event is _removeOrUpdateMessageEvent) {
         List<MessageData> messageList = state.messageList.toList(growable: true);
-
         if (event.isRead) {
           if (messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead == false) {
             await preferences.setMessageCount(count: preferences.getMessageCount() - 1);
@@ -104,16 +101,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         emit(state.copyWith(messageList: messageList));
       } else if (event is _messageDeleteEvent) {
         try {
-          DeleteMessageReq reqMap = DeleteMessageReq(
-            notificationIds: [
-              event.messageId,
-            ],
-          );
-          final response = await DioClient(event.context).post(
-            AppUrlEndPoints.deleteMessageUrl,
-            data: reqMap,
-          );
-
+          DeleteMessageReq reqMap = DeleteMessageReq(notificationIds: [event.messageId]);
+          final response = await DioClient(event.context).post(AppUrlEndPoints.deleteMessageUrl, data: reqMap);
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             add(MessageEvent.refreshListEvent(context: event.context));
             Navigator.pop(event.dialogContext);

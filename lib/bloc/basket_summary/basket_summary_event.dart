@@ -10,36 +10,17 @@ class BasketSummaryEvent with _$BasketSummaryEvent {
     int? totalSupplier,
   }) = _getDataEvent;
 
-  const factory BasketSummaryEvent.orderSendEvent({
-    required BuildContext context,
-    required String paymentMethod,
-    required bool failPayment,
-  }) = _orderSendEvent;
+  const factory BasketSummaryEvent.orderSendEvent({required BuildContext context, required String paymentMethod, required bool failPayment}) = _orderSendEvent;
 
-  const factory BasketSummaryEvent.payWithBankTransferEvent({
-    required BuildContext context,
-    required bool isFromRemovePopUp,
-  }) = _payWithBankTransferEvent;
+  const factory BasketSummaryEvent.payWithBankTransferEvent({required BuildContext context, required bool isFromRemovePopUp}) = _payWithBankTransferEvent;
 
   const factory BasketSummaryEvent.refreshEvent() = _refreshEvent;
 
-  const factory BasketSummaryEvent.getSupplierPaymentTypeEvent({
-    required BuildContext context,
-    required String id,
-    required int index,
-  }) = _getSupplierPaymentTypeEvent;
+  const factory BasketSummaryEvent.getSupplierPaymentTypeEvent({required BuildContext context, required String id, required int index}) = _getSupplierPaymentTypeEvent;
 
-  const factory BasketSummaryEvent.generalSettings({
-    required BuildContext context,
-    required BuildContext dialogContext,
-    required bool isRetryLoading,
-  }) = _generalSettings;
+  const factory BasketSummaryEvent.generalSettings({required BuildContext context, required BuildContext dialogContext, required bool isRetryLoading}) = _generalSettings;
 
-  const factory BasketSummaryEvent.updateMaintenanceEvent({
-    required BuildContext context,
-  }) = _updateMaintenanceEvent;
+  const factory BasketSummaryEvent.updateMaintenanceEvent({required BuildContext context}) = _updateMaintenanceEvent;
 
-  const factory BasketSummaryEvent.getProfileDetailsEvent({
-    required BuildContext context,
-  }) = _getProfileDetailsEvent;
+  const factory BasketSummaryEvent.getProfileDetailsEvent({required BuildContext context}) = _getProfileDetailsEvent;
 }

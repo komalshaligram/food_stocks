@@ -9,34 +9,24 @@ class FilterBottomSheetShimmerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        20.height,
-        buildTextFieldTitle(),
-        7.height,
-        buildTextField(),
-        7.height,
-        buildTextFieldTitle(),
-        7.height,
-        buildTextField(),
-        10.height,
-        buildTextField(),
-        10.height,
-        buildTextField(),
-        10.height,
-        buildTextField(),
-        50.height,
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [buildButton(), buildButton()],
-          ),
-        )
-      ],
-    );
+    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      20.height,
+      buildTextFieldTitle(),
+      7.height,
+      buildTextField(),
+      7.height,
+      buildTextFieldTitle(),
+      7.height,
+      buildTextField(),
+      10.height,
+      buildTextField(),
+      10.height,
+      buildTextField(),
+      10.height,
+      buildTextField(),
+      50.height,
+      Align(alignment: Alignment.bottomCenter, child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [buildButton(), buildButton()]))
+    ]);
   }
 
   Widget buildTextFieldTitle() {
@@ -45,10 +35,7 @@ class FilterBottomSheetShimmerWidget extends StatelessWidget {
         height: 25,
         width: 140,
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
       ),
     );
   }
@@ -58,10 +45,7 @@ class FilterBottomSheetShimmerWidget extends StatelessWidget {
       child: Container(
         height: AppConstants.containerSize_50,
         width: double.maxFinite,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
       ),
     );
   }
@@ -72,10 +56,7 @@ class FilterBottomSheetShimmerWidget extends StatelessWidget {
         width: 120,
         height: AppConstants.containerHeight,
         margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        ),
+        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
       ),
     );
   }

@@ -17,7 +17,6 @@ import '../../data/model/res_model/login_res_model/login_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../../ui/utils/constants/app_strings.dart';
 import 'dart:io';
 part 'otp_event.dart';
@@ -55,35 +54,31 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         if (state.isLoading) {
           return;
         }
-
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
             OtpReqModel reqMap = OtpReqModel(contact: event.contact, otp: event.otp, tokenId: preferences.getFCMToken());
-
             final res = await DioClient(event.context).post(AppUrlEndPoints.loginOTPUrl, data: reqMap);
-
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               _periodicOtpTimerSubscription.cancel();
               preferences.setCartId(cartId: response.data?.cartId ?? '');
               preferences.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
               preferences.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
-              preferences.setUserId(
-                id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '',
-              );
+              preferences.setUserId(id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
               if (response.data?.adminType == AppStrings.subUserString) {
                 preferences.setUserName(name: response.data?.user?.contactName ?? '');
               } else {
                 preferences.setUserName(name: response.data?.user?.clientDetail?.ownerName ?? '');
               }
-
               preferences.setUserImageUrl(imageUrl: response.data?.user?.profileImage ?? '');
               preferences.setUserLoggedIn(isLoggedIn: true);
               preferences.setWalletId(userWalletId: response.data?.wallet ?? '');
               preferences.setIsSubUser(isSubUser: (response.data?.adminType == AppStrings.subUserString) ? true : false);
               preferences.setEmailId(userEmailId: response.data?.user?.email ?? '');
-              preferences.setClubAgentId(club_agent_Id: response.data?.agentId ?? '');
+              preferences.setClubAgentId(clubAgentId: response.data?.agentId ?? '');
+              preferences.setIsAgent(isAgent: response.data?.isAgent ?? false);
+              preferences.setIsAgentSwitchToAssignedStore(isAgentSwitchToAssignedStore: response.data?.isAgentSwitchToAssignedStore ?? false);
 
               String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
               String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
@@ -124,9 +119,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
               }
               emit(state.copyWith(isLoading: false));
-
               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);
-
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -138,9 +131,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
                 type: SnackBarType.failure,
               );
-              emit(state.copyWith(
-                isLoading: false,
-              ));
+              emit(state.copyWith(isLoading: false));
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -164,13 +155,9 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
-            OtpReqModel reqMap = OtpReqModel(
-              contact: event.contact,
-              otp: event.otp,
-            );
+            OtpReqModel reqMap = OtpReqModel(contact: event.contact, otp: event.otp);
             final res = await DioClient(event.context).post(AppUrlEndPoints.otpVerifyUrl, data: reqMap);
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               _periodicOtpTimerSubscription.cancel();
               preferences.setCartId(cartId: response.data?.cartId ?? '');
@@ -187,9 +174,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
                 type: SnackBarType.failure,
               );
-              emit(state.copyWith(
-                isLoading: false,
-              ));
+              emit(state.copyWith(isLoading: false));
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
@@ -210,14 +195,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         emit(state.copyWith(isLoading: false));
         try {
           LoginReqModel reqMap = LoginReqModel(applicationName: AppStrings.appName, contact: event.contactNumber);
-
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.existingUserLoginUrl,
-            data: reqMap,
-          );
-
+          final res = await DioClient(event.context).post(AppUrlEndPoints.existingUserLoginUrl, data: reqMap);
           LoginResModel response = LoginResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             await SmsAutoFill().listenForCode();
             CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.otp_resend_success, type: SnackBarType.success);
@@ -226,27 +205,19 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             emit(state.copyWith(isLoading: false));
           } else if (response.status == AppConstants.code_403) {
             CustomSnackBar.showSnackBar(context: event.context, title: response.message ?? '', type: SnackBarType.failure);
-            emit(state.copyWith(
-              isLoading: false,
-            ));
+            emit(state.copyWith(isLoading: false));
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
               type: SnackBarType.failure,
             );
-            emit(state.copyWith(
-              isLoading: false,
-            ));
+            emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
-          emit(state.copyWith(
-            isLoading: false,
-          ));
+          emit(state.copyWith(isLoading: false));
         } catch (e) {
-          emit(state.copyWith(
-            isLoading: false,
-          ));
+          emit(state.copyWith(isLoading: false));
         }
       }
     });

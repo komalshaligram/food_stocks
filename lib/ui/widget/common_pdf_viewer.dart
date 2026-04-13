@@ -21,10 +21,7 @@ class CommonPdfViewer extends StatelessWidget {
               onTap: () async {
                 await Share.share(url);
               },
-              child: Icon(
-                Icons.share,
-                color: AppColors.mainColor,
-              )),
+              child: Icon(Icons.share, color: AppColors.mainColor)),
           iconData: Icons.arrow_back_ios_sharp,
           onTap: () {
             Navigator.pop(context);
@@ -32,13 +29,7 @@ class CommonPdfViewer extends StatelessWidget {
           bgColor: Colors.transparent,
         ),
       ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: SfPdfViewer.network(
-          url,
-        ),
-      ),
+      body: SizedBox(height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width, child: SfPdfViewer.network(url)),
     );
   }
 }

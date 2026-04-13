@@ -28,28 +28,14 @@ class AppColors {
   static Color pesachBGColor = const Color(0xffF2C94C);
   static Color clubAgentBGColor = const Color(0xff2596be);
   static Color barCodeLineColor = const Color(0xff20BF6B);
-  static Color statusOpenColor = const  Color(0xff40C057);
-  static Color statusCloseColor = const  Color(0xff7E93A0);
-  static Color statusInProgressColor = const  Color(0xff564AB1);
+  static Color statusOpenColor = const Color(0xff40C057);
+  static Color statusCloseColor = const Color(0xff7E93A0);
+  static Color statusInProgressColor = const Color(0xff564AB1);
   static Color statusPartiallyClosedColor = const Color(0xffF76707);
+  static Color statusNoMinimumColor = const Color(0xffF08C00);
 
-  static Gradient appMainGradientColor = const LinearGradient(
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-      colors: [Color(0xff1D5499), Color(0xff8BC53F)]);
-
-  static Gradient connectGradientColor =  LinearGradient(
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-      colors: [AppColors.whiteColor,AppColors.whiteColor]);
-
-  static Gradient disableGradientColor =  LinearGradient(
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-      colors: [AppColors.greyColor,AppColors.greyColor]);
-
-  static Gradient redGradientColor =  LinearGradient(
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
-      colors: [AppColors.redColor,AppColors.redColor]);
+  static Gradient appMainGradientColor = const LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [Color(0xff1D5499), Color(0xff8BC53F)]);
+  static Gradient connectGradientColor = LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [AppColors.whiteColor, AppColors.whiteColor]);
+  static Gradient disableGradientColor = LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [AppColors.greyColor, AppColors.greyColor]);
+  static Gradient redGradientColor = LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [AppColors.redColor, AppColors.redColor]);
 }

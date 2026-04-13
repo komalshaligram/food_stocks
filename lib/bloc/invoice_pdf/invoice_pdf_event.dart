@@ -2,16 +2,9 @@ part of 'invoice_pdf_bloc.dart';
 
 @freezed
 class InvoicePdfEvent with _$InvoicePdfEvent {
-  factory InvoicePdfEvent.getArgumentEvent({
-    required Invoice invoiceDetailsList,
-    required BuildContext context,
-  }) = _getArgumentEvent;
+  factory InvoicePdfEvent.getArgumentEvent({required Invoice invoiceDetailsList, required BuildContext context}) = _getArgumentEvent;
 
-  factory InvoicePdfEvent.pdfDownloadEvent({
-    required BuildContext context,
-  }) = _pdfDownloadEvent;
+  factory InvoicePdfEvent.pdfDownloadEvent({required BuildContext context}) = _pdfDownloadEvent;
 
-  factory InvoicePdfEvent.verifyInvoiceLink({
-    required BuildContext context,
-  }) = _VerifyInvoiceLink;
+  factory InvoicePdfEvent.verifyInvoiceLink({required BuildContext context}) = _VerifyInvoiceLink;
 }

@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../data/error/exceptions.dart';
+import '../../data/model/res_model/login_otp_res_model/login_otp_res_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
@@ -52,6 +55,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             userName: preferences.getBusinessName(),
             userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
             clubAgentId: preferences.getClubAgentId(),
+            isAgent: preferences.getIsAgent(),
+            isAgentSwitchToAssignedStore: preferences.getIsAgentSwitchToAssignedStore(),
           ));
         } else if (event is _getAppLanguage) {
           String appLang = preferences.getAppLanguage();
@@ -62,18 +67,13 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           emit(state.copyWith(isLogOutProcess: true));
           try {
             final response = await DioClient(event.context).put(path: AppUrlEndPoints.logOutUrl, data: {"userId": preferences.getUserId()});
-
             if (response[AppStrings.statusString] == AppConstants.code_200) {
               await preferences.setUserLoggedIn();
               await Provider.of<LocaleProvider>(event.context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
               Navigator.pop(event.context);
               Navigator.popUntil(event.context, (route) => route.name == RouteDefine.bottomNavScreen.name);
               Navigator.pushNamed(event.context, RouteDefine.connectScreen.name);
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppLocalizations.of(event.context)!.logged_out_successfully,
-                type: SnackBarType.success,
-              );
+              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.logged_out_successfully, type: SnackBarType.success);
               emit(state.copyWith(isLogOutProcess: false));
             } else {
               CustomSnackBar.showSnackBar(
@@ -96,19 +96,12 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           }
         } else if (event is _getProfileDetailsEvent) {
           try {
-            final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getProfileDetailsUrl,
-              data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
-            );
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
             ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               if (!preferences.getSubUser()) {
                 preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
-                emit(
-                  state.copyWith(
-                    userImageUrl: response.data?.clients?.first.profileImage ?? '',
-                  ),
-                );
+                emit(state.copyWith(userImageUrl: response.data?.clients?.first.profileImage ?? ''));
               }
             } else {
               CustomSnackBar.showSnackBar(
@@ -123,10 +116,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             try {
               final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
               AccountPermissionResModel response = AccountPermissionResModel.fromJson(res);
-
               if (response.status == AppConstants.code_200) {
                 var res = response.data?.permissions;
-
                 if (preferences.getCanSeeWallet() != res?.canSeeWallet) {
                   event.context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: preferences.getCanSeeWallet() ? 4 : 3, context: event.context));
                 }
@@ -143,19 +134,17 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
                 preferences.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
-                emit(
-                  state.copyWith(
-                    isSubUserSeeOrder: preferences.getCanSeeOrder(),
-                    isSubUserCanManageSubUser: preferences.getCanManageSubUser(),
-                    isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
-                    isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(),
-                    isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
-                    isSubUserSeeReturns: preferences.getCanSeeReturns(),
-                    isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
-                    isAccountPermissionShimmering: false,
-                    isCanSeeInvoices: preferences.getCanSeeInvoices(),
-                  ),
-                );
+                emit(state.copyWith(
+                  isSubUserSeeOrder: preferences.getCanSeeOrder(),
+                  isSubUserCanManageSubUser: preferences.getCanManageSubUser(),
+                  isSubUserUpdateTimeInfo: preferences.getCanUpdateTimeInfo(),
+                  isSubUserUpdateBusinessInfo: preferences.getCanUpdateBusinessInfo(),
+                  isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
+                  isSubUserSeeReturns: preferences.getCanSeeReturns(),
+                  isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
+                  isAccountPermissionShimmering: false,
+                  isCanSeeInvoices: preferences.getCanSeeInvoices(),
+                ));
               } else {
                 CustomSnackBar.showSnackBar(
                   context: event.context,
@@ -189,13 +178,10 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
         } else if (event is _generalSettings) {
           try {
             emit(state.copyWith(retryLoading: event.isRetryLoading));
-
             final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
             SettingResModel response = SettingResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               preferences.setBankTransferDetail(details: response.data?.taviliRivchitDetails?.bankTransferInfoText ?? '');
-
               if (preferences.getAppOnMaintenance() && !(response.data?.isAppOnMaintenance ?? false)) {
                 add(ProfileMenuEvent.updateMaintenanceEvent(context: event.context));
                 Navigator.pop(event.dialogContext);
@@ -213,18 +199,15 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
               preferences.setIsIncludedVat(isIncludedVat: (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
               preferences.setBottleTax(bottleDeposit: response.data?.bottlePrice ?? 0.0);
               preferences.setIsAppOnMaintenance(isAppOnMaintenance: response.data?.isAppOnMaintenance ?? false);
-
-              emit(
-                state.copyWith(
-                  language: preferences.getAppLanguage(),
-                  bottlePrice: response.data?.bottlePrice ?? 0.0,
-                  isIncludedVat: preferences.getIsIncludedVat(),
-                  isSaleOn: preferences.getShowSale(),
-                  retryLoading: false,
-                  isAppOnMaintenance: preferences.getAppOnMaintenance(),
-                ),
-              );
-            } else {}
+              emit(state.copyWith(
+                language: preferences.getAppLanguage(),
+                bottlePrice: response.data?.bottlePrice ?? 0.0,
+                isIncludedVat: preferences.getIsIncludedVat(),
+                isSaleOn: preferences.getShowSale(),
+                retryLoading: false,
+                isAppOnMaintenance: preferences.getAppOnMaintenance(),
+              ));
+            }
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
@@ -232,13 +215,96 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
           try {
             final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
               } else if (!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)) {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
+            }
+          } catch (_) {}
+        } else if (event is _switchAccountEvent) {
+          emit(state.copyWith(isLoading: true));
+          try {
+            var reqMap = {'isStore': false};
+            final res = await DioClient(event.context).post(AppUrlEndPoints.agentSwitchToAssignedStore + preferences.getUserId(), data: reqMap);
+            LoginOtpResModel response = LoginOtpResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              preferences.setCartId(cartId: response.data?.cartId ?? '');
+              preferences.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
+              preferences.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
+              preferences.setUserId(id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
+              if (response.data?.adminType == AppStrings.subUserString) {
+                preferences.setUserName(name: response.data?.user?.contactName ?? '');
+              } else {
+                preferences.setUserName(name: response.data?.user?.clientDetail?.ownerName ?? '');
+              }
+              preferences.setUserImageUrl(imageUrl: response.data?.user?.profileImage ?? '');
+              preferences.setUserLoggedIn(isLoggedIn: true);
+              preferences.setWalletId(userWalletId: response.data?.wallet ?? '');
+              preferences.setIsSubUser(isSubUser: (response.data?.adminType == AppStrings.subUserString) ? true : false);
+              preferences.setEmailId(userEmailId: response.data?.user?.email ?? '');
+              preferences.setClubAgentId(clubAgentId: response.data?.agentId ?? '');
+              preferences.setIsAgent(isAgent: response.data?.isAgent ?? false);
+              preferences.setIsAgentSwitchToAssignedStore(isAgentSwitchToAssignedStore: response.data?.isAgentSwitchToAssignedStore ?? false);
+              String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
+              String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
+              if (Platform.isAndroid) {
+                if (businessName != '' || businessName != null) {
+                  Smartlook.instance.user.properties.removeString(AppStrings.userBusinessName);
+                }
+                if (phoneNumber != '' || phoneNumber != null) {
+                  Smartlook.instance.user.properties.removeString(AppStrings.userPhoneNum);
+                }
+                Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: response.data?.user?.phoneNumber);
+                Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: response.data?.user?.clientDetail?.bussinessName ?? '');
+              } else {
+                if (businessName == '' || businessName == null) {
+                  Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: response.data?.user?.clientDetail?.bussinessName ?? '');
+                } else if (phoneNumber == '' || phoneNumber == null) {
+                  Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: response.data?.user?.phoneNumber);
+                }
+              }
+              Smartlook.instance.user.setIdentifier(
+                (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '',
+              );
+              Smartlook.instance.user.setEmail(response.data?.user?.phoneNumber ?? '');
+              Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
+              if (response.data?.adminType == AppStrings.subUserString) {
+                var res = response.data?.subUserPermissions;
+                preferences.setSubUserId(id: response.data?.user?.id ?? '');
+                preferences.setCanSeeWallet(isSeeWallet: res?.canSeeWallet ?? false);
+                preferences.setCanAddBasket(isAddBasket: res?.canAddToCart ?? false);
+                preferences.setCanCreateOrder(isCreateOrder: res?.canCreateOrder ?? false);
+                preferences.setCanSeeOrder(isSeeOrder: res?.canSeeOrders ?? false);
+                preferences.setCanDuplicateOrder(isDuplicateOrder: res?.canDuplicateOrders ?? false);
+                preferences.setCanUpdateBusinessInfo(isUpdateBusinessInfo: res?.canSeeAndUpdateBusinessInfo ?? false);
+                preferences.setCanUpdateAdditionalInfo(isUpdateAdditionalInfo: res?.canSeeAndUpdateAdditionalInfo ?? false);
+                preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
+                preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
+                preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
+              }
+              emit(state.copyWith(isLoading: false));
+              Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(AppLocalizations.of(event.context)!.switch_agent_message, event.context),
+                type: SnackBarType.success,
+              );
+            } else if (response.status == AppConstants.code_400) {
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
+              emit(state.copyWith(isShimmering: false));
+            } else {
+              emit(state.copyWith(isShimmering: false));
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure,
+              );
             }
           } catch (_) {}
         }

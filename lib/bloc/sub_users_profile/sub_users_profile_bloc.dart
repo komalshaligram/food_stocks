@@ -43,10 +43,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
-          String imageSize = getFileSizeString(
-            bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length(),
-          );
-
+          String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length());
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
@@ -55,23 +52,13 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrlEndPoints.fileUploadUrl,
               formData: FormData.fromMap(
-                {
-                  AppStrings.profileImageString: await MultipartFile.fromFile(
-                    croppedImage?.path ?? pickedFile.path,
-                    contentType: MediaType('image', 'png'),
-                  )
-                },
+                {AppStrings.profileImageString: await MultipartFile.fromFile(croppedImage?.path ?? pickedFile.path, contentType: MediaType('image', 'png'))},
               ),
             );
             FileUploadModel profileImageModel = FileUploadModel.fromJson(response);
-
             if (profileImageModel.filepath != '') {
               imgUrl = profileImageModel.filepath ?? '';
-              emit(state.copyWith(
-                isUploadingProcess: false,
-                image: File(croppedImage?.path ?? pickedFile.path),
-                subUserProfileImage: profileImageModel.filepath ?? '',
-              ));
+              emit(state.copyWith(isUploadingProcess: false, image: File(croppedImage?.path ?? pickedFile.path), subUserProfileImage: profileImageModel.filepath ?? ''));
             }
           } on ServerException {
             emit(state.copyWith(isFileUploading: false, isUploadingProcess: false));
@@ -81,7 +68,6 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
         }
       } else if (event is _createSubUserEvent) {
         emit(state.copyWith(isLoading: true));
-
         try {
           SubUserReqModel req = SubUserReqModel(
             israelId: state.israelIdController.text.trim(),
@@ -92,17 +78,12 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             profileImage: state.subUserProfileImage,
           );
           Map<String, dynamic> subUserReqModel = req.toJson();
-
           subUserReqModel.removeWhere((key, value) {
             if (value != null) {}
             return value == null;
           });
 
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.createSubUserUrl,
-            data: req,
-          );
-
+          final res = await DioClient(event.context).post(AppUrlEndPoints.createSubUserUrl, data: req);
           SubUserResModel response = SubUserResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             CustomSnackBar.showSnackBar(
@@ -110,9 +91,7 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
               title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
               type: SnackBarType.success,
             );
-            emit(
-              state.copyWith(isLoading: false, isEnable: true, subUserId: response.data?.id ?? ''),
-            );
+            emit(state.copyWith(isLoading: false, isEnable: true, subUserId: response.data?.id ?? ''));
           } else {
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
@@ -129,13 +108,8 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
       } else if (event is _deleteAccountEvent) {
         emit(state.copyWith(isDeleteProcess: true));
         try {
-          SubUserDeleteReqModel req = SubUserDeleteReqModel(
-            clientId: preferences.getUserId(),
-            ids: [state.subUserId],
-          );
-
+          SubUserDeleteReqModel req = SubUserDeleteReqModel(clientId: preferences.getUserId(), ids: [state.subUserId]);
           final res = await DioClient(event.context).post(AppUrlEndPoints.deleteClientSubUserUrl, data: req);
-
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isDeleteProcess: false));
             Navigator.pop(event.dialogContext);
@@ -153,10 +127,8 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
       } else if (event is _updateSubUserEvent) {
         try {
           emit(state.copyWith(isLoading: true));
-
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String version = packageInfo.version;
-
           UpdateSubUserReqModel req = UpdateSubUserReqModel(
             id: state.subUserId,
             email: state.emailController.text,
@@ -168,16 +140,12 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             deviceType: Platform.isAndroid ? AppStrings.androidString : AppStrings.iosString,
             lastSeen: DateTime.now(),
           );
-
           Map<String, dynamic> updateSubUserReq = req.toJson();
-
           updateSubUserReq.removeWhere((key, value) {
             if (value != null) {}
             return value == null;
           });
-
           final response = await DioClient(event.context).put(path: AppUrlEndPoints.updateSubUserUrl, data: updateSubUserReq);
-
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
@@ -200,21 +168,14 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             return;
           }
           emit(state.copyWith(isFileUploading: true));
-          UpdateSubUserReqModel updatedSubUserModel = UpdateSubUserReqModel(
-            profileImage: '',
-            id: state.subUserId,
-          );
+          UpdateSubUserReqModel updatedSubUserModel = UpdateSubUserReqModel(profileImage: '', id: state.subUserId);
           Map<String, dynamic> req = updatedSubUserModel.toJson();
 
           req.removeWhere((key, value) {
             if (value != null) {}
             return value == null;
           });
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.updateSubUserUrl,
-            data: req,
-          );
-
+          final res = await DioClient(event.context).post(AppUrlEndPoints.updateSubUserUrl, data: req);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isFileUploading: false));
             emit(state.copyWith(subUserProfileImage: '', image: File('')));
@@ -224,24 +185,14 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
           }
         } catch (e) {
           emit(state.copyWith(isFileUploading: false));
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-            type: SnackBarType.failure,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
         }
       } else if (event is _getSubUserByIdEvent) {
-        emit(state.copyWith(
-          isUpdate: event.isUpdate,
-          subUserId: event.subUserId,
-          isEnable: event.isUpdate ? true : false,
-        ));
+        emit(state.copyWith(isUpdate: event.isUpdate, subUserId: event.subUserId, isEnable: event.isUpdate ? true : false));
         if (event.isUpdate) {
           try {
             emit(state.copyWith(isShimmering: true));
-
             GetSubUserReqModel req = GetSubUserReqModel(clientId: preferences.getUserId(), subuserId: event.subUserId);
-
             Map<String, dynamic> getSubUserReq = req.toJson();
 
             getSubUserReq.removeWhere((key, value) {
@@ -249,13 +200,8 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
               return value == null;
             });
 
-            final res = await DioClient(event.context).post(
-              AppUrlEndPoints.getAllSubUserUrl,
-              data: getSubUserReq,
-            );
-
+            final res = await DioClient(event.context).post(AppUrlEndPoints.getAllSubUserUrl, data: getSubUserReq);
             GetSubUserResModel response = GetSubUserResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(
                 emailController: TextEditingController(text: response.data?.users?.first.email ?? ''),

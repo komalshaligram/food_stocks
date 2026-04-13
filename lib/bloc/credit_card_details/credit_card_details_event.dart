@@ -8,15 +8,9 @@ class CreditCardDetailsEvent with _$CreditCardDetailsEvent {
     required bool isFromRegFlow,
   }) = _getArgumentEvent;
 
-  factory CreditCardDetailsEvent.addCreditCardEvent({
-    required BuildContext context,
-  }) = _addCreditCardEvent;
+  factory CreditCardDetailsEvent.addCreditCardEvent({required BuildContext context}) = _addCreditCardEvent;
 
-  factory CreditCardDetailsEvent.termsConditionApiEvent({
-    required BuildContext context,
-  }) = _termsConditionApiEvent;
+  factory CreditCardDetailsEvent.termsConditionApiEvent({required BuildContext context}) = _termsConditionApiEvent;
 
-  factory CreditCardDetailsEvent.selectMonthEvent({
-    required String month,
-  }) = _selectMonthEvent;
+  factory CreditCardDetailsEvent.selectMonthEvent({required String month}) = _selectMonthEvent;
 }

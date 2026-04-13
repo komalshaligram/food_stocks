@@ -20,10 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MyAppBloc(),
-      child: const MyAppWidget(),
-    );
+    return BlocProvider(create: (context) => MyAppBloc(), child: const MyAppWidget());
   }
 }
 
@@ -50,16 +47,9 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
       try {
         smartLook.start();
         smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
-        smartLook.sensitivity.changeWidgetClassSensitivity(
-          classType: TextField,
-          isSensitive: false,
-        );
+        smartLook.sensitivity.changeWidgetClassSensitivity(classType: TextField, isSensitive: false);
       } catch (e, s) {
-        FirebaseCrashlytics.instance.recordError(
-          e,
-          s,
-          reason: 'Smartlook initialization failed',
-        );
+        FirebaseCrashlytics.instance.recordError(e, s, reason: 'Smartlook initialization failed');
       }
     });
 
@@ -76,36 +66,28 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LocaleProvider()..setAppLocale(),
-      builder: (context, child) {
-        return SmartlookRecordingWidget(
-          child: MaterialApp(
-            navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            locale: Provider.of<LocaleProvider>(context).locale,
-            title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
-            initialRoute: RouteDefine.splashScreen.name,
-            supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            theme: ThemeData(
-              textSelectionTheme: TextSelectionThemeData(
-                cursorColor: AppColors.mainColor,
-                selectionColor: AppColors.mainColor,
-                selectionHandleColor: AppColors.mainColor,
+        create: (context) => LocaleProvider()..setAppLocale(),
+        builder: (context, child) {
+          return SmartlookRecordingWidget(
+            child: MaterialApp(
+              navigatorKey: navigatorKey,
+              debugShowCheckedModeBanner: false,
+              locale: Provider.of<LocaleProvider>(context).locale,
+              title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
+              initialRoute: RouteDefine.splashScreen.name,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              theme: ThemeData(
+                textSelectionTheme: TextSelectionThemeData(cursorColor: AppColors.mainColor, selectionColor: AppColors.mainColor, selectionHandleColor: AppColors.mainColor),
+                primarySwatch: Colors.green,
+                canvasColor: Colors.white,
+                cardColor: AppColors.whiteColor,
+                snackBarTheme: SnackBarThemeData(backgroundColor: AppColors.mainColor, actionTextColor: AppColors.textColor),
               ),
-              primarySwatch: Colors.green,
-              canvasColor: Colors.white,
-              cardColor: AppColors.whiteColor,
-              snackBarTheme: SnackBarThemeData(
-                backgroundColor: AppColors.mainColor,
-                actionTextColor: AppColors.textColor,
-              ),
+              scrollBehavior: MyBehavior(),
+              onGenerateRoute: AppRouting.generateRoute,
             ),
-            scrollBehavior: MyBehavior(),
-            onGenerateRoute: AppRouting.generateRoute,
-          ),
-        );
-      },
-    );
+          );
+        });
   }
 }

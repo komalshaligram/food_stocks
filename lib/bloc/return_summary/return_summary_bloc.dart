@@ -29,9 +29,7 @@ class ReturnSummaryBloc extends Bloc<ReturnSummaryEvent, ReturnSummaryState> {
           List<ReturnProduct> tempList = [];
           try {
             emit(state.copyWith(isShimmer: true));
-            final response = await DioClient(event.context).get(
-              path: AppUrlEndPoints.getReturnByIdUrl + map[AppStrings.idString],
-            );
+            final response = await DioClient(event.context).get(path: AppUrlEndPoints.getReturnByIdUrl + map[AppStrings.idString]);
             GetReturnByIdResModel res = GetReturnByIdResModel.fromJson(response);
             tempList.addAll(res.data?.returnProducts ?? []);
             for (int i = 0; i < tempList.length; i++) {
@@ -65,7 +63,6 @@ class ReturnSummaryBloc extends Bloc<ReturnSummaryEvent, ReturnSummaryState> {
         emit(state.copyWith(isShimmer: true));
         try {
           List<req.ReturnProduct> list = [];
-
           for (int i = 0; i < state.returnProductList.length; i++) {
             if (event.supplierId == state.returnProductList[i].supplierId) {
               list.add(req.ReturnProduct(
@@ -90,10 +87,7 @@ class ReturnSummaryBloc extends Bloc<ReturnSummaryEvent, ReturnSummaryState> {
             returnProducts: list,
             subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
           );
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId}',
-            data: reqModel.toJson(),
-          );
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId}', data: reqModel.toJson());
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
             Map<String?, List<ReturnProduct>> tempMap = Map.from(state.supplierWiseMap);

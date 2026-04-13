@@ -30,9 +30,7 @@ part 'privacy_policy_bloc.freezed.dart';
 
 class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
   final GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey();
-
   File imagePath = File('');
-
   String directory = '';
   String owner1Signature = '';
   String owner2Signature = '';
@@ -76,18 +74,10 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
             AppStrings.guarantee2SignatureString: guarantee2Signature != '' ? await MultipartFile.fromFile(guarantee2Signature, contentType: MediaType('image', 'png')) : '',
           };
           if (termsConditionReqModel.paymentType != AppStrings.creditCard) {
-            reqMap.addAll({
-              AppStrings.bankIdString: termsConditionReqModel.bankId,
-              AppStrings.branchNumberString: termsConditionReqModel.branchNumber,
-            });
+            reqMap.addAll({AppStrings.bankIdString: termsConditionReqModel.bankId, AppStrings.branchNumberString: termsConditionReqModel.branchNumber});
           }
-
           emit(state.copyWith(isShimmering: true));
-          final res = await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrlEndPoints.termsConditionUrl,
-            formData: FormData.fromMap(reqMap),
-          );
-
+          final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.termsConditionUrl, formData: FormData.fromMap(reqMap));
           TermsConditionResModel response = TermsConditionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isShimmering: false));
@@ -120,19 +110,14 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
           title: Text(
             signaturePadName,
             textAlign: TextAlign.center,
-            style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.smallFont,
-              color: Colors.black,
-            ),
+            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
           ),
           titlePadding: const EdgeInsets.all(8),
           contentPadding: const EdgeInsets.all(12),
           content: Container(
             height: 200,
             width: 300,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-            ),
+            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
             child: SfSignaturePad(
               key: _signaturePadKey,
               onDrawStart: () {
@@ -149,10 +134,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
               },
               child: Text(
                 AppLocalizations.of(context)!.remove,
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont,
-                  color: AppColors.redColor,
-                ),
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.redColor),
               ),
             ),
             TextButton(
@@ -165,10 +147,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
               },
               child: Text(
                 AppLocalizations.of(context)!.save,
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.smallFont,
-                  color: AppColors.mainColor,
-                ),
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor),
               ),
             ),
           ],
@@ -179,9 +158,7 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
 
   void saveSignature(BuildContext context, String fieldName) async {
     ui.Image tempImage = await _signaturePadKey.currentState!.toImage();
-
     var data = await tempImage.toByteData(format: ui.ImageByteFormat.png);
-
     final imageInUnit8List = (data!.buffer.asUint8List());
     directory = (await getApplicationDocumentsDirectory()).path;
     var path = '$directory/$fieldName.png';

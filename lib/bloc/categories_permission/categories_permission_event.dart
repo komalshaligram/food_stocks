@@ -8,12 +8,7 @@ class CategoriesPermissionEvent with _$CategoriesPermissionEvent {
     required int subCategoriesIndex,
   }) = _switchButtonEvent;
 
-  const factory CategoriesPermissionEvent.getPermissionList({
-    required BuildContext context,
-    required String subUserId,
-  }) = _getPermissionList;
+  const factory CategoriesPermissionEvent.getPermissionList({required BuildContext context, required String subUserId}) = _getPermissionList;
 
-  const factory CategoriesPermissionEvent.updateCategoriesPermissionEvent({
-    required BuildContext context,
-  }) = _updateCategoriesPermissionEvent;
+  const factory CategoriesPermissionEvent.updateCategoriesPermissionEvent({required BuildContext context}) = _updateCategoriesPermissionEvent;
 }

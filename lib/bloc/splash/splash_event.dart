@@ -2,6 +2,5 @@ part of 'splash_bloc.dart';
 
 @freezed
 class SplashEvent with _$SplashEvent {
-    factory SplashEvent.splashLoaded({required String pushNavigation}) =
-      _splashLoadedEvent;
+  factory SplashEvent.splashLoaded({required String pushNavigation}) = _splashLoadedEvent;
 }

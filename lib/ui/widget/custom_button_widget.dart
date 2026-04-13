@@ -62,25 +62,14 @@ class CustomButtonWidget extends StatelessWidget {
       child: MaterialButton(
         onPressed: enable ? onPressed : null,
         child: isLoading
-            ? CupertinoActivityIndicator(
-                color: loadingColor,
-              )
+            ? CupertinoActivityIndicator(color: loadingColor)
             : iconWidget != null
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      iconWidget!,
-                      5.width,
-                      Text(
-                        buttonText.toUpperCase(),
-                        style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors),
-                      ),
-                    ],
-                  )
-                : Text(
-                    buttonText.toUpperCase(),
-                    style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors),
-                  ),
+                ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    iconWidget!,
+                    5.width,
+                    Text(buttonText.toUpperCase(), style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors)),
+                  ])
+                : Text(buttonText.toUpperCase(), style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors)),
       ),
     );
   }

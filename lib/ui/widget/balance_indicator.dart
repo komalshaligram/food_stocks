@@ -16,17 +16,19 @@ class BalanceIndicator extends StatelessWidget {
     return SizedBox(
       height: 100,
       width: 100,
-      child: SfRadialGauge(
-        backgroundColor: Colors.transparent,
-        axes: [
-          RadialAxis(
+      child: SfRadialGauge(backgroundColor: Colors.transparent, axes: [
+        RadialAxis(
             minimum: 0,
             maximum: totalBalance,
             showLabels: false,
             showTicks: false,
             startAngle: 270,
             endAngle: 270,
-            axisLineStyle: AxisLineStyle(thicknessUnit: GaugeSizeUnit.factor, thickness: 0.2, color: AppColors.borderColor),
+            axisLineStyle: AxisLineStyle(
+              thicknessUnit: GaugeSizeUnit.factor,
+              thickness: 0.2,
+              color: AppColors.borderColor,
+            ),
             annotations: [
               GaugeAnnotation(
                 angle: 180,
@@ -47,10 +49,8 @@ class BalanceIndicator extends StatelessWidget {
                 value: expense.toDouble(),
                 width: 8,
               ),
-            ],
-          ),
-        ],
-      ),
+            ]),
+      ]),
     );
   }
 }

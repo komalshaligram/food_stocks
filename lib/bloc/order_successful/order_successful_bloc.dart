@@ -22,18 +22,11 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
   OrderSuccessfulBloc() : super(OrderSuccessfulState.initial()) {
     on<OrderSuccessfulEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
       message = preferences.getMessage();
 
       if (event is _getDataEvent) {
-        emit(state.copyWith(
-          seePreviousBtn: event.showPreviousBtn,
-          totalSupplier: event.totalSupplier!,
-        ));
-
-        add(OrderSuccessfulEvent.getAllCartEvent(
-          context: event.context,
-        ));
+        emit(state.copyWith(seePreviousBtn: event.showPreviousBtn, totalSupplier: event.totalSupplier!));
+        add(OrderSuccessfulEvent.getAllCartEvent(context: event.context));
       } else if (event is _generalSettings) {
         try {
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
@@ -41,10 +34,8 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
           if (response.status == AppConstants.code_200) {
             if (preferences.getAppOnMaintenance() && !(response.data?.isAppOnMaintenance ?? false)) {
               preferences.setIsAppOnMaintenance(isAppOnMaintenance: false);
-
               return;
             }
-
             preferences.setIsIncludedVat(isIncludedVat: (response.data?.showVatApplication?.contains(AppStrings.appName) ?? false) ? true : false);
           }
         } catch (e) {
@@ -59,16 +50,10 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
 
       if (event is _getAllCartEvent) {
         try {
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-          );
-
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
           GetAllCartResModel response = GetAllCartResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(
-              cartItemList: response,
-            ));
-
+            emit(state.copyWith(cartItemList: response));
             emit(state.copyWith(
               vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0,
               bottleQty: response.data?.cart?.first.bottleQuantities,
@@ -76,7 +61,7 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
               totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0,
             ));
           }
-        } catch(_) {}
+        } catch (_) {}
       }
 
       if (event is _goToOrderEvent) {
@@ -110,13 +95,7 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
             },
           );
         } else {
-          Navigator.pushReplacementNamed(
-            event.context,
-            RouteDefine.bottomNavScreen.name,
-            arguments: {
-              AppStrings.pushNavigationString: 'basketScreen',
-            },
-          );
+          Navigator.pushReplacementNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: 'basketScreen'});
         }
       }
     });

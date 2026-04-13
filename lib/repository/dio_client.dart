@@ -29,10 +29,7 @@ class DioClient {
               baseUrl: AppUrlEndPoints.baseUrl,
               connectTimeout: const Duration(minutes: 1),
               receiveTimeout: const Duration(minutes: 1),
-              headers: {
-                HttpHeaders.acceptHeader: Headers.jsonContentType,
-                HttpHeaders.authorizationHeader: 'Bearer ',
-              },
+              headers: {HttpHeaders.acceptHeader: Headers.jsonContentType, HttpHeaders.authorizationHeader: 'Bearer '},
               validateStatus: (status) {
                 if (status == AppConstants.code_401) {
                   return false;
@@ -99,7 +96,6 @@ class DioClient {
     preferencesHelper.setReqPram(reqPram: jsonEncode(data));
 
     final response = await post(AppUrlEndPoints.refreshTokenUrl, data: {"token": 'Bearer ${preferencesHelper.getRefreshToken()}'});
-
     RefreshTokenModel res = RefreshTokenModel.fromJson(response);
     printData('[refreshToken token] ${res.data?.accessToken}');
 
@@ -107,7 +103,6 @@ class DioClient {
       return manageAccessTokenWork(preferencesHelper, res, type, queryParams, path, data);
     }
     if (res.status == AppConstants.code_401) {
-      //logout work
       return manageRefreshTokenWork(preferencesHelper, queryParams);
     }
   }
@@ -125,20 +120,10 @@ class DioClient {
         response = await _dio.get(path, queryParameters: queryParams, options: requestOptions);
         break;
       case "POST":
-        response = await _dio.post(
-          path,
-          data: data,
-          options: requestOptions,
-          queryParameters: queryParams,
-        );
+        response = await _dio.post(path, data: data, options: requestOptions, queryParameters: queryParams);
         break;
       case "PUT":
-        response = await _dio.put(
-          path,
-          data: data,
-          options: requestOptions,
-          queryParameters: queryParams,
-        );
+        response = await _dio.put(path, data: data, options: requestOptions, queryParameters: queryParams);
         break;
     }
     printData('res_______________________$response');
@@ -201,10 +186,7 @@ class DioClient {
   Future<Map<String, dynamic>> uploadFileProgressWithFormData({required String path, required FormData formData}) async {
     try {
       printData('URL = ${AppUrlEndPoints.baseUrl}$path');
-      final response = await _dio.post(
-        path,
-        data: formData,
-      );
+      final response = await _dio.post(path, data: formData);
       return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
       throw _createErrorEntity(e, context: _context);
@@ -226,9 +208,7 @@ class DioClient {
               queryParameters: query,
               options: options ??
                   Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}',
-                    },
+                    headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
                   ));
           printData('$path: res:${response.data.toString()}');
           return response.data;
@@ -250,7 +230,6 @@ class DioClient {
           }),
         );
         throw Exception("Network Error");
-        //  }
       }
     } on DioException catch (e) {
       throw _createErrorEntity(e);
@@ -271,9 +250,7 @@ class DioClient {
               data: data,
               options: options ??
                   Options(
-                    headers: {
-                      HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}',
-                    },
+                    headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
                   ));
           return response.data;
         } on DioException catch (e) {
@@ -294,7 +271,6 @@ class DioClient {
           }),
         );
         throw Exception("Network Error");
-        //  }
       }
     } on DioException catch (e) {
       throw _createErrorEntity(e);
@@ -311,7 +287,6 @@ class ErrorEntity implements Exception {
   @override
   String toString() {
     if (message == "") return "Exception";
-
     return "Exception code $code, $message";
   }
 }
@@ -324,10 +299,7 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
 
     case DioExceptionType.sendTimeout:
       CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.send_timed_out, type: SnackBarType.failure);
-      return ErrorEntity(
-        code: -1,
-        message: AppLocalizations.of(context)!.send_timed_out,
-      );
+      return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.send_timed_out);
 
     case DioExceptionType.receiveTimeout:
       //  CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.receive_timed_out, type: SnackBarType.failure);
@@ -385,10 +357,9 @@ void _handleLogout(BuildContext context) async {
   Navigator.pushNamed(context, RouteDefine.connectScreen.name);
   // CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.logged_out_successfully, type: SnackBarType.success);
   CustomSnackBar.showSnackBar(
-    context: context,
-    title: "חשבון לא מאושר", //AppLocalizations.of(context)!.account_not_approve,
-    type: SnackBarType.failure,
-  );
+      context: context,
+      title: "חשבון לא מאושר", //AppLocalizations.of(context)!.account_not_approve,
+      type: SnackBarType.failure);
 }
 
 void onError(ErrorEntity eInfo) {

@@ -208,6 +208,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "client_form_details": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
     "client_info": MessageLookupByLibrary.simpleMessage("פרטי לקוח"),
+    "clients_minimum_order": MessageLookupByLibrary.simpleMessage("מינימום :"),
+    "clients_no_minimum": MessageLookupByLibrary.simpleMessage("אין מינימום"),
+    "clients_set_minimum": MessageLookupByLibrary.simpleMessage("הגדר מינימום"),
+    "clients_switch": MessageLookupByLibrary.simpleMessage("התחבר"),
     "closeText": MessageLookupByLibrary.simpleMessage("סגור"),
     "closed_text": MessageLookupByLibrary.simpleMessage("זיכוי סגור"),
     "collection_from_bank_account": MessageLookupByLibrary.simpleMessage(
@@ -225,6 +229,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm": MessageLookupByLibrary.simpleMessage("לְאַשֵׁר"),
     "confirm_minimum_box": MessageLookupByLibrary.simpleMessage(
       ", אתה בטוח שאתה לא רוצה את מחיר המבצע ?",
+    ),
+    "confirmation_minimum": MessageLookupByLibrary.simpleMessage(
+      "האם אתה בטוח שאתה רוצה לעדכן שכן יהיה מינימום הזמנה?",
+    ),
+    "confirmation_no_minimum": MessageLookupByLibrary.simpleMessage(
+      "האם אתה בטוח שברצונך לעדכן שלא יהיה מינימום הזמנה בשעה הקרובה?",
     ),
     "connection_error": MessageLookupByLibrary.simpleMessage("בעיית התחברות"),
     "connection_timed_out": MessageLookupByLibrary.simpleMessage(
@@ -570,6 +580,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "minimum_boxes_detail": MessageLookupByLibrary.simpleMessage(
       "מספר הקופסאות המינימלי למכירה זו הוא:",
     ),
+    "minimum_order": MessageLookupByLibrary.simpleMessage("מינימום הזמנה :"),
     "missing_quantity_not_more_than_original":
         MessageLookupByLibrary.simpleMessage(
           "כמות לא יכולה להיות יותר מהכמות המקורית",
@@ -596,6 +607,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "my_accounting_card": MessageLookupByLibrary.simpleMessage("הכרטסת שלי"),
     "my_agent_code": MessageLookupByLibrary.simpleMessage("קוד סוכן"),
     "my_basket": MessageLookupByLibrary.simpleMessage("הסל שלי"),
+    "my_clients": MessageLookupByLibrary.simpleMessage("הלקוחות שלי"),
     "my_invoices": MessageLookupByLibrary.simpleMessage("החשבוניות שלי"),
     "my_orders": MessageLookupByLibrary.simpleMessage("ההזמנות שלי"),
     "my_refunds": MessageLookupByLibrary.simpleMessage("הזיכויים שלי"),
@@ -632,6 +644,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_refund_data": MessageLookupByLibrary.simpleMessage(
       "לא נמצאו נתוני החזר כספי",
+    ),
+    "no_suppliers_found": MessageLookupByLibrary.simpleMessage(
+      "לא נמצאו ספקים",
     ),
     "not_add_more_than_max_qty": MessageLookupByLibrary.simpleMessage(
       "לא ניתן להוסיף יותר מהמקסימום עבור המבצע הזה",
@@ -1250,6 +1265,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "הזנת מספר משטחים גדול מידי אנא נסה מספר נמוך יותר",
     ),
     "surfaces_order": MessageLookupByLibrary.simpleMessage("משטחים להזמנה"),
+    "switch_agent_message": MessageLookupByLibrary.simpleMessage(
+      "אתה עכשיו מחובר כסוכן",
+    ),
+    "switch_back_to_agent_view": MessageLookupByLibrary.simpleMessage(
+      "עבור חזרה למשתמש שלי",
+    ),
+    "switch_client_message": MessageLookupByLibrary.simpleMessage(
+      "אתה מחובר עכשיו כלקוח: ",
+    ),
     "terms_of_use": MessageLookupByLibrary.simpleMessage("תנאי שימוש"),
     "this_company_has_no_product": MessageLookupByLibrary.simpleMessage(
       "כרגע אין מוצרים לחברה הזו",
@@ -1362,6 +1386,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "you_can_not_update_order": MessageLookupByLibrary.simpleMessage(
       "קוד ספק לא חוקי",
+    ),
+    "you_can_send_the_order": MessageLookupByLibrary.simpleMessage(
+      "אתה יכול לשדר את ההזמנה",
+    ),
+    "you_cant_send_the_order": MessageLookupByLibrary.simpleMessage(
+      "אתה מתחת למינימום",
     ),
     "you_have": MessageLookupByLibrary.simpleMessage("יש לך "),
     "you_have_reached_maximum_quantity": MessageLookupByLibrary.simpleMessage(

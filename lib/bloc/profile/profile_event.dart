@@ -6,38 +6,19 @@ class ProfileEvent with _$ProfileEvent {
 
   factory ProfileEvent.dropDownEvent() = _dropDownEvent;
 
-  factory ProfileEvent.pickProfileImageEvent({
-    required BuildContext context,
-    required bool isFromCamera,
-  }) = _pickProfileImageEvent;
+  factory ProfileEvent.pickProfileImageEvent({required BuildContext context, required bool isFromCamera}) = _pickProfileImageEvent;
 
-  factory ProfileEvent.getBusinessTypeListEvent({
-    required BuildContext context,
-  }) = _getBusinessTypeListEvent;
+  factory ProfileEvent.getBusinessTypeListEvent({required BuildContext context}) = _getBusinessTypeListEvent;
 
-  factory ProfileEvent.navigateToMoreDetailsScreenEvent({
-    required BuildContext context,
-  }) = _navigateToMoreDetailsScreenEvent;
+  factory ProfileEvent.navigateToMoreDetailsScreenEvent({required BuildContext context}) = _navigateToMoreDetailsScreenEvent;
 
-  factory ProfileEvent.getProfileDetailsEvent({
-    required BuildContext context,
-    required bool isUpdate,
-    required String mobileNo,
-  }) = _getProfileDetailsEvent;
+  factory ProfileEvent.getProfileDetailsEvent({required BuildContext context, required bool isUpdate, required String mobileNo}) = _getProfileDetailsEvent;
 
-  factory ProfileEvent.updateProfileDetailsEvent({
-    required BuildContext context,
-  }) = _updateProfileDetailsEvent;
+  factory ProfileEvent.updateProfileDetailsEvent({required BuildContext context}) = _updateProfileDetailsEvent;
 
-  factory ProfileEvent.changeBusinessTypeEvent({
-    required String newBusinessType,
-  }) = _ChangeBusinessTypeEventEvent;
+  factory ProfileEvent.changeBusinessTypeEvent({required String newBusinessType}) = _ChangeBusinessTypeEventEvent;
 
-  factory ProfileEvent.deleteAccountEvent({
-    required BuildContext context,
-  }) = _DeleteAccountEvent;
+  factory ProfileEvent.deleteAccountEvent({required BuildContext context}) = _DeleteAccountEvent;
 
-  factory ProfileEvent.deleteFileEvent({
-    required BuildContext context,
-  }) = _deleteFileEvent;
+  factory ProfileEvent.deleteFileEvent({required BuildContext context}) = _deleteFileEvent;
 }

@@ -29,6 +29,10 @@ class ProfileMenuState with _$ProfileMenuState {
     required double bottlePrice,
     required bool retryLoading,
     required String? clubAgentId,
+    required bool? isAgent,
+    required bool? isAgentSwitchToAssignedStore,
+    required bool isShimmering,
+    required bool isLoading,
   }) = _ProfileMenuState;
 
   factory ProfileMenuState.initial() => const ProfileMenuState(
@@ -58,5 +62,9 @@ class ProfileMenuState with _$ProfileMenuState {
         isSaleOn: false,
         retryLoading: false,
         clubAgentId: '',
+        isAgent: false,
+        isAgentSwitchToAssignedStore: false,
+        isShimmering: false,
+        isLoading: false,
       );
 }

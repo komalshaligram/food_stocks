@@ -11,27 +11,15 @@ class ReturnDriverEvent with _$ReturnDriverEvent {
 
   const factory ReturnDriverEvent.checkAllEvent() = _checkAllEvent;
 
-  const factory ReturnDriverEvent.getOrderByIdEvent({
-    required BuildContext context,
-    required String orderId,
-  }) = _getOrderByIdEvent;
+  const factory ReturnDriverEvent.getOrderByIdEvent({required BuildContext context, required String orderId}) = _getOrderByIdEvent;
 
-  const factory ReturnDriverEvent.getDriverReturnIdEvent({
-    required BuildContext context,
-    required String userId,
-  }) = _getDriverReturnIdEvent;
+  const factory ReturnDriverEvent.getDriverReturnIdEvent({required BuildContext context, required String userId}) = _getDriverReturnIdEvent;
 
-  const factory ReturnDriverEvent.getAllCartEvent({
-    required BuildContext context,
-  }) = _getAllCartEvent;
+  const factory ReturnDriverEvent.getAllCartEvent({required BuildContext context}) = _getAllCartEvent;
 
-  const factory ReturnDriverEvent.getPermissionList({
-    required BuildContext context,
-  }) = _getPermissionList;
+  const factory ReturnDriverEvent.getPermissionList({required BuildContext context}) = _getPermissionList;
 
-  factory ReturnDriverEvent.getReturnListEvent({
-    required BuildContext context,
-  }) = _getReturnListEvent;
+  factory ReturnDriverEvent.getReturnListEvent({required BuildContext context}) = _getReturnListEvent;
 
   factory ReturnDriverEvent.pickProofDocumentEvent({
     required BuildContext context,
@@ -46,8 +34,5 @@ class ReturnDriverEvent with _$ReturnDriverEvent {
     required int fileIndex,
   }) = _deleteProofFileEvent;
 
-  factory ReturnDriverEvent.toggleItemChecked({
-    required int index,
-    required bool isChecked,
-  }) = _toggleItemChecked;
+  factory ReturnDriverEvent.toggleItemChecked({required int index, required bool isChecked}) = _toggleItemChecked;
 }

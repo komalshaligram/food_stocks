@@ -25,7 +25,7 @@ class ScanReturnProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     return BlocProvider(
-      create: (context) => ReturnBloc()..add(ReturnEvent.getArgumentEvent(context: context, list: args??{})),
+      create: (context) => ReturnBloc()..add(ReturnEvent.getArgumentEvent(context: context, list: args ?? {})),
       child: const ScanReturnProduct(),
     );
   }
@@ -41,78 +41,63 @@ class ScanReturnProduct extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
         child: CommonAppBar(
-          bgColor: AppColors.pageColor,
-          title: AppLocalizations.of(context)!.scan_return_product,
-          iconData: Icons.arrow_back_ios_sharp,
-          onTap: () {
-            Navigator.pushReplacementNamed(context, RouteDefine.returnListScreen.name);
-          },
-        ),
+            bgColor: AppColors.pageColor,
+            title: AppLocalizations.of(context)!.scan_return_product,
+            iconData: Icons.arrow_back_ios_sharp,
+            onTap: () {
+              Navigator.pushReplacementNamed(context, RouteDefine.returnListScreen.name);
+            }),
       ),
       body: BlocBuilder<ReturnBloc, ReturnState>(builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  bloc.add(ReturnEvent.openScannerEvent(context: context));
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                bloc.add(ReturnEvent.openScannerEvent(context: context));
+              },
+              child: Center(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+                  SvgPicture.asset(AppImagePath.scan, height: 80),
+                  8.height,
+                  Text(
+                    AppLocalizations.of(context)!.click_to_scan,
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.greyColor, fontWeight: FontWeight.w400),
+                  )
+                ]),
+              ),
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height / 3.5,
+            padding: const EdgeInsets.all(AppConstants.padding_20),
+            color: AppColors.greyColor.withValues(alpha: 0.2),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
+              Text(AppLocalizations.of(context)!.enter_product_barcode, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black)),
+              10.height,
+              CustomFormField(
+                inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                context: context,
+                controller: state.barCodeController,
+                keyboardType: TextInputType.phone,
+                hint: '',
+                fillColor: AppColors.whiteColor,
+                textInputAction: TextInputAction.done,
+                validator: '',
+              ),
+              30.height,
+              CustomButtonWidget(
+                buttonText: AppLocalizations.of(context)!.next,
+                bGColor: AppColors.mainColor,
+                isLoading: state.isLoading,
+                onPressed: () {
+                  bloc.add(ReturnEvent.scanProductEvent(context: context, barCode: state.barCodeController.text));
                 },
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        AppImagePath.scan,
-                        height: 80,
-                      ),
-                      8.height,
-                      Text(AppLocalizations.of(context)!.click_to_scan, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.greyColor,fontWeight: FontWeight.w400))
-                    ],
-                  ),
-                ),
+                fontColors: AppColors.whiteColor,
               ),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height / 3.5,
-              padding: const EdgeInsets.all(AppConstants.padding_20),
-              color: AppColors.greyColor.withValues(alpha:0.2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(AppLocalizations.of(context)!.enter_product_barcode, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black)),
-                  10.height,
-                  CustomFormField(
-                    inputFormat: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    context: context,
-                    controller: state.barCodeController,
-                    keyboardType: TextInputType.phone,
-                    hint: '',
-                    fillColor: AppColors.whiteColor,
-                    textInputAction: TextInputAction.done,
-                    validator: '',
-                  ),
-                  30.height,
-                  CustomButtonWidget(
-                    buttonText: AppLocalizations.of(context)!.next,
-                    bGColor: AppColors.mainColor,
-                    isLoading: state.isLoading,
-                    onPressed: () {
-                      bloc.add(ReturnEvent.scanProductEvent(context: context, barCode: state.barCodeController.text));
-                    },
-                    fontColors: AppColors.whiteColor,
-                  ),
-                  10.height,
-                ],
-              ),
-            ),
-          ],
-        );
+              10.height,
+            ]),
+          ),
+        ]);
       }),
     );
   }

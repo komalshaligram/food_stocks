@@ -12,29 +12,15 @@ class ActivityTimeEvent with _$ActivityTimeEvent {
     required String previousTime,
   }) = _timePickerEvent;
 
-  factory ActivityTimeEvent.defaultValueAddInListEvent({
-    required BuildContext context,
-  }) = _defaultValueAddInListEvent;
+  factory ActivityTimeEvent.defaultValueAddInListEvent({required BuildContext context}) = _defaultValueAddInListEvent;
 
-  factory ActivityTimeEvent.addMoreTimeZoneEvent({
-    required int rowIndex,
-    required BuildContext context,
-  }) = _addMoreTimeZoneEventEvent;
+  factory ActivityTimeEvent.addMoreTimeZoneEvent({required int rowIndex, required BuildContext context}) = _addMoreTimeZoneEventEvent;
 
-  factory ActivityTimeEvent.deleteTimeZoneEvent({
-    required int rowIndex,
-    required int timeIndex,
-  }) = _deleteTimeZoneEvent;
+  factory ActivityTimeEvent.deleteTimeZoneEvent({required int rowIndex, required int timeIndex}) = _deleteTimeZoneEvent;
 
-  factory ActivityTimeEvent.activityTimeApiEvent({
-    required BuildContext context,
-  }) = _activityTimeApiEvent;
+  factory ActivityTimeEvent.activityTimeApiEvent({required BuildContext context}) = _activityTimeApiEvent;
 
-  factory ActivityTimeEvent.getActivityTimeListEvent({
-    required BuildContext context,
-  }) = _getActivityTimeListEvent;
+  factory ActivityTimeEvent.getActivityTimeListEvent({required BuildContext context}) = _getActivityTimeListEvent;
 
-  factory ActivityTimeEvent.getActivityTimeDetailsEvent({
-    required bool isUpdate,
-  }) = _getActivityTimeDetailsEvent;
+  factory ActivityTimeEvent.getActivityTimeDetailsEvent({required bool isUpdate}) = _getActivityTimeDetailsEvent;
 }

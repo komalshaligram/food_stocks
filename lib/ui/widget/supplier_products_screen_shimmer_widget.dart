@@ -12,14 +12,13 @@ class SupplierProductsScreenShimmerWidget extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: GridView.builder(
-            shrinkWrap: true,
-            itemCount: itemCount,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
-            itemBuilder: (context, index) => buildSupplierProductsListItem(
-                  context: context,
-                )),
+          shrinkWrap: true,
+          itemCount: itemCount,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
+          itemBuilder: (context, index) => buildSupplierProductsListItem(context: context),
+        ),
       ),
     );
   }

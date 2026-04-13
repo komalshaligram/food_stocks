@@ -47,11 +47,8 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
         List<CategoriesPermission> categoriesPermissionList = List.from(state.categoriesPermissionList);
         if (event.subCategoriesIndex == -2) {
           bool isEnable = !state.isSelectAll;
-
           for (int i = 0; i < categoriesPermissionList.length; i++) {
-            categoriesPermissionList[i] = categoriesPermissionList[i].copyWith(
-              isAllowed: isEnable,
-            );
+            categoriesPermissionList[i] = categoriesPermissionList[i].copyWith(isAllowed: isEnable);
             for (int j = 0; j < (categoriesPermissionList[i].subCategories!.length); j++) {
               categoriesPermissionList[i].subCategories![j] = categoriesPermissionList[i].subCategories![j].copyWith(isAllowed: isEnable);
             }
@@ -59,7 +56,6 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           emit(state.copyWith(categoriesPermissionList: categoriesPermissionList, isSelectAll: isEnable, isRefresh: !state.isRefresh));
         } else if (event.subCategoriesIndex == -1) {
           bool isAllowed = categoriesPermissionList[event.categoriesIndex].isAllowed ?? false;
-
           categoriesPermissionList[event.categoriesIndex] = categoriesPermissionList[event.categoriesIndex].copyWith(isAllowed: !isAllowed);
 
           if (categoriesPermissionList[event.categoriesIndex].isAllowed == false) {
@@ -68,31 +64,25 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
 
           if (categoriesPermissionList[event.categoriesIndex].isAllowed == false) {
             for (int i = 0; i < (categoriesPermissionList[event.categoriesIndex].subCategories?.length ?? 0); i++) {
-              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(
-                    isAllowed: false,
-                  );
+              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(isAllowed: false);
             }
           } else {
             for (int i = 0; i < (categoriesPermissionList[event.categoriesIndex].subCategories?.length ?? 0); i++) {
-              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(
-                    isAllowed: true,
-                  );
+              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(isAllowed: true);
             }
           }
-
           emit(state.copyWith(categoriesPermissionList: categoriesPermissionList, isRefresh: !state.isRefresh));
         } else {
           if (categoriesPermissionList[event.categoriesIndex].isAllowed ?? false) {
             bool isAllowed = categoriesPermissionList[event.categoriesIndex].subCategories?[event.subCategoriesIndex].isAllowed ?? false;
 
-            categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex] = categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex].copyWith(
+            categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex] =
+                categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex].copyWith(
                   isAllowed: !isAllowed,
                 );
           }
-
           emit(state.copyWith(categoriesPermissionList: categoriesPermissionList, isRefresh: !state.isRefresh));
         }
-
         emit(state.copyWith(isSelectAll: true));
 
         for (int i = 0; i < (categoriesPermissionList.length); i++) {
@@ -119,7 +109,6 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           }
 
           List<update.SubCategory> subCategoryList = [];
-
           for (int i = 0; i < categories.length; i++) {
             subCategoryList = [];
             for (int j = 0; j < (state.categoriesPermissionList[i].subCategories?.length ?? 0); j++) {
@@ -138,9 +127,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
           }
 
           update.UpdatePermissionModel req = update.UpdatePermissionModel(categoryPermissions: updateCategoryPermissionList);
-
           Map<String, dynamic> updatePermissionReq = req.toJson();
-
           updatePermissionReq.removeWhere((key, value) {
             if (value != null) {}
             return value == null;

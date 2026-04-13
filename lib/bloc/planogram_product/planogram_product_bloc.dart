@@ -51,11 +51,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getPreferencesDataEvent) {
-        emit(
-          state.copyWith(
-            clubAgentId: preferences.getClubAgentId(),
-          ),
-        );
+        emit(state.copyWith(clubAgentId: preferences.getClubAgentId()));
       }
 
       if (event is _getPlanogramProductsEvent) {
@@ -70,7 +66,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 .toList() ??
             [];
         productStockList[1].addAll(stockList);
-
         emit(state.copyWith(
           isSubUserAddToBasket: preferences.getCanAddToBasket(),
           isIncludedVat: preferences.getIsIncludedVat(),
@@ -89,14 +84,8 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         _productQuantity = 0;
         try {
           emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
-
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getProductDetailsUrl,
-            data: ProductDetailsReqModel(params: event.productId).toJson(),
-          );
-
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             //new changes
             //0 for barcode and search
@@ -105,12 +94,9 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             if (response.product!.isNotEmpty) {
               List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
               int productListIndex = event.productListIndex;
-
               int productStockUpdateIndex = 0;
-
               if (event.isBarcode) {
                 productStockUpdateIndex = 0;
-
                 productStockList[0][0] = productStockList[0][0].copyWith(
                   quantity: _productQuantity,
                   productId: response.product?.first.id ?? '',
@@ -147,14 +133,12 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   stock: (response.product?.first.supplierSales?.first.productStock.toString() ?? '0'),
                   maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity ?? '0') : 0,
                 );
-
                 emit(state.copyWith(productStockList: productStockList));
               }
               if (response.product!.isNotEmpty) {
                 add(PlanogramProductEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
               List<ProductSupplierModel> supplierList = [];
-
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
                     return ProductSupplierModel(
                       supplierId: supplier.supplierId ?? '',
@@ -186,14 +170,12 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   }).toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == '0');
-
               String note = productStockList.isEmpty
                   ? ''
                   : productStockList.indexOf(state.productStockList.last) == productListIndex
                       ? ''
                       : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
-
               emit(state.copyWith(
                 productDetails: response.product ?? [],
                 productStockList: productStockList,
@@ -232,12 +214,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   if (supplierSaleIndex == -1) {
                     supplierSaleIndex = -2;
                   }
-
-                  add(PlanogramProductEvent.supplierSelectionEvent(
-                    supplierIndex: supplierIndex,
-                    context: event.context,
-                    supplierSaleIndex: supplierSaleIndex,
-                  ));
+                  add(PlanogramProductEvent.supplierSelectionEvent(supplierIndex: supplierIndex, context: event.context, supplierSaleIndex: supplierSaleIndex));
                 }
               }
             } else {
@@ -268,11 +245,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             }
             if (productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty != 0) {
               if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity >= productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
-                CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-                  type: SnackBarType.failure,
-                );
+                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                 return;
               }
             }
@@ -291,7 +264,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(quantity: productStockList[state.productListIndex][state.productStockUpdateIndex].quantity - 1);
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
-          } else {}
+          }
         }
       } else if (event is _updateQuantityOfProduct) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -310,7 +283,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(
               quantity: int.tryParse(quantityString.substring(0, quantityString.length - 1)) ?? 0,
             );
-
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: "${AppLocalizations.of(event.context)!.this_supplier_have}${productStockList[state.productListIndex][state.productStockUpdateIndex].stock}${AppLocalizations.of(event.context)!.quantity_in_stock}",
@@ -332,13 +304,9 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
-
           productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(productSupplierIds: supplierList[event.supplierIndex].supplierId, totalPrice: event.supplierSaleIndex == -2 ? supplierList[event.supplierIndex].basePrice : supplierList[event.supplierIndex].supplierSales[event.supplierSaleIndex].salePrice, stock: supplierList[event.supplierIndex].stock, quantity: supplierList[event.supplierIndex].quantity != 0 ? supplierList[event.supplierIndex].quantity : 1, productSaleId: event.supplierSaleIndex == -2 ? '' : supplierList[event.supplierIndex].supplierSales[event.supplierSaleIndex].saleId);
-
           supplierList = supplierList.map((supplier) => supplier.copyWith(selectedIndex: -1)).toList();
-
           supplierList[event.supplierIndex] = supplierList[event.supplierIndex].copyWith(selectedIndex: event.supplierSaleIndex);
-
           emit(state.copyWith(productSupplierList: supplierList, productStockList: productStockList));
         }
       } else if (event is _addToCartProductEvent) {
@@ -351,11 +319,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         }
         if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty > 0) {
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > state.productStockList[state.productListIndex][state.productStockUpdateIndex].maxQty) {
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
             return;
           }
         }
@@ -366,13 +330,10 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
               productId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productId == '' ? event.productId : state.productStockList[state.productListIndex][state.productStockUpdateIndex].productId,
               supplierId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds,
               saleId: state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId == '' ? null : state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSaleId,
-              quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity /*+ _productQuantity*/,
+              quantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
               cartProductId: _cartProductId,
             );
-            final res = await DioClient(event.context).post(
-              '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
-              data: request,
-            );
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}', data: request);
             UpdateCartResModel response = UpdateCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               Vibration.vibrate();
@@ -385,9 +346,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 totalPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
                 productSaleId: '',
               );
-
               emit(state.copyWith(isLoading: false, productStockList: productStockList, cartCount: preferences.getCartCount()));
-
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -416,10 +375,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
               return value == null;
             });
 
-            final res = await DioClient(event.context).post(
-              '${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}',
-              data: req,
-            );
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}', data: req);
             InsertCartResModel response = InsertCartResModel.fromJson(res);
             if (response.status == AppConstants.code_201) {
               if (!state.productStockList[state.productListIndex][state.productStockUpdateIndex].productIsInCart) {
@@ -470,10 +426,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
       } else if (event is _updateImageIndexEvent) {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _getCartCountEvent) {
-        emit(state.copyWith(
-          cartCount: preferences.getCartCount(),
-          isSubUserAddToBasket: preferences.getCanAddToBasket(),
-        ));
+        emit(state.copyWith(cartCount: preferences.getCartCount(), isSubUserAddToBasket: preferences.getCanAddToBasket()));
       } else if (event is _getGridListView) {
         preferences.setPlanogramProductGridListView(isPlanogramProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));
@@ -500,9 +453,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
           );
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: globalSearchReqModel.toJson());
-
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
-
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) => SearchModel(
@@ -517,7 +468,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
 
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
-
             searchList.addAll(response.data
                     ?.map((supplier) => SearchModel(
                           searchId: supplier.id ?? '',
@@ -541,18 +491,10 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             emit(state.copyWith(isSearching: false));
           }
         } on ServerException {
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-            type: SnackBarType.failure,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
           emit(state.copyWith(isSearching: false));
         } catch (exc) {
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-            type: SnackBarType.failure,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
           emit(state.copyWith(isSearching: false));
         }
       } else if (event is _updateGlobalSearchEvent) {
@@ -565,7 +507,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             data: const ProductCategoriesReqModel(pageNum: 1, pageLimit: 18).toJson(),
           );
           ProductCategoriesResModel response = ProductCategoriesResModel.fromJson(res);
-
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             searchList.addAll(response.data?.categories?.map((category) => SearchModel(
@@ -577,12 +518,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 []);
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference == true) ?? true;
 
-            emit(state.copyWith(
-              isCatVisible: productVisible,
-              productCategoryList: response.data?.categories ?? [],
-              searchList: searchList,
-              isShimmering: false,
-            ));
+            emit(state.copyWith(isCatVisible: productVisible, productCategoryList: response.data?.categories ?? [], searchList: searchList, isShimmering: false));
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
@@ -600,22 +536,12 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         emit(state.copyWith(isRelatedShimmering: true));
         final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
         RelatedProductResModel response = RelatedProductResModel.fromJson(res);
-
         if (response.status == AppConstants.code_200) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
           List<ProductStockModel> stockList = [];
-          stockList.addAll(response.data?.map((product) => ProductStockModel(
-                    productId: product.id ?? '',
-                    stock: (product.productStock.toString()),
-                  )) ??
-              []);
+          stockList.addAll(response.data?.map((product) => ProductStockModel(productId: product.id ?? '', stock: (product.productStock.toString()))) ?? []);
           productStockList[2].addAll(stockList);
-          emit(state.copyWith(
-            relatedProductList: response.data ?? [],
-            isRelatedShimmering: false,
-            productStockList: productStockList,
-            isProductLoading: false,
-          ));
+          emit(state.copyWith(relatedProductList: response.data ?? [], isRelatedShimmering: false, productStockList: productStockList, isProductLoading: false));
         } else {
           emit(state.copyWith(isRelatedShimmering: false, isProductLoading: false));
           CustomSnackBar.showSnackBar(
@@ -664,7 +590,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
           try {
             final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
-
             if (response.status == AppConstants.code_200) {
               if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
@@ -676,7 +601,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         }
       } else if (event is _increaseListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
-
         if (event.productStockUpdateIndex != -1) {
           if (productStockList[event.productListIndex][event.productStockUpdateIndex].quantity <
               double.parse(
@@ -687,11 +611,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             }
             if (productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty != 0) {
               if (productStockList[event.productListIndex][event.productStockUpdateIndex].quantity >= productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty) {
-                CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-                  type: SnackBarType.failure,
-                );
+                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
                 return;
               }
             }
@@ -718,7 +638,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
             );
             emit(state.copyWith(productStockList: []));
             emit(state.copyWith(productStockList: productStockList));
-          } else {}
+          }
         }
       } else if (event is _updateListQuantityOfProductEvent) {
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
@@ -750,51 +670,36 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
         }
       } else if (event is _addToCartListProductEvent) {
         _isProductInCart = false;
-
         if (event.productSupplierIds.isEmpty) {
           return;
         }
 
         if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty > 0) {
           if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity > state.productStockList[event.productListIndex][event.productStockUpdateIndex].maxQty) {
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty,
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
             return;
           }
         }
 
         if (state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity == 0) {
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-          );
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
 
           if (res != null) {
             final response = GetAllCartResModel.fromJson(res);
 
             if (response.status == AppConstants.code_200) {
               final cartList = response.data?.data;
-
               if (cartList != null && cartList.isNotEmpty) {
                 for (var item in cartList) {
                   final productDetails = item.productDetails;
                   if (productDetails != null && productDetails.id == event.productId) {
                     final cartProductId = item.cartProductId;
-
                     try {
                       final player = AudioPlayer();
-                      final response = await DioClient(event.context).post(
-                        AppUrlEndPoints.removeCartProductUrl,
-                        data: {AppStrings.cartProductIdString: cartProductId},
-                      );
-
+                      final response = await DioClient(event.context).post(AppUrlEndPoints.removeCartProductUrl, data: {AppStrings.cartProductIdString: cartProductId});
                       if (response[AppStrings.statusString] == AppConstants.code_200) {
                         player.play(AssetSource(AppStrings.deleteSound));
-
                         await preferences.setCartCount(count: preferences.getCartCount() - 1);
-
                         break;
                       }
                     } catch (_) {}
@@ -803,17 +708,10 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
               }
             }
           }
-
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.record_deleted_successfully,
-            type: SnackBarType.success,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.record_deleted_successfully, type: SnackBarType.success);
         } else {
           try {
-            final res = await DioClient(event.context).post(
-              '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-            );
+            final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
             GetAllCartResModel response = GetAllCartResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               response.data?.data?.forEach((cartProduct) {
@@ -835,10 +733,7 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 quantity: state.productStockList[event.productListIndex][event.productStockUpdateIndex].quantity,
                 cartProductId: _cartProductId,
               );
-              final res = await DioClient(event.context).post(
-                '${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}',
-                data: request,
-              );
+              final res = await DioClient(event.context).post('${AppUrlEndPoints.updateCartProductUrl}${preferences.getCartId()}', data: request);
               UpdateCartResModel response = UpdateCartResModel.fromJson(res);
               if (response.status == AppConstants.code_201) {
                 Vibration.vibrate();
@@ -852,7 +747,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
                 emit(state.copyWith(productStockList: productStockList));
-
                 CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
@@ -885,14 +779,10 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                 if (value != null) {}
                 return value == null;
               });
-              final res = await DioClient(event.context).post(
-                '${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}',
-                data: req,
-              );
+              final res = await DioClient(event.context).post('${AppUrlEndPoints.insertProductInCartUrl}${preferences.getCartId()}', data: req);
               InsertCartResModel response = InsertCartResModel.fromJson(res);
               if (response.status == AppConstants.code_201) {
                 add(const PlanogramProductEvent.setCartCountEvent());
-
                 Vibration.vibrate();
                 List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
                 productStockList[event.productListIndex][event.productStockUpdateIndex] = productStockList[event.productListIndex][event.productStockUpdateIndex].copyWith(
@@ -903,7 +793,6 @@ class PlanogramProductBloc extends Bloc<PlanogramProductEvent, PlanogramProductS
                   totalPrice: productStockList[event.productListIndex][event.productStockUpdateIndex].totalPrice,
                   productSaleId: productStockList[event.productListIndex][event.productStockUpdateIndex].productSaleId,
                 );
-
                 CustomSnackBar.showSnackBar(
                   context: event.context,
                   title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),

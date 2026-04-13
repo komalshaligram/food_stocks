@@ -36,31 +36,18 @@ class MarqueeWidgetState extends State<CommonMarqueeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const NeverScrollableScrollPhysics(),
-      scrollDirection: widget.direction,
-      controller: scrollController,
-      child: widget.child,
-    );
+    return SingleChildScrollView(physics: const NeverScrollableScrollPhysics(), scrollDirection: widget.direction, controller: scrollController, child: widget.child);
   }
 
   void scroll(_) async {
     while (scrollController.hasClients) {
       await Future.delayed(widget.pauseDuration);
       if (scrollController.hasClients) {
-        await scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
-          duration: widget.animationDuration,
-          curve: Curves.ease,
-        );
+        await scrollController.animateTo(scrollController.position.maxScrollExtent, duration: widget.animationDuration, curve: Curves.ease);
       }
       await Future.delayed(widget.pauseDuration);
       if (scrollController.hasClients) {
-        await scrollController.animateTo(
-          0.0,
-          duration: widget.backDuration,
-          curve: Curves.easeOut,
-        );
+        await scrollController.animateTo(0.0, duration: widget.backDuration, curve: Curves.easeOut);
       }
     }
   }

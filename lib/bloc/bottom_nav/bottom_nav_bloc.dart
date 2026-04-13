@@ -20,9 +20,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         bool isGuestUser = preferences.getGuestUser();
         if (!isGuestUser && !preferences.getSubUser()) {
           if (state.arg != '' && preferences.getAppLanguage() == AppStrings.hebrewString) {
-            emit(state.copyWith(
-              index: state.index,
-            ));
+            emit(state.copyWith(index: state.index));
           } else {
             emit(state.copyWith(index: event.index));
           }
@@ -30,13 +28,9 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
           if (preferences.getCanSeeWallet() != state.isSubUserSeeWallet) {
             emit(state.copyWith(index: 0));
           } else if (state.arg != '' && preferences.getAppLanguage() == AppStrings.hebrewString) {
-            emit(state.copyWith(
-              index: state.index,
-            ));
+            emit(state.copyWith(index: state.index));
           } else {
-            emit(state.copyWith(
-              index: event.index,
-            ));
+            emit(state.copyWith(index: event.index));
           }
         } else {
           emit(state.copyWith(isGuestUser: isGuestUser, index: event.index));
@@ -45,11 +39,9 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
         emit(state.copyWith(isSubUserSeeWallet: preferences.getCanSeeWallet()));
       } else if (event is _UpdateCartCountEvent) {
         emit(state.copyWith(isSubUserSeeWallet: preferences.getCanSeeWallet()));
-
         if (state.cartCount < preferences.getCartCount()) {
           emit(state.copyWith(isAnimation: true));
         }
-
         emit(state.copyWith(cartCount: preferences.getCartCount()));
         if (state.isAnimation) {
           await Future.delayed(const Duration(milliseconds: 1000));

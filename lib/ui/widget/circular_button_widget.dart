@@ -16,10 +16,7 @@ class CircularButtonWidget extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-          border: Border.all(
-            color: AppColors.borderColor.withValues(alpha:0.6),
-            width: 1,
-          ),
+          border: Border.all(color: AppColors.borderColor.withValues(alpha: 0.6), width: 1),
         ),
         child: Container(
           alignment: Alignment.center,
@@ -27,27 +24,14 @@ class CircularButtonWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.lightGreyColor,
             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-            border: Border.all(
-              color: AppColors.whiteColor,
-              width: 1,
-            ),
+            border: Border.all(color: AppColors.whiteColor, width: 1),
           ),
           child: RichText(
             textDirection: TextDirection.ltr,
             locale: const Locale(AppStrings.hebrewLocal),
-            text: TextSpan(
-              text: buttonName,
-              style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400),
-              children: <TextSpan>[
-                TextSpan(
-                    text: ':$buttonValue',
-                    style: TextStyle(
-                      color: AppColors.whiteColor,
-                      fontSize: AppConstants.font_14,
-                      fontWeight: FontWeight.w700,
-                    )),
-              ],
-            ),
+            text: TextSpan(text: buttonName, style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400), children: <TextSpan>[
+              TextSpan(text: ':$buttonValue', style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w700)),
+            ]),
           ),
         ),
       ),

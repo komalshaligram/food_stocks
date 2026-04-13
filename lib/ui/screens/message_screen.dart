@@ -42,98 +42,81 @@ class MessageScreenWidget extends StatelessWidget {
     MessageBloc bloc = context.read<MessageBloc>();
     return BlocListener<MessageBloc, MessageState>(
       listener: (context, state) {},
-      child: BlocBuilder<MessageBloc, MessageState>(
-        builder: (context, state) {
-          return WillPopScope(
-            onWillPop: () {
-              Navigator.pop(context, {
-                AppStrings.messageIdListString: state.deletedMessageList,
-              });
-              return Future.value(false);
-            },
-            child: Scaffold(
-              backgroundColor: AppColors.pageColor,
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-                child: CommonAppBar(
-                  bgColor: AppColors.pageColor,
-                  title: AppLocalizations.of(context)!.messages,
-                  iconData: Icons.arrow_back_ios_sharp,
-                  onTap: () {
-                    Navigator.pop(context, {
-                      AppStrings.messageIdListString: state.deletedMessageList,
-                    });
-                  },
-                ),
+      child: BlocBuilder<MessageBloc, MessageState>(builder: (context, state) {
+        return WillPopScope(
+          onWillPop: () {
+            Navigator.pop(context, {AppStrings.messageIdListString: state.deletedMessageList});
+            return Future.value(false);
+          },
+          child: Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                bgColor: AppColors.pageColor,
+                title: AppLocalizations.of(context)!.messages,
+                iconData: Icons.arrow_back_ios_sharp,
+                onTap: () {
+                  Navigator.pop(context, {AppStrings.messageIdListString: state.deletedMessageList});
+                },
               ),
-              body: SafeArea(
-                child: SmartRefresher(
-                  enablePullDown: true,
-                  controller: state.refreshController,
-                  header: const RefreshWidget(),
-                  footer: CustomFooter(
-                    builder: (context, mode) => const QuestionAndAnswerScreenShimmerWidget(),
-                  ),
-                  enablePullUp: !state.isBottomOfMessage,
-                  onRefresh: () {
-                    context.read<MessageBloc>().add(MessageEvent.refreshListEvent(context: context));
-                  },
-                  onLoading: () {
-                    context.read<MessageBloc>().add(MessageEvent.getMessageListEvent(context: context));
-                  },
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        state.isShimmering
-                            ? const QuestionAndAnswerScreenShimmerWidget()
-                            : state.messageList.isEmpty
-                                ? Container(
-                                    height: getScreenHeight(context) - 80,
-                                    width: getScreenWidth(context),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      AppLocalizations.of(context)!.messages_not_found,
-                                      style: AppStyles.pVRegularTextStyle(size: AppConstants.font_26, color: AppColors.blackColor),
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    itemCount: state.messageList.length,
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-                                    itemBuilder: (context, index) {
-                                      return Dismissible(
-                                        key: Key(state.messageList.toString()),
-                                        direction: DismissDirection.startToEnd,
-                                        background: Container(
-                                          alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
-                                          margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.redColor,
-                                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(AppConstants.padding_11),
-                                            child: SvgPicture.asset(
-                                              AppImagePath.delete,
-                                              colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
-                                              height: 30,
-                                              width: 30,
-                                            ),
-                                          ),
+            ),
+            body: SafeArea(
+              child: SmartRefresher(
+                enablePullDown: true,
+                controller: state.refreshController,
+                header: const RefreshWidget(),
+                footer: CustomFooter(builder: (context, mode) => const QuestionAndAnswerScreenShimmerWidget()),
+                enablePullUp: !state.isBottomOfMessage,
+                onRefresh: () {
+                  context.read<MessageBloc>().add(MessageEvent.refreshListEvent(context: context));
+                },
+                onLoading: () {
+                  context.read<MessageBloc>().add(MessageEvent.getMessageListEvent(context: context));
+                },
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    state.isShimmering
+                        ? const QuestionAndAnswerScreenShimmerWidget()
+                        : state.messageList.isEmpty
+                            ? Container(
+                                height: getScreenHeight(context) - 80,
+                                width: getScreenWidth(context),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  AppLocalizations.of(context)!.messages_not_found,
+                                  style: AppStyles.pVRegularTextStyle(size: AppConstants.font_26, color: AppColors.blackColor),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: state.messageList.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+                                itemBuilder: (context, index) {
+                                  return Dismissible(
+                                      key: Key(state.messageList.toString()),
+                                      direction: DismissDirection.startToEnd,
+                                      background: Container(
+                                        alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
+                                        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
+                                        decoration: BoxDecoration(color: AppColors.redColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(AppConstants.padding_11),
+                                          child: SvgPicture.asset(AppImagePath.delete, colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn), height: 30, width: 30),
                                         ),
-                                        confirmDismiss: (DismissDirection direction) async {
-                                          if (direction == DismissDirection.startToEnd) {
-                                            return await showDialog(
+                                      ),
+                                      confirmDismiss: (DismissDirection direction) async {
+                                        if (direction == DismissDirection.startToEnd) {
+                                          return await showDialog(
                                               context: context,
                                               builder: (BuildContext context1) {
                                                 return BlocProvider.value(
                                                   value: context.read<MessageBloc>(),
-                                                  child: BlocBuilder<MessageBloc, MessageState>(
-                                                    builder: (context, state) {
-                                                      return AbsorbPointer(
-                                                          absorbing: state.isRemoveProcess ? true : false,
-                                                          child: CustomDialog(
+                                                  child: BlocBuilder<MessageBloc, MessageState>(builder: (context, state) {
+                                                    return AbsorbPointer(
+                                                        absorbing: state.isRemoveProcess ? true : false,
+                                                        child: CustomDialog(
                                                             title: AppLocalizations.of(context)!.are_you_sure,
                                                             content: const [],
                                                             isMixedSale: false,
@@ -149,47 +132,40 @@ class MessageScreenWidget extends StatelessWidget {
                                                             },
                                                             negativeOnTap: () {
                                                               Navigator.pop(context1);
-                                                            },
-                                                          ));
-                                                    },
-                                                  ),
+                                                            }));
+                                                  }),
                                                 );
-                                              },
-                                            );
-                                          }
-                                          return null;
+                                              });
+                                        }
+                                        return null;
+                                      },
+                                      child: messageListItem(
+                                        index: index,
+                                        context: context,
+                                        title: state.messageList[index].message?.title ?? '',
+                                        content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
+                                        dateTime: state.messageList[index].updatedAt?.replaceRange(16, 19, '') ?? '',
+                                        onTap: () async {
+                                          dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
+                                            AppStrings.messageDataString: state.messageList[index],
+                                            AppStrings.messageIdString: state.messageList[index].id,
+                                          });
+                                          context.read<MessageBloc>().add(MessageEvent.removeOrUpdateMessageEvent(
+                                                messageId: messageNewData[AppStrings.messageIdString],
+                                                isRead: messageNewData[AppStrings.messageReadString],
+                                                isDelete: messageNewData[AppStrings.messageDeleteString],
+                                              ));
                                         },
-                                        child: messageListItem(
-                                          index: index,
-                                          context: context,
-                                          title: state.messageList[index].message?.title ?? '',
-                                          content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
-                                          dateTime: state.messageList[index].updatedAt?.replaceRange(16, 19, '') ?? '',
-                                          onTap: () async {
-                                            dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
-                                              AppStrings.messageDataString: state.messageList[index],
-                                              AppStrings.messageIdString: state.messageList[index].id,
-                                            });
-                                            context.read<MessageBloc>().add(MessageEvent.removeOrUpdateMessageEvent(
-                                                  messageId: messageNewData[AppStrings.messageIdString],
-                                                  isRead: messageNewData[AppStrings.messageReadString],
-                                                  isDelete: messageNewData[AppStrings.messageDeleteString],
-                                                ));
-                                          },
-                                          isRead: state.messageList[index].isRead ?? false,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                      ],
-                    ),
-                  ),
+                                        isRead: state.messageList[index].isRead ?? false,
+                                      ));
+                                }),
+                  ]),
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -206,9 +182,7 @@ class MessageScreenWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        boxShadow: [
-          BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10),
-        ],
+        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
       ),
       margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
       padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
@@ -216,51 +190,28 @@ class MessageScreenWidget extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         onTap: onTap,
-        child: Row(
-          children: [
-            Container(
-              height: 16,
-              width: 16,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isRead ? Colors.transparent : AppColors.mainColor,
-              ),
-              margin: EdgeInsets.only(left: context.rtl ? AppConstants.padding_10 : 0, right: context.rtl ? 0 : AppConstants.padding_10),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w500),
-                  ),
-                  5.height,
-                  Text(
-                    content,
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  5.height,
-                  Text(
-                    dateTime,
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.textColor),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 40,
-              alignment: Alignment.center,
-              child: Icon(
-                Icons.arrow_forward_ios_sharp,
-                color: AppColors.blackColor,
-              ),
-            )
-          ],
-        ),
+        child: Row(children: [
+          Container(
+            height: 16,
+            width: 16,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: isRead ? Colors.transparent : AppColors.mainColor),
+            margin: EdgeInsets.only(left: context.rtl ? AppConstants.padding_10 : 0, right: context.rtl ? 0 : AppConstants.padding_10),
+          ),
+          Expanded(
+            child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w500)),
+              5.height,
+              Text(content, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor), maxLines: 2, overflow: TextOverflow.ellipsis),
+              5.height,
+              Text(dateTime, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.textColor)),
+            ]),
+          ),
+          Container(
+            width: 40,
+            alignment: Alignment.center,
+            child: Icon(Icons.arrow_forward_ios_sharp, color: AppColors.blackColor),
+          )
+        ]),
       ),
     );
   }

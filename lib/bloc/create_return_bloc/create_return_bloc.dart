@@ -32,9 +32,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           List<ReturnProduct> tempList = [];
           try {
             emit(state.copyWith(isShimmer: true));
-            final response = await DioClient(event.context).get(
-              path: AppUrlEndPoints.getReturnByIdUrl + map[AppStrings.idString],
-            );
+            final response = await DioClient(event.context).get(path: AppUrlEndPoints.getReturnByIdUrl + map[AppStrings.idString]);
             GetReturnByIdResModel res = GetReturnByIdResModel.fromJson(response);
             tempList.addAll(res.data?.returnProducts ?? []);
             for (int i = 0; i < tempList.length; i++) {
@@ -65,27 +63,15 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           }
         } else {
           final List<ReturnProduct> myList = map['list'] as List<ReturnProduct>;
-
-          emit(state.copyWith(
-            language: preferences.getAppLanguage(),
-            returnProductList: myList,
-            returnId: myList.first.returnId!,
-            isFromPending: map['status'],
-          ));
+          emit(state.copyWith(language: preferences.getAppLanguage(), returnProductList: myList, returnId: myList.first.returnId!, isFromPending: map['status']));
         }
       } else if (event is _navigateToAddProductEvent) {
-        Navigator.pushReplacementNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {
-          'list': state.returnProductList,
-          'status': state.isFromPending,
-        });
+        Navigator.pushReplacementNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': state.returnProductList, 'status': state.isFromPending});
       } else if (event is _deleteEvent) {
         if (state.returnId.isNotEmpty) {
           DeleteReturnReq req = DeleteReturnReq(ids: [state.returnId]);
           try {
-            final res = await DioClient(event.context).post(
-              AppUrlEndPoints.deleteReturnUrl,
-              data: req.toJson(),
-            );
+            final res = await DioClient(event.context).post(AppUrlEndPoints.deleteReturnUrl, data: req.toJson());
 
             if (res[AppStrings.statusString] == AppConstants.code_200) {
               emit(state.copyWith(returnProductList: []));
@@ -94,11 +80,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
                 title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
                 type: SnackBarType.success,
               );
-
-              Navigator.pushReplacementNamed(
-                event.context,
-                RouteDefine.returnListScreen.name,
-              );
+              Navigator.pushReplacementNamed(event.context, RouteDefine.returnListScreen.name);
             } else {
               CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -107,25 +89,13 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
               );
             }
           } catch (e) {
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: e.toString(),
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
           }
         } else {
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.return_deleted,
-            type: SnackBarType.failure,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.return_deleted, type: SnackBarType.failure);
           emit(state.copyWith(returnProductList: []));
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushNamedAndRemoveUntil(
-              event.context,
-              RouteDefine.returnListScreen.name,
-              (Route route) => route.isFirst,
-            );
+            Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.returnListScreen.name, (Route route) => route.isFirst);
           });
         }
       } else if (event is _updateReturnEvent) {
@@ -157,10 +127,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             returnProducts: list,
             subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
           );
-          final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId ?? state.returnId}',
-            data: reqModel.toJson(),
-          );
+          final res = await DioClient(event.context).post('${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId ?? state.returnId}', data: reqModel.toJson());
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
             List<ReturnProduct> list = [];
@@ -168,21 +135,9 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             if (resModel.data![0].returnproducts!.isNotEmpty) {
               list.addAll(resModel.data![0].returnproducts as List<ReturnProduct>);
             }
-
             emit(state.copyWith(isLoading: false, returnId: resModel.data![0].id.toString()));
-
-            Navigator.pushReplacementNamed(
-              event.context,
-              RouteDefine.returnListScreen.name,
-              arguments: {
-                AppStrings.pushNavigationString: 'profileScreen',
-              },
-            );
-
-            await showDialog(
-              context: event.context,
-              builder: (_) => CallWaitingForNewOrderSuccessMsgDialog(language: state.language),
-            );
+            Navigator.pushReplacementNamed(event.context, RouteDefine.returnListScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+            await showDialog(context: event.context, builder: (_) => CallWaitingForNewOrderSuccessMsgDialog(language: state.language));
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,
@@ -224,7 +179,6 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
 
 class CallWaitingForNewOrderSuccessMsgDialog extends StatelessWidget {
   final String language;
-
   const CallWaitingForNewOrderSuccessMsgDialog({Key? key, required this.language}) : super(key: key);
 
   @override
@@ -235,10 +189,7 @@ class CallWaitingForNewOrderSuccessMsgDialog extends StatelessWidget {
         contentPadding: const EdgeInsets.all(20.0),
         surfaceTintColor: AppColors.whiteColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        content: Text(
-          AppLocalizations.of(context)!.waiting_for_new_order_success_msg,
-          style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont),
-        ),
+        content: Text(AppLocalizations.of(context)!.waiting_for_new_order_success_msg, style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont)),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -253,13 +204,7 @@ class CallWaitingForNewOrderSuccessMsgDialog extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        AppLocalizations.of(context)!.closeText,
-                        style: AppStyles.rkRegularTextStyle(
-                          size: AppConstants.smallFont,
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
+                      Text(AppLocalizations.of(context)!.closeText, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
                     ],
                   ),
                 ),
