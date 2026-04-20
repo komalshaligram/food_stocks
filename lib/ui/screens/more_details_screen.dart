@@ -71,6 +71,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
           body: state.isShimmering
               ? const MoreDetailsScreenShimmerWidget()
               : SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
                   child: Column(children: [
                     SafeArea(
                       child: Padding(

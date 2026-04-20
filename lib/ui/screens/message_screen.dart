@@ -75,6 +75,7 @@ class MessageScreenWidget extends StatelessWidget {
                   context.read<MessageBloc>().add(MessageEvent.getMessageListEvent(context: context));
                 },
                 child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
                   child: Column(children: [
                     state.isShimmering
                         ? const QuestionAndAnswerScreenShimmerWidget()

@@ -197,6 +197,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                     : Expanded(
                         child: AnimationLimiter(
                           child: ListView.builder(
+                            physics: const ClampingScrollPhysics(),
                             itemCount: state.tempList.length,
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
@@ -421,7 +422,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 Navigator.of(context1, rootNavigator: true).pop();
                 Future.delayed(const Duration(milliseconds: 200), () {
                   bankTransferDialog(
-                      context: context1,
+                      context: context,
                       language: state.language,
                       text: state.bankTransferInfo,
                       function: () {
@@ -463,7 +464,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 Navigator.of(context1, rootNavigator: true).pop();
                 Future.delayed(const Duration(milliseconds: 200), () {
                   bankTransferDialog(
-                      context: context1,
+                      context: context,
                       language: state.language,
                       text: state.bankTransferInfo,
                       function: () {
@@ -529,7 +530,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
               Navigator.of(context1, rootNavigator: true).pop();
               Future.delayed(const Duration(milliseconds: 200), () {
                 bankTransferDialog(
-                    context: context1,
+                    context: context,
                     language: state.language,
                     text: state.bankTransferInfo,
                     function: () {

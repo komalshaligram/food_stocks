@@ -99,6 +99,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
             },
             child: SafeArea(
               child: SmartRefresher(
+                physics: const ClampingScrollPhysics(),
                 enablePullDown: true,
                 controller: state.refreshController,
                 header: const RefreshWidget(),

@@ -72,7 +72,7 @@ class MyClientsScreenWidget extends StatelessWidget {
                 state.isShimmering
                     ? const OrderSummaryScreenShimmerWidget(itemCount: 10)
                     : Column(children: [
-                        searchWidget(context),
+                        searchWidget(context, state),
                         state.filteredClientsList.isNotEmpty
                             ? clientListWidget(state: state, context: context, clientsList: state.filteredClientsList)
                             : Expanded(
@@ -93,7 +93,7 @@ class MyClientsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget searchWidget(BuildContext context) => Container(
+  Widget searchWidget(BuildContext context, MyClientsState state) => Container(
         margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_10),
         width: getScreenWidth(context),
         height: 60,
@@ -106,39 +106,37 @@ class MyClientsScreenWidget extends StatelessWidget {
           border: Border.all(color: AppColors.borderColor.withValues(alpha: 0.5)),
           boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: 2)],
         ),
-        child: BlocBuilder<MyClientsBloc, MyClientsState>(builder: (context, state) {
-          return TextField(
-            controller: state.searchController,
-            decoration: InputDecoration(
-              border: AppStyles.searchFieldStyle(),
-              enabledBorder: AppStyles.searchFieldStyle(),
-              focusedBorder: AppStyles.searchFieldStyle(),
-              filled: true,
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(vertical: 0),
-              hintText: AppLocalizations.of(context)!.search,
-              fillColor: AppColors.pageColor,
-              prefixIcon: Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                child: Icon(Icons.search, color: AppColors.greyColor),
-              ),
-              suffixIcon: state.searchQuery.isNotEmpty
-                  ? GestureDetector(
-                      onTap: () {
-                        state.searchController.clear();
-                        context.read<MyClientsBloc>().add(const MyClientsEvent.searchClients(query: ''));
-                      },
-                      child: const Icon(Icons.close),
-                    )
-                  : null,
+        child: TextField(
+          controller: state.searchController,
+          decoration: InputDecoration(
+            border: AppStyles.searchFieldStyle(),
+            enabledBorder: AppStyles.searchFieldStyle(),
+            focusedBorder: AppStyles.searchFieldStyle(),
+            filled: true,
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(vertical: 0),
+            hintText: AppLocalizations.of(context)!.search,
+            fillColor: AppColors.pageColor,
+            prefixIcon: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(context.rtl ? pi : 0),
+              child: Icon(Icons.search, color: AppColors.greyColor),
             ),
-            onChanged: (val) {
-              context.read<MyClientsBloc>().add(MyClientsEvent.searchClients(query: val));
-            },
-            onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-          );
-        }),
+            suffixIcon: state.searchQuery.isNotEmpty
+                ? GestureDetector(
+                    onTap: () {
+                      state.searchController.clear();
+                      context.read<MyClientsBloc>().add(const MyClientsEvent.searchClients(query: ''));
+                    },
+                    child: const Icon(Icons.close),
+                  )
+                : null,
+          ),
+          onChanged: (val) {
+            context.read<MyClientsBloc>().add(MyClientsEvent.searchClients(query: val));
+          },
+          onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+        ),
       );
 
   Widget clientListWidget({required MyClientsState state, required BuildContext context, required List<AgentStore> clientsList}) {
@@ -212,7 +210,7 @@ class MyClientsScreenWidget extends StatelessWidget {
                       5.height,
                       GestureDetector(
                         onTap: () {
-                          supplierListDialog(context: context, state: state, index: index);
+                          supplierListDialog(context: context, state: state, client: clientsList[index]);
                         },
                         child: Container(
                           width: 115,
@@ -238,7 +236,7 @@ class MyClientsScreenWidget extends StatelessWidget {
     );
   }
 
-  supplierListDialog({required BuildContext context, required MyClientsState state, required int index}) {
+  supplierListDialog({required BuildContext context, required MyClientsState state, required AgentStore client}) {
     showMaterialModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -252,17 +250,9 @@ class MyClientsScreenWidget extends StatelessWidget {
             bottom: true,
             child: DraggableScrollableSheet(
                 expand: true,
-                initialChildSize: state.clientsList[index].suppliers!.length == 1
-                    ? 0.2
-                    : state.clientsList[index].suppliers!.length == 2
-                        ? 0.3
-                        : 0.5,
-                minChildSize: state.clientsList[index].suppliers!.length == 1
-                    ? 0.2
-                    : state.clientsList[index].suppliers!.length == 2
-                        ? 0.3
-                        : 0.5,
-                maxChildSize: state.clientsList[index].suppliers!.length > 4 ? 0.9 : 0.5,
+                initialChildSize: getSheetSize(client.suppliers!.length),
+                minChildSize: getSheetSize(client.suppliers!.length),
+                maxChildSize: client.suppliers!.length > 4 ? 0.9 : 0.5,
                 builder: (BuildContext context1, ScrollController scrollController) {
                   return Container(
                     padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_2),
@@ -270,7 +260,7 @@ class MyClientsScreenWidget extends StatelessWidget {
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
                       color: AppColors.whiteColor,
                     ),
-                    child: state.clientsList[index].suppliers == null || state.clientsList[index].suppliers!.isEmpty
+                    child: client.suppliers == null || client.suppliers!.isEmpty
                         ? noDataWidget(AppLocalizations.of(context)!.no_suppliers_found)
                         : Column(children: [
                             Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -294,7 +284,7 @@ class MyClientsScreenWidget extends StatelessWidget {
                             Expanded(
                               child: AnimationLimiter(
                                 child: ListView.builder(
-                                  itemCount: state.clientsList[index].suppliers!.length,
+                                  itemCount: client.suppliers!.length,
                                   controller: scrollController,
                                   physics: const ClampingScrollPhysics(),
                                   itemBuilder: (supplierListContext, suppliersIndex) => AnimationConfiguration.staggeredList(
@@ -316,13 +306,12 @@ class MyClientsScreenWidget extends StatelessWidget {
                                             child: Row(children: [
                                               Container(
                                                 decoration: BoxDecoration(
-                                                    border: Border.all(color: AppColors.borderColor, width: 1),
-                                                    borderRadius: BorderRadius.circular(
-                                                      AppConstants.radius_50,
-                                                    )),
+                                                  border: Border.all(color: AppColors.borderColor, width: 1),
+                                                  borderRadius: BorderRadius.circular(AppConstants.radius_50),
+                                                ),
                                                 padding: const EdgeInsets.all(AppConstants.padding_2),
                                                 child: ClipOval(
-                                                  child: Image.network("${AppUrlEndPoints.baseFileUrl}${state.clientsList[index].suppliers![suppliersIndex].logo}", height: 40, width: 40, fit: BoxFit.contain, loadingBuilder: (
+                                                  child: Image.network("${AppUrlEndPoints.baseFileUrl}${client.suppliers![suppliersIndex].logo}", height: 40, width: 40, fit: BoxFit.contain, loadingBuilder: (
                                                     context,
                                                     child,
                                                     loadingProgress,
@@ -347,7 +336,7 @@ class MyClientsScreenWidget extends StatelessWidget {
                                               ),
                                               10.width,
                                               Text(
-                                                state.clientsList[index].suppliers![suppliersIndex].supplierName!,
+                                                client.suppliers![suppliersIndex].supplierName!,
                                                 style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
@@ -358,7 +347,7 @@ class MyClientsScreenWidget extends StatelessWidget {
                                                 child: Container(
                                                   padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_2, horizontal: AppConstants.padding_10),
                                                   decoration: BoxDecoration(
-                                                      color: state.clientsList[index].suppliers![suppliersIndex].isNoMinimum! == true
+                                                      color: client.suppliers![suppliersIndex].isNoMinimum! == true
                                                           ? AppColors.notificationColor.withValues(alpha: 0.3)
                                                           : AppColors.clubAgentBGColor.withValues(
                                                               alpha: 0.3,
@@ -367,10 +356,10 @@ class MyClientsScreenWidget extends StatelessWidget {
                                                         AppConstants.radius_10,
                                                       )),
                                                   child: Text(
-                                                    state.clientsList[index].suppliers![suppliersIndex].isNoMinimum! == true ? AppLocalizations.of(context)!.clients_no_minimum : '${AppLocalizations.of(context)!.clients_minimum_order} ${state.clientsList[index].suppliers![suppliersIndex].minOrderAmount} ₪',
+                                                    client.suppliers![suppliersIndex].isNoMinimum! == true ? AppLocalizations.of(context)!.clients_no_minimum : '${AppLocalizations.of(context)!.clients_minimum_order} ${client.suppliers![suppliersIndex].minOrderAmount} ₪',
                                                     style: AppStyles.rkRegularTextStyle(
                                                       size: AppConstants.font_12,
-                                                      color: state.clientsList[index].suppliers![suppliersIndex].isNoMinimum! == true ? AppColors.statusOpenColor : AppColors.clubAgentBGColor,
+                                                      color: client.suppliers![suppliersIndex].isNoMinimum! == true ? AppColors.statusOpenColor : AppColors.clubAgentBGColor,
                                                       fontWeight: FontWeight.normal,
                                                     ),
                                                     overflow: TextOverflow.ellipsis,
@@ -385,9 +374,9 @@ class MyClientsScreenWidget extends StatelessWidget {
                                                     Future.delayed(const Duration(milliseconds: 200), () {
                                                       confirmationDialog(
                                                         context: context,
-                                                        clientId: state.clientsList[index].id!,
-                                                        supplierId: state.clientsList[index].suppliers![suppliersIndex].id!,
-                                                        isMinimum: state.clientsList[index].suppliers![suppliersIndex].isNoMinimum!,
+                                                        clientId: client.id!,
+                                                        supplierId: client.suppliers![suppliersIndex].id!,
+                                                        isMinimum: client.suppliers![suppliersIndex].isNoMinimum!,
                                                       );
                                                     });
                                                   },
@@ -406,6 +395,12 @@ class MyClientsScreenWidget extends StatelessWidget {
                 }),
           );
         });
+  }
+
+  double getSheetSize(int length) {
+    if (length == 1) return 0.2;
+    if (length == 2) return 0.3;
+    return 0.5;
   }
 
   confirmationDialog({required BuildContext context, required String clientId, required String supplierId, required bool isMinimum}) {

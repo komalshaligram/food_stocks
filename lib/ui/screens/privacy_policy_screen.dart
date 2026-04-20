@@ -75,6 +75,7 @@ class _PrivacyPolicyWidgetState extends State<PrivacyPolicyWidget> {
             elevation: 0,
           ),
           body: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             child: Column(children: [
               Container(
                 color: AppColors.whiteColor,

@@ -153,11 +153,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             totalSale: state.planogramProductList[index].totalSale ?? 0,
             quantity: state.productStockList[1][index].quantity,
             isMixedSale: state.planogramProductList[index].sale?.isMixedSale,
-            // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-            //     AppStrings.clubAgentIdText  ? state.planogramProductList[index].sale?.isSale == true
-            //     ?
-            // state.planogramProductList[index].recommendedConsumerOffer :
-            // state.planogramProductList[index].recommendedRetailPrice : '',
+
             onQuantityChanged: () {
               context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateListQuantityOfProduct(
                     context: context,
@@ -221,7 +217,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
   Widget listViewWidget(BuildContext context, PlanogramProductState state) => ListView.builder(
         itemCount: state.planogramProductList.length,
         shrinkWrap: true,
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
         itemBuilder: (context, index) => CommonSaleListView(
             context: context,
@@ -238,11 +234,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             price: double.parse(state.planogramProductList[index].productPrice.toString()),
             quantity: state.productStockList[1][index].quantity,
             isMixedSale: state.planogramProductList[index].sale?.isMixedSale,
-            // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-            //     AppStrings.clubAgentIdText  ? state.planogramProductList[index].sale?.isSale == true
-            //     ?
-            // state.planogramProductList[index].recommendedConsumerOffer :
-            // state.planogramProductList[index].recommendedRetailPrice : '',
             onQuantityChanged: () {
               context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateListQuantityOfProduct(
                     context: context,
@@ -482,7 +473,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     required void Function() onQuantityIncreaseTap,
     required void Function() onQuantityDecreaseTap,
     required bool? isMixedSale,
-    // String? recommendedRetailConsumerPricerOffer,
   }) {
     return CommonProductSaleItemWidget(
       originalPrice: originalPrice,
@@ -505,7 +495,6 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       onQuantityIncreaseTap: onQuantityIncreaseTap,
       onQuantityDecreaseTap: onQuantityDecreaseTap,
       isMixedSale: isMixedSale,
-      // recommendedRetailConsumerPricerOffer : recommendedRetailConsumerPricerOffer
     );
   }
 
@@ -553,6 +542,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                             : state.productDetails.isEmpty
                                 ? NoDataBottomSheet(dialogContext: context)
                                 : SingleChildScrollView(
+                                    physics: const ClampingScrollPhysics(),
                                     controller: ModalScrollController.of(context),
                                     child: Column(children: [
                                       CommonProductDetailsWidget(
@@ -678,6 +668,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
         height: getItemHeight(context, isSaleOn),
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
         child: ListView.builder(
+          physics: const ClampingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           itemBuilder: (context2, i) {
@@ -697,11 +688,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 isPesach: relatedProductList.elementAt(i).isPesach,
                 quantity: productStockList[2][i].quantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-                // recommendedRetailConsumerPricerOffer: clubAgentId ==
-                //     AppStrings.clubAgentIdText  ? relatedProductList.elementAt(i).sale?.isSale == true
-                //     ?
-                // relatedProductList.elementAt(i).recommendedConsumerOffer :
-                // relatedProductList.elementAt(i).recommendedRetailPrice : '',
+
                 onQuantityChanged: () {
                   context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateListQuantityOfProduct(
                         context: context,

@@ -64,6 +64,7 @@ class BankInfoWidget extends StatelessWidget {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             child: state.isShimmering
                 ? const BankInfoScreenShimmerWidget()
                 : Padding(

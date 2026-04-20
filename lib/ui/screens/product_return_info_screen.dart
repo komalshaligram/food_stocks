@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,302 +49,48 @@ class ReturnListWidget extends StatelessWidget {
             bgColor: AppColors.pageColor,
             title: AppLocalizations.of(context)!.product_return_info,
             iconData: Icons.arrow_back_ios_sharp,
-            onTap: () {
-              Navigator.pop(context);
-            },
-            trailingWidget: state.mainIndex != -1
-                ? InkWell(
-                    onTap: () {
-                      deleteProductDialog(context: context, returnProductId: state.returnProductId);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
-                      decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
-                      child: Text(AppLocalizations.of(context)!.delete, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
-                    ),
-                  )
-                : 0.width,
+            onTap: () => Navigator.pop(context),
+            trailingWidget: state.mainIndex != -1 ? _deleteButton(context, state) : const SizedBox(),
           ),
         ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_15),
-              child: state.isShimmer
-                  ? const ProductReturnShimmerWidget()
-                  : Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.max, children: [
-                      Card(
-                        elevation: 1.5,
-                        margin: EdgeInsets.zero,
-                        color: AppColors.whiteColor,
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppConstants.padding_8),
-                          child: Row(children: [
-                            state.productImg != ''
-                                ? Image.network(state.productImg, width: 100, height: 100, fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    } else {
-                                      return Center(
-                                        child: SizedBox(
-                                          width: AppConstants.containerHeight_80,
-                                          height: AppConstants.containerHeight_80,
-                                          child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                                        ),
-                                      );
-                                    }
-                                  }, errorBuilder: (context, error, stackTrace) {
-                                    return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
-                                  })
-                                : Image.asset(
-                                    AppImagePath.imageNotAvailable5,
-                                    fit: BoxFit.cover,
-                                    width: AppConstants.containerHeight_80,
-                                    height: AppConstants.containerHeight_80,
-                                  ),
-                            10.width,
-                            Expanded(
-                              child: Text(state.productName, overflow: TextOverflow.ellipsis, maxLines: 4, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont)),
-                            )
-                          ]),
-                        ),
-                      ),
-                      8.height,
-                      Text(AppLocalizations.of(context)!.no_of_unit_for_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
-                      5.height,
-                      Row(children: [
-                        Card(
-                          margin: EdgeInsets.zero,
-                          color: AppColors.whiteColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(AppConstants.padding_11),
-                            child: Row(children: [
-                              GestureDetector(
-                                onTap: () {
-                                  context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productIncrementEvent(productQuantity: state.productQty, context: context));
-                                },
-                                child: Container(
-                                  width: AppConstants.padding_30,
-                                  height: AppConstants.padding_30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(AppConstants.radius_2),
-                                    border: Border.all(color: AppColors.mainColor),
-                                    gradient: AppColors.appMainGradientColor,
-                                  ),
-                                  child: Icon(Icons.add, size: 18, color: AppColors.whiteColor),
-                                ),
-                              ),
-                              15.width,
-                              Text(state.productQty.toString(), style: AppStyles.rkBoldTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont)),
-                              15.width,
-                              GestureDetector(
-                                onTap: () {
-                                  context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productDecrementEvent(productQuantity: state.productQty, context: context));
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: AppConstants.padding_30,
-                                  height: AppConstants.padding_30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                                    border: Border.all(color: AppColors.mainColor),
-                                    gradient: AppColors.appMainGradientColor,
-                                  ),
-                                  child: Icon(Icons.remove, size: 18, color: AppColors.whiteColor),
-                                ),
-                              ),
-                            ]),
-                          ),
-                        ),
-                        Expanded(child: Container())
-                      ]),
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.padding_15),
+            child: state.isShimmer
+                ? const ProductReturnShimmerWidget()
+                : SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      _productCard(state),
+                      10.height,
+                      _quantitySection(context, state),
                       15.height,
-                      Text(AppLocalizations.of(context)!.why_return_product, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
-                      5.height,
-                      state.radioList.isNotEmpty ? radioList(state) : 0.height,
+                      _radioSection(state),
                       15.height,
-                      Text(AppLocalizations.of(context)!.add_proof_img, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
-                      8.height,
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () async {
-                                if (state.proofFile != null && await state.proofFile.exists() || state.proofFile.path.contains("https")) {
-                                  uploadProofBottomSheet(context: context, file: state.proofFile, index: 1, language: state.language);
-                                  return;
-                                }
-                                cameraEvent(context: context, index: 1);
-                              },
-                              child: Container(
-                                height: 120,
-                                width: 120,
-                                decoration: BoxDecoration(color: AppColors.whiteColor),
-                                alignment: Alignment.center,
-                                child: state.proofFile.path.contains("https")
-                                    ? Image.network(state.proofFile.path, loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        } else {
-                                          return Center(
-                                            child: SizedBox(
-                                              width: AppConstants.containerHeight_80,
-                                              height: AppConstants.containerHeight_80,
-                                              child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                                            ),
-                                          );
-                                        }
-                                      }, errorBuilder: (context, error, stackTrace) {
-                                        return Container(
-                                          width: 100,
-                                          height: 100,
-                                          color: AppColors.whiteColor,
-                                          alignment: Alignment.center,
-                                          child: Image.asset(AppImagePath.imageNotAvailable5),
-                                        );
-                                      })
-                                    : state.proofFile.existsSync()
-                                        ? Image.file(state.proofFile, fit: BoxFit.cover, height: 120, width: 120)
-                                        : const Icon(Icons.add, size: 60),
-                              ),
-                            ),
-                            8.width,
-                            InkWell(
-                              onTap: () async {
-                                if (state.proofFile1 != null && await state.proofFile1.exists() || state.proofFile1.path.contains("https")) {
-                                  uploadProofBottomSheet(
-                                    context: context,
-                                    file: state.proofFile1,
-                                    index: 2,
-                                    language: state.language,
-                                  );
-                                  return;
-                                }
-                                cameraEvent(context: context, index: 2);
-                              },
-                              child: Container(
-                                height: 120,
-                                width: 120,
-                                decoration: BoxDecoration(color: AppColors.whiteColor),
-                                alignment: Alignment.center,
-                                child: state.proofFile1.path.contains("https")
-                                    ? Image.network(state.proofFile1.path, loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        } else {
-                                          return Center(
-                                            child: SizedBox(
-                                              width: AppConstants.containerHeight_80,
-                                              height: AppConstants.containerHeight_80,
-                                              child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                                            ),
-                                          );
-                                        }
-                                      }, errorBuilder: (context, error, stackTrace) {
-                                        return Container(
-                                          width: 100,
-                                          height: 100,
-                                          color: AppColors.whiteColor,
-                                          alignment: Alignment.center,
-                                          child: Image.asset(AppImagePath.imageNotAvailable5),
-                                        );
-                                      })
-                                    : state.proofFile1.existsSync()
-                                        ? Image.file(state.proofFile1, fit: BoxFit.cover, height: 120, width: 120)
-                                        : const Icon(Icons.add, size: 60),
-                              ),
-                            ),
-                            8.width,
-                            InkWell(
-                              onTap: () async {
-                                if (state.proofFile2 != null && await state.proofFile2.exists() || state.proofFile2.path.contains("https")) {
-                                  uploadProofBottomSheet(
-                                    context: context,
-                                    file: state.proofFile2,
-                                    index: 3,
-                                    language: state.language,
-                                  );
-                                  return;
-                                }
-                                cameraEvent(context: context, index: 3);
-                              },
-                              child: Container(
-                                height: 120,
-                                width: 120,
-                                decoration: BoxDecoration(color: AppColors.whiteColor),
-                                alignment: Alignment.center,
-                                child: state.proofFile2.path.contains("https")
-                                    ? Image.network(state.proofFile2.path, loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        } else {
-                                          return Center(
-                                            child: SizedBox(
-                                              width: AppConstants.containerHeight_80,
-                                              height: AppConstants.containerHeight_80,
-                                              child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                                            ),
-                                          );
-                                        }
-                                      }, errorBuilder: (context, error, stackTrace) {
-                                        return Container(
-                                          width: 100,
-                                          height: 100,
-                                          color: AppColors.whiteColor,
-                                          alignment: Alignment.center,
-                                          child: Image.asset(AppImagePath.imageNotAvailable5),
-                                        );
-                                      })
-                                    : state.proofFile2.existsSync()
-                                        ? Image.file(state.proofFile2, fit: BoxFit.cover, height: 120, width: 120)
-                                        : const Icon(Icons.add, size: 60),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      _imageSection(context, state),
                       15.height,
-                      Text(AppLocalizations.of(context)!.add_notes, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
-                      5.height,
-                      CustomFormField(
-                        context: context,
-                        fillColor: AppColors.whiteColor,
-                        validator: '',
-                        inputFormat: [LengthLimitingTextInputFormatter(150)],
-                        controller: state.addNoteController,
-                        keyboardType: TextInputType.text,
-                        hint: '',
-                        maxLines: 4,
-                        isBorderVisible: false,
-                        textInputAction: TextInputAction.done,
-                        contentPaddingTop: AppConstants.padding_10,
-                      ),
+                      _noteField(context, state),
                       20.height,
-                      CustomButtonWidget(
-                        buttonText: AppLocalizations.of(context)!.save,
-                        bGColor: AppColors.mainColor,
-                        onPressed: () {
-                          context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.navigateReturnEvent(context: context));
-                        },
-                        fontColors: AppColors.whiteColor,
-                      ),
+                      _saveButton(context),
                     ]),
-            ),
+                  ),
           ),
         ),
       );
     });
   }
 
-  radioList(ProductReturnInfoState state) {
-    return ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return radioWidget(state.radioList[index].id, state.radioList[index].text, context, state.selectedRadioTile);
-        },
-        itemCount: state.radioList.length);
+  Widget _deleteButton(BuildContext context, ProductReturnInfoState state) {
+    return InkWell(
+      onTap: () {
+        deleteProductDialog(context: context, returnProductId: state.returnProductId);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+        decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
+        child: Text(AppLocalizations.of(context)!.delete, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
+      ),
+    );
   }
 
   void deleteProductDialog({required BuildContext context, required String returnProductId}) {
@@ -378,21 +123,136 @@ class ReturnListWidget extends StatelessWidget {
     );
   }
 
-  Widget radioWidget(int value, String text, BuildContext context, int radioValue) {
+  Widget _productCard(ProductReturnInfoState state) {
     return Card(
-      margin: const EdgeInsets.only(top: AppConstants.padding_10, bottom: AppConstants.padding_5),
       color: AppColors.whiteColor,
-      child: Row(children: [
-        Radio(
-            value: value,
-            fillColor: WidgetStateColor.resolveWith((states) => AppColors.mainColor),
-            groupValue: radioValue,
-            onChanged: (val) {
-              context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.radioButtonEvent(selectRadioTile: val!, reason: text));
-            }),
-        5.width,
-        Text(text, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
-      ]),
+      child: Padding(
+        padding: const EdgeInsets.all(AppConstants.padding_8),
+        child: Row(children: [
+          _productImage(state.productImg),
+          10.width,
+          Expanded(child: Text(state.productName, maxLines: 4, overflow: TextOverflow.ellipsis, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont))),
+        ]),
+      ),
+    );
+  }
+
+  Widget _productImage(String url) {
+    if (url.isEmpty) {
+      return Image.asset(AppImagePath.imageNotAvailable5, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80, fit: BoxFit.cover);
+    }
+    return Image.network(
+      url,
+      width: AppConstants.containerHeight_80,
+      height: AppConstants.containerHeight_80,
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) => Image.asset(AppImagePath.imageNotAvailable5, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80),
+    );
+  }
+
+  Widget _quantitySection(BuildContext context, ProductReturnInfoState state) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(AppLocalizations.of(context)!.no_of_unit_for_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
+      5.height,
+      Row(children: [
+        Card(
+          color: AppColors.whiteColor,
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.padding_10),
+            child: Row(children: [
+              _qtyButton(
+                icon: Icons.add,
+                onTap: () => context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productIncrementEvent(productQuantity: state.productQty, context: context)),
+              ),
+              15.width,
+              Text(state.productQty.toString(), style: AppStyles.rkBoldTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont)),
+              15.width,
+              _qtyButton(
+                icon: Icons.remove,
+                onTap: () => context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productDecrementEvent(productQuantity: state.productQty, context: context)),
+              )
+            ]),
+          ),
+        ),
+      ])
+    ]);
+  }
+
+  Widget _qtyButton({required IconData icon, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(4), gradient: AppColors.appMainGradientColor),
+        child: Icon(icon, color: AppColors.whiteColor, size: 18),
+      ),
+    );
+  }
+
+  Widget _radioSection(ProductReturnInfoState state) {
+    if (state.radioList.isEmpty) return const SizedBox();
+
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: state.radioList.length,
+        itemBuilder: (context, index) {
+          final item = state.radioList[index];
+          return Container(
+            decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+            margin: const EdgeInsets.only(top: AppConstants.padding_10, bottom: AppConstants.padding_5),
+            child: Row(children: [
+              Radio(
+                value: item.id,
+                fillColor: WidgetStateColor.resolveWith((states) => AppColors.mainColor),
+                groupValue: state.selectedRadioTile,
+                onChanged: (val) {
+                  context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.radioButtonEvent(selectRadioTile: val!, reason: item.text));
+                },
+              ),
+              5.width,
+              Text(item.text, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
+            ]),
+          );
+        });
+  }
+
+  Widget _imageSection(BuildContext context, ProductReturnInfoState state) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(AppLocalizations.of(context)!.add_proof_img, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
+      10.height,
+      Row(children: [
+        _imageTile(context, state.proofFile, 1, state),
+        8.width,
+        _imageTile(context, state.proofFile1, 2, state),
+        8.width,
+        _imageTile(context, state.proofFile2, 3, state),
+      ])
+    ]);
+  }
+
+  Widget _imageTile(BuildContext context, File file, int index, ProductReturnInfoState state) {
+    final isNetwork = file.path.contains("http");
+    final exists = file.existsSync();
+
+    return InkWell(
+      onTap: () {
+        if (exists || isNetwork) {
+          uploadProofBottomSheet(context: context, file: file, index: index, language: state.language);
+        } else {
+          cameraEvent(context: context, index: index);
+        }
+      },
+      child: Container(
+          height: 120,
+          width: 120,
+          color: AppColors.whiteColor,
+          child: isNetwork
+              ? Image.network(file.path, fit: BoxFit.cover)
+              : exists
+                  ? Image.file(file, fit: BoxFit.cover)
+                  : const Icon(Icons.add, size: 50)),
     );
   }
 
@@ -423,7 +283,7 @@ class ReturnListWidget extends StatelessWidget {
                     title: AppLocalizations.of(context)!.delete,
                     icon: Icons.delete,
                     lastItem: true,
-                    iconColor: Colors.red,
+                    iconColor: AppColors.redColor,
                     onTap: () async {
                       Navigator.pop(context);
                       showDialog(
@@ -448,10 +308,36 @@ class ReturnListWidget extends StatelessWidget {
         backgroundColor: Colors.transparent);
   }
 
+  Widget _noteField(BuildContext context, ProductReturnInfoState state) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(AppLocalizations.of(context)!.add_notes, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
+      5.height,
+      CustomFormField(
+        context: context,
+        fillColor: AppColors.whiteColor,
+        validator: '',
+        inputFormat: [LengthLimitingTextInputFormatter(150)],
+        controller: state.addNoteController,
+        keyboardType: TextInputType.text,
+        hint: '',
+        maxLines: 4,
+        isBorderVisible: false,
+        textInputAction: TextInputAction.done,
+        contentPaddingTop: AppConstants.padding_10,
+      ),
+    ]);
+  }
+
+  Widget _saveButton(BuildContext context) {
+    return CustomButtonWidget(
+        buttonText: AppLocalizations.of(context)!.save,
+        onPressed: () {
+          context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.navigateReturnEvent(context: context));
+        });
+  }
+
   cameraEvent({required BuildContext context, required int index}) async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.camera,
-    ].request();
+    Map<Permission, PermissionStatus> statuses = await [Permission.camera].request();
     if (Platform.isAndroid) {
       if (!statuses[Permission.camera]!.isGranted) {
         Navigator.pop(context);

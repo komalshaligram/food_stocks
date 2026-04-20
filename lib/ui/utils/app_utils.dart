@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -84,7 +86,6 @@ Color getStatusColor(List<StatusData> statusList, String status) {
 }
 
 String getStatus(List<StatusData> statusList, String currentStatus, String language) {
-
   String status = '';
   if (currentStatus.isEmpty) {
     return status;
@@ -97,10 +98,7 @@ String getStatus(List<StatusData> statusList, String currentStatus, String langu
   return status;
 }
 
-String getLocalizedReason({
-  required String apiReason,
-  required BuildContext context,
-}) {
+String getLocalizedReason({required String apiReason, required BuildContext context}) {
   final map = {
     'Product did not arrive at all': AppLocalizations.of(context)!.product_did_not_arrive_at_all,
     'המוצר לא הגיע בכלל': AppLocalizations.of(context)!.product_did_not_arrive_at_all,
@@ -113,7 +111,6 @@ String getLocalizedReason({
     'Wrong product received': AppLocalizations.of(context)!.wrong_product_received,
     'התקבל מוצר שגוי': AppLocalizations.of(context)!.wrong_product_received,
   };
-
   return map[apiReason] ?? apiReason;
 }
 
@@ -543,4 +540,32 @@ void inProgressSnackBarWidget(BuildContext context) => CustomSnackBar.showSnackB
       context: context,
       title: AppStrings.getLocalizedStrings('Oops! in progress', context),
       type: SnackBarType.success,
+    );
+
+Widget smartRefreshCustomHeaderWidget() => CustomHeader(
+    refreshStyle: RefreshStyle.Behind,
+    builder: (c, m) {
+      return Container(
+        height: 30,
+        width: 30,
+        margin: const EdgeInsets.only(top: 90, bottom: AppConstants.padding_30),
+        decoration: BoxDecoration(
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
+          color: AppColors.whiteColor,
+          shape: BoxShape.circle,
+        ),
+        child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_10),
+      );
+    });
+
+Widget imageNotAvailableWidget(double size) => Container(
+      width: size,
+      height: size,
+      color: AppColors.whiteColor,
+      alignment: Alignment.center,
+      child: Image.asset(AppImagePath.imageNotAvailable5),
+    );
+
+Widget loaderWidget(double size) => Center(
+      child: SizedBox(width: size, height: size, child: CupertinoActivityIndicator(color: AppColors.blackColor)),
     );

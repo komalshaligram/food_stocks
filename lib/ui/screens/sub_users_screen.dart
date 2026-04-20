@@ -86,6 +86,7 @@ class SubUserScreenWidget extends StatelessWidget {
                           child: noDataWidget(AppLocalizations.of(context)!.no_data),
                         )
                       : ListView.builder(
+                          physics: const ClampingScrollPhysics(),
                           itemCount: state.subUserList.length,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,

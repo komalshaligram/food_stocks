@@ -120,6 +120,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: AppConstants.padding_50),
                     child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
                       controller: _scrollController,
                       child: Stack(children: [
                         Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -267,7 +268,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                         setState(() => isSign = false);
                                         bloc.add(ShipmentVerificationEvent.signDeleteEvent());
                                       },
-                                      child: SvgPicture.asset(AppImagePath.delete, colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn)),
+                                      child: SvgPicture.asset(AppImagePath.delete, colorFilter: ColorFilter.mode(AppColors.redColor, BlendMode.srcIn)),
                                     ),
                                   ]),
                                 ),
@@ -324,7 +325,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                                         setState(() => isDriverSign = false);
                                         bloc.add(ShipmentVerificationEvent.signDeleteEvent());
                                       },
-                                      child: SvgPicture.asset(AppImagePath.delete, colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn)),
+                                      child: SvgPicture.asset(AppImagePath.delete, colorFilter: ColorFilter.mode(AppColors.redColor, BlendMode.srcIn)),
                                     ),
                                   ]),
                                 ),

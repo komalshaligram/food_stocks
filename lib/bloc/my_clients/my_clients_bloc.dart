@@ -135,15 +135,12 @@ class MyClientsBloc extends Bloc<MyClientsEvent, MyClientsState> {
       } else if (event is _updateAgentClientsNoMinimumEvent) {
         emit(state.copyWith(isShimmering: true, clientsList: []));
         try {
-          UpdateAgentStoresNoMinimumReqModel reqMap = UpdateAgentStoresNoMinimumReqModel(
-            supplierId: event.supplierId,
-            storeId: event.clientsId,
-            isNoMinimum: event.isNoMinimum,
-          );
-
+          UpdateAgentStoresNoMinimumReqModel reqMap = UpdateAgentStoresNoMinimumReqModel(supplierId: event.supplierId, storeId: event.clientsId, isNoMinimum: event.isNoMinimum);
           final res = await DioClient(event.context).post(AppUrlEndPoints.updateAgentStoresNoMinimumForPermittedSuppliers, data: reqMap);
           UpdateAgentStoresNoMinimumResModel response = UpdateAgentStoresNoMinimumResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
+            state.searchController.clear();
+            emit(state.copyWith(searchQuery: '', filteredClientsList: []));
             add(MyClientsEvent.getAgentClientsListEvent(context: event.context));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -164,7 +161,8 @@ class MyClientsBloc extends Bloc<MyClientsEvent, MyClientsState> {
         }
 
         final filtered = state.clientsList.where((client) {
-          return (client.storeName ?? '').toLowerCase().contains(query) || (client.storeRepresentativeName ?? '').toLowerCase().contains(query) || (client.address ?? '').toLowerCase().contains(query) || (client.storePhoneNumber ?? '').toLowerCase().contains(query);
+          return (client.storeName ?? '').toLowerCase().contains(query) || (client.storeRepresentativeName ?? '').toLowerCase().contains(query) ||
+              (client.address ?? '').toLowerCase().contains(query) || (client.storePhoneNumber ?? '').toLowerCase().contains(query);
         }).toList();
 
         emit(state.copyWith(filteredClientsList: filtered, searchQuery: query));

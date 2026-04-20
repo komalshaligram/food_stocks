@@ -75,6 +75,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 30.height,
                 Padding(

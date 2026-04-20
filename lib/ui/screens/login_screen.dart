@@ -54,6 +54,7 @@ class LogInScreenWidget extends StatelessWidget {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             child: Form(
               key: _formKey,
               child: Padding(

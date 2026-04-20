@@ -99,6 +99,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                       100.height,
                       Expanded(
                         child: SmartRefresher(
+                          physics: const ClampingScrollPhysics(),
                           enablePullDown: true,
                           controller: state.refreshController,
                           header: const RefreshWidget(),
@@ -463,11 +464,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-                        // recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
-                        //     ? state.searchList[index].isSale == true
-                        //         ? state.searchList[index].recommendedConsumerOffer
-                        //         : state.searchList[index].recommendedRetailPrice
-                        //     : '',
                         onQuantityChanged: () {
                           context.read<PesachProductsBloc>().add(PesachProductsEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -834,11 +830,6 @@ class PesachProductsScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-                // recommendedRetailConsumerPricerOffer: clubAgentId == AppStrings.clubAgentIdText
-                //     ? relatedProductList.elementAt(i).sale?.isSale == true
-                //         ? relatedProductList.elementAt(i).recommendedConsumerOffer
-                //         : relatedProductList.elementAt(i).recommendedRetailPrice
-                //     : '',
                 onQuantityChanged: () {
                   context.read<PesachProductsBloc>().add(PesachProductsEvent.updateListQuantityOfProduct(
                         context: context,

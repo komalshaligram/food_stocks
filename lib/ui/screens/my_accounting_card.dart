@@ -346,6 +346,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
     }
 
     return ListView.builder(
+        physics: const ClampingScrollPhysics(),
         key: const ValueKey('invoices_tab_list'),
         controller: state.invoicesScrollController,
         itemCount: state.invoiceCardList.length,
@@ -472,6 +473,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
     }
 
     return ListView.builder(
+        physics: const ClampingScrollPhysics(),
         key: const ValueKey('refunds_tab_list'),
         controller: state.refundsScrollController,
         itemCount: state.refundInvoicesCardList.length,

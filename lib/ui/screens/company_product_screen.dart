@@ -121,6 +121,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                         ),
                                       )
                                     : SmartRefresher(
+                                        physics: const ClampingScrollPhysics(),
                                         enablePullDown: true,
                                         controller: state.refreshController,
                                         header: const RefreshWidget(),
@@ -260,7 +261,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   Widget gridViewWidget(BuildContext context, CompanyProductsState state) => GridView.builder(
       itemCount: state.productList.length,
       shrinkWrap: true,
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: getChildAspectRatio(context, state.isSaleOn)),
       itemBuilder: (context, index) {
@@ -307,7 +308,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
   Widget listViewWidget(BuildContext context, CompanyProductsState state) => ListView.builder(
       itemCount: state.productList.length,
       shrinkWrap: true,
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
       itemBuilder: (context, index) {
         final item = state.productList[index];
@@ -486,11 +487,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-                        // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                        //     AppStrings.clubAgentIdText  ? state.searchList[index].isSale == true
-                        //     ?
-                        // state.searchList[index].recommendedConsumerOffer :
-                        // state.searchList[index].recommendedRetailPrice : '',
+
                         onQuantityChanged: () {
                           context.read<CompanyProductsBloc>().add(CompanyProductsEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -707,6 +704,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                             : state.productDetails.isEmpty
                                 ? NoDataBottomSheet(dialogContext: context)
                                 : SingleChildScrollView(
+                                    physics: const ClampingScrollPhysics(),
                                     controller: ModalScrollController.of(context),
                                     child: Column(children: [
                                       CommonProductDetailsWidget(
@@ -828,6 +826,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         height: getItemHeight(context, isSaleOn),
         padding: const EdgeInsets.only(bottom: AppConstants.padding_10, left: AppConstants.padding_10, right: AppConstants.padding_10),
         child: ListView.builder(
+          physics: const ClampingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           itemBuilder: (context2, i) {
@@ -849,11 +848,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-                // recommendedRetailConsumerPricerOffer: clubAgentId ==
-                //     AppStrings.clubAgentIdText  ? relatedProductList.elementAt(i).sale?.isSale == true
-                //     ?
-                // relatedProductList.elementAt(i).recommendedConsumerOffer :
-                // relatedProductList.elementAt(i).recommendedRetailPrice : '',
+
                 onQuantityChanged: () {
                   context.read<CompanyProductsBloc>().add(CompanyProductsEvent.updateListQuantityOfProduct(
                         context: context,

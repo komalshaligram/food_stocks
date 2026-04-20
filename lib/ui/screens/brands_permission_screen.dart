@@ -53,6 +53,7 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: state.isShimmering
                   ? const OrderSummaryScreenShimmerWidget(itemCount: 20, containerHeight: 40)
                   : !state.isShimmering && state.brandPermissionList.isEmpty

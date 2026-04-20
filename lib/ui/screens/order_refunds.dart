@@ -87,10 +87,7 @@ class OrderRefundsScreenWidget extends StatelessWidget {
   }
 
   Widget _buildNoData(BuildContext context) {
-    return SizedBox(
-      height: getScreenHeight(context) * 0.8,
-      child: noDataWidget(AppLocalizations.of(context)!.no_data),
-    );
+    return SizedBox(height: getScreenHeight(context) * 0.8, child: noDataWidget(AppLocalizations.of(context)!.no_data));
   }
 }
 
@@ -160,34 +157,33 @@ class RefundInvoiceCard extends StatelessWidget {
         itemBuilder: (context, i) {
           final order = invoice.refundedOnOrders![i];
           return Padding(
-            padding: const EdgeInsets.only(bottom: AppConstants.padding_2),
-            child: _refundEntryRow(
-                context: context,
-                label: order.orderNumber ?? '',
-                amount: order.orderAdjustAmount ?? '',
-                status: order.status ?? '',
-                onLabelTap: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  final helper = SharedPreferencesHelper(prefs: prefs);
-                  await helper.setOrderId(productOrderId: order.orderId ?? '');
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => ProductDetailsScreen(
-                              statusList: statusList,
-                              orderNumber: order.orderNumber ?? '',
-                              orderId: order.orderId ?? '',
-                              isNavigateToProductDetailString: true,
-                            ),
-                        transitionsBuilder: (_, animation, __, child) {
-                          const begin = Offset(0.0, 1.0);
-                          const end = Offset.zero;
-                          const curve = Curves.bounceIn;
-                          return SlideTransition(position: animation.drive(Tween(begin: begin, end: end).chain(CurveTween(curve: curve))), child: child);
-                        }),
-                  );
-                }),
-          );
+              padding: const EdgeInsets.only(bottom: AppConstants.padding_2),
+              child: _refundEntryRow(
+                  context: context,
+                  label: order.orderNumber ?? '',
+                  amount: order.orderAdjustAmount ?? '',
+                  status: order.status ?? '',
+                  onLabelTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    final helper = SharedPreferencesHelper(prefs: prefs);
+                    await helper.setOrderId(productOrderId: order.orderId ?? '');
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => ProductDetailsScreen(
+                                statusList: statusList,
+                                orderNumber: order.orderNumber ?? '',
+                                orderId: order.orderId ?? '',
+                                isNavigateToProductDetailString: true,
+                              ),
+                          transitionsBuilder: (_, animation, __, child) {
+                            const begin = Offset(0.0, 1.0);
+                            const end = Offset.zero;
+                            const curve = Curves.bounceIn;
+                            return SlideTransition(position: animation.drive(Tween(begin: begin, end: end).chain(CurveTween(curve: curve))), child: child);
+                          }),
+                    );
+                  }));
         });
   }
 
@@ -199,34 +195,32 @@ class RefundInvoiceCard extends StatelessWidget {
         itemBuilder: (context, i) {
           final inv = invoice.refundedOnInvoice![i];
           return Padding(
-            padding: const EdgeInsets.only(bottom: AppConstants.padding_2),
-            child: _refundEntryRow(
-                context: context,
-                label: inv.invoiceNumber ?? '',
-                amount: inv.invoiceAdjustAmount ?? '',
-                status: inv.status ?? '',
-                onLabelTap: () {
-                  final invoiceData = Invoice(
-                    invoiceLink: inv.invoiceLink,
-                    invoiceNumber: inv.invoiceNumber ?? '',
-                    invoiceAmount: inv.invoiceAmount,
-                    paymentStatus: inv.paymentStatus,
-                    invoiceDate: inv.invoiceDate,
-                    dueDate: inv.dueDate,
-                    invoiceAdjustAmount: double.tryParse(inv.invoiceAdjustAmount ?? '0') ?? 0.0,
-                    status: inv.status,
-                    orderNumber: inv.orderNumber,
-                    orderId: inv.orderId,
-                    rivchitApiKey: inv.rivchitApiKey,
-                  );
-
-                  Navigator.pushNamed(
-                    context,
-                    RouteDefine.invoicePdfScreen.name,
-                    arguments: {AppStrings.invoiceListString: invoiceData, AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices},
-                  );
-                }),
-          );
+              padding: const EdgeInsets.only(bottom: AppConstants.padding_2),
+              child: _refundEntryRow(
+                  context: context,
+                  label: inv.invoiceNumber ?? '',
+                  amount: inv.invoiceAdjustAmount ?? '',
+                  status: inv.status ?? '',
+                  onLabelTap: () {
+                    final invoiceData = Invoice(
+                      invoiceLink: inv.invoiceLink,
+                      invoiceNumber: inv.invoiceNumber ?? '',
+                      invoiceAmount: inv.invoiceAmount,
+                      paymentStatus: inv.paymentStatus,
+                      invoiceDate: inv.invoiceDate,
+                      dueDate: inv.dueDate,
+                      invoiceAdjustAmount: double.tryParse(inv.invoiceAdjustAmount ?? '0') ?? 0.0,
+                      status: inv.status,
+                      orderNumber: inv.orderNumber,
+                      orderId: inv.orderId,
+                      rivchitApiKey: inv.rivchitApiKey,
+                    );
+                    Navigator.pushNamed(
+                      context,
+                      RouteDefine.invoicePdfScreen.name,
+                      arguments: {AppStrings.invoiceListString: invoiceData, AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices},
+                    );
+                  }));
         });
   }
 
@@ -240,23 +234,16 @@ class RefundInvoiceCard extends StatelessWidget {
         padding: const EdgeInsets.only(right: AppConstants.padding_5),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           titleText(context, AppLocalizations.of(context)!.remaining_refund),
-          titleGreenText(
-              context,
-              formatSignedNumber(
-                invoice.remainingAmount.toString(),
-              ),
-              TextDirection.ltr)
+          titleGreenText(context, formatSignedNumber(invoice.remainingAmount.toString()), TextDirection.ltr),
         ]),
       ),
     ]);
   }
 
   Widget _sectionTitle(BuildContext context, String title) => Padding(
-      padding: const EdgeInsets.only(top: AppConstants.padding_4, bottom: AppConstants.padding_6),
-      child: titleText(
-        context,
-        title,
-      ));
+        padding: const EdgeInsets.only(top: AppConstants.padding_4, bottom: AppConstants.padding_6),
+        child: titleText(context, title),
+      );
 
   Widget _valueText(BuildContext context, String text) => Directionality(
         textDirection: TextDirection.ltr,

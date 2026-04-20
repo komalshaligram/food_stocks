@@ -53,6 +53,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
               child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
                 child: state.isShimmering
                     ? const OrderSummaryScreenShimmerWidget(itemCount: 10, containerHeight: 40)
                     : !state.isShimmering && state.permissionList.isEmpty

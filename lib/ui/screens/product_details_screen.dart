@@ -253,20 +253,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       file.path,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
-                        return Center(
-                            child: SizedBox(
-                          width: AppConstants.containerHeight_80,
-                          height: AppConstants.containerHeight_80,
-                          child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                        ));
+                        return loaderWidget(AppConstants.containerHeight_80);
                       },
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        width: 100,
-                        height: 100,
-                        color: AppColors.whiteColor,
-                        alignment: Alignment.center,
-                        child: Image.asset(AppImagePath.imageNotAvailable5),
-                      ),
+                      errorBuilder: (context, error, stackTrace) => imageNotAvailableWidget(AppConstants.containerHeight_100),
                     )
                   : file.existsSync()
                       ? Image.file(file, fit: BoxFit.cover, height: 120, width: 120)
@@ -357,7 +346,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
               ? const ProductDetailsScreenShimmerWidget()
               : SingleChildScrollView(
                   controller: _scrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   child: SafeArea(
                     child: AnimationLimiter(
                       child: Column(
@@ -489,6 +478,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         ? Padding(
                                             padding: const EdgeInsets.all(AppConstants.padding_8),
                                             child: SingleChildScrollView(
+                                              physics: const ClampingScrollPhysics(),
                                               scrollDirection: Axis.horizontal,
                                               child: Row(children: [
                                                 buildDriverProofSlot(file: state.driverDeliveryProofFile, index: 1, isDisabled: disableDriverProofTap, language: state.language),
@@ -590,26 +580,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(builder: (context, state) {
       ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
 
-      final matchedProductList = state.returnList.data?.returnProducts?.where((test) => test.barcode == barcode);
+      final matchedProductList = state.returnList.data?.returnProducts?.where((returnProduct) => returnProduct.barcode == barcode);
       final matchedProduct = matchedProductList != null && matchedProductList.isNotEmpty ? matchedProductList.first : null;
       final matchedProductIndex = matchedProduct != null ? state.returnList.data?.returnProducts?.indexOf(matchedProduct) : -1;
-
-      final Map<String, String> reasonsMap = {
-        'Product did not arrive at all': AppLocalizations.of(context)!.product_did_not_arrive_at_all,
-        'המוצר לא הגיע בכלל': AppLocalizations.of(context)!.product_did_not_arrive_at_all,
-        'Product arrived damaged': AppLocalizations.of(context)!.product_arrived_damaged,
-        'המוצר הגיע פגום': AppLocalizations.of(context)!.product_arrived_damaged,
-        'Product arrived incomplete': AppLocalizations.of(context)!.product_arrived_incomplete,
-        'המוצר הגיע לא שלם': AppLocalizations.of(context)!.product_arrived_incomplete,
-        'Expiration date issue': AppLocalizations.of(context)!.expiration_date_issue,
-        'בעיית תאריך תפוגה': AppLocalizations.of(context)!.expiration_date_issue,
-        'Wrong product received': AppLocalizations.of(context)!.wrong_product_received,
-        'התקבל מוצר שגוי': AppLocalizations.of(context)!.wrong_product_received,
-      };
-
-      String getLocalizedReason(String reasonCode, BuildContext context) {
-        return reasonsMap[reasonCode] ?? '';
-      }
 
       return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) || ((state.orderBySupplierProduct.products?[index].isBottle ?? false) ? sku == skuNumber : false)
           ? Container(
@@ -642,21 +615,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             if (loadingProgress == null) {
                               return child;
                             } else {
-                              return Center(
-                                  child: SizedBox(
-                                width: AppConstants.containerHeight_80,
-                                height: AppConstants.containerHeight_80,
-                                child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                              ));
+                              return loaderWidget(AppConstants.containerHeight_80);
                             }
                           }, errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: AppConstants.containerHeight_80,
-                              height: AppConstants.containerHeight_80,
-                              color: AppColors.whiteColor,
-                              alignment: Alignment.center,
-                              child: Image.asset(AppImagePath.imageNotAvailable5),
-                            );
+                            return imageNotAvailableWidget(AppConstants.containerHeight_80);
                           })
                         : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80),
                     15.width,
@@ -832,7 +794,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               width: MediaQuery.of(context).size.width > 370 ? MediaQuery.of(context).size.width / 2 : 160,
                               child: Text(
                                 '${AppLocalizations.of(context)!.issue_text} '
-                                '${getLocalizedReason(matchedProduct!.reasonToReturn.toString(), context)}',
+                                '${getLocalizedReason(apiReason: matchedProduct!.reasonToReturn.toString(), context: context)}',
                                 maxLines: 2,
                                 style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_14, fontWeight: FontWeight.w400),
                               ))
@@ -908,6 +870,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
                     ),
                     child: SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
                       controller: scrollController,
                       child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Padding(
@@ -935,26 +898,18 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           ),
                           child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                             image != ''
-                                ? Image.network('${AppUrlEndPoints.baseFileUrl}$image', width: AppConstants.containerSize_50, height: AppConstants.containerSize_50, fit: BoxFit.fill, loadingBuilder: (context, child, loadingProgress) {
+                                ? Image.network('${AppUrlEndPoints.baseFileUrl}$image', width: AppConstants.containerSize_50, height: AppConstants.containerSize_50, fit: BoxFit.fill, loadingBuilder: (
+                                    context,
+                                    child,
+                                    loadingProgress,
+                                  ) {
                                     if (loadingProgress == null) {
                                       return child;
                                     } else {
-                                      return Center(
-                                        child: SizedBox(
-                                          width: AppConstants.containerSize_50,
-                                          height: AppConstants.containerSize_50,
-                                          child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                                        ),
-                                      );
+                                      return loaderWidget(AppConstants.containerHeight_80);
                                     }
                                   }, errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: AppConstants.containerSize_50,
-                                      height: AppConstants.containerSize_50,
-                                      color: AppColors.whiteColor,
-                                      alignment: Alignment.center,
-                                      child: Image.asset(AppImagePath.imageNotAvailable5),
-                                    );
+                                    return imageNotAvailableWidget(AppConstants.containerSize_50);
                                   })
                                 : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: AppConstants.containerSize_50, height: AppConstants.containerSize_50),
                             SizedBox(
@@ -1119,17 +1074,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         totalUnits: productIssueData[state.selectedRadioTile]!['quantity'],
                                         isApproved: false,
                                         orderId: widget.orderId,
-                                        reasonToReturn: state.selectedRadioTile == 1
-                                            ? AppLocalizations.of(context)!.product_did_not_arrive_at_all
-                                            : state.selectedRadioTile == 2
-                                                ? AppLocalizations.of(context)!.product_arrived_damaged
-                                                : state.selectedRadioTile == 3
-                                                    ? AppLocalizations.of(context)!.product_arrived_incomplete
-                                                    : state.selectedRadioTile == 4
-                                                        ? AppLocalizations.of(context)!.expiration_date_issue
-                                                        : state.selectedRadioTile == 5
-                                                            ? AppLocalizations.of(context)!.wrong_product_received
-                                                            : '',
+                                        reasonToReturn: getReturnReason(context, state.selectedRadioTile),
                                       ));
                                 } else {
                                   context.read<ProductDetailsBloc>().add(ProductDetailsEvent.updateReturnEvent(
@@ -1149,17 +1094,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         returnProduct: returnProducts,
                                         returnProductId: returnProductId,
                                         isRemoved: false,
-                                        reasonToReturn: state.selectedRadioTile == 1
-                                            ? AppLocalizations.of(context)!.product_did_not_arrive_at_all
-                                            : state.selectedRadioTile == 2
-                                                ? AppLocalizations.of(context)!.product_arrived_damaged
-                                                : state.selectedRadioTile == 3
-                                                    ? AppLocalizations.of(context)!.product_arrived_incomplete
-                                                    : state.selectedRadioTile == 4
-                                                        ? AppLocalizations.of(context)!.expiration_date_issue
-                                                        : state.selectedRadioTile == 5
-                                                            ? AppLocalizations.of(context)!.wrong_product_received
-                                                            : '',
+                                        reasonToReturn: getReturnReason(context, state.selectedRadioTile),
                                       ));
                                 }
                               }
@@ -1195,36 +1130,17 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                             returnProduct: returnProducts,
                                             returnProductId: returnProductId,
                                             isRemoved: true,
-                                            reasonToReturn: state.selectedRadioTile == 1
-                                                ? AppLocalizations.of(context)!.product_did_not_arrive_at_all
-                                                : state.selectedRadioTile == 2
-                                                    ? AppLocalizations.of(context)!.product_arrived_damaged
-                                                    : state.selectedRadioTile == 3
-                                                        ? AppLocalizations.of(context)!.product_arrived_incomplete
-                                                        : state.selectedRadioTile == 4
-                                                            ? AppLocalizations.of(context)!.expiration_date_issue
-                                                            : state.selectedRadioTile == 5
-                                                                ? AppLocalizations.of(context)!.wrong_product_received
-                                                                : '',
+                                            reasonToReturn: getReturnReason(context, state.selectedRadioTile),
                                           ));
                                     } else {
                                       context.read<ProductDetailsBloc>().add(ProductDetailsEvent.deleteEvent(
-                                          context: context,
-                                          bottomSheetContext: context1,
-                                          returnId: returnId,
-                                          reasonToReturn: state.selectedRadioTile == 1
-                                              ? AppLocalizations.of(context)!.product_did_not_arrive_at_all
-                                              : state.selectedRadioTile == 2
-                                                  ? AppLocalizations.of(context)!.product_arrived_damaged
-                                                  : state.selectedRadioTile == 3
-                                                      ? AppLocalizations.of(context)!.product_arrived_incomplete
-                                                      : state.selectedRadioTile == 4
-                                                          ? AppLocalizations.of(context)!.expiration_date_issue
-                                                          : state.selectedRadioTile == 5
-                                                              ? AppLocalizations.of(context)!.wrong_product_received
-                                                              : '',
-                                          barcode: barcode!,
-                                          orderSupplierProduct: orderSupplierProduct));
+                                            context: context,
+                                            bottomSheetContext: context1,
+                                            returnId: returnId,
+                                            reasonToReturn: getReturnReason(context, state.selectedRadioTile),
+                                            barcode: barcode!,
+                                            orderSupplierProduct: orderSupplierProduct,
+                                          ));
                                     }
                                   },
                                   child: Container(
@@ -1256,6 +1172,23 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
         context.read<ProductDetailsBloc>().add(ProductDetailsEvent.getReturnListEvent(context: context, excludeBarcodes: deletedBarcode != null ? [deletedBarcode] : null));
       }
     });
+  }
+
+  String getReturnReason(BuildContext context, int selectedRadioTile) {
+    switch (selectedRadioTile) {
+      case 1:
+        return AppLocalizations.of(context)!.product_did_not_arrive_at_all;
+      case 2:
+        return AppLocalizations.of(context)!.product_arrived_damaged;
+      case 3:
+        return AppLocalizations.of(context)!.product_arrived_incomplete;
+      case 4:
+        return AppLocalizations.of(context)!.expiration_date_issue;
+      case 5:
+        return AppLocalizations.of(context)!.wrong_product_received;
+      default:
+        return '';
+    }
   }
 
   Widget radioButtonWidget({
@@ -1364,11 +1297,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             alignment: Alignment.center,
                             width: 20,
                             height: 20,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                              border: Border.all(color: AppColors.greyColor),
-                              color: AppColors.pageColor,
-                            ),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
                             child: const Icon(Icons.remove, size: 15),
                           ),
                         ),
@@ -1389,6 +1318,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
               if (value == 2 || value == 4) 15.height,
               if (value == 2 || value == 4)
                 SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   child: Row(children: [
                     InkWell(
@@ -1416,22 +1346,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 if (loadingProgress == null) {
                                   return child;
                                 } else {
-                                  return Center(
-                                    child: SizedBox(
-                                      width: AppConstants.containerHeight_80,
-                                      height: AppConstants.containerHeight_80,
-                                      child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                                    ),
-                                  );
+                                  return loaderWidget(AppConstants.containerHeight_80);
                                 }
                               }, errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: AppColors.whiteColor,
-                                  alignment: Alignment.center,
-                                  child: Image.asset(AppImagePath.imageNotAvailable5),
-                                );
+                                return imageNotAvailableWidget(AppConstants.containerHeight_100);
                               })
                             : state.proofFile.existsSync()
                                 ? Image.file(state.proofFile, fit: BoxFit.cover, height: 120, width: 120)
@@ -1464,22 +1382,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 if (loadingProgress == null) {
                                   return child;
                                 } else {
-                                  return Center(
-                                    child: SizedBox(
-                                      width: AppConstants.containerHeight_80,
-                                      height: AppConstants.containerHeight_80,
-                                      child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                                    ),
-                                  );
+                                  return loaderWidget(AppConstants.containerHeight_80);
                                 }
                               }, errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: AppColors.whiteColor,
-                                  alignment: Alignment.center,
-                                  child: Image.asset(AppImagePath.imageNotAvailable5),
-                                );
+                                return imageNotAvailableWidget(AppConstants.containerHeight_100);
                               })
                             : state.proofFile1.existsSync()
                                 ? Image.file(state.proofFile1, fit: BoxFit.cover, height: 120, width: 120)
@@ -1512,22 +1418,10 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 if (loadingProgress == null) {
                                   return child;
                                 } else {
-                                  return Center(
-                                    child: SizedBox(
-                                      width: AppConstants.containerHeight_80,
-                                      height: AppConstants.containerHeight_80,
-                                      child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                                    ),
-                                  );
+                                  return loaderWidget(AppConstants.containerHeight_80);
                                 }
                               }, errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: AppColors.whiteColor,
-                                  alignment: Alignment.center,
-                                  child: Image.asset(AppImagePath.imageNotAvailable5),
-                                );
+                                return imageNotAvailableWidget(AppConstants.containerHeight_100);
                               })
                             : state.proofFile2.existsSync()
                                 ? Image.file(state.proofFile2, fit: BoxFit.cover, height: 120, width: 120)
@@ -1578,7 +1472,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
               title: AppLocalizations.of(context)!.delete,
               icon: Icons.delete,
               lastItem: true,
-              iconColor: Colors.red,
+              iconColor: AppColors.redColor,
               onTap: () async {
                 Navigator.pop(context);
                 showDialog(
@@ -1667,7 +1561,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
               title: AppLocalizations.of(context)!.delete,
               icon: Icons.delete,
               lastItem: true,
-              iconColor: Colors.red,
+              iconColor: AppColors.redColor,
               onTap: () async {
                 Navigator.pop(context);
                 showDialog(

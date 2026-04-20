@@ -48,6 +48,7 @@ class ActivityTimeScreenWidget extends StatelessWidget {
             ? const ActivityTimeScreenShimmerWidget()
             : SafeArea(
                 child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_5),
                     child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [

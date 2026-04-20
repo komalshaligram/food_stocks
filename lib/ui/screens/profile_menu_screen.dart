@@ -109,9 +109,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                               child: SvgPicture.asset(AppImagePath.placeholderProfile, width: 80, height: 80, fit: BoxFit.scaleDown),
                             ),
                     ),
-                    Expanded(
-                      child: Text(state.userName, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_20, color: AppColors.blackColor)),
-                    ),
+                    Expanded(child: Text(state.userName, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_20, color: AppColors.blackColor))),
                     state.clubAgentId == AppStrings.clubAgentIdText
                         ? Image.asset(
                             AppImagePath.clubAgentBlueLogo,
@@ -125,6 +123,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 Expanded(
                   child: Stack(children: [
                     SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
                       child: AnimationLimiter(
                         child: Column(
                             children: AnimationConfiguration.toStaggeredList(

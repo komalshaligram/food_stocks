@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -83,7 +82,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
                             child: ListView.builder(
                               itemCount: state.returnProductList.length,
                               shrinkWrap: true,
-                              physics: const AlwaysScrollableScrollPhysics(),
+                              physics: const ClampingScrollPhysics(),
                               itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
                                 duration: const Duration(seconds: 1),
                                 position: index,
@@ -174,16 +173,10 @@ class CreateProductReturnListWidget extends StatelessWidget {
                   if (loadingProgress == null) {
                     return child;
                   } else {
-                    return Center(
-                      child: SizedBox(
-                        width: AppConstants.containerHeight_80,
-                        height: AppConstants.containerHeight_80,
-                        child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                      ),
-                    );
+                    return loaderWidget(AppConstants.containerHeight_80);
                   }
                 }, errorBuilder: (context, error, stackTrace) {
-                  return Container(width: 100, height: 100, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
+                  return imageNotAvailableWidget(AppConstants.containerHeight_100);
                 })
               : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80),
           4.width,
@@ -198,11 +191,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
               ),
               3.height,
               Text(
-                // state.returnProductList[index].reasonToReturn.toString(),
-                getLocalizedReason(
-                  apiReason: state.returnProductList[index].reasonToReturn ?? '',
-                  context: context,
-                ),
+                getLocalizedReason(apiReason: state.returnProductList[index].reasonToReturn ?? '', context: context),
                 style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

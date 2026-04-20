@@ -100,6 +100,7 @@ class ReorderScreenWidget extends StatelessWidget {
               child: NotificationListener<ScrollNotification>(
                   child: Stack(children: [
                     SmartRefresher(
+                      physics: const ClampingScrollPhysics(),
                       enablePullDown: true,
                       controller: state.refreshController,
                       header: const RefreshWidget(),
@@ -150,8 +151,6 @@ class ReorderScreenWidget extends StatelessWidget {
       }),
     );
   }
-
-
 
   void _updateQuantity({required BuildContext context, required ReorderState state, required int index}) {
     final product = state.previousOrderProductsList[index];
@@ -366,18 +365,18 @@ class ReorderScreenWidget extends StatelessWidget {
           child: totalSale == 0
               ? 0.width
               : Text(
-            "$totalSale ${AppLocalizations.of(context)!.discount}",
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.saleRedColor, fontWeight: FontWeight.w600),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
+                  "$totalSale ${AppLocalizations.of(context)!.discount}",
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.saleRedColor, fontWeight: FontWeight.w600),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
         ),
         5.height,
         Center(
           child: CommonProductButtonWidget(
             title: "${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(
-              AppConstants.amountFrLength,
-            )}",
+                AppConstants.amountFrLength,
+              )}",
             onPressed: onPressed,
             textColor: AppColors.whiteColor,
             bgColor: AppColors.mainColor,
@@ -455,11 +454,7 @@ class ReorderScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-                        // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                        //     AppStrings.clubAgentIdText  ? state.searchList[index].isSale == true
-                        //     ?
-                        // state.searchList[index].recommendedConsumerOffer :
-                        // state.searchList[index].recommendedRetailPrice : '',
+
                         onQuantityChanged: () {
                           context.read<ReorderBloc>().add(ReorderEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -668,6 +663,7 @@ class ReorderScreenWidget extends StatelessWidget {
                             : state.productDetails.isEmpty
                                 ? NoDataBottomSheet(dialogContext: context)
                                 : SingleChildScrollView(
+                                    physics: const ClampingScrollPhysics(),
                                     controller: ModalScrollController.of(context),
                                     child: Column(children: [
                                       CommonProductDetailsWidget(
@@ -783,6 +779,7 @@ class ReorderScreenWidget extends StatelessWidget {
         height: getItemHeight(context, isSaleOn),
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
         child: ListView.builder(
+          physics: const ClampingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           itemBuilder: (context2, i) {
@@ -800,15 +797,10 @@ class ReorderScreenWidget extends StatelessWidget {
                 productStock: relatedProductList.elementAt(i).productStock.toString(),
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
-                quantity: productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity, //[i].quantity,
+                quantity: productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity,
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-                // recommendedRetailConsumerPricerOffer: clubAgentId ==
-                //     AppStrings.clubAgentIdText  ? relatedProductList.elementAt(i).sale?.isSale == true
-                //     ?
-                // relatedProductList.elementAt(i).recommendedConsumerOffer :
-                // relatedProductList.elementAt(i).recommendedRetailPrice : '',
                 onQuantityChanged: () {
                   context.read<ReorderBloc>().add(ReorderEvent.updateListQuantityOfProduct(
                         context: context,
@@ -1056,6 +1048,7 @@ class ReorderScreenWidget extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: ListView.builder(
+                                          physics: const ClampingScrollPhysics(),
                                           itemCount: state.productSupplierList[index].supplierSales.length + 1,
                                           scrollDirection: Axis.horizontal,
                                           itemBuilder: (context, subIndex) {

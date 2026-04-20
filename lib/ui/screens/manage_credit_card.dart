@@ -47,7 +47,7 @@ class ManageCreditCardWidget extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
               },
-              child:  Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
+              child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
           title: Align(
             alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
             child: Text(AppLocalizations.of(context)!.manage_credit_card, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
@@ -70,6 +70,7 @@ class ManageCreditCardWidget extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
                               child: SingleChildScrollView(
+                                physics: const ClampingScrollPhysics(),
                                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                                   Container(
                                     padding: const EdgeInsets.all(20.0),

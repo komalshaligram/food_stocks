@@ -73,6 +73,7 @@ class Owner2FormScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
                 child: Form(

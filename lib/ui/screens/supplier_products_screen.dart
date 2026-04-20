@@ -96,6 +96,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                       100.height,
                       Expanded(
                         child: SmartRefresher(
+                          physics: const ClampingScrollPhysics(),
                           enablePullDown: true,
                           controller: state.refreshController,
                           header: const RefreshWidget(),
@@ -466,11 +467,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-                        // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                        //     AppStrings.clubAgentIdText  ? state.searchList[index].isSale == true
-                        //     ?
-                        // state.searchList[index].recommendedConsumerOffer :
-                        // state.searchList[index].recommendedRetailPrice : '',
+
                         onQuantityChanged: () {
                           context.read<SupplierProductsBloc>().add(SupplierProductsEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -696,6 +693,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                             : state.productDetails.isEmpty
                                 ? NoDataBottomSheet(dialogContext: context)
                                 : SingleChildScrollView(
+                                    physics: const ClampingScrollPhysics(),
                                     controller: ModalScrollController.of(context),
                                     child: Column(children: [
                                       CommonProductDetailsWidget(
@@ -824,6 +822,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         height: getItemHeight(context, isSaleOn),
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
         child: ListView.builder(
+          physics: const ClampingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           itemBuilder: (context2, i) {
@@ -845,11 +844,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-                // recommendedRetailConsumerPricerOffer: clubAgentId ==
-                //     AppStrings.clubAgentIdText  ? relatedProductList.elementAt(i).sale?.isSale == true
-                //     ?
-                // relatedProductList.elementAt(i).recommendedConsumerOffer :
-                // relatedProductList.elementAt(i).recommendedRetailPrice : '',
+
                 onQuantityChanged: () {
                   context.read<SupplierProductsBloc>().add(SupplierProductsEvent.updateListQuantityOfProduct(
                         context: context,

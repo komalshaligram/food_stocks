@@ -42,7 +42,6 @@ class SearchItemWidget extends StatelessWidget {
     this.minQuantity,
     this.maxQuantity,
     required this.isMixedSale,
-    // this.recommendedRetailConsumerPricerOffer,
   });
 
   final String lowStock;
@@ -71,7 +70,6 @@ class SearchItemWidget extends StatelessWidget {
   final String? minQuantity;
   final String? maxQuantity;
   final bool? isMixedSale;
-  // final String? recommendedRetailConsumerPricerOffer;
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +161,7 @@ class SearchItemWidget extends StatelessWidget {
                   : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
             ),
             10.width,
-            Column(mainAxisAlignment: searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company ?
-            MainAxisAlignment.center : MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Column(mainAxisAlignment: searchType == SearchTypes.category || searchType == SearchTypes.subCategory || searchType == SearchTypes.company ? MainAxisAlignment.center : MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(
                 width: getScreenWidth(context) / 1.5,
                 child: Text(
@@ -258,26 +255,6 @@ class SearchItemWidget extends StatelessWidget {
               ]),
               3.height,
               isPesach ? isPesachLabelShow(isPesach, context) : 0.height,
-              // recommendedRetailConsumerPricerOffer != '' ? 3.height : const SizedBox(),
-              // recommendedRetailConsumerPricerOffer != ''
-              //     ? Center(
-              //         child: Container(
-              //             padding: const EdgeInsets.only(left: 5, right: 5),
-              //             decoration: BoxDecoration(
-              //               color: AppColors.clubAgentBGColor,
-              //               border: Border.all(color: AppColors.clubAgentBGColor),
-              //               borderRadius: const BorderRadius.all(
-              //                 Radius.circular(
-              //                   5,
-              //                 ),
-              //               ),
-              //             ),
-              //             child: Text(
-              //               recommendedRetailConsumerPricerOffer!,
-              //               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.whiteColor),
-              //               textAlign: TextAlign.center,
-              //             )))
-              //     : const SizedBox(),
               saleDesc.isNotEmpty
                   ? Container(
                       width: getScreenWidth(context) / 1.5,
@@ -320,7 +297,6 @@ class SearchItemWidget extends StatelessWidget {
                       ],
                     )
                   : const IgnorePointer(),
-
               isMixedSale!
                   ? Text(AppLocalizations.of(context)!.mixedSale,
                       style: AppStyles.rkRegularTextStyle(

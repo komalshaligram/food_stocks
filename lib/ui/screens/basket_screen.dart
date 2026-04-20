@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -136,6 +135,7 @@ class BasketScreenWidget extends StatelessWidget {
                               ? Expanded(
                                   child: AnimationLimiter(
                                     child: ListView.builder(
+                                      physics: const ClampingScrollPhysics(),
                                       itemCount: state.basketProductList.length,
                                       shrinkWrap: true,
                                       scrollDirection: Axis.vertical,
@@ -420,20 +420,18 @@ class BasketScreenWidget extends StatelessWidget {
                   child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     state.basketProductList[index].mainImage == ''
                         ? Image.asset(AppImagePath.imageNotAvailable5, width: 100, height: 100, fit: BoxFit.fitWidth)
-                        : Image.network('${AppUrlEndPoints.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}', width: 100, height: 100, fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
+                        : Image.network('${AppUrlEndPoints.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}', width: 100, height: 100, fit: BoxFit.contain, loadingBuilder: (
+                            context,
+                            child,
+                            loadingProgress,
+                          ) {
                             if (loadingProgress == null) {
                               return child;
                             } else {
-                              return Center(child: SizedBox(width: 100, height: 100, child: CupertinoActivityIndicator(color: AppColors.blackColor)));
+                              return loaderWidget(AppConstants.containerHeight_100);
                             }
                           }, errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 100,
-                              height: 100,
-                              color: AppColors.whiteColor,
-                              alignment: Alignment.center,
-                              child: Image.asset(AppImagePath.imageNotAvailable5),
-                            );
+                            return imageNotAvailableWidget(AppConstants.containerHeight_100);
                           }),
                     20.width,
                     Expanded(
@@ -679,8 +677,7 @@ class BasketScreenWidget extends StatelessWidget {
                 return AbsorbPointer(
                     absorbing: state.isRemoveProcess ? true : false,
                     child: CustomDialog(
-                        title: updateClearString == AppStrings.clearString ? AppLocalizations.of(context)!.you_want_clear_cart :
-                        AppLocalizations.of(context)!.you_want_delete_product,
+                        title: updateClearString == AppStrings.clearString ? AppLocalizations.of(context)!.you_want_clear_cart : AppLocalizations.of(context)!.you_want_delete_product,
                         content: const [],
                         isMixedSale: false,
                         directionality: state.language,
@@ -750,6 +747,7 @@ class BasketScreenWidget extends StatelessWidget {
                               : state.productDetails.isEmpty
                                   ? NoDataBottomSheet(dialogContext: context)
                                   : SingleChildScrollView(
+                                      physics: const ClampingScrollPhysics(),
                                       controller: ModalScrollController.of(sheetContext),
                                       child: Column(children: [
                                         CommonProductDetailsWidget(
@@ -862,6 +860,7 @@ class BasketScreenWidget extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
             itemBuilder: (context2, i) {
               return CommonProductSaleItemWidget(
                   isSale: state.relatedProductList.elementAt(i).sale?.isSale,
@@ -879,11 +878,7 @@ class BasketScreenWidget extends StatelessWidget {
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
                   quantity: state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity,
                   isMixedSale: state.relatedProductList.elementAt(i).sale?.isMixedSale,
-                  // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                  //     AppStrings.clubAgentIdText  ? state.relatedProductList.elementAt(i).sale?.isSale == true
-                  //     ?
-                  // state.relatedProductList.elementAt(i).recommendedConsumerOffer :
-                  // state.relatedProductList.elementAt(i).recommendedRetailPrice : '',
+
                   onQuantityChanged: () {
                     context2.read<BasketBloc>().add(BasketEvent.updateListQuantityOfProduct(
                           context: context2,

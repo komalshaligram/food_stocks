@@ -118,23 +118,10 @@ class HomeScreenWidget extends StatelessWidget {
                     Expanded(
                       child: Stack(children: [
                         SmartRefresher(
+                          physics: const ClampingScrollPhysics(),
                           enablePullDown: true,
                           controller: state.refreshController,
-                          header: CustomHeader(
-                              refreshStyle: RefreshStyle.Behind,
-                              builder: (c, m) {
-                                return Container(
-                                  height: 30,
-                                  width: 30,
-                                  margin: const EdgeInsets.only(top: 90, bottom: AppConstants.padding_30),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
-                                    color: AppColors.whiteColor,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_10),
-                                );
-                              }),
+                          header: smartRefreshCustomHeaderWidget(),
                           onRefresh: () {
                             bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
                             bloc.add(HomeEvent.userApproveEvent(context: context));
@@ -153,6 +140,7 @@ class HomeScreenWidget extends StatelessWidget {
                             state.refreshController.loadComplete();
                           },
                           child: SingleChildScrollView(
+                            physics: const ClampingScrollPhysics(),
                             child: Column(children: [
                               80.height,
                               dataAnalyticsButtonWidget(context, state),
@@ -226,58 +214,6 @@ class HomeScreenWidget extends StatelessWidget {
         )
       : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.cover, width: 100, height: 100);
 
-  Widget messageWidget(BuildContext context, HomeBloc bloc, HomeState state) => Container(
-        height: 60,
-        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.blur_10)],
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-        ),
-        clipBehavior: Clip.hardEdge,
-        alignment: Alignment.center,
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-            height: 54,
-            width: 54,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(color: AppColors.iconBGColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
-            child: InkWell(
-              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-              onTap: () async {
-                dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-                if (messageResult != null) {
-                  bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
-                }
-              },
-              child: Stack(fit: StackFit.expand, children: [
-                Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                  child: SvgPicture.asset(AppImagePath.message, height: 26, width: 24, fit: BoxFit.scaleDown),
-                ),
-                state.messageCount <= 0
-                    ? 0.width
-                    : Positioned(
-                        top: 8,
-                        right: context.rtl ? null : 7,
-                        left: context.rtl ? 7 : null,
-                        child: Container(
-                          height: 22,
-                          width: 22,
-                          decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '${state.messageCount <= 99 ? state.messageCount : '99+'}',
-                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor),
-                          ),
-                        ))
-              ]),
-            ),
-          ),
-        ]),
-      );
-
   Widget dataAnalyticsButtonWidget(BuildContext context, HomeState state) => state.showClientDataOnApp
       ? CustomTextIconButtonWidget(
           width: double.maxFinite,
@@ -323,6 +259,7 @@ class HomeScreenWidget extends StatelessWidget {
               : AbsorbPointer(
                   absorbing: state.isProductSaleShimmering,
                   child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
                       itemCount: state.productSalesList.length,
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -346,11 +283,6 @@ class HomeScreenWidget extends StatelessWidget {
                             minQuantity: state.productSalesList[index].sale?.saleMinQuantity,
                             maxQuantity: state.productSalesList[index].sale?.saleMaxQuantity,
                             isMixedSale: state.productSalesList[index].sale?.isMixedSale,
-                            // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                            //     AppStrings.clubAgentIdText  ? state.productSalesList[index].sale?.isSale == true
-                            //    ?
-                            // state.productSalesList[index].recommendedConsumerOffer :
-                            // state.productSalesList[index].recommendedRetailPrice : '',
                             onQuantityChanged: () {
                               context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
                                     context: context,
@@ -458,6 +390,7 @@ class HomeScreenWidget extends StatelessWidget {
           child: state.isShimmering
               ? const CommonProductListShimmerWidget()
               : ListView.builder(
+                  physics: const ClampingScrollPhysics(),
                   itemCount: state.recommendedProductsList.length,
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
@@ -480,11 +413,6 @@ class HomeScreenWidget extends StatelessWidget {
                       minQuantity: state.recommendedProductsList[index].sale?.saleMinQuantity,
                       maxQuantity: state.recommendedProductsList[index].sale?.saleMaxQuantity,
                       isMixedSale: state.recommendedProductsList[index].sale?.isMixedSale,
-                      // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                      //     AppStrings.clubAgentIdText  ? state.recommendedProductsList[index].sale?.isSale == true
-                      //     ?
-                      // state.recommendedProductsList[index].recommendedConsumerOffer :
-                      // state.recommendedProductsList[index].recommendedRetailPrice : '',
                       onQuantityChanged: () {
                         context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
                               context: context,
@@ -701,11 +629,7 @@ class HomeScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-                        // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                        //     AppStrings.clubAgentIdText  ? state.searchList[index].isSale == true
-                        //     ?
-                        // state.searchList[index].recommendedConsumerOffer :
-                        // state.searchList[index].recommendedRetailPrice : '',
+
                         onQuantityChanged: () {
                           context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -868,6 +792,58 @@ class HomeScreenWidget extends StatelessWidget {
         }
       });
 
+  Widget messageWidget(BuildContext context, HomeBloc bloc, HomeState state) => Container(
+    height: 60,
+    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
+    decoration: BoxDecoration(
+      color: AppColors.whiteColor,
+      boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.blur_10)],
+      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+    ),
+    clipBehavior: Clip.hardEdge,
+    alignment: Alignment.center,
+    child: Row(mainAxisSize: MainAxisSize.min, children: [
+      Container(
+        height: 54,
+        width: 54,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(color: AppColors.iconBGColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+        child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+          onTap: () async {
+            dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+            if (messageResult != null) {
+              bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
+            }
+          },
+          child: Stack(fit: StackFit.expand, children: [
+            Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(context.rtl ? pi : 0),
+              child: SvgPicture.asset(AppImagePath.message, height: 26, width: 24, fit: BoxFit.scaleDown),
+            ),
+            state.messageCount <= 0
+                ? 0.width
+                : Positioned(
+                top: 8,
+                right: context.rtl ? null : 7,
+                left: context.rtl ? 7 : null,
+                child: Container(
+                  height: 22,
+                  width: 22,
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
+                  alignment: Alignment.center,
+                  child: Text(
+                    '${state.messageCount <= 99 ? state.messageCount : '99+'}',
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor),
+                  ),
+                ))
+          ]),
+        ),
+      ),
+    ]),
+  );
+
   void handleMessageOnBackground() {
     if (isNavigation.isNotEmpty) {
       PushNotificationService().firebaseMessaging.getInitialMessage().then((message) async {
@@ -946,87 +922,90 @@ class HomeScreenWidget extends StatelessWidget {
                             : state.productDetails.isEmpty
                                 ? NoDataBottomSheet(dialogContext: context)
                                 : SingleChildScrollView(
+                                    physics: const ClampingScrollPhysics(),
                                     controller: ModalScrollController.of(context),
                                     child: Column(children: [
                                       CommonProductDetailsWidget(
-                                        isIncludedVat: state.isIncludedVat,
-                                        productDetails: state.productDetails,
-                                        bottleTax: state.bottlePrice,
-                                        isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                        totalBottleDeposit: (state.bottlePrice * (state.productDetails.first.numberOfUnit ?? 1) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
-                                        isBottle: (state.productDetails.first.isBottle ?? false),
-                                        addToOrderTap: () {
-                                          if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
-                                            context.read<HomeBloc>().add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
-                                          } else {
-                                            showMinQtyConfirmDialog(
-                                              context,
-                                              productId,
-                                              state.productDetails.first.sale!.saleMinQuantity.toString(),
-                                              state.productDetails.first.sale!.isMixedSale,
-                                              state.productDetails.first.sale!.sameSaleProducts,
-                                            );
-                                          }
-                                        },
-                                        isLoading: state.isLoading,
-                                        imageOnTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (dialogContext) {
-                                                return Stack(children: [
-                                                  SizedBox(
-                                                    height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
-                                                    width: getScreenWidth(context),
-                                                    child: GestureDetector(
-                                                      onVerticalDragStart: (dragDetails) {},
-                                                      onVerticalDragUpdate: (dragDetails) {},
-                                                      onVerticalDragEnd: (endDetails) {
-                                                        Navigator.pop(dialogContext);
-                                                      },
-                                                      child: PhotoView(
-                                                        imageProvider: NetworkImage('${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}'),
+                                          isIncludedVat: state.isIncludedVat,
+                                          productDetails: state.productDetails,
+                                          bottleTax: state.bottlePrice,
+                                          isSubUserAddToBasket: state.isSubUserAddToBasket,
+                                          totalBottleDeposit: (state.bottlePrice * (state.productDetails.first.numberOfUnit ?? 1) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
+                                          isBottle: (state.productDetails.first.isBottle ?? false),
+                                          addToOrderTap: () {
+                                            if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
+                                              context.read<HomeBloc>().add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
+                                            } else {
+                                              showMinQtyConfirmDialog(
+                                                context,
+                                                productId,
+                                                state.productDetails.first.sale!.saleMinQuantity.toString(),
+                                                state.productDetails.first.sale!.isMixedSale,
+                                                state.productDetails.first.sale!.sameSaleProducts,
+                                              );
+                                            }
+                                          },
+                                          isLoading: state.isLoading,
+                                          imageOnTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (dialogContext) {
+                                                  return Stack(children: [
+                                                    SizedBox(
+                                                      height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
+                                                      width: getScreenWidth(context),
+                                                      child: GestureDetector(
+                                                        onVerticalDragStart: (dragDetails) {},
+                                                        onVerticalDragUpdate: (dragDetails) {},
+                                                        onVerticalDragEnd: (endDetails) {
+                                                          Navigator.pop(dialogContext);
+                                                        },
+                                                        child: PhotoView(
+                                                          imageProvider: NetworkImage('${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}'),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.pop(dialogContext);
-                                                    },
-                                                    child: Padding(padding: const EdgeInsets.only(top: AppConstants.padding_10), child: Icon(Icons.close, color: AppColors.whiteColor)),
-                                                  ),
-                                                ]);
-                                              });
-                                        },
-                                        context: context,
-                                        productImages: [state.productDetails.first.mainImage ?? ''],
-                                        productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
-                                        productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                        productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                        scrollController: scrollController,
-                                        productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                                        isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                        recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
-                                            ? state.productDetails.first.sale?.isSale == true
-                                                ? state.productDetails.first.recommendedConsumerOffer
-                                                : state.productDetails.first.recommendedRetailPrice
-                                            : '',
-                                        onQuantityChanged: (quantity) {
-                                          context.read<HomeBloc>().add(HomeEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
-                                        },
-                                        onQuantityIncreaseTap: () {
-                                          context.read<HomeBloc>().add(HomeEvent.increaseQuantityOfProduct(context: context1));
-                                        },
-                                        onQuantityDecreaseTap: () {
-                                          if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
-                                            context.read<HomeBloc>().add(HomeEvent.decreaseQuantityOfProduct(context: context1));
-                                          }
-                                        },
-                                        onCloseTap: () {
-                                          context.read<HomeBloc>().add(HomeEvent.getProductSalesListEvent(context: context1));
-                                          context.read<HomeBloc>().add(HomeEvent.getRecommendationProductsListEvent(context: context1));
-                                          Navigator.pop(context);
-                                        },
-                                      ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.pop(dialogContext);
+                                                      },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(top: AppConstants.padding_10),
+                                                        child: Icon(Icons.close, color: AppColors.whiteColor),
+                                                      ),
+                                                    ),
+                                                  ]);
+                                                });
+                                          },
+                                          context: context,
+                                          productImages: [state.productDetails.first.mainImage ?? ''],
+                                          productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                          productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
+                                          productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                                          scrollController: scrollController,
+                                          productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                          isMixedSale: state.productDetails.first.sale!.isMixedSale,
+                                          recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
+                                              ? state.productDetails.first.sale?.isSale == true
+                                                  ? state.productDetails.first.recommendedConsumerOffer
+                                                  : state.productDetails.first.recommendedRetailPrice
+                                              : '',
+                                          onQuantityChanged: (quantity) {
+                                            context.read<HomeBloc>().add(HomeEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                          },
+                                          onQuantityIncreaseTap: () {
+                                            context.read<HomeBloc>().add(HomeEvent.increaseQuantityOfProduct(context: context1));
+                                          },
+                                          onQuantityDecreaseTap: () {
+                                            if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                              context.read<HomeBloc>().add(HomeEvent.decreaseQuantityOfProduct(context: context1));
+                                            }
+                                          },
+                                          onCloseTap: () {
+                                            context.read<HomeBloc>().add(HomeEvent.getProductSalesListEvent(context: context1));
+                                            context.read<HomeBloc>().add(HomeEvent.getRecommendationProductsListEvent(context: context1));
+                                            Navigator.pop(context);
+                                          }),
                                       state.isRelatedShimmering
                                           ? const RelatedProductShimmerWidget()
                                           : state.relatedProductList.isEmpty
@@ -1052,6 +1031,7 @@ class HomeScreenWidget extends StatelessWidget {
               height: getItemHeight(context, isSaleOn),
               padding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, bottom: AppConstants.padding_5),
               child: ListView.builder(
+                physics: const ClampingScrollPhysics(),
                 controller: ScrollController(),
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
@@ -1074,11 +1054,6 @@ class HomeScreenWidget extends StatelessWidget {
                       minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                       maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                       isMixedSale: relatedProductList[i].sale?.isMixedSale,
-                      // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                      //     AppStrings.clubAgentIdText  ? relatedProductList.elementAt(i).sale?.isSale == true
-                      //     ?
-                      // relatedProductList.elementAt(i).recommendedConsumerOffer :
-                      // relatedProductList.elementAt(i).recommendedRetailPrice : '',
                       onQuantityChanged: () {
                         context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
                               context: context,
@@ -1231,7 +1206,11 @@ class HomeScreenWidget extends StatelessWidget {
     if (validSupplier.isEmpty) return;
     storage.writeState(context, true, identifier: 'no_min_dialog');
 
-    showDialog(context: context, barrierDismissible: false, builder: (_) => MultiSupplierCountdownDialog(suppliers: validSupplier, title: state.supplierCustomerDetails[0].text ?? ''));
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => MultiSupplierCountdownDialog(suppliers: validSupplier, title: state.supplierCustomerDetails[0].text ?? ''),
+    );
   }
 
   appUnderMaintenanceDialog({required BuildContext context, required HomeState state}) {

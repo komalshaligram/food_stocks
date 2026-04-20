@@ -89,6 +89,7 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
           ),
           body: SafeArea(
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: state.isShimmering
                   ? const FormDataScreenShimmerWidget()
                   : Padding(

@@ -75,6 +75,7 @@ class ReturnListWidget extends StatelessWidget {
         ),
         body: SafeArea(
           child: SmartRefresher(
+            physics: const ClampingScrollPhysics(),
             enablePullDown: true,
             controller: state.refreshController,
             header: const RefreshWidget(),

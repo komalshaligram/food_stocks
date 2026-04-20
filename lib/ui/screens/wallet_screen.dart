@@ -137,7 +137,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
               child: SafeArea(
                 child: NotificationListener<ScrollNotification>(
                     child: SingleChildScrollView(
-                      physics: state.walletTransactionsList.isEmpty ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
+                      physics: state.walletTransactionsList.isEmpty ? const NeverScrollableScrollPhysics() :  const ClampingScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,

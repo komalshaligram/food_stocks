@@ -156,7 +156,7 @@ class InvoicePdfScreenWidget extends StatelessWidget {
             return const SizedBox.shrink();
           }
           return SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             child: SafeArea(
               child: Stack(children: [
                 Column(children: [

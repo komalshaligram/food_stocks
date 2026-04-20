@@ -81,6 +81,7 @@ class ProfileScreenWidget extends StatelessWidget {
           body: state.isShimmering
               ? const ProfileScreenShimmerWidget()
               : SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
                   child: Column(children: [
                     SafeArea(
                       child: Padding(

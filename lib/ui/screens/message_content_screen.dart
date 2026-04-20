@@ -93,8 +93,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                       Container(
                           alignment: Alignment.center,
                           child: state.message.message?.messageImage != null && state.message.message?.messageImage != ''
-                              ? Image.network('${AppUrlEndPoints.baseFileUrl}${state.message.message?.messageImage ?? ''}', height: getScreenHeight(context), width: double.maxFinite,
-                              fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
+                              ? Image.network('${AppUrlEndPoints.baseFileUrl}${state.message.message?.messageImage ?? ''}', height: getScreenHeight(context), width: double.maxFinite, fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
                                     return child;
                                   } else {
@@ -121,6 +120,7 @@ class MessageContentScreenWidget extends StatelessWidget {
                     ]),
                   )
                 : SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
                     child: SafeArea(
                       child: Column(children: [
                         Container(

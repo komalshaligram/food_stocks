@@ -123,32 +123,7 @@ class CommonSaleListView extends StatelessWidget {
                                 : 0.width,
                     isPesach! ? 3.height : 0.height,
                     isPesachLabelShow(isPesach!, context),
-                    // recommendedRetailConsumerPricerOffer != ''
-                    //     ? 3.height : 0.height,
-                    // recommendedRetailConsumerPricerOffer != ''
-                    //     ?
-                    // Center(
-                    //     child: Container(
-                    //         width: MediaQuery.of(context).size.width / 1.6,
-                    //         padding: const EdgeInsets.only(left: 0, right: 0),
-                    //         decoration: BoxDecoration(
-                    //           color: AppColors.clubAgentBGColor,
-                    //           border: Border.all(color: AppColors.clubAgentBGColor),
-                    //           borderRadius: const BorderRadius.all(
-                    //             Radius.circular(
-                    //               5,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         child: Text(
-                    //           recommendedRetailConsumerPricerOffer!,
-                    //           style: AppStyles.rkRegularTextStyle(
-                    //             size: AppConstants.font_13,
-                    //             color: AppColors.whiteColor
-                    //           ),
-                    //           textAlign: TextAlign.center,
-                    //         )))
-                    //     : const SizedBox(),
+
                     isPesach! ? 3.height : 0.height,
                     !isGuestUser
                         ? numberOfUnits != '0'

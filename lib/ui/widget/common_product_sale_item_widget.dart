@@ -36,7 +36,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String? minQuantity;
   final String? maxQuantity;
   final bool? isMixedSale;
-  // final String? recommendedRetailConsumerPricerOffer;
 
   const CommonProductSaleItemWidget({
     super.key,
@@ -63,7 +62,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.minQuantity,
     this.maxQuantity,
     required this.isMixedSale,
-    // this.recommendedRetailConsumerPricerOffer,
   });
 
   @override
@@ -187,29 +185,6 @@ class CommonProductSaleItemWidget extends StatelessWidget {
             1.height,
             Center(child: isPesachLabelShow(isPesach!, context)),
             3.height,
-            // recommendedRetailConsumerPricerOffer != ''
-            //     ?
-            //     Center(
-            //         child: Container(
-            //             padding: const EdgeInsets.only(left: 5, right: 5),
-            //             decoration: BoxDecoration(
-            //               color: AppColors.clubAgentBGColor,
-            //               border: Border.all(color: AppColors.clubAgentBGColor),
-            //               borderRadius: const BorderRadius.all(
-            //                 Radius.circular(
-            //                   5,
-            //                 ),
-            //               ),
-            //             ),
-            //             child: Text(
-            //               recommendedRetailConsumerPricerOffer!,
-            //               style: AppStyles.rkRegularTextStyle(
-            //                 size: AppConstants.font_13,
-            //                   color: AppColors.whiteColor
-            //               ),
-            //               textAlign: TextAlign.center,
-            //             )))
-            //     : const SizedBox(),
             isPesach! ? 2.height : 0.height,
             !isGuestUser
                 ? isSale!

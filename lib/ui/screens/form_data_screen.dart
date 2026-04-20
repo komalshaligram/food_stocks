@@ -73,6 +73,7 @@ class FormDataScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: state.isShimmering || state.isAgentListShimmering
                   ? const FormDataScreenShimmerWidget()
                   : Padding(

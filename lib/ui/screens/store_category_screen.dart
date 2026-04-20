@@ -109,6 +109,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                           Expanded(
                             child: state.isSubCategory
                                 ? SmartRefresher(
+                                    physics: const ClampingScrollPhysics(),
                                     enablePullDown: true,
                                     controller: state.subCategoryRefreshController,
                                     header: const RefreshWidget(),
@@ -186,7 +187,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                     onLoading: () {
                                       context.read<StoreCategoryBloc>().add(StoreCategoryEvent.getPlanogramAllProductEvent(context: context));
                                     },
-                                    child: ListView(physics: const AlwaysScrollableScrollPhysics(), shrinkWrap: true, children: [
+                                    child: ListView(physics: const ClampingScrollPhysics(), shrinkWrap: true, children: [
                                       state.isPlanogramShimmering && state.subPlanoGramsList.isEmpty
                                           ? state.isGridView
                                               ? const SupplierProductsScreenShimmerWidget(itemCount: 3)
@@ -262,13 +263,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
   }
 
   Widget topNavigationWidget(BuildContext context, StoreCategoryState state) => state.isSubCategory
-      ? buildTopNavigation(
-          isSubCategory: isSubCategory,
-          context: context,
-          categoryName: state.categoryName,
-          search: state.searchController.text,
-          searchList: state.searchList,
-        )
+      ? buildTopNavigation(isSubCategory: isSubCategory, context: context, categoryName: state.categoryName, search: state.searchController.text, searchList: state.searchList)
       : buildTopNavigation(
           isSubCategory: isSubCategory,
           context: context,
@@ -498,11 +493,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           minQuantity: state.planogramProductList[index].product.sale?.saleMinQuantity,
           maxQuantity: state.planogramProductList[index].product.sale?.saleMaxQuantity,
           isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
-          // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-          //     AppStrings.clubAgentIdText  ? state.planogramProductList[index].product.sale?.isSale == true
-          //     ?
-          // state.planogramProductList[index].product.recommendedConsumerOffer :
-          // state.planogramProductList[index].product.recommendedRetailPrice : '',
           onQuantityChanged: () {
             context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateListQuantityOfProduct(
                   context: context,
@@ -611,11 +601,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             minQuantity: state.planogramProductList[index].product.sale?.saleMinQuantity,
             maxQuantity: state.planogramProductList[index].product.sale?.saleMaxQuantity,
             isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
-            // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-            //     AppStrings.clubAgentIdText  ? state.planogramProductList[index].product.sale?.isSale == true
-            //     ?
-            // state.planogramProductList[index].product.recommendedConsumerOffer :
-            // state.planogramProductList[index].product.recommendedRetailPrice : '',
             onQuantityChanged: () {
               context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateListQuantityOfProduct(
                     context: context,
@@ -769,11 +754,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-                        // recommendedRetailConsumerPricerOffer: state.clubAgentId ==
-                        //     AppStrings.clubAgentIdText  ? state.searchList[index].isSale == true
-                        //     ?
-                        // state.searchList[index].recommendedConsumerOffer :
-                        // state.searchList[index].recommendedRetailPrice : '',
                         onQuantityChanged: () {
                           context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -990,6 +970,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                             : state.productDetails.isEmpty
                                 ? NoDataBottomSheet(dialogContext: context)
                                 : SingleChildScrollView(
+                                    physics: const ClampingScrollPhysics(),
                                     controller: ModalScrollController.of(context),
                                     child: Column(children: [
                                       CommonProductDetailsWidget(
@@ -1040,7 +1021,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                                         onTap: () {
                                                           Navigator.pop(context);
                                                         },
-                                                        child:  Padding(
+                                                        child: Padding(
                                                           padding: const EdgeInsets.only(top: AppConstants.padding_10),
                                                           child: Icon(Icons.close, color: AppColors.whiteColor),
                                                         )),
@@ -1114,6 +1095,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         height: getItemHeight(context, isSaleOn),
         padding: const EdgeInsets.only(bottom: AppConstants.padding_10, left: AppConstants.padding_10, right: AppConstants.padding_10),
         child: ListView.builder(
+          physics: const ClampingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           itemBuilder: (context2, i) {
@@ -1135,11 +1117,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-                // recommendedRetailConsumerPricerOffer: clubAgentId ==
-                //     AppStrings.clubAgentIdText  ? relatedProductList.elementAt(i).sale?.isSale == true
-                //     ?
-                // relatedProductList.elementAt(i).recommendedConsumerOffer :
-                // relatedProductList.elementAt(i).recommendedRetailPrice : '',
                 onQuantityChanged: () {
                   context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateListQuantityOfProduct(
                         context: context,

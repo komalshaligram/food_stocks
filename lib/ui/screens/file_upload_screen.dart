@@ -97,6 +97,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                       child: state.isLoading
                           ? SizedBox(height: getScreenHeight(context), child: Center(child: CupertinoActivityIndicator(color: AppColors.mainColor)))
                           : SingleChildScrollView(
+                              physics: const ClampingScrollPhysics(),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
                                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

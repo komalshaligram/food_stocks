@@ -87,6 +87,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                     ? const OrderSummaryScreenShimmerWidget()
                     : AnimationLimiter(
                         child: ListView.builder(
+                          physics: const ClampingScrollPhysics(),
                           itemCount: state.tempList.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,

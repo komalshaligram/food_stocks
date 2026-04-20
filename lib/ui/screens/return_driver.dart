@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -80,7 +79,9 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocBuilder<ReturnDriverBloc, ReturnDriverState>(builder: (context, state) {
-      final bool isOrderStatusCardType = state.orderData.orderstatus?.orderStatusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard;
+      final bool isOrderStatusCardType = state.orderData.orderstatus?.orderStatusNumber == AppConstants.onTheWayStatus ||
+          state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! ==
+              true && state.orderData.paymentMethod.toString() == AppStrings.creditCard;
 
       return FocusDetector(
         onFocusGained: () {
@@ -102,140 +103,143 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
           body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.isEmpty ?? false)
               ? const ProductDetailsScreenShimmerWidget()
               : SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   child: SafeArea(
                     child: AnimationLimiter(
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: AnimationConfiguration.toStaggeredList(duration: const Duration(seconds: 1), childAnimationBuilder: (widget) => SlideAnimation(horizontalOffset: MediaQuery.of(context).size.width / 2, child: FadeInAnimation(child: widget)), children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_15),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                Text(AppLocalizations.of(context)!.return_products_list, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-                                GestureDetector(
-                                  onTap: () {
-                                    bloc.add(const ReturnDriverEvent.checkAllEvent());
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(AppConstants.padding_5),
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-                                      color: state.isAllCheck ? AppColors.mainColor : AppColors.lightBorderColor,
-                                      border: Border.all(color: AppColors.lightGreyColor),
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.check_all,
-                                      style: AppStyles.rkRegularTextStyle(
-                                        size: AppConstants.font_14,
-                                        color: state.isAllCheck ? AppColors.whiteColor : AppColors.blackColor,
-                                      ),
-                                    ),
+                          children: AnimationConfiguration.toStaggeredList(
+                              duration: const Duration(seconds: 1),
+                              childAnimationBuilder: (widget) => SlideAnimation(
+                                    horizontalOffset: MediaQuery.of(context).size.width / 2,
+                                    child: FadeInAnimation(child: widget),
                                   ),
-                                ),
-                              ]),
-                            ),
-                            ListView.builder(
-                              itemCount: state.returnDriverData.data?.length ?? 0,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.only(top: AppConstants.padding_5, bottom: AppConstants.padding_70),
-                              itemBuilder: (context, dataIndex) {
-                                final returnDataItem = state.returnDriverData.data![dataIndex];
-                                final bool isChecked = state.checkedItems[dataIndex] ?? false;
-
-                                return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  Row(children: [
-                                    Checkbox(
-                                        value: isChecked,
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                                        side: BorderSide(width: 1.0, color: AppColors.greyColor),
-                                        activeColor: AppColors.mainColor,
-                                        onChanged: (value) {
-                                          bloc.add(ReturnDriverEvent.toggleItemChecked(index: dataIndex, isChecked: value ?? false));
-                                        }),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_15),
+                                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                     Text(
-                                      '${AppLocalizations.of(context)!.return_number_text} ${returnDataItem.returnNumber}',
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                                      AppLocalizations.of(context)!.return_products_list,
+                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
                                     ),
-                                  ]),
-                                  ListView.builder(
-                                      itemCount: returnDataItem.returnProducts?.length ?? 0,
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      padding: const EdgeInsets.only(bottom: AppConstants.padding_5, left: AppConstants.padding_5),
-                                      itemBuilder: (context, productIndex) {
-                                        final product = returnDataItem.returnProducts![productIndex];
-
-                                        return productListItem(
-                                          productName: product.productName,
-                                          productImage: product.productImage,
-                                          totalUnit: product.totalUnits,
-                                          createdAt: product.createdAt,
-                                          index: productIndex,
-                                        );
-                                      }),
-                                  if (isChecked) ...[
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
-                                      child: Text(
-                                        AppLocalizations.of(context)!.driver_return_delivery_document_img,
-                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!.note}: ${AppLocalizations.of(context)!.driver_return_delivery_document_img_note}',
-                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: List.generate(3, (imageIndex) {
-                                            final List<File?> files = List<File?>.from(state.driverDeliveryProofFilesMap[dataIndex] ?? List.filled(3, null));
-                                            final File? file = files[imageIndex];
-
-                                            return Padding(
-                                              padding: const EdgeInsets.only(right: AppConstants.padding_8),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  if (file != null) {
-                                                    uploadDriverProofBottomSheet(
-                                                      context: context,
-                                                      file: file,
-                                                      index: dataIndex,
-                                                      imageIndex: imageIndex,
-                                                      language: state.language,
-                                                      productIssueData: {},
-                                                    );
-                                                  } else {
-                                                    cameraDriverProofEvent(context: context, index: dataIndex, imageIndex: imageIndex, productIssueData: {});
-                                                  }
-                                                },
-                                                child: Container(
-                                                  height: 120,
-                                                  width: 120,
-                                                  decoration: BoxDecoration(color: AppColors.whiteColor),
-                                                  alignment: Alignment.center,
-                                                  child: file != null ? Image.file(file, fit: BoxFit.cover, height: 120, width: 120) : const Icon(Icons.add, size: 60),
-                                                ),
-                                              ),
-                                            );
-                                          }),
+                                    GestureDetector(
+                                      onTap: () {
+                                        bloc.add(const ReturnDriverEvent.checkAllEvent());
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(AppConstants.padding_5),
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+                                          color: state.isAllCheck ? AppColors.mainColor : AppColors.lightBorderColor,
+                                          border: Border.all(color: AppColors.lightGreyColor),
+                                        ),
+                                        child: Text(
+                                          AppLocalizations.of(context)!.check_all,
+                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: state.isAllCheck ? AppColors.whiteColor : AppColors.blackColor),
                                         ),
                                       ),
                                     ),
-                                  ]
-                                ]);
-                              },
-                            ),
-                          ])),
+                                  ]),
+                                ),
+                                ListView.builder(
+                                    itemCount: state.returnDriverData.data?.length ?? 0,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    padding: const EdgeInsets.only(top: AppConstants.padding_5, bottom: AppConstants.padding_70),
+                                    itemBuilder: (context, dataIndex) {
+                                      final returnDataItem = state.returnDriverData.data![dataIndex];
+                                      final bool isChecked = state.checkedItems[dataIndex] ?? false;
+
+                                      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                        Row(children: [
+                                          Checkbox(
+                                              value: isChecked,
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                                              side: BorderSide(width: 1.0, color: AppColors.greyColor),
+                                              activeColor: AppColors.mainColor,
+                                              onChanged: (value) {
+                                                bloc.add(ReturnDriverEvent.toggleItemChecked(index: dataIndex, isChecked: value ?? false));
+                                              }),
+                                          Text(
+                                            '${AppLocalizations.of(context)!.return_number_text} ${returnDataItem.returnNumber}',
+                                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                                          ),
+                                        ]),
+                                        ListView.builder(
+                                            itemCount: returnDataItem.returnProducts?.length ?? 0,
+                                            shrinkWrap: true,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            padding: const EdgeInsets.only(bottom: AppConstants.padding_5, left: AppConstants.padding_5),
+                                            itemBuilder: (context, productIndex) {
+                                              final product = returnDataItem.returnProducts![productIndex];
+                                              return productListItem(
+                                                productName: product.productName,
+                                                productImage: product.productImage,
+                                                totalUnit: product.totalUnits,
+                                                createdAt: product.createdAt,
+                                                index: productIndex,
+                                              );
+                                            }),
+                                        if (isChecked) ...[
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
+                                            child: Text(
+                                              AppLocalizations.of(context)!.driver_return_delivery_document_img,
+                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
+                                            child: Text(
+                                              '${AppLocalizations.of(context)!.note}: ${AppLocalizations.of(context)!.driver_return_delivery_document_img_note}',
+                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
+                                            child: SingleChildScrollView(
+                                              physics: const ClampingScrollPhysics(),
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                children: List.generate(3, (imageIndex) {
+                                                  final List<File?> files = List<File?>.from(state.driverDeliveryProofFilesMap[dataIndex] ?? List.filled(3, null));
+                                                  final File? file = files[imageIndex];
+                                                  return Padding(
+                                                    padding: const EdgeInsets.only(right: AppConstants.padding_8),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        if (file != null) {
+                                                          uploadDriverProofBottomSheet(
+                                                            context: context,
+                                                            file: file,
+                                                            index: dataIndex,
+                                                            imageIndex: imageIndex,
+                                                            language: state.language,
+                                                            productIssueData: {},
+                                                          );
+                                                        } else {
+                                                          cameraDriverProofEvent(context: context, index: dataIndex, imageIndex: imageIndex, productIssueData: {});
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 120,
+                                                        width: 120,
+                                                        color: AppColors.whiteColor,
+                                                        child: file != null ? Image.file(file, fit: BoxFit.cover) : const Icon(Icons.add, size: 50),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                              ),
+                                            ),
+                                          ),
+                                        ]
+                                      ]);
+                                    }),
+                              ])),
                     ),
                   ),
                 ),
@@ -266,12 +270,8 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                           final sentReturnId = returnDataItem.id ?? '';
                           final urls = state.driverDeliveryProofUrlsMap[index] ?? [];
                           final signedReturnReceiptImages = urls.where((url) => url != null && url.isNotEmpty).map((url) => url!).toList();
-
                           if (signedReturnReceiptImages.isNotEmpty) {
-                            sentReturnData.add({
-                              'sentReturnId': sentReturnId,
-                              'signedReturnReceiptImages': signedReturnReceiptImages,
-                            });
+                            sentReturnData.add({'sentReturnId': sentReturnId, 'signedReturnReceiptImages': signedReturnReceiptImages});
                           }
                         }
                       });
@@ -317,23 +317,15 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
         child: Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             productImage != ''
-                ? Image.network(productImage ?? '', width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80, fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
+                ? Image.network(productImage ?? '', width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80, fit: BoxFit.contain, loadingBuilder: (
+                    context,
+                    child,
+                    loadingProgress,
+                  ) {
                     if (loadingProgress == null) return child;
-                    return Center(
-                      child: SizedBox(
-                        width: AppConstants.containerHeight_80,
-                        height: AppConstants.containerHeight_80,
-                        child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                      ),
-                    );
+                    return loaderWidget(AppConstants.containerHeight_80);
                   }, errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: AppConstants.containerHeight_80,
-                      height: AppConstants.containerHeight_80,
-                      color: AppColors.whiteColor,
-                      alignment: Alignment.center,
-                      child: Image.asset(AppImagePath.imageNotAvailable5),
-                    );
+                    return imageNotAvailableWidget(AppConstants.containerHeight_80);
                   })
                 : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80),
             15.width,
@@ -391,7 +383,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
               ? FileSelectionOptionWidget(
                   title: AppLocalizations.of(context)!.delete,
                   icon: Icons.delete,
-                  iconColor: Colors.red,
+                  iconColor: AppColors.redColor,
                   lastItem: true,
                   onTap: () async {
                     Navigator.pop(context);
@@ -420,9 +412,7 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
   }
 
   cameraDriverProofEvent({required BuildContext context, required int index, required int imageIndex, required Map<int, Map<String, dynamic>> productIssueData}) async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.camera,
-    ].request();
+    Map<Permission, PermissionStatus> statuses = await [Permission.camera].request();
     if (Platform.isAndroid) {
       if (!statuses[Permission.camera]!.isGranted) {
         Navigator.pop(context);

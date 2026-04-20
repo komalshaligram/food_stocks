@@ -43,8 +43,7 @@ class InvoiceScreenWidget extends StatelessWidget {
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
             bgColor: AppColors.pageColor,
-            title: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices :
-            AppLocalizations.of(context)!.my_refunds,
+            title: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () {
               Navigator.pop(context);
@@ -76,7 +75,7 @@ class InvoiceScreenWidget extends StatelessWidget {
                     : ListView.builder(
                         itemCount: state.invoiceDetailsList.length,
                         shrinkWrap: true,
-                        physics: const AlwaysScrollableScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         itemBuilder: (context, index) => invoiceList(
                           index: index,
                           invoicesList: state.invoiceDetailsList,

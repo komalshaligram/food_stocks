@@ -62,6 +62,7 @@ class SubUserProfileScreenWidget extends StatelessWidget {
               }),
         ),
         body: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
           child: state.isShimmering && state.isUpdate
               ? const ProfileScreenShimmerWidget(isProfileImage: false)
               : Padding(

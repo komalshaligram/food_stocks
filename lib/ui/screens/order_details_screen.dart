@@ -70,6 +70,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 ? const OrderSummaryScreenShimmerWidget()
                 : AnimationLimiter(
                     child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
                       itemCount: state.orderByIdList.data?.ordersBySupplier?.length,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,

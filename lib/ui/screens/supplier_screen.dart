@@ -69,6 +69,7 @@ class SupplierScreenWidget extends StatelessWidget {
               context.read<SupplierBloc>().add(SupplierEvent.getSuppliersListEvent(context: context));
             },
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: Column(children: [
                 state.isShimmering
                     ? const SupplierScreenShimmerWidget()
