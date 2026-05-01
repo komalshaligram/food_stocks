@@ -81,8 +81,8 @@
   "gallery": "Gallery",
   "camera": "Camera",
   "save": "Save",
-  "companies": "Companies",
-  "all_companies": "All Companies",
+  "brands": "Brands",
+  "all_brands": "All Brands",
   "total_order": "Total Order",
   "delivery_date": "Delivery date",
   "everything_was_received": "Received All",
@@ -436,6 +436,7 @@
   "total_invoice_amount" : "Total invoice amount",
   "not_include_surfaces_price":"This price does not include surfaces price",
   "open":"open",
+  "pay_invoice_text": "Pay Invoice",
   "data_for_form":"Data for forms",
   "client_info": "Client Info",
   "my_agent_code":"My Agent Code",
@@ -702,5 +703,10 @@
   "confirmation_minimum" : "Are you sure you want to set to minimum order?",
   "switch_client_message" : "You are now connected as: ",
   "switch_agent_message" : "You are now connected as an agent",
-  "no_suppliers_found" : "No Suppliers Found"
+  "no_suppliers_found" : "No Suppliers Found",
+  "suppliers": "Suppliers",
+  "invoice_payment": "Invoice payment",
+  "making_pay_with_credit_card": "Pay with credit card",
+  "credit_card_payment_error": "An error occurred while processing the credit card payment for the invoice",
+  "credit_card_payment_success": "Success! Your invoice has been paid using your credit card."
 }

@@ -34,15 +34,17 @@ import '../utils/constants/app_styles.dart';
 import '../utils/constants/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_dialog_with_one_button.dart';
+import '../widget/common_marquee_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_search_widget.dart';
 import '../../ui/utils/push_notification_service.dart';
+import '../widget/common_shimmer_widget.dart';
 import '../widget/multi_supplier_countdown_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/related_product_title.dart';
 import '../widget/search_item_widget.dart';
-import 'build_list_title.dart';
+import '../widget/build_list_title.dart';
 
 class HomeRoute {
   static Widget get route => const HomeScreen();
@@ -57,6 +59,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeBloc()
         ..add(HomeEvent.getProfileDetailsEvent(context: context))
+        ..add(HomeEvent.getSuppliersDataListEvent(context: context))
         ..add(HomeEvent.getProductSalesListEvent(context: context))
         ..add(const HomeEvent.getPreferencesDataEvent())
         ..add(HomeEvent.getCartCountEvent(context: context)),
@@ -67,6 +70,7 @@ class HomeScreen extends StatelessWidget {
 
 class HomeScreenWidget extends StatelessWidget {
   String isNavigation;
+  static bool _noMinimumDialogShownInSession = false;
   HomeScreenWidget({super.key, this.isNavigation = ''});
   ScrollController controller = ScrollController();
 
@@ -75,7 +79,7 @@ class HomeScreenWidget extends StatelessWidget {
     HomeBloc bloc = context.read<HomeBloc>();
     return BlocListener<HomeBloc, HomeState>(
       listenWhen: (previous, current) => previous.cartCount != current.cartCount || previous.isCartCountChange != current.isCartCountChange || previous.messageCount != current.messageCount || previous.isAccountPermissionShimmering != current.isAccountPermissionShimmering || previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey,
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.updateCartCountEvent(context: context));
         }
@@ -86,8 +90,16 @@ class HomeScreenWidget extends StatelessWidget {
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<HomeBloc>(context).add(HomeEvent.updateMaintenanceEvent(context: context));
         }
-        if (state.noMinimumDialogEventKey != null && state.supplierCustomerDetails.isNotEmpty) {
-          allowOrdersWithoutMinimumDialog(context: context, state: state);
+        final isHomeTabActive = context.read<BottomNavBloc>().state.index == 0;
+        if (!isHomeTabActive) {
+          return;
+        }
+        if (!_noMinimumDialogShownInSession && state.noMinimumDialogEventKey != null && state.noMinimumDialogEventKey!.isNotEmpty && state.supplierCustomerDetails.isNotEmpty) {
+          await allowOrdersWithoutMinimumDialog(context: context, state: state);
+          if (context.mounted) {
+            _noMinimumDialogShownInSession = true;
+            context.read<HomeBloc>().add(const HomeEvent.clearNoMinimumDialogTriggerEvent());
+          }
         }
       },
       child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
@@ -96,11 +108,20 @@ class HomeScreenWidget extends StatelessWidget {
           backgroundColor: AppColors.pageColor,
           key: const PageStorageKey('home_screen'),
           body: FocusDetector(
-            onFocusGained: () {
+            onFocusGained: () async {
               bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
+              bloc.add(HomeEvent.getSuppliersDataListEvent(context: context));
               bloc.add(HomeEvent.getProductSalesListEvent(context: context));
               bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
               bloc.add(HomeEvent.getCartCountEvent(context: context));
+              final currentState = bloc.state;
+              if (!_noMinimumDialogShownInSession && currentState.noMinimumDialogEventKey != null && currentState.noMinimumDialogEventKey!.isNotEmpty && currentState.supplierCustomerDetails.isNotEmpty) {
+                await allowOrdersWithoutMinimumDialog(context: context, state: currentState);
+                if (context.mounted) {
+                  _noMinimumDialogShownInSession = true;
+                  context.read<HomeBloc>().add(const HomeEvent.clearNoMinimumDialogTriggerEvent());
+                }
+              }
             },
             child: SafeArea(
               child: Stack(children: [
@@ -124,6 +145,7 @@ class HomeScreenWidget extends StatelessWidget {
                           header: smartRefreshCustomHeaderWidget(),
                           onRefresh: () {
                             bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
+                            bloc.add(HomeEvent.getSuppliersDataListEvent(context: context));
                             bloc.add(HomeEvent.userApproveEvent(context: context));
                             bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
                             bloc.add(HomeEvent.getProductSalesListEvent(context: context));
@@ -147,6 +169,7 @@ class HomeScreenWidget extends StatelessWidget {
                               0.height,
                               pesachBannerWidget(context, state),
                               10.height,
+                              supplierDataListWidget(context, bloc, state),
                               productSaleWidget(context, bloc, state),
                               productRecommendedWidget(context, bloc, state),
                               bottomButtonWidget(context, state),
@@ -240,6 +263,102 @@ class HomeScreenWidget extends StatelessWidget {
                     }),
               ))
           : 0.width;
+
+  Widget supplierDataListWidget(BuildContext context, HomeBloc bloc, HomeState state) => AnimatedCrossFade(
+      firstChild: getScreenWidth(context).width,
+      secondChild: Column(children: [
+        buildListTitles(
+            context: context,
+            title: AppLocalizations.of(context)!.suppliers,
+            subTitle: AppLocalizations.of(context)!.all_suppliers,
+            onTap: () {
+              Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
+            }),
+        SizedBox(
+          width: getScreenWidth(context),
+          height: 130,
+          child: ListView.builder(
+              physics: const ClampingScrollPhysics(),
+              itemCount: state.suppliersDataList.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+              itemBuilder: (context, index) {
+                return buildSupplierListDataItem(
+                    supplierLogo: state.suppliersDataList[index].logo ?? '',
+                    supplierContactName: state.suppliersDataList[index].supplierDetail?.displayName ?? '',
+                    onTap: () {
+                      Navigator.pushNamed(context, RouteDefine.supplierListProductsScreen.name, arguments: {
+                        AppStrings.supplierIdString: state.suppliersDataList[index].id ?? '',
+                        AppStrings.supplierNameString: state.suppliersDataList[index].supplierDetail?.displayName,
+                        AppStrings.minimumOrderText: state.suppliersDataList[index].supplierDetail?.minOrderAmount,
+                      });
+                    });
+              }),
+        ),
+      ]),
+      crossFadeState: state.suppliersDataList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      duration: const Duration(milliseconds: 300));
+
+  Widget buildSupplierListDataItem({required String supplierLogo, required String supplierContactName, required void Function() onTap}) {
+    return Container(
+      height: 150,
+      width: 105,
+      clipBehavior: Clip.hardEdge,
+      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        color: AppColors.whiteColor,
+        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+      ),
+      child: InkWell(
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        onTap: onTap,
+        child: Stack(children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
+            child: supplierLogo.isNotEmpty
+                ? CachedNetworkImage(
+                    imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo",
+                    fit: BoxFit.scaleDown,
+                    height: 110,
+                    width: 105,
+                    placeholder: (context, url) {
+                      return CommonShimmerWidget(child: Container(height: 110, width: 105, decoration: BoxDecoration(color: AppColors.whiteColor)));
+                    },
+                    errorWidget: (context, error, stackTrace) {
+                      return Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105);
+                    })
+                : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 25,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_2),
+              decoration: BoxDecoration(
+                gradient: AppColors.appMainGradientColor,
+                borderRadius: const BorderRadius.only(bottomRight: Radius.circular(AppConstants.radius_10), bottomLeft: Radius.circular(AppConstants.radius_10)),
+              ),
+              child: CommonMarqueeWidget(
+                direction: Axis.horizontal,
+                child: Text(
+                  supplierContactName,
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          )
+        ]),
+      ),
+    );
+  }
 
   Widget productSaleWidget(BuildContext context, HomeBloc bloc, HomeState state) => AnimatedCrossFade(
       firstChild: getScreenWidth(context).width,
@@ -502,61 +621,6 @@ class HomeScreenWidget extends StatelessWidget {
       crossFadeState: state.recommendedProductsList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
       duration: const Duration(milliseconds: 300));
 
-  Widget bottomButtonWidget(BuildContext context, HomeState state) => state.cartCount == 0
-      ? CustomTextIconButtonWidget(
-          width: double.maxFinite,
-          title: AppLocalizations.of(context)!.new_order,
-          onPressed: () {
-            context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
-          },
-          svgImage: AppImagePath.add,
-        )
-      : CustomTextIconButtonWidget(
-          width: double.maxFinite,
-          title: AppLocalizations.of(context)!.my_basket,
-          onPressed: () {
-            context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
-          },
-          svgImage: AppImagePath.cart,
-          cartCount: state.cartCount,
-        );
-
-  Widget messageListWidget(BuildContext context, HomeState state) => state.messageList.isEmpty
-      ? 0.width
-      : Column(mainAxisSize: MainAxisSize.min, children: [
-          titleRowWidget(
-              context: context,
-              title: AppLocalizations.of(context)!.messages,
-              allContentTitle: AppLocalizations.of(context)!.all_messages,
-              onTap: () {
-                Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-              }),
-          10.height,
-          ListView.builder(
-              itemCount: state.messageList.length > 1 ? 2 : 1,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) => messageListItem(
-                  context: context,
-                  title: state.messageList[index].message?.title ?? '',
-                  content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
-                  dateTime: state.messageList[index].updatedAt?.replaceRange(11, 19, '') ?? '',
-                  onTap: () async {
-                    dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
-                      AppStrings.messageDataString: state.messageList[index],
-                      AppStrings.messageIdString: state.messageList[index].id,
-                      AppStrings.isReadMoreString: true,
-                    });
-                    if (messageNewData != null) {
-                      context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(
-                            messageId: messageNewData[AppStrings.messageIdString],
-                            isRead: messageNewData[AppStrings.messageReadString],
-                            isDelete: messageNewData[AppStrings.messageDeleteString],
-                          ));
-                    }
-                  })),
-        ]);
-
   Widget searchWidget(BuildContext context, HomeBloc bloc, HomeState state) => CommonSearchWidget(
       isFilterTap: true,
       isCategoryExpand: state.isCategoryExpand,
@@ -629,7 +693,6 @@ class HomeScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-
                         onQuantityChanged: () {
                           context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -792,96 +855,6 @@ class HomeScreenWidget extends StatelessWidget {
         }
       });
 
-  Widget messageWidget(BuildContext context, HomeBloc bloc, HomeState state) => Container(
-    height: 60,
-    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
-    decoration: BoxDecoration(
-      color: AppColors.whiteColor,
-      boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.blur_10)],
-      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-    ),
-    clipBehavior: Clip.hardEdge,
-    alignment: Alignment.center,
-    child: Row(mainAxisSize: MainAxisSize.min, children: [
-      Container(
-        height: 54,
-        width: 54,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(color: AppColors.iconBGColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
-        child: InkWell(
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-          onTap: () async {
-            dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-            if (messageResult != null) {
-              bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
-            }
-          },
-          child: Stack(fit: StackFit.expand, children: [
-            Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.rotationY(context.rtl ? pi : 0),
-              child: SvgPicture.asset(AppImagePath.message, height: 26, width: 24, fit: BoxFit.scaleDown),
-            ),
-            state.messageCount <= 0
-                ? 0.width
-                : Positioned(
-                top: 8,
-                right: context.rtl ? null : 7,
-                left: context.rtl ? 7 : null,
-                child: Container(
-                  height: 22,
-                  width: 22,
-                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '${state.messageCount <= 99 ? state.messageCount : '99+'}',
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor),
-                  ),
-                ))
-          ]),
-        ),
-      ),
-    ]),
-  );
-
-  void handleMessageOnBackground() {
-    if (isNavigation.isNotEmpty) {
-      PushNotificationService().firebaseMessaging.getInitialMessage().then((message) async {
-        if (message != null) {
-          if (message.data.isNotEmpty) {
-            var data = json.decode(message.data['data'].toString());
-            if (data != null) {
-              FlutterAppBadger.removeBadge();
-              PushNotificationService().showNotification(
-                notiId: message.notification.hashCode,
-                data: data,
-                imageUrl: Platform.isAndroid ? message.notification?.android?.imageUrl ?? '' : message.notification?.apple?.imageUrl ?? '',
-                title: message.notification?.title ?? '',
-                body: message.notification?.body ?? '',
-              );
-            }
-          }
-        }
-      });
-      isNavigation = '';
-    }
-  }
-
-  Widget titleRowWidget({required BuildContext context, required title, required allContentTitle, required void Function() onTap}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-        InkWell(
-          onTap: onTap,
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          child: Text(allContentTitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor, fontWeight: FontWeight.w500)),
-        ),
-      ]),
-    );
-  }
-
   void showProductDetails({
     required BuildContext context,
     required String productId,
@@ -920,99 +893,99 @@ class HomeScreenWidget extends StatelessWidget {
                         child: state.isProductLoading
                             ? const ProductDetailsShimmerWidget()
                             : state.productDetails.isEmpty
-                                ? NoDataBottomSheet(dialogContext: context)
-                                : SingleChildScrollView(
-                                    physics: const ClampingScrollPhysics(),
-                                    controller: ModalScrollController.of(context),
-                                    child: Column(children: [
-                                      CommonProductDetailsWidget(
-                                          isIncludedVat: state.isIncludedVat,
-                                          productDetails: state.productDetails,
-                                          bottleTax: state.bottlePrice,
-                                          isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                          totalBottleDeposit: (state.bottlePrice * (state.productDetails.first.numberOfUnit ?? 1) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
-                                          isBottle: (state.productDetails.first.isBottle ?? false),
-                                          addToOrderTap: () {
-                                            if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
-                                              context.read<HomeBloc>().add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
-                                            } else {
-                                              showMinQtyConfirmDialog(
-                                                context,
-                                                productId,
-                                                state.productDetails.first.sale!.saleMinQuantity.toString(),
-                                                state.productDetails.first.sale!.isMixedSale,
-                                                state.productDetails.first.sale!.sameSaleProducts,
-                                              );
-                                            }
-                                          },
-                                          isLoading: state.isLoading,
-                                          imageOnTap: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (dialogContext) {
-                                                  return Stack(children: [
-                                                    SizedBox(
-                                                      height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
-                                                      width: getScreenWidth(context),
-                                                      child: GestureDetector(
-                                                        onVerticalDragStart: (dragDetails) {},
-                                                        onVerticalDragUpdate: (dragDetails) {},
-                                                        onVerticalDragEnd: (endDetails) {
-                                                          Navigator.pop(dialogContext);
-                                                        },
-                                                        child: PhotoView(
-                                                          imageProvider: NetworkImage('${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}'),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.pop(dialogContext);
-                                                      },
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.only(top: AppConstants.padding_10),
-                                                        child: Icon(Icons.close, color: AppColors.whiteColor),
-                                                      ),
-                                                    ),
-                                                  ]);
-                                                });
-                                          },
-                                          context: context,
-                                          productImages: [state.productDetails.first.mainImage ?? ''],
-                                          productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
-                                          productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                          productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                          scrollController: scrollController,
-                                          productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                                          isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                          recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
-                                              ? state.productDetails.first.sale?.isSale == true
-                                                  ? state.productDetails.first.recommendedConsumerOffer
-                                                  : state.productDetails.first.recommendedRetailPrice
-                                              : '',
-                                          onQuantityChanged: (quantity) {
-                                            context.read<HomeBloc>().add(HomeEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
-                                          },
-                                          onQuantityIncreaseTap: () {
-                                            context.read<HomeBloc>().add(HomeEvent.increaseQuantityOfProduct(context: context1));
-                                          },
-                                          onQuantityDecreaseTap: () {
-                                            if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
-                                              context.read<HomeBloc>().add(HomeEvent.decreaseQuantityOfProduct(context: context1));
-                                            }
-                                          },
-                                          onCloseTap: () {
-                                            context.read<HomeBloc>().add(HomeEvent.getProductSalesListEvent(context: context1));
-                                            context.read<HomeBloc>().add(HomeEvent.getRecommendationProductsListEvent(context: context1));
-                                            Navigator.pop(context);
-                                          }),
-                                      state.isRelatedShimmering
-                                          ? const RelatedProductShimmerWidget()
-                                          : state.relatedProductList.isEmpty
-                                              ? 0.height
-                                              : relatedProductWidget(context1, state.relatedProductList, context, scrollController, isSaleOn),
-                                    ]),
-                                  ),
+                            ? NoDataBottomSheet(dialogContext: context)
+                            : SingleChildScrollView(
+                          physics: const ClampingScrollPhysics(),
+                          controller: ModalScrollController.of(context),
+                          child: Column(children: [
+                            CommonProductDetailsWidget(
+                                isIncludedVat: state.isIncludedVat,
+                                productDetails: state.productDetails,
+                                bottleTax: state.bottlePrice,
+                                isSubUserAddToBasket: state.isSubUserAddToBasket,
+                                totalBottleDeposit: (state.bottlePrice * (state.productDetails.first.numberOfUnit ?? 1) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
+                                isBottle: (state.productDetails.first.isBottle ?? false),
+                                addToOrderTap: () {
+                                  if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
+                                    context.read<HomeBloc>().add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
+                                  } else {
+                                    showMinQtyConfirmDialog(
+                                      context,
+                                      productId,
+                                      state.productDetails.first.sale!.saleMinQuantity.toString(),
+                                      state.productDetails.first.sale!.isMixedSale,
+                                      state.productDetails.first.sale!.sameSaleProducts,
+                                    );
+                                  }
+                                },
+                                isLoading: state.isLoading,
+                                imageOnTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (dialogContext) {
+                                        return Stack(children: [
+                                          SizedBox(
+                                            height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
+                                            width: getScreenWidth(context),
+                                            child: GestureDetector(
+                                              onVerticalDragStart: (dragDetails) {},
+                                              onVerticalDragUpdate: (dragDetails) {},
+                                              onVerticalDragEnd: (endDetails) {
+                                                Navigator.pop(dialogContext);
+                                              },
+                                              child: PhotoView(
+                                                imageProvider: NetworkImage('${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}'),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.pop(dialogContext);
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: AppConstants.padding_10),
+                                              child: Icon(Icons.close, color: AppColors.whiteColor),
+                                            ),
+                                          ),
+                                        ]);
+                                      });
+                                },
+                                context: context,
+                                productImages: [state.productDetails.first.mainImage ?? ''],
+                                productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
+                                productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                                scrollController: scrollController,
+                                productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                isMixedSale: state.productDetails.first.sale!.isMixedSale,
+                                recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
+                                    ? state.productDetails.first.sale?.isSale == true
+                                    ? state.productDetails.first.recommendedConsumerOffer
+                                    : state.productDetails.first.recommendedRetailPrice
+                                    : '',
+                                onQuantityChanged: (quantity) {
+                                  context.read<HomeBloc>().add(HomeEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                },
+                                onQuantityIncreaseTap: () {
+                                  context.read<HomeBloc>().add(HomeEvent.increaseQuantityOfProduct(context: context1));
+                                },
+                                onQuantityDecreaseTap: () {
+                                  if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                    context.read<HomeBloc>().add(HomeEvent.decreaseQuantityOfProduct(context: context1));
+                                  }
+                                },
+                                onCloseTap: () {
+                                  context.read<HomeBloc>().add(HomeEvent.getProductSalesListEvent(context: context1));
+                                  context.read<HomeBloc>().add(HomeEvent.getRecommendationProductsListEvent(context: context1));
+                                  Navigator.pop(context);
+                                }),
+                            state.isRelatedShimmering
+                                ? const RelatedProductShimmerWidget()
+                                : state.relatedProductList.isEmpty
+                                ? 0.height
+                                : relatedProductWidget(context1, state.relatedProductList, context, scrollController, isSaleOn),
+                          ]),
+                        ),
                       );
                     }),
                   );
@@ -1056,29 +1029,29 @@ class HomeScreenWidget extends StatelessWidget {
                       isMixedSale: relatedProductList[i].sale?.isMixedSale,
                       onQuantityChanged: () {
                         context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
-                              context: context,
-                              quantity: state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity.toString(),
-                              productListIndex: 2,
-                              productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                              productSupplierIds: relatedProductList[i].supplierId.toString(),
-                            ));
+                          context: context,
+                          quantity: state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity.toString(),
+                          productListIndex: 2,
+                          productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                          productSupplierIds: relatedProductList[i].supplierId.toString(),
+                        ));
                       },
                       onQuantityIncreaseTap: () {
                         if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity + 1) {
                           context.read<HomeBloc>().add(HomeEvent.increaseListQuantityOfProduct(
-                                context: context,
-                                productListIndex: 2,
-                                productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                                productSupplierIds: relatedProductList[i].supplierId.toString(),
-                              ));
+                            context: context,
+                            productListIndex: 2,
+                            productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                            productSupplierIds: relatedProductList[i].supplierId.toString(),
+                          ));
 
                           context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                context: context,
-                                productId: relatedProductList[i].id.toString(),
-                                productListIndex: 2,
-                                productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                                productSupplierIds: relatedProductList[i].supplierId.toString(),
-                              ));
+                            context: context,
+                            productId: relatedProductList[i].id.toString(),
+                            productListIndex: 2,
+                            productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                            productSupplierIds: relatedProductList[i].supplierId.toString(),
+                          ));
                         } else {
                           showMinMaxQtyConfirmDialog(
                             context: context,
@@ -1097,19 +1070,19 @@ class HomeScreenWidget extends StatelessWidget {
                         if (state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity != 0) {
                           if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity - 1) {
                             context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
-                                  context: context,
-                                  productListIndex: 2,
-                                  productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                                  productSupplierIds: relatedProductList[i].supplierId.toString(),
-                                ));
+                              context: context,
+                              productListIndex: 2,
+                              productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                              productSupplierIds: relatedProductList[i].supplierId.toString(),
+                            ));
 
                             context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                  context: context,
-                                  productId: relatedProductList[i].id.toString(),
-                                  productListIndex: 2,
-                                  productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                                  productSupplierIds: relatedProductList[i].supplierId.toString(),
-                                ));
+                              context: context,
+                              productId: relatedProductList[i].id.toString(),
+                              productListIndex: 2,
+                              productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                              productSupplierIds: relatedProductList[i].supplierId.toString(),
+                            ));
                           } else {
                             showMinMaxQtyConfirmDialog(
                               context: context,
@@ -1144,129 +1117,36 @@ class HomeScreenWidget extends StatelessWidget {
         }));
   }
 
-  Widget messageListItem({required BuildContext context, required String title, required String content, required String dateTime, required void Function() onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        color: AppColors.pageColor,
-        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.rotationY(context.rtl ? pi : 0),
-            child: SvgPicture.asset(AppImagePath.message, fit: BoxFit.scaleDown, height: 16, width: 16, colorFilter: ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn)),
-          ),
-          10.width,
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-              Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w500)),
-              5.height,
-              Text(content, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.blackColor), maxLines: 2, overflow: TextOverflow.ellipsis),
-              3.height,
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(dateTime, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor)),
-                Text(AppLocalizations.of(context)!.read_more, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.mainColor)),
-              ]),
-            ]),
-          ),
-        ]),
-      ),
-    );
-  }
-
-  allowOrdersWithoutMinimumDialog({required BuildContext context, required HomeState state}) {
-    final storage = PageStorage.of(context);
-    if (storage.readState(context, identifier: 'no_min_dialog') == true) {
-      return;
-    }
-
-    final suppliers = state.supplierCustomerDetails;
-    if (suppliers == null || suppliers.isEmpty) return;
-    List<SupplierTimer> validSupplier = [];
-
-    for (var supplier in suppliers) {
-      final rawDate = supplier.lastOrderAboveMinimumAt;
-      if (rawDate == null || rawDate.isEmpty) continue;
-      DateTime? lastOrderUtc;
-      try {
-        lastOrderUtc = DateTime.parse(rawDate);
-      } catch (e) {
-        continue;
-      }
-
-      int hours = supplier.noMinimumOrderHours ?? 0;
-      DateTime endUtc = lastOrderUtc.add(Duration(hours: hours));
-      DateTime nowUtc = DateTime.now().toUtc();
-      Duration remaining = endUtc.difference(nowUtc);
-
-      if (remaining.isNegative || remaining.inSeconds <= 0) continue;
-      validSupplier.add(SupplierTimer(supplierName: supplier.supplierContactName ?? '', remainingSeconds: remaining.inSeconds));
-    }
-
-    if (validSupplier.isEmpty) return;
-    storage.writeState(context, true, identifier: 'no_min_dialog');
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => MultiSupplierCountdownDialog(suppliers: validSupplier, title: state.supplierCustomerDetails[0].text ?? ''),
-    );
-  }
-
-  appUnderMaintenanceDialog({required BuildContext context, required HomeState state}) {
-    if (!state.isDialogOpen) {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context1) => BlocProvider.value(
-                value: context.read<HomeBloc>(),
-                child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-                  HomeBloc bloc = context.read<HomeBloc>();
-                  return CustomOneButtonDialog(
-                      isLoading: state.retryLoading,
-                      directionality: state.language,
-                      title: AppLocalizations.of(context)!.under_maintenance,
-                      positiveTitle: AppLocalizations.of(context)!.retry,
-                      positiveOnTap: () async {
-                        bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context1, isRetryLoading: true));
-                      });
-                }),
-              ));
-    } else {
-      context.read<HomeBloc>().add(HomeEvent.updateMaintenanceEvent(context: context));
-    }
-  }
-
   showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale, List? sameSaleProducts) {
     HomeBloc bloc = context.read<HomeBloc>();
     showDialog(
         context: context,
         builder: (dialogContext) => BlocProvider.value(
-              value: context.read<HomeBloc>(),
-              child: BlocBuilder<HomeBloc, HomeState>(builder: (context1, state) {
-                String mixedSale = '';
-                if (isMixedSale!) {
-                  mixedSale = AppStrings.minSaleText(context, minBox);
-                } else {
-                  mixedSale = AppStrings.otherSaleText(context, minBox);
-                }
-                return CustomDialog(
-                    directionality: state.language,
-                    title: mixedSale,
-                    content: isMixedSale ? sameSaleProducts! : [],
-                    isMixedSale: isMixedSale,
-                    positiveTitle: AppLocalizations.of(context)!.closeText,
-                    negativeTitle: AppLocalizations.of(context)!.addText,
-                    negativeOnTap: () {
-                      Navigator.pop(dialogContext);
-                      bloc.add(HomeEvent.addToCartProductEvent(context: context, productId: productId));
-                    },
-                    positiveOnTap: () {
-                      Navigator.pop(dialogContext);
-                      bloc.add(HomeEvent.getCartCountEvent(context: context));
-                    });
-              }),
-            ));
+          value: context.read<HomeBloc>(),
+          child: BlocBuilder<HomeBloc, HomeState>(builder: (context1, state) {
+            String mixedSale = '';
+            if (isMixedSale!) {
+              mixedSale = AppStrings.minSaleText(context, minBox);
+            } else {
+              mixedSale = AppStrings.otherSaleText(context, minBox);
+            }
+            return CustomDialog(
+                directionality: state.language,
+                title: mixedSale,
+                content: isMixedSale ? sameSaleProducts! : [],
+                isMixedSale: isMixedSale,
+                positiveTitle: AppLocalizations.of(context)!.closeText,
+                negativeTitle: AppLocalizations.of(context)!.addText,
+                negativeOnTap: () {
+                  Navigator.pop(dialogContext);
+                  bloc.add(HomeEvent.addToCartProductEvent(context: context, productId: productId));
+                },
+                positiveOnTap: () {
+                  Navigator.pop(dialogContext);
+                  bloc.add(HomeEvent.getCartCountEvent(context: context));
+                });
+          }),
+        ));
   }
 
   void showMinMaxQtyConfirmDialog({
@@ -1328,5 +1208,246 @@ class HomeScreenWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget bottomButtonWidget(BuildContext context, HomeState state) => state.cartCount == 0
+      ? CustomTextIconButtonWidget(
+    width: double.maxFinite,
+    title: AppLocalizations.of(context)!.new_order,
+    onPressed: () {
+      context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
+    },
+    svgImage: AppImagePath.add,
+  )
+      : CustomTextIconButtonWidget(
+    width: double.maxFinite,
+    title: AppLocalizations.of(context)!.my_basket,
+    onPressed: () {
+      context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
+    },
+    svgImage: AppImagePath.cart,
+    cartCount: state.cartCount,
+  );
+
+  Widget messageListWidget(BuildContext context, HomeState state) => state.messageList.isEmpty
+      ? 0.width
+      : Column(mainAxisSize: MainAxisSize.min, children: [
+    titleRowWidget(
+        context: context,
+        title: AppLocalizations.of(context)!.messages,
+        allContentTitle: AppLocalizations.of(context)!.all_messages,
+        onTap: () {
+          Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+        }),
+    10.height,
+    ListView.builder(
+        itemCount: state.messageList.length > 1 ? 2 : 1,
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemBuilder: (context, index) => messageListItem(
+            context: context,
+            title: state.messageList[index].message?.title ?? '',
+            content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
+            dateTime: state.messageList[index].updatedAt?.replaceRange(11, 19, '') ?? '',
+            onTap: () async {
+              dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
+                AppStrings.messageDataString: state.messageList[index],
+                AppStrings.messageIdString: state.messageList[index].id,
+                AppStrings.isReadMoreString: true,
+              });
+              if (messageNewData != null) {
+                context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(
+                  messageId: messageNewData[AppStrings.messageIdString],
+                  isRead: messageNewData[AppStrings.messageReadString],
+                  isDelete: messageNewData[AppStrings.messageDeleteString],
+                ));
+              }
+            })),
+  ]);
+
+  Widget messageWidget(BuildContext context, HomeBloc bloc, HomeState state) => Container(
+        height: 60,
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.blur_10)],
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+        ),
+        clipBehavior: Clip.hardEdge,
+        alignment: Alignment.center,
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Container(
+            height: 54,
+            width: 54,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: AppColors.iconBGColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
+            child: InkWell(
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+              onTap: () async {
+                dynamic messageResult = await Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+                if (messageResult != null) {
+                  bloc.add(HomeEvent.updateMessageListEvent(messageIdList: messageResult[AppStrings.messageIdListString] ?? ''));
+                }
+              },
+              child: Stack(fit: StackFit.expand, children: [
+                Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                  child: SvgPicture.asset(AppImagePath.message, height: 26, width: 24, fit: BoxFit.scaleDown),
+                ),
+                state.messageCount <= 0
+                    ? 0.width
+                    : Positioned(
+                        top: 8,
+                        right: context.rtl ? null : 7,
+                        left: context.rtl ? 7 : null,
+                        child: Container(
+                          height: 22,
+                          width: 22,
+                          decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, border: Border.all(color: AppColors.whiteColor, width: 1), shape: BoxShape.circle),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '${state.messageCount <= 99 ? state.messageCount : '99+'}',
+                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor),
+                          ),
+                        ))
+              ]),
+            ),
+          ),
+        ]),
+      );
+
+  void handleMessageOnBackground() {
+    if (isNavigation.isNotEmpty) {
+      PushNotificationService().firebaseMessaging.getInitialMessage().then((message) async {
+        if (message != null) {
+          if (message.data.isNotEmpty) {
+            var data = json.decode(message.data['data'].toString());
+            if (data != null) {
+              FlutterAppBadger.removeBadge();
+              PushNotificationService().showNotification(
+                notiId: message.notification.hashCode,
+                data: data,
+                imageUrl: Platform.isAndroid ? message.notification?.android?.imageUrl ?? '' : message.notification?.apple?.imageUrl ?? '',
+                title: message.notification?.title ?? '',
+                body: message.notification?.body ?? '',
+              );
+            }
+          }
+        }
+      });
+      isNavigation = '';
+    }
+  }
+
+  Widget messageListItem({required BuildContext context, required String title, required String content, required String dateTime, required void Function() onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: AppColors.pageColor,
+        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.rotationY(context.rtl ? pi : 0),
+            child: SvgPicture.asset(AppImagePath.message, fit: BoxFit.scaleDown, height: 16, width: 16, colorFilter: ColorFilter.mode(AppColors.blackColor, BlendMode.srcIn)),
+          ),
+          10.width,
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+              Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w500)),
+              5.height,
+              Text(content, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.blackColor), maxLines: 2, overflow: TextOverflow.ellipsis),
+              3.height,
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text(dateTime, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor)),
+                Text(AppLocalizations.of(context)!.read_more, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.mainColor)),
+              ]),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget titleRowWidget({required BuildContext context, required title, required allContentTitle, required void Function() onTap}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+        InkWell(
+          onTap: onTap,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          child: Text(allContentTitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor, fontWeight: FontWeight.w500)),
+        ),
+      ]),
+    );
+  }
+
+  Future<void> allowOrdersWithoutMinimumDialog({required BuildContext context, required HomeState state}) async {
+    if (!context.mounted) return;
+    if (context.read<BottomNavBloc>().state.index != 0) return;
+
+    final storage = PageStorage.of(context);
+    if (storage.readState(context, identifier: 'no_min_dialog') == true) {
+      return;
+    }
+
+    final suppliers = state.supplierCustomerDetails;
+    if (suppliers == null || suppliers.isEmpty) return;
+    List<SupplierTimer> validSupplier = [];
+
+    for (var supplier in suppliers) {
+      final rawDate = supplier.lastOrderAboveMinimumAt;
+      if (rawDate == null || rawDate.isEmpty) continue;
+      DateTime? lastOrderUtc;
+      try {
+        lastOrderUtc = DateTime.parse(rawDate);
+      } catch (e) {
+        continue;
+      }
+
+      int hours = supplier.noMinimumOrderHours ?? 0;
+      DateTime endUtc = lastOrderUtc.add(Duration(hours: hours));
+      DateTime nowUtc = DateTime.now().toUtc();
+      Duration remaining = endUtc.difference(nowUtc);
+
+      if (remaining.isNegative || remaining.inSeconds <= 0) continue;
+      validSupplier.add(SupplierTimer(supplierName: supplier.supplierContactName ?? '', remainingSeconds: remaining.inSeconds));
+    }
+
+    if (validSupplier.isEmpty) return;
+    storage.writeState(context, true, identifier: 'no_min_dialog');
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => MultiSupplierCountdownDialog(suppliers: validSupplier, title: state.supplierCustomerDetails[0].text ?? ''),
+    );
+  }
+
+  appUnderMaintenanceDialog({required BuildContext context, required HomeState state}) {
+    if (!state.isDialogOpen) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context1) => BlocProvider.value(
+                value: context.read<HomeBloc>(),
+                child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+                  HomeBloc bloc = context.read<HomeBloc>();
+                  return CustomOneButtonDialog(
+                      isLoading: state.retryLoading,
+                      directionality: state.language,
+                      title: AppLocalizations.of(context)!.under_maintenance,
+                      positiveTitle: AppLocalizations.of(context)!.retry,
+                      positiveOnTap: () async {
+                        bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context1, isRetryLoading: true));
+                      });
+                }),
+              ));
+    } else {
+      context.read<HomeBloc>().add(HomeEvent.updateMaintenanceEvent(context: context));
+    }
   }
 }

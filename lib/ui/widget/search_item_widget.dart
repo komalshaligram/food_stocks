@@ -84,7 +84,7 @@ class SearchItemWidget extends StatelessWidget {
                       : searchType == SearchTypes.subCategory
                           ? AppLocalizations.of(context)!.sub_categories
                           : searchType == SearchTypes.company
-                              ? AppLocalizations.of(context)!.companies
+                              ? AppLocalizations.of(context)!.brands
                               : searchType == SearchTypes.sale
                                   ? AppLocalizations.of(context)!.sales
                                   : searchType == SearchTypes.supplier

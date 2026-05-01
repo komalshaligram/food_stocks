@@ -6,6 +6,8 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.changeCategoryExpansion({bool? isOpened}) = _changeCategoryExpansion;
 
+  const factory StoreEvent.getSuppliersDataListEvent({required BuildContext context}) = _getSuppliersDataListEvent;
+
   const factory StoreEvent.getProductCategoriesListEvent({required BuildContext context}) = _getProductCategoriesListEvent;
 
   const factory StoreEvent.getProductSalesListEvent({required BuildContext context}) = _getProductSalesListEvent;
@@ -20,12 +22,7 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.getCompaniesListEvent({required BuildContext context}) = _getCompaniesListEvent;
 
-  const factory StoreEvent.getProductDetailsEvent({
-    required BuildContext context,
-    required String productId,
-    required int productListIndex,
-    bool? isBarcode,
-  }) = _getProductDetailsEvent;
+  const factory StoreEvent.getProductDetailsEvent({required BuildContext context, required String productId, required int productListIndex, bool? isBarcode}) = _getProductDetailsEvent;
 
   const factory StoreEvent.increaseQuantityOfProduct({required BuildContext context}) = _increaseQuantityOfProduct;
 
@@ -35,15 +32,9 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.changeNoteOfProduct({required String newNote}) = _changeNoteOfProduct;
 
-  const factory StoreEvent.changeSupplierSelectionExpansionEvent({
-    bool? isSelectSupplier,
-  }) = _changeSupplierSelectionExpansionEvent;
+  const factory StoreEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
-  const factory StoreEvent.supplierSelectionEvent({
-    required int supplierIndex,
-    required BuildContext context,
-    required int supplierSaleIndex,
-  }) = _supplierSelectionEvent;
+  const factory StoreEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory StoreEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 

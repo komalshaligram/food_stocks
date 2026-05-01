@@ -160,9 +160,7 @@ class BasketScreenWidget extends StatelessWidget {
                                   ),
                                 )
                               : !state.isShimmering && state.basketProductList.isEmpty
-                                  ? Expanded(
-                                      child: noDataWidget(AppLocalizations.of(context)!.cart_empty),
-                                    )
+                                  ? Expanded(child: noDataWidget(AppLocalizations.of(context)!.cart_empty))
                                   : const BasketScreenShimmerWidget(),
                       state.basketProductList.isEmpty ? const SizedBox() : totalAmountCard(state, context, bloc)
                     ]),
@@ -317,14 +315,7 @@ class BasketScreenWidget extends StatelessWidget {
     ]);
   }
 
-  Widget basketListItem({
-    required int index,
-    required BuildContext context,
-    required String lowStock,
-    required double productStock,
-    required bool isPesach,
-    required bool isSaleOn,
-  }) {
+  Widget basketListItem({required int index, required BuildContext context, required String lowStock, required double productStock, required bool isPesach, required bool isSaleOn}) {
     return BlocBuilder<BasketBloc, BasketState>(builder: (context, state) {
       BasketBloc bloc = context.read<BasketBloc>();
       return Dismissible(
@@ -359,28 +350,29 @@ class BasketScreenWidget extends StatelessWidget {
                     value: context.read<BasketBloc>(),
                     child: BlocBuilder<BasketBloc, BasketState>(builder: (context, state) {
                       return AbsorbPointer(
-                          absorbing: state.isRemoveProcess ? true : false,
-                          child: CustomDialog(
-                              isProcessing: state.isRemoveProcess,
-                              title: AppLocalizations.of(context)!.you_want_delete_product,
-                              content: const [],
-                              isMixedSale: false,
-                              directionality: state.language,
-                              positiveTitle: AppLocalizations.of(context)!.yes,
-                              negativeTitle: AppLocalizations.of(context)!.no,
-                              positiveOnTap: () {
-                                bloc.add(BasketEvent.removeCartProductEvent(
-                                  isFromDelete: false,
-                                  context: context,
-                                  cartProductId: state.basketProductList[index].cartProductId,
-                                  listIndex: index,
-                                  dialogContext: context,
-                                  totalAmount: state.basketProductList[index].totalPayment!,
-                                ));
-                              },
-                              negativeOnTap: () {
-                                Navigator.pop(context1);
-                              }));
+                        absorbing: state.isRemoveProcess ? true : false,
+                        child: CustomDialog(
+                            isProcessing: state.isRemoveProcess,
+                            title: AppLocalizations.of(context)!.you_want_delete_product,
+                            content: const [],
+                            isMixedSale: false,
+                            directionality: state.language,
+                            positiveTitle: AppLocalizations.of(context)!.yes,
+                            negativeTitle: AppLocalizations.of(context)!.no,
+                            positiveOnTap: () {
+                              bloc.add(BasketEvent.removeCartProductEvent(
+                                isFromDelete: false,
+                                context: context,
+                                cartProductId: state.basketProductList[index].cartProductId,
+                                listIndex: index,
+                                dialogContext: context,
+                                totalAmount: state.basketProductList[index].totalPayment!,
+                              ));
+                            },
+                            negativeOnTap: () {
+                              Navigator.pop(context1);
+                            }),
+                      );
                     }),
                   );
                 });
@@ -611,58 +603,59 @@ class BasketScreenWidget extends StatelessWidget {
               value: context.read<BasketBloc>(),
               child: BlocBuilder<BasketBloc, BasketState>(builder: (context, state) {
                 return AbsorbPointer(
-                    absorbing: state.isRemoveProcess ? true : false,
-                    child: CustomDialog(
-                        title: AppLocalizations.of(context)!.some_products_out_of_stock_Do_you_want_submit_order,
-                        content: const [],
-                        isMixedSale: false,
-                        directionality: state.language,
-                        positiveTitle: AppLocalizations.of(context)!.yes,
-                        isProcessing: state.isRemoveProcess,
-                        negativeTitle: AppLocalizations.of(context)!.no,
-                        positiveOnTap: () async {
-                          if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
-                            Navigator.pop(context1);
-                            if (state.draftReturnExists) {
-                              await showDialog(context: context, builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc));
+                  absorbing: state.isRemoveProcess ? true : false,
+                  child: CustomDialog(
+                      title: AppLocalizations.of(context)!.some_products_out_of_stock_Do_you_want_submit_order,
+                      content: const [],
+                      isMixedSale: false,
+                      directionality: state.language,
+                      positiveTitle: AppLocalizations.of(context)!.yes,
+                      isProcessing: state.isRemoveProcess,
+                      negativeTitle: AppLocalizations.of(context)!.no,
+                      positiveOnTap: () async {
+                        if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
+                          Navigator.pop(context1);
+                          if (state.draftReturnExists) {
+                            await showDialog(context: context, builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc));
+                          } else {
+                            if (state.supplierCount == 1) {
+                              Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
+                                AppStrings.getCartListString: state.cartItemList,
+                                AppStrings.isSupplierSingle: 'Yes',
+                              });
                             } else {
-                              if (state.supplierCount == 1) {
-                                Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
-                                  AppStrings.getCartListString: state.cartItemList,
-                                  AppStrings.isSupplierSingle: 'Yes',
-                                });
-                              } else {
-                                Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
-                                  AppStrings.getCartListString: state.cartItemList,
-                                  AppStrings.isbackString: 'Basket',
-                                  AppStrings.totalAmountString: state.isIncludedVat
-                                      ? formatNumber(
-                                          value: (state.totalPayment +
-                                                  (bottleDepositCalculationWithVat(
-                                                    deposit: state.bottleTax,
-                                                    qty: state.bottleQty?.toDouble() ?? 0,
-                                                    vatPercentage: state.vatPercentage,
-                                                  )))
-                                              .toString(),
-                                          local: AppStrings.hebrewLocal,
-                                        )
-                                      : (formatNumber(
-                                          value: vatCalculation(
-                                            price: state.totalPayment,
-                                            vat: state.vatPercentage,
-                                            qty: state.bottleQty?.toDouble() ?? 0,
-                                            deposit: state.bottleTax,
-                                          ).toStringAsFixed(2),
-                                          local: AppStrings.hebrewLocal,
-                                        ))
-                                });
-                              }
+                              Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
+                                AppStrings.getCartListString: state.cartItemList,
+                                AppStrings.isbackString: 'Basket',
+                                AppStrings.totalAmountString: state.isIncludedVat
+                                    ? formatNumber(
+                                        value: (state.totalPayment +
+                                                (bottleDepositCalculationWithVat(
+                                                  deposit: state.bottleTax,
+                                                  qty: state.bottleQty?.toDouble() ?? 0,
+                                                  vatPercentage: state.vatPercentage,
+                                                )))
+                                            .toString(),
+                                        local: AppStrings.hebrewLocal,
+                                      )
+                                    : (formatNumber(
+                                        value: vatCalculation(
+                                          price: state.totalPayment,
+                                          vat: state.vatPercentage,
+                                          qty: state.bottleQty?.toDouble() ?? 0,
+                                          deposit: state.bottleTax,
+                                        ).toStringAsFixed(2),
+                                        local: AppStrings.hebrewLocal,
+                                      ))
+                              });
                             }
                           }
-                        },
-                        negativeOnTap: () {
-                          Navigator.pop(context1);
-                        }));
+                        }
+                      },
+                      negativeOnTap: () {
+                        Navigator.pop(context1);
+                      }),
+                );
               }),
             ));
   }
@@ -878,7 +871,6 @@ class BasketScreenWidget extends StatelessWidget {
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
                   quantity: state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity,
                   isMixedSale: state.relatedProductList.elementAt(i).sale?.isMixedSale,
-
                   onQuantityChanged: () {
                     context2.read<BasketBloc>().add(BasketEvent.updateListQuantityOfProduct(
                           context: context2,

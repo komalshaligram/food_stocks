@@ -36,6 +36,7 @@ class InvoicePdfScreen extends StatelessWidget {
 class InvoicePdfScreenWidget extends StatelessWidget {
   final Invoice invoiceDetailsList;
   InvoicePdfScreenWidget({super.key, required this.invoiceDetailsList});
+
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
 
@@ -43,82 +44,95 @@ class InvoicePdfScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<InvoicePdfBloc, InvoicePdfState>(builder: (context, state) {
       final bloc = context.read<InvoicePdfBloc>();
-      final String? fullUrl = state.invoiceDetailsList.invoiceLink;
+      final invoice = state.invoiceDetailsList;
+      final String url = invoice.invoiceLink ?? '';
 
-      Widget itemOne(InvoicePdfState state) => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [titleText(context, AppLocalizations.of(context)!.invoice), subTitleValueText(context, invoiceDetailsList.invoiceNumber.toString())],
-              ),
-              invoiceDetailsList.paymentStatus != null ? getPaymentStatusWidget(invoiceDetailsList.paymentStatus!, context) : 0.width
-            ],
-          );
+      Widget itemOne() => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              titleText(context, AppLocalizations.of(context)!.invoice),
+              subTitleValueText(context, invoice.invoiceNumber.toString()),
+            ]),
+            invoice.paymentMethod != null
+                ? Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_2, horizontal: AppConstants.padding_10),
+                    decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(AppConstants.radius_50)),
+                    child: Text(
+                      invoice.paymentMethod.toString() == AppStrings.wallet
+                          ? AppLocalizations.of(context)!.payment_wallet
+                          : invoice.paymentMethod.toString() == AppStrings.creditCard
+                              ? AppLocalizations.of(context)!.payment_credit_card
+                              : invoice.paymentMethod.toString() == AppStrings.bankTransfer
+                                  ? AppLocalizations.of(context)!.payment_bank_transfer
+                                  : AppLocalizations.of(context)!.payment_bank_check,
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.normal),
+                    ),
+                  )
+                : 0.width,
+            invoice.paymentStatus != null ? getPaymentStatusWidget(invoice.paymentStatus!, context) : 0.width
+          ]);
 
-      Widget itemTwo(InvoicePdfState state) => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    titleText(context, AppLocalizations.of(context)!.invoice_date),
-                    subTitleValueText(context, (invoiceDetailsList.invoiceDate ?? '').isNotEmpty ? invoiceDetailsList.invoiceDate!.substring(0, 10) : ''),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    titleText(context, AppLocalizations.of(context)!.due_date),
-                    subTitleValueText(context, (invoiceDetailsList.dueDate ?? '').isNotEmpty ? invoiceDetailsList.dueDate!.substring(0, 10) : '--'),
-                  ],
-                ),
-              ),
-            ],
-          );
+      Widget itemTwo() => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                titleText(context, AppLocalizations.of(context)!.invoice_date),
+                subTitleValueText(
+                  context,
+                  (invoice.invoiceDate ?? '').isNotEmpty ? invoice.invoiceDate!.substring(0, 10) : '',
+                )
+              ]),
+            ),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                titleText(context, AppLocalizations.of(context)!.due_date),
+                subTitleValueText(
+                  context,
+                  (invoice.dueDate ?? '').isNotEmpty ? invoice.dueDate!.substring(0, 10) : '--',
+                )
+              ]),
+            ),
+          ]);
 
-      Widget itemThree(InvoicePdfState state) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Widget itemThree() => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 titleText(context, AppLocalizations.of(context)!.for_order),
                 GestureDetector(
-                  onTap: () async {
-                    Navigator.push(
+                  onTap: () {
+                    if (invoice.orderNumber != null) {
+                      Navigator.push(
                         context,
                         PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
+                            pageBuilder: (_, __, ___) => ProductDetailsScreen(
                                   statusList: state.statusList,
-                                  orderNumber: invoiceDetailsList.orderNumber.toString(),
-                                  orderId: invoiceDetailsList.orderId.toString(),
+                                  orderNumber: invoice.orderNumber.toString(),
+                                  orderId: invoice.orderId.toString(),
                                   isNavigateToProductDetailString: true,
                                 ),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              const begin = Offset(0.0, 1.0);
-                              const end = Offset.zero;
-                              const curve = Curves.bounceIn;
-                              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                              return SlideTransition(position: animation.drive(tween), child: child);
-                            }));
+                            transitionsBuilder: (_, animation, __, child) {
+                              return SlideTransition(
+                                position: animation.drive(Tween(
+                                  begin: const Offset(0, 1),
+                                  end: Offset.zero,
+                                ).chain(CurveTween(curve: Curves.easeInOut))),
+                                child: child,
+                              );
+                            }),
+                      );
+                    }
                   },
-                  child: invoiceDetailsList.orderNumber == null
+                  child: invoice.orderNumber == null
                       ? const Text('---')
                       : Stack(alignment: Alignment.bottomLeft, children: [
                           Text(
-                            invoiceDetailsList.orderNumber.toString(),
-                            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            invoice.orderNumber.toString(),
+                            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor),
                           ),
                           Positioned(
                             bottom: 0,
                             left: 0,
                             right: 0,
-                            child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
+                            child: Container(height: 1, color: AppColors.notificationColor),
                           ),
                         ]),
                 ),
@@ -127,10 +141,20 @@ class InvoicePdfScreenWidget extends StatelessWidget {
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 titleText(context, AppLocalizations.of(context)!.total_invoice_amount),
-                Directionality(textDirection: TextDirection.ltr, child: subTitleValueText(context, formatSignedNumber(invoiceDetailsList.invoiceAmount))),
+                Directionality(textDirection: TextDirection.ltr, child: subTitleValueText(context, formatSignedNumber(invoice.invoiceAmount))),
               ]),
             ),
           ]);
+
+      Widget pdfSection() {
+        if (state.hasValidLink == null) {
+          return const SizedBox.shrink();
+        }
+        if (state.hasValidLink == false || !bloc.isValidLink(url)) {
+          return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
+        }
+        return Container(color: Colors.white, height: getScreenHeight(context) * 0.7, child: SfPdfViewer.network(url, key: _pdfViewerKey, controller: _pdfViewerController));
+      }
 
       return Scaffold(
         backgroundColor: AppColors.pageColor,
@@ -138,76 +162,62 @@ class InvoicePdfScreenWidget extends StatelessWidget {
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
             bgColor: AppColors.pageColor,
-            title: context.read<InvoicePdfBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
+            title: bloc.screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
             iconData: Icons.arrow_back_ios_sharp,
-            onTap: () {
-              Navigator.pop(context);
-            },
+            onTap: () => Navigator.pop(context),
             trailingWidget: GestureDetector(
-              onTap: () async {
-                Share.share('${invoiceDetailsList.invoiceLink}');
+              onTap: () {
+                if (url.isNotEmpty) {
+                  Share.share(url);
+                }
               },
               child: Icon(Icons.download_outlined, color: AppColors.mainColor),
             ),
           ),
         ),
-        body: Builder(builder: (_) {
-          if (state.hasValidLink == null) {
-            return const SizedBox.shrink();
-          }
-          return SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: SafeArea(
-              child: Stack(children: [
-                Column(children: [
-                  Container(
-                    margin: const EdgeInsets.all(AppConstants.padding_8),
-                    padding: const EdgeInsets.all(AppConstants.padding_8),
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      border: Border.all(color: AppColors.borderColor),
-                      borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-                    ),
-                    child: Column(children: [
-                      itemOne(state),
-                      const DividerWidget(height: 20.0),
-                      itemTwo(state),
-                      const DividerWidget(height: 20.0),
-                      itemThree(state),
-                    ]),
+        body: SafeArea(
+          child: Stack(children: [
+            SingleChildScrollView(
+              child: Column(children: [
+                Container(
+                  margin: const EdgeInsets.all(AppConstants.padding_8),
+                  padding: const EdgeInsets.all(AppConstants.padding_8),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    border: Border.all(color: AppColors.borderColor),
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                   ),
-                  15.height,
-                  state.hasValidLink == false || !bloc.isValidLink(fullUrl)
-                      ? Center(child: Text(AppLocalizations.of(context)!.no_invoice_file))
-                      : Container(
-                          color: Colors.white,
-                          height: getScreenHeight(context) * 0.7,
-                          child: SfPdfViewer.network(invoiceDetailsList.invoiceLink ?? '', key: _pdfViewerKey, controller: _pdfViewerController),
-                        ),
-                ]),
-                state.isDownloading
-                    ? Container(
-                        height: getScreenHeight(context),
-                        width: getScreenWidth(context),
-                        color: const Color.fromARGB(20, 0, 0, 0),
-                        alignment: Alignment.center,
-                        child: Container(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
-                          alignment: Alignment.center,
-                          child: Column(mainAxisSize: MainAxisSize.min, children: [
-                            CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_10),
-                            10.height,
-                            Text('${state.downloadProgress}%', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
-                          ]),
-                        ),
-                      )
-                    : 0.width,
+                  child: Column(children: [
+                    itemOne(),
+                    const DividerWidget(height: 20),
+                    itemTwo(),
+                    const DividerWidget(height: 20),
+                    itemThree(),
+                  ]),
+                ),
+                15.height,
+                pdfSection(),
               ]),
             ),
-          );
-        }),
+            if (state.isDownloading)
+              Container(
+                height: getScreenHeight(context),
+                width: getScreenWidth(context),
+                color: const Color.fromARGB(20, 0, 0, 0),
+                alignment: Alignment.center,
+                child: Container(
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    CupertinoActivityIndicator(color: AppColors.mainColor),
+                    10.height,
+                    Text('${state.downloadProgress}%', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
+                  ]),
+                ),
+              ),
+          ]),
+        ),
       );
     });
   }

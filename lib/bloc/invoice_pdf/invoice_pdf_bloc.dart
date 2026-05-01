@@ -59,7 +59,7 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
 
     try {
       final res = await DioClient(event.context).post(
-        AppUrlEndPoints.getRefundInvoiceCopy,
+        AppUrlEndPoints.getOrderInvoiceCopy,
         data: RefundInvoiceReqModel(
           clientId: preferencesHelper!.getUserId(),
           invoiceNumber: int.parse(state.invoiceDetailsList.invoiceNumber.toString()),

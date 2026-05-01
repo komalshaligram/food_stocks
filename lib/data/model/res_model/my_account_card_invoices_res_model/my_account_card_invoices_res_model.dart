@@ -50,6 +50,10 @@ class MyCardInvoice with _$MyCardInvoice {
     @JsonKey(name: "orderId") String? orderId,
     @JsonKey(name: "orderNumber") String? orderNumber,
     @JsonKey(name: "invoiceAmount") String? invoiceAmount,
+    @JsonKey(name: "cardNumber") String? cardNumber,
+    @JsonKey(name: "paymentMethod") String? paymentMethod,
+    @JsonKey(name: "supplierId") String? supplierId,
+    @JsonKey(name: "customerCreditcardToken") String? customerCreditcardToken,
   }) = _MyCardInvoice;
 
   factory MyCardInvoice.fromJson(Map<String, dynamic> json) => _$MyCardInvoiceFromJson(json);

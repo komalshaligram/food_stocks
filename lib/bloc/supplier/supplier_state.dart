@@ -3,7 +3,7 @@ part of 'supplier_bloc.dart';
 @freezed
 class SupplierState with _$SupplierState {
   const factory SupplierState({
-    required List<Datum> suppliersList,
+    required List<SupplierListData> suppliersDataList,
     required String search,
     required bool isShimmering,
     required int pageNum,
@@ -13,7 +13,7 @@ class SupplierState with _$SupplierState {
   }) = _SupplierState;
 
   factory SupplierState.initial() => SupplierState(
-        suppliersList: [],
+        suppliersDataList: [],
         search: '',
         isShimmering: false,
         pageNum: 0,

@@ -6,6 +6,7 @@ import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/my_accounting_card/my_accounting_card_bloc.dart';
+import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
 import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../data/model/res_model/refund_invoice_common_res/refund_invoice_common.dart';
@@ -42,6 +43,11 @@ class MyAccountingCardScreen extends StatelessWidget {
 
 class MyAccountingCardScreenContent extends StatelessWidget {
   const MyAccountingCardScreenContent({super.key});
+
+  void _refreshAccountingData(BuildContext context) {
+    context.read<MyAccountingCardBloc>().add(MyAccountingCardEvent.getClientInvoicesFromRivchitDataEvent(context: context));
+    context.read<MyAccountingCardBloc>().add(MyAccountingCardEvent.getClientRefundInvoicesFromRivchitDataEvent(context: context));
+  }
 
   String _formatDate(DateTime? date) {
     if (date == null) return '';
@@ -192,90 +198,93 @@ class MyAccountingCardScreenContent extends StatelessWidget {
           final toDate = isInvoicesTab ? state.invoicesTo : state.refundsTo;
           final periodText = '${_formatDate(fromDate)} – ${_formatDate(toDate)}';
 
-          return Scaffold(
-            backgroundColor: AppColors.pageColor,
-            appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(AppConstants.containerHeight_60),
-                child: AppBar(
-                  backgroundColor: AppColors.pageColor,
-                  leading: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(Icons.arrow_back_ios_sharp)),
-                  title: state.isShimmering
-                      ? CommonShimmerWidget(
-                          child: Container(
-                            margin: const EdgeInsets.all(AppConstants.padding_10),
-                            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-                            ),
-                            child: const SizedBox(height: 30, width: 150),
-                          ),
-                        )
-                      : Container(
-                          decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_10)),
-                          padding: const EdgeInsets.all(AppConstants.padding_10),
-                          child: IntrinsicWidth(
-                            child: Row(mainAxisSize: MainAxisSize.min, children: [
-                              Text(
-                                '${AppLocalizations.of(context)!.remaining_to_pay}: ',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
+          return PopScope(
+            canPop: true,
+            child: Scaffold(
+              backgroundColor: AppColors.pageColor,
+              appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(AppConstants.containerHeight_60),
+                  child: AppBar(
+                    backgroundColor: AppColors.pageColor,
+                    leading: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(Icons.arrow_back_ios_sharp)),
+                    title: state.isShimmering
+                        ? CommonShimmerWidget(
+                            child: Container(
+                              margin: const EdgeInsets.all(AppConstants.padding_10),
+                              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+                              decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+                                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                               ),
-                              Directionality(
-                                textDirection: widgets.TextDirection.ltr,
-                                child: Text(
-                                  formatSignedNumber(state.clientBalance),
+                              child: const SizedBox(height: 30, width: 150),
+                            ),
+                          )
+                        : Container(
+                            decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_10)),
+                            padding: const EdgeInsets.all(AppConstants.padding_10),
+                            child: IntrinsicWidth(
+                              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                                Text(
+                                  '${AppLocalizations.of(context)!.remaining_to_pay}: ',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
                                 ),
-                              ),
-                            ]),
-                          ),
-                        ),
-                )),
-            body: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.zero,
-                child: state.isShimmering
-                    ? const OrderSummaryScreenShimmerWidget(containerHeight: 140)
-                    : Column(children: [
-                        Padding(padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8), child: _topSquareTabBar(context, state)),
-                        8.height,
-                        GestureDetector(
-                          onTap: () => _showDatePickerBottomSheet(context),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_8),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_15),
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.circular(AppConstants.radius_10),
-                                border: Border.all(color: AppColors.borderColor),
-                              ),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                Text(
-                                  '${AppLocalizations.of(context)!.date_range}: $periodText',
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.greyColor),
+                                Directionality(
+                                  textDirection: widgets.TextDirection.ltr,
+                                  child: Text(
+                                    formatSignedNumber(state.clientBalance),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
+                                  ),
                                 ),
-                                Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.greyColor, size: AppConstants.font_20),
                               ]),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 300),
-                            child: state.selectedTabIndex == 0 ? _invoicesTab(context, state) : _refundsTab(context, state),
+                  )),
+              body: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.zero,
+                  child: state.isShimmering
+                      ? const OrderSummaryScreenShimmerWidget(containerHeight: 140)
+                      : Column(children: [
+                          Padding(padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8), child: _topSquareTabBar(context, state)),
+                          8.height,
+                          GestureDetector(
+                            onTap: () => _showDatePickerBottomSheet(context),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_8),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_15),
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.circular(AppConstants.radius_10),
+                                  border: Border.all(color: AppColors.borderColor),
+                                ),
+                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                  Text(
+                                    '${AppLocalizations.of(context)!.date_range}: $periodText',
+                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.greyColor),
+                                  ),
+                                  Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.greyColor, size: AppConstants.font_20),
+                                ]),
+                              ),
+                            ),
                           ),
-                        ),
-                      ]),
+                          Expanded(
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              child: state.selectedTabIndex == 0 ? _invoicesTab(context, state) : _refundsTab(context, state),
+                            ),
+                          ),
+                        ]),
+                ),
               ),
             ),
           );
@@ -351,7 +360,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
         controller: state.invoicesScrollController,
         itemCount: state.invoiceCardList.length,
         itemBuilder: (context, index) {
-          Widget itemOne(MyAccountingCardState state) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Widget itemOne(MyAccountingCardState state) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   titleText(context, AppLocalizations.of(context)!.invoice),
                   GestureDetector(
@@ -366,6 +375,8 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                         orderNumber: state.invoiceCardList[index].orderNumber,
                         orderId: state.invoiceCardList[index].orderId,
                         rivchitApiKey: state.invoiceCardList[index].rivchitApiKey,
+                        cardNumber: state.invoiceCardList[index].cardNumber,
+                        paymentMethod: state.invoiceCardList[index].paymentMethod,
                       );
 
                       final invoiceData = Invoice(
@@ -378,6 +389,8 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                         orderNumber: refundInvoiceData.orderNumber,
                         orderId: state.invoiceCardList[index].orderId,
                         rivchitApiKey: state.invoiceCardList[index].rivchitApiKey,
+                        cardNumber: state.invoiceCardList[index].cardNumber,
+                        paymentMethod: state.invoiceCardList[index].paymentMethod,
                       );
 
                       Navigator.pushNamed(context, RouteDefine.invoicePdfScreen.name, arguments: {
@@ -388,6 +401,23 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                     child: invoiceOrderNumberWidget(state.invoiceCardList[index].invoiceNumber.toString()),
                   ),
                 ]),
+                state.invoiceCardList[index].paymentMethod != null
+                    ? Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_2, horizontal: AppConstants.padding_10),
+                        decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(AppConstants.radius_50)),
+                        child: Text(
+                          state.invoiceCardList[index].paymentMethod.toString() == AppStrings.wallet
+                              ? AppLocalizations.of(context)!.payment_wallet
+                              : state.invoiceCardList[index].paymentMethod.toString() == AppStrings.creditCard
+                                  ? AppLocalizations.of(context)!.payment_credit_card
+                                  : state.invoiceCardList[index].paymentMethod.toString() == AppStrings.bankTransfer
+                                      ? AppLocalizations.of(context)!.payment_bank_transfer
+                                      : AppLocalizations.of(context)!.payment_bank_check,
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.normal),
+                        ),
+                      )
+                    : 0.width,
                 state.invoiceCardList[index].paymentStatus != null ? getPaymentStatusWidget(state.invoiceCardList[index].paymentStatus!, context) : 0.width
               ]);
 
@@ -429,6 +459,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                                     orderNumber: state.invoiceCardList[index].orderNumber.toString(),
                                     orderId: state.invoiceCardList[index].orderId.toString(),
                                     isNavigateToProductDetailString: true,
+                                    isFromBasket: false,
                                   ),
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                 const begin = Offset(0.0, 1.0);
@@ -462,7 +493,54 @@ class MyAccountingCardScreenContent extends StatelessWidget {
               border: Border.all(color: AppColors.borderColor),
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
             ),
-            child: Column(children: [itemOne(state), const DividerWidget(height: 20.0), itemTwo(state), const DividerWidget(height: 20.0), itemThree(state)]),
+            child: Column(children: [
+              itemOne(state),
+              const DividerWidget(height: 20.0),
+              itemTwo(state),
+              const DividerWidget(height: 20.0),
+              itemThree(state),
+              const DividerWidget(height: 20.0),
+              state.invoiceCardList[index].paymentStatus == AppStrings.openText
+                  ? GestureDetector(
+                      onTap: () {
+                        if (state.invoiceCardList[index].cardNumber != null && state.invoiceCardList[index].customerCreditcardToken != null) {
+                          Navigator.pushNamed(
+                            context,
+                            RouteDefine.invoicePaymentScreen.name,
+                            arguments: {AppStrings.invoiceData: state.invoiceCardList[index]},
+                          ).then((value) {
+                            if (value == true && context.mounted) {
+                              _refreshAccountingData(context);
+                            }
+                          });
+                        } else {
+                          Navigator.pushNamed(
+                            context,
+                            RouteDefine.creditCardDetailsScreen.name,
+                            arguments: {
+                              AppStrings.termsConditionParamString: const TermsConditionReqModel(),
+                              AppStrings.isFromRegFlow: false,
+                              AppStrings.isPaymentToNext: true,
+                              AppStrings.invoiceData: state.invoiceCardList[index],
+                            },
+                          ).then((value) {
+                            if (value == true && context.mounted) {
+                              _refreshAccountingData(context);
+                            }
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_10),
+                        decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_10)),
+                        child: Text(
+                          AppLocalizations.of(context)!.pay_invoice_text,
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.normal),
+                        ),
+                      ),
+                    )
+                  : 0.width
+            ]),
           );
         });
   }
@@ -588,6 +666,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                                     orderNumber: order.orderNumber ?? '',
                                     orderId: order.orderId ?? '',
                                     isNavigateToProductDetailString: true,
+                                    isFromBasket: false,
                                   ),
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                 const begin = Offset(0.0, 1.0);
@@ -652,21 +731,6 @@ class MyAccountingCardScreenContent extends StatelessWidget {
           ]),
         );
       });
-
-  Widget invoiceOrderNumberWidget(String title) => Stack(alignment: Alignment.bottomLeft, children: [
-        Text(
-          title,
-          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
-        ),
-      ]);
 
   Widget _totalRefundWidget(BuildContext context, String totalAmount, String remainingAmount) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(

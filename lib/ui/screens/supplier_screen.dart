@@ -47,13 +47,12 @@ class SupplierScreenWidget extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: AppLocalizations.of(context)!.suppliers,
-            iconData: Icons.arrow_back_ios_sharp,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+              bgColor: AppColors.pageColor,
+              title: AppLocalizations.of(context)!.suppliers,
+              iconData: Icons.arrow_back_ios_sharp,
+              onTap: () {
+                Navigator.pop(context);
+              }),
         ),
         body: SafeArea(
           child: SmartRefresher(
@@ -73,7 +72,7 @@ class SupplierScreenWidget extends StatelessWidget {
               child: Column(children: [
                 state.isShimmering
                     ? const SupplierScreenShimmerWidget()
-                    : state.suppliersList.isEmpty
+                    : state.suppliersDataList.isEmpty
                         ? Container(
                             height: getScreenHeight(context) - 80,
                             width: getScreenWidth(context),
@@ -83,20 +82,21 @@ class SupplierScreenWidget extends StatelessWidget {
                         : GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: state.suppliersList.length,
+                            itemCount: state.suppliersDataList.length,
                             padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
                             itemBuilder: (context, index) => buildSupplierListItem(
                                 index: index,
                                 context: context,
-                                supplierLogo: state.suppliersList[index].logo ?? '',
-                                supplierName: state.suppliersList[index].supplierDetail?.companyName ?? '',
+                                supplierLogo: state.suppliersDataList[index].logo ?? '',
+                                supplierName: state.suppliersDataList[index].supplierDetail?.displayName ?? '',
                                 onTap: () {
-                                  Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
-                                    AppStrings.supplierIdString: state.suppliersList[index].id ?? '',
+                                  Navigator.pushNamed(context, RouteDefine.supplierListProductsScreen.name, arguments: {
+                                    AppStrings.supplierIdString: state.suppliersDataList[index].id ?? '',
+                                    AppStrings.supplierNameString: state.suppliersDataList[index].supplierDetail?.displayName,
+                                    AppStrings.minimumOrderText: state.suppliersDataList[index].supplierDetail?.minOrderAmount,
                                   });
-                                }),
-                          ),
+                                })),
               ]),
             ),
           ),

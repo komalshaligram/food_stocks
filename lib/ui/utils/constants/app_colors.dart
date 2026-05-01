@@ -33,6 +33,7 @@ class AppColors {
   static Color statusInProgressColor = const Color(0xff564AB1);
   static Color statusPartiallyClosedColor = const Color(0xffF76707);
   static Color statusNoMinimumColor = const Color(0xffF08C00);
+  static Color paymentMethodColor = const Color(0xffA16207);
 
   static Gradient appMainGradientColor = const LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [Color(0xff1D5499), Color(0xff8BC53F)]);
   static Gradient connectGradientColor = LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [AppColors.whiteColor, AppColors.whiteColor]);

@@ -83,6 +83,6 @@ class RecommendationProductsState with _$RecommendationProductsState {
         language: AppStrings.hebrewString,
         isCartCountChange: false,
         messageCount: 0,
-    clubAgentId: '',
+        clubAgentId: '',
       );
 }

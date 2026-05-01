@@ -76,7 +76,12 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
           final response = await DioClient(event.context).post('${AppUrlEndPoints.deliveryConfirmUrl}${event.orderId}', data: deliveryConfirmRequest);
           if (response[AppStrings.statusString] == 200) {
             emit(state.copyWith(isLoading: false));
-            Navigator.pushReplacementNamed(event.context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+            if (event.isFromBasket! == true) {
+              Navigator.pushReplacementNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
+            } else {
+              Navigator.pushReplacementNamed(event.context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+            }
+
             CustomSnackBar.showSnackBar(
               context: event.context,
               title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),

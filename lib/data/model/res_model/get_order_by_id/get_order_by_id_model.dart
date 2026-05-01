@@ -195,6 +195,8 @@ class InvoiceDetails with _$InvoiceDetails {
     String? orderId,
     int? orderNumber,
     @JsonKey(name: 'invoiceAmount') String? invoiceAmount,
+    @JsonKey(name: 'paymentMethod') String? paymentMethod,
+    // @JsonKey(name: 'invoiceAmount') String? invoiceAmount,
   }) = _InvoiceDetails;
 
   factory InvoiceDetails.fromJson(Map<String, dynamic> json) => _$InvoiceDetailsFromJson(json);

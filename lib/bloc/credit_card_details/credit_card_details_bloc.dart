@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,10 +30,9 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
 
       if (event is _getArgumentEvent) {
         termsConditionReqModel = event.termsReqModel;
-        emit(state.copyWith(isPaymentFail: event.isPaymentFail, termsModel: event.termsReqModel, isFromRegFlow: event.isFromRegFlow));
+        emit(state.copyWith(isPaymentFail: event.isPaymentFail, termsModel: event.termsReqModel, isFromRegFlow: event.isFromRegFlow, invoiceData: event.invoiceData));
       } else if (event is _addCreditCardEvent) {
         emit(state.copyWith(isLoading: true));
-
         try {
           CreditCardReqModel reqMap = CreditCardReqModel(
             cardNum: state.creditCardNumberController.text.trim(),
@@ -42,10 +42,25 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
           final res = await DioClient(event.context).post(AppUrlEndPoints.updateCreditCardUrl + preferences.getUserId(), data: reqMap);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             if (state.isFromRegFlow) {
-              add(CreditCardDetailsEvent.termsConditionApiEvent(context: event.context));
+              add(CreditCardDetailsEvent.termsConditionApiEvent(context: event.context, isPaymentToNext: event.isPaymentToNext));
             } else {
               preferences.setPaymentMethod(method: AppStrings.creditCard);
-              Navigator.pop(event.context);
+              if (event.isPaymentToNext == true) {
+                emit(state.copyWith(isLoading: false));
+                final updatedCardNumber = res['data']['clientDetail']['creditCard']['cardNumber'];
+                final routeArgs = ModalRoute.of(event.context)?.settings.arguments as Map?;
+                final isFromInvoicePayment = routeArgs?[AppStrings.isFromInvoicePayment] ?? false;
+                if (isFromInvoicePayment == true) {
+                  Navigator.pop(event.context, {AppStrings.creditCardNumberString: updatedCardNumber});
+                } else {
+                  Navigator.pushNamed(event.context, RouteDefine.invoicePaymentScreen.name, arguments: {
+                    AppStrings.invoiceData: state.invoiceData,
+                    AppStrings.creditCardNumberString: updatedCardNumber,
+                  });
+                }
+              } else {
+                Navigator.pop(event.context);
+              }
             }
           } else {
             emit(state.copyWith(isLoading: false));
@@ -93,29 +108,28 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             return value == null;
           });
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrlEndPoints.termsConditionUrl,
-            formData: FormData.fromMap(
-              {
-                AppStrings.userIdString: termsConditionReqModel.id,
-                AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
-                AppStrings.owner1FullNameString: termsConditionReqModel.owner1FullName,
-                AppStrings.owner1IsraelIdString: termsConditionReqModel.owner1IsraelId,
-                AppStrings.owner2FullNameString: termsConditionReqModel.owner2FullName,
-                AppStrings.owner2IsraelIdString: termsConditionReqModel.owner2IsraelId,
-                AppStrings.guarantee1FullNameString: termsConditionReqModel.guarantee1FullName,
-                AppStrings.guarantee1IsraelIdString: termsConditionReqModel.guarantee1IsraelId,
-                AppStrings.guarantee1AddressString: termsConditionReqModel.guarantee1Address,
-                AppStrings.guarantee1PhoneNumberString: termsConditionReqModel.guarantee1PhoneNumber,
-                AppStrings.guarantee2FullNameString: termsConditionReqModel.guarantee2FullName,
-                AppStrings.guarantee2IsraelIdString: termsConditionReqModel.guarantee2IsraelId,
-                AppStrings.guarantee2AddressString: termsConditionReqModel.guarantee2Address,
-                AppStrings.guarantee2PhoneNumberString: termsConditionReqModel.guarantee2PhoneNumber,
-                AppStrings.branchNumberString: termsConditionReqModel.branchNumber,
-                AppStrings.accountNumberString: termsConditionReqModel.accountNumber,
-                AppStrings.paymentType: termsConditionReqModel.paymentType
-              },
-            ),
-          );
+              path: AppUrlEndPoints.termsConditionUrl,
+              formData: FormData.fromMap(
+                {
+                  AppStrings.userIdString: termsConditionReqModel.id,
+                  AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
+                  AppStrings.owner1FullNameString: termsConditionReqModel.owner1FullName,
+                  AppStrings.owner1IsraelIdString: termsConditionReqModel.owner1IsraelId,
+                  AppStrings.owner2FullNameString: termsConditionReqModel.owner2FullName,
+                  AppStrings.owner2IsraelIdString: termsConditionReqModel.owner2IsraelId,
+                  AppStrings.guarantee1FullNameString: termsConditionReqModel.guarantee1FullName,
+                  AppStrings.guarantee1IsraelIdString: termsConditionReqModel.guarantee1IsraelId,
+                  AppStrings.guarantee1AddressString: termsConditionReqModel.guarantee1Address,
+                  AppStrings.guarantee1PhoneNumberString: termsConditionReqModel.guarantee1PhoneNumber,
+                  AppStrings.guarantee2FullNameString: termsConditionReqModel.guarantee2FullName,
+                  AppStrings.guarantee2IsraelIdString: termsConditionReqModel.guarantee2IsraelId,
+                  AppStrings.guarantee2AddressString: termsConditionReqModel.guarantee2Address,
+                  AppStrings.guarantee2PhoneNumberString: termsConditionReqModel.guarantee2PhoneNumber,
+                  AppStrings.branchNumberString: termsConditionReqModel.branchNumber,
+                  AppStrings.accountNumberString: termsConditionReqModel.accountNumber,
+                  AppStrings.paymentType: termsConditionReqModel.paymentType
+                },
+              ));
           TermsConditionResModel response = TermsConditionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));

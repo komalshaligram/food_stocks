@@ -34,7 +34,7 @@ class ShipmentVerificationScreen extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => ShipmentVerificationBloc(),
-      child: ShipmentVerificationScreenWidget(args: args, status: args?[AppStrings.deliveryStatusString]),
+      child: ShipmentVerificationScreenWidget(args: args, status: args?[AppStrings.deliveryStatusString], isBasket: args?[AppStrings.isFromBasketScreen]),
     );
   }
 }
@@ -42,7 +42,8 @@ class ShipmentVerificationScreen extends StatelessWidget {
 class ShipmentVerificationScreenWidget extends StatefulWidget {
   final Map? args;
   final String? status;
-  const ShipmentVerificationScreenWidget({required this.args, super.key, required this.status});
+  final bool? isBasket;
+  const ShipmentVerificationScreenWidget({required this.args, super.key, required this.status, required this.isBasket});
 
   @override
   State<ShipmentVerificationScreenWidget> createState() => _ShipmentVerificationScreenWidgetState();
@@ -376,6 +377,7 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
                       driverDeliveryDocumentsImages: widget.args?[AppStrings.driverDeliveryDocumentsImages],
                       sentReturnData: (widget.args?[AppStrings.sentReturnData] as List<dynamic>?)?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ?? [],
                       orderIssueReturnId: widget.args?[AppStrings.orderIssueReturnId],
+                      isFromBasket: widget.isBasket,
                     ),
                   );
                 },

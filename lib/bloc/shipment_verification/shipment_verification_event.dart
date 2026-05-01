@@ -15,6 +15,7 @@ class ShipmentVerificationEvent with _$ShipmentVerificationEvent {
     required List<String> driverDeliveryDocumentsImages,
     required List<Map<String, dynamic>> sentReturnData,
     required String? orderIssueReturnId,
+    required bool? isFromBasket,
   }) = _deliveryConfirmEvent;
 
   factory ShipmentVerificationEvent.signDeleteEvent() = _signDeleteEvent;

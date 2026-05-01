@@ -448,7 +448,7 @@ String formatInvoiceDate(String date) {
 }
 
 Widget getPaymentStatusWidget(String status, BuildContext context) => Container(
-      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppConstants.radius_50),
         color: status == AppStrings.openText
@@ -569,3 +569,20 @@ Widget imageNotAvailableWidget(double size) => Container(
 Widget loaderWidget(double size) => Center(
       child: SizedBox(width: size, height: size, child: CupertinoActivityIndicator(color: AppColors.blackColor)),
     );
+
+Widget invoiceOrderNumberWidget(String title) => Stack(alignment: Alignment.bottomLeft, children: [
+  Text(
+    title,
+    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
+    maxLines: 2,
+    overflow: TextOverflow.ellipsis,
+  ),
+  Positioned(
+    bottom: 0,
+    left: 0,
+    right: 0,
+    child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
+  ),
+]);
+
+

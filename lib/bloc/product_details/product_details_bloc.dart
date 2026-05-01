@@ -109,7 +109,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           selectedIndices.add(event.index);
         }
 
-        final totalSelectableProducts = state.orderBySupplierProduct.products?.where((p) => !(p.isBottle ?? false) || (p.sku == "5321"))?.length ?? 0;
+        final totalSelectableProducts = state.orderBySupplierProduct.products?.where((p) => !(p.isBottle ?? false) || (p.sku == "5321")).length ?? 0;
         final isAllSelected = selectedIndices.length == totalSelectableProducts && totalSelectableProducts > 0;
         emit(state.copyWith(productListIndex: selectedIndices, isAllCheck: isAllSelected));
       } else if (event is _checkAllEvent) {

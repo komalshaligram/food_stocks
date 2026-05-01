@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
+import '../../data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
@@ -36,6 +37,7 @@ import '../../data/model/res_model/insert_cart_res_model/insert_cart_res_model.d
 import '../../data/model/res_model/order_count/get_order_count_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
+import '../../data/model/res_model/suppliers_list_response_model/suppliers_list_response_model.dart';
 import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../data/model/search_model/search_model.dart';
@@ -68,20 +70,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (preferences.getGuestUser()) {
       } else {
         if (event is _getPreferencesDataEvent) {
-          emit(
-            state.copyWith(
-              isIncludedVat: preferences.getIsIncludedVat(),
-              isSaleOn: preferences.getShowSale(),
-              isSubUserSeeWallet: preferences.getCanSeeWallet(),
-              isSubUserAddToBasket: preferences.getCanAddToBasket(),
-              userImageUrl: preferences.getUserImageUrl(),
-              userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
-              messageCount: preferences.getMessageCount(),
-              cartCount: preferences.getCartCount(),
-              bottlePrice: preferences.getBottleTax(),
-              clubAgentId: preferences.getClubAgentId(),
-            ),
-          );
+          emit(state.copyWith(
+            isIncludedVat: preferences.getIsIncludedVat(),
+            isSaleOn: preferences.getShowSale(),
+            isSubUserSeeWallet: preferences.getCanSeeWallet(),
+            isSubUserAddToBasket: preferences.getCanAddToBasket(),
+            userImageUrl: preferences.getUserImageUrl(),
+            userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
+            messageCount: preferences.getMessageCount(),
+            cartCount: preferences.getCartCount(),
+            bottlePrice: preferences.getBottleTax(),
+            clubAgentId: preferences.getClubAgentId(),
+          ));
         } else if (event is _getProductDetailsEvent) {
           emit(state.copyWith(isCartCountChange: false));
           add(const HomeEvent.removeRelatedProductEvent());
@@ -1154,6 +1154,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } catch (_) {}
         } else if (event is _getRecommendationProductsListEvent) {
           emit(state.copyWith(noMinimumDialogEventKey: null));
+        } else if (event is _clearNoMinimumDialogTriggerEvent) {
+          emit(state.copyWith(noMinimumDialogEventKey: null));
+        } else if (event is _getSuppliersDataListEvent) {
+          try {
+            emit(state.copyWith(isShimmering: true));
+            final res = await DioClient(event.context).post(
+              AppUrlEndPoints.getSuppliersList,
+              data: const SuppliersReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson(),
+            );
+            SuppliersListResponseModel response = SuppliersListResponseModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              emit(state.copyWith(suppliersDataList: response.data?.supplierList ?? [], isShimmering: false, context: event.context));
+            } else {
+              emit(state.copyWith(isShimmering: false, context: event.context));
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.success,
+              );
+            }
+          } on ServerException {
+            emit(state.copyWith(isShimmering: false));
+          } catch (exc) {
+            emit(state.copyWith(isShimmering: false));
+          }
         }
       }
     });

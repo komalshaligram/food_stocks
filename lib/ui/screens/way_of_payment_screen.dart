@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
+import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/way_of_payment/way_of_payment_bloc.dart';
@@ -95,6 +96,9 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                     Navigator.pushNamed(context, RouteDefine.creditCardDetailsScreen.name, arguments: {
                       AppStrings.termsConditionParamString: state.termsReqModel,
                       AppStrings.isFromRegFlow: true,
+                      AppStrings.isPaymentToNext: false,
+                      AppStrings.invoiceData : const MyCardInvoice()
+
                     });
                   }
                 }

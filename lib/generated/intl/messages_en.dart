@@ -63,8 +63,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_code_length_error": MessageLookupByLibrary.simpleMessage(
       "The Agent code must be 6 digit.",
     ),
+    "all_brands": MessageLookupByLibrary.simpleMessage("All Brands"),
     "all_categories": MessageLookupByLibrary.simpleMessage("All Categories"),
-    "all_companies": MessageLookupByLibrary.simpleMessage("All Companies"),
     "all_messages": MessageLookupByLibrary.simpleMessage("All Messages"),
     "all_recommended": MessageLookupByLibrary.simpleMessage("All Recommended"),
     "all_sales": MessageLookupByLibrary.simpleMessage("All Sales"),
@@ -124,6 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "brand_permissions": MessageLookupByLibrary.simpleMessage(
       "Brands permissions",
     ),
+    "brands": MessageLookupByLibrary.simpleMessage("Brands"),
     "business_certificate": MessageLookupByLibrary.simpleMessage(
       "Business Certificate",
     ),
@@ -229,7 +230,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "comax_order_error": MessageLookupByLibrary.simpleMessage(
       "Something went wrong.",
     ),
-    "companies": MessageLookupByLibrary.simpleMessage("Companies"),
     "companies_not_available": MessageLookupByLibrary.simpleMessage(
       "Companies not available",
     ),
@@ -271,8 +271,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "credit_card_number": MessageLookupByLibrary.simpleMessage(
       "Credit card number",
     ),
+    "credit_card_payment_error": MessageLookupByLibrary.simpleMessage(
+      "An error occurred while processing the credit card payment for the invoice",
+    ),
     "credit_card_payment_failed": MessageLookupByLibrary.simpleMessage(
       "Credit Card Payment failed.",
+    ),
+    "credit_card_payment_success": MessageLookupByLibrary.simpleMessage(
+      "Success! Your invoice has been paid using your credit card.",
     ),
     "currency": MessageLookupByLibrary.simpleMessage("₪"),
     "current_password_wrong": MessageLookupByLibrary.simpleMessage(
@@ -536,6 +542,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invoice_number": MessageLookupByLibrary.simpleMessage("Refund invoice"),
     "invoice_open": MessageLookupByLibrary.simpleMessage("Open"),
+    "invoice_payment": MessageLookupByLibrary.simpleMessage("Invoice payment"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("Invoice status"),
     "invoice_type": MessageLookupByLibrary.simpleMessage("Invoice type"),
     "invoices": MessageLookupByLibrary.simpleMessage("Invoices"),
@@ -587,6 +594,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Product has low quantity.",
     ),
     "main": MessageLookupByLibrary.simpleMessage("Main"),
+    "making_pay_with_credit_card": MessageLookupByLibrary.simpleMessage(
+      "Pay with credit card",
+    ),
     "manage_credit_card": MessageLookupByLibrary.simpleMessage(
       "Manage credit card",
     ),
@@ -798,6 +808,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "partially_closed_text": MessageLookupByLibrary.simpleMessage(
       "Partially Closed",
     ),
+    "pay_invoice_text": MessageLookupByLibrary.simpleMessage("Pay Invoice"),
     "pay_with_bank_check": MessageLookupByLibrary.simpleMessage(
       "Pay with bank check",
     ),

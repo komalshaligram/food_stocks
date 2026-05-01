@@ -169,6 +169,8 @@ class AppStrings {
   static const isFromRegFlow = 'isFromRegFlow';
   static const owner = 'owner';
   static const isFreelancer = 'isFreelancer';
+  static const isPaymentToNext = 'isPaymentToNext';
+  static const invoiceData = 'invoiceData';
 
   //payment types
   static const wallet = 'wallet';
@@ -228,6 +230,13 @@ class AppStrings {
   static const partiallyClosedText = "Partially Closed";
   static const clubAgentIdText = "6989e25de86c03f1e8144404";
   static const clubAgentCodeText = "998616";
+  static const minimumOrderText = "Minimum Order";
+  static const brandListText = "brandList";
+  static const brandIdText = "brandId";
+  static const brandNameText = "brandName";
+  static const isFromInvoicePayment = "isFromInvoicePayment";
+  static const isFromBasketScreen = "isFromBasketScreen";
+
 
   static String minSaleText(BuildContext context, String minBox) => '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
 

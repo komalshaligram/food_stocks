@@ -71,6 +71,6 @@ class ProductSaleState with _$ProductSaleState {
         isCartCountChange: false,
         cartCount: 0,
         messageCount: 0,
-    clubAgentId: '',
+        clubAgentId: '',
       );
 }

@@ -68,6 +68,7 @@ class HomeState with _$HomeState {
     required String? noMinimumDialogEventKey,
     required String? clubAgentId,
     required List<SupplierCustomerDetails> supplierCustomerDetails,
+    required List<SupplierListData> suppliersDataList,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -141,5 +142,6 @@ class HomeState with _$HomeState {
         noMinimumDialogEventKey: '',
         clubAgentId: '',
         supplierCustomerDetails: [],
+        suppliersDataList: [],
       );
 }

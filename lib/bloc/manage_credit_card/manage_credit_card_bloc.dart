@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +53,8 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
         Navigator.pushNamed(event.context, RouteDefine.creditCardDetailsScreen.name, arguments: {
           AppStrings.isPaymentFail: false,
           AppStrings.isFromRegFlow: false,
+          AppStrings.isPaymentToNext: false,
+          AppStrings.invoiceData : const MyCardInvoice()
         });
       } else if (event is _deleteCreditCardEvent) {
         try {

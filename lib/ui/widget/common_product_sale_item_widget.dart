@@ -24,7 +24,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final bool isGuestUser;
   final double? imageHeight;
   final double? imageWidth;
-  final double? originalPrice;
+  final dynamic? originalPrice;
   final String lowStock;
   final bool? isPesach;
   final String productStock;

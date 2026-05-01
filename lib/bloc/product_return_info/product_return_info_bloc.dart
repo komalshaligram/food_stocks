@@ -314,6 +314,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
               AppStrings.isUpdateParamString: false,
               'status': state.isFromPending,
             });
+
           } else if (resModel.status == AppConstants.code_403) {
             emit(state.copyWith(isShimmer: false));
             await showDialog(

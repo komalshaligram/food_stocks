@@ -3,9 +3,8 @@ part of 'recommendation_products_bloc.dart';
 @freezed
 class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
-  const factory RecommendationProductsEvent.getRecommendationProductsEvent({
-    required BuildContext context,
-  }) = _getRecommendationProductsEvent;
+
+  const factory RecommendationProductsEvent.getRecommendationProductsEvent({required BuildContext context}) = _getRecommendationProductsEvent;
 
   const factory RecommendationProductsEvent.getProductDetailsEvent({
     required BuildContext context,
@@ -24,11 +23,7 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
-  const factory RecommendationProductsEvent.supplierSelectionEvent({
-    required int supplierIndex,
-    required BuildContext context,
-    required int supplierSaleIndex,
-  }) = _supplierSelectionEvent;
+  const factory RecommendationProductsEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory RecommendationProductsEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 

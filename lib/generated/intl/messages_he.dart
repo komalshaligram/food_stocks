@@ -64,8 +64,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "agent_code_length_error": MessageLookupByLibrary.simpleMessage(
       "מספר סוכן חייב להיות 6 ספרות.",
     ),
+    "all_brands": MessageLookupByLibrary.simpleMessage("כל מותגים"),
     "all_categories": MessageLookupByLibrary.simpleMessage("כל הקטגוריות"),
-    "all_companies": MessageLookupByLibrary.simpleMessage("כל החברות"),
     "all_messages": MessageLookupByLibrary.simpleMessage("כל ההודעות"),
     "all_recommended": MessageLookupByLibrary.simpleMessage("כל המומלצים"),
     "all_sales": MessageLookupByLibrary.simpleMessage("כל המבצעים"),
@@ -125,6 +125,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bottle_deposit": MessageLookupByLibrary.simpleMessage("פקדון בקבוק"),
     "branch_number": MessageLookupByLibrary.simpleMessage("מספר סניף"),
     "brand_permissions": MessageLookupByLibrary.simpleMessage("הרשאות מותגים"),
+    "brands": MessageLookupByLibrary.simpleMessage("מותגים"),
     "business_certificate": MessageLookupByLibrary.simpleMessage("תעודת עסק"),
     "business_details": MessageLookupByLibrary.simpleMessage("פרטי עסק"),
     "business_id": MessageLookupByLibrary.simpleMessage("ח.פ."),
@@ -186,7 +187,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "הרשאות קטגוריות",
     ),
     "change_credit_card": MessageLookupByLibrary.simpleMessage(
-      "שנה את כרטיס האשראי שלך",
+      "שינוי כרטיס אשראי",
     ),
     "change_successful": MessageLookupByLibrary.simpleMessage(
       "שינוי סיסמה בוצע בהצלחה",
@@ -222,7 +223,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "חשבונית קומקס לא קיימת",
     ),
     "comax_order_error": MessageLookupByLibrary.simpleMessage("משהו השתבש"),
-    "companies": MessageLookupByLibrary.simpleMessage("חברות"),
     "companies_not_available": MessageLookupByLibrary.simpleMessage(
       "חברות לא קיימות",
     ),
@@ -260,8 +260,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "לא נמצא כרטיס אשראי",
     ),
     "credit_card_number": MessageLookupByLibrary.simpleMessage("מספר כרטיס"),
+    "credit_card_payment_error": MessageLookupByLibrary.simpleMessage(
+      "אירעה שגיאה בעת עיבוד התשלום בכרטיס האשראי עבור החשבונית",
+    ),
     "credit_card_payment_failed": MessageLookupByLibrary.simpleMessage(
       "תשלום בכרטיס אשראי נכשל",
+    ),
+    "credit_card_payment_success": MessageLookupByLibrary.simpleMessage(
+      "הצלחה! החשבונית שלך שולמה באמצעות כרטיס האשראי שלך.",
     ),
     "currency": MessageLookupByLibrary.simpleMessage("₪"),
     "current_password_wrong": MessageLookupByLibrary.simpleMessage(
@@ -495,6 +501,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "invoice_number": MessageLookupByLibrary.simpleMessage("חשבונית זיכוי"),
     "invoice_open": MessageLookupByLibrary.simpleMessage("פתוח"),
+    "invoice_payment": MessageLookupByLibrary.simpleMessage("תשלום חשבונית"),
     "invoice_status": MessageLookupByLibrary.simpleMessage("סטטוס חשבונית"),
     "invoice_type": MessageLookupByLibrary.simpleMessage("סוג חשבונית"),
     "invoices": MessageLookupByLibrary.simpleMessage("חשבוניות"),
@@ -540,6 +547,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "logout": MessageLookupByLibrary.simpleMessage("התנתק בהצלחה"),
     "low_quantity": MessageLookupByLibrary.simpleMessage("כמות המוצר נמוכה."),
     "main": MessageLookupByLibrary.simpleMessage("ראשי"),
+    "making_pay_with_credit_card": MessageLookupByLibrary.simpleMessage(
+      "ביצוע תשלום בכרטיס אשראי",
+    ),
     "manage_credit_card": MessageLookupByLibrary.simpleMessage(
       "ניהול כרטיס אשראי",
     ),
@@ -741,6 +751,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "כמה משטחים אתה מחזיר ?",
     ),
     "partially_closed_text": MessageLookupByLibrary.simpleMessage("זוכה חלקית"),
+    "pay_invoice_text": MessageLookupByLibrary.simpleMessage("תשלום חשבונית"),
     "pay_with_bank_check": MessageLookupByLibrary.simpleMessage("תשלום בשיק"),
     "pay_with_bank_transfer": MessageLookupByLibrary.simpleMessage(
       "תשלום בהעברה בנקאית",

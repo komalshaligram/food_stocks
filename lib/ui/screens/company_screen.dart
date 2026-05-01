@@ -47,7 +47,7 @@ class CompanyScreenWidget extends StatelessWidget {
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
             bgColor: AppColors.pageColor,
-            title: AppLocalizations.of(context)?.companies ?? '',
+            title: AppLocalizations.of(context)?.brands ?? '',
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () {
               Navigator.pop(context);
@@ -99,8 +99,7 @@ class CompanyScreenWidget extends StatelessWidget {
                                     AppStrings.companyName: state.companiesList[index].brandName ?? '',
                                     AppStrings.companyLogo: state.companiesList[index].brandLogo ?? '',
                                   });
-                                }),
-                          ),
+                                })),
               ]),
             ),
           ),
@@ -109,13 +108,7 @@ class CompanyScreenWidget extends StatelessWidget {
     });
   }
 
-  Widget buildCompanyListItem({
-    required int index,
-    required String companyLogo,
-    required String companyName,
-    required BuildContext context,
-    required void Function() onTap,
-  }) {
+  Widget buildCompanyListItem({required int index, required String companyLogo, required String companyName, required BuildContext context, required void Function() onTap}) {
     return Container(
       height: getScreenHeight(context),
       width: getScreenWidth(context),

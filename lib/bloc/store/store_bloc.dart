@@ -19,6 +19,7 @@ import '../../data/model/res_model/message_count_res_model/message_count_res_mod
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../data/model/res_model/product_sales_res_model/product_sales_res_model.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
+import '../../data/model/res_model/suppliers_list_response_model/suppliers_list_response_model.dart';
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
@@ -1112,6 +1113,29 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
         } catch (_) {}
+      } else if (event is _getSuppliersDataListEvent) {
+        try {
+          emit(state.copyWith(isShimmering: true));
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.getSuppliersList,
+            data: const SuppliersReqModel(pageNum: 1, pageLimit: AppConstants.defaultPageLimit).toJson(),
+          );
+          SuppliersListResponseModel response = SuppliersListResponseModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            emit(state.copyWith(suppliersDataList: response.data?.supplierList ?? [], isShimmering: false, context: event.context));
+          } else {
+            emit(state.copyWith(isShimmering: false, context: event.context));
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              type: SnackBarType.success,
+            );
+          }
+        } on ServerException {
+          emit(state.copyWith(isShimmering: false));
+        } catch (exc) {
+          emit(state.copyWith(isShimmering: false));
+        }
       }
     });
   }

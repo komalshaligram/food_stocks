@@ -77,7 +77,7 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                   iconData: Icons.arrow_back_ios_sharp,
                   onTap: () {
                     if (state.backString == 'Basket') {
-                      Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: 'basketScreen'});
+                      Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
                     }
                   }),
             ),

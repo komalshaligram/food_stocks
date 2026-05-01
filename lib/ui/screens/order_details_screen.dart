@@ -100,6 +100,7 @@ class OrderDetailsScreenWidget extends StatelessWidget {
                 isNavigateToProductDetailString: false,
                 productData: orderByIdList.data!.ordersBySupplier![index],
                 statusList: state.statusData,
+                isFromBasket: false,
               ),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 const begin = Offset(0.0, 1.0);

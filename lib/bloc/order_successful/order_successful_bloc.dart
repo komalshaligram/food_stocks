@@ -95,7 +95,7 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
             },
           );
         } else {
-          Navigator.pushReplacementNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: 'basketScreen'});
+          Navigator.pushReplacementNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
         }
       }
     });

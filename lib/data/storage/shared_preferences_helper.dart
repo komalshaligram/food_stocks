@@ -31,6 +31,7 @@ class SharedPreferencesHelper {
   static const String emailId = 'userEmailId';
   static const String guestUser = 'guestUser';
   static const String companyProductGrid = 'isCompanyProductGrid';
+  static const String brandProductGrid = 'isBrandProductGrid';
   static const String supplierProductGrid = 'isSupplierProductGrid';
   static const String planogramProductGrid = 'isPlanogramProductGrid';
   static const String recommendationProductGrid = 'isrecommendationProductGrid';
@@ -301,6 +302,10 @@ class SharedPreferencesHelper {
     await prefs.setBool(companyProductGrid, isCompanyProductGrid);
   }
 
+  Future<void> setBrandGridListView({required bool isBrandProductGrid}) async {
+    await prefs.setBool(brandProductGrid, isBrandProductGrid);
+  }
+
   Future<void> setSupplierProductGridListView({required bool isSupplierProductGrid}) async {
     await prefs.setBool(supplierProductGrid, isSupplierProductGrid);
   }
@@ -563,6 +568,10 @@ class SharedPreferencesHelper {
 
   bool getCompanyProductGrid() {
     return prefs.getBool(companyProductGrid) ?? true;
+  }
+
+  bool getBrandProductGrid() {
+    return prefs.getBool(brandProductGrid) ?? true;
   }
 
   bool getSupplierProductGrid() {

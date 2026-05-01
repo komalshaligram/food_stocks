@@ -86,7 +86,7 @@ class ReturnListWidget extends StatelessWidget {
         deleteProductDialog(context: context, returnProductId: state.returnProductId);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
         decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
         child: Text(AppLocalizations.of(context)!.delete, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
       ),

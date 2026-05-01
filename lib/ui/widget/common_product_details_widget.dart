@@ -433,7 +433,8 @@ class CommonProductDetailsWidget extends StatelessWidget {
                           : const IgnorePointer(),
                       !isSubUserAddToBasket ? 13.height : 0.width,
                       isSubUserAddToBasket
-                          ? CommonProductDetailsButton(
+                          ?
+                      CommonProductDetailsButton(
                               isLoading: isLoading,
                               isSupplierAvailable: true,
                               productStock: (productStock.toString()),

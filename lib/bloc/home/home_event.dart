@@ -4,6 +4,8 @@ part of 'home_bloc.dart';
 class HomeEvent with _$HomeEvent {
   const factory HomeEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
 
+  const factory HomeEvent.getSuppliersDataListEvent({required BuildContext context}) = _getSuppliersDataListEvent;
+
   const factory HomeEvent.getProductSalesListEvent({required BuildContext context}) = _getProductSalesListEvent;
 
   const factory HomeEvent.getProductDetailsEvent({
@@ -109,4 +111,5 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.allowOrdersWithoutMinimumEvent({required BuildContext context}) = _allowOrdersWithoutMinimumEvent;
 
+  const factory HomeEvent.clearNoMinimumDialogTriggerEvent() = _clearNoMinimumDialogTriggerEvent;
 }

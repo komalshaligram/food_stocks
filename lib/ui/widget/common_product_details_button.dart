@@ -16,9 +16,11 @@ class CommonProductDetailsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return !isSupplierAvailable || productStock == '0' || productStock == '0.0'
+    return
+      !isSupplierAvailable || productStock == '0' || productStock == '0.0'
         ? 0.height
-        : Container(
+        :
+    Container(
             height: 70,
             margin: EdgeInsets.zero,
             width: getScreenWidth(context),

@@ -42,6 +42,7 @@ class ProductDetailsScreen extends StatelessWidget {
   final OrdersBySupplier productData;
   final OrderDatum orderData;
   final List<StatusData> statusList;
+  final bool isFromBasket;
 
   const ProductDetailsScreen({
     super.key,
@@ -52,6 +53,7 @@ class ProductDetailsScreen extends StatelessWidget {
     this.orderData = const OrderDatum(),
     this.statusList = const <StatusData>[],
     this.issue = '',
+    this.isFromBasket = false,
   });
 
   @override
@@ -64,7 +66,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 orderId: orderId,
               )
             : ProductDetailsEvent.getProductDataEvent(context: context, orderId: orderId, orderData: orderData, orderBySupplierProduct: productData, statusList: statusList)),
-      child: ProductDetailsScreenWidget(orderId: orderId, orderNumber: orderNumber, statusList: statusList),
+      child: ProductDetailsScreenWidget(orderId: orderId, orderNumber: orderNumber, statusList: statusList, isFromBasket: isFromBasket),
     );
   }
 }
@@ -73,7 +75,8 @@ class ProductDetailsScreenWidget extends StatefulWidget {
   final String orderId;
   final String orderNumber;
   final List<StatusData> statusList;
-  const ProductDetailsScreenWidget({super.key, required this.orderId, required this.orderNumber, required this.statusList});
+  const ProductDetailsScreenWidget({super.key, required this.orderId, required this.orderNumber, required this.statusList, required this.isFromBasket});
+  final bool isFromBasket;
 
   @override
   State<ProductDetailsScreenWidget> createState() => _ProductDetailsScreenWidgetState();
@@ -95,7 +98,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           ]),
           state.orderData.orderstatus != null
               ? Container(
-                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppConstants.radius_50),
                     color: getStatusColor(widget.statusList, state.orderData.orderstatus?.statusName ?? ''),
@@ -147,7 +150,14 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           ),
         ]);
 
-    Widget invoiceRefundAmountItem({required String title, required String value, required orderId, int? orderNumber, required InvoiceDetails orderData}) {
+    Widget invoiceRefundAmountItem({
+      required String title,
+      required String value,
+      required orderId,
+      int? orderNumber,
+      required InvoiceDetails orderData,
+      String? paymentMethod,
+    }) {
       return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(width: MediaQuery.of(context).size.width / 2.8, child: titleText(context, title)),
         GestureDetector(
@@ -163,6 +173,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 orderNumber: orderData.orderNumber,
                 orderId: orderData.orderId,
                 rivchitApiKey: orderData.rivchitApiKey,
+                paymentMethod: paymentMethod,
               );
               final invoiceData = Invoice(
                 invoiceLink: refundInvoiceData.invoiceLink,
@@ -174,6 +185,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 orderNumber: refundInvoiceData.orderNumber.toString(),
                 orderId: refundInvoiceData.orderId,
                 rivchitApiKey: refundInvoiceData.rivchitApiKey,
+                paymentMethod: refundInvoiceData.paymentMethod,
               );
 
               Navigator.pushNamed(
@@ -381,6 +393,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         orderId: state.orderData.id,
                                         orderNumber: state.orderData.orderNumber,
                                         orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
+                                        paymentMethod: state.orderData.paymentMethod,
                                       ),
                                       10.height,
                                       invoiceRefundAmountItem(
@@ -389,6 +402,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                         orderId: state.orderData.id,
                                         orderNumber: state.orderData.orderNumber,
                                         orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
+                                        paymentMethod: state.orderData.paymentMethod,
                                       )
                                     ]),
                                     const DividerWidget(height: 20.0),
@@ -523,6 +537,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             AppStrings.statusList: widget.statusList,
                             AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
                             AppStrings.availableSurfaceQuantityToReturn: state.orderData.availableSurfaceQuantityToReturn,
+                            AppStrings.isFromBasketScreen: widget.isFromBasket
                           });
                         } else {
                           Navigator.pushNamed(context, RouteDefine.shipmentVerificationScreen.name, arguments: {
@@ -543,6 +558,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             AppStrings.sentReturnData: [],
                             AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
                             AppStrings.availableSurfaceQuantityToReturn: state.orderData.availableSurfaceQuantityToReturn,
+                            AppStrings.isFromBasketScreen: widget.isFromBasket
                           });
                         }
                       }

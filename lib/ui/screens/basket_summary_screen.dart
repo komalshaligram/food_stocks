@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/basket_summary/basket_summary_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
+import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
@@ -44,7 +45,6 @@ class BasketSummaryScreen extends StatelessWidget {
           isSupplierSingle: args?[AppStrings.isSupplierSingle],
           totalSupplier: args?[AppStrings.totalSupplier],
         )),
-      // ..add(BasketSummaryEvent.getProfileDetailsEvent(context: context)),
       child: const BasketSummaryScreenWidget(),
     );
   }
@@ -92,6 +92,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                                       isNavigateToProductDetailString: false,
                                       productData: response.data!.ordersBySupplier![0],
                                       orderData: response.data!.orderData![0],
+                                      isFromBasket: true,
                                     ),
                                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                   const begin = Offset(0.0, 1.0);
@@ -141,7 +142,11 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                     if (c) {
                       bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
                     } else {
-                      Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
+                      Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {
+                        AppStrings.isPaymentFail: state.isPaymentFail,
+                        AppStrings.isPaymentToNext: false,
+                        AppStrings.invoiceData: const MyCardInvoice(),
+                      });
                     }
                   },
                   positiveOnTap1: () {
@@ -266,7 +271,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
         if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
           bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.creditCard));
         } else {
-          Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
+          Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.invoiceData: const MyCardInvoice(),});
         }
       },
       positiveOnTap1: () {
@@ -303,7 +308,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
         if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
           bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.creditCard));
         } else {
-          Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail});
+          Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.invoiceData: const MyCardInvoice()});
         }
       },
       positiveOnTap1: () {
@@ -455,7 +460,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
               },
               positiveOnTap1: () {
                 Navigator.of(context1, rootNavigator: true).pop();
-
                 Future.delayed(const Duration(milliseconds: 200), () {
                   bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.wallet));
                 });
@@ -555,7 +559,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
     return BlocBuilder<BasketSummaryBloc, BasketSummaryState>(builder: (context, state) {
       final totalSavingsValue = double.tryParse(state.tempList[index].totalSavings.toString()) ?? 0.0;
       final savingsSalesValue = totalSavingsValue < 0 ? '\u200E-${totalSavingsValue.abs().toStringAsFixed(2)}₪' : '\u200E${totalSavingsValue.toStringAsFixed(2)}₪';
-
       return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
           margin: const EdgeInsets.all(AppConstants.padding_10),

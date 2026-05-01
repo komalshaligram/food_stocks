@@ -16,7 +16,7 @@ class CommonSaleListView extends StatelessWidget {
   final double discountedPrice;
   final String productImage;
   final String productName;
-  final double price;
+  final dynamic price;
   final String productStock;
   final void Function() onButtonTap;
   final bool isGuestUser;

@@ -138,6 +138,7 @@ class SupplierCustomerDetails with _$SupplierCustomerDetails {
     @JsonKey(name: "customerComaxId") String? customerComaxId,
     @JsonKey(name: "customerRivchitId") dynamic customerRivchitId,
     @JsonKey(name: "customerCreditcardToken") String? customerCreditcardToken,
+    @JsonKey(name: "supplierlogo") String? supplierlogo,
     @JsonKey(name: "costumerStatusName") String? costumerStatusName,
     @JsonKey(name: "costumerStatusNumber") dynamic costumerStatusNumber,
     @JsonKey(name: "supplierContactName") String? supplierContactName,

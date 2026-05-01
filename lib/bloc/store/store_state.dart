@@ -55,6 +55,7 @@ class StoreState with _$StoreState {
     required String? buttonEnglishText,
     required String? buttonHebrewText,
     required String? clubAgentId,
+    required List<SupplierListData> suppliersDataList,
   }) = _StoreState;
 
   factory StoreState.initial() => StoreState(
@@ -116,5 +117,6 @@ class StoreState with _$StoreState {
         buttonEnglishText: '',
         buttonHebrewText: '',
         clubAgentId: '',
+        suppliersDataList: [],
       );
 }

@@ -54,7 +54,7 @@ class ReturnListWidget extends StatelessWidget {
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () {
               if (args?[AppStrings.isbackString] == 'Basket') {
-                Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: 'basketScreen'});
+                Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
               } else if (args?[AppStrings.isbackString] == 'orderSummary') {
                 Navigator.pop(context);
               } else {
@@ -66,7 +66,7 @@ class ReturnListWidget extends StatelessWidget {
                 bloc.add(ReturnEvent.newRequestEvent(context: context));
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_8),
+                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
                 decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
                 child: Text(AppLocalizations.of(context)!.new_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
               ),

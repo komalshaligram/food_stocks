@@ -644,19 +644,14 @@ class S {
     return Intl.message('Save', name: 'save', desc: '', args: []);
   }
 
-  /// `Companies`
-  String get companies {
-    return Intl.message('Companies', name: 'companies', desc: '', args: []);
+  /// `Brands`
+  String get brands {
+    return Intl.message('Brands', name: 'brands', desc: '', args: []);
   }
 
-  /// `All Companies`
-  String get all_companies {
-    return Intl.message(
-      'All Companies',
-      name: 'all_companies',
-      desc: '',
-      args: [],
-    );
+  /// `All Brands`
+  String get all_brands {
+    return Intl.message('All Brands', name: 'all_brands', desc: '', args: []);
   }
 
   /// `Total Order`
@@ -3759,6 +3754,16 @@ class S {
     return Intl.message('open', name: 'open', desc: '', args: []);
   }
 
+  /// `Pay Invoice`
+  String get pay_invoice_text {
+    return Intl.message(
+      'Pay Invoice',
+      name: 'pay_invoice_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Data for forms`
   String get data_for_form {
     return Intl.message(
@@ -6144,6 +6149,46 @@ class S {
     return Intl.message(
       'No Suppliers Found',
       name: 'no_suppliers_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invoice payment`
+  String get invoice_payment {
+    return Intl.message(
+      'Invoice payment',
+      name: 'invoice_payment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pay with credit card`
+  String get making_pay_with_credit_card {
+    return Intl.message(
+      'Pay with credit card',
+      name: 'making_pay_with_credit_card',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An error occurred while processing the credit card payment for the invoice`
+  String get credit_card_payment_error {
+    return Intl.message(
+      'An error occurred while processing the credit card payment for the invoice',
+      name: 'credit_card_payment_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Success! Your invoice has been paid using your credit card.`
+  String get credit_card_payment_success {
+    return Intl.message(
+      'Success! Your invoice has been paid using your credit card.',
+      name: 'credit_card_payment_success',
       desc: '',
       args: [],
     );

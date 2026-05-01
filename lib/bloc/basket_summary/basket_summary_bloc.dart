@@ -184,6 +184,7 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
                                         isNavigateToProductDetailString: false,
                                         productData: response.data!.ordersBySupplier![0],
                                         orderData: response.data!.orderData![0],
+                                        isFromBasket: true,
                                       ),
                                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                     const begin = Offset(0.0, 1.0);

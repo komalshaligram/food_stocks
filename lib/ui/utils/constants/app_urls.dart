@@ -1,8 +1,8 @@
 class AppUrlEndPoints {
-  // static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; //prodUrl live
+  static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; //prodUrl live
   // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; // local
 
-  static const String baseUrl = 'http://192.168.3.75:3000/api'; // local 75 yash 45 harshit // prachi :192.168.4.48
+  // static const String baseUrl = 'http://192.168.3.75:3000/api'; // local 75 yash 45 harshit // prachi :192.168.4.48
 
   ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
@@ -136,10 +136,14 @@ class AppUrlEndPoints {
   static const String getLatestOnthewayOrderUrl = '/v2/orders/get-latest-ontheway-order/';
   static const String getClientPendingReturnProducts = '/v1/return/getClientPendingReturnProducts/';
   static const String getRefundInvoiceCopy = '/v1/refund/getRefundInvoiceCopy';
+  static const String getOrderInvoiceCopy = '/v1/orders/getOrderInvoiceCopy';
   static const String getAdjustedRefundsInOrder = '/v1/refund/getAdjustedRefundsInOrder/';
   static const String getMyAccountingCardClientInvoicesFromRivchit = '/v1/clients/clientInvoicesFromRivchit/';
   static const String getMyAccountingCardClientRefundInvoicesFromRivchit = '/v1/clients/clientRefundInvoicesFromRivchit/';
   static const String getAgentStoresWithPermittedSuppliers = '/v1/agent/getAgentStoresWithPermittedSuppliers';
   static const String agentSwitchToAssignedStore = '/v1/agent/agentSwitchToAssignedStore/';
   static const String updateAgentStoresNoMinimumForPermittedSuppliers = '/v1/agent/updateAgentStoresNoMinimumForPermittedSuppliers';
+  static const String getSuppliersList = '/v2/store/getSupplier';
+  static const String getSupplierBrandProducts = '/v3/store/getSupplierBrandProducts';
+  static const String payInvoiceByCreditCard = '/v1/orders/payInvoiceByCreditCard';
 }

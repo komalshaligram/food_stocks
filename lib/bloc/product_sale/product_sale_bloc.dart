@@ -415,7 +415,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
       } else if (event is _changeNoteOfProduct) {
         if (state.productStockUpdateIndex != -1) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
-          productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(note: /*event.newNote*/ state.noteController.text);
+          productStockList[state.productListIndex][state.productStockUpdateIndex] = productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(note: state.noteController.text);
           emit(state.copyWith(productStockList: productStockList));
         }
       } else if (event is _changeSupplierSelectionExpansionEvent) {

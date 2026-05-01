@@ -35,6 +35,7 @@ import '../ui/screens/connect_screen.dart';
 import '../ui/screens/create_product_return_list.dart';
 import '../ui/screens/credit_card_details_screen.dart';
 import '../ui/screens/form_data_screen.dart';
+import '../ui/screens/invoice_payment_screen.dart';
 import '../ui/screens/invoice_pdf_screen.dart';
 import '../ui/screens/invoice_screen.dart';
 import '../ui/screens/file_upload_screen.dart';
@@ -59,6 +60,9 @@ import '../ui/screens/shipment_verification_screen.dart';
 import '../ui/screens/store_screen.dart';
 import '../ui/screens/sub_users_profile_screen.dart';
 import '../ui/screens/sub_users_screen.dart';
+import '../ui/screens/supplier_brand_product_screen.dart';
+import '../ui/screens/supplier_brand_screen.dart';
+import '../ui/screens/supplier_list_products_screen.dart';
 import '../ui/screens/supplier_permission_screen.dart';
 import '../ui/screens/supplier_screen.dart';
 import '../ui/screens/wallet_screen.dart';
@@ -98,6 +102,7 @@ enum RouteDefine {
   orderSuccessfulScreen,
   supplierScreen,
   supplierProductsScreen,
+  supplierListProductsScreen,
   productSaleScreen,
   planogramProductScreen,
   productCategoryScreen,
@@ -137,6 +142,9 @@ enum RouteDefine {
   myAccountingCardScreen,
   registrationSuccessScreen,
   myClientsScreen,
+  supplierBrandScreen,
+  supplierBrandProductsScreen,
+  invoicePaymentScreen
 }
 
 class AppRouting {
@@ -169,6 +177,7 @@ class AppRouting {
       RouteDefine.orderSuccessfulScreen.name: (_) => OrderSuccessfulRoute.route,
       RouteDefine.supplierScreen.name: (_) => SupplierRoute.route,
       RouteDefine.supplierProductsScreen.name: (_) => SupplierProductsRoute.route,
+      RouteDefine.supplierListProductsScreen.name: (_) => SupplierListProductsRoute.route,
       RouteDefine.productSaleScreen.name: (_) => ProductSaleRoute.route,
       RouteDefine.planogramProductScreen.name: (_) => PlanogramProductRoute.route,
       RouteDefine.productCategoryScreen.name: (_) => ProductCategoryRoute.route,
@@ -208,6 +217,9 @@ class AppRouting {
       RouteDefine.myAccountingCardScreen.name: (_) => MyAccountingCardRoute.route,
       RouteDefine.registrationSuccessScreen.name: (_) => RegistrationSuccessRoute.route,
       RouteDefine.myClientsScreen.name: (_) => MyClientsRoute.route,
+      RouteDefine.supplierBrandScreen.name: (_) => SupplierBrandRoute.route,
+      RouteDefine.supplierBrandProductsScreen.name: (_) => SupplierBrandProductsRoute.route,
+      RouteDefine.invoicePaymentScreen.name:(_) => InvoicePaymentRoute.route,
     };
 
     final routeBuilder = routes[settings.name];
