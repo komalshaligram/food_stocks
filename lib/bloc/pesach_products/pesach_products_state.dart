@@ -89,6 +89,6 @@ class PesachProductsState with _$PesachProductsState {
         language: AppStrings.hebrewString,
         isCartCountChange: false,
         messageCount: 0,
-    clubAgentId: '',
+        clubAgentId: '',
       );
 }

@@ -5,7 +5,7 @@ class AppConstants {
   static const double appBarHeight = 56;
   static const double textFormFieldHeight = 40;
   static const double relatedProductItemHeight = 223;
-  static const double salesProductItemHeight = 320;
+  static const double salesProductItemHeight = 355;
   static const double containerHeight_80 = 80;
   static const double containerHeight_60 = 60;
   static const double containerHeight_65 = 65;
@@ -111,7 +111,7 @@ class AppConstants {
   static const int listAnimationItemDelay = 50;
 
   //product grid aspect ratio
-  static const double productGridAspectRatio51 = 0.43;
+  static const double productGridAspectRatio51 = 0.36;
   static const double productGridAspectRatio9 = 9.5 / 13;
   static const double productGridAspectRatio7 = 7.5 / 13;
   static const double productGridAspectRatio8 = 0.38;

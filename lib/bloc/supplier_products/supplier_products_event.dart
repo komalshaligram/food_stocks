@@ -4,10 +4,7 @@ part of 'supplier_products_bloc.dart';
 class SupplierProductsEvent with _$SupplierProductsEvent {
   const factory SupplierProductsEvent.getPreferencesDataEvent() = _getPreferencesDataEvent;
 
-  const factory SupplierProductsEvent.getSupplierProductsIdEvent({
-    required String supplierId,
-    required String search,
-  }) = _getSupplierProductsIdEvent;
+  const factory SupplierProductsEvent.getSupplierProductsIdEvent({required String supplierId, required String search}) = _getSupplierProductsIdEvent;
 
   const factory SupplierProductsEvent.getSupplierProductsListEvent({required BuildContext context, required String searchType}) = _getSupplierProductsListEvent;
 
@@ -28,11 +25,7 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
 
   const factory SupplierProductsEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
-  const factory SupplierProductsEvent.supplierSelectionEvent({
-    required int supplierIndex,
-    required BuildContext context,
-    required int supplierSaleIndex,
-  }) = _supplierSelectionEvent;
+  const factory SupplierProductsEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory SupplierProductsEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 
@@ -55,6 +48,7 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
   const factory SupplierProductsEvent.updateGlobalSearchEvent({required String search, required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
   const factory SupplierProductsEvent.relatedProductsEvent({required BuildContext context, required String productId}) = _relatedProductsEvent;
+
   const factory SupplierProductsEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;
 
   const factory SupplierProductsEvent.getPermissionList({required BuildContext context}) = _getPermissionList;

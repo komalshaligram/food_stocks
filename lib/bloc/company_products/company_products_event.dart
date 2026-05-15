@@ -25,11 +25,7 @@ class CompanyProductsEvent with _$CompanyProductsEvent {
 
   const factory CompanyProductsEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
-  const factory CompanyProductsEvent.supplierSelectionEvent({
-    required int supplierIndex,
-    required BuildContext context,
-    required int supplierSaleIndex,
-  }) = _supplierSelectionEvent;
+  const factory CompanyProductsEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory CompanyProductsEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 

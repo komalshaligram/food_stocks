@@ -58,14 +58,8 @@ class MyAccountingCardScreenContent extends StatelessWidget {
     final bloc = context.read<MyAccountingCardBloc>();
     final state = bloc.state;
     final isInvoicesTab = state.selectedTabIndex == 0;
-
-    DateTime tempFrom = isInvoicesTab
-        ? state.invoicesFrom ??
-            DateTime.now().subtract(const Duration(
-              days: 90,
-            ))
-        : state.refundsFrom ?? DateTime.now().subtract(const Duration(days: 90));
-
+    final defaultFromDate = DateTime.now().subtract(const Duration(days: 90));
+    DateTime tempFrom = isInvoicesTab ? (state.invoicesFrom ?? defaultFromDate) : (state.refundsFrom ?? defaultFromDate);
     DateTime tempTo = isInvoicesTab ? state.invoicesTo ?? DateTime.now() : state.refundsTo ?? DateTime.now();
 
     await showModalBottomSheet(
@@ -175,11 +169,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
     final isSelected = text.isNotEmpty && text != hint;
     return Container(
       padding: const EdgeInsets.all(AppConstants.padding_11),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.borderColor),
-        borderRadius: BorderRadius.circular(AppConstants.radius_10),
-        color: isSelected ? AppColors.notificationColor.withValues(alpha: 0.08) : null,
-      ),
+      decoration: BoxDecoration(border: Border.all(color: AppColors.borderColor), borderRadius: BorderRadius.circular(AppConstants.radius_10)),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Text(isSelected ? text : hint, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: isSelected ? AppColors.blackColor : AppColors.greyColor)),
         const Icon(Icons.calendar_today_outlined, size: AppConstants.font_20),
@@ -328,14 +318,12 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppConstants.radius_10),
                 ),
                 child: Center(
-                  child: Text(
-                    tabs[index],
-                    style: AppStyles.rkBoldTextStyle(
-                      size: AppConstants.font_15,
-                      color: selected ? AppColors.blackColor : AppColors.whiteColor,
-                      fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                    ),
-                  ),
+                  child: Text(tabs[index],
+                      style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_15,
+                        color: selected ? AppColors.blackColor : AppColors.whiteColor,
+                        fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                      )),
                 ),
               ),
             ),
@@ -425,19 +413,13 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     titleText(context, AppLocalizations.of(context)!.invoice_date),
-                    subTitleValueText(
-                      context,
-                      (state.invoiceCardList[index].invoiceDate ?? '').isNotEmpty ? state.invoiceCardList[index].invoiceDate!.substring(0, 10) : '---',
-                    ),
+                    subTitleValueText(context, (state.invoiceCardList[index].invoiceDate ?? '').isNotEmpty ? state.invoiceCardList[index].invoiceDate!.substring(0, 10) : '---'),
                   ]),
                 ),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     titleText(context, AppLocalizations.of(context)!.due_date),
-                    subTitleValueText(
-                      context,
-                      (state.invoiceCardList[index].dueDate ?? '').isNotEmpty ? state.invoiceCardList[index].dueDate!.substring(0, 10) : '---',
-                    ),
+                    subTitleValueText(context, (state.invoiceCardList[index].dueDate ?? '').isNotEmpty ? state.invoiceCardList[index].dueDate!.substring(0, 10) : '---'),
                   ]),
                 ),
               ]);
@@ -476,10 +458,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   titleText(context, AppLocalizations.of(context)!.total_invoice_amount),
-                  Directionality(
-                    textDirection: widgets.TextDirection.ltr,
-                    child: subTitleValueText(context, formatSignedNumber(state.invoiceCardList[index].invoiceAmount)),
-                  ),
+                  Directionality(textDirection: widgets.TextDirection.ltr, child: subTitleValueText(context, formatSignedNumber(state.invoiceCardList[index].invoiceAmount))),
                 ]),
               ),
             ]);
@@ -504,11 +483,7 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                   ? GestureDetector(
                       onTap: () {
                         if (state.invoiceCardList[index].cardNumber != null && state.invoiceCardList[index].customerCreditcardToken != null) {
-                          Navigator.pushNamed(
-                            context,
-                            RouteDefine.invoicePaymentScreen.name,
-                            arguments: {AppStrings.invoiceData: state.invoiceCardList[index]},
-                          ).then((value) {
+                          Navigator.pushNamed(context, RouteDefine.invoicePaymentScreen.name, arguments: {AppStrings.invoiceData: state.invoiceCardList[index]}).then((value) {
                             if (value == true && context.mounted) {
                               _refreshAccountingData(context);
                             }
@@ -659,23 +634,22 @@ class MyAccountingCardScreenContent extends StatelessWidget {
                         final helper = SharedPreferencesHelper(prefs: prefs);
                         helper.setOrderId(productOrderId: order.orderId ?? '');
                         Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
-                                    statusList: statusList,
-                                    orderNumber: order.orderNumber ?? '',
-                                    orderId: order.orderId ?? '',
-                                    isNavigateToProductDetailString: true,
-                                    isFromBasket: false,
-                                  ),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(0.0, 1.0);
-                                const end = Offset.zero;
-                                const curve = Curves.bounceIn;
-                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                                return SlideTransition(position: animation.drive(tween), child: child);
-                              }),
-                        );
+                            context,
+                            PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
+                                      statusList: statusList,
+                                      orderNumber: order.orderNumber ?? '',
+                                      orderId: order.orderId ?? '',
+                                      isNavigateToProductDetailString: true,
+                                      isFromBasket: false,
+                                    ),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  const begin = Offset(0.0, 1.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.bounceIn;
+                                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                  return SlideTransition(position: animation.drive(tween), child: child);
+                                }));
                       },
                       child: invoiceOrderNumberWidget(order.orderNumber ?? ''),
                     ),

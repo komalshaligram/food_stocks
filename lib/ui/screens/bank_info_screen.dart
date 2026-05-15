@@ -53,7 +53,7 @@ class BankInfoWidget extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
               },
-              child:  Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
+              child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
           title: Align(
             alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
             child: Text(AppLocalizations.of(context)!.bank_info, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),

@@ -25,11 +25,7 @@ class PesachProductsEvent with _$PesachProductsEvent {
 
   const factory PesachProductsEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
-  const factory PesachProductsEvent.supplierSelectionEvent({
-    required int supplierIndex,
-    required BuildContext context,
-    required int supplierSaleIndex,
-  }) = _supplierSelectionEvent;
+  const factory PesachProductsEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory PesachProductsEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 

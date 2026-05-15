@@ -83,14 +83,7 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
           }
           productStockList[1].clear();
           productStockList[1].addAll(stockList);
-          emit(state.copyWith(
-            productSalesList: productSaleList,
-            productStockList: productStockList,
-            pageNum: state.pageNum + 1,
-            isShimmering: false,
-            isProgress: false,
-            isLoadMore: false,
-          ));
+          emit(state.copyWith(productSalesList: productSaleList, productStockList: productStockList, pageNum: state.pageNum + 1, isShimmering: false, isProgress: false, isLoadMore: false));
           return;
         }
         if (state.isProgress) {
@@ -119,23 +112,12 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
             productStockList[1].clear();
             productStockList[1].addAll(stockList);
             emit(
-              state.copyWith(
-                productSalesList: productSaleList,
-                productStockList: productStockList,
-                pageNum: state.pageNum + 1,
-                isLoadMore: false,
-                isShimmering: false,
-                isProgress: false,
-              ),
+              state.copyWith(productSalesList: productSaleList, productStockList: productStockList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false, isProgress: false),
             );
             emit(state.copyWith(isBottomOfProducts: productSaleList.length == (response.metaData?.totalFilteredCount ?? 0) ? true : false, isProgress: false));
           } else {
             emit(state.copyWith(isLoadMore: false, isProgress: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
-              type: SnackBarType.failure,
-            );
+            CustomSnackBar.showSnackBar(context: event.context, title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context), type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false, isProgress: false));
@@ -183,10 +165,10 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               }
               emit(state.copyWith(productListIndex: productListIndex, productStockUpdateIndex: productStockUpdateIndex));
               try {
-                final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
-                    options: Options(
-                      headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
-                    ));
+                final res = await DioClient(event.context).post(
+                  '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}',
+                  options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}),
+                );
                 GetAllCartResModel response = GetAllCartResModel.fromJson(res);
                 if (response.status == AppConstants.code_200) {
                   response.data?.data?.forEach((cartProduct) {
@@ -215,72 +197,43 @@ class ProductSaleBloc extends Bloc<ProductSaleEvent, ProductSaleState> {
               List<ProductSupplierModel> supplierList = [];
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
                     return ProductSupplierModel(
-                      supplierId: supplier.supplierId ?? '',
-                      companyName: supplier.supplierCompanyName ?? '',
-                      basePrice: double.parse(supplier.productPrice ?? ''),
-                      quantity: _productQuantity,
-                      stock: supplier.productStock.toString(),
-                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
-                      selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
-                          ? !supplier.saleProduct!.contains(
-                              supplier.saleProduct?.firstWhere(
-                                    (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
-                                    orElse: () => const SaleProduct(
-                                      isSale: false,
-                                      saleDescription: '',
-                                      saleFromDate: '',
-                                      saleMaxQuantity: '0',
-                                      salePrice: '0',
-                                      saleUntilDate: '',
-                                    ),
-                                  ) ??
-                                  const SaleProduct(
-                                    isSale: false,
-                                    saleDescription: '',
-                                    saleFromDate: '',
-                                    saleMaxQuantity: '0',
-                                    salePrice: '0',
-                                    saleUntilDate: '',
-                                  ),
-                            )
-                              ? -2
-                              : supplier.saleProduct?.indexOf(
-                                    supplier.saleProduct?.firstWhere(
-                                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
-                                          orElse: () => const SaleProduct(
-                                            isSale: false,
-                                            saleDescription: '',
-                                            saleFromDate: '',
-                                            saleMaxQuantity: '0',
-                                            salePrice: '0',
-                                            saleUntilDate: '',
-                                          ),
-                                        ) ??
-                                        const SaleProduct(
-                                          isSale: false,
-                                          saleDescription: '',
-                                          saleFromDate: '',
-                                          saleMaxQuantity: '0',
-                                          salePrice: '0',
-                                          saleUntilDate: '',
-                                        ),
-                                  ) ??
-                                  -1
-                          : -1,
-                      supplierSales: supplier.saleProduct
-                              ?.map((sale) => SupplierSaleModel(
-                                    productStock: sale.productStock ?? 0,
-                                    quantity: _productQuantity,
-                                    saleId: sale.saleId ?? '',
-                                    saleName: sale.saleName ?? '',
-                                    maxQty: sale.saleMaxQuantity,
-                                    saleDescription: parse(sale.salesDescription ?? '').body?.text ?? '',
-                                    salePrice: double.parse(sale.discountedPrice ?? '0.0'),
-                                    saleDiscount: double.parse(sale.discountPercentage ?? '0.0'),
-                                  ))
-                              .toList() ??
-                          [],
-                    );
+                        supplierId: supplier.supplierId ?? '',
+                        companyName: supplier.supplierCompanyName ?? '',
+                        basePrice: double.parse(supplier.productPrice ?? ''),
+                        quantity: _productQuantity,
+                        stock: supplier.productStock.toString(),
+                        maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
+                        selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
+                            ? !supplier.saleProduct!.contains(
+                                supplier.saleProduct?.firstWhere(
+                                      (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
+                                      orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                                    ) ??
+                                    const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                              )
+                                ? -2
+                                : supplier.saleProduct?.indexOf(
+                                      supplier.saleProduct?.firstWhere(
+                                            (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
+                                            orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                                          ) ??
+                                          const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                                    ) ??
+                                    -1
+                            : -1,
+                        supplierSales: supplier.saleProduct
+                                ?.map((sale) => SupplierSaleModel(
+                                      productStock: sale.productStock ?? 0,
+                                      quantity: _productQuantity,
+                                      saleId: sale.saleId ?? '',
+                                      saleName: sale.saleName ?? '',
+                                      maxQty: sale.saleMaxQuantity,
+                                      saleDescription: parse(sale.salesDescription ?? '').body?.text ?? '',
+                                      salePrice: double.parse(sale.discountedPrice ?? '0.0'),
+                                      saleDiscount: double.parse(sale.discountPercentage ?? '0.0'),
+                                    ))
+                                .toList() ??
+                            []);
                   }).toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == '0');

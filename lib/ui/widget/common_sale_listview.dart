@@ -21,6 +21,7 @@ class CommonSaleListView extends StatelessWidget {
   final void Function() onButtonTap;
   final bool isGuestUser;
   final String numberOfUnits;
+  final String? scaleType;
   final String lowStock;
   final bool? isPesach;
   final bool? isFromSale;
@@ -46,6 +47,7 @@ class CommonSaleListView extends StatelessWidget {
     required this.onButtonTap,
     required this.isGuestUser,
     required this.numberOfUnits,
+    this.scaleType,
     required this.lowStock,
     this.isPesach,
     this.isFromSale,
@@ -123,14 +125,18 @@ class CommonSaleListView extends StatelessWidget {
                                 : 0.width,
                     isPesach! ? 3.height : 0.height,
                     isPesachLabelShow(isPesach!, context),
-
                     isPesach! ? 3.height : 0.height,
                     !isGuestUser
                         ? numberOfUnits != '0'
-                            ? Text(
-                                '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
-                                style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-                              )
+                            ? scaleType == 'מארזים'
+                                ? Text(
+                                    '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
+                                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                  )
+                                : Text(
+                                    '${AppLocalizations.of(context)!.approx}${numberOfUnits.toString()}${AppLocalizations.of(context)!.kgBox}',
+                                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                  )
                             : 0.width
                         : 0.width,
                   ]),

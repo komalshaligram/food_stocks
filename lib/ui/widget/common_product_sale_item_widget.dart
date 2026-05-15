@@ -36,6 +36,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final String? minQuantity;
   final String? maxQuantity;
   final bool? isMixedSale;
+  final String? numberOfUnits;
+  final String? scaleType;
 
   const CommonProductSaleItemWidget({
     super.key,
@@ -62,6 +64,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.minQuantity,
     this.maxQuantity,
     required this.isMixedSale,
+    this.numberOfUnits,
+    this.scaleType,
   });
 
   @override
@@ -242,6 +246,23 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                   child: Text(AppLocalizations.of(context)!.mixedSale, style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_10)),
                 )
               : const IgnorePointer(),
+          !isGuestUser
+              ? numberOfUnits != '0'
+                  ? scaleType == 'מארזים'
+                      ? Center(
+                          child: Text(
+                            '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
+                            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_10, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                          ),
+                        )
+                      : Center(
+                          child: Text(
+                            '${AppLocalizations.of(context)!.approx}${numberOfUnits.toString()}${AppLocalizations.of(context)!.kgBox}',
+                            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_10, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                          ),
+                        )
+                  : 0.width
+              : 0.width,
           const Spacer(),
           Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
             GestureDetector(

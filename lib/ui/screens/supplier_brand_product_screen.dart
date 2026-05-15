@@ -118,10 +118,7 @@ class SupplierBrandProductsScreenWidget extends StatelessWidget {
                                         width: getScreenWidth(context),
                                         margin: const EdgeInsets.only(top: AppConstants.padding_30),
                                         alignment: Alignment.center,
-                                        child: Text(
-                                          AppLocalizations.of(context)!.this_company_has_no_product,
-                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                        ),
+                                        child: noDataWidget(AppLocalizations.of(context)!.this_company_has_no_product),
                                       )
                                     : SmartRefresher(
                                         physics: const ClampingScrollPhysics(),

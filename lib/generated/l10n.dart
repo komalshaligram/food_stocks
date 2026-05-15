@@ -3344,6 +3344,16 @@ class S {
     );
   }
 
+  /// `Approx. `
+  String get approx {
+    return Intl.message('Approx. ', name: 'approx', desc: '', args: []);
+  }
+
+  /// `Kg in box`
+  String get kgBox {
+    return Intl.message('Kg in box', name: 'kgBox', desc: '', args: []);
+  }
+
   /// `Price`
   String get price {
     return Intl.message('Price', name: 'price', desc: '', args: []);

@@ -384,90 +384,94 @@ class HomeScreenWidget extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
                       itemBuilder: (context, index) {
+                        var productSaleData = state.productSalesList[index];
+                        var productStockData = state.productStockList[3][index];
                         return CommonProductSaleItemWidget(
-                            isSale: state.productSalesList[index].sale?.isSale,
+                            isSale: productSaleData.sale?.isSale,
                             isGuestUser: state.isGuestUser,
                             height: AppConstants.salesProductItemHeight,
                             width: getItemWidth(context),
-                            productName: state.productSalesList[index].productName ?? '',
-                            saleImage: state.productSalesList[index].mainImage ?? '',
-                            title: state.productSalesList[index].name,
-                            description: parse(state.productSalesList[index].sale?.saleDescription).body?.text ?? '',
-                            discountedPrice: double.parse(state.productSalesList[index].sale?.salePrice ?? ""),
-                            originalPrice: state.productSalesList[index].productPrice,
-                            productStock: state.productSalesList[index].productStock.toString(),
-                            lowStock: state.productSalesList[index].lowStock ?? '',
-                            isPesach: state.productSalesList[index].isPesach,
-                            quantity: state.productStockList[3][index].quantity,
-                            minQuantity: state.productSalesList[index].sale?.saleMinQuantity,
-                            maxQuantity: state.productSalesList[index].sale?.saleMaxQuantity,
-                            isMixedSale: state.productSalesList[index].sale?.isMixedSale,
+                            productName: productSaleData.productName ?? '',
+                            saleImage: productSaleData.mainImage ?? '',
+                            title: productSaleData.name,
+                            description: parse(productSaleData.sale?.saleDescription).body?.text ?? '',
+                            discountedPrice: double.parse(productSaleData.sale?.salePrice ?? ""),
+                            originalPrice: productSaleData.productPrice,
+                            productStock: productSaleData.productStock.toString(),
+                            lowStock: productSaleData.lowStock ?? '',
+                            isPesach: productSaleData.isPesach,
+                            quantity: productStockData.quantity,
+                            minQuantity: productSaleData.sale?.saleMinQuantity,
+                            maxQuantity: productSaleData.sale?.saleMaxQuantity,
+                            isMixedSale: productSaleData.sale?.isMixedSale,
+                            numberOfUnits: productSaleData.numberOfUnit.toString(),
+                            scaleType: productSaleData.scaleType,
                             onQuantityChanged: () {
                               context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
                                     context: context,
-                                    quantity: state.productStockList[3][index].quantity.toString(),
+                                    quantity: productStockData.quantity.toString(),
                                     productListIndex: 3,
                                     productStockUpdateIndex: index,
-                                    productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                    productSupplierIds: productSaleData.supplierId.toString(),
                                   ));
                             },
                             onQuantityIncreaseTap: () {
-                              if (int.parse(state.productSalesList[index].sale?.saleMinQuantity ?? '0') <= state.productStockList[3][index].quantity + 1) {
+                              if (int.parse(productSaleData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity + 1) {
                                 bloc.add(HomeEvent.increaseListQuantityOfProduct(
                                   context: context,
                                   productListIndex: 3,
                                   productStockUpdateIndex: index,
-                                  productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                  productSupplierIds: productSaleData.supplierId.toString(),
                                 ));
 
                                 bloc.add(HomeEvent.addToCartListProductEvent(
                                   context: context,
-                                  productId: state.productSalesList[index].id.toString(),
+                                  productId: productSaleData.id.toString(),
                                   productListIndex: 3,
                                   productStockUpdateIndex: index,
-                                  productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                  productSupplierIds: productSaleData.supplierId.toString(),
                                 ));
                               } else {
                                 showMinMaxQtyConfirmDialog(
                                   context: context,
-                                  productId: state.productSalesList[index].id.toString(),
-                                  minBox: state.productSalesList[index].sale?.saleMinQuantity.toString() ?? '0',
+                                  productId: productSaleData.id.toString(),
+                                  minBox: productSaleData.sale?.saleMinQuantity.toString() ?? '0',
                                   index: index,
-                                  supplierId: state.productSalesList[index].supplierId.toString(),
+                                  supplierId: productSaleData.supplierId.toString(),
                                   productListIndex: 3,
-                                  isMixedSale: state.productSalesList[index].sale?.isMixedSale ?? false,
-                                  sameSaleProducts: state.productSalesList[index].sale?.sameSaleProducts,
+                                  isMixedSale: productSaleData.sale?.isMixedSale ?? false,
+                                  sameSaleProducts: productSaleData.sale?.sameSaleProducts,
                                   isIncrease: true,
                                 );
                               }
                             },
                             onQuantityDecreaseTap: () {
-                              if (state.productStockList[3][index].quantity != 0) {
-                                if (int.parse(state.productSalesList[index].sale?.saleMinQuantity ?? '0') <= state.productStockList[3][index].quantity - 1) {
+                              if (productStockData.quantity != 0) {
+                                if (int.parse(productSaleData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
                                   bloc.add(HomeEvent.decreaseListQuantityOfProduct(
                                     context: context,
                                     productListIndex: 3,
                                     productStockUpdateIndex: index,
-                                    productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                    productSupplierIds: productSaleData.supplierId.toString(),
                                   ));
 
                                   bloc.add(HomeEvent.addToCartListProductEvent(
                                     context: context,
-                                    productId: state.productSalesList[index].id.toString(),
+                                    productId: productSaleData.id.toString(),
                                     productListIndex: 3,
                                     productStockUpdateIndex: index,
-                                    productSupplierIds: state.productSalesList[index].supplierId.toString(),
+                                    productSupplierIds: productSaleData.supplierId.toString(),
                                   ));
                                 } else {
                                   showMinMaxQtyConfirmDialog(
                                     context: context,
-                                    productId: state.productSalesList[index].id.toString(),
-                                    minBox: state.productSalesList[index].sale?.saleMinQuantity.toString() ?? '0',
+                                    productId: productSaleData.id.toString(),
+                                    minBox: productSaleData.sale?.saleMinQuantity.toString() ?? '0',
                                     index: index,
-                                    supplierId: state.productSalesList[index].supplierId.toString(),
+                                    supplierId: productSaleData.supplierId.toString(),
                                     productListIndex: 3,
-                                    isMixedSale: state.productSalesList[index].sale?.isMixedSale ?? false,
-                                    sameSaleProducts: state.productSalesList[index].sale?.sameSaleProducts,
+                                    isMixedSale: productSaleData.sale?.isMixedSale ?? false,
+                                    sameSaleProducts: productSaleData.sale?.sameSaleProducts,
                                     isIncrease: false,
                                   );
                                 }
@@ -479,8 +483,8 @@ class HomeScreenWidget extends StatelessWidget {
                                   isSaleOn: state.isSaleOn,
                                   productListIndex: 3,
                                   context: context,
-                                  productId: state.productSalesList[index].id ?? '',
-                                  productStock: state.productSalesList[index].productStock.toString(),
+                                  productId: productSaleData.id ?? '',
+                                  productStock: productSaleData.productStock.toString(),
                                 );
                               } else {
                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -514,108 +518,112 @@ class HomeScreenWidget extends StatelessWidget {
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                  itemBuilder: (context, index) => CommonProductSaleItemWidget(
-                      isSale: state.recommendedProductsList[index].sale?.isSale,
-                      isGuestUser: state.isGuestUser,
-                      height: AppConstants.salesProductItemHeight,
-                      width: getItemWidth(context),
-                      productName: state.recommendedProductsList[index].productName ?? '',
-                      saleImage: state.recommendedProductsList[index].mainImage ?? '',
-                      title: state.recommendedProductsList[index].name,
-                      description: parse(state.recommendedProductsList[index].sale?.saleDescription).body?.text ?? '',
-                      discountedPrice: double.parse(state.recommendedProductsList[index].sale?.salePrice ?? '0'),
-                      originalPrice: state.recommendedProductsList[index].productPrice,
-                      productStock: state.recommendedProductsList[index].productStock.toString(),
-                      lowStock: state.recommendedProductsList[index].lowStock ?? '',
-                      isPesach: state.recommendedProductsList[index].isPesach,
-                      quantity: state.productStockList[1][index].quantity,
-                      minQuantity: state.recommendedProductsList[index].sale?.saleMinQuantity,
-                      maxQuantity: state.recommendedProductsList[index].sale?.saleMaxQuantity,
-                      isMixedSale: state.recommendedProductsList[index].sale?.isMixedSale,
-                      onQuantityChanged: () {
-                        context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
-                              context: context,
-                              quantity: state.productStockList[1][index].quantity.toString(),
-                              productListIndex: 1,
-                              productStockUpdateIndex: index,
-                              productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
-                            ));
-                      },
-                      onQuantityIncreaseTap: () {
-                        if (int.parse(state.recommendedProductsList[index].sale?.saleMinQuantity ?? '0') <= state.productStockList[1][index].quantity + 1) {
-                          context.read<HomeBloc>().add(HomeEvent.increaseListQuantityOfProduct(
+                  itemBuilder: (context, index) {
+                    var productRecommendedData = state.recommendedProductsList[index];
+                    var productStockData = state.productStockList[1][index];
+                    return CommonProductSaleItemWidget(
+                        isSale: productRecommendedData.sale?.isSale,
+                        isGuestUser: state.isGuestUser,
+                        height: AppConstants.salesProductItemHeight,
+                        width: getItemWidth(context),
+                        productName: productRecommendedData.productName ?? '',
+                        saleImage: productRecommendedData.mainImage ?? '',
+                        title: productRecommendedData.name,
+                        description: parse(productRecommendedData.sale?.saleDescription).body?.text ?? '',
+                        discountedPrice: double.parse(productRecommendedData.sale?.salePrice ?? '0'),
+                        originalPrice: productRecommendedData.productPrice,
+                        productStock: productRecommendedData.productStock.toString(),
+                        lowStock: productRecommendedData.lowStock ?? '',
+                        isPesach: productRecommendedData.isPesach,
+                        quantity: productStockData.quantity,
+                        minQuantity: productRecommendedData.sale?.saleMinQuantity,
+                        maxQuantity: productRecommendedData.sale?.saleMaxQuantity,
+                        isMixedSale: productRecommendedData.sale?.isMixedSale,
+                        onQuantityChanged: () {
+                          context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
                                 context: context,
+                                quantity: productStockData.quantity.toString(),
                                 productListIndex: 1,
                                 productStockUpdateIndex: index,
-                                productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
+                                productSupplierIds: productRecommendedData.supplierId.toString(),
                               ));
-
-                          context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                context: context,
-                                productId: state.recommendedProductsList[index].id.toString(),
-                                productListIndex: 1,
-                                productStockUpdateIndex: index,
-                                productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
-                              ));
-                        } else {
-                          showMinMaxQtyConfirmDialog(
-                            context: context,
-                            productId: state.recommendedProductsList[index].id.toString(),
-                            minBox: state.recommendedProductsList[index].sale?.saleMinQuantity.toString() ?? '0',
-                            index: index,
-                            supplierId: state.recommendedProductsList[index].supplierId.toString(),
-                            productListIndex: 1,
-                            isMixedSale: state.recommendedProductsList[index].sale?.isMixedSale ?? false,
-                            sameSaleProducts: state.recommendedProductsList[index].sale?.sameSaleProducts,
-                            isIncrease: true,
-                          );
-                        }
-                      },
-                      onQuantityDecreaseTap: () {
-                        if (state.productStockList[1][index].quantity != 0) {
-                          if (int.parse(state.recommendedProductsList[index].sale?.saleMinQuantity ?? '0') <= state.productStockList[1][index].quantity - 1) {
-                            context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
+                        },
+                        onQuantityIncreaseTap: () {
+                          if (int.parse(productRecommendedData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity + 1) {
+                            context.read<HomeBloc>().add(HomeEvent.increaseListQuantityOfProduct(
                                   context: context,
                                   productListIndex: 1,
                                   productStockUpdateIndex: index,
-                                  productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
+                                  productSupplierIds: productRecommendedData.supplierId.toString(),
                                 ));
 
                             context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
                                   context: context,
-                                  productId: state.recommendedProductsList[index].id.toString(),
+                                  productId: productRecommendedData.id.toString(),
                                   productListIndex: 1,
                                   productStockUpdateIndex: index,
-                                  productSupplierIds: state.recommendedProductsList[index].supplierId.toString(),
+                                  productSupplierIds: productRecommendedData.supplierId.toString(),
                                 ));
                           } else {
                             showMinMaxQtyConfirmDialog(
                               context: context,
-                              productId: state.recommendedProductsList[index].id.toString(),
-                              minBox: state.recommendedProductsList[index].sale?.saleMinQuantity.toString() ?? '0',
+                              productId: productRecommendedData.id.toString(),
+                              minBox: productRecommendedData.sale?.saleMinQuantity.toString() ?? '0',
                               index: index,
-                              supplierId: state.recommendedProductsList[index].supplierId.toString(),
+                              supplierId: productRecommendedData.supplierId.toString(),
                               productListIndex: 1,
-                              isMixedSale: state.recommendedProductsList[index].sale?.isMixedSale ?? false,
-                              sameSaleProducts: state.recommendedProductsList[index].sale?.sameSaleProducts,
-                              isIncrease: false,
+                              isMixedSale: productRecommendedData.sale?.isMixedSale ?? false,
+                              sameSaleProducts: productRecommendedData.sale?.sameSaleProducts,
+                              isIncrease: true,
                             );
                           }
-                        }
-                      },
-                      onButtonTap: () {
-                        if (!state.isGuestUser) {
-                          showProductDetails(
-                            isSaleOn: state.isSaleOn,
-                            context: context,
-                            productId: state.recommendedProductsList[index].id ?? '',
-                            productStock: (state.recommendedProductsList[index].productStock.toString()),
-                            productListIndex: 1,
-                          );
-                        } else {
-                          Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                        }
-                      })),
+                        },
+                        onQuantityDecreaseTap: () {
+                          if (productStockData.quantity != 0) {
+                            if (int.parse(productRecommendedData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
+                              context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
+                                    context: context,
+                                    productListIndex: 1,
+                                    productStockUpdateIndex: index,
+                                    productSupplierIds: productRecommendedData.supplierId.toString(),
+                                  ));
+
+                              context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
+                                    context: context,
+                                    productId: productRecommendedData.id.toString(),
+                                    productListIndex: 1,
+                                    productStockUpdateIndex: index,
+                                    productSupplierIds: productRecommendedData.supplierId.toString(),
+                                  ));
+                            } else {
+                              showMinMaxQtyConfirmDialog(
+                                context: context,
+                                productId: productRecommendedData.id.toString(),
+                                minBox: productRecommendedData.sale?.saleMinQuantity.toString() ?? '0',
+                                index: index,
+                                supplierId: productRecommendedData.supplierId.toString(),
+                                productListIndex: 1,
+                                isMixedSale: productRecommendedData.sale?.isMixedSale ?? false,
+                                sameSaleProducts: productRecommendedData.sale?.sameSaleProducts,
+                                isIncrease: false,
+                              );
+                            }
+                          }
+                        },
+                        onButtonTap: () {
+                          if (!state.isGuestUser) {
+                            showProductDetails(
+                              isSaleOn: state.isSaleOn,
+                              context: context,
+                              productId: productRecommendedData.id ?? '',
+                              productStock: (productRecommendedData.productStock.toString()),
+                              productListIndex: 1,
+                            );
+                          } else {
+                            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                          }
+                        });
+                  }),
         ),
       ]),
       crossFadeState: state.recommendedProductsList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
@@ -667,98 +675,95 @@ class HomeScreenWidget extends StatelessWidget {
                   itemCount: state.searchList.length,
                   shrinkWrap: true,
                   itemBuilder: (listViewContext, index) {
+                    var productSearchData = state.searchList[index];
+                    var productStockData = state.productStockList[0][index];
                     return SearchItemWidget(
                         isShowSeeAll: index == state.searchList.length - 1 ? true : false,
                         isGuestUser: state.isGuestUser,
-                        priceOfBox: state.searchList[index].priceOfBox,
-                        salePrice: state.searchList[index].salePrice,
-                        saleDesc: state.searchList[index].salesDesc,
-                        isPesach: state.searchList[index].isPesach,
-                        lowStock: state.searchList[index].lowStock.toString(),
-                        numberOfUnits: state.searchList[index].numberOfUnits,
-                        productStock: state.searchList[index].productStock.toString(),
+                        priceOfBox: productSearchData.priceOfBox,
+                        salePrice: productSearchData.salePrice,
+                        saleDesc: productSearchData.salesDesc,
+                        isPesach: productSearchData.isPesach,
+                        lowStock: productSearchData.lowStock.toString(),
+                        numberOfUnits: productSearchData.numberOfUnits,
+                        productStock: productSearchData.productStock.toString(),
                         context: context,
-                        searchName: state.searchList[index].name,
-                        searchImage: state.searchList[index].image,
-                        searchType: state.searchList[index].searchType,
-                        isMoreResults: state.searchList
-                            .where(
-                              (search) => search.searchType == state.searchList[index].searchType,
-                            )
-                            .toList()
-                            .isNotEmpty,
+                        searchName: productSearchData.name,
+                        searchImage: productSearchData.image,
+                        searchType: productSearchData.searchType,
+                        isMoreResults: state.searchList.where((search) => search.searchType == productSearchData.searchType).toList().isNotEmpty,
                         isLastItem: state.searchList.length - 1 == index,
-                        quantity: state.productStockList[0][index].quantity,
-                        isSale: state.searchList[index].isSale,
-                        minQuantity: state.searchList[index].saleMinQuantity,
-                        maxQuantity: state.searchList[index].saleMaxQuantity,
-                        isMixedSale: state.searchList[index].isMixedSale,
+                        quantity: productStockData.quantity,
+                        isSale: productSearchData.isSale,
+                        minQuantity: productSearchData.saleMinQuantity,
+                        maxQuantity: productSearchData.saleMaxQuantity,
+                        isMixedSale: productSearchData.isMixedSale,
                         onQuantityChanged: () {
                           context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
                                 context: context,
-                                quantity: state.productStockList[0][index].quantity.toString(),
+                                quantity: productStockData.quantity.toString(),
                                 productListIndex: 0,
                                 productStockUpdateIndex: index,
-                                productSupplierIds: state.searchList[index].supplierId.toString(),
+                                productSupplierIds: productSearchData.supplierId.toString(),
                               ));
                         },
                         onQuantityIncreaseTap: () {
-                          if (int.parse(state.searchList[index].saleMinQuantity ?? '0') <= state.productStockList[0][index].quantity + 1) {
+                          if (int.parse(productSearchData.saleMinQuantity ?? '0') <= productStockData.quantity + 1) {
                             context.read<HomeBloc>().add(HomeEvent.increaseListQuantityOfProduct(
                                   context: context,
                                   productListIndex: 0,
                                   productStockUpdateIndex: index,
-                                  productSupplierIds: state.searchList[index].supplierId.toString(),
+                                  productSupplierIds: productSearchData.supplierId.toString(),
                                 ));
 
                             context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
                                   context: context,
-                                  productId: state.searchList[index].searchId,
+                                  productId: productSearchData.searchId,
                                   productListIndex: 0,
                                   productStockUpdateIndex: index,
-                                  productSupplierIds: state.searchList[index].supplierId.toString(),
+                                  productSupplierIds: productSearchData.supplierId.toString(),
                                 ));
                           } else {
                             showMinMaxQtyConfirmDialog(
                               context: context,
-                              productId: state.searchList[index].searchId,
-                              minBox: state.searchList[index].saleMinQuantity.toString(),
+                              productId: productSearchData.searchId,
+                              minBox: productSearchData.saleMinQuantity.toString(),
                               index: index,
-                              supplierId: state.searchList[index].supplierId.toString(),
+                              supplierId: productSearchData.supplierId.toString(),
                               productListIndex: 0,
-                              isMixedSale: state.searchList[index].isMixedSale ?? false,
-                              sameSaleProducts: state.searchList[index].sameSaleProducts,
+                              isMixedSale: productSearchData.isMixedSale ?? false,
+                              sameSaleProducts: productSearchData.sameSaleProducts,
                               isIncrease: true,
                             );
                           }
                         },
                         onQuantityDecreaseTap: () {
-                          if (state.productStockList[0][index].quantity != 0) {
-                            if (int.parse(state.searchList[index].saleMinQuantity ?? '0') <= state.productStockList[0][index].quantity - 1) {
+                          if (productStockData.quantity != 0) {
+                            if (int.parse(productSearchData.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
                               context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
                                     context: context,
                                     productListIndex: 0,
                                     productStockUpdateIndex: index,
-                                    productSupplierIds: state.searchList[index].supplierId.toString(),
+                                    productSupplierIds: productSearchData.supplierId.toString(),
                                   ));
 
                               context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
                                     context: context,
-                                    productId: state.searchList[index].searchId,
+                                    productId: productSearchData.searchId,
                                     productListIndex: 0,
                                     productStockUpdateIndex: index,
-                                    productSupplierIds: state.searchList[index].supplierId.toString(),
+                                    productSupplierIds: productSearchData.supplierId.toString(),
                                   ));
                             } else {
                               showMinMaxQtyConfirmDialog(
                                 context: context,
-                                productId: state.searchList[index].searchId,
-                                minBox: state.searchList[index].saleMinQuantity.toString(),
+                                productId: productSearchData.searchId,
+                                minBox: productSearchData.saleMinQuantity.toString(),
                                 index: index,
-                                supplierId: state.searchList[index].supplierId.toString(),
+                                supplierId: productSearchData.supplierId.toString(),
                                 productListIndex: 0,
-                                isMixedSale: state.searchList[index].isMixedSale ?? false,
-                                sameSaleProducts: state.searchList[index].sameSaleProducts,
+                                isMixedSale: productSearchData.isMixedSale ?? false,
+                                sameSaleProducts: productSearchData.sameSaleProducts,
                                 isIncrease: false,
                               );
                             }
@@ -766,11 +771,11 @@ class HomeScreenWidget extends StatelessWidget {
                         },
                         isShowSearchLabel: index == 0
                             ? true
-                            : state.searchList[index].searchType != state.searchList[index - 1].searchType
+                            : productSearchData.searchType != state.searchList[index - 1].searchType
                                 ? true
                                 : false,
                         onSeeAllTap: () async {
-                          if (state.searchList[index].searchType == SearchTypes.category) {
+                          if (productSearchData.searchType == SearchTypes.category) {
                             dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {
                               AppStrings.searchString: state.search,
                               AppStrings.reqSearchString: state.search,
@@ -779,10 +784,10 @@ class HomeScreenWidget extends StatelessWidget {
                             if (searchResult != null) {
                               bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
                             }
-                          } else if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                          } else if (productSearchData.searchType == SearchTypes.subCategory) {
                             dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
-                              AppStrings.categoryIdString: state.searchList[index].categoryId,
-                              AppStrings.categoryNameString: state.searchList[index].categoryName,
+                              AppStrings.categoryIdString: productSearchData.categoryId,
+                              AppStrings.categoryNameString: productSearchData.categoryName,
                               AppStrings.searchString: state.search,
                               AppStrings.searchResultString: state.searchList,
                             });
@@ -790,14 +795,12 @@ class HomeScreenWidget extends StatelessWidget {
                               bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
                             }
                           } else {
-                            state.searchList[index].searchType == SearchTypes.company
+                            productSearchData.searchType == SearchTypes.company
                                 ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
-                                : state.searchList[index].searchType == SearchTypes.supplier
+                                : productSearchData.searchType == SearchTypes.supplier
                                     ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
-                                    : state.searchList[index].searchType == SearchTypes.sale
-                                        ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {
-                                            AppStrings.searchString: state.search,
-                                          })
+                                    : productSearchData.searchType == SearchTypes.sale
+                                        ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
                                         : Navigator.pushNamed(
                                             context,
                                             RouteDefine.supplierProductsScreen.name,
@@ -806,23 +809,23 @@ class HomeScreenWidget extends StatelessWidget {
                           }
                         },
                         onTap: () async {
-                          if (state.searchList[index].searchType == SearchTypes.subCategory) {
+                          if (productSearchData.searchType == SearchTypes.subCategory) {
                             inProgressSnackBarWidget(context);
                             return;
                           }
-                          if (state.searchList[index].searchType == SearchTypes.sale || state.searchList[index].searchType == SearchTypes.product) {
+                          if (productSearchData.searchType == SearchTypes.sale || productSearchData.searchType == SearchTypes.product) {
                             showProductDetails(
                               context: Platform.isIOS ? (state.context ?? context) : context,
-                              productId: state.searchList[index].searchId,
+                              productId: productSearchData.searchId,
                               isBarcode: true,
                               productListIndex: 0,
                               isSaleOn: state.isSaleOn,
-                              productStock: (state.searchList[index].productStock.toString()),
+                              productStock: (productSearchData.productStock.toString()),
                             );
-                          } else if (state.searchList[index].searchType == SearchTypes.category) {
+                          } else if (productSearchData.searchType == SearchTypes.category) {
                             dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
-                              AppStrings.categoryIdString: state.searchList[index].searchId,
-                              AppStrings.categoryNameString: state.searchList[index].name,
+                              AppStrings.categoryIdString: productSearchData.searchId,
+                              AppStrings.categoryNameString: productSearchData.name,
                               AppStrings.searchString: state.searchController.text,
                               AppStrings.searchResultString: state.searchList,
                             });
@@ -830,12 +833,10 @@ class HomeScreenWidget extends StatelessWidget {
                               bloc.add(HomeEvent.updateGlobalSearchEvent(search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
                             }
                           } else {
-                            state.searchList[index].searchType == SearchTypes.company
-                                ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
-                                    AppStrings.companyIdString: state.searchList[index].searchId,
-                                  })
+                            productSearchData.searchType == SearchTypes.company
+                                ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {AppStrings.companyIdString: productSearchData.searchId})
                                 : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
-                                    AppStrings.supplierIdString: state.searchList[index].searchId,
+                                    AppStrings.supplierIdString: productSearchData.searchId,
                                   });
                           }
                           bloc.add(const HomeEvent.changeCategoryExpansion());
@@ -884,6 +885,8 @@ class HomeScreenWidget extends StatelessWidget {
                   return BlocProvider.value(
                     value: context.read<HomeBloc>(),
                     child: BlocBuilder<HomeBloc, HomeState>(builder: (blocContext, state) {
+                      // var productDetailsData = state.productDetails.first;
+                      // var productStockData = state.productStockList[state.productListIndex][state.productStockUpdateIndex];
                       return Container(
                         height: getScreenHeight(context),
                         decoration: BoxDecoration(
@@ -893,99 +896,99 @@ class HomeScreenWidget extends StatelessWidget {
                         child: state.isProductLoading
                             ? const ProductDetailsShimmerWidget()
                             : state.productDetails.isEmpty
-                            ? NoDataBottomSheet(dialogContext: context)
-                            : SingleChildScrollView(
-                          physics: const ClampingScrollPhysics(),
-                          controller: ModalScrollController.of(context),
-                          child: Column(children: [
-                            CommonProductDetailsWidget(
-                                isIncludedVat: state.isIncludedVat,
-                                productDetails: state.productDetails,
-                                bottleTax: state.bottlePrice,
-                                isSubUserAddToBasket: state.isSubUserAddToBasket,
-                                totalBottleDeposit: (state.bottlePrice * (state.productDetails.first.numberOfUnit ?? 1) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
-                                isBottle: (state.productDetails.first.isBottle ?? false),
-                                addToOrderTap: () {
-                                  if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
-                                    context.read<HomeBloc>().add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
-                                  } else {
-                                    showMinQtyConfirmDialog(
-                                      context,
-                                      productId,
-                                      state.productDetails.first.sale!.saleMinQuantity.toString(),
-                                      state.productDetails.first.sale!.isMixedSale,
-                                      state.productDetails.first.sale!.sameSaleProducts,
-                                    );
-                                  }
-                                },
-                                isLoading: state.isLoading,
-                                imageOnTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (dialogContext) {
-                                        return Stack(children: [
-                                          SizedBox(
-                                            height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
-                                            width: getScreenWidth(context),
-                                            child: GestureDetector(
-                                              onVerticalDragStart: (dragDetails) {},
-                                              onVerticalDragUpdate: (dragDetails) {},
-                                              onVerticalDragEnd: (endDetails) {
-                                                Navigator.pop(dialogContext);
-                                              },
-                                              child: PhotoView(
-                                                imageProvider: NetworkImage('${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}'),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.pop(dialogContext);
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(top: AppConstants.padding_10),
-                                              child: Icon(Icons.close, color: AppColors.whiteColor),
-                                            ),
-                                          ),
-                                        ]);
-                                      });
-                                },
-                                context: context,
-                                productImages: [state.productDetails.first.mainImage ?? ''],
-                                productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
-                                productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                scrollController: scrollController,
-                                productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                                isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
-                                    ? state.productDetails.first.sale?.isSale == true
-                                    ? state.productDetails.first.recommendedConsumerOffer
-                                    : state.productDetails.first.recommendedRetailPrice
-                                    : '',
-                                onQuantityChanged: (quantity) {
-                                  context.read<HomeBloc>().add(HomeEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
-                                },
-                                onQuantityIncreaseTap: () {
-                                  context.read<HomeBloc>().add(HomeEvent.increaseQuantityOfProduct(context: context1));
-                                },
-                                onQuantityDecreaseTap: () {
-                                  if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
-                                    context.read<HomeBloc>().add(HomeEvent.decreaseQuantityOfProduct(context: context1));
-                                  }
-                                },
-                                onCloseTap: () {
-                                  context.read<HomeBloc>().add(HomeEvent.getProductSalesListEvent(context: context1));
-                                  context.read<HomeBloc>().add(HomeEvent.getRecommendationProductsListEvent(context: context1));
-                                  Navigator.pop(context);
-                                }),
-                            state.isRelatedShimmering
-                                ? const RelatedProductShimmerWidget()
-                                : state.relatedProductList.isEmpty
-                                ? 0.height
-                                : relatedProductWidget(context1, state.relatedProductList, context, scrollController, isSaleOn),
-                          ]),
-                        ),
+                                ? NoDataBottomSheet(dialogContext: context)
+                                : SingleChildScrollView(
+                                    physics: const ClampingScrollPhysics(),
+                                    controller: ModalScrollController.of(context),
+                                    child: Column(children: [
+                                      CommonProductDetailsWidget(
+                                          isIncludedVat: state.isIncludedVat,
+                                          productDetails: state.productDetails,
+                                          bottleTax: state.bottlePrice,
+                                          isSubUserAddToBasket: state.isSubUserAddToBasket,
+                                          totalBottleDeposit: (state.bottlePrice * (state.productDetails.first.numberOfUnit ?? 1) * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
+                                          isBottle: (state.productDetails.first.isBottle ?? false),
+                                          addToOrderTap: () {
+                                            if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
+                                              context.read<HomeBloc>().add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
+                                            } else {
+                                              showMinQtyConfirmDialog(
+                                                context,
+                                                productId,
+                                                state.productDetails.first.sale!.saleMinQuantity.toString(),
+                                                state.productDetails.first.sale!.isMixedSale,
+                                                state.productDetails.first.sale!.sameSaleProducts,
+                                              );
+                                            }
+                                          },
+                                          isLoading: state.isLoading,
+                                          imageOnTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (dialogContext) {
+                                                  return Stack(children: [
+                                                    SizedBox(
+                                                      height: getScreenHeight(context) - MediaQuery.of(context).padding.top,
+                                                      width: getScreenWidth(context),
+                                                      child: GestureDetector(
+                                                        onVerticalDragStart: (dragDetails) {},
+                                                        onVerticalDragUpdate: (dragDetails) {},
+                                                        onVerticalDragEnd: (endDetails) {
+                                                          Navigator.pop(dialogContext);
+                                                        },
+                                                        child: PhotoView(
+                                                          imageProvider: NetworkImage('${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}'),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.pop(dialogContext);
+                                                      },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(top: AppConstants.padding_10),
+                                                        child: Icon(Icons.close, color: AppColors.whiteColor),
+                                                      ),
+                                                    ),
+                                                  ]);
+                                                });
+                                          },
+                                          context: context,
+                                          productImages: [state.productDetails.first.mainImage ?? ''],
+                                          productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                          productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
+                                          productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                                          scrollController: scrollController,
+                                          productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                          isMixedSale: state.productDetails.first.sale!.isMixedSale,
+                                          recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
+                                              ? state.productDetails.first.sale?.isSale == true
+                                                  ? state.productDetails.first.recommendedConsumerOffer
+                                                  : state.productDetails.first.recommendedRetailPrice
+                                              : '',
+                                          onQuantityChanged: (quantity) {
+                                            context.read<HomeBloc>().add(HomeEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                          },
+                                          onQuantityIncreaseTap: () {
+                                            context.read<HomeBloc>().add(HomeEvent.increaseQuantityOfProduct(context: context1));
+                                          },
+                                          onQuantityDecreaseTap: () {
+                                            if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 1) {
+                                              context.read<HomeBloc>().add(HomeEvent.decreaseQuantityOfProduct(context: context1));
+                                            }
+                                          },
+                                          onCloseTap: () {
+                                            context.read<HomeBloc>().add(HomeEvent.getProductSalesListEvent(context: context1));
+                                            context.read<HomeBloc>().add(HomeEvent.getRecommendationProductsListEvent(context: context1));
+                                            Navigator.pop(context);
+                                          }),
+                                      state.isRelatedShimmering
+                                          ? const RelatedProductShimmerWidget()
+                                          : state.relatedProductList.isEmpty
+                                              ? 0.height
+                                              : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn),
+                                    ]),
+                                  ),
                       );
                     }),
                   );
@@ -994,7 +997,7 @@ class HomeScreenWidget extends StatelessWidget {
         });
   }
 
-  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context, ScrollController scrollController, bool isSaleOn) {
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context, bool isSaleOn) {
     return BlocProvider.value(
         value: context.read<HomeBloc>(),
         child: BlocBuilder<HomeBloc, HomeState>(builder: (blocContext, state) {
@@ -1009,55 +1012,58 @@ class HomeScreenWidget extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 itemBuilder: (context2, i) {
+                  var relatedProductData = relatedProductList.elementAt(i);
+                  var productStockData = state.productStockList[2].firstWhere;
+                  var productStockIndexData = state.productStockList[2].indexWhere;
                   return CommonProductSaleItemWidget(
-                      isSale: relatedProductList.elementAt(i).sale?.isSale,
+                      isSale: relatedProductData.sale?.isSale,
                       isGuestUser: false,
                       height: AppConstants.salesProductItemHeight,
                       width: getItemWidth(context),
-                      productName: relatedProductList.elementAt(i).productName ?? '',
-                      saleImage: relatedProductList.elementAt(i).mainImage ?? '',
-                      title: relatedProductList.elementAt(i).name,
-                      description: parse(relatedProductList.elementAt(i).sale?.saleDescription).body?.text ?? '',
-                      discountedPrice: double.parse(relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
-                      originalPrice: relatedProductList.elementAt(i).productPrice,
-                      productStock: relatedProductList.elementAt(i).productStock.toString(),
-                      lowStock: relatedProductList.elementAt(i).lowStock ?? '',
-                      isPesach: relatedProductList.elementAt(i).isPesach,
-                      quantity: state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity,
-                      minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
-                      maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
+                      productName: relatedProductData.productName ?? '',
+                      saleImage: relatedProductData.mainImage ?? '',
+                      title: relatedProductData.name,
+                      description: parse(relatedProductData.sale?.saleDescription).body?.text ?? '',
+                      discountedPrice: double.parse(relatedProductData.sale?.salePrice ?? '0'),
+                      originalPrice: relatedProductData.productPrice,
+                      productStock: relatedProductData.productStock.toString(),
+                      lowStock: relatedProductData.lowStock ?? '',
+                      isPesach: relatedProductData.isPesach,
+                      quantity: productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id).quantity,
+                      minQuantity: relatedProductData.sale?.saleMinQuantity,
+                      maxQuantity: relatedProductData.sale?.saleMaxQuantity,
                       isMixedSale: relatedProductList[i].sale?.isMixedSale,
                       onQuantityChanged: () {
                         context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
-                          context: context,
-                          quantity: state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity.toString(),
-                          productListIndex: 2,
-                          productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                          productSupplierIds: relatedProductList[i].supplierId.toString(),
-                        ));
+                              context: context,
+                              quantity: productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id).quantity.toString(),
+                              productListIndex: 2,
+                              productStockUpdateIndex: productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                              productSupplierIds: relatedProductList[i].supplierId.toString(),
+                            ));
                       },
                       onQuantityIncreaseTap: () {
-                        if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity + 1) {
+                        if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id).quantity + 1) {
                           context.read<HomeBloc>().add(HomeEvent.increaseListQuantityOfProduct(
-                            context: context,
-                            productListIndex: 2,
-                            productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                            productSupplierIds: relatedProductList[i].supplierId.toString(),
-                          ));
+                                context: context,
+                                productListIndex: 2,
+                                productStockUpdateIndex: productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                productSupplierIds: relatedProductList[i].supplierId.toString(),
+                              ));
 
                           context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                            context: context,
-                            productId: relatedProductList[i].id.toString(),
-                            productListIndex: 2,
-                            productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                            productSupplierIds: relatedProductList[i].supplierId.toString(),
-                          ));
+                                context: context,
+                                productId: relatedProductList[i].id.toString(),
+                                productListIndex: 2,
+                                productStockUpdateIndex: productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                productSupplierIds: relatedProductList[i].supplierId.toString(),
+                              ));
                         } else {
                           showMinMaxQtyConfirmDialog(
                             context: context,
                             productId: relatedProductList[i].id.toString(),
-                            minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                            index: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                            minBox: relatedProductData.sale?.saleMinQuantity.toString() ?? '0',
+                            index: productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
                             supplierId: relatedProductList[i].supplierId.toString(),
                             productListIndex: 2,
                             isMixedSale: relatedProductList[i].sale?.isMixedSale ?? false,
@@ -1067,28 +1073,28 @@ class HomeScreenWidget extends StatelessWidget {
                         }
                       },
                       onQuantityDecreaseTap: () {
-                        if (state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity != 0) {
-                          if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= state.productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity - 1) {
+                        if (productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id).quantity != 0) {
+                          if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id).quantity - 1) {
                             context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
-                              context: context,
-                              productListIndex: 2,
-                              productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                              productSupplierIds: relatedProductList[i].supplierId.toString(),
-                            ));
+                                  context: context,
+                                  productListIndex: 2,
+                                  productStockUpdateIndex: productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                  productSupplierIds: relatedProductList[i].supplierId.toString(),
+                                ));
 
                             context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                              context: context,
-                              productId: relatedProductList[i].id.toString(),
-                              productListIndex: 2,
-                              productStockUpdateIndex: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                              productSupplierIds: relatedProductList[i].supplierId.toString(),
-                            ));
+                                  context: context,
+                                  productId: relatedProductList[i].id.toString(),
+                                  productListIndex: 2,
+                                  productStockUpdateIndex: productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                  productSupplierIds: relatedProductList[i].supplierId.toString(),
+                                ));
                           } else {
                             showMinMaxQtyConfirmDialog(
                               context: context,
                               productId: relatedProductList[i].id.toString(),
-                              minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                              index: state.productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                              minBox: relatedProductData.sale?.saleMinQuantity.toString() ?? '0',
+                              index: productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
                               supplierId: relatedProductList[i].supplierId.toString(),
                               productListIndex: 2,
                               isMixedSale: relatedProductList[i].sale?.isMixedSale ?? false,
@@ -1122,31 +1128,31 @@ class HomeScreenWidget extends StatelessWidget {
     showDialog(
         context: context,
         builder: (dialogContext) => BlocProvider.value(
-          value: context.read<HomeBloc>(),
-          child: BlocBuilder<HomeBloc, HomeState>(builder: (context1, state) {
-            String mixedSale = '';
-            if (isMixedSale!) {
-              mixedSale = AppStrings.minSaleText(context, minBox);
-            } else {
-              mixedSale = AppStrings.otherSaleText(context, minBox);
-            }
-            return CustomDialog(
-                directionality: state.language,
-                title: mixedSale,
-                content: isMixedSale ? sameSaleProducts! : [],
-                isMixedSale: isMixedSale,
-                positiveTitle: AppLocalizations.of(context)!.closeText,
-                negativeTitle: AppLocalizations.of(context)!.addText,
-                negativeOnTap: () {
-                  Navigator.pop(dialogContext);
-                  bloc.add(HomeEvent.addToCartProductEvent(context: context, productId: productId));
-                },
-                positiveOnTap: () {
-                  Navigator.pop(dialogContext);
-                  bloc.add(HomeEvent.getCartCountEvent(context: context));
-                });
-          }),
-        ));
+              value: context.read<HomeBloc>(),
+              child: BlocBuilder<HomeBloc, HomeState>(builder: (context1, state) {
+                String mixedSale = '';
+                if (isMixedSale!) {
+                  mixedSale = AppStrings.minSaleText(context, minBox);
+                } else {
+                  mixedSale = AppStrings.otherSaleText(context, minBox);
+                }
+                return CustomDialog(
+                    directionality: state.language,
+                    title: mixedSale,
+                    content: isMixedSale ? sameSaleProducts! : [],
+                    isMixedSale: isMixedSale,
+                    positiveTitle: AppLocalizations.of(context)!.closeText,
+                    negativeTitle: AppLocalizations.of(context)!.addText,
+                    negativeOnTap: () {
+                      Navigator.pop(dialogContext);
+                      bloc.add(HomeEvent.addToCartProductEvent(context: context, productId: productId));
+                    },
+                    positiveOnTap: () {
+                      Navigator.pop(dialogContext);
+                      bloc.add(HomeEvent.getCartCountEvent(context: context));
+                    });
+              }),
+            ));
   }
 
   void showMinMaxQtyConfirmDialog({
@@ -1212,58 +1218,61 @@ class HomeScreenWidget extends StatelessWidget {
 
   Widget bottomButtonWidget(BuildContext context, HomeState state) => state.cartCount == 0
       ? CustomTextIconButtonWidget(
-    width: double.maxFinite,
-    title: AppLocalizations.of(context)!.new_order,
-    onPressed: () {
-      context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
-    },
-    svgImage: AppImagePath.add,
-  )
+          width: double.maxFinite,
+          title: AppLocalizations.of(context)!.new_order,
+          onPressed: () {
+            context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
+          },
+          svgImage: AppImagePath.add,
+        )
       : CustomTextIconButtonWidget(
-    width: double.maxFinite,
-    title: AppLocalizations.of(context)!.my_basket,
-    onPressed: () {
-      context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
-    },
-    svgImage: AppImagePath.cart,
-    cartCount: state.cartCount,
-  );
+          width: double.maxFinite,
+          title: AppLocalizations.of(context)!.my_basket,
+          onPressed: () {
+            context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
+          },
+          svgImage: AppImagePath.cart,
+          cartCount: state.cartCount,
+        );
 
   Widget messageListWidget(BuildContext context, HomeState state) => state.messageList.isEmpty
       ? 0.width
       : Column(mainAxisSize: MainAxisSize.min, children: [
-    titleRowWidget(
-        context: context,
-        title: AppLocalizations.of(context)!.messages,
-        allContentTitle: AppLocalizations.of(context)!.all_messages,
-        onTap: () {
-          Navigator.pushNamed(context, RouteDefine.messageScreen.name);
-        }),
-    10.height,
-    ListView.builder(
-        itemCount: state.messageList.length > 1 ? 2 : 1,
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemBuilder: (context, index) => messageListItem(
-            context: context,
-            title: state.messageList[index].message?.title ?? '',
-            content: parse(state.messageList[index].message?.body ?? '').body?.text ?? '',
-            dateTime: state.messageList[index].updatedAt?.replaceRange(11, 19, '') ?? '',
-            onTap: () async {
-              dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
-                AppStrings.messageDataString: state.messageList[index],
-                AppStrings.messageIdString: state.messageList[index].id,
-                AppStrings.isReadMoreString: true,
-              });
-              if (messageNewData != null) {
-                context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(
-                  messageId: messageNewData[AppStrings.messageIdString],
-                  isRead: messageNewData[AppStrings.messageReadString],
-                  isDelete: messageNewData[AppStrings.messageDeleteString],
-                ));
-              }
-            })),
-  ]);
+          buildListTitles(
+              context: context,
+              title: AppLocalizations.of(context)!.messages,
+              subTitle: AppLocalizations.of(context)!.all_messages,
+              onTap: () {
+                Navigator.pushNamed(context, RouteDefine.messageScreen.name);
+              }),
+          10.height,
+          ListView.builder(
+              itemCount: state.messageList.length > 1 ? 2 : 1,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                var messageData = state.messageList[index];
+                return messageListItem(
+                    context: context,
+                    title: messageData.message?.title ?? '',
+                    content: parse(messageData.message?.body ?? '').body?.text ?? '',
+                    dateTime: messageData.updatedAt?.replaceRange(11, 19, '') ?? '',
+                    onTap: () async {
+                      dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
+                        AppStrings.messageDataString: messageData,
+                        AppStrings.messageIdString: messageData.id,
+                        AppStrings.isReadMoreString: true,
+                      });
+                      if (messageNewData != null) {
+                        context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(
+                              messageId: messageNewData[AppStrings.messageIdString],
+                              isRead: messageNewData[AppStrings.messageReadString],
+                              isDelete: messageNewData[AppStrings.messageDeleteString],
+                            ));
+                      }
+                    });
+              }),
+        ]);
 
   Widget messageWidget(BuildContext context, HomeBloc bloc, HomeState state) => Container(
         height: 60,
@@ -1367,21 +1376,6 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         ]),
       ),
-    );
-  }
-
-  Widget titleRowWidget({required BuildContext context, required title, required allContentTitle, required void Function() onTap}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-      child: Row(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-        InkWell(
-          onTap: onTap,
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          child: Text(allContentTitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor, fontWeight: FontWeight.w500)),
-        ),
-      ]),
     );
   }
 

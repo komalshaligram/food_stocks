@@ -117,11 +117,7 @@ class MyClientsScreenWidget extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(vertical: 0),
             hintText: AppLocalizations.of(context)!.search,
             fillColor: AppColors.pageColor,
-            prefixIcon: Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.rotationY(context.rtl ? pi : 0),
-              child: Icon(Icons.search, color: AppColors.greyColor),
-            ),
+            prefixIcon: Transform(alignment: Alignment.center, transform: Matrix4.rotationY(context.rtl ? pi : 0), child: Icon(Icons.search, color: AppColors.greyColor)),
             suffixIcon: state.searchQuery.isNotEmpty
                 ? GestureDetector(
                     onTap: () {
@@ -311,20 +307,13 @@ class MyClientsScreenWidget extends StatelessWidget {
                                                 ),
                                                 padding: const EdgeInsets.all(AppConstants.padding_2),
                                                 child: ClipOval(
-                                                  child: Image.network("${AppUrlEndPoints.baseFileUrl}${client.suppliers![suppliersIndex].logo}", height: 40, width: 40, fit: BoxFit.contain, loadingBuilder: (
-                                                    context,
-                                                    child,
-                                                    loadingProgress,
-                                                  ) {
+                                                  child: Image.network("${AppUrlEndPoints.baseFileUrl}${client.suppliers![suppliersIndex].logo}", height: 40, width: 40, fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
                                                     if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
                                                       return CommonShimmerWidget(
                                                         child: Container(
                                                           height: 40,
                                                           width: 40,
-                                                          decoration: BoxDecoration(
-                                                            color: AppColors.whiteColor,
-                                                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-                                                          ),
+                                                          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
                                                         ),
                                                       );
                                                     }
@@ -427,24 +416,25 @@ class MyClientsScreenWidget extends StatelessWidget {
           10.width,
           buttonWidget(context, AppLocalizations.of(context)!.no, buttonTap: () {
             Navigator.of(dialogContext).pop();
-          }),
+          })
         ]),
       ),
     );
   }
 
   Widget buttonWidget(BuildContext context, String buttonTitle, {required Null Function() buttonTap}) => InkWell(
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      onTap: buttonTap,
-      child: Container(
-        padding: const EdgeInsets.all(AppConstants.padding_8),
-        width: MediaQuery.of(context).size.width / 3,
-        decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text(buttonTitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor))],
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: buttonTap,
+        child: Container(
+          padding: const EdgeInsets.all(AppConstants.padding_8),
+          width: MediaQuery.of(context).size.width / 3,
+          decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text(buttonTitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor))],
+          ),
         ),
-      ));
+      );
 }

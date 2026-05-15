@@ -129,14 +129,13 @@ class ActivityTimeScreenWidget extends StatelessWidget {
   Widget saveButtonWidget(BuildContext context, ActivityTimeState state) => Padding(
         padding: EdgeInsets.only(left: getScreenWidth(context) * 0.08, right: getScreenWidth(context) * 0.08),
         child: CustomButtonWidget(
-          buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
-          fontColors: AppColors.whiteColor,
-          isLoading: state.isLoading,
-          onPressed: () {
-            context.read<ActivityTimeBloc>().add(ActivityTimeEvent.activityTimeApiEvent(context: context));
-          },
-          bGColor: AppColors.mainColor,
-        ),
+            buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
+            fontColors: AppColors.whiteColor,
+            isLoading: state.isLoading,
+            onPressed: () {
+              context.read<ActivityTimeBloc>().add(ActivityTimeEvent.activityTimeApiEvent(context: context));
+            },
+            bGColor: AppColors.mainColor),
       );
 
   Widget skipButtonWidget(BuildContext context, ActivityTimeState state) => state.isUpdate
@@ -144,16 +143,15 @@ class ActivityTimeScreenWidget extends StatelessWidget {
       : Padding(
           padding: EdgeInsets.only(left: getScreenWidth(context) * 0.08, right: getScreenWidth(context) * 0.08),
           child: CustomButtonWidget(
-            buttonText: AppLocalizations.of(context)!.skip.toUpperCase().toUpperCase(),
-            fontColors: AppColors.mainColor,
-            borderColor: AppColors.mainColor,
-            isFromConnectScreen: true,
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              Navigator.pushNamed(context, RouteDefine.formDataScreen.name);
-            },
-            bGColor: AppColors.whiteColor,
-          ),
+              buttonText: AppLocalizations.of(context)!.skip.toUpperCase().toUpperCase(),
+              fontColors: AppColors.mainColor,
+              borderColor: AppColors.mainColor,
+              isFromConnectScreen: true,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                Navigator.pushNamed(context, RouteDefine.formDataScreen.name);
+              },
+              bGColor: AppColors.whiteColor),
         );
 }
 
@@ -304,9 +302,7 @@ class TimeContainer extends StatelessWidget {
                                       borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
                                     ),
                                     padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_30, vertical: AppConstants.padding_5),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.ok,
-                                    ))),
+                                    child: Text(AppLocalizations.of(context)!.ok))),
                             10.height,
                           ]),
                         ),

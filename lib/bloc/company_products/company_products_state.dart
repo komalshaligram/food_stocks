@@ -93,6 +93,6 @@ class CompanyProductsState with _$CompanyProductsState {
         language: AppStrings.hebrewString,
         isCartCountChange: false,
         messageCount: 0,
-    clubAgentId: '',
+        clubAgentId: '',
       );
 }

@@ -384,6 +384,8 @@
   "comax_order_error": "משהו השתבש",
   "comax_client_error": "משהו השתבש",
   "unit_in_box": "יחידות במארז",
+  "approx": "Approx. ",
+  "kgBox": "Kg in box",
   "price": "מחיר",
   "sub_categories": "תתי קטגויות",
   "per_unit": "ליחידה",

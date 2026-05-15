@@ -271,7 +271,10 @@ class BasketSummaryScreenWidget extends StatelessWidget {
         if (state.isPaymentFail && state.errorString != AppStrings.getLocalizedStrings(AppLocalizations.of(context)!.credit_card_not_found, context)) {
           bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.creditCard));
         } else {
-          Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.invoiceData: const MyCardInvoice(),});
+          Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {
+            AppStrings.isPaymentFail: state.isPaymentFail,
+            AppStrings.invoiceData: const MyCardInvoice(),
+          });
         }
       },
       positiveOnTap1: () {
@@ -709,8 +712,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                             vatPercentage: state.tempList[index].vatPercentage!,
                             qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
                           ).toStringAsFixed(2),
-                          local: AppStrings.hebrewLocal,
-                        ))
+                          local: AppStrings.hebrewLocal))
                       : (formatNumber(
                           value: bottleDepositCalculation(
                             deposit: state.tempList[index].bottleTax!,
@@ -731,14 +733,13 @@ class BasketSummaryScreenWidget extends StatelessWidget {
               : basketRow(
                   AppLocalizations.of(context)!.vat,
                   (formatNumber(
-                    value: totalVatAmountCalculation(
-                      price: double.parse(state.tempList[index].totalAmount!),
-                      vat: state.tempList[index].vatPercentage!,
-                      qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
-                      deposit: state.tempList[index].bottleTax!,
-                    ).toStringAsFixed(2),
-                    local: AppStrings.hebrewLocal,
-                  ))),
+                      value: totalVatAmountCalculation(
+                        price: double.parse(state.tempList[index].totalAmount!),
+                        vat: state.tempList[index].vatPercentage!,
+                        qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
+                        deposit: state.tempList[index].bottleTax!,
+                      ).toStringAsFixed(2),
+                      local: AppStrings.hebrewLocal))),
           state.isIncludedVat ? const SizedBox() : const DividerWidget(height: 8.0),
           state.isIncludedVat ? const SizedBox() : basketRow(AppLocalizations.of(context)!.total_refunds, displayAmount),
           state.isIncludedVat ? const SizedBox() : const DividerWidget(height: 8.0),
@@ -759,15 +760,14 @@ class BasketSummaryScreenWidget extends StatelessWidget {
               : basketRow(
                   AppLocalizations.of(context)!.total,
                   (formatNumber(
-                    value: vatCalculationRefund(
-                      price: double.parse(state.tempList[index].totalAmount!),
-                      vat: state.tempList[index].vatPercentage!,
-                      qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
-                      deposit: state.tempList[index].bottleTax!,
-                      refund: state.orderSummaryList.data?.openRefundTotalAmount,
-                    ).toStringAsFixed(2),
-                    local: AppStrings.hebrewLocal,
-                  )),
+                      value: vatCalculationRefund(
+                        price: double.parse(state.tempList[index].totalAmount!),
+                        vat: state.tempList[index].vatPercentage!,
+                        qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
+                        deposit: state.tempList[index].bottleTax!,
+                        refund: state.orderSummaryList.data?.openRefundTotalAmount,
+                      ).toStringAsFixed(2),
+                      local: AppStrings.hebrewLocal)),
                   isTitle: true),
           state.isIncludedVat ? const SizedBox() : const DividerWidget(height: 8.0),
           if (remainingRefund > 0)
@@ -777,10 +777,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                       ? AppLocalizations.of(context)!.refund_amount_1
                       : '${AppLocalizations.of(context)!.refund_amount_1} '
                           '${remainingRefund.toStringAsFixed(2)}${'₪'}',
-                  style: AppStyles.rkBoldTextStyle(
-                    size: AppConstants.font_15,
-                    color: AppColors.notificationColor,
-                  )),
+                  style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.notificationColor)),
               Text(
                 isHebrew ? '${AppLocalizations.of(context)!.refund_amount_2} ${remainingRefund.toStringAsFixed(2)}${'₪'}' : AppLocalizations.of(context)!.refund_amount_2,
                 style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.notificationColor),

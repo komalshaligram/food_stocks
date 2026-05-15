@@ -221,7 +221,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                     ),
                   )
                 : const SizedBox()
-            : const SizedBox(),
+            : const SizedBox()
       ]),
     );
   }

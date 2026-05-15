@@ -38,11 +38,7 @@ class FileUploadScreen extends StatelessWidget {
     bool isRegisterFile = args?[AppStrings.isRegisterFileString] ?? false;
 
     return BlocProvider(
-      create: (context) => FileUploadBloc()
-        ..add(FileUploadEvent.getFormsListEvent(
-          context: context,
-          isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
-        )),
+      create: (context) => FileUploadBloc()..add(FileUploadEvent.getFormsListEvent(context: context, isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false)),
       child: FileUploadScreenWidget(isRegisterFile: isRegisterFile),
     );
   }
@@ -143,11 +139,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                                       if (state.formsAndFilesList[1].url != null) {
                                                         bloc.add(FileUploadEvent.uploadApiEvent(context: context));
                                                       } else {
-                                                        CustomSnackBar.showSnackBar(
-                                                          context: context,
-                                                          title: AppLocalizations.of(context)!.upload_document,
-                                                          type: SnackBarType.failure,
-                                                        );
+                                                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.upload_document, type: SnackBarType.failure);
                                                       }
                                                     },
                                               bGColor: AppColors.mainColor,
@@ -302,12 +294,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                         return;
                                       }
                                     } else if (Platform.isIOS) {}
-                                    context.read<FileUploadBloc>().add(FileUploadEvent.pickDocumentEvent(
-                                          context: context,
-                                          isFromCamera: true,
-                                          fileIndex: fileIndex,
-                                          isDocument: false,
-                                        ));
+                                    context.read<FileUploadBloc>().add(FileUploadEvent.pickDocumentEvent(context: context, isFromCamera: true, fileIndex: fileIndex, isDocument: false));
                                     Navigator.pop(context1);
                                   }),
                               FileSelectionOptionWidget(
@@ -351,12 +338,7 @@ class FileUploadScreenWidget extends StatelessWidget {
                                         }
                                       }
                                     } else if (Platform.isIOS) {}
-                                    context.read<FileUploadBloc>().add(FileUploadEvent.pickDocumentEvent(
-                                          context: context,
-                                          isFromCamera: false,
-                                          fileIndex: fileIndex,
-                                          isDocument: true,
-                                        ));
+                                    context.read<FileUploadBloc>().add(FileUploadEvent.pickDocumentEvent(context: context, isFromCamera: false, fileIndex: fileIndex, isDocument: true));
                                     Navigator.pop(context);
                                   }),
                               url.isEmpty

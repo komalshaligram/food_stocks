@@ -57,10 +57,7 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
               child: state.isShimmering
                   ? const OrderSummaryScreenShimmerWidget(itemCount: 10, containerHeight: 40)
                   : !state.isShimmering && state.categoriesPermissionList.isEmpty
-                      ? SizedBox(
-                          height: getScreenHeight(context) * 0.8,
-                          child: noDataWidget(AppLocalizations.of(context)!.no_data),
-                        )
+                      ? SizedBox(height: getScreenHeight(context) * 0.8, child: noDataWidget(AppLocalizations.of(context)!.no_data))
                       : Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.end, children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_20),

@@ -87,14 +87,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
           }
           productStockList[1].clear();
           productStockList[1].addAll(stockList);
-          emit(state.copyWith(
-            productList: productList,
-            productStockList: productStockList,
-            pageNum: state.pageNum + 1,
-            isShimmering: false,
-            isProgress: false,
-            isLoadMore: false,
-          ));
+          emit(state.copyWith(productList: productList, productStockList: productStockList, pageNum: state.pageNum + 1, isShimmering: false, isProgress: false, isLoadMore: false));
           return;
         }
         if (state.isProgress) {

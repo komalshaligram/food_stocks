@@ -454,7 +454,6 @@ class ReorderScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-
                         onQuantityChanged: () {
                           context.read<ReorderBloc>().add(ReorderEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -890,6 +889,8 @@ class ReorderScreenWidget extends StatelessWidget {
     ]);
   }
 
+
+
   Widget buildSupplierSelection({required BuildContext context}) {
     return BlocProvider.value(
       value: context.read<ReorderBloc>(),
@@ -997,7 +998,7 @@ class ReorderScreenWidget extends StatelessWidget {
                     decoration: BoxDecoration(border: Border(top: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.5), width: 1))),
                     padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_30),
                     alignment: Alignment.center,
-                    child: Text(AppLocalizations.of(context)!.suppliers_not_available, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
+                    child: noDataWidget(AppLocalizations.of(context)!.suppliers_not_available),
                   )
                 : ConstrainedBox(
                     constraints: BoxConstraints(maxHeight: getScreenHeight(context) * 0.5, maxWidth: getScreenWidth(context)),

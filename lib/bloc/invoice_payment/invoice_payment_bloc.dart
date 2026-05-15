@@ -39,8 +39,8 @@ class InvoicePaymentBloc extends Bloc<InvoicePaymentEvent, InvoicePaymentState> 
           final res = await DioClient(event.context).post(AppUrlEndPoints.payInvoiceByCreditCard, data: payInvoiceCreditCardRequest);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));
+            Navigator.of(event.context).pop(true);
             CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.credit_card_payment_success, type: SnackBarType.success);
-            Navigator.pop(event.context, true);
           } else {
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.credit_card_payment_error, type: SnackBarType.failure);

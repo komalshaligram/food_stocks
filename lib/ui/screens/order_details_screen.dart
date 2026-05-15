@@ -94,22 +94,21 @@ class OrderDetailsScreenWidget extends StatelessWidget {
         Navigator.push(
             context,
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
-                orderNumber: orderNumber,
-                orderId: orderId,
-                isNavigateToProductDetailString: false,
-                productData: orderByIdList.data!.ordersBySupplier![index],
-                statusList: state.statusData,
-                isFromBasket: false,
-              ),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0.0, 1.0);
-                const end = Offset.zero;
-                const curve = Curves.bounceIn;
-                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                return SlideTransition(position: animation.drive(tween), child: child);
-              },
-            ));
+                pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
+                      orderNumber: orderNumber,
+                      orderId: orderId,
+                      isNavigateToProductDetailString: false,
+                      productData: orderByIdList.data!.ordersBySupplier![index],
+                      statusList: state.statusData,
+                      isFromBasket: false,
+                    ),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(0.0, 1.0);
+                  const end = Offset.zero;
+                  const curve = Curves.bounceIn;
+                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                  return SlideTransition(position: animation.drive(tween), child: child);
+                }));
       },
       child: Container(
         margin: const EdgeInsets.all(AppConstants.padding_10),
@@ -125,16 +124,12 @@ class OrderDetailsScreenWidget extends StatelessWidget {
               orderByIdList.data!.ordersBySupplier![index].supplierName!.toString(),
               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
             ),
-            Text(
-              getStatus(state.statusData, orderByIdList.data?.ordersBySupplier?[index].deliverStatus?.statusName ?? '', state.language).toTitleCase(),
-              style: AppStyles.rkRegularTextStyle(
+            Text(getStatus(state.statusData, orderByIdList.data?.ordersBySupplier?[index].deliverStatus?.statusName ?? '', state.language).toTitleCase(),
+                style: AppStyles.rkRegularTextStyle(
                   size: AppConstants.smallFont,
-                  color: getStatusColor(
-                    state.statusData,
-                    orderByIdList.data!.ordersBySupplier?[index].deliverStatus?.statusName ?? '',
-                  ),
-                  fontWeight: FontWeight.w700),
-            )
+                  color: getStatusColor(state.statusData, orderByIdList.data!.ordersBySupplier?[index].deliverStatus?.statusName ?? ''),
+                  fontWeight: FontWeight.w700,
+                ))
           ]),
           7.height,
           Row(children: [

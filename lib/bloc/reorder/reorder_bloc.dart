@@ -57,17 +57,15 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         emit(state.copyWith(clubAgentId: preferences.getClubAgentId()));
       }
       if (event is _getPreviousOrderProductsEvent) {
-        emit(
-          state.copyWith(
-            isIncludedVat: preferences.getIsIncludedVat(),
-            isSaleOn: preferences.getShowSale(),
-            isSubUserAddToBasket: preferences.getCanAddToBasket(),
-            cartCount: preferences.getCartCount(),
-            isGridView: preferences.getReorderProductGrid(),
-            bottleDeposit: preferences.getBottleTax(),
-            language: preferences.getAppLanguage(),
-          ),
-        );
+        emit(state.copyWith(
+          isIncludedVat: preferences.getIsIncludedVat(),
+          isSaleOn: preferences.getShowSale(),
+          isSubUserAddToBasket: preferences.getCanAddToBasket(),
+          cartCount: preferences.getCartCount(),
+          isGridView: preferences.getReorderProductGrid(),
+          bottleDeposit: preferences.getBottleTax(),
+          language: preferences.getAppLanguage(),
+        ));
 
         List<PreviousOrderProductData> previousOrderProductsList = state.previousOrderProductsList.toList(growable: true);
         List<List<ProductStockModel>> productStockList = List.from(state.productStockList, growable: true);

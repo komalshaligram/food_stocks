@@ -49,7 +49,7 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
   String _cartProductId = '';
   int _productQuantity = 0;
 
-  SupplierBrandProductsBloc() : super(SupplierBrandProductsState.initial()) {
+  SupplierBrandProductsBloc() : super(SupplierBrandProductsState.initial())  {
     on<SupplierBrandProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getPreferencesDataEvent) {
@@ -105,6 +105,8 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
           if (response.status == AppConstants.code_200) {
             final cartMap = await fetchCartQuantities(event.context);
             productList.addAll(response.data?.products ?? []);
+
+            printData("check here productlistdata ${productList.length}");
 
             for (var product in productList) {
               stockList.add(ProductStockModel(

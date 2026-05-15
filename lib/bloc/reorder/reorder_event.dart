@@ -48,6 +48,7 @@ class ReorderEvent with _$ReorderEvent {
   const factory ReorderEvent.getProductCategoriesListEvent({required BuildContext context}) = _getProductCategoriesListEvent;
 
   const factory ReorderEvent.relatedProductsEvent({required BuildContext context, required String productId}) = _relatedProductsEvent;
+
   const factory ReorderEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;
 
   const factory ReorderEvent.getPermissionList({required BuildContext context}) = _getPermissionList;
@@ -56,12 +57,7 @@ class ReorderEvent with _$ReorderEvent {
 
   const factory ReorderEvent.sortingEvent({required BuildContext context, required String sortField}) = _sortingEvent;
 
-  const factory ReorderEvent.selectFilterFieldEvent({
-    required BuildContext context,
-    required int mainIndex,
-    required int subIndex,
-    required int subCatIndex,
-  }) = _selectFilterFieldEvent;
+  const factory ReorderEvent.selectFilterFieldEvent({required BuildContext context, required int mainIndex, required int subIndex, required int subCatIndex}) = _selectFilterFieldEvent;
 
   const factory ReorderEvent.applyFilterEvent({required BuildContext context}) = _applyFilterEvent;
 

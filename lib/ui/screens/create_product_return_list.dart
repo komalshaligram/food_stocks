@@ -131,27 +131,26 @@ class CreateProductReturnListWidget extends StatelessWidget {
 
   void deleteProductDialog({required BuildContext context, Map? returnId}) {
     showDialog(
-      context: context,
-      builder: (context1) => BlocProvider.value(
-        value: context.read<CreateReturnBloc>(),
-        child: BlocBuilder<CreateReturnBloc, CreateReturnState>(builder: (c, state) {
-          CreateReturnBloc bloc = context.read<CreateReturnBloc>();
-          return CommonAlertDialog(
-              directionality: state.language,
-              title: AppLocalizations.of(context)!.delete,
-              subTitle: AppLocalizations.of(context)!.are_you_sure,
-              positiveTitle: AppLocalizations.of(context)!.yes,
-              negativeTitle: AppLocalizations.of(context)!.no,
-              negativeOnTap: () {
-                Navigator.pop(c);
-              },
-              positiveOnTap: () async {
-                bloc.add(CreateReturnEvent.deleteEvent(context: context));
-                Navigator.pop(c);
-              });
-        }),
-      ),
-    );
+        context: context,
+        builder: (context1) => BlocProvider.value(
+              value: context.read<CreateReturnBloc>(),
+              child: BlocBuilder<CreateReturnBloc, CreateReturnState>(builder: (c, state) {
+                CreateReturnBloc bloc = context.read<CreateReturnBloc>();
+                return CommonAlertDialog(
+                    directionality: state.language,
+                    title: AppLocalizations.of(context)!.delete,
+                    subTitle: AppLocalizations.of(context)!.are_you_sure,
+                    positiveTitle: AppLocalizations.of(context)!.yes,
+                    negativeTitle: AppLocalizations.of(context)!.no,
+                    negativeOnTap: () {
+                      Navigator.pop(c);
+                    },
+                    positiveOnTap: () async {
+                      bloc.add(CreateReturnEvent.deleteEvent(context: context));
+                      Navigator.pop(c);
+                    });
+              }),
+            ));
   }
 
   Widget returnListItem({required int index, required BuildContext context, required CreateReturnState state}) {

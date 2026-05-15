@@ -68,10 +68,7 @@ class InvoiceScreenWidget extends StatelessWidget {
             child: state.isShimmering
                 ? const OrderSummaryScreenShimmerWidget(containerHeight: 140)
                 : !state.isShimmering && state.invoiceDetailsList.isEmpty
-                    ? SizedBox(
-                        height: getScreenHeight(context) * 0.8,
-                        child: noDataWidget(AppLocalizations.of(context)!.no_data),
-                      )
+                    ? SizedBox(height: getScreenHeight(context) * 0.8, child: noDataWidget(AppLocalizations.of(context)!.no_data))
                     : ListView.builder(
                         itemCount: state.invoiceDetailsList.length,
                         shrinkWrap: true,
@@ -114,7 +111,8 @@ class InvoiceScreenWidget extends StatelessWidget {
           RouteDefine.invoicePdfScreen.name,
           arguments: {
             AppStrings.invoiceListString: invoicesList[index],
-            AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
+            AppStrings.invoiceTitleNameString: context.read<InvoiceBloc>().screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices :
+            AppLocalizations.of(context)!.my_refunds,
           },
         );
       },

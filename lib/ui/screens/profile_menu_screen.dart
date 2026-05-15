@@ -102,10 +102,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                   }),
                             )
                           : Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.whiteColor, width: 5),
-                                borderRadius: BorderRadius.circular(AppConstants.radius_40),
-                              ),
+                              decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(AppConstants.radius_40)),
                               child: SvgPicture.asset(AppImagePath.placeholderProfile, width: 80, height: 80, fit: BoxFit.scaleDown),
                             ),
                     ),
@@ -238,9 +235,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     ),
                     state.isLoading
                         ? Positioned.fill(
-                            child: Center(
-                            child: SizedBox(height: 120, width: 120, child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20)),
-                          ))
+                            child: Center(child: SizedBox(height: 120, width: 120, child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20))),
+                          )
                         : 0.width
                   ]),
                 ),

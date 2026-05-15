@@ -571,18 +571,16 @@ Widget loaderWidget(double size) => Center(
     );
 
 Widget invoiceOrderNumberWidget(String title) => Stack(alignment: Alignment.bottomLeft, children: [
-  Text(
-    title,
-    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
-    maxLines: 2,
-    overflow: TextOverflow.ellipsis,
-  ),
-  Positioned(
-    bottom: 0,
-    left: 0,
-    right: 0,
-    child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
-  ),
-]);
-
-
+      Text(
+        title,
+        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+      Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
+      ),
+    ]);

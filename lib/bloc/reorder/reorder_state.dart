@@ -55,7 +55,7 @@ class ReorderState with _$ReorderState {
         productDetails: [],
         productStockUpdateIndex: -1,
         productStockList: [
-          [ProductStockModel(productId: '')],
+          [const ProductStockModel(productId: '')],
           [],
           []
         ],
@@ -89,8 +89,8 @@ class ReorderState with _$ReorderState {
         isIncludedVat: false,
         isSaleOn: false,
         language: AppStrings.hebrewString,
-    isCartCountChange: false,
-    messageCount: 0,
-    clubAgentId: '',
+        isCartCountChange: false,
+        messageCount: 0,
+        clubAgentId: '',
       );
 }

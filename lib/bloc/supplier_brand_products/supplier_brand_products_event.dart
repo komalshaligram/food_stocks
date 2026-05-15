@@ -86,5 +86,4 @@ class SupplierBrandProductsEvent with _$SupplierBrandProductsEvent {
   }) = _addToCartListProductEvent;
 
   const factory SupplierBrandProductsEvent.getCartCountNoEvent({required BuildContext context}) = _getCartCountNoEvent;
-
 }

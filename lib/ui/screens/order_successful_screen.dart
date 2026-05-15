@@ -88,7 +88,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_17, color: AppColors.greyColor, fontWeight: FontWeight.normal),
                             ),
                           ),
-                          50.height,
+                          50.height
                         ]),
                       ),
                       20.height,
@@ -113,10 +113,7 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
                                     height: AppConstants.containerHeight_60,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(color: AppColors.navSelectedColor, borderRadius: BorderRadius.circular(AppConstants.radius_40)),
-                                    child: Text(
-                                      AppLocalizations.of(context)!.back_to_order,
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.whiteColor),
-                                    ),
+                                    child: Text(AppLocalizations.of(context)!.back_to_order, style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.whiteColor)),
                                   ),
                                 ),
                               ))

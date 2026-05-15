@@ -56,6 +56,7 @@ class CompanyScreenWidget extends StatelessWidget {
         ),
         body: SafeArea(
           child: SmartRefresher(
+            physics: const ClampingScrollPhysics(),
             enablePullDown: true,
             controller: state.refreshController,
             header: const RefreshWidget(),
@@ -77,10 +78,7 @@ class CompanyScreenWidget extends StatelessWidget {
                             height: getScreenHeight(context) - 80,
                             width: getScreenWidth(context),
                             alignment: Alignment.center,
-                            child: Text(
-                              AppLocalizations.of(context)?.companies_not_available ?? '',
-                              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                            ),
+                            child: noDataWidget(AppLocalizations.of(context)?.companies_not_available ?? ''),
                           )
                         : GridView.builder(
                             shrinkWrap: true,

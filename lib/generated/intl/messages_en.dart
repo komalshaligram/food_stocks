@@ -92,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "approve_previous_order": MessageLookupByLibrary.simpleMessage(
       "need to approve previous order",
     ),
+    "approx": MessageLookupByLibrary.simpleMessage("Approx. "),
     "apr": MessageLookupByLibrary.simpleMessage("Sep"),
     "april": MessageLookupByLibrary.simpleMessage("September"),
     "are_you_sure": MessageLookupByLibrary.simpleMessage("Are you sure?"),
@@ -573,6 +574,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "jun": MessageLookupByLibrary.simpleMessage("Jul"),
     "june": MessageLookupByLibrary.simpleMessage("July"),
     "kg": MessageLookupByLibrary.simpleMessage("kg"),
+    "kgBox": MessageLookupByLibrary.simpleMessage("Kg in box"),
     "last_months_expenses": MessageLookupByLibrary.simpleMessage(
       "Last month\'s expenses",
     ),

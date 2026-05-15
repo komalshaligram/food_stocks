@@ -76,19 +76,13 @@ class InvoicePdfScreenWidget extends StatelessWidget {
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 titleText(context, AppLocalizations.of(context)!.invoice_date),
-                subTitleValueText(
-                  context,
-                  (invoice.invoiceDate ?? '').isNotEmpty ? invoice.invoiceDate!.substring(0, 10) : '',
-                )
+                subTitleValueText(context, (invoice.invoiceDate ?? '').isNotEmpty ? invoice.invoiceDate!.substring(0, 10) : ''),
               ]),
             ),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 titleText(context, AppLocalizations.of(context)!.due_date),
-                subTitleValueText(
-                  context,
-                  (invoice.dueDate ?? '').isNotEmpty ? invoice.dueDate!.substring(0, 10) : '--',
-                )
+                subTitleValueText(context, (invoice.dueDate ?? '').isNotEmpty ? invoice.dueDate!.substring(0, 10) : '--'),
               ]),
             ),
           ]);
@@ -124,16 +118,8 @@ class InvoicePdfScreenWidget extends StatelessWidget {
                   child: invoice.orderNumber == null
                       ? const Text('---')
                       : Stack(alignment: Alignment.bottomLeft, children: [
-                          Text(
-                            invoice.orderNumber.toString(),
-                            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(height: 1, color: AppColors.notificationColor),
-                          ),
+                          Text(invoice.orderNumber.toString(), style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor)),
+                          Positioned(bottom: 0, left: 0, right: 0, child: Container(height: 1, color: AppColors.notificationColor)),
                         ]),
                 ),
               ]),

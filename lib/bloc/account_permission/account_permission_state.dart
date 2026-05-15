@@ -10,11 +10,5 @@ class AccountPermissionState with _$AccountPermissionState {
     required String subUserId,
   }) = _AccountPermissionState;
 
-  factory AccountPermissionState.initial() => const AccountPermissionState(
-        isShimmering: false,
-        permissionList: [],
-        isRefresh: false,
-        isUpdateProcess: false,
-        subUserId: '',
-      );
+  factory AccountPermissionState.initial() => const AccountPermissionState(isShimmering: false, permissionList: [], isRefresh: false, isUpdateProcess: false, subUserId: '');
 }

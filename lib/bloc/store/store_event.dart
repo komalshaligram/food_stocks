@@ -30,8 +30,6 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.updateQuantityOfProduct({required BuildContext context, required String quantity}) = _updateQuantityOfProduct;
 
-  const factory StoreEvent.changeNoteOfProduct({required String newNote}) = _changeNoteOfProduct;
-
   const factory StoreEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
   const factory StoreEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
@@ -44,11 +42,7 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.resetGlobalSearchEvent() = _resetGlobalSearchEvent;
 
-  const factory StoreEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
-
   const factory StoreEvent.updateGlobalSearchEvent({required String search, required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
-
-  const factory StoreEvent.toggleNoteEvent({required bool isBarcode}) = _toggleNoteEvent;
 
   const factory StoreEvent.relatedProductsEvent({required BuildContext context, required String productId}) = _relatedProductsEvent;
 

@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "approve_previous_order": MessageLookupByLibrary.simpleMessage(
       "עליך לאשר הזמנה קודמת",
     ),
+    "approx": MessageLookupByLibrary.simpleMessage("Approx. "),
     "apr": MessageLookupByLibrary.simpleMessage("אפר"),
     "april": MessageLookupByLibrary.simpleMessage("אַפּרִיל"),
     "are_you_sure": MessageLookupByLibrary.simpleMessage("האם אתה בטוח?"),
@@ -530,6 +531,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "jun": MessageLookupByLibrary.simpleMessage("יונ"),
     "june": MessageLookupByLibrary.simpleMessage("יוני"),
     "kg": MessageLookupByLibrary.simpleMessage("ק”ג"),
+    "kgBox": MessageLookupByLibrary.simpleMessage("Kg in box"),
     "last_months_expenses": MessageLookupByLibrary.simpleMessage(
       "הוצאות חודש שעבר",
     ),

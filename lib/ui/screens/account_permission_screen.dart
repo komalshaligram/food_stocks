@@ -98,10 +98,7 @@ class AccountPermissionScreenWidget extends StatelessWidget {
 
   Widget menuSwitchTile({required String title, required BuildContext menuSwitchContext, required bool isEnable, required void Function(bool)? onChanged}) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        border: Border(bottom: BorderSide(color: AppColors.greyColor.withValues(alpha: 0.4))),
-      ),
+      decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: BorderSide(color: AppColors.greyColor.withValues(alpha: 0.4)))),
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
       child: InkWell(
         splashColor: Colors.transparent,

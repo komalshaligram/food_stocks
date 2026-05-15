@@ -256,15 +256,13 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             maxQuantity: product.sale?.saleMaxQuantity,
             isMixedSale: product.sale?.isMixedSale,
             onQuantityChanged: () {
-              context.read<SupplierProductsBloc>().add(
-                    SupplierProductsEvent.updateListQuantityOfProduct(
-                      context: context,
-                      quantity: stock.quantity.toString(),
-                      productListIndex: 1,
-                      productStockUpdateIndex: index,
-                      productSupplierIds: product.supplierId.toString(),
-                    ),
-                  );
+              context.read<SupplierProductsBloc>().add(SupplierProductsEvent.updateListQuantityOfProduct(
+                    context: context,
+                    quantity: stock.quantity.toString(),
+                    productListIndex: 1,
+                    productStockUpdateIndex: index,
+                    productSupplierIds: product.supplierId.toString(),
+                  ));
             },
             onQuantityIncreaseTap: () => handleIncrease(context, state, index),
             onQuantityDecreaseTap: () => handleDecrease(context, state, index),
@@ -293,49 +291,46 @@ class SupplierProductsScreenWidget extends StatelessWidget {
         final stock = state.productStockList[1][index];
 
         return CommonSaleListView(
-          context: context,
-          discountedPrice: double.parse(product.sale!.salePrice),
-          isFromSale: product.sale?.isSale,
-          salesDesc: product.sale?.saleDescription,
-          isPesach: product.isPesach,
-          numberOfUnits: product.numberOfUnit.toString(),
-          lowStock: product.lowStock.toString(),
-          productStock: product.productStock.toString(),
-          productImage: product.mainImage ?? '',
-          productName: product.productName ?? '',
-          price: double.parse(product.productPrice.toString()),
-          quantity: stock.quantity,
-          minQuantity: product.sale?.saleMinQuantity,
-          maxQuantity: product.sale?.saleMaxQuantity,
-          isMixedSale: product.sale?.isMixedSale,
-          onQuantityChanged: () {
-            context.read<SupplierProductsBloc>().add(
-                  SupplierProductsEvent.updateListQuantityOfProduct(
+            context: context,
+            discountedPrice: double.parse(product.sale!.salePrice),
+            isFromSale: product.sale?.isSale,
+            salesDesc: product.sale?.saleDescription,
+            isPesach: product.isPesach,
+            numberOfUnits: product.numberOfUnit.toString(),
+            lowStock: product.lowStock.toString(),
+            productStock: product.productStock.toString(),
+            productImage: product.mainImage ?? '',
+            productName: product.productName ?? '',
+            price: double.parse(product.productPrice.toString()),
+            quantity: stock.quantity,
+            minQuantity: product.sale?.saleMinQuantity,
+            maxQuantity: product.sale?.saleMaxQuantity,
+            isMixedSale: product.sale?.isMixedSale,
+            onQuantityChanged: () {
+              context.read<SupplierProductsBloc>().add(SupplierProductsEvent.updateListQuantityOfProduct(
                     context: context,
                     quantity: stock.quantity.toString(),
                     productListIndex: 1,
                     productStockUpdateIndex: index,
                     productSupplierIds: product.supplierId.toString(),
-                  ),
+                  ));
+            },
+            onQuantityIncreaseTap: () => handleIncrease(context, state, index),
+            onQuantityDecreaseTap: () => handleDecrease(context, state, index),
+            onButtonTap: () {
+              if (!state.isGuestUser) {
+                showProductDetails(
+                  context: context,
+                  productListIndex: 1,
+                  productId: getProductId(state, index),
+                  productStock: product.productStock.toString(),
+                  isSaleOn: state.isSaleOn,
                 );
-          },
-          onQuantityIncreaseTap: () => handleIncrease(context, state, index),
-          onQuantityDecreaseTap: () => handleDecrease(context, state, index),
-          onButtonTap: () {
-            if (!state.isGuestUser) {
-              showProductDetails(
-                context: context,
-                productListIndex: 1,
-                productId: getProductId(state, index),
-                productStock: product.productStock.toString(),
-                isSaleOn: state.isSaleOn,
-              );
-            } else {
-              Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-            }
-          },
-          isGuestUser: false,
-        );
+              } else {
+                Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+              }
+            },
+            isGuestUser: false);
       });
 
   Widget buildSupplierProducts({
@@ -467,7 +462,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                         minQuantity: state.searchList[index].saleMinQuantity,
                         maxQuantity: state.searchList[index].saleMaxQuantity,
                         isMixedSale: state.searchList[index].isMixedSale,
-
                         onQuantityChanged: () {
                           context.read<SupplierProductsBloc>().add(SupplierProductsEvent.updateListQuantityOfProduct(
                                 context: context,
@@ -753,9 +747,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                                 });
                                           },
                                           context: context,
-                                          productImages: [
-                                            state.productDetails.first.mainImage ?? '',
-                                          ],
+                                          productImages: [state.productDetails.first.mainImage ?? ''],
                                           productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
                                           productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                           productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
@@ -844,7 +836,6 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-
                 onQuantityChanged: () {
                   context.read<SupplierProductsBloc>().add(SupplierProductsEvent.updateListQuantityOfProduct(
                         context: context,

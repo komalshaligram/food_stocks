@@ -35,11 +35,7 @@ class CreditCardDetailsScreen extends StatelessWidget {
           isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,
           invoiceData: invoiceData,
         )),
-      child: CreditCardDetailsScreenWidget(
-        isPaymentToNext: args?[AppStrings.isPaymentToNext],
-        invoiceData: invoiceData!,
-        isFromInvoicePayment: isFromInvoicePayment,
-      ),
+      child: CreditCardDetailsScreenWidget(isPaymentToNext: args?[AppStrings.isPaymentToNext], invoiceData: invoiceData!, isFromInvoicePayment: isFromInvoicePayment),
     );
   }
 }
@@ -69,24 +65,23 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
         child: Scaffold(
           backgroundColor: AppColors.whiteColor,
           appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
-            leading: GestureDetector(
-                onTap: () {
-                  if (isFromInvoicePayment) {
-                    Navigator.pop(context);
-                  } else {
-                    Navigator.pop(context, true);
-                  }
-                },
-                child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
-            title: Align(
-              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.credit_card_details, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-            ),
-            backgroundColor: AppColors.whiteColor,
-            titleSpacing: 0,
-            elevation: 0,
-          ),
+              surfaceTintColor: AppColors.whiteColor,
+              leading: GestureDetector(
+                  onTap: () {
+                    if (isFromInvoicePayment) {
+                      Navigator.pop(context);
+                    } else {
+                      Navigator.pop(context, true);
+                    }
+                  },
+                  child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
+              title: Align(
+                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+                child: Text(AppLocalizations.of(context)!.credit_card_details, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+              ),
+              backgroundColor: AppColors.whiteColor,
+              titleSpacing: 0,
+              elevation: 0),
           body: SafeArea(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),

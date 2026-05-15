@@ -263,26 +263,25 @@ class MessageContentScreenWidget extends StatelessWidget {
 
   void deleteMessageDialog({required BuildContext context, required String messageId}) {
     showDialog(
-      context: context,
-      builder: (context1) => BlocProvider.value(
-        value: context.read<MessageContentBloc>(),
-        child: BlocBuilder<MessageContentBloc, MessageContentState>(builder: (context, state) {
-          MessageContentBloc bloc = context.read<MessageContentBloc>();
-          return CommonAlertDialog(
-              isLogOutProcess: state.isLoading,
-              directionality: state.language,
-              title: AppLocalizations.of(context)!.delete,
-              subTitle: AppLocalizations.of(context)!.are_you_sure,
-              positiveTitle: AppLocalizations.of(context)!.yes,
-              negativeTitle: AppLocalizations.of(context)!.no,
-              negativeOnTap: () {
-                Navigator.pop(context1);
-              },
-              positiveOnTap: () async {
-                bloc.add(MessageContentEvent.messageDeleteEvent(messageId: state.message.id ?? '', context: context, dialogContext: context1));
-              });
-        }),
-      ),
-    );
+        context: context,
+        builder: (context1) => BlocProvider.value(
+              value: context.read<MessageContentBloc>(),
+              child: BlocBuilder<MessageContentBloc, MessageContentState>(builder: (context, state) {
+                MessageContentBloc bloc = context.read<MessageContentBloc>();
+                return CommonAlertDialog(
+                    isLogOutProcess: state.isLoading,
+                    directionality: state.language,
+                    title: AppLocalizations.of(context)!.delete,
+                    subTitle: AppLocalizations.of(context)!.are_you_sure,
+                    positiveTitle: AppLocalizations.of(context)!.yes,
+                    negativeTitle: AppLocalizations.of(context)!.no,
+                    negativeOnTap: () {
+                      Navigator.pop(context1);
+                    },
+                    positiveOnTap: () async {
+                      bloc.add(MessageContentEvent.messageDeleteEvent(messageId: state.message.id ?? '', context: context, dialogContext: context1));
+                    });
+              }),
+            ));
   }
 }

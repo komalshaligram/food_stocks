@@ -73,7 +73,7 @@ class ManageCreditCardWidget extends StatelessWidget {
                                 physics: const ClampingScrollPhysics(),
                                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                                   Container(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding: const EdgeInsets.all(AppConstants.padding_20),
                                     width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(color: AppColors.blueColor.withValues(alpha: 0.8), borderRadius: BorderRadius.circular(AppConstants.radius_15)),
                                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -120,26 +120,24 @@ class ManageCreditCardWidget extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20),
                               child: Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.end, children: [
                                 CustomButtonWidget(
-                                  buttonText: AppLocalizations.of(context)!.change_credit_card,
-                                  bGColor: AppColors.mainColor,
-                                  isLoading: state.isLoading,
-                                  onPressed: () {
-                                    bloc.add(ManageCreditCardEvent.addCreditCardEvent(context: context));
-                                  },
-                                  fontColors: AppColors.whiteColor,
-                                ),
+                                    buttonText: AppLocalizations.of(context)!.change_credit_card,
+                                    bGColor: AppColors.mainColor,
+                                    isLoading: state.isLoading,
+                                    onPressed: () {
+                                      bloc.add(ManageCreditCardEvent.addCreditCardEvent(context: context));
+                                    },
+                                    fontColors: AppColors.whiteColor),
                                 15.height,
                                 CustomButtonWidget(
-                                  buttonText: AppLocalizations.of(context)!.delete_credit_card,
-                                  fontColors: AppColors.redColor,
-                                  borderColor: AppColors.redColor,
-                                  isFromConnectScreen: true,
-                                  isLoading: state.isDeleteLoading,
-                                  loadingColor: AppColors.redColor,
-                                  onPressed: () {
-                                    bloc.add(ManageCreditCardEvent.deleteCreditCardEvent(context: context));
-                                  },
-                                ),
+                                    buttonText: AppLocalizations.of(context)!.delete_credit_card,
+                                    fontColors: AppColors.redColor,
+                                    borderColor: AppColors.redColor,
+                                    isFromConnectScreen: true,
+                                    isLoading: state.isDeleteLoading,
+                                    loadingColor: AppColors.redColor,
+                                    onPressed: () {
+                                      bloc.add(ManageCreditCardEvent.deleteCreditCardEvent(context: context));
+                                    }),
                               ]),
                             ),
                           ),
@@ -147,14 +145,13 @@ class ManageCreditCardWidget extends StatelessWidget {
                       : Padding(
                           padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.05, vertical: 20),
                           child: CustomButtonWidget(
-                            buttonText: AppLocalizations.of(context)!.add_credit_card,
-                            fontColors: AppColors.mainColor,
-                            borderColor: AppColors.mainColor,
-                            isFromConnectScreen: true,
-                            onPressed: () {
-                              bloc.add(ManageCreditCardEvent.addCreditCardEvent(context: context));
-                            },
-                          ),
+                              buttonText: AppLocalizations.of(context)!.add_credit_card,
+                              fontColors: AppColors.mainColor,
+                              borderColor: AppColors.mainColor,
+                              isFromConnectScreen: true,
+                              onPressed: () {
+                                bloc.add(ManageCreditCardEvent.addCreditCardEvent(context: context));
+                              }),
                         ),
                 ),
         ),

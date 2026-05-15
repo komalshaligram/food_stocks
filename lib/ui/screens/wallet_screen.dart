@@ -137,7 +137,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
               child: SafeArea(
                 child: NotificationListener<ScrollNotification>(
                     child: SingleChildScrollView(
-                      physics: state.walletTransactionsList.isEmpty ? const NeverScrollableScrollPhysics() :  const ClampingScrollPhysics(),
+                      physics: state.walletTransactionsList.isEmpty ? const NeverScrollableScrollPhysics() : const ClampingScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -335,16 +335,13 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                               5.height,
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!.history,
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-                                    ),
-                                    const Text('')
-                                  ],
-                                ),
+                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.history,
+                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
+                                  ),
+                                  const Text('')
+                                ]),
                               ),
                               3.height,
                               Padding(
