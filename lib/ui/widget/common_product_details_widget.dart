@@ -26,6 +26,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
   final double productPrice;
   final int productQuantity;
   final double productUnitPrice;
+  final String? scaleType;
   final List<Product> productDetails;
   final Function() addToOrderTap;
   final bool isSubUserAddToBasket;
@@ -45,6 +46,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
     required this.productImages,
     required this.productStock,
     required this.productUnitPrice,
+    required this.scaleType,
     required this.bottleTax,
     required this.isBottle,
     this.isLoading = false,
@@ -89,10 +91,15 @@ class CommonProductDetailsWidget extends StatelessWidget {
             Expanded(child: GestureDetector(onTap: isFromBasketScreen ? onCloseTap : onCloseTap, child: Icon(Icons.close, size: 36, color: AppColors.blackColor))),
           ]),
           5.height,
-          Text(
-            '${productDetails.first.numberOfUnit.toString()} ${AppLocalizations.of(context)!.unit_in_box} ',
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-          ),
+          scaleType == 'מארזים'
+              ? Text(
+                  '${productDetails.first.numberOfUnit.toString()} ${AppLocalizations.of(context)!.unit_in_box} ',
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                )
+              : Text(
+                  '${AppLocalizations.of(context)!.approx}${' '}${productDetails.first.numberOfUnit.toString()}${' '}${AppLocalizations.of(context)!.kgBox}',
+                  style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                ),
           Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
             (productDetails.first.sale?.isSale ?? false)
                 ? Text.rich(
@@ -114,7 +121,10 @@ class CommonProductDetailsWidget extends StatelessWidget {
                     ),
                   )
                 : Text(
-                    isIncludedVat ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} (${AppLocalizations.of(context)?.price_includes_vat})' : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
+                    isIncludedVat
+                        ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:'
+                            '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} (${AppLocalizations.of(context)?.price_includes_vat})'
+                        : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}',
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
                   ),
           ]),
@@ -433,8 +443,7 @@ class CommonProductDetailsWidget extends StatelessWidget {
                           : const IgnorePointer(),
                       !isSubUserAddToBasket ? 13.height : 0.width,
                       isSubUserAddToBasket
-                          ?
-                      CommonProductDetailsButton(
+                          ? CommonProductDetailsButton(
                               isLoading: isLoading,
                               isSupplierAvailable: true,
                               productStock: (productStock.toString()),

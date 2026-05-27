@@ -255,6 +255,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             minQuantity: product.sale?.saleMinQuantity,
             maxQuantity: product.sale?.saleMaxQuantity,
             isMixedSale: product.sale?.isMixedSale,
+            numberOfUnits: product?.numberOfUnit.toString(),
+            scaleType: product?.scaleType,
             onQuantityChanged: () {
               context.read<SupplierProductsBloc>().add(SupplierProductsEvent.updateListQuantityOfProduct(
                     context: context,
@@ -297,6 +299,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
             salesDesc: product.sale?.saleDescription,
             isPesach: product.isPesach,
             numberOfUnits: product.numberOfUnit.toString(),
+            scaleType: product?.scaleType,
             lowStock: product.lowStock.toString(),
             productStock: product.productStock.toString(),
             productImage: product.mainImage ?? '',
@@ -449,6 +452,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                         lowStock: state.searchList[index].lowStock.toString(),
                         isGuestUser: state.isGuestUser,
                         numberOfUnits: state.searchList[index].numberOfUnits,
+                        scaleType: state.searchList[index].scaleType,
                         priceOfBox: state.searchList[index].priceOfBox,
                         productStock: state.searchList[index].productStock.toString(),
                         context: context,
@@ -749,6 +753,7 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                                           context: context,
                                           productImages: [state.productDetails.first.mainImage ?? ''],
                                           productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
+                                          scaleType: state.productDetails.first.scaleType,
                                           productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                           productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                           scrollController: scrollController,
@@ -836,6 +841,8 @@ class SupplierProductsScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
+                numberOfUnits: relatedProductList.elementAt(i).numberOfUnit.toString(),
+                scaleType: relatedProductList.elementAt(i).scaleType,
                 onQuantityChanged: () {
                   context.read<SupplierProductsBloc>().add(SupplierProductsEvent.updateListQuantityOfProduct(
                         context: context,

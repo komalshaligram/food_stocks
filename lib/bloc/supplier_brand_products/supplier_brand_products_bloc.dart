@@ -49,7 +49,7 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
   String _cartProductId = '';
   int _productQuantity = 0;
 
-  SupplierBrandProductsBloc() : super(SupplierBrandProductsState.initial())  {
+  SupplierBrandProductsBloc() : super(SupplierBrandProductsState.initial()) {
     on<SupplierBrandProductsEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       if (event is _getPreferencesDataEvent) {
@@ -564,6 +564,7 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
                           image: supplier.mainImage ?? '',
                           productStock: supplier.productStock.toString(),
                           numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+                          scaleType: supplier.scaleType!,
                           priceOfBox: double.parse(supplier.productPrice.toString()),
                           lowStock: supplier.lowStock.toString(),
                           isPesach: supplier.isPesach ?? false,

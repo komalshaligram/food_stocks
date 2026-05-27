@@ -37,6 +37,7 @@ class CompanyData with _$CompanyData {
 class CompanyProduct with _$CompanyProduct {
   const factory CompanyProduct({
     @JsonKey(name: "numberOfUnit") String? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
     @JsonKey(name: "supplierId") String? supplierId,
     @JsonKey(name: "itemsWeight") String? itemsWeight,
     @JsonKey(name: "totalWeightCardboard") String? totalWeightCardboard,

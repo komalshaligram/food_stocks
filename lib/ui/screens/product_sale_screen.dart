@@ -380,7 +380,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                             });
                                       },
                                       context: context,
-                                      productUnitPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice,
+                                      productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                      scaleType: state.productDetails.first.scaleType,
                                       productImages: [state.productDetails.first.mainImage ?? ''],
                                       productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
                                       productStock: state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString(),
@@ -411,7 +412,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       ? const RelatedProductShimmerWidget()
                                       : state.relatedProductList.isEmpty
                                           ? 0.width
-                                          : relatedProductWidget(context1, state.relatedProductList, context, productStockList: state.productStockList, clubAgentId: state.clubAgentId)
+                                          : relatedProductWidget(context1, state.relatedProductList, context, productStockList: state.productStockList)
                                 ]),
                               ),
                       );
@@ -427,7 +428,6 @@ class ProductSaleScreenWidget extends StatelessWidget {
     List<RelatedProductDatum> relatedProductList,
     BuildContext context, {
     required List<List<ProductStockModel>> productStockList,
-    String? clubAgentId,
   }) {
     return Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
       relatedProductTitle(context),
@@ -457,6 +457,8 @@ class ProductSaleScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
+                numberOfUnits: relatedProductList.elementAt(i).numberOfUnit.toString(),
+                scaleType: relatedProductList.elementAt(i).scaleType,
                 onQuantityChanged: () {
                   context.read<ProductSaleBloc>().add(ProductSaleEvent.updateListQuantityOfProduct(
                         context: context,

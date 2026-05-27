@@ -111,7 +111,7 @@ class Product with _$Product {
     @JsonKey(name: "sku") String? sku,
     @JsonKey(name: "barcode") String? barcode,
     @JsonKey(name: "brand") String? brand,
-    @JsonKey(name: "scale") String? scale,
+    @JsonKey(name: "scaleType") String? scaleType,
     @JsonKey(name: "category") Category? category,
     @JsonKey(name: "subCategory") SubCategory? subCategory,
     @JsonKey(name: "subSubCategory") SubSubCategory? subSubCategory,

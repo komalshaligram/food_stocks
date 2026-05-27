@@ -422,22 +422,36 @@ double bottleDepositCalculationWithVat({required double deposit, required double
   return result;
 }
 
-double bottleDepositCalculationWithVatRefund({required double deposit, required double qty, double vatPercentage = 1, double? refund}) {
-  double depositWithVat = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
-
-  if (refund != null) {
-    if (depositWithVat <= -refund) {
-      return 0;
-    } else {
-      if (depositWithVat <= -refund) {
-        return depositWithVat + refund;
-      } else {
-        return depositWithVat + refund;
-      }
-    }
-  }
-  return depositWithVat;
+/// Sum of product [totalVatAmount] from cart API.
+double sumProductTotalVatAmounts(Iterable<double?> productTotalVatAmounts) {
+  return productTotalVatAmounts.fold<double>(0, (sum, amount) => sum + (amount ?? 0));
 }
+
+/// Grand total: sum(totalVatAmount) + bottle deposit + 18% on deposit when [bottleQuantities] > 0.
+double calculateBasketGrandTotal({required double productsTotalWithVat, required double bottleTax, required double vatPercentage, required int bottleQuantities}) {
+  if (bottleQuantities <= 0) {
+    return productsTotalWithVat;
+  }
+
+  return productsTotalWithVat + bottleDepositCalculationWithVat(deposit: bottleTax, qty: bottleQuantities.toDouble(), vatPercentage: vatPercentage);
+}
+
+// double bottleDepositCalculationWithVatRefund({required double deposit, required double qty, double vatPercentage = 1, double? refund}) {
+//   double depositWithVat = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
+//
+//   if (refund != null) {
+//     if (depositWithVat <= -refund) {
+//       return 0;
+//     } else {
+//       if (depositWithVat <= -refund) {
+//         return depositWithVat + refund;
+//       } else {
+//         return depositWithVat + refund;
+//       }
+//     }
+//   }
+//   return depositWithVat;
+// }
 
 String formatInvoiceDate(String date) {
   if (date.isEmpty) return '';

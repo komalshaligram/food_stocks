@@ -81,8 +81,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             bottlePrice: preferences.getBottleTax(),
             clubAgentId: preferences.getClubAgentId(),
           ));
-        }
-        else if (event is _getProductDetailsEvent) {
+        } else if (event is _getProductDetailsEvent) {
           emit(state.copyWith(isCartCountChange: false));
           add(const HomeEvent.removeRelatedProductEvent());
 
@@ -254,8 +253,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             Navigator.pop(event.context);
             emit(state.copyWith(isProductLoading: false));
           }
-        }
-        else if (event is _getProductSalesListEvent) {
+        } else if (event is _getProductSalesListEvent) {
           try {
             emit(state.copyWith(isProductSaleShimmering: true));
             final res = await DioClient(event.context).post(
@@ -287,8 +285,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } catch (_) {
             emit(state.copyWith(isProductSaleShimmering: false, allShimmering: false));
           }
-        }
-        else if (event is _increaseQuantityOfProduct) {
+        } else if (event is _increaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
 
           if (state.productStockUpdateIndex != -1) {
@@ -314,8 +311,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
             }
           }
-        }
-        else if (event is _decreaseQuantityOfProduct) {
+        } else if (event is _decreaseQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
           if (state.productStockUpdateIndex != -1) {
             if (productStockList[state.productListIndex][state.productStockUpdateIndex].quantity > 0) {
@@ -324,8 +320,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(productStockList: productStockList));
             }
           }
-        }
-        else if (event is _updateQuantityOfProduct) {
+        } else if (event is _updateQuantityOfProduct) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
           if (state.productStockUpdateIndex != -1) {
             String quantityString = event.quantity;
@@ -350,8 +345,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(productStockList: productStockList));
             }
           }
-        }
-        else if (event is _supplierSelectionEvent) {
+        } else if (event is _supplierSelectionEvent) {
           if (event.supplierIndex >= 0) {
             List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
             List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
@@ -367,8 +361,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             supplierList[event.supplierIndex] = supplierList[event.supplierIndex].copyWith(selectedIndex: event.supplierSaleIndex);
             emit(state.copyWith(productSupplierList: supplierList, productStockList: productStockList));
           }
-        }
-        else if (event is _addToCartProductEvent) {
+        } else if (event is _addToCartProductEvent) {
           if (state.productStockList[state.productListIndex][state.productStockUpdateIndex].productSupplierIds.isEmpty) {
             return;
           }
@@ -491,12 +484,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(isLoading: false));
             }
           }
-        }
-        else if (event is _setCartCountEvent) {
+        } else if (event is _setCartCountEvent) {
           await preferences.setCartCount(count: preferences.getCartCount() + 1);
           emit(state.copyWith(cartCount: preferences.getCartCount(), isCartCountChange: true));
-        }
-        else if (event is _getOrderCountEvent) {
+        } else if (event is _getOrderCountEvent) {
           try {
             int daysInMonth(DateTime date) => DateTimeRange(start: DateTime(date.year, date.month, 1), end: DateTime(date.year, date.month + 1)).duration.inDays;
             var now = DateTime.now();
@@ -510,8 +501,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(orderThisMonth: response.data!.toInt()));
             }
           } catch (_) {}
-        }
-        else if (event is _getMessageListEvent) {
+        } else if (event is _getMessageListEvent) {
           try {
             final res = await DioClient(event.context).post(AppUrlEndPoints.getNotificationMessageUrl, data: const GetMessagesReqModel(pageNum: 1, pageLimit: 2).toJson());
             if (res != null) {
@@ -544,8 +534,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
           } catch (_) {}
-        }
-        else if (event is _removeOrUpdateMessageEvent) {
+        } else if (event is _removeOrUpdateMessageEvent) {
           List<MessageData> messageList = state.messageList.toList(growable: true);
           if (event.isRead) {
             if (messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead == false) {
@@ -561,15 +550,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
           emit(state.copyWith(messageList: []));
           emit(state.copyWith(messageList: messageList));
-        }
-        else if (event is _updateMessageListEvent) {
+        } else if (event is _updateMessageListEvent) {
           if (event.messageIdList.isNotEmpty) {
             List<MessageData> messageList = state.messageList.toList(growable: true);
             messageList.removeWhere((message) => event.messageIdList.contains(message.id));
             emit(state.copyWith(messageList: messageList));
           }
-        }
-        else if (event is _getProfileDetailsEvent) {
+        } else if (event is _getProfileDetailsEvent) {
           try {
             final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl,
                 data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
@@ -615,8 +602,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               add(HomeEvent.checkVersionOfAppEvent(context: event.context));
             }
           } catch (_) {}
-        }
-        else if (event is _getRecommendationProductsListEvent) {
+        } else if (event is _getRecommendationProductsListEvent) {
           try {
             emit(state.copyWith(isShimmering: true));
 
@@ -645,8 +631,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } catch (_) {
             emit(state.copyWith(isShimmering: false));
           }
-        }
-        else if (event is _changeCategoryExpansion) {
+        } else if (event is _changeCategoryExpansion) {
           if (event.isOpened == false) {
             emit(state.copyWith(searchList: []));
           }
@@ -655,8 +640,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } else {
             emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
           }
-        }
-        else if (event is _globalSearchEvent) {
+        } else if (event is _globalSearchEvent) {
           emit(state.copyWith(search: state.searchController.text));
           try {
             GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(
@@ -688,6 +672,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                             image: supplier.mainImage ?? '',
                             productStock: supplier.productStock.toString(),
                             numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+                            scaleType: supplier.scaleType!,
                             priceOfBox: double.parse(supplier.productPrice.toString()),
                             lowStock: supplier.lowStock.toString(),
                             isPesach: supplier.isPesach ?? false,
@@ -726,11 +711,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } catch (exc) {
             emit(state.copyWith(isSearching: false));
           }
-        }
-        else if (event is _updateGlobalSearchEvent) {
+        } else if (event is _updateGlobalSearchEvent) {
           emit(state.copyWith(searchController: TextEditingController(text: event.search), searchList: event.searchList));
-        }
-        else if (event is _checkVersionOfAppEvent) {
+        } else if (event is _checkVersionOfAppEvent) {
           final checker = StoreVersionChecker();
           checker.checkUpdate().then((value) {
             printData("check here $value");
@@ -744,8 +727,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               customShowUpdateDialog(event.context, preferences.getAppLanguage(), value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
             }
           });
-        }
-        else if (event is _relatedProductsEvent) {
+        } else if (event is _relatedProductsEvent) {
           emit(state.copyWith(isRelatedShimmering: true));
           final res = await DioClient(event.context).post(AppUrlEndPoints.relatedProductsUrl, data: {AppStrings.mainProductIdString: event.productId});
           final response = RelatedProductResModel.fromJson(res);
@@ -775,14 +757,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               type: SnackBarType.success,
             );
           }
-        }
-        else if (event is _removeRelatedProductEvent) {
+        } else if (event is _removeRelatedProductEvent) {
           emit(state.copyWith(relatedProductList: []));
-        }
-        else if (event is _updateMaintenanceEvent) {
+        } else if (event is _updateMaintenanceEvent) {
           emit(state.copyWith(isDialogOpen: true));
-        }
-        else if (event is _generalSettings) {
+        } else if (event is _generalSettings) {
           try {
             emit(state.copyWith(pesachBannerShimmering: true, retryLoading: event.isRetryLoading));
             final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
@@ -825,8 +804,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           } catch (exc) {
             emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));
           }
-        }
-        else if (event is _getPermissionList) {
+        } else if (event is _getPermissionList) {
           if (preferences.getSubUser()) {
             try {
               final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getAccountPermissionUrl}${preferences.getSubUserId()}');
@@ -857,8 +835,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
             }
           }
-        }
-        else if (event is _userApproveEvent) {
+        } else if (event is _userApproveEvent) {
           try {
             final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
@@ -870,8 +847,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               }
             }
           } catch (_) {}
-        }
-        else if (event is _increaseListQuantityOfProductEvent) {
+        } else if (event is _increaseListQuantityOfProductEvent) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
           if (event.productStockUpdateIndex != -1) {
             if (productStockList[event.productListIndex][event.productStockUpdateIndex].quantity <
@@ -905,8 +881,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               );
             }
           }
-        }
-        else if (event is _decreaseListQuantityOfProductEvent) {
+        } else if (event is _decreaseListQuantityOfProductEvent) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
           if (event.productStockUpdateIndex != -1) {
             if (productStockList[event.productListIndex][event.productStockUpdateIndex].quantity > 0) {
@@ -917,8 +892,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(productStockList: productStockList));
             }
           }
-        }
-        else if (event is _updateListQuantityOfProductEvent) {
+        } else if (event is _updateListQuantityOfProductEvent) {
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
           if (event.productStockUpdateIndex != -1) {
             String quantityString = event.quantity;
@@ -948,8 +922,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(productStockList: productStockList));
             }
           }
-        }
-        else if (event is _addToCartListProductEvent) {
+        } else if (event is _addToCartListProductEvent) {
           _isProductInCart = false;
 
           if (event.productSupplierIds.isEmpty) {
@@ -1102,8 +1075,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               } catch (_) {}
             }
           }
-        }
-        else if (event is _getCartCountEvent) {
+        } else if (event is _getCartCountEvent) {
           try {
             final res = await DioClient(event.context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
             if (res != null) {
@@ -1134,14 +1106,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(messageCount: response.data ?? 0));
             }
           } catch (_) {}
-        }
-        else if (event is _getRecommendationProductsListEvent) {
+        } else if (event is _getRecommendationProductsListEvent) {
           emit(state.copyWith(noMinimumDialogEventKey: null));
-        }
-        else if (event is _clearNoMinimumDialogTriggerEvent) {
+        } else if (event is _clearNoMinimumDialogTriggerEvent) {
           emit(state.copyWith(noMinimumDialogEventKey: null));
-        }
-        else if (event is _getSuppliersDataListEvent) {
+        } else if (event is _getSuppliersDataListEvent) {
           try {
             emit(state.copyWith(isShimmering: true));
             final res = await DioClient(event.context).post(

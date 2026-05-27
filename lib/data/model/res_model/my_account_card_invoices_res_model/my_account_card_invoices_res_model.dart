@@ -42,6 +42,7 @@ double? _doubleFromJson(dynamic value) {
 class MyCardInvoice with _$MyCardInvoice {
   const factory MyCardInvoice({
     @JsonKey(name: "rivchitApiKey") String? rivchitApiKey,
+    @JsonKey(name: "documentType") int? documentType,
     @JsonKey(name: "invoiceNumber") int? invoiceNumber,
     @JsonKey(name: "invoiceLink") String? invoiceLink,
     @JsonKey(name: "invoiceDate") String? invoiceDate,
@@ -50,6 +51,7 @@ class MyCardInvoice with _$MyCardInvoice {
     @JsonKey(name: "orderId") String? orderId,
     @JsonKey(name: "orderNumber") String? orderNumber,
     @JsonKey(name: "invoiceAmount") String? invoiceAmount,
+    @JsonKey(name: "payableAmount") String? payableAmount,
     @JsonKey(name: "cardNumber") String? cardNumber,
     @JsonKey(name: "paymentMethod") String? paymentMethod,
     @JsonKey(name: "supplierId") String? supplierId,

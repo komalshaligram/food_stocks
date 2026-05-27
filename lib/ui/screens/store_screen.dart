@@ -456,6 +456,8 @@ class StoreScreenWidget extends StatelessWidget {
                             minQuantity: productSaleData.sale?.saleMinQuantity,
                             maxQuantity: productSaleData.sale?.saleMaxQuantity,
                             isMixedSale: productSaleData.sale?.isMixedSale,
+                            numberOfUnits: productSaleData.numberOfUnit.toString(),
+                            scaleType: productSaleData.scaleType,
                             onQuantityChanged: () {
                               context.read<StoreBloc>().add(StoreEvent.updateListQuantityOfProduct(
                                     context: context,
@@ -590,6 +592,8 @@ class StoreScreenWidget extends StatelessWidget {
                             minQuantity: productRecommendedData.sale?.saleMinQuantity,
                             maxQuantity: productRecommendedData.sale?.saleMaxQuantity,
                             isMixedSale: productRecommendedData.sale?.isMixedSale,
+                            numberOfUnits: productRecommendedData.numberOfUnit.toString(),
+                            scaleType: productRecommendedData.scaleType,
                             onQuantityChanged: () {
                               context.read<StoreBloc>().add(StoreEvent.updateListQuantityOfProduct(
                                     context: context,
@@ -724,6 +728,8 @@ class StoreScreenWidget extends StatelessWidget {
                             minQuantity: previousOrderData.sale?.saleMinQuantity,
                             maxQuantity: previousOrderData.sale?.saleMaxQuantity,
                             isMixedSale: previousOrderData.sale?.isMixedSale,
+                            numberOfUnits: previousOrderData.numberOfUnit.toString(),
+                            scaleType: previousOrderData.scaleType,
                             onQuantityChanged: () {
                               context.read<StoreBloc>().add(StoreEvent.updateListQuantityOfProduct(
                                     context: context,
@@ -873,6 +879,7 @@ class StoreScreenWidget extends StatelessWidget {
                         isPesach: productSearchData.isPesach,
                         lowStock: productSearchData.lowStock.toString(),
                         numberOfUnits: productSearchData.numberOfUnits,
+                        scaleType: productSearchData.scaleType,
                         productStock: productSearchData.productStock.toString(),
                         context: context,
                         searchName: productSearchData.name,
@@ -1129,6 +1136,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           context: context,
                                           productImages: [state.productDetails.first.mainImage ?? ''],
                                           productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
+                                          scaleType: state.productDetails.first.scaleType,
                                           productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                           productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                           scrollController: scrollController,
@@ -1203,10 +1211,12 @@ class StoreScreenWidget extends StatelessWidget {
                       productStock: relatedProductData.productStock.toString(),
                       lowStock: relatedProductData.lowStock ?? '',
                       isPesach: relatedProductData.isPesach,
-                      quantity: productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id).quantity, //[i].quantity,
+                      quantity: productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id).quantity,
                       minQuantity: relatedProductData.sale?.saleMinQuantity,
                       maxQuantity: relatedProductData.sale?.saleMaxQuantity,
                       isMixedSale: relatedProductData.sale?.isMixedSale,
+                      numberOfUnits: relatedProductData.numberOfUnit.toString(),
+                      scaleType: relatedProductData.scaleType,
                       onQuantityChanged: () {
                         context.read<StoreBloc>().add(StoreEvent.updateListQuantityOfProduct(
                               context: context,

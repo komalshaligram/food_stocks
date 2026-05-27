@@ -152,7 +152,9 @@ class ReturnListWidget extends StatelessWidget {
 
   Widget _quantitySection(BuildContext context, ProductReturnInfoState state) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(AppLocalizations.of(context)!.no_of_unit_for_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
+     state.scaleType == 'מארזים' ?
+     Text(AppLocalizations.of(context)!.no_of_unit_for_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)):
+    Text(AppLocalizations.of(context)!.no_of_kg_for_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
       5.height,
       Row(children: [
         Card(

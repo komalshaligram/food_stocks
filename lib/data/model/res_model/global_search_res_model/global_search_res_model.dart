@@ -23,7 +23,6 @@ class GlobalSearchResModel with _$GlobalSearchResModel {
 @freezed
 class Datum with _$Datum {
   const factory Datum({
-    @JsonKey(name: "numberOfUnit") String? numberOfUnit,
     @JsonKey(name: "isBottle") bool? isBottle,
     @JsonKey(name: "isAlcohol") bool? isAlcohol,
     @JsonKey(name: "productStock") int? productStock,
@@ -48,6 +47,8 @@ class Datum with _$Datum {
     @JsonKey(name: "lowStock") String? lowStock,
     @JsonKey(name: "recommendedRetailPrice") String? recommendedRetailPrice,
     @JsonKey(name: "recommendedConsumerOffer") String? recommendedConsumerOffer,
+    @JsonKey(name: "numberOfUnit") String? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
   }) = _Datum;
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

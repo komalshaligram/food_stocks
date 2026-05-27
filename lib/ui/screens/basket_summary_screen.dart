@@ -609,15 +609,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 borderCoder: AppColors.lightBorderColor,
                 flexValue: 7,
                 title: AppLocalizations.of(context)!.total_order,
-                value: (formatNumber(
-                  value: vatCalculation(
-                    price: double.parse(state.tempList[index].totalAmount ?? '0'),
-                    vat: state.tempList[index].vatPercentage ?? 0,
-                    qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
-                    deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
-                  ).toStringAsFixed(2),
-                  local: AppStrings.hebrewLocal,
-                )),
+                value: double.parse(state.tempList[index].totalAmount!.toString()).toStringAsFixed(2),
                 titleColor: AppColors.mainColor,
                 valueColor: AppColors.blackColor,
                 valueTextWeight: FontWeight.w500,
@@ -653,11 +645,54 @@ class BasketSummaryScreenWidget extends StatelessWidget {
 
   Widget totalAmountCard(BasketSummaryState state, BuildContext context, int index) {
     BasketSummaryBloc bloc = context.read<BasketSummaryBloc>();
-    double orderAmount = double.tryParse(state.tempList[index].totalAmount ?? '0') ?? 0;
+    // double orderAmount = double.tryParse(state.tempList[index].totalAmount ?? '0') ?? 0;
+    // double vatPercentage = state.tempList[index].vatPercentage ?? 0;
+    // double deposit = state.tempList[index].bottleTax ?? 0;
+    // double qty = state.tempList[index].bottleQuantities?.toDouble() ?? 0;
+    // double refundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0;
+    // double vatAmount = totalVatAmountCalculation(price: orderAmount, vat: vatPercentage, qty: qty, deposit: deposit);
+    // double bottleDeposit = bottleDepositCalculation(deposit: deposit, qty: qty);
+    // double totalBeforeRefund;
+    //
+    // if (state.isIncludedVat) {
+    //   totalBeforeRefund = orderAmount + bottleDeposit;
+    // } else {
+    //   totalBeforeRefund = orderAmount + vatAmount + bottleDeposit;
+    // }
+    //
+    // double remainingRefund = 0;
+    // double totalRefund = 0.0;
+    // if (refundAmount < 0) {
+    //   double refundAbs = -refundAmount;
+    //   if (refundAbs > totalBeforeRefund) {
+    //     totalRefund = totalBeforeRefund;
+    //     remainingRefund = refundAbs - totalRefund;
+    //   } else {
+    //     totalRefund = refundAbs;
+    //     remainingRefund = 0;
+    //   }
+    // }
+    //
+    // final isHebrew = Localizations.localeOf(context).languageCode == 'he';
+    // final rawRefundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0.0;
+    // final totalOrderAmount = vatCalculation(
+    //   price: double.parse(state.tempList[index].totalAmount ?? '0'),
+    //   vat: state.tempList[index].vatPercentage ?? 0,
+    //   qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
+    //   deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
+    // );
+    //
+    // final adjustedAmount = totalOrderAmount.abs() < rawRefundAmount.abs() ? totalOrderAmount : rawRefundAmount;
+    // final displayAmount = adjustedAmount == 0.0 ? '${adjustedAmount.abs().toStringAsFixed(2)}₪' : ' -${adjustedAmount.abs().toStringAsFixed(2)}₪';
+    //
+    // final double totalAmount = double.tryParse(state.tempList[index].totalAmount ?? "0") ?? 0;
+    // final double refundAmount1 = adjustedAmount.abs();
+    // final double finalAmount = refundAmount1 != 0 ? totalAmount - refundAmount : totalAmount;
+
+    double orderAmount = double.tryParse(state.tempList[index].totalAmount.toString()) ?? 0;
     double vatPercentage = state.tempList[index].vatPercentage ?? 0;
     double deposit = state.tempList[index].bottleTax ?? 0;
     double qty = state.tempList[index].bottleQuantities?.toDouble() ?? 0;
-    double refundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0;
     double vatAmount = totalVatAmountCalculation(price: orderAmount, vat: vatPercentage, qty: qty, deposit: deposit);
     double bottleDeposit = bottleDepositCalculation(deposit: deposit, qty: qty);
     double totalBeforeRefund;
@@ -668,30 +703,25 @@ class BasketSummaryScreenWidget extends StatelessWidget {
       totalBeforeRefund = orderAmount + vatAmount + bottleDeposit;
     }
 
-    double remainingRefund = 0;
-    double totalRefund = 0.0;
-    if (refundAmount < 0) {
-      double refundAbs = -refundAmount;
-      if (refundAbs > totalBeforeRefund) {
-        totalRefund = totalBeforeRefund;
-        remainingRefund = refundAbs - totalRefund;
-      } else {
-        totalRefund = refundAbs;
-        remainingRefund = 0;
-      }
-    }
-
+    double remainingRefund = 0.0;
     final isHebrew = Localizations.localeOf(context).languageCode == 'he';
     final rawRefundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0.0;
+
     final totalOrderAmount = vatCalculation(
-      price: double.parse(state.tempList[index].totalAmount ?? '0'),
+      price: double.parse(state.tempList[index].totalAmount.toString()),
       vat: state.tempList[index].vatPercentage ?? 0,
       qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
       deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
     );
 
+    final double totalAmount = double.tryParse(state.tempList[index].totalAmount.toString()) ?? 0;
     final adjustedAmount = totalOrderAmount.abs() < rawRefundAmount.abs() ? totalOrderAmount : rawRefundAmount;
-    final displayAmount = adjustedAmount == 0.0 ? '${adjustedAmount.abs().toStringAsFixed(2)}₪' : ' -${adjustedAmount.abs().toStringAsFixed(2)}₪';
+    final double refundAmount1 = adjustedAmount.abs();
+    final bool isRefundGreater = refundAmount1 > totalAmount;
+    final double finalAmount = isRefundGreater ? 0.0 : totalAmount - refundAmount1;
+    final double usedDisplayRefund = isRefundGreater ? totalAmount : refundAmount1;
+    remainingRefund = isRefundGreater ? rawRefundAmount - totalAmount : 0.0;
+    final displayAmount = usedDisplayRefund == 0.0 ? '${usedDisplayRefund.toStringAsFixed(2)}₪' : ' -${usedDisplayRefund.toStringAsFixed(2)}₪';
 
     return Container(
         alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
@@ -724,51 +754,66 @@ class BasketSummaryScreenWidget extends StatelessWidget {
           state.isIncludedVat
               ? const SizedBox()
               : basketRow(
-                  AppLocalizations.of(context)!.order_amount,
-                  formatNumber(value: double.parse(state.tempList[index].totalAmount!.toString()).toStringAsFixed(2), local: AppStrings.hebrewLocal),
+                  AppLocalizations.of(context)!.total_amount_subject_to_vat,
+                  formatNumber(value: double.parse(state.tempList[index].totalAmountSubjectToVat!.toString()).toStringAsFixed(2), local: AppStrings.hebrewLocal),
+                ),
+          state.isIncludedVat ? const SizedBox() : const DividerWidget(height: 8.0),
+          state.isIncludedVat
+              ? const SizedBox()
+              : basketRow(
+                  AppLocalizations.of(context)!.total_amount_not_subject_to_vat,
+                  formatNumber(value: double.parse(state.tempList[index].totalAmountNotSubjectToVat!.toString()).toStringAsFixed(2), local: AppStrings.hebrewLocal),
                 ),
           state.isIncludedVat ? const SizedBox() : const DividerWidget(height: 8.0),
           state.isIncludedVat
               ? const SizedBox()
               : basketRow(
                   AppLocalizations.of(context)!.vat,
-                  (formatNumber(
-                      value: totalVatAmountCalculation(
-                        price: double.parse(state.tempList[index].totalAmount!),
-                        vat: state.tempList[index].vatPercentage!,
-                        qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
-                        deposit: state.tempList[index].bottleTax!,
-                      ).toStringAsFixed(2),
-                      local: AppStrings.hebrewLocal))),
+                  double.parse(state.tempList[index].vatAmount.toString()).toStringAsFixed(2),
+                ),
+          // (formatNumber(
+          //     value: totalVatAmountCalculation(
+          //       price: double.parse(state.tempList[index].totalAmount!),
+          //       vat: state.tempList[index].vatPercentage!,
+          //       qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
+          //       deposit: state.tempList[index].bottleTax!,
+          //     ).toStringAsFixed(2),
+          //     local: AppStrings.hebrewLocal))),
           state.isIncludedVat ? const SizedBox() : const DividerWidget(height: 8.0),
           state.isIncludedVat ? const SizedBox() : basketRow(AppLocalizations.of(context)!.total_refunds, displayAmount),
           state.isIncludedVat ? const SizedBox() : const DividerWidget(height: 8.0),
           state.isIncludedVat
-              ? basketRow(
-                  AppLocalizations.of(context)!.total_price_with_vat,
-                  (formatNumber(
-                      value: (double.parse(state.tempList[index].totalAmount!) +
-                              (bottleDepositCalculationWithVatRefund(
-                                deposit: state.tempList[index].bottleTax!,
-                                qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
-                                vatPercentage: state.tempList[index].vatPercentage!,
-                                refund: state.orderSummaryList.data?.openRefundTotalAmount,
-                              )))
-                          .toString(),
-                      local: AppStrings.hebrewLocal)),
-                  isTitle: true)
+              ? basketRow(AppLocalizations.of(context)!.total_price_with_vat, finalAmount.toStringAsFixed(2), isTitle: true)
               : basketRow(
                   AppLocalizations.of(context)!.total,
-                  (formatNumber(
-                      value: vatCalculationRefund(
-                        price: double.parse(state.tempList[index].totalAmount!),
-                        vat: state.tempList[index].vatPercentage!,
-                        qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
-                        deposit: state.tempList[index].bottleTax!,
-                        refund: state.orderSummaryList.data?.openRefundTotalAmount,
-                      ).toStringAsFixed(2),
-                      local: AppStrings.hebrewLocal)),
-                  isTitle: true),
+                  finalAmount.toStringAsFixed(2),
+                  isTitle: true,
+                ),
+          // ? basketRow(
+          //     AppLocalizations.of(context)!.total_price_with_vat,
+          //     (formatNumber(
+          //         value: (double.parse(state.tempList[index].totalAmount!) +
+          //                 (bottleDepositCalculationWithVatRefund(
+          //                   deposit: state.tempList[index].bottleTax!,
+          //                   qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
+          //                   vatPercentage: state.tempList[index].vatPercentage!,
+          //                   refund: state.orderSummaryList.data?.openRefundTotalAmount,
+          //                 )))
+          //             .toString(),
+          //         local: AppStrings.hebrewLocal)),
+          //     isTitle: true)
+          // : basketRow(
+          //     AppLocalizations.of(context)!.total,
+          //     (formatNumber(
+          //         value: vatCalculationRefund(
+          //           price: double.parse(state.tempList[index].totalAmount!),
+          //           vat: state.tempList[index].vatPercentage!,
+          //           qty: state.tempList[index].bottleQuantities?.toDouble() ?? 0,
+          //           deposit: state.tempList[index].bottleTax!,
+          //           refund: state.orderSummaryList.data?.openRefundTotalAmount,
+          //         ).toStringAsFixed(2),
+          //         local: AppStrings.hebrewLocal)),
+          //     isTitle: true),
           state.isIncludedVat ? const SizedBox() : const DividerWidget(height: 8.0),
           if (remainingRefund > 0)
             Wrap(alignment: WrapAlignment.center, spacing: 4, children: [

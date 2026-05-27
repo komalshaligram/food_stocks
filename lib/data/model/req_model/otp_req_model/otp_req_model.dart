@@ -15,6 +15,7 @@ class OtpReqModel with _$OtpReqModel {
     String? contact,
     String? otp,
     String? tokenId,
+    String? applicationName,
   }) = _OtpReqModel;
 
   factory OtpReqModel.fromJson(Map<String, dynamic> json) => _$OtpReqModelFromJson(json);

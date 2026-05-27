@@ -23,6 +23,7 @@ class PesachData with _$PesachData {
     @JsonKey(name: "isBottle") bool? isBottle,
     @JsonKey(name: "itemsWeight") String? itemsWeight,
     @JsonKey(name: "numberOfUnit") String? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
     @JsonKey(name: "totalWeightCardboard") String? totalWeightCardboard,
     @JsonKey(name: "totalWeightSurface") String? totalWeightSurface,
     @JsonKey(name: "updatedAt") String? updatedAt,

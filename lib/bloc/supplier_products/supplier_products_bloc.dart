@@ -654,6 +654,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                           image: supplier.mainImage ?? '',
                           productStock: supplier.productStock.toString(),
                           numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+                          scaleType: supplier.scaleType!,
                           priceOfBox: double.parse(supplier.productPrice.toString()),
                           lowStock: supplier.lowStock.toString(),
                           isPesach: supplier.isPesach ?? false,

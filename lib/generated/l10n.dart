@@ -1019,9 +1019,9 @@ class S {
     );
   }
 
-  /// `kg`
+  /// `Kg`
   String get kg {
-    return Intl.message('kg', name: 'kg', desc: '', args: []);
+    return Intl.message('Kg', name: 'kg', desc: '', args: []);
   }
 
   /// `Monthly expense graph`
@@ -3344,9 +3344,9 @@ class S {
     );
   }
 
-  /// `Approx. `
+  /// `Approx`
   String get approx {
-    return Intl.message('Approx. ', name: 'approx', desc: '', args: []);
+    return Intl.message('Approx', name: 'approx', desc: '', args: []);
   }
 
   /// `Kg in box`
@@ -3409,6 +3409,26 @@ class S {
     return Intl.message(
       'Order amount',
       name: 'order_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Amount Subject to VAT`
+  String get total_amount_subject_to_vat {
+    return Intl.message(
+      'Total Amount Subject to VAT',
+      name: 'total_amount_subject_to_vat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Amount Not Subject to VAT`
+  String get total_amount_not_subject_to_vat {
+    return Intl.message(
+      'Total Amount Not Subject to VAT',
+      name: 'total_amount_not_subject_to_vat',
       desc: '',
       args: [],
     );
@@ -5504,6 +5524,16 @@ class S {
     );
   }
 
+  /// `Number of kgs for return?`
+  String get no_of_kg_for_return {
+    return Intl.message(
+      'Number of kgs for return?',
+      name: 'no_of_kg_for_return',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Why do you want to return the product?`
   String get why_return_product {
     return Intl.message(
@@ -6199,6 +6229,26 @@ class S {
     return Intl.message(
       'Success! Your invoice has been paid using your credit card.',
       name: 'credit_card_payment_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PDF is still loading. Please wait.`
+  String get pdf_loading {
+    return Intl.message(
+      'PDF is still loading. Please wait.',
+      name: 'pdf_loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unable to share PDF. Please try again.`
+  String get unable_pdf {
+    return Intl.message(
+      'Unable to share PDF. Please try again.',
+      name: 'unable_pdf',
       desc: '',
       args: [],
     );

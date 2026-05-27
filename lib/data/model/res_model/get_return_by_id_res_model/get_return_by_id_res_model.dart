@@ -61,6 +61,7 @@ class ReturnProduct with _$ReturnProduct {
     @JsonKey(name: "proofImages") List<String>? proofImages,
     String? reasonToReturn,
     @JsonKey(name: "productImage") String? productImg,
+    @JsonKey(name: "scaleType") String? scaleType,
     String? returnId,
     String? supplierId,
     String? supplierName,

@@ -32,6 +32,7 @@ class SupplierProductsData with _$SupplierProductsData {
     @JsonKey(name: "sku") String? sku,
     @JsonKey(name: "brandName") String? brandName,
     @JsonKey(name: "numberOfUnit") String? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
     @JsonKey(name: "productName") String? productName,
     @JsonKey(name: "mainImage") String? mainImage,
     @JsonKey(name: "itemsWeight") String? itemsWeight,

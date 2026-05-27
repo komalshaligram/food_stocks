@@ -31,6 +31,7 @@ class SearchItemWidget extends StatelessWidget {
     required this.searchImage,
     required this.isGuestUser,
     required this.numberOfUnits,
+    this.scaleType,
     required this.priceOfBox,
     required this.salePrice,
     required this.isShowSeeAll,
@@ -55,6 +56,7 @@ class SearchItemWidget extends StatelessWidget {
   final String productStock;
   final bool isGuestUser;
   final int numberOfUnits;
+  final String? scaleType;
   final bool isPesach;
   final Function() onTap;
   final Function() onSeeAllTap;
@@ -112,7 +114,7 @@ class SearchItemWidget extends StatelessWidget {
                       : salePrice != 0.0
                           ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true
                               ? 220
-                              : 150
+                              : 160
                           : 140
                   : isPesach
                       ? 130
@@ -189,10 +191,15 @@ class SearchItemWidget extends StatelessWidget {
                                     style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400),
                                   ),
                     numberOfUnits != 0
-                        ? Text(
-                            '${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.unit_in_box}',
-                            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-                          )
+                        ? scaleType == 'מארזים'
+                            ? Text(
+                                '${numberOfUnits.toString()} ${AppLocalizations.of(context)!.unit_in_box}',
+                                style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                              )
+                            : Text(
+                                '${AppLocalizations.of(context)!.approx}${' '}${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.kgBox}',
+                                style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                              )
                         : 0.width,
                     !isGuestUser
                         ? numberOfUnits != 0 && priceOfBox != 0.0

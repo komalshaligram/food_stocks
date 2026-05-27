@@ -41,6 +41,7 @@ class PlanoProduct with _$PlanoProduct {
     @JsonKey(name: "isBottle") bool? isBottle,
     @JsonKey(name: "itemsWeight") String? itemsWeight,
     @JsonKey(name: "numberOfUnit") String? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
     @JsonKey(name: "totalWeight") String? totalWeight,
     @JsonKey(name: "totalWeightCardboard") String? totalWeightCardboard,
     @JsonKey(name: "totalWeightSurface") String? totalWeightSurface,

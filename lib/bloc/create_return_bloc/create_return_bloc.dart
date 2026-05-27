@@ -48,6 +48,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
                 totalUnits: tempList[i].totalUnits,
                 supplierName: tempList[i].supplierName,
                 returnId: res.data?.id ?? '',
+                scaleType: tempList[i].scaleType,
               );
             }
             emit(state.copyWith(

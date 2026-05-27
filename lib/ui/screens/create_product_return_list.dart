@@ -185,7 +185,9 @@ class CreateProductReturnListWidget extends StatelessWidget {
               3.height,
               Text(state.returnProductList[index].supplierName ?? '', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.mainColor)),
               Text(
-                '${state.returnProductList[index].totalUnits.toString()} ${AppLocalizations.of(context)!.units}',
+                  state.returnProductList[index].scaleType == 'מארזים' ?
+                  '${state.returnProductList[index].totalUnits.toString()} ${AppLocalizations.of(context)!.units}':
+                  '${state.returnProductList[index].totalUnits.toString()} ${AppLocalizations.of(context)!.kg}',
                 style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),
               ),
               3.height,

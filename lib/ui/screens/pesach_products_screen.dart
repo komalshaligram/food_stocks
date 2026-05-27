@@ -276,6 +276,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
             minQuantity: product.sale?.saleMinQuantity,
             maxQuantity: product.sale?.saleMaxQuantity,
             isMixedSale: product.sale?.isMixedSale,
+            numberOfUnits: product?.numberOfUnit.toString(),
+            scaleType: product?.scaleType,
             onQuantityChanged: () => updateQty(context, state, index),
             onQuantityIncreaseTap: () => handleIncrease(context, state, index),
             onQuantityDecreaseTap: () => handleDecrease(context, state, index),
@@ -312,6 +314,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
             lowStock: product.lowStock.toString(),
             isGuestUser: state.isGuestUser,
             numberOfUnits: product.numberOfUnit ?? '0',
+            scaleType: product?.scaleType,
             productStock: product.productStock.toString(),
             productImage: product.mainImage ?? '',
             productName: product.productName ?? '',
@@ -451,6 +454,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                         lowStock: state.searchList[index].lowStock.toString(),
                         isGuestUser: state.isGuestUser,
                         numberOfUnits: state.searchList[index].numberOfUnits,
+                        scaleType: state.searchList[index].scaleType,
                         priceOfBox: state.searchList[index].priceOfBox,
                         productStock: state.searchList[index].productStock.toString(),
                         context: context,
@@ -746,6 +750,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                           context: context,
                                           productImages: [state.productDetails.first.mainImage ?? ''],
                                           productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                          scaleType: state.productDetails.first.scaleType,
                                           productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                           productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                           scrollController: scrollController,
@@ -775,7 +780,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                           ? const RelatedProductShimmerWidget()
                                           : state.relatedProductList.isEmpty
                                               ? 0.width
-                                              : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn, productStockList: state.productStockList, state.clubAgentId!),
+                                              : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn, productStockList: state.productStockList),
                                       10.height
                                     ]),
                                   ),
@@ -791,8 +796,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
     BuildContext prevContext,
     List<RelatedProductDatum> relatedProductList,
     BuildContext context,
-    bool isSaleOn,
-    String clubAgentId, {
+    bool isSaleOn, {
     required List<List<ProductStockModel>> productStockList,
   }) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -822,6 +826,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
+                numberOfUnits: relatedProductList.elementAt(i).numberOfUnit.toString(),
+                scaleType: relatedProductList.elementAt(i).scaleType,
                 onQuantityChanged: () {
                   context.read<PesachProductsBloc>().add(PesachProductsEvent.updateListQuantityOfProduct(
                         context: context,

@@ -17,7 +17,6 @@ class RelatedProductResModel with _$RelatedProductResModel {
 @freezed
 class RelatedProductDatum with _$RelatedProductDatum {
   const factory RelatedProductDatum({
-    @JsonKey(name: "numberOfUnit") String? numberOfUnit,
     @JsonKey(name: "supplierId") String? supplierId,
     @JsonKey(name: "itemsWeight") String? itemsWeight,
     @JsonKey(name: "isBottle") bool? isBottle,
@@ -41,7 +40,6 @@ class RelatedProductDatum with _$RelatedProductDatum {
     @JsonKey(name: "subcategories") String? subcategories,
     @JsonKey(name: "manufacturingCountry") String? manufacturingCountry,
     @JsonKey(name: "caseType") String? caseType,
-    @JsonKey(name: "scale") String? scale,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "productNumber") String? productNumber,
     @JsonKey(name: "productStock") String? productStock,
@@ -51,6 +49,8 @@ class RelatedProductDatum with _$RelatedProductDatum {
     @JsonKey(name: "lowStock") String? lowStock,
     @JsonKey(name: "recommendedRetailPrice") String? recommendedRetailPrice,
     @JsonKey(name: "recommendedConsumerOffer") String? recommendedConsumerOffer,
+    @JsonKey(name: "numberOfUnit") String? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
   }) = _Datum;
 
   factory RelatedProductDatum.fromJson(Map<String, dynamic> json) => _$RelatedProductDatumFromJson(json);

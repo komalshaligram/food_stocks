@@ -71,6 +71,7 @@ class ProductData with _$ProductData {
     @JsonKey(name: "component") String? component,
     @JsonKey(name: "healthAndLifestye") String? healthAndLifestye,
     @JsonKey(name: "numberOfUnit") String? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
     @JsonKey(name: "isBottle") bool? isBottle,
     @JsonKey(name: "isPesach") bool? isPesach,
     @JsonKey(name: "nmMashlim") String? nmMashlim,

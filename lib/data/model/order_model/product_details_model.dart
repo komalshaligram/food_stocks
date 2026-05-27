@@ -16,6 +16,8 @@ class ProductDetailsModel {
   double? discountPrice;
   bool isSale;
   String? supplierName;
+  String? numberOfUnits;
+  String? scaleType;
 
   ProductDetailsModel({
     this.isProductIssue = false,
@@ -35,5 +37,7 @@ class ProductDetailsModel {
     required this.discountPrice,
     this.isSale = false,
     this.supplierName = '',
+    required this.numberOfUnits,
+    required this.scaleType,
   });
 }

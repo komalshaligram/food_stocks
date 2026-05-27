@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/widget/custom_button_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
@@ -187,14 +186,15 @@ class OrderSummaryScreenWidget extends StatelessWidget {
                 borderCoder: AppColors.lightBorderColor,
                 flexValue: 7,
                 title: AppLocalizations.of(context)!.total_order,
-                value: formatNumber(
-                    value: vatCalculation(
-                      price: double.parse(state.tempList[index].totalAmount ?? '0'),
-                      vat: state.tempList[index].vatPercentage ?? 0,
-                      qty: state.tempList[index].bottleQuantities!.toDouble(),
-                      deposit: state.tempList[index].bottleTax!.toDouble(),
-                    ).toStringAsFixed(2),
-                    local: AppStrings.hebrewLocal),
+                value: double.parse(state.tempList[index].totalAmount.toString()).toStringAsFixed(2),
+                // value: formatNumber(
+                //     value: vatCalculation(
+                //       price: double.parse(state.tempList[index].totalAmount ?? '0'),
+                //       vat: state.tempList[index].vatPercentage ?? 0,
+                //       qty: state.tempList[index].bottleQuantities!.toDouble(),
+                //       deposit: state.tempList[index].bottleTax!.toDouble(),
+                //     ).toStringAsFixed(2),
+                //     local: AppStrings.hebrewLocal),
                 titleColor: AppColors.mainColor,
                 valueColor: AppColors.blackColor,
                 valueTextWeight: FontWeight.w500,

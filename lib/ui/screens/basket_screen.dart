@@ -210,6 +210,12 @@ class BasketScreenWidget extends StatelessWidget {
       : const SizedBox();
 
   Widget totalAmountCard(BasketState state, BuildContext context, BasketBloc bloc) {
+    final grandTotal = basketGrandTotal(state);
+    final formattedTotal = formatNumber(
+      value: state.isIncludedVat ? grandTotal.toString() : grandTotal.toStringAsFixed(2),
+      local: AppStrings.hebrewLocal,
+    );
+
     return Container(
         alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
         padding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, top: AppConstants.padding_3, bottom: AppConstants.padding_10),
@@ -217,32 +223,7 @@ class BasketScreenWidget extends StatelessWidget {
         decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
         child: Column(children: [
           const DividerWidget(height: 10.0),
-          state.isIncludedVat
-              ? basketRow(
-                  AppLocalizations.of(context)!.total_price_with_vat,
-                  (formatNumber(
-                    value: (state.totalPayment +
-                            (bottleDepositCalculationWithVat(
-                              deposit: state.bottleTax,
-                              qty: state.bottleQty?.toDouble() ?? 0,
-                              vatPercentage: state.vatPercentage,
-                            )))
-                        .toString(),
-                    local: AppStrings.hebrewLocal,
-                  )),
-                  isTitle: true)
-              : basketRow(
-                  AppLocalizations.of(context)!.total,
-                  (formatNumber(
-                    value: vatCalculation(
-                      price: state.totalPayment,
-                      vat: state.vatPercentage,
-                      qty: state.bottleQty?.toDouble() ?? 0,
-                      deposit: state.bottleTax,
-                    ).toStringAsFixed(2),
-                    local: AppStrings.hebrewLocal,
-                  )),
-                  isTitle: true),
+          state.isIncludedVat ? basketRow(AppLocalizations.of(context)!.total_price_with_vat, formattedTotal, isTitle: true) : basketRow(AppLocalizations.of(context)!.total, formattedTotal, isTitle: true),
           const DividerWidget(height: 10.0),
           5.height,
           state.isSubUserCanCreateOrder
@@ -272,25 +253,7 @@ class BasketScreenWidget extends StatelessWidget {
                             Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
                               AppStrings.getCartListString: state.cartItemList,
                               AppStrings.isbackString: 'Basket',
-                              AppStrings.totalAmountString: state.isIncludedVat
-                                  ? formatNumber(
-                                      value: (state.totalPayment +
-                                              (bottleDepositCalculationWithVat(
-                                                deposit: state.bottleTax,
-                                                qty: state.bottleQty?.toDouble() ?? 0,
-                                                vatPercentage: state.vatPercentage,
-                                              )))
-                                          .toString(),
-                                      local: AppStrings.hebrewLocal,
-                                    )
-                                  : (formatNumber(
-                                      value: vatCalculation(
-                                        price: state.totalPayment,
-                                        vat: state.vatPercentage,
-                                        qty: state.bottleQty?.toDouble() ?? 0,
-                                        deposit: state.bottleTax,
-                                      ).toStringAsFixed(2),
-                                      local: AppStrings.hebrewLocal)),
+                              AppStrings.totalAmountString: formattedBasketGrandTotal(state),
                             });
                           }
                         }
@@ -433,7 +396,17 @@ class BasketScreenWidget extends StatelessWidget {
                           state.basketProductList[index].productName ?? '',
                           style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.bold),
                         ),
-                        5.height,
+                        state.basketProductList[index].numberOfUnits != '0'
+                            ? state.basketProductList[index].scaleType == 'מארזים'
+                                ? Text(
+                                    '${state.basketProductList[index].numberOfUnits.toString()} ${AppLocalizations.of(context)!.unit_in_box}',
+                                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                  )
+                                : Text(
+                                    '${AppLocalizations.of(context)!.approx}${' '}${state.basketProductList[index].numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.kgBox}',
+                                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                                  )
+                            : 0.width,
                         Text(state.basketProductList[index].supplierName ?? '', style: TextStyle(color: AppColors.mainColor)),
                         productStock == 0 || productStock == 0.0
                             ? Text(
@@ -627,26 +600,7 @@ class BasketScreenWidget extends StatelessWidget {
                               Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
                                 AppStrings.getCartListString: state.cartItemList,
                                 AppStrings.isbackString: 'Basket',
-                                AppStrings.totalAmountString: state.isIncludedVat
-                                    ? formatNumber(
-                                        value: (state.totalPayment +
-                                                (bottleDepositCalculationWithVat(
-                                                  deposit: state.bottleTax,
-                                                  qty: state.bottleQty?.toDouble() ?? 0,
-                                                  vatPercentage: state.vatPercentage,
-                                                )))
-                                            .toString(),
-                                        local: AppStrings.hebrewLocal,
-                                      )
-                                    : (formatNumber(
-                                        value: vatCalculation(
-                                          price: state.totalPayment,
-                                          vat: state.vatPercentage,
-                                          qty: state.bottleQty?.toDouble() ?? 0,
-                                          deposit: state.bottleTax,
-                                        ).toStringAsFixed(2),
-                                        local: AppStrings.hebrewLocal,
-                                      ))
+                                AppStrings.totalAmountString: formattedBasketGrandTotal(state),
                               });
                             }
                           }
@@ -789,6 +743,7 @@ class BasketScreenWidget extends StatelessWidget {
                                             context: context,
                                             productImages: [state.productDetails.first.mainImage ?? ''],
                                             productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                            scaleType: state.productDetails.first.scaleType,
                                             productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                             productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                             scrollController: scrollController,
@@ -871,6 +826,8 @@ class BasketScreenWidget extends StatelessWidget {
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
                   quantity: state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity,
                   isMixedSale: state.relatedProductList.elementAt(i).sale?.isMixedSale,
+                  numberOfUnits: state.relatedProductList.elementAt(i).numberOfUnit.toString(),
+                  scaleType: state.relatedProductList.elementAt(i).scaleType,
                   onQuantityChanged: () {
                     context2.read<BasketBloc>().add(BasketEvent.updateListQuantityOfProduct(
                           context: context2,
@@ -966,6 +923,26 @@ class BasketScreenWidget extends StatelessWidget {
   }
 }
 
+double basketGrandTotal(BasketState state) {
+  final products = state.cartItemList.data?.data ?? [];
+  return calculateBasketGrandTotal(
+    productsTotalWithVat: sumProductTotalVatAmounts(
+      products.map((product) => product.totalVatAmount),
+    ),
+    bottleTax: state.bottleTax,
+    vatPercentage: state.vatPercentage,
+    bottleQuantities: state.bottleQty ?? 0,
+  );
+}
+
+String formattedBasketGrandTotal(BasketState state) {
+  final total = basketGrandTotal(state);
+  return formatNumber(
+    value: state.isIncludedVat ? total.toString() : total.toStringAsFixed(2),
+    local: AppStrings.hebrewLocal,
+  );
+}
+
 class CallAgentDialog extends StatelessWidget {
   final String language;
   final BasketState state;
@@ -1013,26 +990,7 @@ class CallAgentDialog extends StatelessWidget {
                     Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
                       AppStrings.getCartListString: state.cartItemList,
                       AppStrings.isbackString: 'Basket',
-                      AppStrings.totalAmountString: state.isIncludedVat
-                          ? formatNumber(
-                              value: (state.totalPayment +
-                                      (bottleDepositCalculationWithVat(
-                                        deposit: state.bottleTax,
-                                        qty: state.bottleQty?.toDouble() ?? 0,
-                                        vatPercentage: state.vatPercentage,
-                                      )))
-                                  .toString(),
-                              local: AppStrings.hebrewLocal,
-                            )
-                          : (formatNumber(
-                              value: vatCalculation(
-                                price: state.totalPayment,
-                                vat: state.vatPercentage,
-                                qty: state.bottleQty?.toDouble() ?? 0,
-                                deposit: state.bottleTax,
-                              ).toStringAsFixed(2),
-                              local: AppStrings.hebrewLocal,
-                            )),
+                      AppStrings.totalAmountString: formattedBasketGrandTotal(state),
                     });
                   }
                 },

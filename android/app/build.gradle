@@ -8,10 +8,13 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// NDK r28+ builds native libs with 16 KB ELF alignment (Google Play requirement for API 35+).
+def ndkVersion16Kb = "28.0.13004108"
+
 android {
     namespace "com.foodstock"
     compileSdk = 35
-    ndkVersion flutter.ndkVersion
+    ndkVersion ndkVersion16Kb
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -45,8 +48,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
         targetSdkVersion 35
-        versionCode 66
-        versionName "1.0.52"
+        versionCode 67
+        versionName "1.0.53"
     }
 
     signingConfigs {
@@ -64,6 +67,13 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             // signingConfig signingConfigs.debug
             signingConfig signingConfigs.release
+        }
+    }
+
+    // AGP 8.5.1+: uncompressed .so files are zip-aligned to 16 KB for Play Store / 16 KB devices.
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
         }
     }
 

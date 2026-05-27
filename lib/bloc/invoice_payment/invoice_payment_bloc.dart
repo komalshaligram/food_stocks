@@ -33,6 +33,7 @@ class InvoicePaymentBloc extends Bloc<InvoicePaymentEvent, InvoicePaymentState> 
           final payInvoiceCreditCardRequest = {
             "supplierId": event.supplierId,
             "invoiceNumber": event.invoiceNumber,
+            "documentType": event.documentType,
             if ((event.orderId ?? '').trim().isNotEmpty && event.orderId != 'null' && event.orderId != null) "orderId": event.orderId,
           };
           // PayInvoiceCreditCardRequestModel reqMap = PayInvoiceCreditCardRequestModel(orderId: event.orderId == null ? , invoiceNumber: event.invoiceNumber);

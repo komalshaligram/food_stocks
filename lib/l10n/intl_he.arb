@@ -384,8 +384,8 @@
   "comax_order_error": "משהו השתבש",
   "comax_client_error": "משהו השתבש",
   "unit_in_box": "יחידות במארז",
-  "approx": "Approx. ",
-  "kgBox": "Kg in box",
+  "approx": "כ-",
+  "kgBox": "ק״ג במארז",
   "price": "מחיר",
   "sub_categories": "תתי קטגויות",
   "per_unit": "ליחידה",
@@ -395,6 +395,8 @@
   "refund":"החזר תשלום",
   "sub_total": "מחיר לפני מע\"מ",
   "order_amount": "סכום הזמנה",
+  "total_amount_subject_to_vat": "סה״כ סכום חייב במע״מ",
+  "total_amount_not_subject_to_vat": "סה״כ סכום שאינו חייב במע״מ",
   "vat": "מע\"מ",
   "total_refunds": "סה”כ זיכויים",
   "refund_amount_1" : "למימוש בהזמנות הבאות ",
@@ -628,6 +630,7 @@
   "scan_return_product": "סרוק את המוצר לחזרה",
   "product_return_info": "נתוני מוצר לחזרה",
   "no_of_unit_for_return": "מספר יחידות לחזרה?",
+  "no_of_kg_for_return": "מספר קילוגרמים להחזרה?",
   "why_return_product": "למה אתה רוצה להחזיר את המוצר?",
   "add_proof_img": "העלה תמונות להוכחה",
   "add_driver_delivery_document_img": "צילום של תעודת משלוח שקיבלת",
@@ -706,5 +709,7 @@
   "invoice_payment": "תשלום חשבונית",
   "making_pay_with_credit_card": "ביצוע תשלום בכרטיס אשראי",
   "credit_card_payment_error": "אירעה שגיאה בעת עיבוד התשלום בכרטיס האשראי עבור החשבונית",
-  "credit_card_payment_success": "הצלחה! החשבונית שלך שולמה באמצעות כרטיס האשראי שלך."
+  "credit_card_payment_success": "הצלחה! החשבונית שלך שולמה באמצעות כרטיס האשראי שלך.",
+  "pdf_loading": "קובץ ה-PDF עדיין נטען. אנא המתן.",
+  "unable_pdf": "לא ניתן לשתף את קובץ ה-PDF. אנא נסה שוב."
 }

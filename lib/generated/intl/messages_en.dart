@@ -92,7 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "approve_previous_order": MessageLookupByLibrary.simpleMessage(
       "need to approve previous order",
     ),
-    "approx": MessageLookupByLibrary.simpleMessage("Approx. "),
+    "approx": MessageLookupByLibrary.simpleMessage("Approx"),
     "apr": MessageLookupByLibrary.simpleMessage("Sep"),
     "april": MessageLookupByLibrary.simpleMessage("September"),
     "are_you_sure": MessageLookupByLibrary.simpleMessage("Are you sure?"),
@@ -573,7 +573,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "july": MessageLookupByLibrary.simpleMessage("June"),
     "jun": MessageLookupByLibrary.simpleMessage("Jul"),
     "june": MessageLookupByLibrary.simpleMessage("July"),
-    "kg": MessageLookupByLibrary.simpleMessage("kg"),
+    "kg": MessageLookupByLibrary.simpleMessage("Kg"),
     "kgBox": MessageLookupByLibrary.simpleMessage("Kg in box"),
     "last_months_expenses": MessageLookupByLibrary.simpleMessage(
       "Last month\'s expenses",
@@ -693,6 +693,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_invoice_file": MessageLookupByLibrary.simpleMessage(
       "No invoice file found",
+    ),
+    "no_of_kg_for_return": MessageLookupByLibrary.simpleMessage(
+      "Number of kgs for return?",
     ),
     "no_of_unit_for_return": MessageLookupByLibrary.simpleMessage(
       "Number of units for return?",
@@ -833,6 +836,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "payment_invoice": MessageLookupByLibrary.simpleMessage("Payment invoice"),
     "payment_type": MessageLookupByLibrary.simpleMessage("Payment Type"),
     "payment_wallet": MessageLookupByLibrary.simpleMessage("Wallet"),
+    "pdf_loading": MessageLookupByLibrary.simpleMessage(
+      "PDF is still loading. Please wait.",
+    ),
     "pending": MessageLookupByLibrary.simpleMessage("Pending"),
     "pending_delivery": MessageLookupByLibrary.simpleMessage("Pending"),
     "per_unit": MessageLookupByLibrary.simpleMessage("per unit"),
@@ -1422,6 +1428,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_amount_cant_be_zero": MessageLookupByLibrary.simpleMessage(
       "Total amount can\'t be zero",
     ),
+    "total_amount_not_subject_to_vat": MessageLookupByLibrary.simpleMessage(
+      "Total Amount Not Subject to VAT",
+    ),
+    "total_amount_subject_to_vat": MessageLookupByLibrary.simpleMessage(
+      "Total Amount Subject to VAT",
+    ),
     "total_credit": MessageLookupByLibrary.simpleMessage("Total Credit"),
     "total_invoice_amount": MessageLookupByLibrary.simpleMessage(
       "Total invoice amount",
@@ -1436,6 +1448,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "tuesday": MessageLookupByLibrary.simpleMessage("Tuesday"),
     "type_of_business": MessageLookupByLibrary.simpleMessage("Business Type"),
     "type_of_picture": MessageLookupByLibrary.simpleMessage("Type of Picture"),
+    "unable_pdf": MessageLookupByLibrary.simpleMessage(
+      "Unable to share PDF. Please try again.",
+    ),
     "under_maintenance": MessageLookupByLibrary.simpleMessage(
       "TAVILI is under maintenance now, please try again later.",
     ),

@@ -311,17 +311,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
-  connectivity_plus: 07c49e96d7fc92bc9920617b83238c4d178b446a
-  device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
+  audioplayers_darwin: ccf9c770ee768abb07e26d90af093f7bab1c12ab
+  connectivity_plus: 4d5101c5877bedcda6cd1ccb825307911667d6b0
+  device_info_plus: 335f3ce08d2e174b9fdc3db3db0f4e3b1f66bd89
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
-  eraser: 23d701c0ff53a9d042581459b752fd76a6ad6ca4
-  file_picker: 15fd9539e4eb735dc54bae8c0534a7a9511a03de
+  eraser: 83a4b06985f3702aa3d8dec816f9693266012937
+  file_picker: 07c75322ede1d47ec9bb4ac82b27c94d3598251a
   Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
-  firebase_core: 100945864b4aedce3cfef0c62ab864858bf013cf
-  firebase_crashlytics: 2b9ca6246501a03427eb43280be7615027e32142
-  firebase_messaging: e65050bf9b187511d80ea3a4de7cf5573d2c7543
+  firebase_core: 2a80983e98480c7f02ff001358621c8d7f1ff8f0
+  firebase_crashlytics: 85fdba54a96f7daefd59441cfc289bad404908fb
+  firebase_messaging: 879b396d2be7aa1eaf044d50d2407d24c971b934
   FirebaseCore: 0326ec9b05fbed8f8716cddbf0e36894a13837f7
   FirebaseCoreExtension: 705ca5b14bf71d2564a0ddc677df1fc86ffa600f
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
@@ -330,36 +330,36 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 9f71037fd9db3376a4caa54e5a3949d1027b4b6e
   FirebaseSessions: dbd14adac65ce996228652c1fc3a3f576bdf3ecc
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_app_badger: b87fc231847b03b92ce1412aa351842e7e97932f
-  flutter_barcode_scanner: 7a1144744c28dc0c57a8de7218ffe5ec59a9e4bf
-  flutter_inappwebview_ios: 6f63631e2c62a7c350263b13fa5427aedefe81d4
-  flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
-  flutter_localization: f43b18844a2b3d2c71fd64f04ffd6b1e64dd54d4
-  flutter_smartlook: 2f8ffb62fb0197739e3a412ddb4e65eb67d8a237
+  flutter_app_badger: 16b371e989d04cd265df85be2c3851b49cb68d18
+  flutter_barcode_scanner: c5aa9f51c150a6242fa392386bd52b64bb27fcb5
+  flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
+  flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
+  flutter_localization: 72299fb6cb4e51cae587bd953ed0b958040b71e6
+  flutter_smartlook: 1068c331a72313c12bb65f259bb6a0dd4e7fe604
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
-  image_cropper: a3291c624a953049bc6a02e1f8c8ceb162a24b25
-  image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  image_cropper: 655b3ba703c9e15e3111e79151624d6154288774
+  image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
-  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
+  package_info_plus: 566e1b7a2f3900e4b0020914ad3fc051dcc95596
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   ReachabilitySwift: 32793e867593cfc1177f5d16491e3a197d2fccda
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
-  share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  sms_autofill: c461043483362c3f1709ee76eaae6eb570b31686
-  sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
-  store_version_checker: c1bef675aa75e852cf10b1abe8c0aac7de6d29c3
+  share_plus: de6030e33b4e106470e09322d87cf2a4258d2d1d
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sms_autofill: b36b2147535657fea83d7f3898d7831de70bd8e4
+  sqflite: c35dad70033b8862124f8337cc994a809fcd9fa3
+  store_version_checker: a486c8be327bdf12aebcb8cecbeb74cc49b6223c
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
-  syncfusion_flutter_pdfviewer: bb9998884b864cfedf72628df3503bdf57e397c0
+  syncfusion_flutter_pdfviewer: dfb514751af5b6b71e504c9c04a2e4ddbc1dd895
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
-  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
-  vibration: 7d883d141656a1c1a6d8d238616b2042a51a1241
-  webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
+  vibration: 8e2f50fc35bb736f9eecb7dd9f7047fbb6a6e888
+  webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
 
 PODFILE CHECKSUM: a45c710cf9027a0646b03d7d93ef24f9eb598c1f
 

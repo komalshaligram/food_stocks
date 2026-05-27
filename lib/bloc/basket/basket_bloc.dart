@@ -115,11 +115,13 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
                   mainImage: element.productDetails?.mainImage,
                   totalPayment: double.parse(element.totalAmount.toString()),
                   cartProductId: element.cartProductId ?? '',
-                  scales: element.productDetails?.scales ?? '',
                   weight: element.productDetails?.itemsWeight?.toDouble() ?? 0,
                   lowStock: element.lowStock,
+                  scales: '',
                   productStock: element.productStock?.toDouble(),
                   supplierName: element.suppliers?.first.contactName ?? '',
+                  numberOfUnits: element.productDetails?.numberOfUnit!.toString() ?? '0',
+                  scaleType: element.productDetails?.scaleType,
                 ));
               });
 

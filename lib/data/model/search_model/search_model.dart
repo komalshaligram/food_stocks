@@ -16,33 +16,24 @@ class SearchModel with _$SearchModel {
     @Default('') String categoryName,
     @Default('0') String productStock,
     @Default(0) int numberOfUnits,
+    @Default('') String scaleType,
     @Default(0.0) double priceParUnit,
     @Default(0.0) double priceOfBox,
     @Default(false) bool isPesach,
     @Default('') String salesDesc,
     @Default(0.0) double salePrice,
-    @JsonKey(name: "isSale")
-    bool? isSale,
-    @JsonKey(name: "saleMaxQuantity")
-    String? saleMaxQuantity,
-    @JsonKey(name: "saleMinQuantity")
-    String? saleMinQuantity,
-    @JsonKey(name: "isMixedSale")
-    bool? isMixedSale,
-    @JsonKey(name: "sameSaleProducts")
-    List<dynamic>? sameSaleProducts,
-    @JsonKey(name: "_id")
-    String? id,
-    @JsonKey(name: "supplierId")
-    String? supplierId,
-    @JsonKey(name: "recommendedRetailPrice")
-    String? recommendedRetailPrice,
-    @JsonKey(name: "recommendedConsumerOffer")
-    String? recommendedConsumerOffer,
+    @JsonKey(name: "isSale") bool? isSale,
+    @JsonKey(name: "saleMaxQuantity") String? saleMaxQuantity,
+    @JsonKey(name: "saleMinQuantity") String? saleMinQuantity,
+    @JsonKey(name: "isMixedSale") bool? isMixedSale,
+    @JsonKey(name: "sameSaleProducts") List<dynamic>? sameSaleProducts,
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "supplierId") String? supplierId,
+    @JsonKey(name: "recommendedRetailPrice") String? recommendedRetailPrice,
+    @JsonKey(name: "recommendedConsumerOffer") String? recommendedConsumerOffer,
   }) = _SearchModel;
 
-  factory SearchModel.fromJson(Map<String, dynamic> json) =>
-      _$SearchModelFromJson(json);
+  factory SearchModel.fromJson(Map<String, dynamic> json) => _$SearchModelFromJson(json);
 }
 
 enum SearchTypes {

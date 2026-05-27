@@ -93,7 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "approve_previous_order": MessageLookupByLibrary.simpleMessage(
       "עליך לאשר הזמנה קודמת",
     ),
-    "approx": MessageLookupByLibrary.simpleMessage("Approx. "),
+    "approx": MessageLookupByLibrary.simpleMessage("כ-"),
     "apr": MessageLookupByLibrary.simpleMessage("אפר"),
     "april": MessageLookupByLibrary.simpleMessage("אַפּרִיל"),
     "are_you_sure": MessageLookupByLibrary.simpleMessage("האם אתה בטוח?"),
@@ -531,7 +531,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "jun": MessageLookupByLibrary.simpleMessage("יונ"),
     "june": MessageLookupByLibrary.simpleMessage("יוני"),
     "kg": MessageLookupByLibrary.simpleMessage("ק”ג"),
-    "kgBox": MessageLookupByLibrary.simpleMessage("Kg in box"),
+    "kgBox": MessageLookupByLibrary.simpleMessage("ק״ג במארז"),
     "last_months_expenses": MessageLookupByLibrary.simpleMessage(
       "הוצאות חודש שעבר",
     ),
@@ -646,6 +646,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_invoice_file": MessageLookupByLibrary.simpleMessage(
       "לא נמצא קובץ חשבונית",
+    ),
+    "no_of_kg_for_return": MessageLookupByLibrary.simpleMessage(
+      "מספר קילוגרמים להחזרה?",
     ),
     "no_of_unit_for_return": MessageLookupByLibrary.simpleMessage(
       "מספר יחידות לחזרה?",
@@ -774,6 +777,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "payment_invoice": MessageLookupByLibrary.simpleMessage("חשבונית תשלום"),
     "payment_type": MessageLookupByLibrary.simpleMessage("שיטת תשלום"),
     "payment_wallet": MessageLookupByLibrary.simpleMessage("ארנק"),
+    "pdf_loading": MessageLookupByLibrary.simpleMessage(
+      "קובץ ה-PDF עדיין נטען. אנא המתן.",
+    ),
     "pending": MessageLookupByLibrary.simpleMessage("ממתין"),
     "pending_delivery": MessageLookupByLibrary.simpleMessage("Pending"),
     "per_unit": MessageLookupByLibrary.simpleMessage("ליחידה"),
@@ -1303,6 +1309,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_amount_cant_be_zero": MessageLookupByLibrary.simpleMessage(
       "סה\"כ לתשלום לא יכול להיות אפס",
     ),
+    "total_amount_not_subject_to_vat": MessageLookupByLibrary.simpleMessage(
+      "סה״כ סכום שאינו חייב במע״מ",
+    ),
+    "total_amount_subject_to_vat": MessageLookupByLibrary.simpleMessage(
+      "סה״כ סכום חייב במע״מ",
+    ),
     "total_credit": MessageLookupByLibrary.simpleMessage("סך האשראי"),
     "total_invoice_amount": MessageLookupByLibrary.simpleMessage(
       "סכום החשבונית הכולל",
@@ -1317,6 +1329,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "tuesday": MessageLookupByLibrary.simpleMessage("יום שלישי"),
     "type_of_business": MessageLookupByLibrary.simpleMessage("סוג העסק"),
     "type_of_picture": MessageLookupByLibrary.simpleMessage("סוג תמונה"),
+    "unable_pdf": MessageLookupByLibrary.simpleMessage(
+      "לא ניתן לשתף את קובץ ה-PDF. אנא נסה שוב.",
+    ),
     "under_maintenance": MessageLookupByLibrary.simpleMessage(
       "האפליקציה כרגע בתחזוקה, אנא נסה שוב מאוחר יותר",
     ),

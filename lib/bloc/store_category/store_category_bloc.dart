@@ -725,9 +725,8 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                           searchType: SearchTypes.product,
                           productStock: supplier.productStock.toString(),
                           lowStock: supplier.lowStock.toString(),
-                          numberOfUnits: int.parse(
-                            supplier.numberOfUnit.toString(),
-                          ),
+                          numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+                          scaleType: supplier.scaleType!,
                           priceOfBox: double.parse(supplier.productPrice.toString()),
                           salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
                           salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
@@ -740,6 +739,7 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
                           sameSaleProducts: supplier.sale?.sameSaleProducts,
                           recommendedConsumerOffer: supplier.recommendedConsumerOffer,
                           recommendedRetailPrice: supplier.recommendedRetailPrice,
+
                         ),
                       )
                       .toList() ??

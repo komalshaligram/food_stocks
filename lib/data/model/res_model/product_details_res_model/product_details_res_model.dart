@@ -29,6 +29,7 @@ class Product with _$Product {
     String? qrcode,
     String? sku,
     int? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
     int? itemsWeight,
     int? totalWeightCardboard,
     int? totalWeightSurface,

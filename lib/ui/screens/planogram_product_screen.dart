@@ -153,7 +153,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             totalSale: state.planogramProductList[index].totalSale ?? 0,
             quantity: state.productStockList[1][index].quantity,
             isMixedSale: state.planogramProductList[index].sale?.isMixedSale,
-
+            numberOfUnits: state.planogramProductList[index].numberOfUnit.toString(),
+            scaleType: state.planogramProductList[index].scaleType,
             onQuantityChanged: () {
               context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateListQuantityOfProduct(
                     context: context,
@@ -227,6 +228,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
             isGuestUser: state.isGuestUser,
             isPesach: state.planogramProductList[index].isPesach,
             numberOfUnits: state.planogramProductList[index].numberOfUnit.toString(),
+            scaleType: state.planogramProductList[index].scaleType,
             lowStock: state.planogramProductList[index].lowStock.toString(),
             productStock: state.planogramProductList[index].productStock.toString(),
             productImage: state.planogramProductList[index].mainImage ?? '',
@@ -473,6 +475,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
     required void Function() onQuantityIncreaseTap,
     required void Function() onQuantityDecreaseTap,
     required bool? isMixedSale,
+    required String numberOfUnits,
+    String? scaleType,
   }) {
     return CommonProductSaleItemWidget(
       originalPrice: originalPrice,
@@ -495,6 +499,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
       onQuantityIncreaseTap: onQuantityIncreaseTap,
       onQuantityDecreaseTap: onQuantityDecreaseTap,
       isMixedSale: isMixedSale,
+      numberOfUnits: '',
+      scaleType: '',
     );
   }
 
@@ -589,6 +595,7 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                                           context: context,
                                           productImages: [state.productDetails.first.mainImage ?? ''],
                                           productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                          scaleType: state.productDetails.first.scaleType,
                                           productPrice: state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 0),
                                           productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                           scrollController: scrollController,
@@ -688,7 +695,8 @@ class PlanogramProductScreenWidget extends StatelessWidget {
                 isPesach: relatedProductList.elementAt(i).isPesach,
                 quantity: productStockList[2][i].quantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-
+                numberOfUnits: relatedProductList.elementAt(i).numberOfUnit.toString(),
+                scaleType: relatedProductList.elementAt(i).scaleType,
                 onQuantityChanged: () {
                   context.read<PlanogramProductBloc>().add(PlanogramProductEvent.updateListQuantityOfProduct(
                         context: context,

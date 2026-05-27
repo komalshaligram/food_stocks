@@ -650,7 +650,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         isOrderStatusCardType && isUpdated
                             ? Text(
                                 '${(updatedUnitQuantity / numberOfUnit).round()}${' '}'
-                                '${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                                '${state.orderBySupplierProduct.products?[index].scaleType.toString()}',
                                 style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
                               )
                             : sku == skuNumber
@@ -663,7 +663,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                   )
                                 : Text(
                                     '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}'
-                                    '${state.orderBySupplierProduct.products?[index].scale.toString()}',
+                                    '${state.orderBySupplierProduct.products?[index].scaleType.toString()}',
                                     maxLines: 2,
                                     overflow: TextOverflow.fade,
                                     style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
@@ -671,7 +671,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         5.width,
                         isOrderStatusCardType && isUpdated
                             ? Text(
-                                '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scale.toString()})',
+                                '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scaleType.toString()})',
                                 maxLines: 2,
                                 overflow: TextOverflow.fade,
                                 style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_12),
@@ -766,7 +766,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                     listIndex: index,
                                     productId: product?.productId ?? '',
                                     supplierId: state.orderBySupplierProduct.id.toString(),
-                                    scale: product?.scale.toString() ?? '',
+                                    scale: product?.scaleType.toString() ?? '',
                                     isIssue: isIssue,
                                     issue: issue,
                                     missingQuantity: missingQuantity,

@@ -57,7 +57,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         if (event.otp.length == 4) {
           emit(state.copyWith(isLoading: true));
           try {
-            OtpReqModel reqMap = OtpReqModel(contact: event.contact, otp: event.otp, tokenId: preferences.getFCMToken());
+            OtpReqModel reqMap = OtpReqModel(contact: event.contact, otp: event.otp, tokenId: preferences.getFCMToken(), applicationName: 'Tavili');
             final res = await DioClient(event.context).post(AppUrlEndPoints.loginOTPUrl, data: reqMap);
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {

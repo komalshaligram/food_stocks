@@ -164,7 +164,7 @@ class _InvoicePaymentScreenWidgetState extends State<InvoicePaymentScreenWidget>
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               titleText(context, AppLocalizations.of(context)!.total_invoice_amount),
-              Directionality(textDirection: widgets.TextDirection.ltr, child: subTitleValueText(context, formatSignedNumber(invoiceDataList.invoiceAmount))),
+              Directionality(textDirection: widgets.TextDirection.ltr, child: subTitleValueText(context, formatSignedNumber(invoiceDataList.payableAmount))),
             ]),
           ),
         ]);
@@ -266,6 +266,7 @@ class _InvoicePaymentScreenWidgetState extends State<InvoicePaymentScreenWidget>
                         invoiceNumber: int.parse(widget.invoiceData.invoiceNumber.toString()),
                         orderId: widget.invoiceData.orderId.toString(),
                         supplierId: widget.invoiceData.supplierId.toString(),
+                        documentType: widget.invoiceData.documentType!
                       ));
                 },
                 fontColors: AppColors.whiteColor,

@@ -268,6 +268,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
               minQuantity: productSaleData.sale?.saleMinQuantity,
               maxQuantity: productSaleData.sale?.saleMaxQuantity,
               isMixedSale: productSaleData.sale?.isMixedSale,
+              numberOfUnits: productSaleData.numberOfUnit.toString(),
+              scaleType: productSaleData.scaleType,
               onQuantityChanged: () => _updateQuantity(context: context, state: state, index: index),
               onQuantityIncreaseTap: () => _increaseQuantity(context: context, state: state, index: index),
               onQuantityDecreaseTap: () => _decreaseQuantity(context: context, state: state, index: index),
@@ -299,7 +301,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
             isFromSale: productSaleData.sale?.isSale ?? false,
             salesDesc: productSaleData.sale?.saleDescription ?? '',
             isPesach: productSaleData.isPesach,
-            numberOfUnits: productSaleData.numberOfUnit.toString(),
             lowStock: productSaleData.lowStock.toString(),
             productStock: productSaleData.productStock.toString(),
             productImage: productSaleData.mainImage ?? '',
@@ -309,6 +310,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
             minQuantity: productSaleData.sale?.saleMinQuantity,
             maxQuantity: productSaleData.sale?.saleMaxQuantity,
             isMixedSale: productSaleData.sale?.isMixedSale,
+            numberOfUnits: productSaleData.numberOfUnit.toString(),
+            scaleType: productSaleData.scaleType,
             onQuantityChanged: () => _updateQuantity(context: context, state: state, index: index),
             onQuantityIncreaseTap: () => _increaseQuantity(context: context, state: state, index: index),
             onQuantityDecreaseTap: () => _decreaseQuantity(context: context, state: state, index: index),
@@ -378,6 +381,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                       isPesach: state.searchList[index].isPesach,
                       lowStock: state.searchList[index].lowStock,
                       numberOfUnits: state.searchList[index].numberOfUnits,
+                      scaleType: state.searchList[index].scaleType,
                       priceOfBox: state.searchList[index].priceOfBox,
                       productStock: state.searchList[index].productStock,
                       context: context,
@@ -661,6 +665,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                         context: context,
                                         productImages: [state.productDetails.first.mainImage ?? ''],
                                         productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? ''),
+                                        scaleType: state.productDetails.first.scaleType,
                                         productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                         productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                         scrollController: scrollController,
@@ -700,7 +705,6 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                                                   context,
                                                   isSaleOn,
                                                   productStockList: state.productStockList,
-                                                  state.clubAgentId!,
                                                 )
                                     ]),
                                   ),
@@ -716,8 +720,7 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
     BuildContext prevContext,
     List<RelatedProductDatum> relatedProductList,
     BuildContext context,
-    bool isSaleOn,
-    String clubAgentId, {
+    bool isSaleOn, {
     required List<List<ProductStockModel>> productStockList,
   }) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -748,6 +751,8 @@ class RecommendationProductsScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
+                numberOfUnits: relatedProductList.elementAt(i).numberOfUnit.toString(),
+                scaleType: relatedProductList.elementAt(i).scaleType,
                 onQuantityChanged: () {
                   context.read<RecommendationProductsBloc>().add(RecommendationProductsEvent.updateListQuantityOfProduct(
                         context: context,

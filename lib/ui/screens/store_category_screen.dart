@@ -493,6 +493,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
           minQuantity: state.planogramProductList[index].product.sale?.saleMinQuantity,
           maxQuantity: state.planogramProductList[index].product.sale?.saleMaxQuantity,
           isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
+          numberOfUnits: state.planogramProductList[index].product.numberOfUnit.toString(),
+          scaleType: state.planogramProductList[index].product.scaleType!,
           onQuantityChanged: () {
             context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateListQuantityOfProduct(
                   context: context,
@@ -587,7 +589,6 @@ class StoreCategoryScreenWidget extends StatelessWidget {
         return CommonSaleListView(
             isPesach: state.planogramProductList[index].product.isPesach ?? false,
             lowStock: state.planogramProductList[index].product.lowStock.toString(),
-            numberOfUnits: state.planogramProductList[index].product.numberOfUnit ?? '0',
             isGuestUser: state.isGuestUser,
             productStock: (state.planogramProductList[index].product.productStock.toString()),
             productImage: state.planogramProductList[index].product.mainImage ?? '',
@@ -601,6 +602,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
             minQuantity: state.planogramProductList[index].product.sale?.saleMinQuantity,
             maxQuantity: state.planogramProductList[index].product.sale?.saleMaxQuantity,
             isMixedSale: state.planogramProductList[index].product.sale?.isMixedSale,
+            numberOfUnits: state.planogramProductList[index].product.numberOfUnit ?? '0',
+            scaleType: state.planogramProductList[index].product.scaleType!,
             onQuantityChanged: () {
               context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateListQuantityOfProduct(
                     context: context,
@@ -740,6 +743,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         isPesach: state.searchList[index].isPesach,
                         lowStock: state.searchList[index].lowStock.toString(),
                         numberOfUnits: state.searchList[index].numberOfUnits,
+                        scaleType: state.searchList[index].scaleType,
                         priceOfBox: state.searchList[index].priceOfBox,
                         isGuestUser: state.isGuestUser,
                         productStock: (state.searchList[index].productStock.toString()),
@@ -1034,6 +1038,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                         productPrice: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
                                         productStock: (state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].stock.toString()),
                                         productUnitPrice: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].totalPrice != 0 ? state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].totalPrice : double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                        scaleType: state.productDetails.first.scaleType,
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].quantity,
                                         isMixedSale: state.productDetails.first.sale!.isMixedSale,
@@ -1063,14 +1068,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                                           ? const RelatedProductShimmerWidget()
                                           : state.relatedProductList.isEmpty
                                               ? 0.width
-                                              : relatedProductWidget(
-                                                  context1,
-                                                  state.relatedProductList,
-                                                  context,
-                                                  isSaleOn,
-                                                  productStockList: state.productStockList,
-                                                  state.clubAgentId!,
-                                                )
+                                              : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn, productStockList: state.productStockList)
                                     ]),
                                   ),
                       );
@@ -1085,8 +1083,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     BuildContext prevContext,
     List<RelatedProductDatum> relatedProductList,
     BuildContext context,
-    bool isSaleOn,
-    String clubAgentId, {
+    bool isSaleOn, {
     required List<List<ProductStockModel>> productStockList,
   }) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -1117,6 +1114,8 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
+                numberOfUnits: relatedProductList.elementAt(i).numberOfUnit.toString(),
+                scaleType: relatedProductList.elementAt(i).scaleType,
                 onQuantityChanged: () {
                   context.read<StoreCategoryBloc>().add(StoreCategoryEvent.updateListQuantityOfProduct(
                         context: context,

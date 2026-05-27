@@ -388,7 +388,7 @@
   "comax_order_error": "Something went wrong.",
   "comax_client_error": "Something went wrong.",
   "unit_in_box": "units in the box",
-  "approx": "Approx. ",
+  "approx": "Approx",
   "kgBox": "Kg in box",
   "price": "Price",
   "per_unit": "per unit",
@@ -398,6 +398,8 @@
   "refund":"Refund",
   "sub_total": "Sub Total",
   "order_amount": "Order amount",
+  "total_amount_subject_to_vat": "Total Amount Subject to VAT",
+  "total_amount_not_subject_to_vat": "Total Amount Not Subject to VAT",
   "vat": "VAT",
   "total_refunds": "Total refund",
   "refund_amount_1" : "You still have a credit balance of:",
@@ -427,6 +429,7 @@
   "original_was" : "Original was",
   "was_not_in_stock" : "Was not in stock",
   "units" : "Units",
+  "kg" : "Kg",
   "surfaces_order" : "Surfaces for order",
   "refund_for_order" : "Refund for order",
   "related_products": "Related products",
@@ -632,6 +635,7 @@
   "scan_return_product": "Scan return product",
   "product_return_info": "Product return info",
   "no_of_unit_for_return": "Number of units for return?",
+  "no_of_kg_for_return": "Number of kgs for return?",
   "why_return_product": "Why do you want to return the product?",
   "add_proof_img": "Add proof images",
   "add_driver_delivery_document_img": "A photocopy of the delivery receipt you received",
@@ -710,5 +714,7 @@
   "invoice_payment": "Invoice payment",
   "making_pay_with_credit_card": "Pay with credit card",
   "credit_card_payment_error": "An error occurred while processing the credit card payment for the invoice",
-  "credit_card_payment_success": "Success! Your invoice has been paid using your credit card."
+  "credit_card_payment_success": "Success! Your invoice has been paid using your credit card.",
+  "pdf_loading": "PDF is still loading. Please wait.",
+  "unable_pdf": "Unable to share PDF. Please try again."
 }

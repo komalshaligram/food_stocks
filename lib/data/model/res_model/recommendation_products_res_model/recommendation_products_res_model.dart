@@ -30,6 +30,7 @@ class RecommendationData with _$RecommendationData {
     @JsonKey(name: "nmMashlim") String? nmMashlim,
     @JsonKey(name: "productName") String? productName,
     @JsonKey(name: "numberOfUnit") int? numberOfUnit,
+    @JsonKey(name: "scaleType") String? scaleType,
     @JsonKey(name: "sale") Sale? sale,
     @JsonKey(name: "recommendedRetailPrice") String? recommendedRetailPrice,
     @JsonKey(name: "recommendedConsumerOffer") String? recommendedConsumerOffer,
