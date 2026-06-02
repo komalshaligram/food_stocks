@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,50 +37,76 @@ class InvoicePdfScreen extends StatelessWidget {
   }
 }
 
-class InvoicePdfScreenWidget extends StatelessWidget {
+class InvoicePdfScreenWidget extends StatefulWidget {
   final Invoice invoiceDetailsList;
-  InvoicePdfScreenWidget({super.key, required this.invoiceDetailsList});
+  const InvoicePdfScreenWidget({super.key, required this.invoiceDetailsList});
 
+  @override
+  State<InvoicePdfScreenWidget> createState() => _InvoicePdfScreenWidgetState();
+}
+
+class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
+
+  String? _pdfUrl;
+  Future<Uint8List>? _pdfBytesFuture;
+
+  Future<Uint8List> _downloadPdfBytes(String url) async {
+    final encodedUrl = Uri.encodeFull(url.trim());
+    final res = await Dio().get<List<int>>(
+      encodedUrl,
+      options: Options(
+        responseType: ResponseType.bytes,
+        followRedirects: true,
+        receiveTimeout: const Duration(minutes: 2),
+        sendTimeout: const Duration(minutes: 2),
+      ),
+    );
+    final bytes = Uint8List.fromList(res.data ?? const <int>[]);
+    if (bytes.isEmpty) throw Exception('Empty PDF bytes');
+    return bytes;
+  }
 
   Future<void> _sharePdfFromUrl({
     required BuildContext context,
     required String url,
     required String fileNameWithoutExt,
+    Rect? sharePositionOrigin,
   }) async {
     if (url.trim().isEmpty) return;
 
     try {
+      final encodedUrl = Uri.encodeFull(url.trim());
       final tempDir = await getTemporaryDirectory();
-      final safeName = fileNameWithoutExt.trim().isEmpty ? 'document' : fileNameWithoutExt.trim();
+      final rawName = fileNameWithoutExt.trim().isEmpty ? 'document' : fileNameWithoutExt.trim();
+      final safeName = rawName.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_').substring(0, rawName.length > 60 ? 60 : rawName.length);
       final filePath = '${tempDir.path}/$safeName.pdf';
 
       await Dio().download(
-        url,
+        encodedUrl,
         filePath,
         options: Options(
           responseType: ResponseType.bytes,
           followRedirects: true,
-          receiveTimeout: const Duration(seconds: 60),
-          sendTimeout: const Duration(seconds: 60),
+          receiveTimeout: const Duration(minutes: 2),
+          sendTimeout: const Duration(minutes: 2),
         ),
       );
 
       final file = File(filePath);
-      if (!await file.exists()) {
+      if (!await file.exists() || await file.length() == 0) {
         throw Exception('Downloaded file missing');
       }
 
       await Share.shareXFiles(
         [XFile(filePath, mimeType: 'application/pdf')],
         text: safeName,
+        sharePositionOrigin: sharePositionOrigin,
       );
     } catch (_) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unable to share PDF')),
-      );
+      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.unable_pdf, type: SnackBarType.failure);
     }
   }
 
@@ -182,7 +209,39 @@ class InvoicePdfScreenWidget extends StatelessWidget {
         if (state.hasValidLink == false || !bloc.isValidLink(url)) {
           return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
         }
-        return Container(color: Colors.white, height: getScreenHeight(context) * 0.7, child: SfPdfViewer.network(url, key: _pdfViewerKey, controller: _pdfViewerController));
+
+        // Cache the bytes future so page-jump dialog doesn't trigger re-downloads/rebuild blank states.
+        if (_pdfUrl != url || _pdfBytesFuture == null) {
+          _pdfUrl = url;
+          _pdfBytesFuture = _downloadPdfBytes(url);
+        }
+
+        return Container(
+          color: Colors.white,
+          height: getScreenHeight(context) * 0.7,
+          child: FutureBuilder<Uint8List>(
+            future: _pdfBytesFuture,
+            builder: (context, snap) {
+              if (snap.connectionState != ConnectionState.done) {
+                return const Center(child: CupertinoActivityIndicator());
+              }
+              if (snap.hasError || snap.data == null) {
+                return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
+              }
+
+              return SfPdfViewer.memory(
+                snap.data!,
+                key: _pdfViewerKey,
+                controller: _pdfViewerController,
+                scrollDirection: PdfScrollDirection.vertical,
+                pageLayoutMode: PdfPageLayoutMode.continuous,
+                canShowScrollHead: true,
+                canShowScrollStatus: true,
+                canShowPaginationDialog: true,
+              );
+            },
+          ),
+        );
       }
 
       return Scaffold(
@@ -194,61 +253,75 @@ class InvoicePdfScreenWidget extends StatelessWidget {
             title: bloc.screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () => Navigator.pop(context),
-            trailingWidget: GestureDetector(
-              onTap: () async {
-                if (url.isEmpty) return;
-                await _sharePdfFromUrl(
-                  context: context,
-                  url: url,
-                  fileNameWithoutExt: 'invoice_${invoice.invoiceNumber ?? ''}',
-                );
-              },
-              child: Icon(Icons.share_outlined, color: AppColors.mainColor),
+            trailingWidget: Builder(
+              builder: (shareContext) => GestureDetector(
+                onTap: () async {
+                  if (url.isEmpty) return;
+                  final box = shareContext.findRenderObject() as RenderBox?;
+                  final origin = box == null ? null : (box.localToGlobal(Offset.zero) & box.size);
+
+                  await _sharePdfFromUrl(
+                    context: shareContext,
+                    url: url,
+                    fileNameWithoutExt: 'invoice_${invoice.invoiceNumber ?? ''}',
+                    sharePositionOrigin: origin,
+                  );
+                },
+                child: Icon(Icons.share, color: AppColors.mainColor),
+              ),
             ),
           ),
         ),
         body: SafeArea(
-          child: Stack(children: [
-            SingleChildScrollView(
-              child: Column(children: [
-                Container(
-                  margin: const EdgeInsets.all(AppConstants.padding_8),
-                  padding: const EdgeInsets.all(AppConstants.padding_8),
-                  decoration: BoxDecoration(
-                    color: AppColors.whiteColor,
-                    border: Border.all(color: AppColors.borderColor),
-                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(AppConstants.padding_8),
+                          padding: const EdgeInsets.all(AppConstants.padding_8),
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            border: Border.all(color: AppColors.borderColor),
+                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                          ),
+                          child: Column(children: [
+                            itemOne(),
+                            const DividerWidget(height: 20),
+                            itemTwo(),
+                            const DividerWidget(height: 20),
+                            itemThree(),
+                          ]),
+                        ),
+                        15.height,
+                      ],
+                    ),
                   ),
-                  child: Column(children: [
-                    itemOne(),
-                    const DividerWidget(height: 20),
-                    itemTwo(),
-                    const DividerWidget(height: 20),
-                    itemThree(),
-                  ]),
-                ),
-                15.height,
-                pdfSection(),
-              ]),
-            ),
-            if (state.isDownloading)
-              Container(
-                height: getScreenHeight(context),
-                width: getScreenWidth(context),
-                color: const Color.fromARGB(20, 0, 0, 0),
-                alignment: Alignment.center,
-                child: Container(
-                  height: 80,
-                  width: 80,
-                  decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    CupertinoActivityIndicator(color: AppColors.mainColor),
-                    10.height,
-                    Text('${state.downloadProgress}%', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
-                  ]),
-                ),
+                  Expanded(child: pdfSection()),
+                ],
               ),
-          ]),
+              if (state.isDownloading)
+                Container(
+                  height: getScreenHeight(context),
+                  width: getScreenWidth(context),
+                  color: const Color.fromARGB(20, 0, 0, 0),
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: 80,
+                    width: 80,
+                    decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                    child: Column(mainAxisSize: MainAxisSize.min, children: [
+                      CupertinoActivityIndicator(color: AppColors.mainColor),
+                      10.height,
+                      Text('${state.downloadProgress}%', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
+                    ]),
+                  ),
+                ),
+            ],
+          ),
         ),
       );
     });

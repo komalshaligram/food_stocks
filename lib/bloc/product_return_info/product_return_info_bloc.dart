@@ -81,6 +81,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                   isApproved: myList[i].isApproved,
                   reasonToReturn: myList[i].reasonToReturn,
                   returnProductId: myList[i].returnProductId,
+                  scaleType: myList[i].scaleType
                 ),
               );
             }
@@ -112,6 +113,7 @@ class ProductReturnInfoBloc extends Bloc<ProductReturnInfoEvent, ProductReturnIn
                 proofImagesList: proofList,
                 reason: tempProductList.elementAt(index).reasonToReturn ?? '',
                 addNoteController: TextEditingController(text: tempProductList.elementAt(index).notes ?? ''),
+                scaleType: tempProductList.elementAt(index).scaleType ?? '',
               ),
             );
             emit(state.copyWith(

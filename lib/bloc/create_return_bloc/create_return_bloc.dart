@@ -149,11 +149,15 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           }
         } catch (_) {}
       } else if (event is _detailReturnEvent) {
+        printData("check here data ${state.returnProductList}");
         final result = await Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {
           'list': state.returnProductList,
           'index': event.index,
           'status': state.isFromPending,
         });
+
+
+
         if (result != null) {
           emit(state.copyWith(returnProductList: []));
           List<ReturnProduct> list = [];
