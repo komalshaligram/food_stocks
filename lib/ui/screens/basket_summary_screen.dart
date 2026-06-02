@@ -645,63 +645,6 @@ class BasketSummaryScreenWidget extends StatelessWidget {
 
   Widget totalAmountCard(BasketSummaryState state, BuildContext context, int index) {
     BasketSummaryBloc bloc = context.read<BasketSummaryBloc>();
-    // double orderAmount = double.tryParse(state.tempList[index].totalAmount ?? '0') ?? 0;
-    // double vatPercentage = state.tempList[index].vatPercentage ?? 0;
-    // double deposit = state.tempList[index].bottleTax ?? 0;
-    // double qty = state.tempList[index].bottleQuantities?.toDouble() ?? 0;
-    // double refundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0;
-    // double vatAmount = totalVatAmountCalculation(price: orderAmount, vat: vatPercentage, qty: qty, deposit: deposit);
-    // double bottleDeposit = bottleDepositCalculation(deposit: deposit, qty: qty);
-    // double totalBeforeRefund;
-    //
-    // if (state.isIncludedVat) {
-    //   totalBeforeRefund = orderAmount + bottleDeposit;
-    // } else {
-    //   totalBeforeRefund = orderAmount + vatAmount + bottleDeposit;
-    // }
-    //
-    // double remainingRefund = 0;
-    // double totalRefund = 0.0;
-    // if (refundAmount < 0) {
-    //   double refundAbs = -refundAmount;
-    //   if (refundAbs > totalBeforeRefund) {
-    //     totalRefund = totalBeforeRefund;
-    //     remainingRefund = refundAbs - totalRefund;
-    //   } else {
-    //     totalRefund = refundAbs;
-    //     remainingRefund = 0;
-    //   }
-    // }
-    //
-    // final isHebrew = Localizations.localeOf(context).languageCode == 'he';
-    // final rawRefundAmount = state.orderSummaryList.data?.openRefundTotalAmount ?? 0.0;
-    // final totalOrderAmount = vatCalculation(
-    //   price: double.parse(state.tempList[index].totalAmount ?? '0'),
-    //   vat: state.tempList[index].vatPercentage ?? 0,
-    //   qty: (state.tempList[index].bottleQuantities ?? 0).toDouble(),
-    //   deposit: (state.tempList[index].bottleTax ?? 0).toDouble(),
-    // );
-    //
-    // final adjustedAmount = totalOrderAmount.abs() < rawRefundAmount.abs() ? totalOrderAmount : rawRefundAmount;
-    // final displayAmount = adjustedAmount == 0.0 ? '${adjustedAmount.abs().toStringAsFixed(2)}₪' : ' -${adjustedAmount.abs().toStringAsFixed(2)}₪';
-    //
-    // final double totalAmount = double.tryParse(state.tempList[index].totalAmount ?? "0") ?? 0;
-    // final double refundAmount1 = adjustedAmount.abs();
-    // final double finalAmount = refundAmount1 != 0 ? totalAmount - refundAmount : totalAmount;
-
-    double orderAmount = double.tryParse(state.tempList[index].totalAmount.toString()) ?? 0;
-    double vatPercentage = state.tempList[index].vatPercentage ?? 0;
-    double deposit = state.tempList[index].bottleTax ?? 0;
-    double qty = state.tempList[index].bottleQuantities?.toDouble() ?? 0;
-    double vatAmount = totalVatAmountCalculation(price: orderAmount, vat: vatPercentage, qty: qty, deposit: deposit);
-    double bottleDeposit = bottleDepositCalculation(deposit: deposit, qty: qty);
-    double totalBeforeRefund;
-
-    if (state.isIncludedVat) {
-      totalBeforeRefund = orderAmount + bottleDeposit;
-    } else {
-      totalBeforeRefund = orderAmount + vatAmount + bottleDeposit;
-    }
 
     double remainingRefund = 0.0;
     final isHebrew = Localizations.localeOf(context).languageCode == 'he';

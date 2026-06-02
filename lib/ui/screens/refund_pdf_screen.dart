@@ -1,11 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../bloc/refund_pdf/refund_pdf_bloc.dart';
 import '../../data/model/res_model/refund_invoice_common_res/refund_invoice_common.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import '../utils/app_utils.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 import '../widget/common_app_bar.dart';
@@ -32,6 +36,47 @@ class RefundPdfScreenWidget extends StatelessWidget {
   final RefundInvoiceCommon? invoiceDetailsList;
   const RefundPdfScreenWidget({super.key, required this.invoiceDetailsList});
 
+  Future<void> _sharePdfFromUrl({
+    required BuildContext context,
+    required String url,
+    required String fileNameWithoutExt,
+  }) async {
+    if (url.trim().isEmpty) return;
+
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final safeName = fileNameWithoutExt.trim().isEmpty ? 'document' : fileNameWithoutExt.trim();
+      final filePath = '${tempDir.path}/$safeName.pdf';
+
+      await Dio().download(
+        url,
+        filePath,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: true,
+          receiveTimeout: const Duration(seconds: 60),
+          sendTimeout: const Duration(seconds: 60),
+        ),
+      );
+
+      final file = File(filePath);
+      if (!await file.exists()) {
+        throw Exception('Downloaded file missing');
+      }
+
+      await Share.shareXFiles(
+        [XFile(filePath, mimeType: 'application/pdf')],
+        text: safeName,
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.unable_pdf, type: SnackBarType.failure);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to share PDF')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RefundPdfBloc, RefundPdfState>(builder: (context, state) {
@@ -49,24 +94,27 @@ class RefundPdfScreenWidget extends StatelessWidget {
             onTap: () => Navigator.pop(context),
             trailingWidget: GestureDetector(
               onTap: () async {
-                if (bloc.isValidLink(fullUrl)) {
-                  await Share.share(fullUrl!);
-                  return;
+                String? urlToShare = fullUrl;
+
+                if (!bloc.isValidLink(urlToShare)) {
+                  bloc.add(RefundPdfEvent.verifyInvoiceLink(context: context));
+                  await Future.delayed(const Duration(milliseconds: 500));
+                  urlToShare = bloc.state.invoiceDetailsList?.invoiceLink;
                 }
 
-                bloc.add(RefundPdfEvent.verifyInvoiceLink(context: context));
-                await Future.delayed(const Duration(milliseconds: 500));
-
-                final newUrl = bloc.state.invoiceDetailsList?.invoiceLink;
-                if (bloc.isValidLink(newUrl)) {
-                  await Share.share(newUrl!);
+                if (bloc.isValidLink(urlToShare)) {
+                  await _sharePdfFromUrl(
+                    context: context,
+                    url: urlToShare!,
+                    fileNameWithoutExt: 'refund',
+                  );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("No Invoice PDF found")),
                   );
                 }
               },
-              child: Icon(Icons.download_outlined, color: AppColors.mainColor),
+              child: Icon(Icons.share_outlined, color: AppColors.mainColor),
             ),
           ),
         ),

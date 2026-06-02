@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -39,6 +42,46 @@ class InvoicePdfScreenWidget extends StatelessWidget {
 
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
+
+  Future<void> _sharePdfFromUrl({
+    required BuildContext context,
+    required String url,
+    required String fileNameWithoutExt,
+  }) async {
+    if (url.trim().isEmpty) return;
+
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final safeName = fileNameWithoutExt.trim().isEmpty ? 'document' : fileNameWithoutExt.trim();
+      final filePath = '${tempDir.path}/$safeName.pdf';
+
+      await Dio().download(
+        url,
+        filePath,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: true,
+          receiveTimeout: const Duration(seconds: 60),
+          sendTimeout: const Duration(seconds: 60),
+        ),
+      );
+
+      final file = File(filePath);
+      if (!await file.exists()) {
+        throw Exception('Downloaded file missing');
+      }
+
+      await Share.shareXFiles(
+        [XFile(filePath, mimeType: 'application/pdf')],
+        text: safeName,
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to share PDF')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,12 +195,15 @@ class InvoicePdfScreenWidget extends StatelessWidget {
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () => Navigator.pop(context),
             trailingWidget: GestureDetector(
-              onTap: () {
-                if (url.isNotEmpty) {
-                  Share.share(url);
-                }
+              onTap: () async {
+                if (url.isEmpty) return;
+                await _sharePdfFromUrl(
+                  context: context,
+                  url: url,
+                  fileNameWithoutExt: 'invoice_${invoice.invoiceNumber ?? ''}',
+                );
               },
-              child: Icon(Icons.download_outlined, color: AppColors.mainColor),
+              child: Icon(Icons.share_outlined, color: AppColors.mainColor),
             ),
           ),
         ),
