@@ -46,11 +46,13 @@ class InvoicePdfScreenWidget extends StatefulWidget {
 }
 
 class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
-  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
 
-  String? _pdfUrl;
-  Future<Uint8List>? _pdfBytesFuture;
+  String? _cachedUrl;
+  Uint8List? _cachedPdfBytes;
+  bool _isCachingPdf = false;
+  bool _isPreparingShare = false;
+  bool _shareLocked = false;
 
   Future<Uint8List> _downloadPdfBytes(String url) async {
     final encodedUrl = Uri.encodeFull(url.trim());
@@ -68,45 +70,80 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
     return bytes;
   }
 
-  Future<void> _sharePdfFromUrl({
+  void _startCacheIfNeeded(String url) {
+    if (url.trim().isEmpty) return;
+    if (_cachedUrl == url && _cachedPdfBytes != null) return;
+    if (_cachedUrl == url && _isCachingPdf) return;
+
+    _cachedUrl = url;
+    _cachedPdfBytes = null;
+    _isCachingPdf = true;
+
+    _downloadPdfBytes(url).then((bytes) {
+      if (!mounted || _cachedUrl != url) return;
+      setState(() {
+        _cachedPdfBytes = bytes;
+        _isCachingPdf = false;
+      });
+    }).catchError((_) {
+      if (mounted && _cachedUrl == url) {
+        setState(() => _isCachingPdf = false);
+      }
+    });
+  }
+
+  Future<Uint8List> _getOrDownloadBytes(String url) async {
+    if (_cachedUrl == url && _cachedPdfBytes != null) {
+      return _cachedPdfBytes!;
+    }
+    final bytes = await _downloadPdfBytes(url);
+    if (mounted) {
+      setState(() {
+        _cachedUrl = url;
+        _cachedPdfBytes = bytes;
+        _isCachingPdf = false;
+      });
+    }
+    return bytes;
+  }
+
+  Future<void> _sharePdf({
     required BuildContext context,
     required String url,
     required String fileNameWithoutExt,
     Rect? sharePositionOrigin,
   }) async {
-    if (url.trim().isEmpty) return;
+    if (url.trim().isEmpty || _shareLocked) return;
 
+    setState(() {
+      _shareLocked = true;
+      _isPreparingShare = true;
+    });
     try {
-      final encodedUrl = Uri.encodeFull(url.trim());
+      final bytes = await _getOrDownloadBytes(url);
       final tempDir = await getTemporaryDirectory();
       final rawName = fileNameWithoutExt.trim().isEmpty ? 'document' : fileNameWithoutExt.trim();
-      final safeName = rawName.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_').substring(0, rawName.length > 60 ? 60 : rawName.length);
-      final filePath = '${tempDir.path}/$safeName.pdf';
+      final safeName = rawName.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_');
+      final trimmedName = safeName.length > 60 ? safeName.substring(0, 60) : safeName;
+      final filePath = '${tempDir.path}/$trimmedName.pdf';
+      await File(filePath).writeAsBytes(bytes, flush: true);
 
-      await Dio().download(
-        encodedUrl,
-        filePath,
-        options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: true,
-          receiveTimeout: const Duration(minutes: 2),
-          sendTimeout: const Duration(minutes: 2),
-        ),
-      );
-
-      final file = File(filePath);
-      if (!await file.exists() || await file.length() == 0) {
-        throw Exception('Downloaded file missing');
-      }
+      if (mounted) setState(() => _isPreparingShare = false);
 
       await Share.shareXFiles(
         [XFile(filePath, mimeType: 'application/pdf')],
-        text: safeName,
         sharePositionOrigin: sharePositionOrigin,
       );
     } catch (_) {
       if (!context.mounted) return;
       CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.unable_pdf, type: SnackBarType.failure);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPreparingShare = false;
+          _shareLocked = false;
+        });
+      }
     }
   }
 
@@ -116,6 +153,7 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
       final bloc = context.read<InvoicePdfBloc>();
       final invoice = state.invoiceDetailsList;
       final String url = invoice.invoiceLink ?? '';
+      final bool showShareIcon = state.hasValidLink == true && bloc.isValidLink(url);
 
       Widget itemOne() => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -210,36 +248,19 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
           return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
         }
 
-        // Cache the bytes future so page-jump dialog doesn't trigger re-downloads/rebuild blank states.
-        if (_pdfUrl != url || _pdfBytesFuture == null) {
-          _pdfUrl = url;
-          _pdfBytesFuture = _downloadPdfBytes(url);
-        }
+        _startCacheIfNeeded(url);
 
         return Container(
           color: Colors.white,
-          height: getScreenHeight(context) * 0.7,
-          child: FutureBuilder<Uint8List>(
-            future: _pdfBytesFuture,
-            builder: (context, snap) {
-              if (snap.connectionState != ConnectionState.done) {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-              if (snap.hasError || snap.data == null) {
-                return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
-              }
-
-              return SfPdfViewer.memory(
-                snap.data!,
-                key: _pdfViewerKey,
-                controller: _pdfViewerController,
-                scrollDirection: PdfScrollDirection.vertical,
-                pageLayoutMode: PdfPageLayoutMode.continuous,
-                canShowScrollHead: true,
-                canShowScrollStatus: true,
-                canShowPaginationDialog: true,
-              );
-            },
+          child: SfPdfViewer.network(
+            url,
+            key: ValueKey(url),
+            controller: _pdfViewerController,
+            scrollDirection: PdfScrollDirection.vertical,
+            pageLayoutMode: PdfPageLayoutMode.continuous,
+            canShowScrollHead: true,
+            canShowScrollStatus: true,
+            canShowPaginationDialog: true,
           ),
         );
       }
@@ -253,23 +274,28 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
             title: bloc.screenTitleName == AppLocalizations.of(context)!.my_invoices ? AppLocalizations.of(context)!.my_invoices : AppLocalizations.of(context)!.my_refunds,
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () => Navigator.pop(context),
-            trailingWidget: Builder(
-              builder: (shareContext) => GestureDetector(
-                onTap: () async {
-                  if (url.isEmpty) return;
-                  final box = shareContext.findRenderObject() as RenderBox?;
-                  final origin = box == null ? null : (box.localToGlobal(Offset.zero) & box.size);
+            trailingWidget: showShareIcon
+                ? Builder(
+                    builder: (shareContext) => GestureDetector(
+                      onTap: _shareLocked
+                          ? null
+                          : () async {
+                              final box = shareContext.findRenderObject() as RenderBox?;
+                              final origin = box == null ? null : (box.localToGlobal(Offset.zero) & box.size);
 
-                  await _sharePdfFromUrl(
-                    context: shareContext,
-                    url: url,
-                    fileNameWithoutExt: 'invoice_${invoice.invoiceNumber ?? ''}',
-                    sharePositionOrigin: origin,
-                  );
-                },
-                child: Icon(Icons.share, color: AppColors.mainColor),
-              ),
-            ),
+                              await _sharePdf(
+                                context: shareContext,
+                                url: url,
+                                fileNameWithoutExt: 'invoice_${invoice.invoiceNumber ?? ''}',
+                                sharePositionOrigin: origin,
+                              );
+                            },
+                      child: _isPreparingShare
+                          ? SizedBox(width: 22, height: 22, child: CupertinoActivityIndicator(color: AppColors.mainColor))
+                          : Icon(Icons.share, color: AppColors.mainColor),
+                    ),
+                  )
+                : const SizedBox(),
           ),
         ),
         body: SafeArea(

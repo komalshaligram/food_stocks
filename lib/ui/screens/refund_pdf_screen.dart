@@ -25,11 +25,16 @@ class RefundPdfScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    final Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
-      create: (context) => RefundPdfBloc()..add(RefundPdfEvent.getArgumentEvent(invoiceDetailsList: args?[AppStrings.invoiceListString], context: context)),
-      child: RefundPdfScreenWidget(invoiceDetailsList: args?[AppStrings.invoiceListString]),
+      create: (context) => RefundPdfBloc()
+        ..add(RefundPdfEvent.getArgumentEvent(
+            invoiceDetailsList: args?[AppStrings.invoiceListString],
+            context: context)),
+      child: RefundPdfScreenWidget(
+          invoiceDetailsList: args?[AppStrings.invoiceListString]),
     );
   }
 }
@@ -43,8 +48,11 @@ class RefundPdfScreenWidget extends StatefulWidget {
 }
 
 class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
-  String? _pdfUrl;
-  Future<Uint8List>? _pdfBytesFuture;
+  String? _cachedUrl;
+  Uint8List? _cachedPdfBytes;
+  bool _isCachingPdf = false;
+  bool _isPreparingShare = false;
+  bool _shareLocked = false;
 
   Future<Uint8List> _downloadPdfBytes(String url) async {
     final encodedUrl = Uri.encodeFull(url.trim());
@@ -62,53 +70,97 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
     return bytes;
   }
 
-  Future<void> _sharePdfFromUrl({
+  void _startCacheIfNeeded(String url) {
+    if (url.trim().isEmpty) return;
+    if (_cachedUrl == url && _cachedPdfBytes != null) return;
+    if (_cachedUrl == url && _isCachingPdf) return;
+
+    _cachedUrl = url;
+    _cachedPdfBytes = null;
+    _isCachingPdf = true;
+
+    _downloadPdfBytes(url).then((bytes) {
+      if (!mounted || _cachedUrl != url) return;
+      setState(() {
+        _cachedPdfBytes = bytes;
+        _isCachingPdf = false;
+      });
+    }).catchError((_) {
+      if (mounted && _cachedUrl == url) {
+        setState(() => _isCachingPdf = false);
+      }
+    });
+  }
+
+  Future<Uint8List> _getOrDownloadBytes(String url) async {
+    if (_cachedUrl == url && _cachedPdfBytes != null) {
+      return _cachedPdfBytes!;
+    }
+    final bytes = await _downloadPdfBytes(url);
+    if (mounted) {
+      setState(() {
+        _cachedUrl = url;
+        _cachedPdfBytes = bytes;
+        _isCachingPdf = false;
+      });
+    }
+    return bytes;
+  }
+
+  Future<void> _sharePdf({
     required BuildContext context,
     required String url,
     required String fileNameWithoutExt,
     Rect? sharePositionOrigin,
   }) async {
-    if (url.trim().isEmpty) return;
+    if (url.trim().isEmpty || _shareLocked) return;
 
+    setState(() {
+      _shareLocked = true;
+      _isPreparingShare = true;
+    });
     try {
-      final encodedUrl = Uri.encodeFull(url.trim());
+      final bytes = await _getOrDownloadBytes(url);
       final tempDir = await getTemporaryDirectory();
-      final rawName = fileNameWithoutExt.trim().isEmpty ? 'document' : fileNameWithoutExt.trim();
-      final safeName = rawName.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_').substring(0, rawName.length > 60 ? 60 : rawName.length);
-      final filePath = '${tempDir.path}/$safeName.pdf';
+      final rawName = fileNameWithoutExt.trim().isEmpty
+          ? 'document'
+          : fileNameWithoutExt.trim();
+      final safeName = rawName.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_');
+      final trimmedName =
+          safeName.length > 60 ? safeName.substring(0, 60) : safeName;
+      final filePath = '${tempDir.path}/$trimmedName.pdf';
+      await File(filePath).writeAsBytes(bytes, flush: true);
 
-      await Dio().download(
-        encodedUrl,
-        filePath,
-        options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: true,
-          receiveTimeout: const Duration(minutes: 2),
-          sendTimeout: const Duration(minutes: 2),
-        ),
-      );
-
-      final file = File(filePath);
-      if (!await file.exists() || await file.length() == 0) {
-        throw Exception('Downloaded file missing');
-      }
+      if (mounted) setState(() => _isPreparingShare = false);
 
       await Share.shareXFiles(
         [XFile(filePath, mimeType: 'application/pdf')],
-        text: safeName,
         sharePositionOrigin: sharePositionOrigin,
       );
     } catch (_) {
       if (!context.mounted) return;
-      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.unable_pdf, type: SnackBarType.failure);
+      CustomSnackBar.showSnackBar(
+          context: context,
+          title: AppLocalizations.of(context)!.unable_pdf,
+          type: SnackBarType.failure);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPreparingShare = false;
+          _shareLocked = false;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RefundPdfBloc, RefundPdfState>(builder: (context, state) {
+    return BlocBuilder<RefundPdfBloc, RefundPdfState>(
+        builder: (context, state) {
       final bloc = context.read<RefundPdfBloc>();
       final String? fullUrl = state.invoiceDetailsList?.invoiceLink;
+      final bool showShareIcon =
+          state.hasValidLink == true && bloc.isValidLink(fullUrl);
 
       return Scaffold(
         backgroundColor: AppColors.pageColor,
@@ -119,34 +171,35 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
             title: AppLocalizations.of(context)!.my_refunds,
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () => Navigator.pop(context),
-            trailingWidget: Builder(
-              builder: (shareContext) => GestureDetector(
-                onTap: () async {
-                  String? urlToShare = fullUrl;
+            trailingWidget: showShareIcon
+                ? Builder(
+                    builder: (shareContext) => GestureDetector(
+                      onTap: _shareLocked
+                          ? null
+                          : () async {
+                              final box =
+                                  shareContext.findRenderObject() as RenderBox?;
+                              final origin = box == null
+                                  ? null
+                                  : (box.localToGlobal(Offset.zero) & box.size);
 
-                  if (!bloc.isValidLink(urlToShare)) {
-                    bloc.add(RefundPdfEvent.verifyInvoiceLink(context: context));
-                    await Future.delayed(const Duration(milliseconds: 500));
-                    urlToShare = bloc.state.invoiceDetailsList?.invoiceLink;
-                  }
-
-                  if (bloc.isValidLink(urlToShare)) {
-                    final box = shareContext.findRenderObject() as RenderBox?;
-                    final origin = box == null ? null : (box.localToGlobal(Offset.zero) & box.size);
-
-                    await _sharePdfFromUrl(
-                      context: shareContext,
-                      url: urlToShare!,
-                      fileNameWithoutExt: 'refund',
-                      sharePositionOrigin: origin,
-                    );
-                  } else {
-                    CustomSnackBar.showSnackBar(context: shareContext, title: AppLocalizations.of(context)!.no_invoice_file, type: SnackBarType.failure);
-                  }
-                },
-                child: Icon(Icons.share, color: AppColors.mainColor),
-              ),
-            ),
+                              await _sharePdf(
+                                context: shareContext,
+                                url: fullUrl!,
+                                fileNameWithoutExt: 'refund',
+                                sharePositionOrigin: origin,
+                              );
+                            },
+                      child: _isPreparingShare
+                          ? SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CupertinoActivityIndicator(
+                                  color: AppColors.mainColor))
+                          : Icon(Icons.share, color: AppColors.mainColor),
+                    ),
+                  )
+                : const SizedBox(),
           ),
         ),
         body: Builder(builder: (_) {
@@ -155,33 +208,20 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
           }
 
           if (state.hasValidLink == false || !bloc.isValidLink(fullUrl)) {
-            return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
+            return Center(
+                child: Text(AppLocalizations.of(context)!.no_invoice_file));
           }
 
-          if (_pdfUrl != fullUrl || _pdfBytesFuture == null) {
-            _pdfUrl = fullUrl;
-            _pdfBytesFuture = _downloadPdfBytes(fullUrl!);
-          }
+          _startCacheIfNeeded(fullUrl!);
 
-          return FutureBuilder<Uint8List>(
-            future: _pdfBytesFuture,
-            builder: (context, snap) {
-              if (snap.connectionState != ConnectionState.done) {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-              if (snap.hasError || snap.data == null) {
-                return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
-              }
-
-              return SfPdfViewer.memory(
-                snap.data!,
-                scrollDirection: PdfScrollDirection.vertical,
-                pageLayoutMode: PdfPageLayoutMode.continuous,
-                canShowScrollHead: true,
-                canShowScrollStatus: true,
-                canShowPaginationDialog: true,
-              );
-            },
+          return SfPdfViewer.network(
+            fullUrl!,
+            key: ValueKey(fullUrl),
+            scrollDirection: PdfScrollDirection.vertical,
+            pageLayoutMode: PdfPageLayoutMode.continuous,
+            canShowScrollHead: true,
+            canShowScrollStatus: true,
+            canShowPaginationDialog: true,
           );
         }),
       );
