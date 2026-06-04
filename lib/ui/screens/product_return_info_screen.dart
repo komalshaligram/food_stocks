@@ -151,6 +151,9 @@ class ReturnListWidget extends StatelessWidget {
   }
 
   Widget _quantitySection(BuildContext context, ProductReturnInfoState state) {
+
+    printData("check here state.scaleType ${state.scaleType}");
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
      state.scaleType == 'מארזים' ?
      Text(AppLocalizations.of(context)!.no_of_unit_for_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)):

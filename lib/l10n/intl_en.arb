@@ -716,5 +716,6 @@
   "credit_card_payment_error": "An error occurred while processing the credit card payment for the invoice",
   "credit_card_payment_success": "Success! Your invoice has been paid using your credit card.",
   "pdf_loading": "PDF is still loading. Please wait.",
-  "unable_pdf": "Unable to share PDF. Please try again."
+  "unable_pdf": "Unable to share PDF. Please try again.",
+  "sold_units": "Sold by units"
 }

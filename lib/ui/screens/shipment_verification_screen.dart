@@ -342,49 +342,54 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
               ),
             ),
             bottomSheet: SafeArea(
-              child: GestureDetector(
-                onTap: () async {
-                  if (!_formKey.currentState!.validate()) return;
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_20, horizontal: AppConstants.padding_30),
+                color: AppColors.pageColor,
+                child: CustomButtonWidget(
+                  buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
+                  bGColor: AppColors.mainColor,
+                  isLoading: state.isLoading,
+                  onPressed: state.isLoading
+                      ? null
+                      : () async {
+                          if (!_formKey.currentState!.validate()) return;
 
-                  if (!isSign) {
-                    CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.signature_missing, type: SnackBarType.failure);
-                    return;
-                  }
+                          if (!isSign) {
+                            CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.signature_missing, type: SnackBarType.failure);
+                            return;
+                          }
 
-                  if (!isDriverSign) {
-                    CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.driver_signature_missing, type: SnackBarType.failure);
-                    _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
-                    return;
-                  }
+                          if (!isDriverSign) {
+                            CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.driver_signature_missing, type: SnackBarType.failure);
+                            _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+                            return;
+                          }
 
-                  final signImage = await signatureGlobalKey.currentState!.toImage();
-                  final signData = await signImage.toByteData(format: ui.ImageByteFormat.png);
-                  final signBytes = signData!.buffer.asUint8List();
-                  final dir = (await getApplicationDocumentsDirectory()).path;
-                  final signFile = await File('$dir/sign.png').writeAsBytes(signBytes);
-                  final driverImage = await driverSignatureGlobalKey.currentState!.toImage();
-                  final driverData = await driverImage.toByteData(format: ui.ImageByteFormat.png);
-                  final driverBytes = driverData!.buffer.asUint8List();
-                  final driverFile = await File('$dir/driver_sign.png').writeAsBytes(driverBytes);
+                          final signImage = await signatureGlobalKey.currentState!.toImage();
+                          final signData = await signImage.toByteData(format: ui.ImageByteFormat.png);
+                          final signBytes = signData!.buffer.asUint8List();
+                          final dir = (await getApplicationDocumentsDirectory()).path;
+                          final signFile = await File('$dir/sign.png').writeAsBytes(signBytes);
+                          final driverImage = await driverSignatureGlobalKey.currentState!.toImage();
+                          final driverData = await driverImage.toByteData(format: ui.ImageByteFormat.png);
+                          final driverBytes = driverData!.buffer.asUint8List();
+                          final driverFile = await File('$dir/driver_sign.png').writeAsBytes(driverBytes);
 
-                  bloc.add(
-                    ShipmentVerificationEvent.deliveryConfirmEvent(
-                      context: context,
-                      supplierId: widget.args?[AppStrings.supplierIdString],
-                      signPath: signFile.path,
-                      driverSignPath: driverFile.path,
-                      orderId: widget.args?[AppStrings.orderIdString],
-                      driverDeliveryDocumentsImages: widget.args?[AppStrings.driverDeliveryDocumentsImages],
-                      sentReturnData: (widget.args?[AppStrings.sentReturnData] as List<dynamic>?)?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ?? [],
-                      orderIssueReturnId: widget.args?[AppStrings.orderIssueReturnId],
-                      isFromBasket: widget.isBasket,
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_20, horizontal: AppConstants.padding_30),
-                  color: AppColors.pageColor,
-                  child: CustomButtonWidget(buttonText: AppLocalizations.of(context)!.save.toUpperCase(), bGColor: AppColors.mainColor),
+                          if (!context.mounted) return;
+                          bloc.add(
+                            ShipmentVerificationEvent.deliveryConfirmEvent(
+                              context: context,
+                              supplierId: widget.args?[AppStrings.supplierIdString],
+                              signPath: signFile.path,
+                              driverSignPath: driverFile.path,
+                              orderId: widget.args?[AppStrings.orderIdString],
+                              driverDeliveryDocumentsImages: widget.args?[AppStrings.driverDeliveryDocumentsImages],
+                              sentReturnData: (widget.args?[AppStrings.sentReturnData] as List<dynamic>?)?.map((e) => Map<String, dynamic>.from(e as Map)).toList() ?? [],
+                              orderIssueReturnId: widget.args?[AppStrings.orderIssueReturnId],
+                              isFromBasket: widget.isBasket,
+                            ),
+                          );
+                        },
                 ),
               ),
             ),

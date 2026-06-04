@@ -51,6 +51,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
                 totalUnits: myList[i].totalUnits,
                 isApproved: myList[i].isApproved,
                 reasonToReturn: myList[i].reasonToReturn,
+                scaleType: myList[i].scaleType,
               ));
             }
             emit(state.copyWith(returnProductList: tempList));
@@ -128,6 +129,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
                   supplierName: response.product![i].supplierName,
                   supplierId: response.product![i].supplierId,
                   barcode: response.product![i].qrcode,
+                  scaleType: response.product![i].scaleType,
                 ));
               }
               list.addAll(state.returnProductList);

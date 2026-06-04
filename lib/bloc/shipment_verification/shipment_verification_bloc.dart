@@ -10,6 +10,7 @@ import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -27,6 +28,8 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
       } else if (event is _signDeleteEvent) {
         emit(state.copyWith(isDelete: true));
       } else if (event is _deliveryConfirmEvent) {
+        if (state.isLoading) return;
+
         emit(state.copyWith(isLoading: true));
         String signUrl = '';
         String driverSignUrl = '';
@@ -74,29 +77,43 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
           );
 
           final response = await DioClient(event.context).post('${AppUrlEndPoints.deliveryConfirmUrl}${event.orderId}', data: deliveryConfirmRequest);
-          if (response[AppStrings.statusString] == 200) {
+          final status = response[AppStrings.statusString];
+          final isSuccess = status == AppConstants.code_200 || status?.toString() == '${AppConstants.code_200}';
+
+          if (isSuccess) {
             emit(state.copyWith(isLoading: false));
-            if (event.isFromBasket! == true) {
+            if (!event.context.mounted) return;
+
+            final message = response[AppStrings.messageString]?.toString() ?? '';
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(message.toLocalization(), event.context),
+              type: SnackBarType.success,
+            );
+
+            if (event.isFromBasket == true) {
               Navigator.pushReplacementNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
             } else {
               Navigator.pushReplacementNamed(event.context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
             }
-
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.success,
-            );
-          } else {
-            emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+            return;
           }
+
+          emit(state.copyWith(isLoading: false));
+          if (!event.context.mounted) return;
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
+            type: SnackBarType.failure,
+          );
         } catch (e) {
           emit(state.copyWith(isLoading: false));
+          if (!event.context.mounted) return;
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
+            type: SnackBarType.failure,
+          );
         }
       }
     });

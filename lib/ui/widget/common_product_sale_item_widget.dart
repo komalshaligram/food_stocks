@@ -23,7 +23,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final bool isGuestUser;
   final double? imageHeight;
   final double? imageWidth;
-  final dynamic? originalPrice;
+  final dynamic originalPrice;
   final String lowStock;
   final bool? isPesach;
   final String productStock;
@@ -209,30 +209,28 @@ class CommonProductSaleItemWidget extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
 
-            /// UNIT / KG
-            !isGuestUser
-                ? numberOfUnits != '0'
-                    ? scaleType == 'מארזים'
-                        ? Center(
-                            child: Text(
-                              '${numberOfUnits.toString()} ${AppLocalizations.of(context)!.unit_in_box}',
-                              style: AppStyles.rkBoldTextStyle(
-                                  size: AppConstants.font_10,
-                                  color: AppColors.blackColor,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          )
-                        : Center(
-                            child: Text(
-                              '${AppLocalizations.of(context)!.approx}${' '}${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.kgBox}',
-                              style: AppStyles.rkBoldTextStyle(
-                                  size: AppConstants.font_10,
-                                  color: AppColors.blackColor,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          )
-                    : 0.width
-                : 0.width,
+            /// UNIT / KG — same Visibility pattern as original price so price button stays aligned
+            if (!isGuestUser)
+              Visibility(
+                visible: numberOfUnits != '0',
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: Center(
+                  child: Text(
+                    scaleType == 'מארזים'
+                        ? '${numberOfUnits.toString()} ${AppLocalizations.of(context)!.unit_in_box}'
+                        : scaleType == 'Units'
+                            ? AppLocalizations.of(context)!.sold_units
+                            : '${AppLocalizations.of(context)!.approx}${' '}${numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.kgBox}',
+                    style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_10,
+                      color: AppColors.blackColor,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
 
             /// Description
             // /// DESCRIPTION
