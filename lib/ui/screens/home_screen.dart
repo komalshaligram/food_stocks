@@ -14,7 +14,7 @@ import '../../bloc/home/home_bloc.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/widget/common_product_details_widget.dart';
 import '../../ui/widget/common_product_sale_item_widget.dart';
 import '../../ui/widget/custom_dialog.dart';
@@ -237,14 +237,19 @@ class HomeScreenWidget extends StatelessWidget {
         )
       : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.cover, width: 100, height: 100);
 
-  Widget dataAnalyticsButtonWidget(BuildContext context, HomeState state) => state.showClientDataOnApp
-      ? CustomTextIconButtonWidget(
-          width: double.maxFinite,
-          title: state.language == 'en' ? state.buttonEnglishText! : state.buttonHebrewText!,
-          onPressed: () {
-            Navigator.pushNamed(context, RouteDefine.webViewScreen.name);
-          })
-      : 0.width;
+  Widget dataAnalyticsButtonWidget(BuildContext context, HomeState state) {
+    final buttonText = state.language == 'en' ? state.buttonEnglishText : state.buttonHebrewText;
+    if (!state.showClientDataOnApp || buttonText == null || buttonText.isEmpty) {
+      return 0.width;
+    }
+    return CustomTextIconButtonWidget(
+      width: double.maxFinite,
+      title: buttonText,
+      onPressed: () {
+        Navigator.pushNamed(context, RouteDefine.webViewScreen.name);
+      },
+    );
+  }
 
   Widget pesachBannerWidget(BuildContext context, HomeState state) => state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
       ? const PesachBannerShimmerWidget()
@@ -1395,7 +1400,7 @@ class HomeScreenWidget extends StatelessWidget {
     }
 
     final suppliers = state.supplierCustomerDetails;
-    if (suppliers == null || suppliers.isEmpty) return;
+    if (suppliers.isEmpty) return;
     List<SupplierTimer> validSupplier = [];
 
     for (var supplier in suppliers) {

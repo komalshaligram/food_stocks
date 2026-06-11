@@ -9,7 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../bloc/refund_pdf/refund_pdf_bloc.dart';
 import '../../data/model/res_model/refund_invoice_common_res/refund_invoice_common.dart';
 import '../../ui/utils/constants/app_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../utils/app_utils.dart';
 import '../utils/constants/app_constants.dart';
@@ -215,7 +215,7 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
           _startCacheIfNeeded(fullUrl!);
 
           return SfPdfViewer.network(
-            fullUrl!,
+            fullUrl,
             key: ValueKey(fullUrl),
             scrollDirection: PdfScrollDirection.vertical,
             pageLayoutMode: PdfPageLayoutMode.continuous,

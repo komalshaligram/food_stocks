@@ -62,6 +62,7 @@ class CartProductDataResModel with _$CartProductDataResModel {
     @JsonKey(name: "bottleTax", fromJson: _toDoubleNullable) double? bottleTax,
     @JsonKey(name: "bottleQuantities", fromJson: _toDoubleNullable) double? bottleQuantities,
     @JsonKey(name: "bottleDeposit", fromJson: _toDoubleNullable) double? bottleDeposit,
+    @JsonKey(name: "isFirstOrderFromSupplier") bool? isFirstOrderFromSupplier,
     bool? isProcess,
   }) = _CartProductDataResModel;
 

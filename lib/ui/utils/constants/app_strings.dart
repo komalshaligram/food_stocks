@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 class AppStrings {
   static const appName = 'Tavili';
@@ -75,6 +75,8 @@ class AppStrings {
   static const orderBySupplierId = 'orderSupplierId';
   static const isSupplierSingle = 'isSupplierSingle';
   static const totalSupplier = 'totalSupplier';
+  static const verifyClientNextRoute = 'verifyClientNextRoute';
+  static const verifyClientNextArgs = 'verifyClientNextArgs';
   static const getCartListString = 'getCartListString';
   static const isSubCategory = 'false';
   static const issueString = 'issue';
@@ -232,6 +234,7 @@ class AppStrings {
   static const clubAgentCodeText = "998616";
   static const minimumOrderText = "Minimum Order";
   static const brandListText = "brandList";
+  static const categoryListText = "categoryList";
   static const brandIdText = "brandId";
   static const brandNameText = "brandName";
   static const isFromInvoicePayment = "isFromInvoicePayment";

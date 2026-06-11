@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/product_stock_model/product_stock_model.dart';
 import 'package:food_stock/ui/widget/related_product_title.dart';

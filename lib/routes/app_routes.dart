@@ -24,8 +24,10 @@ import '../../ui/screens/supplier_products_screen.dart';
 import '../ui/screens/account_permission_screen.dart';
 import '../ui/screens/bank_info_screen.dart';
 import '../ui/screens/bank_transfer_screen.dart';
+import '../ui/screens/certificate_scanning_screen.dart';
 import '../ui/screens/basket_screen.dart';
 import '../ui/screens/basket_summary_screen.dart';
+import '../ui/screens/verify_client_data_screen.dart';
 import '../ui/screens/brands_permission_screen.dart';
 import '../ui/screens/categories_permission_screen.dart';
 import '../ui/screens/client_form_details_screen.dart';
@@ -62,6 +64,7 @@ import '../ui/screens/sub_users_profile_screen.dart';
 import '../ui/screens/sub_users_screen.dart';
 import '../ui/screens/supplier_brand_product_screen.dart';
 import '../ui/screens/supplier_brand_screen.dart';
+import '../ui/screens/supplier_category_screen.dart';
 import '../ui/screens/supplier_list_products_screen.dart';
 import '../ui/screens/supplier_permission_screen.dart';
 import '../ui/screens/supplier_screen.dart';
@@ -99,6 +102,7 @@ enum RouteDefine {
   shipmentVerificationScreen,
   storeCategoryScreen,
   orderSummaryScreen,
+  verifyClientDataScreen,
   orderSuccessfulScreen,
   supplierScreen,
   supplierProductsScreen,
@@ -144,7 +148,9 @@ enum RouteDefine {
   myClientsScreen,
   supplierBrandScreen,
   supplierBrandProductsScreen,
-  invoicePaymentScreen
+  supplierCategoryScreen,
+  invoicePaymentScreen,
+  certificateScanningScreen,
 }
 
 class AppRouting {
@@ -174,6 +180,7 @@ class AppRouting {
       RouteDefine.shipmentVerificationScreen.name: (_) => ShipmentVerificationRoute.route,
       RouteDefine.storeCategoryScreen.name: (_) => StoreCategoryRoute.route,
       RouteDefine.orderSummaryScreen.name: (_) => OrderSummaryRoute.route,
+      RouteDefine.verifyClientDataScreen.name: (_) => VerifyClientDataRoute.route,
       RouteDefine.orderSuccessfulScreen.name: (_) => OrderSuccessfulRoute.route,
       RouteDefine.supplierScreen.name: (_) => SupplierRoute.route,
       RouteDefine.supplierProductsScreen.name: (_) => SupplierProductsRoute.route,
@@ -219,7 +226,9 @@ class AppRouting {
       RouteDefine.myClientsScreen.name: (_) => MyClientsRoute.route,
       RouteDefine.supplierBrandScreen.name: (_) => SupplierBrandRoute.route,
       RouteDefine.supplierBrandProductsScreen.name: (_) => SupplierBrandProductsRoute.route,
+      RouteDefine.supplierCategoryScreen.name: (_) => SupplierCategoryRoute.route,
       RouteDefine.invoicePaymentScreen.name:(_) => InvoicePaymentRoute.route,
+      RouteDefine.certificateScanningScreen.name: (_) => CertificateScanningRoute.route,
     };
 
     final routeBuilder = routes[settings.name];

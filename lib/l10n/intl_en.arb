@@ -44,6 +44,7 @@
   "menu": "Menu",
   "confirm":"Confirm",
   "my_orders": "My Orders",
+  "certificate_scanning": "Certificate Scanning",
   "questions_and_answers": "FAQ",
   "terms_of_use": "Terms and Conditions",
   "contact_us": "Contact Us",
@@ -506,6 +507,7 @@
   "sub_user": "Sub Users",
   "new_user": "New",
   "new_sub_user": "New sub user",
+  "edit_sub_user": "Edit user",
   "full_name": "Full name",
   "phone_number": "Phone number for login",
   "please_enter_sub_user": "Please enter sub user",
@@ -529,8 +531,9 @@
   "select_none": "Select none",
   "not_sufficient_permission":"Not sufficient permission",
   "phone_number_of_other_sub_user": "The phone number is already associated with another user",
-  "delete_sub_user_account" : "Delete",
+  "delete_sub_user_account" : "Delete user",
   "can_see_invoices" : "Can see invoices",
+  "can_scan_documents" : "Can scan documents",
   "maximum_qty" : "Maximum Quantity",
   "not_add_more_than_max_qty": "You can not add more than maximum quantity",
   "apply": "Apply",
@@ -717,5 +720,35 @@
   "credit_card_payment_success": "Success! Your invoice has been paid using your credit card.",
   "pdf_loading": "PDF is still loading. Please wait.",
   "unable_pdf": "Unable to share PDF. Please try again.",
-  "sold_units": "Sold by units"
+  "sold_units": "Sold by units",
+  "supplier_delivery_schedule_title": "Delivery days — {city}",
+  "@supplier_delivery_schedule_title": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "supplier_delivery_schedule_button": "Delivery days",
+  "supplier_delivery_schedule_delivery_on": "Delivery",
+  "supplier_delivery_schedule_order_until": "Order by",
+  "supplier_delivery_schedule_until_time": "Until {time}",
+  "@supplier_delivery_schedule_until_time": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "verify_data_correct": "Verify that the data is correct",
+  "verify_form_subtitle": "Please review and update your details before continuing",
+  "business_details_section": "Business details",
+  "address_section": "Business address",
+  "delivery_section": "Delivery details",
+  "waze_location_saved": "Waze location saved",
+  "verify_phone_number": "Phone number",
+  "delivery_location_description": "Delivery location description",
+  "waze_delivery_location": "Waze delivery location",
+  "open_waze_to_set_location": "Open Waze to set location",
+  "delivery_location_photo": "Delivery location photo"
 }

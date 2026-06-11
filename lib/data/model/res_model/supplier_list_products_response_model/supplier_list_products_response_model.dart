@@ -27,11 +27,26 @@ class SupplierListProductsResponseModel with _$SupplierListProductsResponseModel
 class SupplierListProductsData with _$SupplierListProductsData {
   const factory SupplierListProductsData({
     @JsonKey(name: "brands") List<BrandData>? brands,
+    @JsonKey(name: "categories") List<SupplierCategoryData>? categories,
     @JsonKey(name: "products") List<ProductData>? products,
   }) = _SupplierListProductsData;
 
   factory SupplierListProductsData.fromJson(Map<String, dynamic> json) =>
       _$SupplierListProductsDataFromJson(json);
+}
+
+@freezed
+class SupplierCategoryData with _$SupplierCategoryData {
+  const factory SupplierCategoryData({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "categoryName") String? categoryName,
+    @JsonKey(name: "categoryImage") String? categoryImage,
+    @JsonKey(name: "isHomePreference") bool? isHomePreference,
+    @JsonKey(name: "order") int? order,
+  }) = _SupplierCategoryData;
+
+  factory SupplierCategoryData.fromJson(Map<String, dynamic> json) =>
+      _$SupplierCategoryDataFromJson(json);
 }
 
 @freezed

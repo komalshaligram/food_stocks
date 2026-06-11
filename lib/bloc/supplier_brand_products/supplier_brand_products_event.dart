@@ -6,6 +6,8 @@ class SupplierBrandProductsEvent with _$SupplierBrandProductsEvent {
 
   const factory SupplierBrandProductsEvent.getBrandProductsListEvent({required BuildContext context, required String supplierId, required String brandId}) = _getBrandProductsListEvent;
 
+  const factory SupplierBrandProductsEvent.getCategoryProductsListEvent({required BuildContext context, required String supplierId, required String categoryId}) = _getCategoryProductsListEvent;
+
   const factory SupplierBrandProductsEvent.getProductDetailsEvent({
     required BuildContext context,
     required String productId,
@@ -33,7 +35,7 @@ class SupplierBrandProductsEvent with _$SupplierBrandProductsEvent {
 
   const factory SupplierBrandProductsEvent.toggleNoteEvent() = _toggleNoteEvent;
 
-  const factory SupplierBrandProductsEvent.refreshListEvent({required BuildContext context, required String supplierId, required String brandId}) = _refreshListEvent;
+  const factory SupplierBrandProductsEvent.refreshListEvent({required BuildContext context, required String supplierId, String? brandId, String? categoryId}) = _refreshListEvent;
 
   const factory SupplierBrandProductsEvent.getCartCountEvent() = _getCartCountEvent;
 

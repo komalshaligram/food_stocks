@@ -62,6 +62,7 @@ class SharedPreferencesHelper {
   static const String subUserId = 'subUserId';
   static const String canSeeInvoices = 'canSeeInvoices';
   static const String clientDataOnApp = 'showClientDataOnApp';
+  static const String documentScanOnApp = 'showDocumentScanOnApp';
   static const String appOnMaintenance = 'isAppOnMaintenance';
   static const String paymentMethod = 'selectedPaymentMethod';
   static const String paymentMethodCount = 'paymentMethodCount';
@@ -69,6 +70,7 @@ class SharedPreferencesHelper {
   static const String paymentMethods = 'paymentMethods';
   static const String isWalletApproved = 'isWalletApproved';
   static const String canSeeReturns = 'canSeeReturns';
+  static const String canScanDocuments = 'canScanDocuments';
   static const String orderStatusDetail = 'orderStatusDetail';
   static const String statusDetail = 'statusDetail';
   static const String paymentStatusDetail = 'paymentStatusDetail';
@@ -133,6 +135,8 @@ class SharedPreferencesHelper {
       await prefs.remove(availableAllPayment);
       await prefs.remove(paymentMethods);
       await prefs.remove(canSeeReturns);
+      await prefs.remove(canScanDocuments);
+      await prefs.remove(documentScanOnApp);
       await prefs.remove(orderStatusDetail);
       await prefs.remove(statusDetail);
       await prefs.remove(paymentStatusDetail);
@@ -268,6 +272,10 @@ class SharedPreferencesHelper {
 
   Future<void> setClientDataOnApp({required bool showClientDataOnApp}) async {
     await prefs.setBool(clientDataOnApp, showClientDataOnApp);
+  }
+
+  Future<void> setDocumentScanOnApp({required bool showDocumentScanOnApp}) async {
+    await prefs.setBool(documentScanOnApp, showDocumentScanOnApp);
   }
 
   Future<void> setIsWalletApproved({required bool walletApproved}) async {
@@ -434,6 +442,10 @@ class SharedPreferencesHelper {
     await prefs.setBool(canSeeReturns, isCanSeeReturns);
   }
 
+  Future<void> setCanScanDocuments({required bool isCanScanDocuments}) async {
+    await prefs.setBool(canScanDocuments, isCanScanDocuments);
+  }
+
   String getReturnList() {
     return prefs.getString(productReturnList) ?? '';
   }
@@ -444,6 +456,17 @@ class SharedPreferencesHelper {
 
   bool getClientDataOnApp() {
     return prefs.getBool(clientDataOnApp) ?? false;
+  }
+
+  bool getDocumentScanOnApp() {
+    return prefs.getBool(documentScanOnApp) ?? false;
+  }
+
+  /// Client-level flag plus sub-user permission (main user only needs client flag).
+  bool getDocumentScanMenuVisible() {
+    if (!getDocumentScanOnApp()) return false;
+    if (getSubUser()) return getCanScanDocuments();
+    return true;
   }
 
   bool getUserLoggedIn() {
@@ -688,6 +711,10 @@ class SharedPreferencesHelper {
 
   bool getCanSeeReturns() {
     return prefs.getBool(canSeeReturns) ?? true;
+  }
+
+  bool getCanScanDocuments() {
+    return prefs.getBool(canScanDocuments) ?? true;
   }
 
   bool getCanManageSubUser() {

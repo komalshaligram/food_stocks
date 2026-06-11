@@ -5,7 +5,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/widget/common_app_bar.dart';
 import '../../ui/widget/custom_button_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';

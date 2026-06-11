@@ -1,0 +1,277 @@
+{
+  "@@locale": "he",
+  "appName": "סורק חשבוניות",
+  "searchHint": "חיפוש לפי סוג מסמך או שם חברה",
+  "sortAndFilter": "מיון וסינון",
+  "sortBy": "מיון לפי",
+  "filterBy": "סינון לפי",
+  "clearSortAndFilter": "נקה מיון וסינון",
+  "close": "סגור",
+  "emptyTitle": "אין מסמכים סרוקים",
+  "emptySubtitle": "לחץ על הכפתור למטה כדי לסרוק חשבונית",
+  "scanInvoice": "סרוק תעודה",
+  "chooseScanModelTitle": "בחר מודל סריקה",
+  "deleteDocumentTitle": "מחיקת מסמך",
+  "deleteDocumentConfirm": "האם אתה בטוח שאתה רוצה למחוק את המסמך הזה?",
+  "documentDeletedSuccess": "המסמך נמחק בהצלחה",
+  "cancel": "ביטול",
+  "delete": "מחק",
+  "filterDate": "תאריך",
+  "filterCompanyName": "שם חברה",
+  "filterAmount": "סכום",
+  "filterStatus": "סטטוס",
+  "filterCreatedDate": "תאריך יצירה",
+  "filterDocumentDate": "תאריך מסמך",
+  "filterDocumentType": "סוג מסמך",
+  "scan": "סריקה",
+  "scanPlaceholder": "הנח את החשבונית במסגרת",
+  "scanMockHint": "או לחץ לסריקה מדומה",
+  "scanButton": "סרוק",
+  "pageScanned": "העמוד נסרק",
+  "previewPlaceholder": "תצוגה מקדימה של העמוד",
+  "send": "שלח",
+  "processingTitle": "סורק נתוני מסמך...",
+  "processingSub1": "מזהה טקסט...",
+  "processingSub2": "מנתח נתונים...",
+  "processingSub3": "מחלץ פרטים...",
+  "processingSub4": "כמעט סיים...",
+  "documentDetails": "נתוני מסמך",
+  "noDocumentSelected": "לא נבחר מסמך",
+  "scanDateLabel": "נסרק: {formatted}",
+  "@scanDateLabel": {
+    "placeholders": {
+      "formatted": {
+        "type": "String"
+      }
+    }
+  },
+  "showScanDocument": "הצג מסמך סריקה",
+  "exportToExcel": "ייצוא לאקסל",
+  "exportExcelFailed": "לא ניתן לייצא לאקסל. ודא שנתוני המסמך תקינים.",
+  "save": "שמור",
+  "updateInCash": "שלח לקופה",
+  "generalData": "נתונים כלליים",
+  "documentType": "סוג מסמך",
+  "companyName": "שם חברה",
+  "companyId": "מספר ח.פ.",
+  "documentNumber": "מספר תעודה",
+  "documentDate": "תאריך המסמך",
+  "subtotalNoVat": "סה\"כ ללא מע\"מ",
+  "vatAmount": "סה\"כ מע\"מ",
+  "totalToPay": "סה\"כ לתשלום",
+  "items": "פריטים",
+  "addItem": "הוסף פריט",
+  "searchItemHint": "חיפוש פריט לפי תיאור או מס' פריט",
+  "colLineNumber": "#",
+  "colItemNumber": "מס' פריט",
+  "colItemDescription": "תיאור פריט",
+  "colQuantity": "כמות",
+  "colPackages": "מארזים",
+  "colUnits": "יח' במארז",
+  "colPricePerUnit": "מחיר ליח'",
+  "colTotalNis": "סה\"כ",
+  "deleteRowTitle": "מחיקת שורה",
+  "deleteRowConfirm": "האם אתה בטוח שברצונך למחוק את השורה?",
+  "yes": "כן",
+  "no": "לא",
+  "update": "עדכן",
+  "docTypeInvoice": "חשבונית",
+  "docTypeDelivery": "תעודת משלוח",
+  "docTypeReturn": "תעודת חזרה",
+  "docTypeOther": "אחר",
+  "chooseDocumentType": "בחר סוג מסמך",
+  "enterDocumentType": "הזן סוג מסמך",
+  "documentTypeLabel": "סוג מסמך",
+  "pickDocumentDate": "בחר תאריך מסמך",
+  "excelPreviewTitle": "תצוגת אקסל",
+  "excelShareText": "גיליון אקסל",
+  "pdfPreviewTitle": "תצוגת PDF",
+  "pdfAvailable": "PDF זמין לצפייה",
+  "pdfDemoHint": "תצוגה מקדימה במצב הדגמה",
+  "share": "שיתוף",
+  "statusScanning": "סורק נתוני מסמך",
+  "statusUploading": "מעלה מסמכים",
+  "statusReadyForUpdate": "ממתין לשליחה לקופה",
+  "statusCompleted": "בוצע",
+  "statusDeleted": "נמחק",
+  "statusSentToCashRegister": "נשלח לקופה",
+  "docNumberLabel": "מס' תעודה",
+  "docNumberValue": "מס' תעודה: {num}",
+  "@docNumberValue": {
+    "placeholders": {
+      "num": {
+        "type": "String"
+      }
+    }
+  },
+  "dateLabel": "תאריך: {date}",
+  "@dateLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "itemNumber": "מס' פריט",
+  "itemDescription": "תיאור פריט",
+  "quantity": "כמות",
+  "packages": "מארזים",
+  "units": "יחידות",
+  "pricePerUnitNis": "ש\"ח ליחידה",
+  "totalNis": "סה\"כ ש\"ח",
+
+  "preScanDocumentDetailsTitle": "פרטי מסמך לפני סריקה",
+  "supplierNameLabel": "שם ספק",
+  "supplierNameHint": "הקלד שם ספק (או בחר מהרשימה)",
+  "supplierQuickTip": "טיפ: אפשר להקליד לסינון מהיר",
+  "supplierListTitle": "רשימת ספקים",
+  "continueToScan": "המשך לסריקה",
+
+  "pickSupplierTitle": "בחירת ספק",
+  "supplierSearchHint": "חפש ספק...",
+  "supplierSearchPlaceholder": "חיפוש...",
+  "suppliersFoundCount": "נמצאו {count} ספקים",
+  "noResults": "לא נמצאו תוצאות",
+  "noSavedSuppliers": "אין ספקים שמורים",
+  "select": "בחר",
+  "clear": "נקה",
+  "unknownSupplierInitial": "ס",
+
+  "sortTileTitle": "מיון",
+  "sortNone": "ללא מיון",
+  "sortByCreatedAtOldest": "תאריך: ישן קודם",
+  "sortByCreatedAtNewest": "תאריך: חדש קודם",
+  "sortByTotalAmountLow": "סכום: נמוך קודם",
+  "sortByTotalAmountHigh": "סכום: גבוה קודם",
+
+  "helpTextChooseRange": "בחר טווח",
+  "rangeNoneLabel": "ללא",
+
+  "filterCreatedDatePreview": "תאריך יצירה: {range}",
+  "filterDocumentDatePreview": "תאריך מסמך: {range}",
+  "filterDocumentTypePreview": "סוג מסמך: {types}",
+  "filterSupplierPreview": "שם ספק: {suppliers}",
+  "filterStatusPreview": "סטטוס: {statuses}",
+
+  "statusProcessing": "בעיבוד",
+  "statusError": "שגיאה",
+
+  "documentProcessing": "המסמך עדיין בעיבוד",
+  "noImagesForRetry": "אין תמונות לשליחה מחדש",
+  "showScannedImage": "הצג תמונה סרוקה",
+  "retrieveDataAgain": "אחזר נתונים מחדש",
+  "confirmRetrieveDataAgainTitle": "אישור",
+  "confirmRetrieveDataAgainMessage": "האם אתה בטוח שאתה רוצה לאחזר את נתוני המסמך מחדש?\nזה יכול לקחת זמן...",
+  "confirmSendToCashTitle": "אישור",
+  "confirmSendToCashMessage": "האם אתה בטוח שברצונך לשלוח את המסמך לעדכון הקופה שלך?",
+
+  "imageExportFailureTitle": "שגיאה בייצוא תמונות",
+  "copyTooltip": "העתקה",
+  "copiedToClipboard": "הועתק ללוח",
+  "continueButton": "המשך",
+  "imageExportDebugIntro": "לא הצלחנו לייצא תמונות מהסריקה. לא נשלח PDF ל-API.",
+  "imageExportErrorLine": "שגיאה: {error}",
+  "imageExportExpectedImages": "תמונות צפויות: {count}",
+  "imageExportExistingImages": "תמונות קיימות: {count}",
+  "imageExportPdfPath": "pdfPath: {path}",
+  "imageExportFailedNull": "ייצוא תמונות נכשל (null)",
+  "imageExportReturnedEmpty": "ייצוא תמונות החזיר רשימה ריקה (לא נמצאו תמונות תקינות)",
+  "imageExportPathExamples": "דוגמאות נתיבים (עד 10):\n{paths}",
+  "serverError": "שגיאה בשרת: {error}",
+  "unexpectedError": "שגיאה לא צפויה: {error}",
+  "noValidImagesToSend": "לא נמצאו תמונות תקינות לשליחה",
+
+  "jsonTitle": "JSON",
+  "jsonContentLabel": "תוכן JSON",
+  "jsonCopiedSnackBar": "ה-JSON הועתק",
+  "noJsonToShow": "אין JSON להצגה",
+  "copy": "העתקה",
+
+  "shareScannedDocument": "מסמך סרוק",
+  "fileNotFound": "הקובץ לא נמצא",
+  "shareError": "שגיאה בשיתוף: {error}",
+  "unableToLoadDocument": "לא ניתן לטעון את המסמך",
+
+  "scannedImagesPreviewTitle": "תצוגת תמונות סרוקות",
+  "scannedImagesShareText": "תמונות סרוקות",
+  "unableToLoadImages": "לא ניתן לטעון את התמונות",
+  "noImagesToShow": "אין תמונות להצגה",
+
+  "docTypeReceipt": "קבלה",
+  "docTypeCreditInvoice": "חשבונית זיכוי",
+
+  "languageEnglishOptionLabel": "EN",
+  "languageHebrewOptionLabel": "עב",
+
+  "parseErrorImageTooLarge": "התמונה גדולה מדי ({sizeMB}MB). מקסימום {maxMB}MB.",
+  "parseErrorImagesNotReceived": "לא התקבלו תמונות",
+  "parseErrorPdfTooLarge": "הקובץ גדול מדי ({sizeMB}MB). מקסימום {maxMB}MB.",
+  "parseErrorScanJobEmptyResponse": "שגיאה ביצירת משימת סריקה: תשובה ריקה",
+  "parseErrorScanJobMissingJobId": "שגיאה ביצירת משימת סריקה: jobId חסר",
+  "parseErrorDocumentProcessingEmptyResponse": "שגיאה בעיבוד המסמך: תשובה ריקה",
+  "parseErrorUnauthenticated": "יש להתחבר לפני שליחת מסמכים",
+  "parseErrorInvalidArgument": "קובץ לא תקין",
+  "parseErrorResourceExhausted": "יותר מדי בקשות. נסה שוב בעוד דקה",
+  "parseErrorInternal": "שגיאה בעיבוד המסמך",
+  "parseErrorUnknown": "שגיאה ({code})",
+
+  "docutainScanTitleScanPage": "סריקת מסמך",
+  "docutainScanFocusHint": "נא להחזיק יציב",
+  "docutainButtonScanTorchTitle": "פלאש",
+  "docutainButtonScanFinishTitle": "המשך",
+  "docutainButtonScanAutoCaptureOnTitle": "סרוק אוטומטית",
+  "docutainButtonScanAutoCaptureOffTitle": "סרוק ידנית",
+  "docutainButtonEditDeleteTitle": "מחק",
+  "docutainButtonEditFinishTitle": "סיום",
+  "docutainButtonEditCropTitle": "חיתוך",
+  "docutainButtonEditRotateTitle": "סיבוב",
+  "docutainButtonEditArrangeTitle": "סידור",
+  "docutainTextTitleArrangementPage": "סידור",
+  "docutainTextDeleteDialogCurrentPage": "מחק דף נוכחי",
+  "docutainTextDeleteDialogAllPages": "מחק את כל הדפים",
+  "docutainTextDeleteDialogCancel": "ביטול",
+
+  "docutainScanCancelledError": "הסריקה בוטלה.",
+  "docutainScanError": "שגיאה בסריקה: {error}",
+
+  "docutainInitLicenseKeyMissing": "מפתח רישיון Docutain לא הוגדר. הוסף ב־app_config.dart (defaultValue) או הרץ עם: --dart-define=DOCUTAIN_LICENSE_KEY=המפתח_שלך",
+  "docutainInitFailedWithSdkError": "אתחול Docutain נכשל: {sdkError}\n\nהרישיון קשור ל-applicationId של האפליקציה. באפליקציה זו: scanner.tavili.com. יש להנפיק רישיון ניסיון עם ה-ID הזה ב־ https://sdk.docutain.com/TrialLicense",
+  "docutainInitFailedWithoutSdkError": "אתחול Docutain נכשל. הרישיון קשור ל-applicationId. באפליקציה זו: scanner.tavili.com. הנפק רישיון ניסיון עם ID זה: https://sdk.docutain.com/TrialLicense",
+
+  "scanSourceTitle": "איך לצלם את המסמך?",
+  "scanSourceCamera": "מצלמה",
+  "scanSourceGallery": "גלריה",
+  "scanAddAnotherPageTitle": "הוספת דף",
+  "scanAddAnotherPageMessage": "צילמת {count} דפים. להוסיף עוד דף?",
+  "@scanAddAnotherPageMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scanFinishCapture": "סיום",
+  "scanAddPage": "צלם דף נוסף",
+  "scanCropPageTitle": "עריכת דף",
+  "scanCropPageCounter": "דף {current} מתוך {total}",
+  "@scanCropPageCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "scanMaxPagesReached": "הגעת למקסימום {max} דפים",
+  "@scanMaxPagesReached": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "scanPermissionDenied": "נדרשת הרשאה למצלמה או לגלריה",
+  "scanNoImagesSelected": "לא נבחרו תמונות"
+}

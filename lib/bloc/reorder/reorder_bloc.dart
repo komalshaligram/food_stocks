@@ -7,7 +7,7 @@ import '../../data/model/req_model/previous_order_products_req_model/previous_or
 import '../../data/model/res_model/message_count_res_model/message_count_res_model.dart';
 import '../../data/model/res_model/previous_order_products_res_model/previous_order_products_res_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:html/parser.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -14,7 +14,7 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 part 'form_data_event.dart';
 part 'form_data_state.dart';

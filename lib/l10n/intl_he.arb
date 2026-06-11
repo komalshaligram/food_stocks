@@ -57,6 +57,7 @@
   "read_more": "קרא עוד",
   "menu": "תפריט",
   "my_orders": "ההזמנות שלי",
+  "certificate_scanning": "סריקת תעודות",
   "questions_and_answers": "שאלות ותשובות",
   "terms_of_use": "תנאי שימוש",
   "contact_us": "יצירת קשר",
@@ -500,6 +501,7 @@
   "sub_user": "משתמשים",
   "new_user": "חדש",
   "new_sub_user": "משתמש חדש",
+  "edit_sub_user": "עריכת משתמש",
   "full_name": "שם מלא",
   "phone_number": "טלפון נייד להתחברות",
   "please_enter_sub_user": "אנא הזן משמש",
@@ -523,8 +525,9 @@
   "select_none": "נקה הכל",
   "not_sufficient_permission":"אין לך הרשאה",
   "phone_number_of_other_sub_user": "מספר הטלפון כבר משוייך למשתמש אחר",
-  "delete_sub_user_account" : "מחיקת ",
+  "delete_sub_user_account" : "מחיקת משתמש",
   "can_see_invoices" : "יכול לראות חשבוניות",
+  "can_scan_documents" : "יכול לסרוק מסמכים",
   "maximum_qty" : "מקסימום מארזים להזמנה עבור המבצע",
   "not_add_more_than_max_qty": "לא ניתן להוסיף יותר מהמקסימום עבור המבצע הזה",
   "apply": "הצג",
@@ -665,7 +668,7 @@
   "call_the_agent": "תתקשר לסוכן",
   "return_draft_not_sent": "יש לך החזרות שטרם נשלחו.",
   "view_return": "הצג חזרה",
-  "send_any_way": "שלח בכל דרך",
+  "send_any_way": "שלח בכל זאת",
   "waiting_for_new_order_success_msg": "ההחזרה נרשמה בהצלחה. לנוחיותכם, ההחזרה תישלח ביום ביצוע ההזמנה הבאה שלכם. עד אז, תוכלו להוסיף החזרות נוספות.",
   "issue_text": "הסתייגות:",
   "return_number_text": "מספר החזרה:",
@@ -712,5 +715,35 @@
   "credit_card_payment_success": "הצלחה! החשבונית שלך שולמה באמצעות כרטיס האשראי שלך.",
   "pdf_loading": "קובץ ה-PDF עדיין נטען. אנא המתן.",
   "unable_pdf": "לא ניתן לשתף את קובץ ה-PDF. אנא נסה שוב.",
-  "sold_units": "נמכר ביחידות"
+  "sold_units": "נמכר ביחידות",
+  "supplier_delivery_schedule_title": "ימי אספקה — {city}",
+  "@supplier_delivery_schedule_title": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "supplier_delivery_schedule_button": "ימי אספקה",
+  "supplier_delivery_schedule_delivery_on": "אספקה",
+  "supplier_delivery_schedule_order_until": "הזמנה עד",
+  "supplier_delivery_schedule_until_time": "עד {time}",
+  "@supplier_delivery_schedule_until_time": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "verify_data_correct": "וודא שהנתונים נכונים",
+  "verify_form_subtitle": "אנא בדוק ועדכן את הפרטים לפני המשך ההזמנה",
+  "business_details_section": "פרטי העסק",
+  "address_section": "כתובת העסק",
+  "delivery_section": "פרטי הורדת סחורה",
+  "waze_location_saved": "מיקום Waze נשמר",
+  "verify_phone_number": "מספר טלפון",
+  "delivery_location_description": "תיאור מיקום להורדת סחורה",
+  "waze_delivery_location": "מיקום Waze להורדת סחורה",
+  "open_waze_to_set_location": "פתח ב-Waze לבחירת מיקום",
+  "delivery_location_photo": "תמונה של מיקום להורדת סחורה"
 }

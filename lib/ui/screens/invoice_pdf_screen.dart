@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../ui/utils/constants/app_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../bloc/invoice_pdf/invoice_pdf_bloc.dart';

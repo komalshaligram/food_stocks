@@ -1,12 +1,22 @@
 class AppUrlEndPoints {
-  static const String baseUrl = 'https://api.foodstock.shtibel.com/api'; //prodUrl live
-  // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; // local
+  // Team docs: docs/en/FIRST-ORDER-AND-CLIENT-VERIFICATION.md (local dev URLs)
+  static const String baseUrl =
+      'https://api.foodstock.shtibel.com/api'; //prodUrl live
+  // static const String baseUrl = 'https://devapi.foodstock.shtibel.com/api'; // dev — needs emulator internet
+  // Android emulator → host machine localhost (Backend npm run dev on 3030):
+  // static const String baseUrl = 'http://10.0.2.2:3030/api';
+  // Physical phone on same Wi‑Fi as this PC — PC LAN IP (ipconfig → IPv4):
+  // static const String baseUrl = 'http://10.0.0.18:3030/api';
 
-  // static const String baseUrl = 'http://192.168.3.75:3000/api'; // local 75 yash 45 harshit // prachi :192.168.4.48
+  // static const String baseUrl = 'http://192.168.3.75:3000/api'; // local 75 yash 45 harshit
 
   ///devUrl
   //static const String baseUrl = 'http://51.17.148.178:5000/api'; ///localUrl
-  static const String baseFileUrl = 'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
+  static const String baseFileUrl =
+      'https://foodstock-buckets.s3.il-central-1.amazonaws.com/';
+
+  /// S3 bucket for scanned certificate uploads (`AWS_BUCKET_NAME` on backend).
+  static const String scannedDocsBaseUrl = baseFileUrl;
   //static const String existingUserLoginUrl = '/v1/auth/verifyContactAndSendOTP';
   static const String loginOTPUrl = '/v1/auth/clientLogin';
   // static const String registrationUrl = '/v1/clients/createClient';
@@ -36,24 +46,30 @@ class AppUrlEndPoints {
   static const String clearCartUrl = '/v1/cart/clearCart/';
   static const String removeCartProductUrl = '/v1/cart/removeProduct';
   // static const String walletRecordUrl = '/v1/walletTransaction/getWalletRecords';
-  static const String totalExpenseByYearUrl = '/v1/walletTransaction/getTotalExpensesByYear';
-  static const String getAllWalletTransactionUrl = '/v1/walletTransaction/getAllWalletTransactions';
+  static const String totalExpenseByYearUrl =
+      '/v1/walletTransaction/getTotalExpensesByYear';
+  static const String getAllWalletTransactionUrl =
+      '/v1/walletTransaction/getAllWalletTransactions';
   // static const String getSubCategoriesUrl = '/v1/store/getSubCategories';
   //static const String getCompaniesUrl = '/v1/store/getBrand';
   static const String insertProductInCartUrl = '/v1/cart/addProduct/';
-  static const String exportWalletTransactionUrl = '/v1/walletTransaction/exportWalletTransactions';
+  static const String exportWalletTransactionUrl =
+      '/v1/walletTransaction/exportWalletTransactions';
   static const String getOrdersCountUrl = '/v1/orders/getOrdersCount';
   static const String getAllMessagesUrl = '/v1/client/usermessages/getMessages';
-  static const String getNotificationMessageUrl = '/v1/notifications/getNotifications';
+  static const String getNotificationMessageUrl =
+      '/v1/notifications/getNotifications';
   static const String getAppContentUrl = '/v1/client/contents/getContentsById/';
   // static const String getCompanyProductsUrl = '/v1/store/getBrandProducts';
   // static const String getRecommendationProductsUrl = '/v1/recommendation/products';
   //static const String getPreviousOrderProductsUrl = '/v1/recommendation/getPrevoiusOrderproducts';
   //static const String getGlobalSearchResultUrl = '/v1/store/globalSearch';
   static const String logOutUrl = '/v1/auth/logout';
-  static const String deleteMessageUrl = '/v1/notifications/deleteNotifications';
+  static const String deleteMessageUrl =
+      '/v1/notifications/deleteNotifications';
   static const String updateMessageUrl = '/v1/notifications/seenNotification';
-  static const String getUnreadMessageCountUrl = '/v1/notifications/getNotificationsCount';
+  static const String getUnreadMessageCountUrl =
+      '/v1/notifications/getNotificationsCount';
   static const String refreshTokenUrl = '/v1/auth/refreshToken';
 //  static const String getPlanogramByIdUrl = '/v1/planograms/getPlanogram/';
   static const String otpVerifyUrl = '/v1/auth/otpVerification';
@@ -66,18 +82,23 @@ class AppUrlEndPoints {
   static const String generalSettingUrl = '/v1/settings/getSettings';
   static const String getBusinessTypeUrl = '/v1/settings/BusinessType';
   static const String getBankDetailUrl = '/v1/settings/BankDetail';
-  static const String termsConditionUrl = '/v1/clients/getTermsAndConditionForm';
+  static const String termsConditionUrl =
+      '/v1/clients/getTermsAndConditionForm';
   static const String duplicateOrderUrl = '/v1/cart/duplicateOrder';
   static const String clientInvoicesUrl = '/v1/clients/clientInvoices';
   static const String clientRefundUrl = '/v1/refund/getRefundInvoices/';
   static const String createSubUserUrl = '/v1/subuser/createSubuser';
-  static const String getAccountPermissionUrl = '/v1/subuser/accountpermissions/';
-  static const String getCategoriesPermissionUrl = '/v1/subuser/categorypermissions/';
+  static const String getAccountPermissionUrl =
+      '/v1/subuser/accountpermissions/';
+  static const String getCategoriesPermissionUrl =
+      '/v1/subuser/categorypermissions/';
   static const String getBrandPermissionUrl = '/v1/subuser/brandpermissions/';
-  static const String getSupplierPermissionUrl = '/v1/subuser/supplierpermissions/';
-  static const String updatePermissionUrl = '/v1/subuser/updatepermissions/';
+  static const String getSupplierPermissionUrl =
+      '/v1/subuser/supplierpermissions/';
+  static const String updatePermissionUrl = '/v1/subuser/updatePermissions/';
   static const String getAllSubUserUrl = '/v1/subuser/getAllSubusers';
-  static const String deleteClientSubUserUrl = '/v1/subuser/deleteClientSubuser';
+  static const String deleteClientSubUserUrl =
+      '/v1/subuser/deleteClientSubuser';
   static const String updateSubUserUrl = '/v1/subuser/updateSubuser';
   static const String verifyClientUrl = '/v1/clients/verifyClient';
   // static const String updateCreditCardUrl = '/v1/clients/update-credit-card-details/';
@@ -86,8 +107,10 @@ class AppUrlEndPoints {
   //  static const String deleteCreditCardUrl = '/v1/clients/delete-credit-card-details';
   // static const String bdiUrl = '/v1/clients/checkBdi'; //getting payment options
   //static const String updateClientCredits = '/v1/clients/updateClientCredits/'; //navigation after successful registration
-  static const String updateCreditCardUrl = '/v2/clients/update-credit-card-details/';
-  static const String deleteCreditCardUrl = '/v2/clients/delete-credit-card-details';
+  static const String updateCreditCardUrl =
+      '/v2/clients/update-credit-card-details/';
+  static const String deleteCreditCardUrl =
+      '/v2/clients/delete-credit-card-details';
   static const String verifyAgentUrl = '/v2/clients/verifyAgent';
   static const String updateClientCredits = '/v2/clients/updateClientCredits/';
   static const String addBankInfo = '/v2/clients/bank-information-updation';
@@ -103,8 +126,10 @@ class AppUrlEndPoints {
   static const String getSubCategoriesUrl = '/v2/store/getSubCategories';
   static const String getCompaniesUrl = '/v2/store/getBrand';
 
-  static const String getSupplierProductsUrl = '/v2/supplierProduct/getSupplierProducts';
-  static const String walletRecordUrl = '/v2/walletTransaction/getWalletRecords';
+  static const String getSupplierProductsUrl =
+      '/v2/supplierProduct/getSupplierProducts';
+  static const String walletRecordUrl =
+      '/v2/walletTransaction/getWalletRecords';
   // static const String getPlanogramAllProductUrl = '/v2/store/getAllProducts';
   //static const String getRecommendationProductsUrl = '/v2/recommendation/products';
   //static const String relatedProductsUrl = '/v2/products/getRelatedProducts';
@@ -116,34 +141,61 @@ class AppUrlEndPoints {
   //static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
 
   static const String getSaleProductsUrl = '/v3/products/getSaleProducts';
-  static const String getPlanogramProductsUrl = '/v3/store/getPalnogramProducts';
+  static const String getPlanogramProductsUrl =
+      '/v3/store/getPalnogramProducts';
   static const String getPlanogramAllProductUrl = '/v1/store/getAllProducts';
   static const String getCompanyProductsUrl = '/v3/store/getBrandProducts';
-  static const String getRecommendationProductsUrl = '/v3/recommendation/products';
-  static const String getPreviousOrderProductsUrl = '/v3/recommendation/getPrevoiusOrderproducts';
+  static const String getRecommendationProductsUrl =
+      '/v3/recommendation/products';
+  static const String getPreviousOrderProductsUrl =
+      '/v3/recommendation/getPrevoiusOrderproducts';
   static const String relatedProductsUrl = '/v3/products/getRelatedProducts';
-  static const String getSubCategoryProductsUrl = '/v3/store/getsubCategoryProducts';
-  static const String getPlanogramAllProductForSearchUrl = '/v3/products/getAllProducts';
+  static const String getSubCategoryProductsUrl =
+      '/v3/store/getsubCategoryProducts';
+  static const String getPlanogramAllProductForSearchUrl =
+      '/v3/products/getAllProducts';
   //static const String getListingCartProductsSupplier = 'v1/cart/listingCartProductsSupplier/65e5d2aefa8171f2d34bc0c3';
-  static const String listingCartProductsSupplierUrl = '/v1/cart/listingCartProductsSupplier/';
-  static const String getSupplierPaymentTypesUrl = '/v1/suppliers/getSupplierPaymentTypes/';
+  static const String listingCartProductsSupplierUrl =
+      '/v1/cart/listingCartProductsSupplier/';
+  static const String getSupplierPaymentTypesUrl =
+      '/v1/suppliers/getSupplierPaymentTypes/';
+  static const String getSupplierCityDeliveryScheduleUrl =
+      '/v1/suppliers/getSupplierCityDeliveryScheduleForClient/';
   static const String createReturnUrl = '/v1/return/createReturn';
   static const String getReturnListUrl = '/v1/return/getClientReturn';
   static const String getStatusInfoUrl = '/v1/settings/get-all-status-info';
   static const String getReturnByIdUrl = '/v1/return/getClientReturnById/';
   static const String updateReturnUrl = '/v1/return/updateReturn/';
   static const String deleteReturnUrl = '/v1/return/deleteReturn';
-  static const String getLatestOnthewayOrderUrl = '/v2/orders/get-latest-ontheway-order/';
-  static const String getClientPendingReturnProducts = '/v1/return/getClientPendingReturnProducts/';
+  static const String getLatestOnthewayOrderUrl =
+      '/v2/orders/get-latest-ontheway-order/';
+  static const String getClientPendingReturnProducts =
+      '/v1/return/getClientPendingReturnProducts/';
   static const String getRefundInvoiceCopy = '/v1/refund/getRefundInvoiceCopy';
   static const String getOrderInvoiceCopy = '/v1/orders/getOrderInvoiceCopy';
-  static const String getAdjustedRefundsInOrder = '/v1/refund/getAdjustedRefundsInOrder/';
-  static const String getMyAccountingCardClientInvoicesFromRivchit = '/v1/clients/clientInvoicesFromRivchit/';
-  static const String getMyAccountingCardClientRefundInvoicesFromRivchit = '/v1/clients/clientRefundInvoicesFromRivchit/';
-  static const String getAgentStoresWithPermittedSuppliers = '/v1/agent/getAgentStoresWithPermittedSuppliers';
-  static const String agentSwitchToAssignedStore = '/v1/agent/agentSwitchToAssignedStore/';
-  static const String updateAgentStoresNoMinimumForPermittedSuppliers = '/v1/agent/updateAgentStoresNoMinimumForPermittedSuppliers';
+  static const String getAdjustedRefundsInOrder =
+      '/v1/refund/getAdjustedRefundsInOrder/';
+  static const String getMyAccountingCardClientInvoicesFromRivchit =
+      '/v1/clients/clientInvoicesFromRivchit/';
+  static const String getMyAccountingCardClientRefundInvoicesFromRivchit =
+      '/v1/clients/clientRefundInvoicesFromRivchit/';
+  static const String getAgentStoresWithPermittedSuppliers =
+      '/v1/agent/getAgentStoresWithPermittedSuppliers';
+  static const String agentSwitchToAssignedStore =
+      '/v1/agent/agentSwitchToAssignedStore/';
+  static const String updateAgentStoresNoMinimumForPermittedSuppliers =
+      '/v1/agent/updateAgentStoresNoMinimumForPermittedSuppliers';
   static const String getSuppliersList = '/v2/store/getSupplier';
-  static const String getSupplierBrandProducts = '/v3/store/getSupplierBrandProducts';
-  static const String payInvoiceByCreditCard = '/v1/orders/payInvoiceByCreditCard';
+  static const String getSupplierBrandProducts =
+      '/v3/store/getSupplierBrandProducts';
+  static const String payInvoiceByCreditCard =
+      '/v1/orders/payInvoiceByCreditCard';
+  static const String syncClientScannedCertificateUrl =
+      '/v1/client-scanned-certificates/sync';
+  static const String getAllClientScannedCertificatesUrl =
+      '/v1/client-scanned-certificates/getAll';
+  static const String deleteClientScannedCertificateUrl =
+      '/v1/client-scanned-certificates/delete';
+  static const String uploadClientScannedCertificateUrl =
+      '/v1/client-scanned-certificates/upload';
 }

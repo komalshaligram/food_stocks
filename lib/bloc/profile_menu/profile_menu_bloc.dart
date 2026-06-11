@@ -23,7 +23,7 @@ import '../../data/services/locale_provider.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
 
 part 'profile_menu_event.dart';
@@ -52,6 +52,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             isSubUserUpdateAdditionalInfo: preferences.getCanUpdateAdditionalInfo(),
             isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
             isCanSeeInvoices: preferences.getCanSeeInvoices(),
+            isCanScanDocuments: preferences.getDocumentScanMenuVisible(),
+            showDocumentScanOnApp: preferences.getDocumentScanOnApp(),
             userName: preferences.getBusinessName(),
             userCompanyLogoUrl: preferences.getUserCompanyLogoUrl(),
             clubAgentId: preferences.getClubAgentId(),
@@ -99,9 +101,22 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
             final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
             ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
+              final clientData = response.data?.clients?.first;
+              preferences.setDocumentScanOnApp(
+                showDocumentScanOnApp: clientData?.clientDetail?.showDocumentScanOnApp ?? false,
+              );
               if (!preferences.getSubUser()) {
-                preferences.setUserImageUrl(imageUrl: response.data?.clients?.first.profileImage ?? '');
-                emit(state.copyWith(userImageUrl: response.data?.clients?.first.profileImage ?? ''));
+                preferences.setUserImageUrl(imageUrl: clientData?.profileImage ?? '');
+                emit(state.copyWith(
+                  userImageUrl: clientData?.profileImage ?? '',
+                  showDocumentScanOnApp: preferences.getDocumentScanOnApp(),
+                  isCanScanDocuments: preferences.getDocumentScanMenuVisible(),
+                ));
+              } else {
+                emit(state.copyWith(
+                  showDocumentScanOnApp: preferences.getDocumentScanOnApp(),
+                  isCanScanDocuments: preferences.getDocumentScanMenuVisible(),
+                ));
               }
             } else {
               CustomSnackBar.showSnackBar(
@@ -134,6 +149,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
                 preferences.setCanSeeInvoices(isCanSeeInvoices: res?.canSeeInvoices ?? false);
                 preferences.setCanSeeReturns(isCanSeeReturns: res?.returns ?? false);
+                preferences.setCanScanDocuments(isCanScanDocuments: res?.canScanDocuments ?? false);
                 emit(state.copyWith(
                   isSubUserSeeOrder: preferences.getCanSeeOrder(),
                   isSubUserCanManageSubUser: preferences.getCanManageSubUser(),
@@ -144,6 +160,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                   isSubUserSeeFormsFiles: preferences.getCanSeeFormsFiles(),
                   isAccountPermissionShimmering: false,
                   isCanSeeInvoices: preferences.getCanSeeInvoices(),
+                  isCanScanDocuments: preferences.getDocumentScanMenuVisible(),
+                  showDocumentScanOnApp: preferences.getDocumentScanOnApp(),
                 ));
               } else {
                 CustomSnackBar.showSnackBar(
@@ -283,6 +301,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
+                preferences.setCanScanDocuments(isCanScanDocuments: res?.canScanDocuments ?? false);
               }
               emit(state.copyWith(isLoading: false));
               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);

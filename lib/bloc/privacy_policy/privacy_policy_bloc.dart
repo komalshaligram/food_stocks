@@ -10,7 +10,7 @@ import '../../ui/utils/app_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';

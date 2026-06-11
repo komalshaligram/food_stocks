@@ -33,7 +33,7 @@ import '../../data/model/res_model/verify_client_res_model/verify_client_res_mod
 import '../../data/model/search_model/search_model.dart';
 import '../../data/model/supplier_sale_model/supplier_sale_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_strings.dart';

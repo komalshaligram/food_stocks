@@ -27,6 +27,7 @@ class Data with _$Data {
     List<String>? showVatApplication,
     DataWebViewSettings? dataWebViewSettings,
     RegistrationSuccessPageSettings? registrationSuccessPageSettings,
+    String? firstSupplierOrderMessageTemplate,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

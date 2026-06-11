@@ -55,6 +55,9 @@ class SubUserPermissions with _$SubUserPermissions {
     @JsonKey(name: "canSeeFileAndForms") bool? canSeeFileAndForms,
     @JsonKey(name: "canManageSubUsers") bool? canManageSubUsers,
     @JsonKey(name: "canSeeAndUpdateTimesInfo") bool? canSeeAndUpdateTimesInfo,
+    bool? canSeeInvoices,
+    bool? returns,
+    bool? canScanDocuments,
   }) = _SubUserPermissions;
 
   factory SubUserPermissions.fromJson(Map<String, dynamic> json) => _$SubUserPermissionsFromJson(json);

@@ -36,7 +36,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 part 'supplier_brand_products_event.dart';
 
@@ -130,11 +130,79 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
+      } else if (event is _getCategoryProductsListEvent) {
+        List<ProductData> productList = List.from(state.productList, growable: true);
+        List<List<ProductStockModel>> productStockList = List.from(state.productStockList, growable: true);
+        List<ProductStockModel> stockList = [];
+        if (state.isLoadMore) {
+          return;
+        }
+
+        if (state.isBottomOfProducts) {
+          final cartMap = await fetchCartQuantities(event.context);
+          for (var product in productList) {
+            stockList.add(ProductStockModel(
+              productId: product.id ?? '',
+              stock: product.productStock.toString(),
+              quantity: cartMap[product.id ?? ''] ?? 0,
+              maxQty: (product.sale?.isSale ?? false) ? int.tryParse(product.sale?.saleMaxQuantity ?? '0') ?? 0 : 0,
+            ));
+          }
+          productStockList[1].clear();
+          productStockList[1].addAll(stockList);
+          emit(state.copyWith(productList: productList, productStockList: productStockList, pageNum: state.pageNum + 1, isShimmering: false, isProgress: false, isLoadMore: false));
+          return;
+        }
+
+        if (state.isProgress) {
+          return;
+        }
+        try {
+          emit(state.copyWith(isShimmering: state.pageNum == 0, isLoadMore: state.pageNum != 0, isProgress: true, categoryId: event.categoryId));
+          SupplierBrandProductRequestModel request = SupplierBrandProductRequestModel(
+            supplierId: event.supplierId,
+            pageLimit: AppConstants.supplierProductPageLimit,
+            pageNum: state.pageNum + 1,
+            categoryId: event.categoryId,
+          );
+          Map<String, dynamic> req = request.toJson()..removeWhere((key, value) => value == null);
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getSupplierBrandProducts, data: req);
+          final response = SupplierListProductsResponseModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            final cartMap = await fetchCartQuantities(event.context);
+            productList.addAll(response.data?.products ?? []);
+
+            for (var product in productList) {
+              stockList.add(ProductStockModel(
+                productId: product.id ?? '',
+                stock: product.productStock.toString(),
+                quantity: cartMap[product.id ?? ''] ?? 0,
+                maxQty: (product.sale?.isSale ?? false) ? int.tryParse(product.sale?.saleMaxQuantity ?? '0') ?? 0 : 0,
+              ));
+            }
+            productStockList[1].clear();
+            productStockList[1].addAll(stockList);
+
+            emit(state.copyWith(productList: productList, productStockList: productStockList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false, isProgress: false));
+            emit(state.copyWith(isBottomOfProducts: productList.length == (response.metaData?.totalFilteredCount ?? 0), isProgress: false));
+          } else {
+            emit(state.copyWith(isLoadMore: false, isProgress: false));
+            CustomSnackBar.showSnackBar(context: event.context, title: response.message ?? '', type: SnackBarType.failure);
+          }
+        } on ServerException {
+          emit(state.copyWith(isLoadMore: false, isProgress: false));
+        }
+        state.refreshController.refreshCompleted();
+        state.refreshController.loadComplete();
       } else if (event is _refreshListEvent) {
         add(SupplierBrandProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(isShimmering: true, pageNum: 0, isProgress: false, productList: [], productStockList: [state.productStockList[0], [], []], isBottomOfProducts: false));
         if (!state.isProgress) {
-          add(SupplierBrandProductsEvent.getBrandProductsListEvent(context: event.context, supplierId: event.supplierId, brandId: event.brandId));
+          if ((event.categoryId ?? '').isNotEmpty) {
+            add(SupplierBrandProductsEvent.getCategoryProductsListEvent(context: event.context, supplierId: event.supplierId, categoryId: event.categoryId!));
+          } else {
+            add(SupplierBrandProductsEvent.getBrandProductsListEvent(context: event.context, supplierId: event.supplierId, brandId: event.brandId ?? ''));
+          }
         }
       } else if (event is _getProductDetailsEvent) {
         if (event.productListIndex != 2) {

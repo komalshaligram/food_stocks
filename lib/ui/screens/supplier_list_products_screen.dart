@@ -12,7 +12,7 @@ import '../../data/model/res_model/related_product_res_model/related_product_res
 import '../../data/model/search_model/search_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import '../../ui/widget/common_product_sale_item_widget.dart';
@@ -40,6 +40,7 @@ import '../widget/refresh_widget.dart';
 import '../widget/search_item_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/build_list_title.dart';
+import '../widget/supplier_products_info_bar.dart';
 
 class SupplierListProductsRoute {
   static Widget get route => const SupplierListProductsScreen();
@@ -58,6 +59,7 @@ class SupplierListProductsScreen extends StatelessWidget {
       create: (context) => SupplierListProductsBloc()
         ..add(const SupplierListProductsEvent.getPreferencesDataEvent())
         ..add(SupplierListProductsEvent.getSupplierProductsIdEvent(supplierId: args?[AppStrings.supplierIdString] ?? '', search: args?[AppStrings.searchString] ?? ''))
+        ..add(SupplierListProductsEvent.getSupplierDeliveryScheduleEvent(context: context))
         ..add(SupplierListProductsEvent.getSupplierProductsListEvent(
           context: context,
           searchType: args?[AppStrings.searchType] ?? '',
@@ -107,7 +109,7 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
               child: NotificationListener<ScrollNotification>(
                   child: Stack(children: [
                     Column(children: [
-                      100.height,
+                      76.height,
                       Expanded(
                         child: SmartRefresher(
                           physics: (!state.isShimmering && state.productList.isEmpty) ? const NeverScrollableScrollPhysics() : const ClampingScrollPhysics(),
@@ -121,40 +123,33 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
                           onRefresh: () {
                             context.read<SupplierListProductsBloc>().add(SupplierListProductsEvent.refreshListEvent(context: context));
                             context.read<SupplierListProductsBloc>().add(const SupplierListProductsEvent.getPreferencesDataEvent());
+                            context.read<SupplierListProductsBloc>().add(SupplierListProductsEvent.getSupplierDeliveryScheduleEvent(context: context));
                           },
                           child: !state.isShimmering && state.productList.isEmpty
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-                                      decoration: BoxDecoration(
-                                        gradient: AppColors.appMainGradientColor,
-                                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_50)),
-                                      ),
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!.minimum_order} $minimumOrder ₪',
-                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                                      ),
+                                    SupplierProductsInfoBar(
+                                      minimumOrder: minimumOrder,
+                                      deliveryCityName: state.deliveryScheduleCityName,
+                                      deliveryDays: state.deliveryScheduleDays,
+                                      isDeliveryScheduleLoading: state.isDeliveryScheduleLoading,
                                     ),
                                     brandDataWidget(context, state),
+                                    categoryDataWidget(context, state),
                                     Expanded(child: Center(child: noDataWidget(AppLocalizations.of(context)!.no_data))),
                                   ],
                                 )
                               : SingleChildScrollView(
                                   child: Column(mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-                                      decoration: BoxDecoration(
-                                        gradient: AppColors.appMainGradientColor,
-                                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_50)),
-                                      ),
-                                      child: Text(
-                                        '${AppLocalizations.of(context)!.minimum_order} $minimumOrder ₪',
-                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                                      ),
+                                    SupplierProductsInfoBar(
+                                      minimumOrder: minimumOrder,
+                                      deliveryCityName: state.deliveryScheduleCityName,
+                                      deliveryDays: state.deliveryScheduleDays,
+                                      isDeliveryScheduleLoading: state.isDeliveryScheduleLoading,
                                     ),
                                     brandDataWidget(context, state),
+                                    categoryDataWidget(context, state),
                                     state.isShimmering
                                         ? state.isGridView
                                             ? const SupplierProductsScreenShimmerWidget()
@@ -209,7 +204,7 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
             }),
         SizedBox(
           width: getScreenWidth(context),
-          height: 130,
+          height: 88,
           child: ListView.builder(
               physics: const ClampingScrollPhysics(),
               itemCount: state.brandList.length,
@@ -219,7 +214,6 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
               itemBuilder: (context, index) {
                 return buildSupplierListDataItem(
                     supplierLogo: state.brandList[index].brandLogo ?? '',
-                    supplierContactName: state.brandList[index].brandName ?? '',
                     isSelected: state.selectedBrandId == state.brandList[index].id,
                     onTap: () {
                       context.read<SupplierListProductsBloc>().add(SupplierListProductsEvent.getSupplierProductsListEvent(
@@ -234,10 +228,74 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
       crossFadeState: state.brandList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
       duration: const Duration(milliseconds: 300));
 
-  Widget buildSupplierListDataItem({required String supplierLogo, required String supplierContactName, required void Function() onTap, required bool isSelected}) {
+  Widget categoryDataWidget(BuildContext context, SupplierListProductsState state) => AnimatedCrossFade(
+      firstChild: getScreenWidth(context).width,
+      secondChild: Column(children: [
+        buildListTitles(
+            context: context,
+            title: AppLocalizations.of(context)!.categories,
+            subTitle: AppLocalizations.of(context)!.all_categories,
+            onTap: () {
+              Navigator.pushNamed(context, RouteDefine.supplierCategoryScreen.name, arguments: {
+                AppStrings.supplierIdString: supplierId ?? '',
+                AppStrings.categoryListText: state.supplierCategoryList,
+                AppStrings.supplierNameString: supplierName,
+              });
+            }),
+        SizedBox(
+          width: getScreenWidth(context),
+          height: 36,
+          child: ListView.builder(
+              physics: const ClampingScrollPhysics(),
+              itemCount: state.supplierCategoryList.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+              itemBuilder: (context, index) {
+                final category = state.supplierCategoryList[index];
+                return buildSupplierCategoryListItem(
+                    categoryName: category.categoryName ?? '',
+                    onTap: () {
+                      Navigator.pushNamed(context, RouteDefine.supplierBrandProductsScreen.name, arguments: {
+                        AppStrings.categoryIdString: category.id ?? '',
+                        AppStrings.categoryNameString: category.categoryName ?? '',
+                        AppStrings.supplierIdString: supplierId ?? '',
+                        AppStrings.supplierNameString: supplierName,
+                      });
+                    });
+              }),
+        ),
+      ]),
+      crossFadeState: state.supplierCategoryList.isEmpty ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+      duration: const Duration(milliseconds: 300));
+
+  Widget buildSupplierCategoryListItem({required String categoryName, required void Function() onTap}) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_4, horizontal: AppConstants.padding_5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppConstants.radius_10),
+        gradient: AppColors.appMainGradientColor,
+        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppConstants.radius_10),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_4),
+          child: Text(
+            categoryName,
+            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor),
+            maxLines: 1,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildSupplierListDataItem({required String supplierLogo, required void Function() onTap, required bool isSelected}) {
     return TweenAnimationBuilder<double>(
       duration: const Duration(milliseconds: 250),
-      tween: Tween<double>(begin: 1.0, end: isSelected ? 1.08 : 1.0),
+      tween: Tween<double>(begin: 1.0, end: isSelected ? 1.05 : 1.0),
       curve: Curves.easeInOut,
       builder: (context, scale, child) {
         return Transform.scale(scale: scale, alignment: Alignment.center, child: child);
@@ -245,9 +303,9 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         child: Container(
-          height: 150,
-          width: isSelected ? 120 : 110,
-          margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
+          height: 88,
+          width: isSelected ? 88 : 80,
+          margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
             color: AppColors.whiteColor,
@@ -257,43 +315,17 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
           child: InkWell(
             borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
             onTap: onTap,
-            child: Stack(children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
-                child: supplierLogo.isNotEmpty
-                    ? CachedNetworkImage(imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo", fit: BoxFit.contain, height: 110, width: double.infinity)
-                    : Image.asset(
-                        AppImagePath.imageNotAvailable5,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: 110,
-                      ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 25,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_2),
-                  decoration: BoxDecoration(
-                    gradient: AppColors.appMainGradientColor,
-                    borderRadius: const BorderRadius.only(bottomRight: Radius.circular(AppConstants.radius_8), bottomLeft: Radius.circular(AppConstants.radius_8)),
-                  ),
-                  child: CommonMarqueeWidget(
-                    direction: Axis.horizontal,
-                    child: Text(
-                      supplierContactName,
-                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
+            child: Padding(
+              padding: const EdgeInsets.all(AppConstants.padding_6),
+              child: supplierLogo.isNotEmpty
+                  ? CachedNetworkImage(imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo", fit: BoxFit.contain, width: double.infinity, height: double.infinity)
+                  : Image.asset(
+                      AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                      height: double.infinity,
                     ),
-                  ),
-                ),
-              ),
-            ]),
+            ),
           ),
         ),
       ),
@@ -412,8 +444,8 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
             minQuantity: product.sale?.saleMinQuantity,
             maxQuantity: product.sale?.saleMaxQuantity,
             isMixedSale: product.sale?.isMixedSale,
-            numberOfUnits: product?.numberOfUnit.toString(),
-            scaleType: product?.scaleType,
+            numberOfUnits: product.numberOfUnit.toString(),
+            scaleType: product.scaleType,
             onQuantityChanged: () {
               context.read<SupplierListProductsBloc>().add(
                     SupplierListProductsEvent.updateListQuantityOfProduct(
@@ -456,7 +488,7 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
           salesDesc: product.sale?.saleDescription,
           isPesach: product.isPesach,
           numberOfUnits: product.numberOfUnit.toString(),
-          scaleType: product?.scaleType,
+          scaleType: product.scaleType,
           lowStock: product.lowStock.toString(),
           productStock: product.productStock.toString(),
           productImage: product.mainImage ?? '',

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../ui/utils/app_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/widget/container_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/credit_card_details/credit_card_details_bloc.dart';

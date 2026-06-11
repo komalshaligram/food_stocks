@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/manage_credit_card/manage_credit_card_bloc.dart';
 import '../../ui/utils/app_utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_img_path.dart';
 import '../../ui/widget/custom_button_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';

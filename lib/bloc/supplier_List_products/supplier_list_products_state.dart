@@ -6,6 +6,7 @@ class SupplierListProductsState with _$SupplierListProductsState {
     required String supplierId,
     required String search,
     required List<BrandData> brandList,
+    required List<SupplierCategoryData> supplierCategoryList,
     required List<ProductData> productList,
     required bool isShimmering,
     required bool isLoading,
@@ -47,6 +48,9 @@ class SupplierListProductsState with _$SupplierListProductsState {
     String? selectedBrandId,
     required bool duringCelebration,
     required double bottlePrice,
+    required bool isDeliveryScheduleLoading,
+    required List<SupplierCityDeliveryDay> deliveryScheduleDays,
+    String? deliveryScheduleCityName,
   }) = _SupplierListProductsState;
 
   factory SupplierListProductsState.initial() => SupplierListProductsState(
@@ -54,6 +58,7 @@ class SupplierListProductsState with _$SupplierListProductsState {
         search: '',
         productList: [],
         brandList: [],
+        supplierCategoryList: [],
         isShimmering: false,
         isLoading: false,
         isProductLoading: false,
@@ -98,5 +103,8 @@ class SupplierListProductsState with _$SupplierListProductsState {
         selectedBrandId: '',
         duringCelebration: false,
         bottlePrice: 0.0,
+        isDeliveryScheduleLoading: false,
+        deliveryScheduleDays: [],
+        deliveryScheduleCityName: null,
       );
 }

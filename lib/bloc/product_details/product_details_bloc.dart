@@ -27,7 +27,7 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../product_return_info/product_return_info_bloc.dart';
 
 part 'product_details_event.dart';
@@ -184,7 +184,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.select_issue, type: SnackBarType.failure);
         }
       } else if (event is _getBottomSheetDataEvent) {
-        if (event.notes != null && event.notes.isNotEmpty) {
+        if (event.notes.isNotEmpty) {
           state.addNoteController.text = event.notes;
         }
       } else if (event is _removeIssueEvent) {
@@ -302,7 +302,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       } else if (event is _getPickDocumentEvent) {
         final images = event.proofImages ?? [];
         emit(state.copyWith(
-          proofFile: images.length > 0 ? File(AppUrlEndPoints.baseFileUrl + images[0]) : File(''),
+          proofFile: images.isNotEmpty ? File(AppUrlEndPoints.baseFileUrl + images[0]) : File(''),
           proofFile1: images.length > 1 ? File(AppUrlEndPoints.baseFileUrl + images[1]) : File(''),
           proofFile2: images.length > 2 ? File(AppUrlEndPoints.baseFileUrl + images[2]) : File(''),
           proofImagesList: event.proofImages!,

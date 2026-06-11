@@ -10,7 +10,7 @@ import '../utils/app_utils.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_img_path.dart';
 import '../widget/custom_button_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 class ConnectRoute {
   static Widget get route => const ConnectScreen();

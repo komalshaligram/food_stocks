@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../ui/widget/custom_button_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';

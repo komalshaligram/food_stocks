@@ -23,7 +23,7 @@ class CommonDropDownButton extends StatelessWidget {
       isExpanded: true,
       elevation: 0,
       style: TextStyle(fontSize: AppConstants.smallFont, color: AppColors.blackColor),
-      value: value,
+      // initialValue: value,
       items: items,
       onChanged: onChanged,
       dropdownColor: AppColors.pageColor,

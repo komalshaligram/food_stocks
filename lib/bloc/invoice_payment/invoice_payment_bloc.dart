@@ -10,7 +10,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 part 'invoice_payment_state.dart';
 part 'invoice_payment_event.dart';
@@ -34,7 +34,7 @@ class InvoicePaymentBloc extends Bloc<InvoicePaymentEvent, InvoicePaymentState> 
             "supplierId": event.supplierId,
             "invoiceNumber": event.invoiceNumber,
             "documentType": event.documentType,
-            if ((event.orderId ?? '').trim().isNotEmpty && event.orderId != 'null' && event.orderId != null) "orderId": event.orderId,
+            if ((event.orderId ?? '').trim().isNotEmpty && event.orderId != 'null') "orderId": event.orderId,
           };
           // PayInvoiceCreditCardRequestModel reqMap = PayInvoiceCreditCardRequestModel(orderId: event.orderId == null ? , invoiceNumber: event.invoiceNumber);
           final res = await DioClient(event.context).post(AppUrlEndPoints.payInvoiceByCreditCard, data: payInvoiceCreditCardRequest);

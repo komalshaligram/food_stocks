@@ -9,7 +9,7 @@ import '../../data/model/res_model/related_product_res_model/related_product_res
 import '../../data/model/search_model/search_model.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
@@ -276,8 +276,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
             minQuantity: product.sale?.saleMinQuantity,
             maxQuantity: product.sale?.saleMaxQuantity,
             isMixedSale: product.sale?.isMixedSale,
-            numberOfUnits: product?.numberOfUnit.toString(),
-            scaleType: product?.scaleType,
+            numberOfUnits: product.numberOfUnit.toString(),
+            scaleType: product.scaleType,
             onQuantityChanged: () => updateQty(context, state, index),
             onQuantityIncreaseTap: () => handleIncrease(context, state, index),
             onQuantityDecreaseTap: () => handleDecrease(context, state, index),
@@ -314,7 +314,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
             lowStock: product.lowStock.toString(),
             isGuestUser: state.isGuestUser,
             numberOfUnits: product.numberOfUnit ?? '0',
-            scaleType: product?.scaleType,
+            scaleType: product.scaleType,
             productStock: product.productStock.toString(),
             productImage: product.mainImage ?? '',
             productName: product.productName ?? '',

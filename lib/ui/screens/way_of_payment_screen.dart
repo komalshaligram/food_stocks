@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../ui/utils/app_utils.dart';

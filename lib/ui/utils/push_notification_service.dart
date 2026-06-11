@@ -400,7 +400,7 @@ class PushNotificationService {
 
     String? cachedToken = preferences.getFCMToken();
 
-    if (cachedToken == null || cachedToken.isEmpty) {
+    if (cachedToken.isEmpty) {
       try {
         String? token = await firebaseMessaging.getToken();
         if (token != null && token.isNotEmpty) {

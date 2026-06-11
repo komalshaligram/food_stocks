@@ -18,7 +18,7 @@ import '../utils/app_utils.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_img_path.dart';
 import '../utils/constants/app_styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../widget/balance_indicator.dart';
 import '../widget/circular_button_widget.dart';
 import '../widget/common_dialog_with_one_button.dart';

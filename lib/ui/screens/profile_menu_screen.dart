@@ -13,7 +13,7 @@ import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../utils/constants/app_img_path.dart';
 import '../utils/constants/app_urls.dart';
 import '../widget/common_alert_dialog.dart';
@@ -132,6 +132,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                                     ),
                                 children: [
                               15.height,
+                              state.isCanScanDocuments
+                                  ? profileMenuTiles(
+                                      title: AppLocalizations.of(context)!.certificate_scanning,
+                                      onTap: () {
+                                        Navigator.pushNamed(context, RouteDefine.certificateScanningScreen.name);
+                                      })
+                                  : 0.width,
                               state.isSubUserSeeOrder
                                   ? profileMenuTiles(
                                       title: AppLocalizations.of(context)!.my_orders,

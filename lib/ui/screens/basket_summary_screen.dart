@@ -5,7 +5,7 @@ import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/basket_summary/basket_summary_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';

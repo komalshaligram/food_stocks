@@ -46,7 +46,7 @@ import '../../data/model/res_model/update_cart_res/update_cart_res_model.dart';
 import '../../data/model/res_model/verify_client_res_model/verify_client_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
 
@@ -830,8 +830,8 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
               retryLoading: false,
               isAppOnMaintenance: preferences.getAppOnMaintenance(),
               showClientDataOnApp: preferences.getClientDataOnApp(),
-              buttonEnglishText: response.data?.dataWebViewSettings?.buttonEnglishText,
-              buttonHebrewText: response.data?.dataWebViewSettings?.buttonHebrewText,
+              buttonEnglishText: response.data?.dataWebViewSettings?.buttonEnglishText ?? state.buttonEnglishText ?? '',
+              buttonHebrewText: response.data?.dataWebViewSettings?.buttonHebrewText ?? state.buttonHebrewText ?? '',
             ));
           } else {
             emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));

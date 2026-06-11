@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/ui/widget/related_product_title.dart';
@@ -246,7 +246,7 @@ class StoreScreenWidget extends StatelessWidget {
                           child: Stack(children: [
                             ClipRRect(
                               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.padding_10)),
-                              child: state.productCategoryList[index].categoryImage!.isNotEmpty
+                              child: (state.productCategoryList[index].categoryImage ?? '').isNotEmpty
                                   ? CachedNetworkImage(
                                       imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.productCategoryList[index].categoryImage}",
                                       fit: BoxFit.cover,
@@ -1423,12 +1423,17 @@ class StoreScreenWidget extends StatelessWidget {
     }
   }
 
-  Widget dataAnalyticsButtonWidget(BuildContext context, StoreState state) => state.showClientDataOnApp
-      ? CustomTextIconButtonWidget(
-          width: double.maxFinite,
-          title: state.language == 'en' ? state.buttonEnglishText! : state.buttonHebrewText!,
-          onPressed: () {
-            Navigator.pushNamed(context, RouteDefine.webViewScreen.name);
-          })
-      : 0.width;
+  Widget dataAnalyticsButtonWidget(BuildContext context, StoreState state) {
+    final buttonText = state.language == 'en' ? state.buttonEnglishText : state.buttonHebrewText;
+    if (!state.showClientDataOnApp || buttonText == null || buttonText.isEmpty) {
+      return 0.width;
+    }
+    return CustomTextIconButtonWidget(
+      width: double.maxFinite,
+      title: buttonText,
+      onPressed: () {
+        Navigator.pushNamed(context, RouteDefine.webViewScreen.name);
+      },
+    );
+  }
 }

@@ -1,12 +1,12 @@
 buildscript {
-    ext.kotlin_version = '1.9.22'
+    ext.kotlin_version = '2.1.0'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.5.2'
+        classpath 'com.android.tools.build:gradle:8.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.13'
         classpath 'org.codehaus.groovy:groovy-all:3.0.17'
@@ -26,7 +26,45 @@ subprojects {
     afterEvaluate {
         if (plugins.hasPlugin('kotlin-android') || plugins.hasPlugin('org.jetbrains.kotlin.android')) {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib:2.1.0"
+            }
+        }
+    }
+}
+
+// AGP 8+ requires namespace on all Android library modules; older pub plugins may lack it.
+subprojects { subproject ->
+    subproject.afterEvaluate {
+        if (subproject.plugins.hasPlugin('com.android.library')) {
+            def android = subproject.extensions.findByName('android')
+            if (android != null && (android.namespace == null || android.namespace.isEmpty())) {
+                def manifestFile = subproject.file('src/main/AndroidManifest.xml')
+                if (manifestFile.exists()) {
+                    def matcher = (manifestFile.text =~ /package=["']([^"']+)["']/)
+                    if (matcher.find()) {
+                        android.namespace = matcher.group(1)
+                    }
+                }
+                if (android.namespace == null || android.namespace.isEmpty()) {
+                    android.namespace = "com.plugin.${subproject.name}"
+                }
+            }
+        }
+
+        def android = subproject.extensions.findByName('android')
+        if (android != null) {
+            if (subproject.plugins.hasPlugin('com.android.library')) {
+                android.compileSdk = 34
+            }
+            android.compileOptions {
+                sourceCompatibility JavaVersion.VERSION_17
+                targetCompatibility JavaVersion.VERSION_17
+            }
+        }
+
+        subproject.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = '17'
             }
         }
     }
@@ -42,4 +80,17 @@ subprojects {
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
+}
+
+gradle.projectsEvaluated {
+    subprojects { subproject ->
+        subproject.tasks.matching { task ->
+            task.name.contains('JavaWithJavac')
+        }.configureEach { task ->
+            task.options.warnings = false
+            if (!task.options.compilerArgs.contains('-nowarn')) {
+                task.options.compilerArgs += ['-nowarn', '-Xlint:none']
+            }
+        }
+    }
 }

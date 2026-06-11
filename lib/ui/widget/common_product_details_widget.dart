@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../../ui/widget/common_product_details_button.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:html/parser.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../utils/app_utils.dart';

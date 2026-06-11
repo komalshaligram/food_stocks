@@ -45,6 +45,7 @@ class Permissions with _$Permissions {
     bool? canSeeAndUpdateTimesInfo,
     bool? canSeeInvoices,
     bool? returns,
+    bool? canScanDocuments,
   }) = _Permissions;
 
   factory Permissions.fromJson(Map<String, dynamic> json) => _$PermissionsFromJson(json);

@@ -9,6 +9,7 @@ class OrderSummaryState with _$OrderSummaryState {
     required List<CartProductDataResModel> tempList,
     required String total,
     String? backString,
+    String? firstSupplierOrderMessageTemplate,
   }) = _OrderSummaryState;
 
   factory OrderSummaryState.initial() => const OrderSummaryState(
@@ -18,5 +19,6 @@ class OrderSummaryState with _$OrderSummaryState {
         tempList: [],
         total: '',
         backString: '',
+        firstSupplierOrderMessageTemplate: '',
       );
 }

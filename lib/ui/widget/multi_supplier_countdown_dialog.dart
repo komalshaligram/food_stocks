@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/utils/constants/app_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';

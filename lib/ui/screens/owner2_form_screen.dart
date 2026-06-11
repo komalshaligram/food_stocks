@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../bloc/owner2_form/owner2_form_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';

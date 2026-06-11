@@ -25,7 +25,7 @@ import '../../ui/utils/constants/app_urls.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart'
     as orderbyidmodel;
 import '../../ui/widget/common_dialog_with_one_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 part 'basket_summary_event.dart';
 part 'basket_summary_state.dart';

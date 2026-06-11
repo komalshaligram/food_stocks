@@ -16,11 +16,12 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/utils/constants/app_constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_img_path.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/utils/constants/app_urls.dart';
+import '../../ui/utils/first_supplier_order_helper.dart';
 import '../../ui/widget/basket_screen_shimmer_widget.dart';
 import '../../ui/widget/common_product_details_widget.dart';
 import '../../ui/widget/custom_button_widget.dart';
@@ -35,6 +36,43 @@ import '../widget/common_dialog_with_one_button.dart';
 import '../widget/common_product_sale_item_widget.dart';
 import '../widget/custom_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
+
+Future<void> navigateFromBasketContinue({
+  required BuildContext context,
+  required BasketState state,
+  required String formattedTotal,
+}) async {
+  if (state.supplierCount == 1) {
+    final dialogResult = await checkAndShowFirstOrderDialogForSingleSupplier(
+      context: context,
+      language: state.language,
+    );
+    if (!context.mounted || dialogResult == FirstOrderDialogResult.cancelled) return;
+
+    if (dialogResult == FirstOrderDialogResult.confirmed) {
+      await navigateToVerifyClientDataScreen(
+        context: context,
+        nextRouteName: RouteDefine.basketSummaryScreen.name,
+        nextRouteArgs: {
+          AppStrings.getCartListString: state.cartItemList,
+          AppStrings.isSupplierSingle: 'Yes',
+        },
+      );
+      return;
+    }
+
+    Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
+      AppStrings.getCartListString: state.cartItemList,
+      AppStrings.isSupplierSingle: 'Yes',
+    });
+  } else {
+    Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
+      AppStrings.getCartListString: state.cartItemList,
+      AppStrings.isbackString: 'Basket',
+      AppStrings.totalAmountString: formattedTotal,
+    });
+  }
+}
 
 class BasketRoute {
   static Widget get route => const BasketScreen();
@@ -244,18 +282,11 @@ class BasketScreenWidget extends StatelessWidget {
                         if (state.draftReturnExists) {
                           await showDialog(context: context, builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc));
                         } else {
-                          if (state.supplierCount == 1) {
-                            Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
-                              AppStrings.getCartListString: state.cartItemList,
-                              AppStrings.isSupplierSingle: 'Yes',
-                            });
-                          } else {
-                            Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
-                              AppStrings.getCartListString: state.cartItemList,
-                              AppStrings.isbackString: 'Basket',
-                              AppStrings.totalAmountString: formattedBasketGrandTotal(state),
-                            });
-                          }
+                          await navigateFromBasketContinue(
+                            context: context,
+                            state: state,
+                            formattedTotal: formattedTotal,
+                          );
                         }
                       }
                     }
@@ -591,18 +622,11 @@ class BasketScreenWidget extends StatelessWidget {
                           if (state.draftReturnExists) {
                             await showDialog(context: context, builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc));
                           } else {
-                            if (state.supplierCount == 1) {
-                              Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
-                                AppStrings.getCartListString: state.cartItemList,
-                                AppStrings.isSupplierSingle: 'Yes',
-                              });
-                            } else {
-                              Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
-                                AppStrings.getCartListString: state.cartItemList,
-                                AppStrings.isbackString: 'Basket',
-                                AppStrings.totalAmountString: formattedBasketGrandTotal(state),
-                              });
-                            }
+                            await navigateFromBasketContinue(
+                              context: context,
+                              state: state,
+                              formattedTotal: formattedBasketGrandTotal(state),
+                            );
                           }
                         }
                       },
@@ -981,18 +1005,11 @@ class CallAgentDialog extends StatelessWidget {
               InkWell(
                 onTap: () async {
                   Navigator.of(context).pop();
-                  if (state.supplierCount == 1) {
-                    Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
-                      AppStrings.getCartListString: state.cartItemList,
-                      AppStrings.isSupplierSingle: 'Yes',
-                    });
-                  } else {
-                    Navigator.pushNamed(context, RouteDefine.orderSummaryScreen.name, arguments: {
-                      AppStrings.getCartListString: state.cartItemList,
-                      AppStrings.isbackString: 'Basket',
-                      AppStrings.totalAmountString: formattedBasketGrandTotal(state),
-                    });
-                  }
+                  await navigateFromBasketContinue(
+                    context: context,
+                    state: state,
+                    formattedTotal: formattedBasketGrandTotal(state),
+                  );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(AppConstants.padding_8),

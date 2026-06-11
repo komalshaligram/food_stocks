@@ -16,7 +16,7 @@ import '../../data/model/req_model/otp_req_model/otp_req_model.dart';
 import '../../data/model/res_model/login_res_model/login_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import 'dart:io';
 part 'otp_event.dart';
@@ -117,6 +117,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 preferences.setCanUpdateTimeInfo(isUpdateTimeInfo: res?.canSeeAndUpdateTimesInfo ?? false);
                 preferences.setCanSeeFormsFiles(isSeeFormsFiles: res?.canSeeFileAndForms ?? false);
                 preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
+                preferences.setCanScanDocuments(isCanScanDocuments: res?.canScanDocuments ?? false);
               }
               emit(state.copyWith(isLoading: false));
               Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);

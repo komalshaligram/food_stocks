@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '/bloc/product_return_info/product_return_info_bloc.dart';
 import '/ui/widget/file_selection_option_widget.dart';
 import '/ui/widget/sized_box_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';

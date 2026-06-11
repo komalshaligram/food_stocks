@@ -32,7 +32,7 @@ import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart' as res_get;
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart' as req;

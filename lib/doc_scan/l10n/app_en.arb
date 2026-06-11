@@ -1,0 +1,277 @@
+{
+  "@@locale": "en",
+  "appName": "Invoice Scanner",
+  "searchHint": "Search by document type or company name",
+  "sortAndFilter": "Sort & Filter",
+  "sortBy": "Sort by",
+  "filterBy": "Filter by",
+  "clearSortAndFilter": "Clear sort and filter",
+  "close": "Close",
+  "emptyTitle": "No scanned documents",
+  "emptySubtitle": "Tap the button below to scan an invoice",
+  "scanInvoice": "Scan document",
+  "chooseScanModelTitle": "Choose scan model",
+  "deleteDocumentTitle": "Delete document",
+  "deleteDocumentConfirm": "Are you sure you want to delete this document?",
+  "documentDeletedSuccess": "Document deleted successfully",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "filterDate": "Date",
+  "filterCompanyName": "Company name",
+  "filterAmount": "Amount",
+  "filterStatus": "Status",
+  "filterCreatedDate": "Created date",
+  "filterDocumentDate": "Document date",
+  "filterDocumentType": "Document type",
+  "scan": "Scan",
+  "scanPlaceholder": "Place the invoice in the frame",
+  "scanMockHint": "Or tap for mock scan",
+  "scanButton": "Scan",
+  "pageScanned": "Page scanned",
+  "previewPlaceholder": "Page preview",
+  "send": "Send",
+  "processingTitle": "Scanning document data...",
+  "processingSub1": "Detecting text...",
+  "processingSub2": "Analyzing data...",
+  "processingSub3": "Extracting details...",
+  "processingSub4": "Almost done...",
+  "documentDetails": "Document details",
+  "noDocumentSelected": "No document selected",
+  "scanDateLabel": "Scanned: {formatted}",
+  "@scanDateLabel": {
+    "placeholders": {
+      "formatted": {
+        "type": "String"
+      }
+    }
+  },
+  "showScanDocument": "Show scan document",
+  "exportToExcel": "Export to Excel",
+  "exportExcelFailed": "Could not export to Excel. Check that the document data is valid.",
+  "save": "Save",
+  "updateInCash": "Send to cash register",
+  "generalData": "General data",
+  "documentType": "Document type",
+  "companyName": "Company name",
+  "companyId": "Company ID",
+  "documentNumber": "Document number",
+  "documentDate": "Document date",
+  "subtotalNoVat": "Subtotal (excl. VAT)",
+  "vatAmount": "VAT amount",
+  "totalToPay": "Total to pay",
+  "items": "Items",
+  "addItem": "Add item",
+  "searchItemHint": "Search item by description or item number",
+  "colLineNumber": "#",
+  "colItemNumber": "Item no.",
+  "colItemDescription": "Description",
+  "colQuantity": "Qty",
+  "colPackages": "Packages",
+  "colUnits": "Units in package",
+  "colPricePerUnit": "Price per unit",
+  "colTotalNis": "Total (NIS)",
+  "deleteRowTitle": "Delete row",
+  "deleteRowConfirm": "Are you sure you want to delete this row?",
+  "yes": "Yes",
+  "no": "No",
+  "update": "Update",
+  "docTypeInvoice": "Invoice",
+  "docTypeDelivery": "Delivery note",
+  "docTypeReturn": "Return note",
+  "docTypeOther": "Other",
+  "chooseDocumentType": "Choose document type",
+  "enterDocumentType": "Enter document type",
+  "documentTypeLabel": "Document type",
+  "pickDocumentDate": "Pick document date",
+  "excelPreviewTitle": "Excel preview",
+  "excelShareText": "Excel spreadsheet",
+  "pdfPreviewTitle": "PDF Preview",
+  "pdfAvailable": "PDF available for viewing",
+  "pdfDemoHint": "Preview in demo mode",
+  "share": "Share",
+  "statusScanning": "Scanning document data",
+  "statusUploading": "Uploading documents",
+  "statusReadyForUpdate": "Waiting to send to cash register",
+  "statusCompleted": "Completed",
+  "statusDeleted": "Deleted",
+  "statusSentToCashRegister": "Sent to cash register",
+  "docNumberLabel": "Doc. number",
+  "docNumberValue": "Doc. number: {num}",
+  "@docNumberValue": {
+    "placeholders": {
+      "num": {
+        "type": "String"
+      }
+    }
+  },
+  "dateLabel": "Date: {date}",
+  "@dateLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "itemNumber": "Item no.",
+  "itemDescription": "Description",
+  "quantity": "Quantity",
+  "packages": "Packages",
+  "units": "Units",
+  "pricePerUnitNis": "Price per unit (NIS)",
+  "totalNis": "Total (NIS)",
+
+  "preScanDocumentDetailsTitle": "Document details before scan",
+  "supplierNameLabel": "Supplier name",
+  "supplierNameHint": "Type supplier name (or pick from the list)",
+  "supplierQuickTip": "Tip: type to quickly filter",
+  "supplierListTitle": "Suppliers list",
+  "continueToScan": "Continue to scan",
+
+  "pickSupplierTitle": "Pick a supplier",
+  "supplierSearchHint": "Search supplier...",
+  "supplierSearchPlaceholder": "Search...",
+  "suppliersFoundCount": "Found {count} suppliers",
+  "noResults": "No results found",
+  "noSavedSuppliers": "No saved suppliers",
+  "select": "Select",
+  "clear": "Clear",
+  "unknownSupplierInitial": "S",
+
+  "sortTileTitle": "Sort",
+  "sortNone": "No sorting",
+  "sortByCreatedAtOldest": "Date: oldest first",
+  "sortByCreatedAtNewest": "Date: newest first",
+  "sortByTotalAmountLow": "Amount: low first",
+  "sortByTotalAmountHigh": "Amount: high first",
+
+  "helpTextChooseRange": "Choose range",
+  "rangeNoneLabel": "None",
+
+  "filterCreatedDatePreview": "Created date: {range}",
+  "filterDocumentDatePreview": "Document date: {range}",
+  "filterDocumentTypePreview": "Document type: {types}",
+  "filterSupplierPreview": "Supplier name: {suppliers}",
+  "filterStatusPreview": "Status: {statuses}",
+
+  "statusProcessing": "Processing",
+  "statusError": "Error",
+
+  "documentProcessing": "The document is still processing",
+  "noImagesForRetry": "No images available for retry",
+  "showScannedImage": "Show scanned image",
+  "retrieveDataAgain": "Retrieve data again",
+  "confirmRetrieveDataAgainTitle": "Confirm",
+  "confirmRetrieveDataAgainMessage": "Are you sure you want to retrieve the document data again?\nThis may take some time...",
+  "confirmSendToCashTitle": "Confirm",
+  "confirmSendToCashMessage": "Are you sure you want to send the document for updating your cash register?",
+
+  "imageExportFailureTitle": "Image export error",
+  "copyTooltip": "Copy",
+  "copiedToClipboard": "Copied to clipboard",
+  "continueButton": "Continue",
+  "imageExportDebugIntro": "We couldn't export images from the scan. We won't send the PDF to the API.",
+  "imageExportErrorLine": "Error: {error}",
+  "imageExportExpectedImages": "Expected images: {count}",
+  "imageExportExistingImages": "Existing images: {count}",
+  "imageExportPdfPath": "pdfPath: {path}",
+  "imageExportFailedNull": "Failed to export images (null)",
+  "imageExportReturnedEmpty": "Image export returned an empty list (no valid images)",
+  "imageExportPathExamples": "Examples of paths (up to 10):\n{paths}",
+  "serverError": "Server error: {error}",
+  "unexpectedError": "Unexpected error: {error}",
+  "noValidImagesToSend": "No valid images found for sending",
+
+  "jsonTitle": "JSON",
+  "jsonContentLabel": "JSON content",
+  "jsonCopiedSnackBar": "JSON copied",
+  "noJsonToShow": "No JSON to display",
+  "copy": "Copy",
+
+  "shareScannedDocument": "Scanned document",
+  "fileNotFound": "File not found",
+  "shareError": "Share error: {error}",
+  "unableToLoadDocument": "Unable to load the document",
+
+  "scannedImagesPreviewTitle": "Scanned images preview",
+  "scannedImagesShareText": "Scanned images",
+  "unableToLoadImages": "Unable to load images",
+  "noImagesToShow": "No images to display",
+
+  "docTypeReceipt": "Receipt",
+  "docTypeCreditInvoice": "Credit invoice",
+
+  "languageEnglishOptionLabel": "EN",
+  "languageHebrewOptionLabel": "HE",
+
+  "parseErrorImageTooLarge": "Image is too large ({sizeMB}MB). Max {maxMB}MB.",
+  "parseErrorImagesNotReceived": "No images received",
+  "parseErrorPdfTooLarge": "File is too large ({sizeMB}MB). Max {maxMB}MB.",
+  "parseErrorScanJobEmptyResponse": "Error creating scan job: empty response",
+  "parseErrorScanJobMissingJobId": "Error creating scan job: missing jobId",
+  "parseErrorDocumentProcessingEmptyResponse": "Error processing document: empty response",
+  "parseErrorUnauthenticated": "Please sign in before sending documents",
+  "parseErrorInvalidArgument": "Invalid file",
+  "parseErrorResourceExhausted": "Too many requests. Please try again in a minute",
+  "parseErrorInternal": "Error processing document",
+  "parseErrorUnknown": "Error ({code})",
+
+  "docutainScanTitleScanPage": "Scan doc",
+  "docutainScanFocusHint": "Please hold steady",
+  "docutainButtonScanTorchTitle": "Flash",
+  "docutainButtonScanFinishTitle": "Continue",
+  "docutainButtonScanAutoCaptureOnTitle": "Auto scan",
+  "docutainButtonScanAutoCaptureOffTitle": "Manual scan",
+  "docutainButtonEditDeleteTitle": "Delete",
+  "docutainButtonEditFinishTitle": "Finish",
+  "docutainButtonEditCropTitle": "Crop",
+  "docutainButtonEditRotateTitle": "Rotate",
+  "docutainButtonEditArrangeTitle": "Arrange",
+  "docutainTextTitleArrangementPage": "Arrange",
+  "docutainTextDeleteDialogCurrentPage": "Delete current page",
+  "docutainTextDeleteDialogAllPages": "Delete all pages",
+  "docutainTextDeleteDialogCancel": "Cancel",
+
+  "docutainScanCancelledError": "Scan was cancelled.",
+  "docutainScanError": "Scan error: {error}",
+
+  "docutainInitLicenseKeyMissing": "Docutain license key is not configured. Add it in app_config.dart (defaultValue) or run with: --dart-define=DOCUTAIN_LICENSE_KEY=YOUR_KEY",
+  "docutainInitFailedWithSdkError": "Docutain initialization failed: {sdkError}\n\nThe license is tied to the application's applicationId. In this app: scanner.tavili.com. Get a trial license with this ID: https://sdk.docutain.com/TrialLicense",
+  "docutainInitFailedWithoutSdkError": "Docutain initialization failed. The license is tied to the application's applicationId. In this app: scanner.tavili.com. Get a trial license with this ID: https://sdk.docutain.com/TrialLicense",
+
+  "scanSourceTitle": "How would you like to capture the document?",
+  "scanSourceCamera": "Camera",
+  "scanSourceGallery": "Gallery",
+  "scanAddAnotherPageTitle": "Add another page",
+  "scanAddAnotherPageMessage": "You captured {count} page(s). Add another page?",
+  "@scanAddAnotherPageMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scanFinishCapture": "Finish",
+  "scanAddPage": "Capture another page",
+  "scanCropPageTitle": "Edit page",
+  "scanCropPageCounter": "Page {current} of {total}",
+  "@scanCropPageCounter": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "scanMaxPagesReached": "Maximum of {max} pages reached",
+  "@scanMaxPagesReached": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "scanPermissionDenied": "Camera or gallery permission is required",
+  "scanNoImagesSelected": "No images selected"
+}

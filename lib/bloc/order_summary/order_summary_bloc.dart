@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/res_model/cart_product_supplier/cart_products_supplier_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
+import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -24,10 +25,18 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       if (event is _getDataEvent) {
         emit(state.copyWith(cartItemList: event.cartItemList, language: preferences.getAppLanguage(), total: event.totalAmount, backString: event.backString));
         try {
-          final res = await DioClient(event.context).post('${AppUrlEndPoints.listingCartProductsSupplierUrl}${preferences.getCartId()}');
-          CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(res);
+          final results = await Future.wait([
+            DioClient(event.context).post('${AppUrlEndPoints.listingCartProductsSupplierUrl}${preferences.getCartId()}'),
+            DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl),
+          ]);
+          CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(results[0]);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(orderSummaryList: response, tempList: response.data?.data ?? []));
+            final settingsResponse = SettingResModel.fromJson(results[1]);
+            emit(state.copyWith(
+              orderSummaryList: response,
+              tempList: response.data?.data ?? [],
+              firstSupplierOrderMessageTemplate: settingsResponse.data?.firstSupplierOrderMessageTemplate ?? '',
+            ));
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,

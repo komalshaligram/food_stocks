@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
 import '../../bloc/product_category/product_category_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/widget/common_marquee_widget.dart';
 import '../../ui/widget/product_category_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';

@@ -15,7 +15,7 @@ import '../widget/common_app_bar.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/company_screen_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 class CompanyRoute {
   static Widget get route => const CompanyScreen();

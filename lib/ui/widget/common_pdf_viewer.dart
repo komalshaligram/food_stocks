@@ -4,7 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 class CommonPdfViewer extends StatelessWidget {
   final String url;

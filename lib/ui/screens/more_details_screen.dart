@@ -14,7 +14,7 @@ import '../utils/constants/app_styles.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 class MoreDetailsRoute {
   static Widget get route => const MoreDetailsScreen();

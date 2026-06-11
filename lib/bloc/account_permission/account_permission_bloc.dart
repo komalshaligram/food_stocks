@@ -7,7 +7,7 @@ import '../../data/model/permission_model/permission_model.dart';
 import '../../data/model/req_model/update_permission/update_permission_model.dart';
 import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
@@ -44,6 +44,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
               PermissionModel(title: AppLocalizations.of(event.context)!.can_manage_sub_users, isEnable: response.data?.permissions?.canManageSubUsers ?? false),
               PermissionModel(title: AppLocalizations.of(event.context)!.can_see_invoices, isEnable: response.data?.permissions?.canSeeInvoices ?? false),
               PermissionModel(title: AppLocalizations.of(event.context)!.returns, isEnable: response.data?.permissions?.returns ?? false),
+              PermissionModel(title: AppLocalizations.of(event.context)!.can_scan_documents, isEnable: response.data?.permissions?.canScanDocuments ?? false),
             ];
             emit(state.copyWith(isShimmering: false, permissionList: permissionList));
           } else {
@@ -78,6 +79,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
             canManageSubUsers: state.permissionList[11].isEnable,
             canSeeInvoices: state.permissionList[12].isEnable,
             returns: state.permissionList[13].isEnable,
+            canScanDocuments: state.permissionList[14].isEnable,
           ));
 
           Map<String, dynamic> updatePermissionReq = req.toJson();
@@ -104,6 +106,7 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
               preferences.setManageSubUser(isManageSubUser: state.permissionList[11].isEnable);
               preferences.setCanSeeInvoices(isCanSeeInvoices: state.permissionList[12].isEnable);
               preferences.setCanSeeReturns(isCanSeeReturns: state.permissionList[13].isEnable);
+              preferences.setCanScanDocuments(isCanScanDocuments: state.permissionList[14].isEnable);
             }
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);

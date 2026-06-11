@@ -38,6 +38,9 @@ class ClientDetail with _$ClientDetail {
     String? streetName,
     String? streetNumber,
     String? zip,
+    String? wazeURL,
+    String? deliveryLocationDescription,
+    String? deliveryLocationImage,
     String? applicationName,
     bool? approveSmsAndEmail,
   }) = _ClientDetail;

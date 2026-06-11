@@ -36,7 +36,7 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
 
 part 'recommendation_products_event.dart';

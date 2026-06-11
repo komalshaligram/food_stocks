@@ -17,7 +17,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_version_checker/store_version_checker.dart';
 import 'package:vibration/vibration.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../data/error/exceptions.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/product_supplier_model/product_supplier_model.dart';
@@ -154,7 +154,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                         basePrice: double.parse(supplier.productPrice ?? ''),
                         quantity: _productQuantity,
                         stock: supplier.productStock.toString(),
-                        maxQty: (productDetailData?.sale?.isSale ?? false) ? int.parse(productDetailData?.sale?.saleMaxQuantity.toString() ?? '') : 0,
+                        maxQty: (productDetailData.sale?.isSale ?? false) ? int.parse(productDetailData.sale?.saleMaxQuantity.toString() ?? '') : 0,
                         selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
                             ? supplier.saleProduct!.contains(
                                 supplier.saleProduct?.firstWhere(
@@ -570,6 +570,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               preferences.setAvailableAllPayment(isAvailableAllPayment: clientData?.clientDetail?.isAvailableAllPayments ?? false);
               preferences.setPaymentMethod(method: clientData?.clientDetail?.paymentType ?? '');
               preferences.setClientDataOnApp(showClientDataOnApp: clientData?.clientDetail?.showClientDataOnApp ?? false);
+              preferences.setDocumentScanOnApp(showDocumentScanOnApp: clientData?.clientDetail?.showDocumentScanOnApp ?? false);
               preferences.setPaymentMethodTypes(methods: clientData?.clientDetail?.availablePaymentTypes ?? []);
               preferences.setPaymentMethodCount(count: clientData?.clientDetail?.availablePaymentTypes.length.toString() ?? '0');
               preferences.setBusinessName(businessName: clientData?.clientDetail?.bussinessName ?? '');
@@ -793,8 +794,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 isSaleOn: preferences.getShowSale(),
                 retryLoading: false,
                 isAppOnMaintenance: preferences.getAppOnMaintenance(),
-                buttonEnglishText: response.data?.dataWebViewSettings?.buttonEnglishText,
-                buttonHebrewText: response.data?.dataWebViewSettings?.buttonHebrewText,
+                buttonEnglishText: response.data?.dataWebViewSettings?.buttonEnglishText ?? state.buttonEnglishText ?? '',
+                buttonHebrewText: response.data?.dataWebViewSettings?.buttonHebrewText ?? state.buttonHebrewText ?? '',
               ));
             } else {
               emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));

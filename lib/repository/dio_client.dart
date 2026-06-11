@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../data/model/res_model/refresh_token/refresh_token_model.dart';
 import '../data/services/locale_provider.dart';
 import '../ui/utils/constants/app_urls.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 
 class DioClient {
   final Dio _dio;
@@ -114,7 +114,7 @@ class DioClient {
     printData('accessToken_____${res.data?.accessToken ?? ''}');
     Options requestOptions = Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferencesHelper.getAuthToken()}'});
     requestOptions.headers = requestOptions.headers ?? {};
-    var response;
+    final Response<dynamic> response;
     switch (type) {
       case "GET":
         response = await _dio.get(path, queryParameters: queryParams, options: requestOptions);
@@ -125,6 +125,8 @@ class DioClient {
       case "PUT":
         response = await _dio.put(path, data: data, options: requestOptions, queryParameters: queryParams);
         break;
+      default:
+        throw UnsupportedError('Unsupported HTTP method: $type');
     }
     printData('res_______________________$response');
     return response.data;

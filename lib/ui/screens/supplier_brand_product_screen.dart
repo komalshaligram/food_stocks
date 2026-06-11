@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/product_stock_model/product_stock_model.dart';
 import 'package:food_stock/ui/widget/related_product_title.dart';
@@ -50,25 +50,64 @@ class SupplierBrandProductsScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     final String? brandName = args?[AppStrings.brandNameText];
     final String? brandId = args?[AppStrings.brandIdText];
+    final String? categoryId = args?[AppStrings.categoryIdString];
+    final String? categoryName = args?[AppStrings.categoryNameString];
     final String? supplierName = args?[AppStrings.supplierNameString];
     final String? supplierId = args?[AppStrings.supplierIdString];
+    final bool isCategoryMode = (categoryId ?? '').isNotEmpty;
     return BlocProvider(
       create: (context) => SupplierBrandProductsBloc()
-        ..add(SupplierBrandProductsEvent.getBrandProductsListEvent(context: context, supplierId: supplierId!, brandId: brandId!))
+        ..add(isCategoryMode
+            ? SupplierBrandProductsEvent.getCategoryProductsListEvent(context: context, supplierId: supplierId!, categoryId: categoryId!)
+            : SupplierBrandProductsEvent.getBrandProductsListEvent(context: context, supplierId: supplierId!, brandId: brandId!))
         ..add(SupplierBrandProductsEvent.getPermissionList(context: context))
         ..add(SupplierBrandProductsEvent.userApproveEvent(context: context))
         ..add(const SupplierBrandProductsEvent.getPreferencesDataEvent()),
-      child: SupplierBrandProductsScreenWidget(brandName: brandName, supplierId: supplierId, supplierName: supplierName, brandId: brandId),
+      child: SupplierBrandProductsScreenWidget(
+        filterName: isCategoryMode ? categoryName : brandName,
+        supplierId: supplierId,
+        supplierName: supplierName,
+        brandId: brandId,
+        categoryId: categoryId,
+        isCategoryMode: isCategoryMode,
+      ),
     );
   }
 }
 
 class SupplierBrandProductsScreenWidget extends StatelessWidget {
-  const SupplierBrandProductsScreenWidget({super.key, required this.brandName, required this.supplierId, required this.supplierName, required this.brandId});
-  final String? brandName;
+  const SupplierBrandProductsScreenWidget({
+    super.key,
+    required this.filterName,
+    required this.supplierId,
+    required this.supplierName,
+    required this.brandId,
+    required this.categoryId,
+    required this.isCategoryMode,
+  });
+  final String? filterName;
   final String? supplierId;
   final String? supplierName;
   final String? brandId;
+  final String? categoryId;
+  final bool isCategoryMode;
+
+  void _loadProducts(BuildContext context) {
+    if (isCategoryMode) {
+      context.read<SupplierBrandProductsBloc>().add(SupplierBrandProductsEvent.getCategoryProductsListEvent(context: context, supplierId: supplierId!, categoryId: categoryId!));
+    } else {
+      context.read<SupplierBrandProductsBloc>().add(SupplierBrandProductsEvent.getBrandProductsListEvent(context: context, supplierId: supplierId!, brandId: brandId!));
+    }
+  }
+
+  void _refreshProducts(BuildContext context) {
+    context.read<SupplierBrandProductsBloc>().add(SupplierBrandProductsEvent.refreshListEvent(
+          context: context,
+          supplierId: supplierId!,
+          brandId: isCategoryMode ? null : brandId,
+          categoryId: isCategoryMode ? categoryId : null,
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +123,7 @@ class SupplierBrandProductsScreenWidget extends StatelessWidget {
             preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
             child: CommonAppBar(
               bgColor: AppColors.pageColor,
-              title: '${brandName ?? ''} - ${supplierName ?? ''}',
+              title: '${filterName ?? ''} - ${supplierName ?? ''}',
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);
@@ -133,11 +172,7 @@ class SupplierBrandProductsScreenWidget extends StatelessWidget {
                                         }),
                                         enablePullUp: !state.isBottomOfProducts,
                                         onRefresh: () {
-                                          context.read<SupplierBrandProductsBloc>().add(SupplierBrandProductsEvent.refreshListEvent(
-                                                context: context,
-                                                supplierId: supplierId!,
-                                                brandId: brandId!,
-                                              ));
+                                          _refreshProducts(context);
                                           context.read<SupplierBrandProductsBloc>().add(const SupplierBrandProductsEvent.getPreferencesDataEvent());
                                         },
                                         child: state.isBrandProductGrid ? gridViewWidget(context, state) : listViewWidget(context, state)),
@@ -148,11 +183,7 @@ class SupplierBrandProductsScreenWidget extends StatelessWidget {
                   onNotification: (notification) {
                     if (notification.metrics.pixels > (notification.metrics.maxScrollExtent - 200)) {
                       if (!state.isLoadMore && !state.isProgress && !state.isBottomOfProducts) {
-                        context.read<SupplierBrandProductsBloc>().add(SupplierBrandProductsEvent.getBrandProductsListEvent(
-                              context: context,
-                              supplierId: supplierId!,
-                              brandId: brandId!,
-                            ));
+                        _loadProducts(context);
                       }
                     }
                     return true;
@@ -289,8 +320,8 @@ class SupplierBrandProductsScreenWidget extends StatelessWidget {
             minQuantity: product.sale?.saleMinQuantity,
             maxQuantity: product.sale?.saleMaxQuantity,
             isMixedSale: product.sale?.isMixedSale,
-            numberOfUnits: product?.numberOfUnit.toString(),
-            scaleType: product?.scaleType,
+            numberOfUnits: product.numberOfUnit.toString(),
+            scaleType: product.scaleType,
             onQuantityChanged: () => updateQty(context, state, index),
             onQuantityIncreaseTap: () => handleIncrease(context, state, index),
             onQuantityDecreaseTap: () => handleDecrease(context, state, index),
@@ -423,7 +454,7 @@ class SupplierBrandProductsScreenWidget extends StatelessWidget {
   Widget searchWidget(BuildContext context, SupplierBrandProductsBloc bloc, SupplierBrandProductsState state, {required String supplierId}) => CommonSearchWidget(
       onCloseTap: () {
         bloc.add(const SupplierBrandProductsEvent.changeCategoryExpansion(isOpened: false));
-        context.read<SupplierBrandProductsBloc>().add(SupplierBrandProductsEvent.getBrandProductsListEvent(context: context, supplierId: supplierId, brandId: brandId!));
+        _loadProducts(context);
       },
       isFilterTap: true,
       isCategoryExpand: state.isCategoryExpand,
@@ -787,11 +818,7 @@ class SupplierBrandProductsScreenWidget extends StatelessWidget {
                                             }
                                           },
                                           onCloseTap: () async {
-                                            context.read<SupplierBrandProductsBloc>().add(SupplierBrandProductsEvent.getBrandProductsListEvent(
-                                                  context: context1,
-                                                  supplierId: supplierId!,
-                                                  brandId: brandId!,
-                                                ));
+                                            _loadProducts(context1);
                                             Navigator.pop(context);
                                           }),
                                       state.isRelatedShimmering

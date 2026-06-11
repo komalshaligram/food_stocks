@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/data/model/res_model/get_return_by_id_res_model/get_return_by_id_res_model.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -249,7 +249,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           onTap: isDisabled
               ? null
               : () async {
-                  if (file != null && await file.exists() || file.path.contains("https")) {
+                  if (await file.exists() || file.path.contains("https")) {
                     uploadDriverProofBottomSheet(context: context, file: file, index: index, language: language, productIssueData: {}, selectedRadio: state.selectedRadioTile);
                     return;
                   }
@@ -1339,7 +1339,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                   child: Row(children: [
                     InkWell(
                       onTap: () async {
-                        if (state.proofFile != null && await state.proofFile.exists() || state.proofFile.path.contains("https")) {
+                        if (await state.proofFile.exists() || state.proofFile.path.contains("https")) {
                           uploadProofBottomSheet(
                             context: context,
                             file: state.proofFile,
@@ -1375,7 +1375,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     8.width,
                     InkWell(
                       onTap: () async {
-                        if (state.proofFile1 != null && await state.proofFile1.exists() || state.proofFile1.path.contains("https")) {
+                        if (await state.proofFile1.exists() || state.proofFile1.path.contains("https")) {
                           uploadProofBottomSheet(
                             context: context,
                             file: state.proofFile1,
@@ -1411,7 +1411,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     8.width,
                     InkWell(
                       onTap: () async {
-                        if (state.proofFile2 != null && await state.proofFile2.exists() || state.proofFile2.path.contains("https")) {
+                        if (await state.proofFile2.exists() || state.proofFile2.path.contains("https")) {
                           uploadProofBottomSheet(
                             context: context,
                             file: state.proofFile2,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../bloc/order_summary/order_summary_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/widget/custom_button_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
@@ -14,6 +14,7 @@ import '../widget/common_app_bar.dart';
 import '../widget/common_order_content_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
+import '../utils/first_supplier_order_helper.dart';
 
 class OrderSummaryRoute {
   static Widget get route => const OrderSummaryScreen();
@@ -221,6 +222,29 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             bGColor: AppColors.mainColor,
             height: 40,
             onPressed: () async {
+              final dialogResult = await showFirstSupplierOrderDialogIfNeeded(
+                context: context,
+                language: state.language,
+                isFirstOrderFromSupplier: state.tempList[index].isFirstOrderFromSupplier ?? false,
+                supplierDisplayName: state.tempList[index].suppliers?.contactName ?? '',
+                messageTemplate: state.firstSupplierOrderMessageTemplate,
+              );
+              if (!context.mounted || dialogResult == FirstOrderDialogResult.cancelled) return;
+
+              if (dialogResult == FirstOrderDialogResult.confirmed) {
+                await navigateToVerifyClientDataScreen(
+                  context: context,
+                  nextRouteName: RouteDefine.basketSummaryScreen.name,
+                  nextRouteArgs: {
+                    AppStrings.getCartListString: state.cartItemList,
+                    AppStrings.orderBySupplierId: state.tempList[index].id,
+                    AppStrings.isSupplierSingle: 'No',
+                    AppStrings.totalSupplier: state.tempList.length,
+                  },
+                );
+                return;
+              }
+
               Navigator.pushNamed(context, RouteDefine.basketSummaryScreen.name, arguments: {
                 AppStrings.getCartListString: state.cartItemList,
                 AppStrings.orderBySupplierId: state.tempList[index].id,

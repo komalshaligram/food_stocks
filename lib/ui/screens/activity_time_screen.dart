@@ -7,7 +7,7 @@ import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../bloc/activity_time/activity_time_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/constants/app_strings.dart';

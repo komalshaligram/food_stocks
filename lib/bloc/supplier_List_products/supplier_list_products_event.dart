@@ -97,4 +97,6 @@ class SupplierListProductsEvent with _$SupplierListProductsEvent {
 
   /// Applies [cartQuantities] to list rows and clears detail-only fields (supplier/sale selection) so reopening the sheet runs supplier auto-select and default qty 1 again.
   const factory SupplierListProductsEvent.applyListCartQuantitiesEvent({required Map<String, int> cartQuantities}) = _applyListCartQuantitiesEvent;
+
+  const factory SupplierListProductsEvent.getSupplierDeliveryScheduleEvent({required BuildContext context}) = _getSupplierDeliveryScheduleEvent;
 }

@@ -22,7 +22,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'constants/app_img_path.dart';
 import 'constants/app_urls.dart';
@@ -244,10 +244,10 @@ bool isValidIsraeliID(String id) {
 Future<CroppedFile?> cropImage({required String path, CropStyle shape = CropStyle.rectangle, int quality = 100, bool? isLogoCrop = false}) async {
   return await ImageCropper().cropImage(
     sourcePath: path,
-    cropStyle: shape,
     compressQuality: quality,
     uiSettings: [
       AndroidUiSettings(
+        cropStyle: shape,
         activeControlsWidgetColor: AppColors.mainColor,
         cropFrameColor: AppColors.greyColor,
         initAspectRatio: isLogoCrop ?? false ? CropAspectRatioPreset.ratio16x9 : CropAspectRatioPreset.square,
@@ -259,6 +259,7 @@ Future<CroppedFile?> cropImage({required String path, CropStyle shape = CropStyl
         toolbarWidgetColor: AppColors.whiteColor,
       ),
       IOSUiSettings(
+        cropStyle: shape,
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: true,
         hidesNavigationBar: true,
@@ -598,3 +599,25 @@ Widget invoiceOrderNumberWidget(String title) => Stack(alignment: Alignment.bott
         child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
       ),
     ]);
+
+String weekdayLabel(BuildContext context, int day) {
+  final l10n = AppLocalizations.of(context)!;
+  switch (day) {
+    case 0:
+      return l10n.sunday;
+    case 1:
+      return l10n.monday;
+    case 2:
+      return l10n.tuesday;
+    case 3:
+      return l10n.wednesday;
+    case 4:
+      return l10n.thursday;
+    case 5:
+      return l10n.friday_and_holiday_eves;
+    case 6:
+      return l10n.saturday_and_holidays;
+    default:
+      return '';
+  }
+}

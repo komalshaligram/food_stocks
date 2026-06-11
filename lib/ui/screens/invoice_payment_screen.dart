@@ -1,7 +1,7 @@
 import 'dart:ui' as widgets;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:food_stock/ui/screens/product_details_screen.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';

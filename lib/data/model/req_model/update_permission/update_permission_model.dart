@@ -37,6 +37,7 @@ class AccountPermissions with _$AccountPermissions {
     bool? canSeeAndUpdateTimesInfo,
     bool? canSeeInvoices,
     bool? returns,
+    bool? canScanDocuments,
   }) = _AccountPermissions;
 
   factory AccountPermissions.fromJson(Map<String, dynamic> json) => _$AccountPermissionsFromJson(json);

@@ -35,7 +35,7 @@ class WalletState with _$WalletState {
         year: 2020,
         yearList: [],
         currentDate: '',
-        balanceSheetList: AllWalletTransactionResModel(),
+        balanceSheetList: const AllWalletTransactionResModel(),
         language: '',
         balance: 0,
         lastMonthExpense: 0,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/widget/profile_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/sub_users_profile/sub_users_profile_bloc.dart';
@@ -55,7 +55,9 @@ class SubUserProfileScreenWidget extends StatelessWidget {
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
               bgColor: AppColors.pageColor,
-              title: AppLocalizations.of(context)!.new_sub_user,
+              title: (state.isUpdate || state.isEnable)
+                  ? AppLocalizations.of(context)!.edit_sub_user
+                  : AppLocalizations.of(context)!.new_sub_user,
               iconData: Icons.arrow_back_ios_sharp,
               onTap: () {
                 Navigator.pop(context);

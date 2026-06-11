@@ -16,7 +16,7 @@ import '../../data/model/res_model/get_all_sub_user/get_sub_user_res_model.dart'
 import '../../data/model/res_model/sub_user/sub_user_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import 'dart:io';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';

@@ -1,0 +1,28 @@
+{
+  "buildFiles": [
+    "/Users/komal-sit/.shorebird/bin/cache/flutter/2e1bcd18e2dc3b8251dc0671085c6518d37e16ad/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/komal-sit/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/komal-sit/Documents/Projects/30-06-2025/food_stocks/android/app/.cxx/RelWithDebInfo/2j3g4u2b/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/komal-sit/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/komal-sit/Documents/Projects/30-06-2025/food_stocks/android/app/.cxx/RelWithDebInfo/2j3g4u2b/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {},
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/Users/komal-sit/Library/Android/sdk/ndk/28.0.13004108/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/Users/komal-sit/Library/Android/sdk/ndk/28.0.13004108/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": []
+}

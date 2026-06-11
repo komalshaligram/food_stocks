@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:food_stock/ui/widget/related_product_title.dart';
 import '../../bloc/reorder/reorder_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../data/model/product_stock_model/product_stock_model.dart';
 import '../../data/model/res_model/related_product_res_model/related_product_res_model.dart';
 import '../../ui/utils/constants/app_img_path.dart';
@@ -265,8 +265,8 @@ class ReorderScreenWidget extends StatelessWidget {
               minQuantity: product.sale?.saleMinQuantity,
               maxQuantity: product.sale?.saleMaxQuantity,
               isMixedSale: product.sale?.isMixedSale,
-              numberOfUnits: product?.numberOfUnit.toString(),
-              scaleType: product?.scaleType,
+              numberOfUnits: product.numberOfUnit.toString(),
+              scaleType: product.scaleType,
               onQuantityChanged: () => _updateQuantity(context: context, state: state, index: index),
               onQuantityIncreaseTap: () => _increaseQuantity(context: context, state: state, index: index),
               onQuantityDecreaseTap: () => _decreaseQuantity(context: context, state: state, index: index),
@@ -301,7 +301,7 @@ class ReorderScreenWidget extends StatelessWidget {
               isGuestUser: false,
               isPesach: product.isPesach,
               numberOfUnits: product.numberOfUnit.toString(),
-              scaleType: product?.scaleType,
+              scaleType: product.scaleType,
               lowStock: product.lowStock.toString(),
               productStock: product.productStock.toString(),
               productImage: product.mainImage ?? '',
