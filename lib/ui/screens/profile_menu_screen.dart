@@ -18,6 +18,7 @@ import '../utils/constants/app_img_path.dart';
 import '../utils/constants/app_urls.dart';
 import '../widget/common_alert_dialog.dart';
 import '../widget/common_dialog_with_one_button.dart';
+import '../widget/customer_service_contact_widget.dart';
 
 class ProfileMenuRoute {
   static Widget get route => const ProfileMenuScreen();
@@ -74,49 +75,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             backgroundColor: AppColors.pageColor,
             body: SafeArea(
               child: Column(mainAxisSize: MainAxisSize.max, children: [
-                10.height,
-                Container(
-                  height: 110,
-                  width: double.maxFinite,
-                  padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        border: Border.all(color: AppColors.whiteColor, width: 0.5),
-                        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
-                        shape: BoxShape.circle,
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: state.userImageUrl.isNotEmpty
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(AppConstants.radius_20),
-                              child: CachedNetworkImage(
-                                  imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
-                                  fit: BoxFit.fill,
-                                  placeholder: (context, url) => const CupertinoActivityIndicator(),
-                                  errorWidget: (context, url, error) {
-                                    return Container(color: AppColors.whiteColor);
-                                  }),
-                            )
-                          : Container(
-                              decoration: BoxDecoration(border: Border.all(color: AppColors.whiteColor, width: 5), borderRadius: BorderRadius.circular(AppConstants.radius_40)),
-                              child: SvgPicture.asset(AppImagePath.placeholderProfile, width: 80, height: 80, fit: BoxFit.scaleDown),
-                            ),
-                    ),
-                    Expanded(child: Text(state.userName, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_20, color: AppColors.blackColor))),
-                    state.clubAgentId == AppStrings.clubAgentIdText
-                        ? Image.asset(
-                            AppImagePath.clubAgentBlueLogo,
-                            fit: BoxFit.fill,
-                            width: 150,
-                            height: 80,
-                          )
-                        : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.cover, height: 90, width: 90)
-                  ]),
-                ),
+                12.height,
+                _buildProfileHeader(state),
                 Expanded(
                   child: Stack(children: [
                     SingleChildScrollView(
@@ -124,120 +84,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                       child: AnimationLimiter(
                         child: Column(
                             children: AnimationConfiguration.toStaggeredList(
-                                duration: const Duration(seconds: 1),
+                                duration: const Duration(milliseconds: 400),
                                 childAnimationBuilder: (widget) => SlideAnimation(
-                                      duration: const Duration(seconds: 1),
-                                      verticalOffset: MediaQuery.of(context).size.height / 5,
+                                      duration: const Duration(milliseconds: 400),
+                                      verticalOffset: 24,
                                       child: FadeInAnimation(child: widget),
                                     ),
-                                children: [
-                              15.height,
-                              state.isCanScanDocuments
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.certificate_scanning,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.certificateScanningScreen.name);
-                                      })
-                                  : 0.width,
-                              state.isSubUserSeeOrder
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.my_orders,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
-                                      })
-                                  : 0.width,
-                              state.isCanSeeInvoices
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.my_accounting_card,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.myAccountingCardScreen.name);
-                                      })
-                                  : 0.width,
-                              state.isSubUserSeeReturns
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.returns,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
-                                      })
-                                  : 0.width,
-                              state.isSubUserUpdateBusinessInfo
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.business_details,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.profileScreen.name, arguments: {AppStrings.isUpdateParamString: true});
-                                      })
-                                  : 0.width,
-                              state.isSubUserUpdateAdditionalInfo
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.more_details,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.moreDetailsScreen.name, arguments: {AppStrings.isUpdateParamString: true});
-                                      })
-                                  : 0.width,
-                              state.isSubUserUpdateTimeInfo
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.activity_time,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.activityTimeScreen.name, arguments: {AppStrings.isUpdateParamString: true});
-                                      })
-                                  : 0.width,
-                              state.isSubUserSeeFormsFiles
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.files,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name, arguments: {
-                                          AppStrings.isUpdateParamString: true,
-                                          AppStrings.isRegisterFileString: false,
-                                        });
-                                      })
-                                  : 0.width,
-                              state.isSubUserCanManageSubUser
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.sub_user,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.subUsersScreen.name);
-                                      })
-                                  : 0.width,
-                              state.isSubUserCanManageSubUser
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.manage_credit_card,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.manageCreditCardScreen.name);
-                                      })
-                                  : 0.width,
-                              profileMenuTiles(
-                                  title: AppLocalizations.of(context)!.bank_transfer_information,
-                                  onTap: () {
-                                    Navigator.pushNamed(context, RouteDefine.bankTransferScreen.name);
-                                  }),
-                              state.isAgent!
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.my_clients,
-                                      onTap: () {
-                                        Navigator.pushNamed(context, RouteDefine.myClientsScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
-                                      })
-                                  : 0.width,
-                              state.isAgentSwitchToAssignedStore!
-                                  ? profileMenuTiles(
-                                      title: AppLocalizations.of(context)!.switch_back_to_agent_view,
-                                      onTap: () {
-                                        if (state.isLoading) return;
-                                        context.read<ProfileMenuBloc>().add(ProfileMenuEvent.switchAccountEvent(context: context));
-                                      })
-                                  : 0.width,
-                              profileMenuTiles(
-                                  title: AppLocalizations.of(context)!.log_out,
-                                  onTap: () {
-                                    !state.isLogOutProcess ? logOutDialog(context: context, directionality: state.language) : const CupertinoActivityIndicator();
-                                  }),
-                              menuSwitchTile(
-                                  title: AppLocalizations.of(context)!.app_language,
-                                  isHebrewLang: state.isHebrewLanguage,
-                                  onChanged: (bool value) {
-                                    context.read<ProfileMenuBloc>().add(ProfileMenuEvent.changeAppLanguageEvent(context: context));
-                                  }),
-                              AppConstants.bottomNavSpace.height,
-                            ])),
+                                children: _buildMenuContent(context, state))),
                       ),
                     ),
                     state.isLoading
@@ -250,7 +103,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 10.height,
                 Text(
                   '${AppLocalizations.of(context)!.application_version}${' '}${state.applicationVersion} (${state.buildNumber})',
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor.withValues(alpha: 0.45)),
                 ),
                 10.height,
               ]),
@@ -261,60 +114,321 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget profileMenuTiles({required title, required void Function() onTap, bool isDelete = false}) {
+  static const double _menuHorizontalMargin = 16;
+  static const double _menuGroupRadius = 16;
+
+  Widget _buildProfileHeader(ProfileMenuState state) {
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: _menuHorizontalMargin),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(2.5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: AppColors.appMainGradientColor,
+            ),
+            child: Container(
+              height: 48,
+              width: 48,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.whiteColor),
+              clipBehavior: Clip.hardEdge,
+              child: state.userImageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const CupertinoActivityIndicator(),
+                      errorWidget: (context, url, error) => SvgPicture.asset(AppImagePath.placeholderProfile, fit: BoxFit.cover),
+                    )
+                  : SvgPicture.asset(AppImagePath.placeholderProfile, fit: BoxFit.scaleDown),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Text(
+              state.userName,
+              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.blackColor),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: 8),
+          state.clubAgentId == AppStrings.clubAgentIdText
+              ? Image.asset(AppImagePath.clubAgentBlueLogo, fit: BoxFit.contain, width: 48, height: 48)
+              : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.contain, width: 48, height: 48),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildMenuContent(BuildContext context, ProfileMenuState state) {
+    final l10n = AppLocalizations.of(context)!;
+    final activityTiles = <Widget>[];
+    final settingsTiles = <Widget>[];
+    final otherTiles = <Widget>[];
+
+    void addTile(List<Widget> group, {required String title, required VoidCallback onTap, required IconData icon, bool isDestructive = false}) {
+      group.add(profileMenuTile(title: title, onTap: onTap, icon: icon, isDestructive: isDestructive));
+    }
+
+    if (state.isCanScanDocuments) {
+      addTile(activityTiles, title: l10n.certificate_scanning, icon: Icons.document_scanner_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.certificateScanningScreen.name);
+      });
+    }
+    if (state.isSubUserSeeOrder) {
+      addTile(activityTiles, title: l10n.my_orders, icon: Icons.receipt_long_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+      });
+    }
+    if (state.isCanSeeInvoices) {
+      addTile(activityTiles, title: l10n.my_accounting_card, icon: Icons.account_balance_wallet_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.myAccountingCardScreen.name);
+      });
+    }
+    if (state.isSubUserSeeReturns) {
+      addTile(activityTiles, title: l10n.returns, icon: Icons.assignment_return_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+      });
+    }
+
+    if (state.isSubUserUpdateBusinessInfo) {
+      addTile(settingsTiles, title: l10n.business_details, icon: Icons.person_outline_rounded, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.profileScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+      });
+    }
+    if (state.isSubUserUpdateAdditionalInfo) {
+      addTile(settingsTiles, title: l10n.more_details, icon: Icons.storefront_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.moreDetailsScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+      });
+    }
+    if (state.isSubUserUpdateTimeInfo) {
+      addTile(settingsTiles, title: l10n.activity_time, icon: Icons.schedule_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.activityTimeScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+      });
+    }
+    if (state.isSubUserSeeFormsFiles) {
+      addTile(settingsTiles, title: l10n.files, icon: Icons.folder_open_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name, arguments: {
+          AppStrings.isUpdateParamString: true,
+          AppStrings.isRegisterFileString: false,
+        });
+      });
+    }
+    if (state.isSubUserCanManageSubUser) {
+      addTile(settingsTiles, title: l10n.sub_user, icon: Icons.people_outline_rounded, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.subUsersScreen.name);
+      });
+      addTile(settingsTiles, title: l10n.manage_credit_card, icon: Icons.credit_card_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.manageCreditCardScreen.name);
+      });
+    }
+
+    addTile(otherTiles, title: l10n.bank_transfer_information, icon: Icons.account_balance_outlined, onTap: () {
+      Navigator.pushNamed(context, RouteDefine.bankTransferScreen.name);
+    });
+    if (state.isAgent!) {
+      addTile(otherTiles, title: l10n.my_clients, icon: Icons.groups_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.myClientsScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+      });
+    }
+    addTile(otherTiles, title: l10n.customer_service, icon: Icons.headset_mic_outlined, onTap: () {
+      showCustomerServiceBottomSheet(
+        context: context,
+        customerServicePhone: state.customerServicePhone,
+        customerServiceWhatsApp: state.customerServiceWhatsApp,
+      );
+    });
+    if (state.isAgentSwitchToAssignedStore!) {
+      addTile(otherTiles, title: l10n.switch_back_to_agent_view, icon: Icons.swap_horiz_rounded, onTap: () {
+        if (state.isLoading) return;
+        context.read<ProfileMenuBloc>().add(ProfileMenuEvent.switchAccountEvent(context: context));
+      });
+    }
+
+    final sections = <Widget>[
+      16.height,
+      if (activityTiles.isNotEmpty) profileMenuGroup(children: activityTiles),
+      if (settingsTiles.isNotEmpty) profileMenuGroup(children: settingsTiles),
+      if (otherTiles.isNotEmpty) profileMenuGroup(children: otherTiles),
+      menuSwitchTile(
+        title: l10n.app_language,
+        isHebrewLang: state.isHebrewLanguage,
+        onChanged: (bool value) {
+          context.read<ProfileMenuBloc>().add(ProfileMenuEvent.changeAppLanguageEvent(context: context));
+        },
+      ),
+      profileMenuGroup(
+        children: [
+          profileMenuTile(
+            title: l10n.log_out,
+            icon: Icons.logout_rounded,
+            isDestructive: true,
+            onTap: () {
+              if (!state.isLogOutProcess) logOutDialog(context: context, directionality: state.language);
+            },
+          ),
+        ],
+      ),
+      AppConstants.bottomNavSpace.height,
+    ];
+
+    return sections;
+  }
+
+  Widget profileMenuGroup({required List<Widget> children}) {
+    if (children.isEmpty) return 0.width;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(_menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(_menuGroupRadius),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(mainAxisSize: MainAxisSize.min, children: _intersperseDividers(children)),
+    );
+  }
+
+  List<Widget> _intersperseDividers(List<Widget> children) {
+    if (children.length <= 1) return children;
+    final result = <Widget>[];
+    for (var i = 0; i < children.length; i++) {
+      result.add(children[i]);
+      if (i < children.length - 1) {
+        result.add(Divider(height: 1, thickness: 1, indent: 68, color: AppColors.lightBorderColor.withValues(alpha: 0.6)));
+      }
+    }
+    return result;
+  }
+
+  Widget profileMenuTile({required String title, required VoidCallback onTap, required IconData icon, bool isDestructive = false}) {
+    final accentColor = isDestructive ? AppColors.redColor : AppColors.mainColor;
+    return Material(
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(AppConstants.padding_15),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: isDelete ? AppColors.redColor : AppColors.blackColor)),
-            Icon(isDelete ? Icons.delete : Icons.arrow_forward_ios, color: isDelete ? AppColors.redColor : AppColors.blackColor),
-          ]),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+          child: Row(
+            children: [
+              Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: accentColor.withValues(alpha: isDestructive ? 0.1 : 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, size: 21, color: accentColor),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_15,
+                    color: isDestructive ? AppColors.redColor : AppColors.blackColor.withValues(alpha: 0.88),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                size: 22,
+                color: isDestructive ? AppColors.redColor.withValues(alpha: 0.5) : AppColors.blackColor.withValues(alpha: 0.25),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
+  Widget profileMenuTiles({required title, required void Function() onTap, bool isDelete = false}) {
+    return profileMenuTile(
+      title: title,
+      onTap: onTap,
+      icon: isDelete ? Icons.delete_outline : Icons.chevron_right,
+      isDestructive: isDelete,
+    );
+  }
+
   Widget menuSwitchTile({required String title, required bool isHebrewLang, required void Function(bool)? onChanged}) {
     return Container(
+      margin: const EdgeInsets.fromLTRB(_menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+        borderRadius: BorderRadius.circular(_menuGroupRadius),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-      child: InkWell(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: () {
-          onChanged?.call(true);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_8),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-            SizedBox(
-              width: 45,
-              child: Transform.scale(
-                scaleX: 0.84,
-                scaleY: 0.8,
-                child: CupertinoSwitch(
-                  value: isHebrewLang,
-                  onChanged: onChanged,
-                  activeTrackColor: AppColors.mainColor,
-                  thumbColor: AppColors.whiteColor,
-                  inactiveTrackColor: AppColors.lightBorderColor,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(_menuGroupRadius),
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onTap: () => onChanged?.call(true),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            child: Row(
+              children: [
+                Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.mainColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(Icons.language_rounded, size: 21, color: AppColors.mainColor),
                 ),
-              ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_15,
+                      color: AppColors.blackColor.withValues(alpha: 0.88),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Transform.scale(
+                  scale: 0.88,
+                  child: CupertinoSwitch(
+                    value: isHebrewLang,
+                    onChanged: onChanged,
+                    activeTrackColor: AppColors.mainColor,
+                    thumbColor: AppColors.whiteColor,
+                    inactiveTrackColor: AppColors.lightBorderColor,
+                  ),
+                ),
+              ],
             ),
-          ]),
+          ),
         ),
       ),
     );

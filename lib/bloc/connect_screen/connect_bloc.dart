@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_stock/data/model/res_model/guest_user_login_model/guest_user_login_res_model.dart';
+import 'package:food_stock/ui/utils/app_utils.dart';
 import '../../data/storage/shared_preferences_helper.dart';
+import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_urls.dart';
 
 part 'connect_event.dart';
 part 'connect_state.dart';
@@ -13,11 +18,57 @@ part 'connect_bloc.freezed.dart';
 class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
   ConnectBloc() : super(ConnectState.initial()) {
     on<ConnectEvent>((event, emit) async {
-      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
       if (event is _logInAsGuest) {
-        preferences.setIsGuestUser(isGuestUser: true);
-        Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: 'storeScreen'});
+        if (state.isLoading) return;
+        emit(state.copyWith(isLoading: true));
+
+        final preferences = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
+        try {
+          await preferences.setIsGuestUser(isGuestUser: true);
+          final res = await DioClient(event.context)
+              .post(AppUrlEndPoints.guestLogin);
+
+          printData("check here guest user response ${res}");
+          final response = GuestUserLoginResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            await preferences.setAuthToken(
+                accToken: response.data?.tokenData.accessToken ?? '');
+            await preferences.setRefreshToken(
+                refToken: response.data?.tokenData.refreshToken ?? '');
+            emit(state.copyWith(isLoading: false));
+            if (event.context.mounted) {
+              await Navigator.pushNamed(
+                  event.context, RouteDefine.bottomNavScreen.name,
+                  arguments: {
+                    AppStrings.pushNavigationString: 'homeScreen'
+                  });
+            }
+          } else {
+            await preferences.setIsGuestUser(isGuestUser: false);
+            emit(state.copyWith(isLoading: false));
+            if (event.context.mounted) {
+              CustomSnackBar.showSnackBar(
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    response.message?.toLocalization() ?? response.message!,
+                    event.context),
+                type: SnackBarType.failure,
+              );
+            }
+          }
+        } catch (e) {
+          await preferences.setIsGuestUser(isGuestUser: false);
+          emit(state.copyWith(isLoading: false));
+          if (event.context.mounted) {
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(
+                  e.toString(), event.context),
+              type: SnackBarType.failure,
+            );
+          }
+        }
       }
     });
   }

@@ -1,17 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/categories_permission/categories_permission_bloc.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-import '../../ui/utils/app_utils.dart';
-import '../../ui/widget/order_summary_screen_shimmer_widget.dart';
+import '../../ui/widget/permission_screen_widgets.dart';
 import '../../ui/widget/sized_box_widget.dart';
+import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
-import '../utils/constants/app_styles.dart';
 import '../widget/common_app_bar.dart';
-import '../widget/custom_button_widget.dart';
 
 class CategoriesPermissionRoute {
   static Widget get route => const CategoriesPermissionScreen();
@@ -24,7 +21,8 @@ class CategoriesPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => CategoriesPermissionBloc()..add(CategoriesPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
+      create: (context) => CategoriesPermissionBloc()
+        ..add(CategoriesPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
       child: const CategoriesPermissionScreenWidget(),
     );
   }
@@ -36,146 +34,87 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CategoriesPermissionBloc bloc = context.read<CategoriesPermissionBloc>();
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocBuilder<CategoriesPermissionBloc, CategoriesPermissionState>(builder: (context, state) {
       return Scaffold(
         backgroundColor: AppColors.pageColor,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-              bgColor: AppColors.pageColor,
-              title: AppLocalizations.of(context)!.categories_permissions,
-              iconData: Icons.arrow_back_ios_sharp,
-              onTap: () {
-                Navigator.pop(context);
-              }),
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15),
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: state.isShimmering
-                  ? const OrderSummaryScreenShimmerWidget(itemCount: 10, containerHeight: 40)
-                  : !state.isShimmering && state.categoriesPermissionList.isEmpty
-                      ? SizedBox(height: getScreenHeight(context) * 0.8, child: noDataWidget(AppLocalizations.of(context)!.no_data))
-                      : Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.end, children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: CustomButtonWidget(
-                                width: 150,
-                                height: 40,
-                                fontSize: AppConstants.font_14,
-                                buttonText: !state.isSelectAll ? AppLocalizations.of(context)!.select_all.toUpperCase() : AppLocalizations.of(context)!.select_none.toUpperCase(),
-                                bGColor: AppColors.mainColor,
-                                onPressed: () {
-                                  bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, subCategoriesIndex: -2, categoriesIndex: -2));
-                                },
-                                fontColors: AppColors.whiteColor,
-                              ),
-                            ),
-                          ),
-                          5.height,
-                          ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: state.categoriesPermissionList.length,
-                              itemBuilder: (context, index) {
-                                return Column(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.end, children: [
-                                  menuSwitchTile(
-                                      title: state.categoriesPermissionList[index].category?.categoryName ?? '',
-                                      context: context,
-                                      isEnable: state.categoriesPermissionList[index].isAllowed ?? false,
-                                      isSelectAll: state.isSelectAll,
-                                      onChanged: (bool value) {
-                                        bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: -1));
-                                      }),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: AppConstants.padding_15),
-                                    child: SizedBox(
-                                      width: getScreenWidth(context) * 0.8,
-                                      child: ListView.builder(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.vertical,
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          itemCount: state.categoriesPermissionList[index].subCategories?.length,
-                                          itemBuilder: (context, index1) {
-                                            return menuSwitchTile(
-                                                title: state.categoriesPermissionList[index].subCategories?[index1].subCategoryData?.subCategoryName ?? '',
-                                                context: context,
-                                                isEnable: state.categoriesPermissionList[index].subCategories?[index1].isAllowed ?? false,
-                                                isSelectAll: state.isSelectAll,
-                                                isSubCategories: true,
-                                                onChanged: (bool value) {
-                                                  bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: index1));
-                                                });
-                                          }),
-                                    ),
-                                  )
-                                ]);
-                              }),
-                        ]),
-            ),
+            bgColor: AppColors.pageColor,
+            title: l10n.categories_permissions,
+            iconData: Icons.arrow_back_ios_new_rounded,
+            trailingWidget: PermissionScreenWidgets.appBarIcon(Icons.category_outlined),
+            onTap: () => Navigator.pop(context),
           ),
         ),
+        body: SafeArea(
+          child: state.isShimmering
+              ? const PermissionScreenShimmerWidget(itemCount: 6)
+              : state.categoriesPermissionList.isEmpty
+                  ? Center(child: noDataWidget(l10n.no_data))
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(
+                        PermissionScreenWidgets.horizontalPadding,
+                        8,
+                        PermissionScreenWidgets.horizontalPadding,
+                        100,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          PermissionScreenWidgets.selectAllButton(
+                            text: !state.isSelectAll ? l10n.select_all.toUpperCase() : l10n.select_none.toUpperCase(),
+                            onPressed: () {
+                              bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, subCategoriesIndex: -2, categoriesIndex: -2));
+                            },
+                          ),
+                          16.height,
+                          ...List.generate(state.categoriesPermissionList.length, (index) {
+                            final category = state.categoriesPermissionList[index];
+                            final subCategories = category.subCategories ?? [];
+                            final tiles = <Widget>[
+                              PermissionScreenWidgets.switchTile(
+                                title: category.category?.categoryName ?? '',
+                                value: category.isAllowed ?? false,
+                                onChanged: (_) {
+                                  bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: -1));
+                                },
+                              ),
+                              ...List.generate(subCategories.length, (subIndex) {
+                                return PermissionScreenWidgets.switchTile(
+                                  title: subCategories[subIndex].subCategoryData?.subCategoryName ?? '',
+                                  value: subCategories[subIndex].isAllowed ?? false,
+                                  isSubItem: true,
+                                  onChanged: (_) {
+                                    bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: subIndex));
+                                  },
+                                );
+                              }),
+                            ];
+
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: index < state.categoriesPermissionList.length - 1 ? 12 : 0),
+                              child: PermissionScreenWidgets.formCard(
+                                child: Column(
+                                  children: PermissionScreenWidgets.intersperseDividers(tiles, indent: 28),
+                                ),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+        ),
         bottomNavigationBar: state.isShimmering || state.categoriesPermissionList.isEmpty
-            ? const SizedBox()
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_20),
-                child: CustomButtonWidget(
-                  buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
-                  bGColor: AppColors.mainColor,
-                  isLoading: state.isUpdateProcess,
-                  onPressed: () {
-                    bloc.add(CategoriesPermissionEvent.updateCategoriesPermissionEvent(context: context));
-                  },
-                  fontColors: AppColors.whiteColor,
-                ),
+            ? null
+            : PermissionScreenWidgets.bottomSaveBar(
+                text: l10n.save.toUpperCase(),
+                isLoading: state.isUpdateProcess,
+                onPressed: () => bloc.add(CategoriesPermissionEvent.updateCategoriesPermissionEvent(context: context)),
               ),
       );
     });
-  }
-
-  Widget menuSwitchTile({
-    required String title,
-    required BuildContext context,
-    required bool isEnable,
-    required void Function(bool)? onChanged,
-    bool isSubCategories = false,
-    bool isSelectAll = false,
-  }) {
-    return Container(
-      decoration: BoxDecoration(color: AppColors.whiteColor, border: Border(bottom: BorderSide(color: AppColors.greyColor.withValues(alpha: 0.4)))),
-      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
-      child: InkWell(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: () {
-          onChanged?.call(true);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_8),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(child: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_17, color: AppColors.greyColor))),
-            SizedBox(
-              width: 45,
-              child: Transform.scale(
-                scaleX: 1,
-                scaleY: 1,
-                child: CupertinoSwitch(
-                  onChanged: onChanged,
-                  activeTrackColor: AppColors.mainColor,
-                  thumbColor: AppColors.whiteColor,
-                  inactiveTrackColor: AppColors.lightBorderColor,
-                  value: isEnable,
-                ),
-              ),
-            ),
-          ]),
-        ),
-      ),
-    );
   }
 }

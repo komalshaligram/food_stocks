@@ -754,7 +754,7 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                                 );
                                 bloc.add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: radioValue));
 
-                                final newState = await bloc.stream.firstWhere((s) => s.productIssueData != null);
+                                final newState = await bloc.stream.firstWhere((s) => s.productIssueData.isNotEmpty);
                                 productProblemBottomSheet(
                                     productIssueData: newState.productIssueData,
                                     radioValue: radioValue,

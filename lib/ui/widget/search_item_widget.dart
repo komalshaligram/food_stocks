@@ -135,11 +135,7 @@ class SearchItemWidget extends StatelessWidget {
           ),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             SizedBox(
-              height: getItemHeight(context, false) == 350
-                  ? 120
-                  : getItemHeight(context, false) == 260
-                      ? 100
-                      : 60,
+              height: getSearchItemImageHeight(context),
               width: getItemWidth(context) == 190
                   ? 130
                   : getItemWidth(context) == 160

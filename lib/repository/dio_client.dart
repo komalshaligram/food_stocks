@@ -4,23 +4,69 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
+import 'package:food_stock/main.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
-import 'package:provider/provider.dart';
 import '../../ui/widget/no_internet_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../data/model/res_model/refresh_token/refresh_token_model.dart';
 import '../data/services/locale_provider.dart';
 import '../ui/utils/constants/app_urls.dart';
-import 'package:food_stock/l10n/generated/app_localizations.dart';
+
+bool _isLoggingOut = false;
+
+Future<void> forceLogoutToConnect({
+  String? snackbarMessage,
+  SnackBarType snackbarType = SnackBarType.failure,
+}) async {
+  if (_isLoggingOut) return;
+  _isLoggingOut = true;
+
+  try {
+    final preferences = SharedPreferencesHelper(
+      prefs: await SharedPreferences.getInstance(),
+    );
+    await preferences.setUserLoggedIn();
+
+    final navContext = navigatorKey.currentContext;
+    if (navContext != null && navContext.mounted) {
+      await Provider.of<LocaleProvider>(navContext, listen: false)
+          .setAppLocale(locale: const Locale(AppStrings.hebrewString));
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final nav = navigatorKey.currentState;
+      if (nav == null) return;
+
+      nav.pushNamedAndRemoveUntil(
+        RouteDefine.connectScreen.name,
+        (_) => false,
+      );
+
+      if (snackbarMessage != null) {
+        final context = navigatorKey.currentContext;
+        if (context != null && context.mounted) {
+          CustomSnackBar.showSnackBar(
+            context: context,
+            title: snackbarMessage,
+            type: snackbarType,
+          );
+        }
+      }
+    });
+  } catch (_) {
+    _isLoggingOut = false;
+  }
+}
 
 class DioClient {
   final Dio _dio;
   late final BuildContext _context;
-  bool isLogOut = false;
   bool isLoggedIn = true;
   bool isInProgress = false;
   DioClient(this._context)
@@ -30,16 +76,7 @@ class DioClient {
               connectTimeout: const Duration(minutes: 1),
               receiveTimeout: const Duration(minutes: 1),
               headers: {HttpHeaders.acceptHeader: Headers.jsonContentType, HttpHeaders.authorizationHeader: 'Bearer '},
-              validateStatus: (status) {
-                if (status == AppConstants.code_401) {
-                  return false;
-                } else if (status == AppConstants.code_501) {
-                  _handleLogout(_context);
-                  return true;
-                } else {
-                  return true;
-                }
-              },
+              validateStatus: (status) => status != AppConstants.code_401,
               contentType: Headers.jsonContentType,
               responseType: ResponseType.json),
         )..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
@@ -47,6 +84,13 @@ class DioClient {
           }, onResponse: (response, handler) async {
             if (kDebugMode) {
               printData("app response data ${response.data}");
+            }
+            if (response.statusCode == AppConstants.code_501) {
+              final navContext = navigatorKey.currentContext ?? _context;
+              final message = navContext.mounted
+                  ? AppLocalizations.of(navContext)!.account_not_approve
+                  : 'חשבון לא מאושר';
+              await forceLogoutToConnect(snackbarMessage: message);
             }
             return handler.next(response);
           }, onError: (DioException e, handler) {
@@ -135,15 +179,16 @@ class DioClient {
   void manageRefreshTokenWork(SharedPreferencesHelper preferencesHelper, Map<String, dynamic> queryParams) async {
     var response = await _dio.put(AppUrlEndPoints.logOutUrl, data: {"userId": preferencesHelper.getUserId()});
 
-    if (response.statusCode == AppConstants.code_200 && !isLogOut) {
-      isLogOut = true;
-      await preferencesHelper.setUserLoggedIn();
+    if (response.statusCode == AppConstants.code_200) {
       printData('Token Expired = ${response.data}');
-      await Provider.of<LocaleProvider>(_context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
-      Navigator.pushNamedAndRemoveUntil(_context, RouteDefine.connectScreen.name, (Route route) => route.isFirst);
-
-      ScaffoldMessenger.of(_context).hideCurrentSnackBar();
-      CustomSnackBar.showSnackBar(context: _context, title: AppLocalizations.of(_context)!.logged_out_successfully, type: SnackBarType.success);
+      final navContext = navigatorKey.currentContext ?? _context;
+      final message = navContext.mounted
+          ? AppLocalizations.of(navContext)!.logged_out_successfully
+          : '';
+      await forceLogoutToConnect(
+        snackbarMessage: message.isNotEmpty ? message : null,
+        snackbarType: SnackBarType.success,
+      );
     }
   }
 
@@ -324,13 +369,9 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
           return ErrorEntity(code: 500, message: AppLocalizations.of(context)!.server_internal_error);
 
         case 501:
-          // Handle 501 error: Show message, log out and redirect to login screen
-          printData("come out here for fail");
-
-          CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.account_not_approve, type: SnackBarType.failure);
-          _handleLogout(context);
-          // Perform logout (you may call your logout method here)
-
+          forceLogoutToConnect(
+            snackbarMessage: AppLocalizations.of(context!)!.account_not_approve,
+          );
           return ErrorEntity(code: 501, message: AppLocalizations.of(context)!.account_not_approve);
       }
       CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.server_bad_response, type: SnackBarType.failure);
@@ -348,20 +389,6 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
       CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.unknown_error, type: SnackBarType.failure);
       return ErrorEntity(code: -1, message: AppLocalizations.of(context)!.unknown_error);
   }
-}
-
-void _handleLogout(BuildContext context) async {
-  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-  await preferences.setUserLoggedIn();
-  await Provider.of<LocaleProvider>(context, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
-  Navigator.pop(context);
-  Navigator.popUntil(context, (route) => route.name == RouteDefine.bottomNavScreen.name);
-  Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-  // CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.logged_out_successfully, type: SnackBarType.success);
-  CustomSnackBar.showSnackBar(
-      context: context,
-      title: "חשבון לא מאושר", //AppLocalizations.of(context)!.account_not_approve,
-      type: SnackBarType.failure);
 }
 
 void onError(ErrorEntity eInfo) {

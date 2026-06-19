@@ -335,20 +335,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
               Center(
                 child: !isGuestUser
                     ? Image.network("${AppUrlEndPoints.baseFileUrl}${list[index].planogramproducts?[subIndex].mainImage}",
-                        height: getItemHeight(context, false) == 260.0
-                            ? 125
-                            : getItemHeight(context, false) == 350.0
-                                ? 190
-                                : 110,
+                        height: getPlanogramProductImageHeight(context),
                         fit: BoxFit.cover, loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
                           return CommonShimmerWidget(
                             child: Container(
-                              height: getItemHeight(context, false) == 260.0
-                                  ? 125
-                                  : getItemHeight(context, false) == 350.0
-                                      ? 190
-                                      : 110,
+                              height: getPlanogramProductImageHeight(context),
                               width: 70,
                               decoration: BoxDecoration(
                                 color: AppColors.whiteColor,
@@ -360,11 +352,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         return child;
                       }, errorBuilder: (context, error, stackTrace) {
                         return Image.asset(AppImagePath.imageNotAvailable5,
-                            height: getItemHeight(context, false) == 260.0
-                                ? 125
-                                : getItemHeight(context, false) == 350.0
-                                    ? 190
-                                    : 110,
+                            height: getPlanogramProductImageHeight(context),
                             width: 70,
                             fit: BoxFit.cover);
                       })
@@ -372,11 +360,7 @@ class StoreCategoryScreenWidget extends StatelessWidget {
                         AppImagePath.imageNotAvailable5,
                         fit: BoxFit.cover,
                         width: 70,
-                        height: getItemHeight(context, false) == 260.0
-                            ? 125
-                            : getItemHeight(context, false) == 350.0
-                                ? 190
-                                : 110,
+                        height: getPlanogramProductImageHeight(context),
                       ),
               ),
               5.height,

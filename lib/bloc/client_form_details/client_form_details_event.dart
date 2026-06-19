@@ -37,6 +37,12 @@ class ClientFormDetailsEvent with _$ClientFormDetailsEvent {
 
   factory ClientFormDetailsEvent.signatureEvent({required BuildContext context, required String fieldName, required String fieldNameForSign}) = _signatureEvent;
 
+  factory ClientFormDetailsEvent.uploadSignatureFromPadEvent({
+    required BuildContext context,
+    required String fieldName,
+    required String localImagePath,
+  }) = _uploadSignatureFromPadEvent;
+
   factory ClientFormDetailsEvent.updateClientDataEvent({required BuildContext context}) = _updateClientDataEvent;
 
   factory ClientFormDetailsEvent.deleteFileEvent({required BuildContext context, required String fieldName}) = _deleteFileEvent;

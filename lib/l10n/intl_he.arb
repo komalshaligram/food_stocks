@@ -2,7 +2,7 @@
   "app_language": "שפה עברית",
   "register": "הרשמה",
   "login": "התחברות",
-  "business_details": "פרטי עסק",
+  "business_details": "פרופיל אישי",
   "type_of_picture": "סוג תמונה",
   "type_of_business": "סוג העסק",
   "profile_picture": "תמונת פרופיל",
@@ -226,8 +226,8 @@
   "you_have_reached_maximum_quantity" : "הגעת לכמות המקסימלית",
   "downloaded_successfully" : " !הורד בהצלחה",
   "failed_download":"ההורדה נכשלה",
-  "camera_permission":"אנא אפשר הרשאות מצלמה",
-  "storage_permission":"אנא אפשר הרשאות אכסון",
+  "camera_permission":"נדרשת גישה למצלמה כדי לצלם תמונה.",
+    "storage_permission":"נדרשת גישה לאחסון כדי לבחור קובץ.",
   "enter_4digit_otp":"אנא הזן קוד בין 4 ספרות",
   "you_want_clear_cart":"האם אתה בטוח שאתה רוצה לאפס את סל הקניות?",
   "you_want_delete_product":"האם אתה בטוח שאתה רוצה למחוק את המוצר?",
@@ -745,5 +745,12 @@
   "delivery_location_description": "תיאור מיקום להורדת סחורה",
   "waze_delivery_location": "מיקום Waze להורדת סחורה",
   "open_waze_to_set_location": "פתח ב-Waze לבחירת מיקום",
-  "delivery_location_photo": "תמונה של מיקום להורדת סחורה"
+  "delivery_location_photo": "תמונה של מיקום להורדת סחורה",
+  "customer_service_sheet_title": "יצירת קשר עם שירות הלקוחות של TAVILI",
+  "customer_service_write_to_us": "כתוב לנו",
+  "customer_service_call_us": "התקשר אלינו",
+  "customer_service_not_configured": "לא הוגדר במערכת",
+  "customer_service_whatsapp_unavailable": "מספר וואטסאפ לשירות לקוחות לא הוגדר",
+  "customer_service_phone_unavailable": "מספר טלפון לשירות לקוחות לא הוגדר",
+  "customer_service": "שירות לקוחות"
 }

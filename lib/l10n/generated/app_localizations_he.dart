@@ -18,7 +18,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get login => 'התחברות';
 
   @override
-  String get business_details => 'פרטי עסק';
+  String get business_details => 'פרופיל אישי';
 
   @override
   String get type_of_picture => 'סוג תמונה';
@@ -2253,4 +2253,28 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get delivery_location_photo => 'תמונה של מיקום להורדת סחורה';
+
+  @override
+  String get customer_service_sheet_title =>
+      'יצירת קשר עם שירות הלקוחות של TAVILI';
+
+  @override
+  String get customer_service_write_to_us => 'כתוב לנו';
+
+  @override
+  String get customer_service_call_us => 'התקשר אלינו';
+
+  @override
+  String get customer_service_not_configured => 'לא הוגדר במערכת';
+
+  @override
+  String get customer_service_whatsapp_unavailable =>
+      'מספר וואטסאפ לשירות לקוחות לא הוגדר';
+
+  @override
+  String get customer_service_phone_unavailable =>
+      'מספר טלפון לשירות לקוחות לא הוגדר';
+
+  @override
+  String get customer_service => 'שירות לקוחות';
 }

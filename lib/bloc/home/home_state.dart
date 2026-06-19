@@ -68,6 +68,8 @@ class HomeState with _$HomeState {
     required String? clubAgentId,
     required List<SupplierCustomerDetails> supplierCustomerDetails,
     required List<SupplierListData> suppliersDataList,
+    required String customerServicePhone,
+    required String customerServiceWhatsApp,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -141,5 +143,7 @@ class HomeState with _$HomeState {
         clubAgentId: '',
         supplierCustomerDetails: [],
         suppliersDataList: [],
+        customerServicePhone: '',
+        customerServiceWhatsApp: '',
       );
 }

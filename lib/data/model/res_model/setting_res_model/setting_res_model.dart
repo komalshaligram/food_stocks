@@ -28,6 +28,8 @@ class Data with _$Data {
     DataWebViewSettings? dataWebViewSettings,
     RegistrationSuccessPageSettings? registrationSuccessPageSettings,
     String? firstSupplierOrderMessageTemplate,
+    String? customerServicePhone,
+    String? customerServiceWhatsApp,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

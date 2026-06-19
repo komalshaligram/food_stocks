@@ -20,6 +20,7 @@ class AppImagePath {
   static const String signature = 'assets/images/signature.svg';
   static const String delete = 'assets/images/delete.svg';
   static const String placeholderProfile = 'assets/images/user_icon.svg';
+  static const String whatsapp = 'assets/images/whatsapp.png';
 
   ///pngs
   static const String successIcon = 'assets/images/icon_success.png';

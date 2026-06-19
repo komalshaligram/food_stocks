@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import 'common_shimmer_widget.dart';
@@ -8,51 +7,76 @@ import 'common_shimmer_widget.dart';
 class ManageCreditCardShimmer extends StatelessWidget {
   const ManageCreditCardShimmer({super.key});
 
+  static const double _horizontalPadding = 16;
+
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-        flex: 2,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
-          child: SingleChildScrollView(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                height: 200,
-                padding: const EdgeInsets.all(20.0),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: AppColors.shimmer1Color, borderRadius: BorderRadius.circular(15)),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          CommonShimmerWidget(
+            child: Container(
+              height: 180,
+              decoration: BoxDecoration(
+                color: AppColors.pageColor,
+                borderRadius: BorderRadius.circular(20),
               ),
-              buildTextFieldTitle(),
-              buildTextField(),
-              10.height,
-              buildTextFieldTitle(),
-              buildTextField(),
-            ]),
+            ),
           ),
-        ),
-      ),
-      50.height,
-      Expanded(
-        flex: 1,
-        child: Container(
-          color: AppColors.whiteColor,
-          padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.end, children: [
-            Container(
+          20.height,
+          _buildCardShimmer(),
+          24.height,
+          CommonShimmerWidget(
+            child: Container(
               height: AppConstants.buttonHeight,
-              decoration: BoxDecoration(color: AppColors.shimmer1Color, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+              decoration: BoxDecoration(
+                color: AppColors.pageColor,
+                borderRadius: BorderRadius.circular(14),
+              ),
             ),
-            15.height,
-            Container(
+          ),
+          12.height,
+          CommonShimmerWidget(
+            child: Container(
               height: AppConstants.buttonHeight,
-              decoration: BoxDecoration(color: AppColors.shimmer1Color, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+              decoration: BoxDecoration(
+                color: AppColors.pageColor,
+                borderRadius: BorderRadius.circular(14),
+              ),
             ),
-            35.height,
-          ]),
-        ),
+          ),
+        ],
       ),
-    ]);
+    );
+  }
+
+  Widget _buildCardShimmer() {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildTextFieldTitle(),
+          buildTextField(),
+          14.height,
+          buildTextFieldTitle(),
+          buildTextField(),
+        ],
+      ),
+    );
   }
 
   Widget buildTextField() {
@@ -60,7 +84,10 @@ class ManageCreditCardShimmer extends StatelessWidget {
       child: Container(
         height: AppConstants.textFormFieldHeight,
         width: double.maxFinite,
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+        decoration: BoxDecoration(
+          color: AppColors.pageColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }
@@ -69,9 +96,12 @@ class ManageCreditCardShimmer extends StatelessWidget {
     return CommonShimmerWidget(
       child: Container(
         height: AppConstants.shimmerTextHeight,
-        width: 140,
-        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
+        width: 120,
+        margin: const EdgeInsets.only(bottom: 6),
+        decoration: BoxDecoration(
+          color: AppColors.pageColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
     );
   }

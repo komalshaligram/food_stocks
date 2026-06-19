@@ -224,6 +224,8 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 isSaleOn: preferences.getShowSale(),
                 retryLoading: false,
                 isAppOnMaintenance: preferences.getAppOnMaintenance(),
+                customerServicePhone: response.data?.customerServicePhone ?? '',
+                customerServiceWhatsApp: response.data?.customerServiceWhatsApp ?? '',
               ));
             }
           } catch (e) {

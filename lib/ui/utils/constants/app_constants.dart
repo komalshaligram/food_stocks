@@ -6,6 +6,16 @@ class AppConstants {
   static const double textFormFieldHeight = 40;
   static const double relatedProductItemHeight = 223;
   static const double salesProductItemHeight = 300;
+  static const double homeStoreSalesProductItemHeightIOS = 305;
+  static const double homeStoreWithoutSaleItemHeightIOS = 305;
+  static const double homeStoreSalesProductItemHeightAndroid = 570;
+  static const double homeStoreWithoutSaleItemHeightAndroid = 570;
+  static const double homeStoreBigTabItemHeight = 360;
+  static const double homeStoreSmallTabItemHeight = 300;
+  static const double homeStoreProductImageHeightIOS = 93;
+  static const double homeStoreProductImageHeightAndroid = 173;
+  static const double homeStoreBigTabImageHeight = 175;
+  static const double homeStoreSmallTabImageHeight = 135;
   static const double containerHeight_80 = 80;
   static const double containerHeight_60 = 60;
   static const double containerHeight_65 = 65;
@@ -25,6 +35,17 @@ class AppConstants {
   static const double smallTabItemHeight = 260;
   static const double bigTabImageHeight = 190;
   static const double smallTabImageHeight = 125;
+  static const double defaultProductImageHeight = 152;
+  static const double defaultPlanogramImageHeight = 209;
+  static const double searchItemImageHeightDefault = 114;
+  static const double searchItemImageHeightSmallTab = 173;
+  static const double searchItemImageHeightBigTab = 185;
+  static const double productDetailImageHeightDefault = 285;
+  static const double productDetailImageHeightBigTab = 309;
+  static const double productDetailImageHeightSmallTab = 311;
+  static const double productDetailShimmerSizeDefault = 285;
+  static const double productDetailShimmerSizeBigTab = 340;
+  static const double productDetailShimmerSizeSmallTab = 346;
   static const double bigTabImageWidth = 190;
   static const double smallTabImageWidth = 160;
   static const double normalImageWidth = 140;
@@ -115,6 +136,8 @@ class AppConstants {
   static const double productGridAspectRatio9 = 9.5 / 13;
   static const double productGridAspectRatio7 = 7.5 / 13;
   static const double productGridAspectRatio8 = 0.47;
+  static const double productGridAspectRatioOffset = 0;
+  static const double productGridShimmerAspectRatio = 0.34;
 
   //bottom nav space
   static const double bottomNavSpace = 30;

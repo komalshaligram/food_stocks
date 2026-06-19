@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/model/res_model/my_account_card_invoices_res_model/my_account_card_invoices_res_model.dart';
 import '../../ui/utils/app_utils.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-import '../../ui/widget/container_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/credit_card_details/credit_card_details_bloc.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
@@ -12,6 +11,7 @@ import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
+import '../widget/common_app_bar.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_form_field_widget.dart';
@@ -42,14 +42,19 @@ class CreditCardDetailsScreen extends StatelessWidget {
 
 class CreditCardDetailsScreenWidget extends StatelessWidget {
   CreditCardDetailsScreenWidget({super.key, required this.isPaymentToNext, required this.invoiceData, required this.isFromInvoicePayment});
+
   final bool isPaymentToNext;
   final MyCardInvoice invoiceData;
   final bool isFromInvoicePayment;
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<FormFieldState> formFieldKey = GlobalKey();
+
+  static const double _horizontalPadding = 16;
+  static const double _fieldRadius = 12;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocBuilder<CreditCardDetailsBloc, CreditCardDetailsState>(builder: (context, state) {
       return PopScope(
         canPop: false,
@@ -63,94 +68,44 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
           }
         },
         child: Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          appBar: AppBar(
-              surfaceTintColor: AppColors.whiteColor,
-              leading: GestureDetector(
-                  onTap: () {
-                    if (isFromInvoicePayment) {
-                      Navigator.pop(context);
-                    } else {
-                      Navigator.pop(context, true);
-                    }
-                  },
-                  child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
-              title: Align(
-                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-                child: Text(AppLocalizations.of(context)!.credit_card_details, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-              ),
-              backgroundColor: AppColors.whiteColor,
-              titleSpacing: 0,
-              elevation: 0),
+          backgroundColor: AppColors.pageColor,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+            child: CommonAppBar(
+              bgColor: AppColors.pageColor,
+              title: l10n.credit_card_details,
+              iconData: Icons.arrow_back_ios_new_rounded,
+              trailingWidget: _buildAppBarIcon(),
+              onTap: () {
+                if (isFromInvoicePayment) {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pop(context, true);
+                }
+              },
+            ),
+          ),
           body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 100),
               child: Form(
                 key: _formKey,
-                child: Column(children: [
-                  ContainerWidget(name: AppLocalizations.of(context)!.credit_card_number),
-                  CustomFormField(
-                    inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
-                    context: context,
-                    controller: state.creditCardNumberController,
-                    keyboardType: TextInputType.number,
-                    hint: "",
-                    fillColor: Colors.transparent,
-                    textInputAction: TextInputAction.next,
-                    validator: AppStrings.creditCardNumberString,
-                  ),
-                  7.height,
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                    Expanded(
-                      flex: 3,
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                        ContainerWidget(name: AppLocalizations.of(context)!.year),
-                        CustomFormField(
-                          inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
-                          context: context,
-                          controller: state.validityController,
-                          keyboardType: TextInputType.number,
-                          hint: "YY",
-                          fillColor: Colors.transparent,
-                          textInputAction: TextInputAction.done,
-                          validator: AppStrings.creditCardValidityString,
-                        ),
-                      ]),
-                    ),
-                    10.width,
-                    Expanded(
-                      flex: 3,
-                      child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        ContainerWidget(name: AppLocalizations.of(context)!.month),
-                        CommonDropDownButton(
-                          items: state.monthList.map((value) {
-                            return DropdownMenuItem<String>(value: value, child: Text(value.toString()));
-                          }).toList(),
-                          onChanged: (month) {
-                            if (validateMonth(month.toString(), state.validityController.text.toString())) {
-                              context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.selectMonthEvent(month: month ?? ''));
-                            } else {
-                              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_valid_month, type: SnackBarType.failure);
-                            }
-                          },
-                          value: state.selectedMonth,
-                        ),
-                      ]),
-                    ),
-                    Expanded(flex: 4, child: Container())
-                  ]),
-                ]),
+                child: _buildFormCard(
+                  context: context,
+                  state: state,
+                  l10n: l10n,
+                ),
               ),
             ),
           ),
-          bottomSheet: Container(
-            color: AppColors.whiteColor,
+          bottomNavigationBar: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(AppConstants.padding_30),
+              padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 16),
               child: CustomButtonWidget(
-                buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                buttonText: l10n.next.toUpperCase(),
                 bGColor: AppColors.mainColor,
                 isLoading: state.isLoading,
+                radius: 14,
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
                     if (validateMonth(state.selectedMonth, state.validityController.text)) {
@@ -160,7 +115,7 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                             invoiceData: invoiceData.orderId != null ? invoiceData : const MyCardInvoice(),
                           ));
                     } else {
-                      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_valid_month, type: SnackBarType.failure);
+                      CustomSnackBar.showSnackBar(context: context, title: l10n.select_valid_month, type: SnackBarType.failure);
                     }
                   }
                 },
@@ -171,6 +126,118 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget _buildAppBarIcon() {
+    return Container(
+      height: 40,
+      width: 40,
+      decoration: BoxDecoration(
+        color: AppColors.mainColor.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(Icons.credit_card_outlined, size: 21, color: AppColors.mainColor),
+    );
+  }
+
+  Widget _buildFormCard({required BuildContext context, required CreditCardDetailsState state, required AppLocalizations l10n}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildFieldLabel(l10n.credit_card_number),
+          CustomFormField(
+            inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+            context: context,
+            controller: state.creditCardNumberController,
+            keyboardType: TextInputType.number,
+            hint: '',
+            fillColor: AppColors.pageColor,
+            textInputAction: TextInputAction.next,
+            validator: AppStrings.creditCardNumberString,
+            border: _fieldRadius,
+            cursorColor: AppColors.mainColor,
+          ),
+          14.height,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildFieldLabel(l10n.year),
+                    CustomFormField(
+                      inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
+                      context: context,
+                      controller: state.validityController,
+                      keyboardType: TextInputType.number,
+                      hint: 'YY',
+                      fillColor: AppColors.pageColor,
+                      textInputAction: TextInputAction.done,
+                      validator: AppStrings.creditCardValidityString,
+                      border: _fieldRadius,
+                      cursorColor: AppColors.mainColor,
+                    ),
+                  ],
+                ),
+              ),
+              12.width,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildFieldLabel(l10n.month),
+                    CommonDropDownButton(
+                      items: state.monthList.map((value) {
+                        return DropdownMenuItem<String>(value: value, child: Text(value.toString()));
+                      }).toList(),
+                      onChanged: (month) {
+                        if (validateMonth(month.toString(), state.validityController.text.toString())) {
+                          context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.selectMonthEvent(month: month ?? ''));
+                        } else {
+                          CustomSnackBar.showSnackBar(context: context, title: l10n.select_valid_month, type: SnackBarType.failure);
+                        }
+                      },
+                      value: state.selectedMonth,
+                      color: AppColors.lightBorderColor,
+                      borderRadius: _fieldRadius,
+                      useFilledBackground: true,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFieldLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(
+        label,
+        style: AppStyles.rkRegularTextStyle(
+          size: AppConstants.font_13,
+          color: AppColors.blackColor.withValues(alpha: 0.55),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
   }
 
   bool validateMonth(String month, String year) {

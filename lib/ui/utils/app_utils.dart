@@ -115,7 +115,7 @@ String getLocalizedReason({required String apiReason, required BuildContext cont
 }
 
 double getChildAspectRatio(BuildContext context, bool isSaleOn) {
-  return !isSaleOn
+  final baseRatio = !isSaleOn
       ? AppConstants.productGridAspectRatio8
       : Platform.isAndroid
           ? getScreenHeight(context) > 900
@@ -126,16 +126,95 @@ double getChildAspectRatio(BuildContext context, bool isSaleOn) {
           : getScreenHeight(context) > 820
               ? AppConstants.productGridAspectRatio51
               : AppConstants.productGridAspectRatio51;
+  return baseRatio - AppConstants.productGridAspectRatioOffset;
 }
 
 double getItemHeight(BuildContext context, bool isSaleOn) {
   return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
-      ? 350
+      ? AppConstants.bigTabItemHeight
       : getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550
-          ? 260
+          ? AppConstants.smallTabItemHeight
           : isSaleOn
               ? AppConstants.salesProductItemHeight
               : AppConstants.withoutSaleItemHeight;
+}
+
+double getHomeStoreItemHeight(BuildContext context, bool isSaleOn) {
+  if (getScreenHeight(context) > 1000 && getScreenWidth(context) > 700) {
+    return AppConstants.homeStoreBigTabItemHeight;
+  }
+  if (getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550) {
+    return AppConstants.homeStoreSmallTabItemHeight;
+  }
+  if (Platform.isAndroid) {
+    return isSaleOn ? AppConstants.homeStoreSalesProductItemHeightAndroid : AppConstants.homeStoreWithoutSaleItemHeightAndroid;
+  }
+  return isSaleOn ? AppConstants.homeStoreSalesProductItemHeightIOS : AppConstants.homeStoreWithoutSaleItemHeightIOS;
+}
+
+double getHomeStoreProductImageHeight(BuildContext context) {
+  if (getScreenHeight(context) > 1000 && getScreenWidth(context) > 700) {
+    return AppConstants.homeStoreBigTabImageHeight;
+  }
+  if (getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550) {
+    return AppConstants.homeStoreSmallTabImageHeight;
+  }
+  return Platform.isAndroid ? AppConstants.homeStoreProductImageHeightAndroid : AppConstants.homeStoreProductImageHeightIOS;
+}
+
+double getProductImageHeight(BuildContext context, {double? fallback}) {
+  final itemHeight = getItemHeight(context, false);
+  if (itemHeight == AppConstants.bigTabItemHeight) {
+    return AppConstants.bigTabImageHeight;
+  }
+  if (itemHeight == AppConstants.smallTabItemHeight) {
+    return AppConstants.smallTabImageHeight;
+  }
+  return fallback ?? AppConstants.defaultProductImageHeight;
+}
+
+double getPlanogramProductImageHeight(BuildContext context) {
+  final itemHeight = getItemHeight(context, false);
+  if (itemHeight == AppConstants.bigTabItemHeight) {
+    return AppConstants.bigTabImageHeight;
+  }
+  if (itemHeight == AppConstants.smallTabItemHeight) {
+    return AppConstants.smallTabImageHeight;
+  }
+  return AppConstants.defaultPlanogramImageHeight;
+}
+
+double getSearchItemImageHeight(BuildContext context) {
+  final itemHeight = getItemHeight(context, false);
+  if (itemHeight == AppConstants.bigTabItemHeight) {
+    return AppConstants.searchItemImageHeightBigTab;
+  }
+  if (itemHeight == AppConstants.smallTabItemHeight) {
+    return AppConstants.searchItemImageHeightSmallTab;
+  }
+  return AppConstants.searchItemImageHeightDefault;
+}
+
+double getProductDetailImageHeight(BuildContext context) {
+  final itemHeight = getItemHeight(context, false);
+  if (itemHeight == AppConstants.bigTabItemHeight) {
+    return AppConstants.productDetailImageHeightBigTab;
+  }
+  if (itemHeight == AppConstants.smallTabItemHeight) {
+    return AppConstants.productDetailImageHeightSmallTab;
+  }
+  return AppConstants.productDetailImageHeightDefault;
+}
+
+double getProductDetailShimmerSize(BuildContext context) {
+  final itemHeight = getItemHeight(context, false);
+  if (itemHeight == AppConstants.bigTabItemHeight) {
+    return AppConstants.productDetailShimmerSizeBigTab;
+  }
+  if (itemHeight == AppConstants.smallTabItemHeight) {
+    return AppConstants.productDetailShimmerSizeSmallTab;
+  }
+  return AppConstants.productDetailShimmerSizeDefault;
 }
 
 double getItemWidth(BuildContext context) {
@@ -227,6 +306,51 @@ Future<void> _launchUrl(String storeUrl) async {
   }
 }
 
+String normalizeWhatsAppPhone(String phoneNumber) {
+  final digits = phoneNumber.replaceAll(RegExp(r'\D'), '');
+  if (digits.isEmpty) {
+    return '';
+  }
+  if (digits.startsWith('972')) {
+    return digits;
+  }
+  if (digits.startsWith('0')) {
+    return '972${digits.substring(1)}';
+  }
+  return '972$digits';
+}
+
+Future<bool> openPhoneCall(String phoneNumber) async {
+  final digits = phoneNumber.replaceAll(RegExp(r'\D'), '');
+  if (digits.isEmpty) {
+    return false;
+  }
+  final uri = Uri(scheme: 'tel', path: digits);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+    return true;
+  }
+  return false;
+}
+
+Future<bool> openWhatsAppChat(String phoneNumber) async {
+  final intlPhone = normalizeWhatsAppPhone(phoneNumber);
+  if (intlPhone.isEmpty) {
+    return false;
+  }
+  final appUri = Uri.parse('whatsapp://send?phone=$intlPhone');
+  if (await canLaunchUrl(appUri)) {
+    await launchUrl(appUri, mode: LaunchMode.externalApplication);
+    return true;
+  }
+  final webUri = Uri.parse('https://wa.me/$intlPhone');
+  if (await canLaunchUrl(webUri)) {
+    await launchUrl(webUri, mode: LaunchMode.externalApplication);
+    return true;
+  }
+  return false;
+}
+
 bool isValidIsraeliID(String id) {
   id = id.trim();
   if (id.length > 9 || id.length < 5 || int.tryParse(id) == null) return false;
@@ -316,7 +440,47 @@ Future<XFile?> openImagePicker(ImageSource source) async {
   return null;
 }
 
+Future<bool> ensureBarcodeScannerCameraPermission(BuildContext context) async {
+  // iOS: let the barcode scanner plugin request camera via AVCaptureDevice.requestAccess,
+  // which shows the native permission dialog (permission_handler may not prompt on iOS).
+  if (Platform.isIOS) {
+    return true;
+  }
+
+  if (await Permission.camera.isGranted) {
+    return true;
+  }
+
+  if (await Permission.camera.isPermanentlyDenied) {
+    if (context.mounted) {
+      CustomSnackBar.showSnackBar(
+        context: context,
+        title: AppLocalizations.of(context)!.camera_permission,
+        type: SnackBarType.failure,
+      );
+    }
+    return false;
+  }
+
+  final status = await Permission.camera.request();
+  if (status.isGranted) {
+    return true;
+  }
+
+  if (context.mounted) {
+    CustomSnackBar.showSnackBar(
+      context: context,
+      title: AppLocalizations.of(context)!.camera_permission,
+      type: SnackBarType.failure,
+    );
+  }
+  return false;
+}
+
 Future<String> scanBarcodeOrQRCode({required BuildContext context, required String cancelText, required ScanMode scanMode}) async {
+  if (!await ensureBarcodeScannerCameraPermission(context)) {
+    return '-1';
+  }
   String barcodeSOrQRScanRes;
   try {
     barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode('#ff20BF6B', cancelText, true, scanMode);
@@ -376,10 +540,6 @@ String formatNumberPositiveToNegative({required String value, required String lo
 }
 
 String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
-  String result = (NumberFormat.compactSimpleCurrency(
-    locale: local,
-    decimalDigits: 1,
-  ).format(double.parse(value)));
   String result1 = value.split('.')[0] + AppLocalizations.of(context)!.currency;
   return result1;
 }
@@ -514,14 +674,18 @@ Widget titleGreenText(BuildContext context, String title, ltr) => Directionality
 Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
   SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
   try {
-    final cartRes = await DioClient(context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
-    final cartResponse = GetAllCartResModel.fromJson(cartRes);
+    printData("check here preferences.getGuestUser()${preferences.getGuestUser()}");
+    if(!preferences.getGuestUser()) {
+      final cartRes = await DioClient(context).post(
+          '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
+      final cartResponse = GetAllCartResModel.fromJson(cartRes);
 
-    if (cartResponse.status == AppConstants.code_200) {
-      final items = cartResponse.data?.data ?? [];
-      return {
-        for (var item in items) item.id ?? '': item.totalQuantity ?? 0,
-      };
+      if (cartResponse.status == AppConstants.code_200) {
+        final items = cartResponse.data?.data ?? [];
+        return {
+          for (var item in items) item.id ?? '': item.totalQuantity ?? 0,
+        };
+      }
     }
   } catch (_) {}
   return {};

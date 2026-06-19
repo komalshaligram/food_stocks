@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import '../utils/app_utils.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import 'common_shimmer_widget.dart';
@@ -8,110 +7,139 @@ import 'common_shimmer_widget.dart';
 class ActivityTimeScreenShimmerWidget extends StatelessWidget {
   const ActivityTimeScreenShimmerWidget({super.key});
 
+  static const double _horizontalPadding = 16;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_5),
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            10.height,
-            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-              Expanded(flex: 2, child: 0.height),
-              Expanded(
-                flex: 2,
-                child: CommonShimmerWidget(
-                  child: Container(
-                    height: AppConstants.shimmerTextHeight,
-                    margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                    decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildCard(
+            child: Column(
+              children: [
+                buildHeaderRow(),
+                12.height,
+                ListView.separated(
+                  itemCount: 7,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  separatorBuilder: (_, __) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Divider(height: 1, color: AppColors.lightBorderColor.withValues(alpha: 0.6)),
                   ),
+                  itemBuilder: (context, index) => buildDayWiseShiftTime(),
                 ),
-              ),
-              10.width,
-              Expanded(
-                flex: 2,
-                child: CommonShimmerWidget(
-                  child: Container(
-                    height: AppConstants.shimmerTextHeight,
-                    margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                    decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-                  ),
-                ),
-              ),
-              10.width,
-              Expanded(flex: 1, child: 0.height),
-              10.width,
-            ]),
-            15.height,
-            ListView.builder(
-              itemCount: 7,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Padding(padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3), child: buildDayWiseShiftTime());
-              },
+              ],
             ),
-            70.height,
-            Padding(padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1), child: buildButton()),
-            20.height,
-          ]),
-        ),
+          ),
+          24.height,
+          buildButton(),
+        ],
       ),
     );
   }
 
-  Widget buildDayWiseShiftTime() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Expanded(
-            flex: 2,
-            child: CommonShimmerWidget(
-              child: Container(
-                height: AppConstants.shimmerTextHeight,
-                margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-              ),
-            ),
+  Widget _buildCard({required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
           ),
-          Expanded(
-            flex: 2,
-            child: CommonShimmerWidget(
-              child: Container(
-                height: AppConstants.textFormFieldHeight,
-                decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-              ),
-            ),
-          ),
-          10.width,
-          Expanded(
-            flex: 2,
-            child: CommonShimmerWidget(
-              child: Container(
-                height: AppConstants.textFormFieldHeight,
-                decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-              ),
-            ),
-          ),
-          10.width,
-          Expanded(
-              child: CommonShimmerWidget(
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: child,
+    );
+  }
+
+  Widget buildHeaderRow() {
+    return Row(
+      children: [
+        const Expanded(flex: 3, child: SizedBox()),
+        Expanded(
+          flex: 3,
+          child: CommonShimmerWidget(
             child: Container(
-              height: AppConstants.textFormFieldHeight,
-              width: AppConstants.textFormFieldHeight,
-              decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+              height: AppConstants.shimmerTextHeight,
+              decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: BorderRadius.circular(8)),
             ),
-          )),
-          10.width,
-        ]),
-      );
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 3,
+          child: CommonShimmerWidget(
+            child: Container(
+              height: AppConstants.shimmerTextHeight,
+              decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: BorderRadius.circular(8)),
+            ),
+          ),
+        ),
+        const SizedBox(width: 52),
+      ],
+    );
+  }
+
+  Widget buildDayWiseShiftTime() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: CommonShimmerWidget(
+            child: Container(
+              height: AppConstants.shimmerTextHeight,
+              margin: const EdgeInsets.only(right: 8),
+              decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: BorderRadius.circular(8)),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: CommonShimmerWidget(
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 3,
+          child: CommonShimmerWidget(
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        CommonShimmerWidget(
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget buildButton() {
     return CommonShimmerWidget(
       child: Container(
         height: AppConstants.buttonHeight,
         width: double.maxFinite,
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+        decoration: BoxDecoration(
+          color: AppColors.pageColor,
+          borderRadius: BorderRadius.circular(14),
+        ),
       ),
     );
   }

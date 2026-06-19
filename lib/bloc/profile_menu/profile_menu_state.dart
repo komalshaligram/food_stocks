@@ -35,6 +35,8 @@ class ProfileMenuState with _$ProfileMenuState {
     required bool? isAgentSwitchToAssignedStore,
     required bool isShimmering,
     required bool isLoading,
+    required String customerServicePhone,
+    required String customerServiceWhatsApp,
   }) = _ProfileMenuState;
 
   factory ProfileMenuState.initial() => const ProfileMenuState(
@@ -70,5 +72,7 @@ class ProfileMenuState with _$ProfileMenuState {
         isAgentSwitchToAssignedStore: false,
         isShimmering: false,
         isLoading: false,
+        customerServicePhone: '',
+        customerServiceWhatsApp: '',
       );
 }

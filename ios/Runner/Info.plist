@@ -48,7 +48,7 @@
 	<key>io.flutter.embedded_views_preview</key>
     <true/>
 	<key>NSCameraUsageDescription</key>
-	<string>To capture profile photo please grant camera access</string>
+	<string>Camera access is used to scan product barcodes and take profile photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App needs access to photo lib for profile images</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

@@ -108,7 +108,7 @@ class BottomNavScreenWidget extends StatelessWidget {
                       onTap: (index) async {
                         SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
                         if (preferences.getGuestUser()) {
-                          if (index == 1) {
+                          if (index == 0 || index == 1) {
                             bloc.add(BottomNavEvent.changePage(index: index, context: context));
                           } else {
                             Navigator.pushNamed(context, RouteDefine.connectScreen.name);

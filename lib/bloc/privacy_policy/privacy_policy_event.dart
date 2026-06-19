@@ -15,4 +15,9 @@ class PrivacyPolicyEvent with _$PrivacyPolicyEvent {
   }) = _getPdfDataEvent;
 
   factory PrivacyPolicyEvent.signatureEvent({required BuildContext context, required String fieldName, required String fieldNameForSign}) = _signatureEvent;
+
+  factory PrivacyPolicyEvent.signaturePadSavedEvent({
+    required String fieldName,
+    required String localImagePath,
+  }) = _signaturePadSavedEvent;
 }

@@ -5,7 +5,8 @@ import 'common_shimmer_widget.dart';
 
 class CommonProductListShimmerWidget extends StatelessWidget {
   final int itemCount;
-  const CommonProductListShimmerWidget({super.key, this.itemCount = 6});
+  final double? itemHeight;
+  const CommonProductListShimmerWidget({super.key, this.itemCount = 6, this.itemHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class CommonProductListShimmerWidget extends StatelessWidget {
   Widget buildSubCategoryItem() {
     return CommonShimmerWidget(
       child: Container(
-        height: AppConstants.relatedProductItemHeight,
+        height: itemHeight ?? AppConstants.relatedProductItemHeight,
         width: 140,
         decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),

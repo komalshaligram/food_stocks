@@ -85,8 +85,9 @@ class CommonSaleListView extends StatelessWidget {
             vertical: AppConstants.padding_5,
             horizontal: AppConstants.padding_10),
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          !isGuestUser
-              ? productImage.isNotEmpty
+          // !isGuestUser
+          //     ?
+          productImage.isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: "${AppUrlEndPoints.baseFileUrl}$productImage",
                       height: 70,
@@ -109,9 +110,9 @@ class CommonSaleListView extends StatelessWidget {
                             height: 70, width: 70, fit: BoxFit.cover);
                       })
                   : Image.asset(AppImagePath.imageNotAvailable5,
-                      height: 70, width: 70)
-              : Image.asset(AppImagePath.imageNotAvailable5,
-                  height: 70, width: 70),
+                      height: 70, width: 70),
+              // : Image.asset(AppImagePath.imageNotAvailable5,
+              //     height: 70, width: 70),
           Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -17,8 +17,8 @@
   # In Windows, build-name is used as the major, minor, and patch parts
   # of the product and file versions while build-number is used as the build suffix.
 
-#  version: 1.0.55+1 # ios
-  version: 1.0.55+69 # Android
+#  version: 1.0.56+3 # ios
+  version: 1.0.57+71 # Android
 
 
   environment:
@@ -80,9 +80,7 @@
     fl_chart: ^0.64.0
     shimmer: ^3.0.0
     flutter_barcode_scanner:
-      git:
-        url: https://github.com/decodevM/flutter_barcode_scanner
-        ref: flutter-3.29
+      path: packages/flutter_barcode_scanner
     flutter_date_range_picker: ^0.0.14
     html: ^0.15.4
     pull_to_refresh: ^2.0.0

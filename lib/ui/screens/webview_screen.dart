@@ -103,7 +103,6 @@ class CustomWebView extends StatefulWidget {
 }
 
 class _CustomWebViewState extends State<CustomWebView> {
-  InAppWebViewController? _controller;
   bool isLoading = true;
 
   Future<void> _saveCsvFile(String base64Data, String? suggestedFilename) async {
@@ -168,7 +167,6 @@ class _CustomWebViewState extends State<CustomWebView> {
           initialUrlRequest: URLRequest(url: WebUri(widget.url)),
           initialSettings: InAppWebViewSettings(javaScriptEnabled: true),
           onWebViewCreated: (controller) {
-            _controller = controller;
             controller.addJavaScriptHandler(
                 handlerName: 'downloadCsvHandler',
                 callback: (args) async {

@@ -36,7 +36,6 @@ class Owner2FormScreen extends StatelessWidget {
 class Owner2FormScreenWidget extends StatelessWidget {
   Owner2FormScreenWidget({super.key});
   final _formKey = GlobalKey<FormState>();
-  String ownerName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +88,6 @@ class Owner2FormScreenWidget extends StatelessWidget {
                       fillColor: Colors.transparent,
                       textInputAction: TextInputAction.next,
                       validator: AppStrings.ownerName2ValString,
-                      onChangeValue: (t) {
-                        ownerName = t;
-                      },
                     ),
                     7.height,
                     CustomContainerWidget(name: AppLocalizations.of(context)!.owner_2_israel_id),

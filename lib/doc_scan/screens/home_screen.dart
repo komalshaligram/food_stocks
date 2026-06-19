@@ -78,8 +78,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final Map<String, StreamSubscription<Map<String, dynamic>>> _jobSubscriptions =
-      {};
+  final Map<String, StreamSubscription<Map<String, dynamic>>>
+      _jobSubscriptions = {};
   final Map<String, Timer> _jobTimers = {};
   ProviderSubscription<List<InvoiceDocument>>? _documentsSubscription;
   Timer? _processingTimeoutTimer;
@@ -157,10 +157,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     }
 
-    final stale =
-        _jobTimers.keys.where((jobId) => !activeProcessingJobIds.contains(jobId)).toList(
-              growable: false,
-            );
+    final stale = _jobTimers.keys
+        .where((jobId) => !activeProcessingJobIds.contains(jobId))
+        .toList(
+          growable: false,
+        );
     for (final jobId in stale) {
       _jobTimers.remove(jobId)?.cancel();
     }
@@ -173,7 +174,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     late final Timer pollTimer;
     pollTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
       try {
-        final payload = await ref.read(documentParserProvider).getJobStatusViaRest(jobId);
+        final payload =
+            await ref.read(documentParserProvider).getJobStatusViaRest(jobId);
         if (payload == null) {
           debugPrint(
             '[HomeScreen] Job $jobId not yet in Firestore, still waiting...',
@@ -184,8 +186,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         _handleJobPayload(localDocumentId, jobId, payload);
 
         // Stop polling if job is done
-        final status =
-            (payload['status'] as String?)?.toLowerCase();
+        final status = (payload['status'] as String?)?.toLowerCase();
         if (status == 'completed' || status == 'error' || status == 'failed') {
           pollTimer.cancel();
           _jobTimers.remove(jobId);
@@ -234,10 +235,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             jobId: null,
             pdfPath: current.pdfPath,
             imagePaths: current.imagePaths,
-            documentType:
-                parsedDoc.documentType ?? current.documentType,
-            companyName:
-                parsedDoc.companyName ?? current.companyName,
+            documentType: parsedDoc.documentType ?? current.documentType,
+            companyName: parsedDoc.companyName ?? current.companyName,
             scanModel: _extractJobModelKey(payload) ?? current.scanModel,
             errorMessage: null,
           ),
@@ -263,7 +262,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       // Job document is not present in Firestore (or we don't have access),
       // so the UI would otherwise stay stuck in `processing` forever.
       if (status == 'missing') {
-        debugPrint('[HomeScreen] Job $jobId not yet in Firestore, still waiting...');
+        debugPrint(
+            '[HomeScreen] Job $jobId not yet in Firestore, still waiting...');
         return;
       }
     } catch (_) {
@@ -359,9 +359,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
     );
     return Scaffold(
-      appBar: widget.embedded
-          ? null
-          : _buildAppBar(context, ref, l10n, locale),
+      appBar: widget.embedded ? null : _buildAppBar(context, ref, l10n, locale),
       body: Column(
         children: [
           _buildSearchAndFilter(context, l10n),
@@ -474,7 +472,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(width: 10),
           TextButton.icon(
             onPressed: () => _showFilterSheet(context, l10n),
-            icon: const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.accentGreen),
+            icon: const Icon(CupertinoIcons.slider_horizontal_3,
+                color: AppColors.accentGreen),
             label: Text(
               l10n.sortAndFilter,
               style: const TextStyle(color: AppColors.accentGreen),
@@ -549,7 +548,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         child: Row(
           children: [
-            const Icon(CupertinoIcons.arrow_up_arrow_down, color: AppColors.accentGreen),
+            const Icon(CupertinoIcons.arrow_up_arrow_down,
+                color: AppColors.accentGreen),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -562,7 +562,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             TextButton.icon(
               onPressed: () => setState(() => _sortMode = _HomeSortMode.none),
-              icon: const Icon(CupertinoIcons.xmark, size: 18, color: AppColors.accentGreen),
+              icon: const Icon(CupertinoIcons.xmark,
+                  size: 18, color: AppColors.accentGreen),
               label: Text(l10n.clearSortAndFilter),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.accentGreen,
@@ -611,7 +612,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final f = from != null ? _dateOnly(from) : null;
     final t = to != null ? _dateOnly(to) : null;
     if (f == null && t == null) return l10n.rangeNoneLabel;
-    if (f != null && t != null) return '${formatDisplayDate(f)} - ${formatDisplayDate(t)}';
+    if (f != null && t != null)
+      return '${formatDisplayDate(f)} - ${formatDisplayDate(t)}';
     if (f != null) return '${formatDisplayDate(f)} +';
     return formatDisplayDate(t!);
   }
@@ -652,7 +654,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           onPressed: () => Navigator.of(ctx).pop(),
                           child: Text(
                             l10n.cancel,
-                            style: const TextStyle(color: AppColors.accentGreen),
+                            style:
+                                const TextStyle(color: AppColors.accentGreen),
                           ),
                         ),
                         CupertinoButton(
@@ -665,7 +668,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                           child: Text(
                             l10n.save,
-                            style: const TextStyle(color: AppColors.accentGreen),
+                            style:
+                                const TextStyle(color: AppColors.accentGreen),
                           ),
                         ),
                       ],
@@ -681,7 +685,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 padding: const EdgeInsets.only(top: 6),
                                 child: Text(
                                   '×‘×—×¨ ×ž×ª××¨×™×š',
-                                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(ctx)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         color: AppColors.textSecondary,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -711,7 +718,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 padding: const EdgeInsets.only(top: 6),
                                 child: Text(
                                   '×‘×—×¨ ×¢×“ ×ª××¨×™×š',
-                                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(ctx)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
                                         color: AppColors.textSecondary,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -782,7 +792,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   List<InvoiceDocument> _applyFilters(List<InvoiceDocument> documents) {
-    final createdFrom = _createdAtFrom != null ? _dateOnly(_createdAtFrom!) : null;
+    final createdFrom =
+        _createdAtFrom != null ? _dateOnly(_createdAtFrom!) : null;
     final createdTo = _createdAtTo != null ? _dateOnly(_createdAtTo!) : null;
     final documentFrom =
         _documentDateFrom != null ? _dateOnly(_documentDateFrom!) : null;
@@ -791,13 +802,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return documents.where((d) {
       // ×¡×˜×˜×•×¡
-      if (_selectedStatuses.isNotEmpty && !_selectedStatuses.contains(d.status)) {
+      if (_selectedStatuses.isNotEmpty &&
+          !_selectedStatuses.contains(d.status)) {
         return false;
       }
 
       // ×¡×•×’ ×ž×¡×ž×š
       if (_selectedDocumentTypes.isNotEmpty) {
-        if (d.documentType == null || !_selectedDocumentTypes.contains(d.documentType)) {
+        if (d.documentType == null ||
+            !_selectedDocumentTypes.contains(d.documentType)) {
           return false;
         }
       }
@@ -805,7 +818,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       // ×©× ×¡×¤×§
       if (_selectedSupplierNames.isNotEmpty) {
         final name = d.companyName?.trim();
-        if (name == null || name.isEmpty || !_selectedSupplierNames.contains(name)) {
+        if (name == null ||
+            name.isEmpty ||
+            !_selectedSupplierNames.contains(name)) {
           return false;
         }
       }
@@ -882,14 +897,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     label: l10n.filterDocumentTypePreview(
                       previewTwoOrLess(_selectedDocumentTypes.toList()),
                     ),
-                    onClear: () => setState(() => _selectedDocumentTypes.clear()),
+                    onClear: () =>
+                        setState(() => _selectedDocumentTypes.clear()),
                   ),
                 if (_selectedSupplierNames.isNotEmpty)
                   _activeFilterChip(
                     label: l10n.filterSupplierPreview(
                       previewTwoOrLess(_selectedSupplierNames.toList()),
                     ),
-                    onClear: () => setState(() => _selectedSupplierNames.clear()),
+                    onClear: () =>
+                        setState(() => _selectedSupplierNames.clear()),
                   ),
                 if (_selectedStatuses.isNotEmpty)
                   _activeFilterChip(
@@ -917,10 +934,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   _selectedDocumentTypes.clear();
                   _selectedSupplierNames.clear();
                 }),
-                icon: const Icon(CupertinoIcons.trash, color: AppColors.accentGreen),
+                icon: const Icon(CupertinoIcons.trash,
+                    color: AppColors.accentGreen),
                 label: Text(
                   l10n.clearSortAndFilter,
-                  style: const TextStyle(color: AppColors.accentGreen, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                      color: AppColors.accentGreen,
+                      fontWeight: FontWeight.w700),
                 ),
               ),
             ),
@@ -944,7 +964,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(CupertinoIcons.check_mark_circled_solid, size: 16, color: AppColors.accentGreen),
+          const Icon(CupertinoIcons.check_mark_circled_solid,
+              size: 16, color: AppColors.accentGreen),
           const SizedBox(width: 8),
           Text(
             label,
@@ -958,14 +979,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           InkWell(
             onTap: onClear,
             borderRadius: BorderRadius.circular(12),
-            child: const Icon(CupertinoIcons.xmark, size: 18, color: AppColors.accentGreen),
+            child: const Icon(CupertinoIcons.xmark,
+                size: 18, color: AppColors.accentGreen),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _showFilterSheet(BuildContext context, AppLocalizations l10n) async {
+  Future<void> _showFilterSheet(
+      BuildContext context, AppLocalizations l10n) async {
     final theme = Theme.of(context);
     await showAdaptiveBottomSheet<void>(
       context: context,
@@ -1015,7 +1038,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
-
                       const SizedBox(height: 8),
                       _filterTile(
                         icon: CupertinoIcons.calendar,
@@ -1103,7 +1125,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         title: l10n.filterStatus,
                         subtitle: _selectedStatuses.isEmpty
                             ? l10n.rangeNoneLabel
-                            : _previewFromSet(_selectedStatuses.map((s) => _statusLabel(s, l10n)).toList()),
+                            : _previewFromSet(_selectedStatuses
+                                .map((s) => _statusLabel(s, l10n))
+                                .toList()),
                         onTap: () {
                           _pickStatusesToggle(
                             context: ctx,
@@ -1118,13 +1142,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           });
                         },
                       ),
-
                       const SizedBox(height: 16),
-
                       Text(
                         l10n.sortTileTitle,
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w700),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w700),
                       ),
                       const SizedBox(height: 10),
                       Wrap(
@@ -1143,7 +1166,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             label: l10n.sortByCreatedAtNewest,
                             selected: _sortMode == _HomeSortMode.createdAtDesc,
                             onSelected: () {
-                              setState(() => _sortMode = _HomeSortMode.createdAtDesc);
+                              setState(() =>
+                                  _sortMode = _HomeSortMode.createdAtDesc);
                               setModalState(() {});
                             },
                           ),
@@ -1151,15 +1175,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             label: l10n.sortByCreatedAtOldest,
                             selected: _sortMode == _HomeSortMode.createdAtAsc,
                             onSelected: () {
-                              setState(() => _sortMode = _HomeSortMode.createdAtAsc);
+                              setState(
+                                  () => _sortMode = _HomeSortMode.createdAtAsc);
                               setModalState(() {});
                             },
                           ),
                           _SortChoiceChip(
                             label: l10n.sortByTotalAmountHigh,
-                            selected: _sortMode == _HomeSortMode.totalAmountDesc,
+                            selected:
+                                _sortMode == _HomeSortMode.totalAmountDesc,
                             onSelected: () {
-                              setState(() => _sortMode = _HomeSortMode.totalAmountDesc);
+                              setState(() =>
+                                  _sortMode = _HomeSortMode.totalAmountDesc);
                               setModalState(() {});
                             },
                           ),
@@ -1167,13 +1194,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             label: l10n.sortByTotalAmountLow,
                             selected: _sortMode == _HomeSortMode.totalAmountAsc,
                             onSelected: () {
-                              setState(() => _sortMode = _HomeSortMode.totalAmountAsc);
+                              setState(() =>
+                                  _sortMode = _HomeSortMode.totalAmountAsc);
                               setModalState(() {});
                             },
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 20),
                       Row(
                         children: [
@@ -1181,7 +1208,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: AppColors.accentGreen,
-                                side: const BorderSide(color: AppColors.accentGreen),
+                                side: const BorderSide(
+                                    color: AppColors.accentGreen),
                               ),
                               onPressed: () {
                                 setState(() {
@@ -1288,7 +1316,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (sorted.length <= 2) return sorted.join(', ');
     return '${sorted[0]}, ${sorted[1]}...';
   }
-
 
   Future<Set<DocumentStatus>?> _pickStatusesToggle({
     required BuildContext context,
@@ -1401,15 +1428,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ),
                               value: isOn,
                               // activeThumbColor: AppColors.accentGreen,
-                              activeTrackColor: AppColors.accentGreen
-                                  .withOpacity(0.35),
-                              trackOutlineColor:
-                                  WidgetStateProperty.all(
+                              activeTrackColor:
+                                  AppColors.accentGreen.withOpacity(0.35),
+                              trackOutlineColor: WidgetStateProperty.all(
                                 Colors.grey.shade300.withOpacity(0.9),
                               ),
                               inactiveThumbColor: Colors.grey.shade300,
-                              inactiveTrackColor: Colors.grey.shade300
-                                  .withOpacity(0.35),
+                              inactiveTrackColor:
+                                  Colors.grey.shade300.withOpacity(0.35),
                               onChanged: (v) {
                                 setModalState(() {
                                   if (v) {
@@ -1542,7 +1568,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                             IconButton(
                               onPressed: () => Navigator.of(ctx).pop(null),
-                              icon: const Icon(CupertinoIcons.xmark, color: Colors.white),
+                              icon: const Icon(CupertinoIcons.xmark,
+                                  color: Colors.white),
                             ),
                           ],
                         ),
@@ -1551,8 +1578,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
-                          children:
-                              documentTypeOptions.map<Widget>((type) {
+                          children: documentTypeOptions.map<Widget>((type) {
                             final isOn = selected.contains(type);
                             return SwitchListTile(
                               contentPadding: EdgeInsets.zero,
@@ -1566,13 +1592,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               // activeThumbColor: AppColors.accentGreen,
                               activeTrackColor:
                                   AppColors.accentGreen.withOpacity(0.35),
-                              trackOutlineColor:
-                                  WidgetStateProperty.all(
+                              trackOutlineColor: WidgetStateProperty.all(
                                 Colors.grey.shade300.withOpacity(0.9),
                               ),
                               inactiveThumbColor: Colors.grey.shade300,
-                              inactiveTrackColor: Colors.grey.shade300
-                                  .withOpacity(0.35),
+                              inactiveTrackColor:
+                                  Colors.grey.shade300.withOpacity(0.35),
                               onChanged: (v) {
                                 setModalState(() {
                                   if (v) {
@@ -1608,7 +1633,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: FilledButton(
-                                onPressed: () => Navigator.of(ctx).pop(selected),
+                                onPressed: () =>
+                                    Navigator.of(ctx).pop(selected),
                                 style: FilledButton.styleFrom(
                                   backgroundColor: AppColors.accentGreen,
                                 ),
@@ -1649,9 +1675,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             final filteredOptions = query.trim().isEmpty
                 ? sortedOptions
                 : sortedOptions
-                    .where((n) => n
-                        .toLowerCase()
-                        .contains(query.trim().toLowerCase()))
+                    .where((n) =>
+                        n.toLowerCase().contains(query.trim().toLowerCase()))
                     .toList(growable: false);
             return SafeArea(
               child: Padding(
@@ -1803,39 +1828,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     itemCount: filteredOptions.length,
                                     itemBuilder: (context, index) {
                                       final name = filteredOptions[index];
-                                  final isOn = selected.contains(name);
-                                  return SwitchListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    title: Text(
-                                      name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    value: isOn,
-                                    // activeThumbColor: AppColors.accentGreen,
-                                    activeTrackColor: AppColors
-                                        .accentGreen
-                                        .withOpacity(0.35),
-                                    trackOutlineColor:
-                                        WidgetStateProperty.all(
-                                      Colors.grey.shade300.withOpacity(0.9),
-                                    ),
-                                    inactiveThumbColor: Colors.grey.shade300,
-                                    inactiveTrackColor: Colors.grey.shade300
-                                        .withOpacity(0.35),
-                                    onChanged: (v) {
-                                      setModalState(() {
-                                        if (v) {
-                                          selected.add(name);
-                                        } else {
-                                          selected.remove(name);
-                                        }
-                                      });
+                                      final isOn = selected.contains(name);
+                                      return SwitchListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        title: Text(
+                                          name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        value: isOn,
+                                        // activeThumbColor: AppColors.accentGreen,
+                                        activeTrackColor: AppColors.accentGreen
+                                            .withOpacity(0.35),
+                                        trackOutlineColor:
+                                            WidgetStateProperty.all(
+                                          Colors.grey.shade300.withOpacity(0.9),
+                                        ),
+                                        inactiveThumbColor:
+                                            Colors.grey.shade300,
+                                        inactiveTrackColor: Colors.grey.shade300
+                                            .withOpacity(0.35),
+                                        onChanged: (v) {
+                                          setModalState(() {
+                                            if (v) {
+                                              selected.add(name);
+                                            } else {
+                                              selected.remove(name);
+                                            }
+                                          });
+                                        },
+                                      );
                                     },
-                                  );
-                                },
-                              ),
+                                  ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(14),
@@ -1925,12 +1950,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildList(
-      BuildContext context, WidgetRef ref, List<InvoiceDocument> documents,
-      AppLocalizations l10n) {
+  Widget _buildList(BuildContext context, WidgetRef ref,
+      List<InvoiceDocument> documents, AppLocalizations l10n) {
     return RefreshIndicator(
-      onRefresh: () =>
-          ref.read(documentsProvider.notifier).loadFromStorage(),
+      onRefresh: () => ref.read(documentsProvider.notifier).loadFromStorage(),
       child: ListView.builder(
         padding: const EdgeInsets.only(top: 8, bottom: 100),
         itemCount: documents.length,
@@ -1943,11 +1966,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Dismissible(
               key: ValueKey(doc.id),
               direction: DismissDirection.endToStart,
-              confirmDismiss: (_) =>
-                  _confirmDelete(context, ref, doc.id, l10n),
+              confirmDismiss: (_) => _confirmDelete(context, ref, doc.id, l10n),
               background: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.red.shade600,
                   borderRadius: BorderRadius.circular(16),
@@ -1968,8 +1989,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Future<bool> _confirmDelete(
-      BuildContext context, WidgetRef ref, String id, AppLocalizations l10n) async {
+  Future<bool> _confirmDelete(BuildContext context, WidgetRef ref, String id,
+      AppLocalizations l10n) async {
     final isIos = Theme.of(context).platform == TargetPlatform.iOS;
     final result = await showDialog<bool>(
       context: context,
@@ -2013,8 +2034,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return false;
   }
 
-  Widget _buildFAB(
-      BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _buildFAB(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(

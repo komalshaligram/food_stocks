@@ -11,7 +11,7 @@ class ProductSaleScreenShimmerWidget extends StatelessWidget {
       shrinkWrap: true,
       itemCount: AppConstants.saleProductPageLimit,
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: AppConstants.productGridAspectRatio7),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: AppConstants.productGridShimmerAspectRatio),
       itemBuilder: (context, index) {
         return buildProductSaleListItem();
       },

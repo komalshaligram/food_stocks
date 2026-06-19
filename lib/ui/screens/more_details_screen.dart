@@ -11,8 +11,8 @@ import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
+import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
-import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 
@@ -40,6 +40,9 @@ class MoreDetailsScreenWidget extends StatelessWidget {
 
   MoreDetailsScreenWidget({super.key});
 
+  static const double _horizontalPadding = 16;
+  static const double _fieldRadius = 12;
+
   @override
   Widget build(BuildContext context) {
     final listNotifier = ValueNotifier<List<String>>([]);
@@ -47,246 +50,369 @@ class MoreDetailsScreenWidget extends StatelessWidget {
     MoreDetailsBloc bloc = context.read<MoreDetailsBloc>();
     return BlocListener<MoreDetailsBloc, MoreDetailsState>(
       listener: (context, state) {},
-      child: BlocBuilder<MoreDetailsBloc, MoreDetailsState>(builder: (context, state) {
-        if (listNotifier.value.isEmpty) {
-          listNotifier.value = [...state.cityList];
-        }
-        return Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
-            leading: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
-            title: Align(
-              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.more_details, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+      child: BlocBuilder<MoreDetailsBloc, MoreDetailsState>(
+        builder: (context, state) {
+          if (listNotifier.value.isEmpty) {
+            listNotifier.value = [...state.cityList];
+          }
+          return Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                bgColor: AppColors.pageColor,
+                title: AppLocalizations.of(context)!.more_details,
+                iconData: Icons.arrow_back_ios_new_rounded,
+                trailingWidget: _buildAppBarIcon(),
+                onTap: () => Navigator.pop(context),
+              ),
             ),
-            backgroundColor: AppColors.whiteColor,
-            titleSpacing: 0,
-            elevation: 0,
-          ),
-          body: state.isShimmering
-              ? const MoreDetailsScreenShimmerWidget()
-              : SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  child: Column(children: [
-                    SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: getScreenWidth(context) * 0.1, right: getScreenWidth(context) * 0.1),
+            body: state.isShimmering
+                ? const MoreDetailsScreenShimmerWidget()
+                : Stack(
+                    children: [
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
                         child: Form(
                           key: _formKey,
-                          child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            10.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.city),
-                            GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    backgroundColor: Colors.white,
-                                    context: context,
-                                    isScrollControlled: true,
-                                    shape: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.only(topRight: Radius.circular(AppConstants.radius_20), topLeft: Radius.circular(AppConstants.radius_20)),
-                                      borderSide: BorderSide.none,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildFormCard(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.city),
+                                    _buildCityField(
+                                      context: context,
+                                      bloc: bloc,
+                                      state: state,
+                                      listNotifier: listNotifier,
                                     ),
-                                    builder: (context1) {
-                                      return ValueListenableBuilder(
-                                          valueListenable: listNotifier,
-                                          builder: (context, content, child) {
-                                            return Padding(
-                                              padding: const EdgeInsets.all(AppConstants.padding_15),
-                                              child: SizedBox(
-                                                height: getScreenHeight(context) * 0.9,
-                                                child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                  7.height,
-                                                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                                    Text(
-                                                      AppLocalizations.of(context)!.city,
-                                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor),
-                                                    ),
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.pop(context1);
-                                                        },
-                                                        child: const Icon(Icons.close))
-                                                  ]),
-                                                  15.height,
-                                                  CustomFormField(
-                                                    context: context,
-                                                    prefixIcon: Icon(Icons.search, color: AppColors.borderColor),
-                                                    onChangeValue: (value) {
-                                                      bloc.add(MoreDetailsEvent.citySearchEvent(search: value));
-                                                      listNotifier.value = state.cityList.where((city) => city.contains(value)).toList();
-                                                      listNotifier.value = listNotifier.value;
-                                                    },
-                                                    controller: state.cityController,
-                                                    keyboardType: TextInputType.text,
-                                                    hint: AppLocalizations.of(context)!.city,
-                                                    fillColor: AppColors.whiteColor,
-                                                    textInputAction: TextInputAction.next,
-                                                    validator: '',
-                                                    textCapitalization: TextCapitalization.words,
-                                                    autofocus: true,
-                                                    cursorColor: AppColors.mainColor,
-                                                  ),
-                                                  7.height,
-                                                  listNotifier.value.isEmpty
-                                                      ? Expanded(
-                                                          child: noDataWidget(AppLocalizations.of(context)!.cities_not_available),
-                                                        )
-                                                      : Expanded(
-                                                          child: ListView.builder(
-                                                              shrinkWrap: true,
-                                                              itemCount: listNotifier.value.length,
-                                                              itemBuilder: (context, index) {
-                                                                return Padding(
-                                                                  padding: const EdgeInsets.all(AppConstants.padding_10),
-                                                                  child: GestureDetector(
-                                                                    onTap: () {
-                                                                      bloc.add(MoreDetailsEvent.selectCityEvent(city: listNotifier.value[index], context: context));
-                                                                      Navigator.pop(context1);
-                                                                    },
-                                                                    child: Text(listNotifier.value[index].toString(), style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont)),
-                                                                  ),
-                                                                );
-                                                              }),
-                                                        ),
-                                                ]),
-                                              ),
-                                            );
-                                          });
-                                    });
-                              },
-                              child: Container(
-                                height: 46,
-                                width: getScreenWidth(context),
-                                decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  border: Border.all(color: AppColors.borderColor),
-                                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.street_name),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.streetNameController,
+                                      inputFormat: [LengthLimitingTextInputFormatter(50)],
+                                      keyboardType: TextInputType.text,
+                                      validator: AppStrings.streetNameValString,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.street_number),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.streetNumberController,
+                                      inputFormat: [LengthLimitingTextInputFormatter(50)],
+                                      keyboardType: TextInputType.number,
+                                      validator: AppStrings.streetNumberValString,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.email, required: false),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.emailController,
+                                      keyboardType: TextInputType.emailAddress,
+                                      validator: state.emailController.text.toString().isNotEmpty ? AppStrings.emailValString : '',
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.zip, required: false),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.zipController,
+                                      inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                                      textDirection: context.rtl ? TextDirection.ltr : null,
+                                      keyboardType: TextInputType.number,
+                                      validator: state.zipController.text.toString().isNotEmpty ? AppStrings.zipValString : '',
+                                      textInputAction: TextInputAction.done,
+                                    ),
+                                    16.height,
+                                    Divider(height: 1, color: AppColors.lightBorderColor.withValues(alpha: 0.6)),
+                                    12.height,
+                                    _buildSmsSwitchRow(context, bloc, state),
+                                  ],
                                 ),
-                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                                child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                                  Text(state.selectCity, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor)),
-                                ]),
                               ),
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.street_name),
-                            CustomFormField(
-                              context: context,
-                              controller: state.streetNameController,
-                              inputFormat: [LengthLimitingTextInputFormatter(50)],
-                              keyboardType: TextInputType.text,
-                              hint: '',
-                              fillColor: AppColors.whiteColor,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.streetNameValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.street_number),
-                            CustomFormField(
-                              context: context,
-                              controller: state.streetNumberController,
-                              inputFormat: [LengthLimitingTextInputFormatter(50)],
-                              keyboardType: TextInputType.number,
-                              hint: '',
-                              fillColor: AppColors.whiteColor,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.streetNumberValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.email, star: ''),
-                            CustomFormField(
-                              context: context,
-                              controller: state.emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              hint: "",
-                              fillColor: AppColors.whiteColor,
-                              textInputAction: TextInputAction.next,
-                              validator: state.emailController.text.toString().isNotEmpty ? AppStrings.emailValString : '',
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.zip, star: ''),
-                            CustomFormField(
-                              context: context,
-                              controller: state.zipController,
-                              inputFormat: [FilteringTextInputFormatter.digitsOnly],
-                              textDirection: context.rtl ? TextDirection.ltr : null,
-                              keyboardType: TextInputType.number,
-                              hint: "",
-                              fillColor: AppColors.whiteColor,
-                              textInputAction: TextInputAction.done,
-                              validator: state.zipController.text.toString().isNotEmpty ? AppStrings.zipValString : '',
-                            ),
-                            10.height,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_8),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                Expanded(
-                                  child: Text(
-                                    AppLocalizations.of(context)!.approve_for_promotional_info,
-                                    maxLines: 4,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 40,
-                                  child: Transform.scale(
-                                    scaleX: 0.84,
-                                    scaleY: 0.8,
-                                    child: CupertinoSwitch(
-                                      value: state.approveForSMS,
-                                      onChanged: (newVal) {
-                                        bloc.add(MoreDetailsEvent.setApprovalSMSSwitchEvent(context: context, updatedVal: newVal));
-                                      },
-                                      activeTrackColor: AppColors.mainColor,
-                                      thumbColor: AppColors.whiteColor,
-                                      inactiveTrackColor: AppColors.lightBorderColor,
-                                    ),
-                                  ),
-                                ),
-                              ]),
-                            ),
-                            20.height,
-                            CustomButtonWidget(
-                              buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
-                              bGColor: AppColors.mainColor,
-                              isLoading: state.isLoading,
-                              onPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                      if (state.selectCity != '') {
-                                        if (_formKey.currentState?.validate() ?? false) {
-                                          bloc.add(MoreDetailsEvent.registrationApiEvent(context: context));
+                              24.height,
+                              CustomButtonWidget(
+                                buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
+                                bGColor: AppColors.mainColor,
+                                isLoading: state.isLoading,
+                                radius: 14,
+                                onPressed: state.isLoading
+                                    ? null
+                                    : () {
+                                        if (state.selectCity != '') {
+                                          if (_formKey.currentState?.validate() ?? false) {
+                                            bloc.add(MoreDetailsEvent.registrationApiEvent(context: context));
+                                          }
+                                        } else {
+                                          CustomSnackBar.showSnackBar(
+                                            context: context,
+                                            title: AppLocalizations.of(context)!.please_enter_city,
+                                            type: SnackBarType.failure,
+                                          );
                                         }
-                                      } else {
-                                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_city, type: SnackBarType.failure);
-                                      }
-                                    },
-                              fontColors: AppColors.whiteColor,
-                            ),
-                            20.height,
-                          ]),
+                                      },
+                                fontColors: AppColors.whiteColor,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    state.isUpdating
-                        ? Container(
-                            color: const Color.fromARGB(10, 0, 0, 0),
-                            height: getScreenHeight(context),
-                            width: getScreenWidth(context),
-                            alignment: Alignment.center,
-                            child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                          )
-                        : 0.width,
-                  ]),
+                      if (state.isUpdating)
+                        Positioned.fill(
+                          child: ColoredBox(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            child: Center(child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20)),
+                          ),
+                        ),
+                    ],
+                  ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFormCard({required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: child,
+    );
+  }
+
+  Widget _buildAppBarIcon() {
+    return Container(
+      height: 40,
+      width: 40,
+      decoration: BoxDecoration(
+        color: AppColors.mainColor.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(Icons.storefront_outlined, size: 21, color: AppColors.mainColor),
+    );
+  }
+
+  Widget _buildFieldLabel(BuildContext context, String label, {bool required = true}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (required) Text('* ', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.redColor)),
+          Expanded(
+            child: Text(
+              label,
+              style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_13,
+                color: AppColors.blackColor.withValues(alpha: 0.55),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required BuildContext context,
+    required TextEditingController controller,
+    required TextInputType keyboardType,
+    required String validator,
+    TextInputAction? textInputAction,
+    List<TextInputFormatter>? inputFormat,
+    TextDirection? textDirection,
+  }) {
+    return CustomFormField(
+      context: context,
+      controller: controller,
+      keyboardType: keyboardType,
+      hint: '',
+      fillColor: AppColors.pageColor,
+      textInputAction: textInputAction,
+      validator: validator,
+      inputFormat: inputFormat,
+      textDirection: textDirection,
+      border: _fieldRadius,
+      cursorColor: AppColors.mainColor,
+    );
+  }
+
+  Widget _buildCityField({
+    required BuildContext context,
+    required MoreDetailsBloc bloc,
+    required MoreDetailsState state,
+    required ValueNotifier<List<String>> listNotifier,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _showCityPicker(context: context, bloc: bloc, state: state, listNotifier: listNotifier),
+        borderRadius: BorderRadius.circular(_fieldRadius),
+        child: Container(
+          height: AppConstants.textFormFieldHeight,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: AppColors.pageColor,
+            borderRadius: BorderRadius.circular(_fieldRadius),
+            border: Border.all(color: AppColors.lightBorderColor),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  state.selectCity.isEmpty ? AppLocalizations.of(context)!.city : state.selectCity,
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.smallFont,
+                    color: state.selectCity.isEmpty ? AppColors.blackColor.withValues(alpha: 0.4) : AppColors.blackColor,
+                  ),
                 ),
+              ),
+              Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.blackColor.withValues(alpha: 0.45)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSmsSwitchRow(BuildContext context, MoreDetailsBloc bloc, MoreDetailsState state) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            AppLocalizations.of(context)!.approve_for_promotional_info,
+            style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.font_14,
+              color: AppColors.blackColor.withValues(alpha: 0.75),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Transform.scale(
+          scale: 0.88,
+          child: CupertinoSwitch(
+            value: state.approveForSMS,
+            onChanged: (newVal) {
+              bloc.add(MoreDetailsEvent.setApprovalSMSSwitchEvent(context: context, updatedVal: newVal));
+            },
+            activeTrackColor: AppColors.mainColor,
+            thumbColor: AppColors.whiteColor,
+            inactiveTrackColor: AppColors.lightBorderColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showCityPicker({
+    required BuildContext context,
+    required MoreDetailsBloc bloc,
+    required MoreDetailsState state,
+    required ValueNotifier<List<String>> listNotifier,
+  }) {
+    showModalBottomSheet(
+      backgroundColor: AppColors.whiteColor,
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context1) {
+        return ValueListenableBuilder(
+          valueListenable: listNotifier,
+          builder: (context, content, child) {
+            return Padding(
+              padding: const EdgeInsets.all(AppConstants.padding_15),
+              child: SizedBox(
+                height: getScreenHeight(context) * 0.9,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.city,
+                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.blackColor),
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.pop(context1),
+                          icon: const Icon(Icons.close_rounded),
+                        ),
+                      ],
+                    ),
+                    12.height,
+                    CustomFormField(
+                      context: context,
+                      prefixIcon: Icon(Icons.search_rounded, color: AppColors.blackColor.withValues(alpha: 0.4)),
+                      onChangeValue: (value) {
+                        bloc.add(MoreDetailsEvent.citySearchEvent(search: value));
+                        listNotifier.value = state.cityList.where((city) => city.contains(value)).toList();
+                      },
+                      controller: state.cityController,
+                      keyboardType: TextInputType.text,
+                      hint: AppLocalizations.of(context)!.city,
+                      fillColor: AppColors.pageColor,
+                      textInputAction: TextInputAction.next,
+                      validator: '',
+                      textCapitalization: TextCapitalization.words,
+                      autofocus: true,
+                      cursorColor: AppColors.mainColor,
+                      border: _fieldRadius,
+                    ),
+                    12.height,
+                    listNotifier.value.isEmpty
+                        ? Expanded(
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!.cities_not_available,
+                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                              ),
+                            ),
+                          )
+                        : Expanded(
+                            child: ListView.separated(
+                              itemCount: listNotifier.value.length,
+                              separatorBuilder: (_, __) => Divider(height: 1, color: AppColors.lightBorderColor.withValues(alpha: 0.6)),
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text(
+                                    listNotifier.value[index],
+                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.blackColor),
+                                  ),
+                                  onTap: () {
+                                    bloc.add(MoreDetailsEvent.selectCityEvent(city: listNotifier.value[index], context: context));
+                                    Navigator.pop(context1);
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
-      }),
+      },
     );
   }
 }

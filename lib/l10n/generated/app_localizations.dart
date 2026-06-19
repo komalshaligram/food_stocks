@@ -119,7 +119,7 @@ abstract class AppLocalizations {
   /// No description provided for @business_details.
   ///
   /// In he, this message translates to:
-  /// **'פרטי עסק'**
+  /// **'פרופיל אישי'**
   String get business_details;
 
   /// No description provided for @type_of_picture.
@@ -4471,6 +4471,48 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'תמונה של מיקום להורדת סחורה'**
   String get delivery_location_photo;
+
+  /// No description provided for @customer_service_sheet_title.
+  ///
+  /// In he, this message translates to:
+  /// **'יצירת קשר עם שירות הלקוחות של TAVILI'**
+  String get customer_service_sheet_title;
+
+  /// No description provided for @customer_service_write_to_us.
+  ///
+  /// In he, this message translates to:
+  /// **'כתוב לנו'**
+  String get customer_service_write_to_us;
+
+  /// No description provided for @customer_service_call_us.
+  ///
+  /// In he, this message translates to:
+  /// **'התקשר אלינו'**
+  String get customer_service_call_us;
+
+  /// No description provided for @customer_service_not_configured.
+  ///
+  /// In he, this message translates to:
+  /// **'לא הוגדר במערכת'**
+  String get customer_service_not_configured;
+
+  /// No description provided for @customer_service_whatsapp_unavailable.
+  ///
+  /// In he, this message translates to:
+  /// **'מספר וואטסאפ לשירות לקוחות לא הוגדר'**
+  String get customer_service_whatsapp_unavailable;
+
+  /// No description provided for @customer_service_phone_unavailable.
+  ///
+  /// In he, this message translates to:
+  /// **'מספר טלפון לשירות לקוחות לא הוגדר'**
+  String get customer_service_phone_unavailable;
+
+  /// No description provided for @customer_service.
+  ///
+  /// In he, this message translates to:
+  /// **'שירות לקוחות'**
+  String get customer_service;
 }
 
 class _AppLocalizationsDelegate

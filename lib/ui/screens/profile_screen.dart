@@ -12,9 +12,9 @@ import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../widget/common_alert_dialog.dart';
+import '../widget/common_app_bar.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
-import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 
@@ -32,11 +32,13 @@ class ProfileScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProfileBloc()
         ..add(ProfileEvent.getBusinessTypeListEvent(context: context))
-        ..add(ProfileEvent.getProfileDetailsEvent(
-          context: context,
-          isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
-          mobileNo: args?.containsKey(AppStrings.contactString) ?? false ? args![AppStrings.contactString] : '',
-        )),
+        ..add(
+          ProfileEvent.getProfileDetailsEvent(
+            context: context,
+            isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
+            mobileNo: args?.containsKey(AppStrings.contactString) ?? false ? args![AppStrings.contactString] : '',
+          ),
+        ),
       child: ProfileScreenWidget(),
     );
   }
@@ -47,6 +49,9 @@ class ProfileScreenWidget extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
 
+  static const double _horizontalPadding = 16;
+  static const double _fieldRadius = 12;
+
   @override
   Widget build(BuildContext context1) {
     ProfileBloc bloc = context1.read<ProfileBloc>();
@@ -56,12 +61,17 @@ class ProfileScreenWidget extends StatelessWidget {
           CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.file_size_must_be_less_then, type: SnackBarType.failure);
         }
       },
-      child: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
-            leading: GestureDetector(
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.pageColor,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+              child: CommonAppBar(
+                bgColor: AppColors.pageColor,
+                title: AppLocalizations.of(context)!.business_details,
+                iconData: Icons.arrow_back_ios_new_rounded,
+                trailingWidget: _buildAppBarIcon(),
                 onTap: () {
                   if (!state.isUpdate) {
                     Navigator.pushNamed(context, RouteDefine.connectScreen.name);
@@ -69,175 +79,268 @@ class ProfileScreenWidget extends StatelessWidget {
                     Navigator.pop(context);
                   }
                 },
-                child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
-            title: Align(
-              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.business_details, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+              ),
             ),
-            backgroundColor: AppColors.whiteColor,
-            titleSpacing: 0,
-            elevation: 0,
-          ),
-          body: state.isShimmering
-              ? const ProfileScreenShimmerWidget()
-              : SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  child: Column(children: [
-                    SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: getScreenWidth(context1) * 0.1, right: getScreenWidth(context1) * 0.1),
+            body: state.isShimmering
+                ? const ProfileScreenShimmerWidget()
+                : Stack(
+                    children: [
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
                         child: Form(
                           key: _formKey,
-                          child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            10.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.type_of_business),
-                            CommonDropDownButton(
-                              items: state.businessTypeList.map((businessType) {
-                                return DropdownMenuItem<String>(value: businessType.businessType, child: Text(businessType.businessType ?? ''));
-                              }).toList(),
-                              onChanged: (newBusinessType) {
-                                bloc.add(ProfileEvent.changeBusinessTypeEvent(newBusinessType: newBusinessType ?? ''));
-                              },
-                              value: state.selectedBusinessType,
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.business_name),
-                            CustomFormField(
-                              context: context,
-                              controller: state.businessNameController,
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.businessNameValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.business_id),
-                            CustomFormField(
-                              context: context,
-                              controller: state.businessIdController,
-                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
-                              keyboardType: TextInputType.number,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.hpValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.owner_first_name),
-                            CustomFormField(
-                              context: context,
-                              controller: state.ownerFirstNameController,
-                              inputFormat: [LengthLimitingTextInputFormatter(20)],
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.ownerFirstNameValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.owner_last_name),
-                            CustomFormField(
-                              context: context,
-                              controller: state.ownerLastNameController,
-                              inputFormat: [LengthLimitingTextInputFormatter(20)],
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.ownerFirstNameValString,
-                            ),
-                            7.height,
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.israel_id),
-                            CustomFormField(
-                              context: context,
-                              controller: state.israelIdController,
-                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
-                              keyboardType: TextInputType.number,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.next,
-                              validator: AppStrings.idValString,
-                            ),
-                            CustomContainerWidget(name: AppLocalizations.of(context)!.contact_name),
-                            7.height,
-                            CustomFormField(
-                              controller: state.contactController,
-                              inputFormat: [LengthLimitingTextInputFormatter(20)],
-                              keyboardType: TextInputType.text,
-                              hint: "",
-                              fillColor: Colors.transparent,
-                              textInputAction: TextInputAction.done,
-                              validator: AppStrings.contactNameValString,
-                              context: context,
-                            ),
-                            40.height,
-                            CustomButtonWidget(
-                              buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
-                              bGColor: AppColors.mainColor,
-                              isLoading: state.isLoading,
-                              onPressed: state.isLoading
-                                  ? null
-                                  : () {
-                                      if (state.selectedBusinessType != AppLocalizations.of(context)?.type_of_business) {
-                                        if (isValidIsraeliID(state.businessIdController.text.toString().trim())) {
-                                          if (isValidIsraeliID(state.israelIdController.text.toString().trim())) {
-                                            if (_formKey.currentState?.validate() ?? false) {
-                                              if (state.isUpdate) {
-                                                bloc.add(ProfileEvent.updateProfileDetailsEvent(context: context1));
-                                              } else {
-                                                bloc.add(ProfileEvent.navigateToMoreDetailsScreenEvent(context: context1));
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildFormCard(
+                                context,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.type_of_business),
+                                    CommonDropDownButton(
+                                      items: state.businessTypeList.map((businessType) {
+                                        return DropdownMenuItem<String>(value: businessType.businessType, child: Text(businessType.businessType ?? ''));
+                                      }).toList(),
+                                      onChanged: (newBusinessType) {
+                                        bloc.add(ProfileEvent.changeBusinessTypeEvent(newBusinessType: newBusinessType ?? ''));
+                                      },
+                                      value: state.selectedBusinessType,
+                                      color: AppColors.lightBorderColor,
+                                      borderRadius: _fieldRadius,
+                                      useFilledBackground: true,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.business_name),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.businessNameController,
+                                      keyboardType: TextInputType.text,
+                                      validator: AppStrings.businessNameValString,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.business_id),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.businessIdController,
+                                      inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
+                                      keyboardType: TextInputType.number,
+                                      validator: AppStrings.hpValString,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.owner_first_name),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.ownerFirstNameController,
+                                      inputFormat: [LengthLimitingTextInputFormatter(20)],
+                                      keyboardType: TextInputType.text,
+                                      validator: AppStrings.ownerFirstNameValString,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.owner_last_name),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.ownerLastNameController,
+                                      inputFormat: [LengthLimitingTextInputFormatter(20)],
+                                      keyboardType: TextInputType.text,
+                                      validator: AppStrings.ownerFirstNameValString,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.israel_id),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.israelIdController,
+                                      inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(9)],
+                                      keyboardType: TextInputType.number,
+                                      validator: AppStrings.idValString,
+                                      textInputAction: TextInputAction.next,
+                                    ),
+                                    14.height,
+                                    _buildFieldLabel(context, AppLocalizations.of(context)!.contact_name),
+                                    _buildTextField(
+                                      context: context,
+                                      controller: state.contactController,
+                                      inputFormat: [LengthLimitingTextInputFormatter(20)],
+                                      keyboardType: TextInputType.text,
+                                      validator: AppStrings.contactNameValString,
+                                      textInputAction: TextInputAction.done,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              24.height,
+                              CustomButtonWidget(
+                                buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
+                                bGColor: AppColors.mainColor,
+                                isLoading: state.isLoading,
+                                radius: 14,
+                                onPressed: state.isLoading
+                                    ? null
+                                    : () {
+                                        if (state.selectedBusinessType != AppLocalizations.of(context)?.type_of_business) {
+                                          if (isValidIsraeliID(state.businessIdController.text.toString().trim())) {
+                                            if (isValidIsraeliID(state.israelIdController.text.toString().trim())) {
+                                              if (_formKey.currentState?.validate() ?? false) {
+                                                if (state.isUpdate) {
+                                                  bloc.add(ProfileEvent.updateProfileDetailsEvent(context: context1));
+                                                } else {
+                                                  bloc.add(ProfileEvent.navigateToMoreDetailsScreenEvent(context: context1));
+                                                }
                                               }
+                                            } else {
+                                              CustomSnackBar.showSnackBar(
+                                                context: context,
+                                                title: AppLocalizations.of(context)!.please_enter_valid_israel_id,
+                                                type: SnackBarType.failure,
+                                              );
                                             }
                                           } else {
                                             CustomSnackBar.showSnackBar(
                                               context: context,
-                                              title: AppLocalizations.of(context)!.please_enter_valid_israel_id,
+                                              title: AppLocalizations.of(context)!.please_enter_valid_business_id,
                                               type: SnackBarType.failure,
                                             );
                                           }
                                         } else {
                                           CustomSnackBar.showSnackBar(
                                             context: context,
-                                            title: AppLocalizations.of(context)!.please_enter_valid_business_id,
+                                            title: AppLocalizations.of(context)!.select_business_type,
                                             type: SnackBarType.failure,
                                           );
                                         }
-                                      } else {
-                                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
-                                      }
-                                    },
-                              fontColors: AppColors.whiteColor,
-                            ),
-                            10.height,
-                            state.isUpdate
-                                ? CustomButtonWidget(
-                                    isFromConnectScreen: true,
-                                    fontColors: AppColors.mainColor,
-                                    borderColor: AppColors.mainColor,
-                                    buttonText: AppLocalizations.of(context)!.delete_account.toUpperCase(),
-                                    onPressed: () {
-                                      deleteConfirmDialog(bloc: bloc, context: context, directionality: state.language);
-                                    })
-                                : 0.width,
-                            20.height,
-                          ]),
+                                      },
+                                fontColors: AppColors.whiteColor,
+                              ),
+                              if (state.isUpdate) ...[
+                                20.height,
+                                _buildDeleteAccountButton(
+                                  context: context,
+                                  onPressed: () {
+                                    deleteConfirmDialog(bloc: bloc, context: context, directionality: state.language);
+                                  },
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    state.isUpdating
-                        ? Container(
-                            color: const Color.fromARGB(10, 0, 0, 0),
-                            height: getScreenHeight(context),
-                            width: getScreenWidth(context),
-                            alignment: Alignment.center,
-                            child: CupertinoActivityIndicator(color: AppColors.blackColor),
-                          )
-                        : 0.width,
-                  ]),
-                ),
-        );
-      }),
+                      if (state.isUpdating)
+                        Positioned.fill(
+                          child: ColoredBox(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            child: Center(child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20)),
+                          ),
+                        ),
+                    ],
+                  ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFormCard(BuildContext context, {required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: child,
+    );
+  }
+
+  Widget _buildDeleteAccountButton({required BuildContext context, required VoidCallback onPressed}) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          height: 44,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.redColor.withValues(alpha: 0.3)),
+          ),
+          child: Text(
+            AppLocalizations.of(context)!.delete_account,
+            style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.font_14,
+              color: AppColors.redColor.withValues(alpha: 0.75),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppBarIcon() {
+    return Container(
+      height: 40,
+      width: 40,
+      decoration: BoxDecoration(
+        color: AppColors.mainColor.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(Icons.person_outline_rounded, size: 21, color: AppColors.mainColor),
+    );
+  }
+
+  Widget _buildFieldLabel(BuildContext context, String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('* ', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.redColor)),
+          Expanded(
+            child: Text(
+              label,
+              style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_13,
+                color: AppColors.blackColor.withValues(alpha: 0.55),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required BuildContext context,
+    required TextEditingController controller,
+    required TextInputType keyboardType,
+    required String validator,
+    TextInputAction? textInputAction,
+    List<TextInputFormatter>? inputFormat,
+  }) {
+    return CustomFormField(
+      context: context,
+      controller: controller,
+      keyboardType: keyboardType,
+      hint: '',
+      fillColor: AppColors.pageColor,
+      textInputAction: textInputAction,
+      validator: validator,
+      inputFormat: inputFormat,
+      border: _fieldRadius,
+      cursorColor: AppColors.mainColor,
     );
   }
 
@@ -245,31 +348,33 @@ class ProfileScreenWidget extends StatelessWidget {
     showDialog(
         context: context,
         builder: (context1) => CommonAlertDialog(
-            directionality: directionality,
-            title: AppLocalizations.of(context)!.delete_account,
-            subTitle: AppLocalizations.of(context)!.are_you_sure,
-            positiveTitle: AppLocalizations.of(context)!.yes,
-            negativeTitle: AppLocalizations.of(context)!.no,
-            negativeOnTap: () {
-              Navigator.pop(context);
-            },
-            positiveOnTap: () async {
-              Navigator.pop(context);
-              deleteDialog(context: context, directionality: directionality, bloc: bloc);
-            }));
+              directionality: directionality,
+              title: AppLocalizations.of(context)!.delete_account,
+              subTitle: AppLocalizations.of(context)!.are_you_sure,
+              positiveTitle: AppLocalizations.of(context)!.yes,
+              negativeTitle: AppLocalizations.of(context)!.no,
+              negativeOnTap: () {
+                Navigator.pop(context);
+              },
+              positiveOnTap: () async {
+                Navigator.pop(context);
+                deleteDialog(context: context, directionality: directionality, bloc: bloc);
+              },
+            ));
   }
 
   void deleteDialog({required ProfileBloc bloc, required BuildContext context, required String directionality}) {
     showDialog(
         context: context,
         builder: (context1) => CommonAlertDialog(
-            directionality: directionality,
-            title: AppLocalizations.of(context)!.delete_account,
-            subTitle: AppLocalizations.of(context)!.delete_pop_up_msg,
-            positiveTitle: AppLocalizations.of(context)!.closeText,
-            positiveOnTap: () async {
-              Navigator.pop(context1);
-              bloc.add(ProfileEvent.deleteAccountEvent(context: context));
-            }));
+              directionality: directionality,
+              title: AppLocalizations.of(context)!.delete_account,
+              subTitle: AppLocalizations.of(context)!.delete_pop_up_msg,
+              positiveTitle: AppLocalizations.of(context)!.closeText,
+              positiveOnTap: () async {
+                Navigator.pop(context1);
+                bloc.add(ProfileEvent.deleteAccountEvent(context: context));
+              },
+            ));
   }
 }

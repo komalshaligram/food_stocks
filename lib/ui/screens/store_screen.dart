@@ -424,9 +424,9 @@ class StoreScreenWidget extends StatelessWidget {
             }),
         SizedBox(
           width: getScreenWidth(context),
-          height: getItemHeight(context, state.isSaleOn),
+          height: getHomeStoreItemHeight(context, state.isSaleOn),
           child: state.isSaleShimmering
-              ? const CommonProductListShimmerWidget()
+              ? CommonProductListShimmerWidget(itemHeight: getHomeStoreItemHeight(context, state.isSaleOn))
               : AbsorbPointer(
                   absorbing: state.isSaleShimmering,
                   child: ListView.builder(
@@ -441,7 +441,10 @@ class StoreScreenWidget extends StatelessWidget {
                         return CommonProductSaleItemWidget(
                             isSale: productSaleData.sale?.isSale,
                             isGuestUser: state.isGuestUser,
-                            height: AppConstants.salesProductItemHeight,
+                            onGuestLoginRequired: () => Navigator.pushNamed(
+                                context, RouteDefine.connectScreen.name),
+                            height: getHomeStoreItemHeight(context, state.isSaleOn),
+                            imageHeight: getHomeStoreProductImageHeight(context),
                             width: getItemWidth(context),
                             productName: productSaleData.productName ?? '',
                             saleImage: productSaleData.mainImage ?? '',
@@ -562,9 +565,9 @@ class StoreScreenWidget extends StatelessWidget {
                 }),
             SizedBox(
               width: getScreenWidth(context),
-              height: getItemHeight(context, state.isSaleOn),
+              height: getHomeStoreItemHeight(context, state.isSaleOn),
               child: state.isRecommendedShimmering
-                  ? const CommonProductListShimmerWidget()
+                  ? CommonProductListShimmerWidget(itemHeight: getHomeStoreItemHeight(context, state.isSaleOn))
                   : ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       itemCount: state.recommendedProductsList.length,
@@ -577,7 +580,10 @@ class StoreScreenWidget extends StatelessWidget {
                         return CommonProductSaleItemWidget(
                             isSale: productRecommendedData.sale?.isSale,
                             isGuestUser: state.isGuestUser,
-                            height: AppConstants.salesProductItemHeight,
+                            onGuestLoginRequired: () => Navigator.pushNamed(
+                                context, RouteDefine.connectScreen.name),
+                            height: getHomeStoreItemHeight(context, state.isSaleOn),
+                            imageHeight: getHomeStoreProductImageHeight(context),
                             width: getItemWidth(context),
                             productName: productRecommendedData.productName ?? '',
                             saleImage: productRecommendedData.mainImage ?? '',
@@ -698,9 +704,9 @@ class StoreScreenWidget extends StatelessWidget {
                 }),
             SizedBox(
               width: getScreenWidth(context),
-              height: getItemHeight(context, state.isSaleOn),
+              height: getHomeStoreItemHeight(context, state.isSaleOn),
               child: state.isPreviousOrderShimmering
-                  ? const CommonProductListShimmerWidget()
+                  ? CommonProductListShimmerWidget(itemHeight: getHomeStoreItemHeight(context, state.isSaleOn))
                   : ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       itemCount: state.previousOrderProductsList.length,
@@ -713,7 +719,10 @@ class StoreScreenWidget extends StatelessWidget {
                         return CommonProductSaleItemWidget(
                             isSale: previousOrderData.sale?.isSale,
                             isGuestUser: state.isGuestUser,
-                            height: AppConstants.salesProductItemHeight,
+                            onGuestLoginRequired: () => Navigator.pushNamed(
+                                context, RouteDefine.connectScreen.name),
+                            height: getHomeStoreItemHeight(context, state.isSaleOn),
+                            imageHeight: getHomeStoreProductImageHeight(context),
                             width: getItemWidth(context),
                             productName: previousOrderData.productName ?? '',
                             saleImage: previousOrderData.mainImage ?? '',
@@ -1187,7 +1196,7 @@ class StoreScreenWidget extends StatelessWidget {
           return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
             relatedProductTitle(context),
             Container(
-              height: getItemHeight(context, isSaleOn),
+              height: getHomeStoreItemHeight(context, isSaleOn),
               padding: const EdgeInsets.only(left: AppConstants.padding_10, right: AppConstants.padding_10, top: AppConstants.padding_10),
               child: ListView.builder(
                 physics: const ClampingScrollPhysics(),
@@ -1199,8 +1208,11 @@ class StoreScreenWidget extends StatelessWidget {
                   var productStockIndexData = state.productStockList[2].indexWhere;
                   return CommonProductSaleItemWidget(
                       isSale: relatedProductData.sale?.isSale,
-                      isGuestUser: false,
-                      height: isSaleOn ? AppConstants.salesProductItemHeight : AppConstants.withoutSaleItemHeight,
+                      isGuestUser: state.isGuestUser,
+                      onGuestLoginRequired: () => Navigator.pushNamed(
+                          context, RouteDefine.connectScreen.name),
+                      height: getHomeStoreItemHeight(context, isSaleOn),
+                      imageHeight: getHomeStoreProductImageHeight(context),
                       width: getItemWidth(context),
                       productName: relatedProductData.productName ?? '',
                       saleImage: relatedProductData.mainImage ?? '',
@@ -1367,6 +1379,12 @@ class StoreScreenWidget extends StatelessWidget {
                     negativeTitle: AppLocalizations.of(context)!.addText,
                     negativeOnTap: () {
                       Navigator.pop(dialogContext);
+
+                      if (state.isGuestUser) {
+                        Navigator.pushNamed(
+                            context, RouteDefine.connectScreen.name);
+                        return;
+                      }
 
                       if (isIncrease) {
                         bloc.add(StoreEvent.increaseListQuantityOfProduct(

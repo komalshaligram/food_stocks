@@ -50,15 +50,24 @@ class ConnectScreenWidget extends StatelessWidget {
                       fontColors: AppColors.mainColor,
                       borderColor: AppColors.mainColor,
                       isFromConnectScreen: true,
+                      enable: !state.isLoading,
                       onPressed: () {
                         Navigator.pushNamed(context, RouteDefine.loginScreen.name, arguments: {AppStrings.isRegisterString: false});
                       }),
                   20.height,
-                  GestureDetector(
-                      onTap: () {
-                        bloc.add(ConnectEvent.logInAsGuest(context: context));
-                      },
-                      child: Text(AppLocalizations.of(context)!.login_as_guest, style: TextStyle(color: AppColors.mainColor, fontSize: AppConstants.mediumFont)))
+                  CustomButtonWidget(
+                      buttonText: AppLocalizations.of(context)!.login_as_guest,
+                      fontColors: AppColors.mainColor,
+                      borderColor: AppColors.mainColor,
+                      isFromConnectScreen: true,
+                      isLoading: state.isLoading,
+                      loadingColor: AppColors.mainColor,
+                      enable: !state.isLoading,
+                      onPressed: state.isLoading
+                          ? null
+                          : () {
+                              bloc.add(ConnectEvent.logInAsGuest(context: context));
+                            }),
                 ]),
               ),
             ),

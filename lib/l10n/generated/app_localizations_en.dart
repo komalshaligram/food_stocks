@@ -18,7 +18,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Login';
 
   @override
-  String get business_details => 'Business Info';
+  String get business_details => 'Personal Profile';
 
   @override
   String get type_of_picture => 'Type of Picture';
@@ -2295,4 +2295,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get delivery_location_photo => 'Delivery location photo';
+
+  @override
+  String get customer_service_sheet_title => 'Contact TAVILI Customer Service';
+
+  @override
+  String get customer_service_write_to_us => 'Write to us';
+
+  @override
+  String get customer_service_call_us => 'Call us';
+
+  @override
+  String get customer_service_not_configured => 'Not configured';
+
+  @override
+  String get customer_service_whatsapp_unavailable =>
+      'Customer service WhatsApp number is not configured';
+
+  @override
+  String get customer_service_phone_unavailable =>
+      'Customer service phone number is not configured';
+
+  @override
+  String get customer_service => 'Customer Service';
 }

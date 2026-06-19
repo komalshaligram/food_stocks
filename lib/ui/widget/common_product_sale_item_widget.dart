@@ -32,6 +32,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
   final void Function()? onQuantityChanged;
   final void Function()? onQuantityIncreaseTap;
   final void Function()? onQuantityDecreaseTap;
+  final VoidCallback? onGuestLoginRequired;
   final String? minQuantity;
   final String? maxQuantity;
   final bool? isMixedSale;
@@ -60,6 +61,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     this.onQuantityChanged,
     this.onQuantityIncreaseTap,
     this.onQuantityDecreaseTap,
+    this.onGuestLoginRequired,
     this.minQuantity,
     this.maxQuantity,
     required this.isMixedSale,
@@ -67,13 +69,25 @@ class CommonProductSaleItemWidget extends StatelessWidget {
     required this.scaleType,
   });
 
+  void _onQuantityIncrease() {
+    if (isGuestUser) {
+      onGuestLoginRequired?.call();
+      return;
+    }
+    onQuantityIncreaseTap?.call();
+  }
+
+  void _onQuantityDecrease() {
+    if (isGuestUser) {
+      onGuestLoginRequired?.call();
+      return;
+    }
+    onQuantityDecreaseTap?.call();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double productImageHeight = getItemHeight(context, false) == 350.0
-        ? 190
-        : getItemHeight(context, false) == 260.0
-            ? 125
-            : imageHeight ?? 80;
+    final double productImageHeight = getProductImageHeight(context, fallback: imageHeight);
 
     return Container(
       height: height,
@@ -105,8 +119,10 @@ class CommonProductSaleItemWidget extends StatelessWidget {
             Stack(clipBehavior: Clip.none, children: [
               /// PRODUCT IMAGE
               Center(
-                child: !isGuestUser
-                    ? saleImage.isNotEmpty
+                child:
+                // !isGuestUser
+                //     ?
+                saleImage.isNotEmpty
                         ? CachedNetworkImage(
                             imageUrl:
                                 "${AppUrlEndPoints.baseFileUrl}$saleImage",
@@ -134,8 +150,8 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                             })
                         : Image.asset(AppImagePath.imageNotAvailable5,
                             height: productImageHeight, width: 70)
-                    : Image.asset(AppImagePath.imageNotAvailable5,
-                        height: productImageHeight, width: 70),
+                    // : Image.asset(AppImagePath.imageNotAvailable5,
+                    //     height: productImageHeight, width: 70),
               ),
 
               if (isSale == true)
@@ -395,7 +411,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
           /// QUANTITY
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             GestureDetector(
-              onTap: onQuantityIncreaseTap,
+              onTap: _onQuantityIncrease,
               child: Container(
                 width: 25,
                 height: 25,
@@ -412,7 +428,7 @@ class CommonProductSaleItemWidget extends StatelessWidget {
                     color: AppColors.blackColor, size: AppConstants.font_17)),
             15.width,
             GestureDetector(
-              onTap: onQuantityDecreaseTap,
+              onTap: _onQuantityDecrease,
               child: Container(
                 alignment: Alignment.center,
                 width: 25,

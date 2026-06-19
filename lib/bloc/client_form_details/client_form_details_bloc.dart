@@ -209,8 +209,54 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
         } else if (event.fieldName == AppStrings.guarantee2SignatureString) {
           emit(state.copyWith(guarantee2Signature: '', guarantee2SignatureLocal: ''));
         }
+      } else if (event is _uploadSignatureFromPadEvent) {
+        await _uploadSignatureFromPad(event, emit);
       }
     });
+  }
+
+  Future<void> _uploadSignatureFromPad(_uploadSignatureFromPadEvent event, Emitter<ClientFormDetailsState> emit) async {
+    const contentType = 'png';
+    const type = 'image';
+    final fieldName = event.fieldName;
+    final localPath = event.localImagePath;
+    final fileNameWithoutExtension = p.basenameWithoutExtension(localPath);
+    final filename =
+        '${fileNameWithoutExtension}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}';
+
+    if (fieldName == AppStrings.owner1SignatureString) {
+      emit(state.copyWith(owner1SignatureLocal: localPath));
+      final formData = FormData.fromMap({
+        AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType)),
+      });
+      final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
+      final response = FileUploadResModel.fromJson(res);
+      emit(state.copyWith(owner1Signature: response.filepath.toString()));
+    } else if (fieldName == AppStrings.owner2SignatureString) {
+      emit(state.copyWith(owner2SignatureLocal: localPath));
+      final formData = FormData.fromMap({
+        AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType)),
+      });
+      final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
+      final response = FileUploadResModel.fromJson(res);
+      emit(state.copyWith(owner2Signature: response.filepath.toString()));
+    } else if (fieldName == AppStrings.guarantee1SignatureString) {
+      emit(state.copyWith(guarantee1SignatureLocal: localPath));
+      final formData = FormData.fromMap({
+        AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType)),
+      });
+      final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
+      final response = FileUploadResModel.fromJson(res);
+      emit(state.copyWith(guarantee1Signature: response.filepath.toString()));
+    } else if (fieldName == AppStrings.guarantee2SignatureString) {
+      emit(state.copyWith(guarantee2SignatureLocal: localPath));
+      final formData = FormData.fromMap({
+        AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType)),
+      });
+      final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
+      final response = FileUploadResModel.fromJson(res);
+      emit(state.copyWith(guarantee2Signature: response.filepath.toString()));
+    }
   }
 
   Future<void> showCustomSignaturePadDialog(BuildContext context, String fieldName, String signaturePadName) async {
@@ -261,64 +307,20 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
     );
   }
 
-  void saveSignature(BuildContext context, String fieldName) async {
+  Future<void> saveSignature(BuildContext context, String fieldName) async {
     ui.Image tempImage = await _signaturePadKey.currentState!.toImage();
     var data = await tempImage.toByteData(format: ui.ImageByteFormat.png);
-    final imageInUnit8List = (data!.buffer.asUint8List());
+    final imageInUnit8List = data!.buffer.asUint8List();
     directory = (await getApplicationDocumentsDirectory()).path;
     var timestamp = DateTime.now().millisecondsSinceEpoch;
     var path = '$directory/${fieldName}_$timestamp.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
 
-    FormData formData;
-    String? contentType = 'png';
-    String type = 'image';
-
-    if (fieldName == AppStrings.owner1SignatureString) {
-      emit(state.copyWith(owner1SignatureLocal: imagePath.path));
-
-      final fileNameWithoutExtension = p.basenameWithoutExtension(state.owner1SignatureLocal);
-
-      formData = FormData.fromMap({
-        AppStrings.fileString: await MultipartFile.fromFile(
-          state.owner1SignatureLocal,
-          filename: "${fileNameWithoutExtension}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}",
-          contentType: MediaType(type, contentType),
-        )
-      });
-
-      final res = await DioClient(context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
-      FileUploadResModel response = FileUploadResModel.fromJson(res);
-
-      emit(state.copyWith(owner1Signature: response.filepath.toString()));
-    } else if (fieldName == AppStrings.owner2SignatureString) {
-      emit(state.copyWith(owner2SignatureLocal: imagePath.path));
-
-      final fileNameWithoutExtension = p.basenameWithoutExtension(state.owner2SignatureLocal);
-      formData = FormData.fromMap({AppStrings.fileString: await MultipartFile.fromFile(state.owner2SignatureLocal, filename: "${fileNameWithoutExtension}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}", contentType: MediaType(type, contentType))});
-
-      final res = await DioClient(context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
-      FileUploadResModel response = FileUploadResModel.fromJson(res);
-      emit(state.copyWith(owner2Signature: response.filepath.toString()));
-    } else if (fieldName == AppStrings.guarantee1SignatureString) {
-      emit(state.copyWith(guarantee1SignatureLocal: imagePath.path));
-
-      final fileNameWithoutExtension = p.basenameWithoutExtension(state.guarantee1SignatureLocal);
-      formData = FormData.fromMap({AppStrings.fileString: await MultipartFile.fromFile(state.guarantee1SignatureLocal, filename: "${fileNameWithoutExtension}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}", contentType: MediaType(type, contentType))});
-
-      final res = await DioClient(context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
-      FileUploadResModel response = FileUploadResModel.fromJson(res);
-      emit(state.copyWith(guarantee1Signature: response.filepath.toString()));
-    } else if (fieldName == AppStrings.guarantee2SignatureString) {
-      emit(state.copyWith(guarantee2SignatureLocal: imagePath.path));
-
-      final fileNameWithoutExtension = p.basenameWithoutExtension(state.guarantee2SignatureLocal);
-      formData = FormData.fromMap({AppStrings.fileString: await MultipartFile.fromFile(state.guarantee2SignatureLocal, filename: "${fileNameWithoutExtension}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}", contentType: MediaType(type, contentType))});
-
-      final res = await DioClient(context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
-      FileUploadResModel response = FileUploadResModel.fromJson(res);
-      emit(state.copyWith(guarantee2Signature: response.filepath.toString()));
-    }
+    add(ClientFormDetailsEvent.uploadSignatureFromPadEvent(
+      context: context,
+      fieldName: fieldName,
+      localImagePath: imagePath.path,
+    ));
 
     // if (state.isOwner2Available) {
     //   if (state.owner1Signature != '' && owner2Signature != '' && guarantee1Signature != '' && guarantee2Signature != '') {

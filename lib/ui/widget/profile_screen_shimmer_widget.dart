@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import '../utils/app_utils.dart';
 import '../utils/constants/app_constants.dart';
 
 class ProfileScreenShimmerWidget extends StatelessWidget {
@@ -10,57 +9,90 @@ class ProfileScreenShimmerWidget extends StatelessWidget {
 
   const ProfileScreenShimmerWidget({super.key, this.isProfileImage = true});
 
+  static const double _horizontalPadding = 16;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(left: getScreenWidth(context) * 0.1, right: getScreenWidth(context) * 0.1),
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-            10.height,
-            buildTextFieldTitle(),
-            buildTextField(),
-            7.height,
-            buildTextFieldTitle(),
-            buildTextField(),
-            7.height,
-            buildTextFieldTitle(),
-            buildTextField(),
-            7.height,
-            buildTextFieldTitle(),
-            buildTextField(),
-            7.height,
-            buildTextFieldTitle(),
-            buildTextField(),
-            7.height,
-            buildTextFieldTitle(),
-            buildTextField(),
-            40.height,
-            buildTextField(),
-            20.height,
-          ]),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildTextFieldTitle(width: 120),
+                buildTextField(),
+                14.height,
+                buildTextFieldTitle(width: 100),
+                buildTextField(),
+                14.height,
+                buildTextFieldTitle(width: 90),
+                buildTextField(),
+                14.height,
+                buildTextFieldTitle(width: 110),
+                buildTextField(),
+                14.height,
+                buildTextFieldTitle(width: 110),
+                buildTextField(),
+                14.height,
+                buildTextFieldTitle(width: 80),
+                buildTextField(),
+                14.height,
+                buildTextFieldTitle(width: 100),
+                buildTextField(),
+              ],
+            ),
+          ),
+          24.height,
+          buildTextField(height: AppConstants.buttonHeight),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCard({required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: child,
+    );
+  }
+
+  Widget buildTextField({double? height}) {
+    return CommonShimmerWidget(
+      child: Container(
+        height: height ?? AppConstants.textFormFieldHeight,
+        width: double.maxFinite,
+        decoration: BoxDecoration(
+          color: AppColors.pageColor,
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );
   }
 
-  Widget buildTextField() {
-    return CommonShimmerWidget(
-      child: Container(
-        height: AppConstants.textFormFieldHeight,
-        width: double.maxFinite,
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-      ),
-    );
-  }
-
-  Widget buildTextFieldTitle() {
+  Widget buildTextFieldTitle({double width = 140}) {
     return CommonShimmerWidget(
       child: Container(
         height: AppConstants.shimmerTextHeight,
-        width: 140,
-        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
+        width: width,
+        margin: const EdgeInsets.only(bottom: 6),
+        decoration: BoxDecoration(
+          color: AppColors.pageColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
     );
   }

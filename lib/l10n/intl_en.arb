@@ -2,7 +2,7 @@
   "app_language": "Hebrew Language",
   "register": "Register",
   "login": "Login",
-  "business_details": "Business Info",
+  "business_details": "Personal Profile",
   "type_of_picture": "Type of Picture",
   "type_of_business": "Business Type",
   "profile_picture": "Profile Image",
@@ -229,8 +229,8 @@
   "you_have_reached_maximum_quantity": "You have reached maximum quantity",
   "downloaded_successfully": "Downloaded successfully!",
   "failed_download": "Failed to download",
-  "camera_permission": "Please allow camera permission from settings",
-  "storage_permission": "Please allow storage permission from settings",
+  "camera_permission": "Camera access is required to take a photo.",
+   "storage_permission": "Storage access is required to choose a file.",
   "enter_4digit_otp": "Please enter 4 digit otp code",
   "you_want_clear_cart": "Are you sure you want to clear cart?",
   "you_want_delete_product": "Are you sure you want to delete product?",
@@ -750,5 +750,12 @@
   "delivery_location_description": "Delivery location description",
   "waze_delivery_location": "Waze delivery location",
   "open_waze_to_set_location": "Open Waze to set location",
-  "delivery_location_photo": "Delivery location photo"
+  "delivery_location_photo": "Delivery location photo",
+  "customer_service_sheet_title": "Contact TAVILI Customer Service",
+  "customer_service_write_to_us": "Write to us",
+  "customer_service_call_us": "Call us",
+  "customer_service_not_configured": "Not configured",
+  "customer_service_whatsapp_unavailable": "Customer service WhatsApp number is not configured",
+  "customer_service_phone_unavailable": "Customer service phone number is not configured",
+  "customer_service": "Customer Service"
 }

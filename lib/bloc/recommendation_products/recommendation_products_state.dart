@@ -40,6 +40,7 @@ class RecommendationProductsState with _$RecommendationProductsState {
     required bool isCartCountChange,
     required int messageCount,
     required String? clubAgentId,
+    required bool isGuestUser,
   }) = _RecommendationProductsState;
 
   factory RecommendationProductsState.initial() => RecommendationProductsState(
@@ -84,5 +85,6 @@ class RecommendationProductsState with _$RecommendationProductsState {
         isCartCountChange: false,
         messageCount: 0,
         clubAgentId: '',
+        isGuestUser: false,
       );
 }

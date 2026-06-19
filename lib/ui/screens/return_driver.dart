@@ -250,17 +250,6 @@ class _ReturnDriverScreenWidgetState extends State<ReturnDriverScreenWidget> {
                   child: CustomButtonWidget(
                     onPressed: () {
                       final checkedItems = state.checkedItems;
-                      bool anyMissingProof = false;
-
-                      checkedItems.forEach((index, isChecked) {
-                        if (isChecked) {
-                          final proofImages = state.driverDeliveryProofFilesMap[index] ?? [];
-                          final hasImage = proofImages.any((file) => file != null);
-                          if (!hasImage) {
-                            anyMissingProof = true;
-                          }
-                        }
-                      });
 
                       final sentReturnData = <Map<String, dynamic>>[];
                       checkedItems.forEach((index, isChecked) {

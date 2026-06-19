@@ -98,6 +98,28 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
         }
       } else if (event is _signatureEvent) {
         showCustomSignaturePadDialog(event.context, event.fieldName, event.fieldNameForSign);
+      } else if (event is _signaturePadSavedEvent) {
+        if (event.fieldName == AppStrings.owner1SignatureString) {
+          owner1Signature = event.localImagePath;
+        } else if (event.fieldName == AppStrings.owner2SignatureString) {
+          owner2Signature = event.localImagePath;
+        } else if (event.fieldName == AppStrings.guarantee1SignatureString) {
+          guarantee1Signature = event.localImagePath;
+        } else if (event.fieldName == AppStrings.guarantee2SignatureString) {
+          guarantee2Signature = event.localImagePath;
+        }
+
+        if (state.isOwner2Available) {
+          if (owner1Signature != '' && owner2Signature != '' && guarantee1Signature != '' && guarantee2Signature != '') {
+            emit(state.copyWith(isNextEnable: true));
+          }
+        } else if (owner1Signature != '') {
+          if (state.isGuarantee1Available && guarantee1Signature == '') {
+            emit(state.copyWith(isNextEnable: false));
+          } else {
+            emit(state.copyWith(isNextEnable: true));
+          }
+        }
       }
     });
   }
@@ -156,34 +178,17 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
     );
   }
 
-  void saveSignature(BuildContext context, String fieldName) async {
+  Future<void> saveSignature(BuildContext context, String fieldName) async {
     ui.Image tempImage = await _signaturePadKey.currentState!.toImage();
     var data = await tempImage.toByteData(format: ui.ImageByteFormat.png);
-    final imageInUnit8List = (data!.buffer.asUint8List());
+    final imageInUnit8List = data!.buffer.asUint8List();
     directory = (await getApplicationDocumentsDirectory()).path;
     var path = '$directory/$fieldName.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
 
-    if (fieldName == AppStrings.owner1SignatureString) {
-      owner1Signature = imagePath.path;
-    } else if (fieldName == AppStrings.owner2SignatureString) {
-      owner2Signature = imagePath.path;
-    } else if (fieldName == AppStrings.guarantee1SignatureString) {
-      guarantee1Signature = imagePath.path;
-    } else if (fieldName == AppStrings.guarantee2SignatureString) {
-      guarantee2Signature = imagePath.path;
-    }
-
-    if (state.isOwner2Available) {
-      if (owner1Signature != '' && owner2Signature != '' && guarantee1Signature != '' && guarantee2Signature != '') {
-        emit(state.copyWith(isNextEnable: true));
-      }
-    } else if (owner1Signature != '') {
-      if (state.isGuarantee1Available && guarantee1Signature == '') {
-        emit(state.copyWith(isNextEnable: false));
-      } else {
-        emit(state.copyWith(isNextEnable: true));
-      }
-    }
+    add(PrivacyPolicyEvent.signaturePadSavedEvent(
+      fieldName: fieldName,
+      localImagePath: imagePath.path,
+    ));
   }
 }

@@ -34,16 +34,8 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
           Center(
             child: CommonShimmerWidget(
               child: Container(
-                height: getItemHeight(context, false) == 350.0
-                    ? 220
-                    : getItemHeight(context, false) == 260.0
-                        ? 200
-                        : 150,
-                width: getItemHeight(context, false) == 350.0
-                    ? 220
-                    : getItemHeight(context, false) == 260.0
-                        ? 200
-                        : 150,
+                height: getProductDetailShimmerSize(context),
+                width: getProductDetailShimmerSize(context),
                 margin: const EdgeInsets.all(AppConstants.padding_10),
                 decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
               ),
