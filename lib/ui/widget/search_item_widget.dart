@@ -135,12 +135,16 @@ class SearchItemWidget extends StatelessWidget {
           ),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             SizedBox(
-              height: getSearchItemImageHeight(context),
+              height: getItemHeight(context, false) == 350
+                  ? 120
+                  : getItemHeight(context, false) == 260
+                  ? 100
+                  : 60,
               width: getItemWidth(context) == 190
                   ? 130
                   : getItemWidth(context) == 160
-                      ? 100
-                      : 50,
+                  ? 100
+                  : 50,
               child: !isGuestUser
                   ? Image.network('${AppUrlEndPoints.baseFileUrl}$searchImage', fit: BoxFit.scaleDown, loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) {

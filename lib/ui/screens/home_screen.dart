@@ -465,11 +465,9 @@ class HomeScreenWidget extends StatelessWidget {
                 }),
             SizedBox(
               width: getScreenWidth(context),
-              height: getHomeStoreItemHeight(context, state.isSaleOn),
+              height: getItemHeight(context, state.isSaleOn),
               child: state.isProductSaleShimmering
-                  ? CommonProductListShimmerWidget(
-                      itemHeight:
-                          getHomeStoreItemHeight(context, state.isSaleOn))
+                  ? const CommonProductListShimmerWidget()
                   : AbsorbPointer(
                       absorbing: state.isProductSaleShimmering,
                       child: ListView.builder(
@@ -488,10 +486,8 @@ class HomeScreenWidget extends StatelessWidget {
                                 isGuestUser: state.isGuestUser,
                                 onGuestLoginRequired: () => Navigator.pushNamed(
                                     context, RouteDefine.connectScreen.name),
-                                height: getHomeStoreItemHeight(
-                                    context, state.isSaleOn),
-                                imageHeight:
-                                    getHomeStoreProductImageHeight(context),
+                                height: AppConstants.salesProductItemHeight,
+
                                 width: getItemWidth(context),
                                 productName: productSaleData.productName ?? '',
                                 saleImage: productSaleData.mainImage ?? '',
@@ -663,11 +659,9 @@ class HomeScreenWidget extends StatelessWidget {
                 }),
             SizedBox(
               width: getScreenWidth(context),
-              height: getHomeStoreItemHeight(context, state.isSaleOn),
+              height: getItemHeight(context, state.isSaleOn),
               child: state.isShimmering
-                  ? CommonProductListShimmerWidget(
-                      itemHeight:
-                          getHomeStoreItemHeight(context, state.isSaleOn))
+                  ? const CommonProductListShimmerWidget()
                   : ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       itemCount: state.recommendedProductsList.length,
@@ -684,10 +678,7 @@ class HomeScreenWidget extends StatelessWidget {
                             isGuestUser: state.isGuestUser,
                             onGuestLoginRequired: () => Navigator.pushNamed(
                                 context, RouteDefine.connectScreen.name),
-                            height:
-                                getHomeStoreItemHeight(context, state.isSaleOn),
-                            imageHeight:
-                                getHomeStoreProductImageHeight(context),
+                            height: AppConstants.salesProductItemHeight,
                             width: getItemWidth(context),
                             productName:
                                 productRecommendedData.productName ?? '',
@@ -1498,7 +1489,7 @@ class HomeScreenWidget extends StatelessWidget {
               children: [
                 relatedProductTitle(context),
                 Container(
-                  height: getHomeStoreItemHeight(context, isSaleOn),
+                  height: getItemHeight(context, isSaleOn),
                   padding: const EdgeInsets.only(
                       left: AppConstants.padding_10,
                       right: AppConstants.padding_10,
@@ -1519,8 +1510,7 @@ class HomeScreenWidget extends StatelessWidget {
                           isGuestUser: state.isGuestUser,
                           onGuestLoginRequired: () => Navigator.pushNamed(
                               context, RouteDefine.connectScreen.name),
-                          height: getHomeStoreItemHeight(context, isSaleOn),
-                          imageHeight: getHomeStoreProductImageHeight(context),
+                          height: AppConstants.salesProductItemHeight,
                           width: getItemWidth(context),
                           productName: relatedProductData.productName ?? '',
                           saleImage: relatedProductData.mainImage ?? '',

@@ -87,7 +87,12 @@ class CommonProductSaleItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double productImageHeight = getProductImageHeight(context, fallback: imageHeight);
+  final double productImageHeight = getItemHeight(context, false) == 350.0
+        ? 190
+        : getItemHeight(context, false) == 260.0
+        ? 125
+        : imageHeight ?? 80;
+
 
     return Container(
       height: height,

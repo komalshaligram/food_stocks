@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -60,7 +61,8 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         add(ReturnEvent.getReturnListEvent(context: event.context));
       } else if (event is _getReturnListEvent) {
         final String statusData = preferences.getReturnStatusInfo();
-        final List<StatusData> statusList = StatusData.decode(statusData);
+        final List<StatusData> statusList =
+            statusData.isEmpty ? <StatusData>[] : StatusData.decode(statusData);
         if (state.isLoadMore) {
           return;
         }
@@ -74,15 +76,28 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           isLoadMore: state.pageNum == 0 ? false : true,
         ));
         try {
-          GetAllOrderReqModel reqMap = GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.orderPageLimit, userId: preferences.getUserId());
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getReturnListUrl, data: reqMap);
-          GetReturnListResModel response = GetReturnListResModel.fromJson(res);
+          final GetAllOrderReqModel reqMap = GetAllOrderReqModel(
+            pageNum: state.pageNum + 1,
+            pageLimit: AppConstants.orderPageLimit,
+            userId: preferences.getUserId(),
+          );
+          final dynamic res = await DioClient(event.context).post(
+            AppUrlEndPoints.getReturnListUrl,
+            data: reqMap.toJson(),
+          );
+          final Map<String, dynamic> jsonMap = switch (res) {
+            final Map<String, dynamic> map => map,
+            final Map map => Map<String, dynamic>.from(map),
+            final String text => Map<String, dynamic>.from(json.decode(text)),
+            _ => throw const FormatException('Unexpected return list response'),
+          };
+          final GetReturnListResModel response = GetReturnListResModel.fromJson(jsonMap);
           if (response.status == AppConstants.code_200) {
             List<Return> orderList = state.returnList.toList(growable: true);
             if ((response.data?.totalRecords ?? 1) > state.returnList.length) {
               orderList.addAll(response.data?.returns ?? []);
               emit(state.copyWith(isLoading: false, returnList: orderList, pageNum: state.pageNum + 1, isLoadMore: false));
-              emit(state.copyWith(isBottomOfProducts: response.data?.returns?.length == (response.data?.totalRecords ?? 0) ? true : false));
+              emit(state.copyWith(isBottomOfProducts: orderList.length >= (response.data?.totalRecords ?? 0)));
             } else {
               emit(state.copyWith(isLoading: false, isLoadMore: false));
             }
@@ -99,6 +114,13 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false, isLoadMore: false));
+        } catch (e) {
+          emit(state.copyWith(isLoading: false, isLoadMore: false));
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: e.toString(),
+            type: SnackBarType.failure,
+          );
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();

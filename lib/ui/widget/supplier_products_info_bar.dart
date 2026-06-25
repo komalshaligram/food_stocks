@@ -75,11 +75,11 @@ class SupplierProductsInfoBar extends StatelessWidget {
                     cityName: deliveryCityName,
                     deliveryDays: deliveryDays,
                     label: l10n.supplier_delivery_schedule_button,
-                    onTap: deliveryCityName == null || deliveryDays.isEmpty
+                    onTap: deliveryCityName?.isNotEmpty != true || deliveryDays.isEmpty
                         ? null
                         : () => SupplierDeliveryScheduleWidget.showSheet(
                               context,
-                              cityName: deliveryCityName!,
+                              cityName: deliveryCityName ?? '',
                               deliveryDays: deliveryDays,
                             ),
                   ),

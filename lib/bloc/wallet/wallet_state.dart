@@ -31,9 +31,12 @@ class WalletState with _$WalletState {
     required bool isAccountPermissionShimmering,
   }) = _WalletState;
 
-  factory WalletState.initial() => WalletState(
-        year: 2020,
-        yearList: [],
+  factory WalletState.initial() {
+    final now = DateTime.now();
+    final currentYear = now.year;
+    return WalletState(
+        year: currentYear,
+        yearList: [currentYear, currentYear - 1, currentYear - 2, currentYear - 3],
         currentDate: '',
         balanceSheetList: const AllWalletTransactionResModel(),
         language: '',
@@ -57,6 +60,7 @@ class WalletState with _$WalletState {
         isExportComplete: false,
         userEmail: '',
         isAccountPermissionShimmering: false,
-        firstDateOfMonth: DateTime.utc(DateTime.now().year, DateTime.now().month, 1),
+        firstDateOfMonth: DateTime.utc(now.year, now.month, 1),
       );
+  }
 }

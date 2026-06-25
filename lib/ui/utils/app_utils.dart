@@ -41,7 +41,8 @@ enum SnackBarType { success, failure }
 
 bool isTablet(BuildContext context) {
   bool isTablet = false;
-  if (MediaQuery.of(context).size.height > 800 && MediaQuery.of(context).size.height > 500) {
+  if (MediaQuery.of(context).size.height > 800 &&
+      MediaQuery.of(context).size.height > 500) {
     isTablet = true;
   } else {
     return false;
@@ -51,11 +52,15 @@ bool isTablet(BuildContext context) {
 
 String maskCreditCardNumber(String cardNumber) {
   var firstDigits = cardNumber.substring(0, 4);
-  var lastDigits = cardNumber.substring(cardNumber.length - 4, cardNumber.length);
+  var lastDigits =
+      cardNumber.substring(cardNumber.length - 4, cardNumber.length);
   var requiredMask = 'X' * (16 - firstDigits.length);
   var maskedString = requiredMask + lastDigits;
-  var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(RegExp(r'.{4}'), (match) => '${match.group(0)}-');
-  return maskedCardNumberWithSpaces.toString().substring(0, maskedCardNumberWithSpaces.length - 1);
+  var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(
+      RegExp(r'.{4}'), (match) => '${match.group(0)}-');
+  return maskedCardNumberWithSpaces
+      .toString()
+      .substring(0, maskedCardNumberWithSpaces.length - 1);
 }
 
 String formatExpiryDate(String text) {
@@ -71,7 +76,8 @@ String formatExpiryDate(String text) {
 }
 
 Future<String> getBottleTax() async {
-  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  SharedPreferencesHelper preferences =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
   var value = preferences.getBottleTax().toString();
   return Future.value(value.toString());
 }
@@ -80,42 +86,59 @@ Color getStatusColor(List<StatusData> statusList, String status) {
   if (status.isEmpty) {
     return AppColors.mainColor;
   }
-  String color = statusList.where((e) => e.statusNameKey == status).first.statusColor ?? '';
+  String color =
+      statusList.where((e) => e.statusNameKey == status).first.statusColor ??
+          '';
   final hexCode = color.replaceAll('#', '');
   return Color(int.parse('FF$hexCode', radix: 16));
 }
 
-String getStatus(List<StatusData> statusList, String currentStatus, String language) {
+String getStatus(
+    List<StatusData> statusList, String currentStatus, String language) {
   String status = '';
   if (currentStatus.isEmpty) {
     return status;
   }
   if (language == AppStrings.hebrewString) {
-    status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameHebrew ?? '';
+    status = statusList
+            .where((e) => e.statusNameKey == currentStatus)
+            .first
+            .statusNameHebrew ??
+        '';
   } else {
-    status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameEnglish ?? '';
+    status = statusList
+            .where((e) => e.statusNameKey == currentStatus)
+            .first
+            .statusNameEnglish ??
+        '';
   }
   return status;
 }
 
-String getLocalizedReason({required String apiReason, required BuildContext context}) {
+String getLocalizedReason(
+    {required String apiReason, required BuildContext context}) {
+  final l10n = AppLocalizations.of(context);
+  if (l10n == null) {
+    return apiReason;
+  }
+
   final map = {
-    'Product did not arrive at all': AppLocalizations.of(context)!.product_did_not_arrive_at_all,
-    'המוצר לא הגיע בכלל': AppLocalizations.of(context)!.product_did_not_arrive_at_all,
-    'Product arrived damaged': AppLocalizations.of(context)!.product_arrived_damaged,
-    'המוצר הגיע פגום': AppLocalizations.of(context)!.product_arrived_damaged,
-    'Product arrived incomplete': AppLocalizations.of(context)!.product_arrived_incomplete,
-    'המוצר הגיע לא שלם': AppLocalizations.of(context)!.product_arrived_incomplete,
-    'Expiration date issue': AppLocalizations.of(context)!.expiration_date_issue,
-    'בעיית תאריך תפוגה': AppLocalizations.of(context)!.expiration_date_issue,
-    'Wrong product received': AppLocalizations.of(context)!.wrong_product_received,
-    'התקבל מוצר שגוי': AppLocalizations.of(context)!.wrong_product_received,
+    'Product did not arrive at all': l10n.product_did_not_arrive_at_all,
+    'המוצר לא הגיע בכלל': l10n.product_did_not_arrive_at_all,
+    'Product arrived damaged': l10n.product_arrived_damaged,
+    'המוצר הגיע פגום': l10n.product_arrived_damaged,
+    'Product arrived incomplete': l10n.product_arrived_incomplete,
+    'המוצר הגיע לא שלם': l10n.product_arrived_incomplete,
+    'Expiration date issue': l10n.expiration_date_issue,
+    'בעיית תאריך תפוגה': l10n.expiration_date_issue,
+    'Wrong product received': l10n.wrong_product_received,
+    'התקבל מוצר שגוי': l10n.wrong_product_received,
   };
-  return map[apiReason] ?? apiReason;
+  return map[apiReason.trim()] ?? apiReason;
 }
 
 double getChildAspectRatio(BuildContext context, bool isSaleOn) {
-  final baseRatio = !isSaleOn
+  return !isSaleOn
       ? AppConstants.productGridAspectRatio8
       : Platform.isAndroid
           ? getScreenHeight(context) > 900
@@ -126,95 +149,18 @@ double getChildAspectRatio(BuildContext context, bool isSaleOn) {
           : getScreenHeight(context) > 820
               ? AppConstants.productGridAspectRatio51
               : AppConstants.productGridAspectRatio51;
-  return baseRatio - AppConstants.productGridAspectRatioOffset;
 }
 
 double getItemHeight(BuildContext context, bool isSaleOn) {
   return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
-      ? AppConstants.bigTabItemHeight
-      : getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550
-          ? AppConstants.smallTabItemHeight
+      ? 350
+      : getScreenHeight(context) < 1000 &&
+              getScreenHeight(context) > 800 &&
+              getScreenWidth(context) > 550
+          ? 260
           : isSaleOn
               ? AppConstants.salesProductItemHeight
               : AppConstants.withoutSaleItemHeight;
-}
-
-double getHomeStoreItemHeight(BuildContext context, bool isSaleOn) {
-  if (getScreenHeight(context) > 1000 && getScreenWidth(context) > 700) {
-    return AppConstants.homeStoreBigTabItemHeight;
-  }
-  if (getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550) {
-    return AppConstants.homeStoreSmallTabItemHeight;
-  }
-  if (Platform.isAndroid) {
-    return isSaleOn ? AppConstants.homeStoreSalesProductItemHeightAndroid : AppConstants.homeStoreWithoutSaleItemHeightAndroid;
-  }
-  return isSaleOn ? AppConstants.homeStoreSalesProductItemHeightIOS : AppConstants.homeStoreWithoutSaleItemHeightIOS;
-}
-
-double getHomeStoreProductImageHeight(BuildContext context) {
-  if (getScreenHeight(context) > 1000 && getScreenWidth(context) > 700) {
-    return AppConstants.homeStoreBigTabImageHeight;
-  }
-  if (getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550) {
-    return AppConstants.homeStoreSmallTabImageHeight;
-  }
-  return Platform.isAndroid ? AppConstants.homeStoreProductImageHeightAndroid : AppConstants.homeStoreProductImageHeightIOS;
-}
-
-double getProductImageHeight(BuildContext context, {double? fallback}) {
-  final itemHeight = getItemHeight(context, false);
-  if (itemHeight == AppConstants.bigTabItemHeight) {
-    return AppConstants.bigTabImageHeight;
-  }
-  if (itemHeight == AppConstants.smallTabItemHeight) {
-    return AppConstants.smallTabImageHeight;
-  }
-  return fallback ?? AppConstants.defaultProductImageHeight;
-}
-
-double getPlanogramProductImageHeight(BuildContext context) {
-  final itemHeight = getItemHeight(context, false);
-  if (itemHeight == AppConstants.bigTabItemHeight) {
-    return AppConstants.bigTabImageHeight;
-  }
-  if (itemHeight == AppConstants.smallTabItemHeight) {
-    return AppConstants.smallTabImageHeight;
-  }
-  return AppConstants.defaultPlanogramImageHeight;
-}
-
-double getSearchItemImageHeight(BuildContext context) {
-  final itemHeight = getItemHeight(context, false);
-  if (itemHeight == AppConstants.bigTabItemHeight) {
-    return AppConstants.searchItemImageHeightBigTab;
-  }
-  if (itemHeight == AppConstants.smallTabItemHeight) {
-    return AppConstants.searchItemImageHeightSmallTab;
-  }
-  return AppConstants.searchItemImageHeightDefault;
-}
-
-double getProductDetailImageHeight(BuildContext context) {
-  final itemHeight = getItemHeight(context, false);
-  if (itemHeight == AppConstants.bigTabItemHeight) {
-    return AppConstants.productDetailImageHeightBigTab;
-  }
-  if (itemHeight == AppConstants.smallTabItemHeight) {
-    return AppConstants.productDetailImageHeightSmallTab;
-  }
-  return AppConstants.productDetailImageHeightDefault;
-}
-
-double getProductDetailShimmerSize(BuildContext context) {
-  final itemHeight = getItemHeight(context, false);
-  if (itemHeight == AppConstants.bigTabItemHeight) {
-    return AppConstants.productDetailShimmerSizeBigTab;
-  }
-  if (itemHeight == AppConstants.smallTabItemHeight) {
-    return AppConstants.productDetailShimmerSizeSmallTab;
-  }
-  return AppConstants.productDetailShimmerSizeDefault;
 }
 
 double getItemWidth(BuildContext context) {
@@ -234,7 +180,8 @@ Widget isPesachLabelShow(bool isPesach, BuildContext context) {
           border: Border.all(color: AppColors.pesachBGColor),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
-        child: Text(AppLocalizations.of(context)!.pesach, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13)));
+        child: Text(AppLocalizations.of(context)!.pesach,
+            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13)));
   } else {
     return 0.height;
   }
@@ -242,10 +189,19 @@ Widget isPesachLabelShow(bool isPesach, BuildContext context) {
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
-  static void showSnackBar({required BuildContext context, required String title, required SnackBarType type}) {
+  static void showSnackBar(
+      {required BuildContext context,
+      required String title,
+      required SnackBarType type}) {
     Flushbar(
-      backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withValues(alpha: 0.85) : AppColors.redColor.withValues(alpha: 0.85),
-      messageText: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
+      backgroundColor: type == SnackBarType.success
+          ? AppColors.mainColor.withValues(alpha: 0.85)
+          : AppColors.redColor.withValues(alpha: 0.85),
+      messageText: Text(title,
+          style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.smallFont,
+              color: AppColors.whiteColor,
+              fontWeight: FontWeight.w400)),
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(20),
       borderRadius: BorderRadius.circular(15),
@@ -259,7 +215,8 @@ printData(String? message) {
   debugPrint(message ?? '');
 }
 
-customShowUpdateDialog(BuildContext context, String directionality, String storeUrl) {
+customShowUpdateDialog(
+    BuildContext context, String directionality, String storeUrl) {
   return showDialog(
       barrierDismissible: false,
       context: context,
@@ -269,7 +226,8 @@ customShowUpdateDialog(BuildContext context, String directionality, String store
           child: AlertDialog(
               title: Text(
                 AppLocalizations.of(context)!.new_version_app_update,
-                style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.mediumFont),
+                style: AppStyles.rkRegularTextStyle(
+                    color: AppColors.blackColor, size: AppConstants.mediumFont),
               ),
               actions: [
                 Align(
@@ -279,13 +237,18 @@ customShowUpdateDialog(BuildContext context, String directionality, String store
                       _launchUrl(storeUrl);
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5.0, vertical: 5.0),
                       alignment: Alignment.center,
                       width: AppConstants.containerHeight_80,
-                      decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
+                      decoration: BoxDecoration(
+                          gradient: AppColors.appMainGradientColor,
+                          borderRadius: BorderRadius.circular(8.0)),
                       child: Text(
                         AppLocalizations.of(context)!.update,
-                        style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.font_14),
+                        style: AppStyles.rkRegularTextStyle(
+                            color: AppColors.whiteColor,
+                            size: AppConstants.font_14),
                       ),
                     ),
                   ),
@@ -293,17 +256,6 @@ customShowUpdateDialog(BuildContext context, String directionality, String store
               ]),
         );
       });
-}
-
-Future<void> _launchUrl(String storeUrl) async {
-  Uri url = Uri.parse(storeUrl);
-  try {
-    launchUrl(url);
-  } on PlatformException catch (e) {
-    printData(e.toString());
-  } finally {
-    launchUrl(url);
-  }
 }
 
 String normalizeWhatsAppPhone(String phoneNumber) {
@@ -351,6 +303,17 @@ Future<bool> openWhatsAppChat(String phoneNumber) async {
   return false;
 }
 
+Future<void> _launchUrl(String storeUrl) async {
+  Uri url = Uri.parse(storeUrl);
+  try {
+    launchUrl(url);
+  } on PlatformException catch (e) {
+    printData(e.toString());
+  } finally {
+    launchUrl(url);
+  }
+}
+
 bool isValidIsraeliID(String id) {
   id = id.trim();
   if (id.length > 9 || id.length < 5 || int.tryParse(id) == null) return false;
@@ -365,16 +328,21 @@ bool isValidIsraeliID(String id) {
   return sum % 10 == 0;
 }
 
-Future<CroppedFile?> cropImage({required String path, CropStyle shape = CropStyle.rectangle, int quality = 100, bool? isLogoCrop = false}) async {
+Future<CroppedFile?> cropImage(
+    {required String path,
+    CropStyle shape = CropStyle.rectangle,
+    int quality = 100,
+    bool? isLogoCrop = false}) async {
   return await ImageCropper().cropImage(
     sourcePath: path,
     compressQuality: quality,
     uiSettings: [
       AndroidUiSettings(
-        cropStyle: shape,
         activeControlsWidgetColor: AppColors.mainColor,
         cropFrameColor: AppColors.greyColor,
-        initAspectRatio: isLogoCrop ?? false ? CropAspectRatioPreset.ratio16x9 : CropAspectRatioPreset.square,
+        initAspectRatio: isLogoCrop ?? false
+            ? CropAspectRatioPreset.ratio16x9
+            : CropAspectRatioPreset.square,
         hideBottomControls: true,
         showCropGrid: false,
         lockAspectRatio: false,
@@ -383,7 +351,6 @@ Future<CroppedFile?> cropImage({required String path, CropStyle shape = CropStyl
         toolbarWidgetColor: AppColors.whiteColor,
       ),
       IOSUiSettings(
-        cropStyle: shape,
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: true,
         hidesNavigationBar: true,
@@ -477,13 +444,18 @@ Future<bool> ensureBarcodeScannerCameraPermission(BuildContext context) async {
   return false;
 }
 
-Future<String> scanBarcodeOrQRCode({required BuildContext context, required String cancelText, required ScanMode scanMode}) async {
+Future<String> scanBarcodeOrQRCode(
+    {required BuildContext context,
+    required String cancelText,
+    required ScanMode scanMode}) async {
   if (!await ensureBarcodeScannerCameraPermission(context)) {
     return '-1';
   }
+
   String barcodeSOrQRScanRes;
   try {
-    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode('#ff20BF6B', cancelText, true, scanMode);
+    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
+        '#ff20BF6B', cancelText, true, scanMode);
     printData(barcodeSOrQRScanRes);
   } on PlatformException {
     barcodeSOrQRScanRes = 'Failed to get platform version.';
@@ -499,7 +471,10 @@ bool isRTLContent({required BuildContext context}) {
 }
 
 extension RTLExtension on BuildContext {
-  bool get rtl => [const Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
+  bool get rtl => [const Locale(AppStrings.hebrewString)]
+          .contains(Localizations.localeOf(this))
+      ? true
+      : false;
 }
 
 String splitNumber(String price) {
@@ -512,44 +487,71 @@ String splitNumber(String price) {
 }
 
 extension StringCasingExtension on String {
-  String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
-  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
   String toLocalization() => contains('.') ? split('.')[1].toLowerCase() : this;
 }
 
 String formatNumber({required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;
-  final formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs());
+  final formatted =
+      NumberFormat.simpleCurrency(locale: local).format(number.abs());
   final String result = isNegative ? '-$formatted' : formatted;
   return splitNumber(result);
 }
 
 String formatSignedNumber(dynamic value) {
-  final double amount = value is num ? value.toDouble() : double.tryParse(value?.toString() ?? '0') ?? 0;
+  final double amount = value is num
+      ? value.toDouble()
+      : double.tryParse(value?.toString() ?? '0') ?? 0;
   final formatted = NumberFormat.decimalPattern('en_IN').format(amount.abs());
   return amount.isNegative ? '-$formatted ₪' : '$formatted ₪';
 }
 
-String formatNumberPositiveToNegative({required String value, required String local}) {
+String formatNumberPositiveToNegative(
+    {required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;
-  String formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs());
+  String formatted =
+      NumberFormat.simpleCurrency(locale: local).format(number.abs());
   formatted = formatted.replaceAll(RegExp(r'\s+'), '');
   return isNegative ? ' -$formatted' : formatted;
 }
 
-String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
-  String result1 = value.split('.')[0] + AppLocalizations.of(context)!.currency;
-  return result1;
+String formatNumberForWallet(
+    {required String value,
+    required String local,
+    required BuildContext context}) {
+  final currency = AppLocalizations.of(context)?.currency ?? '₪';
+  final parsed = double.tryParse(value) ?? 0;
+  final integerPart =
+      value.contains('.') ? value.split('.').first : parsed.toStringAsFixed(0);
+  return '$integerPart$currency';
 }
 
-double vatCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
-  double result = price + ((price * vat) / 100) + (qty * deposit) + ((qty * deposit * vat) / 100);
+double vatCalculation(
+    {required double price,
+    required double vat,
+    double qty = 0,
+    double deposit = 0}) {
+  double result = price +
+      ((price * vat) / 100) +
+      (qty * deposit) +
+      ((qty * deposit * vat) / 100);
   return result;
 }
 
-double vatCalculationRefund({required double price, required double vat, double qty = 0, double deposit = 0, double? refund}) {
+double vatCalculationRefund(
+    {required double price,
+    required double vat,
+    double qty = 0,
+    double deposit = 0,
+    double? refund}) {
   double priceWithVat = price + ((price * vat) / 100);
   double depositWithVat = (qty * deposit) + ((qty * deposit * vat) / 100);
   double total = priceWithVat + depositWithVat;
@@ -568,33 +570,48 @@ double vatCalculationRefund({required double price, required double vat, double 
   return total;
 }
 
-double totalVatAmountCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
+double totalVatAmountCalculation(
+    {required double price,
+    required double vat,
+    double qty = 0,
+    double deposit = 0}) {
   double result = ((price * vat) / 100) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-double bottleDepositCalculation({double units = 1, required double deposit, required double qty}) {
+double bottleDepositCalculation(
+    {double units = 1, required double deposit, required double qty}) {
   double result = qty * deposit * units;
   return result;
 }
 
-double bottleDepositCalculationWithVat({required double deposit, required double qty, double vatPercentage = 1}) {
+double bottleDepositCalculationWithVat(
+    {required double deposit, required double qty, double vatPercentage = 1}) {
   double result = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
   return result;
 }
 
 /// Sum of product [totalVatAmount] from cart API.
 double sumProductTotalVatAmounts(Iterable<double?> productTotalVatAmounts) {
-  return productTotalVatAmounts.fold<double>(0, (sum, amount) => sum + (amount ?? 0));
+  return productTotalVatAmounts.fold<double>(
+      0, (sum, amount) => sum + (amount ?? 0));
 }
 
 /// Grand total: sum(totalVatAmount) + bottle deposit + 18% on deposit when [bottleQuantities] > 0.
-double calculateBasketGrandTotal({required double productsTotalWithVat, required double bottleTax, required double vatPercentage, required int bottleQuantities}) {
+double calculateBasketGrandTotal(
+    {required double productsTotalWithVat,
+    required double bottleTax,
+    required double vatPercentage,
+    required int bottleQuantities}) {
   if (bottleQuantities <= 0) {
     return productsTotalWithVat;
   }
 
-  return productsTotalWithVat + bottleDepositCalculationWithVat(deposit: bottleTax, qty: bottleQuantities.toDouble(), vatPercentage: vatPercentage);
+  return productsTotalWithVat +
+      bottleDepositCalculationWithVat(
+          deposit: bottleTax,
+          qty: bottleQuantities.toDouble(),
+          vatPercentage: vatPercentage);
 }
 
 // double bottleDepositCalculationWithVatRefund({required double deposit, required double qty, double vatPercentage = 1, double? refund}) {
@@ -623,7 +640,8 @@ String formatInvoiceDate(String date) {
 }
 
 Widget getPaymentStatusWidget(String status, BuildContext context) => Container(
-      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
+      padding: const EdgeInsets.symmetric(
+          vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppConstants.radius_50),
         color: status == AppStrings.openText
@@ -642,42 +660,55 @@ Widget getPaymentStatusWidget(String status, BuildContext context) => Container(
                 : status == AppStrings.inProgressText
                     ? AppLocalizations.of(context)!.in_progress_text
                     : AppLocalizations.of(context)!.partially_closed_text,
-        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
+        style: AppStyles.rkRegularTextStyle(
+            size: AppConstants.font_12,
+            color: AppColors.whiteColor,
+            fontWeight: FontWeight.w400),
       ),
     );
 
 Widget titleText(BuildContext context, String title) => Text(
       title,
-      style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
+      style: AppStyles.rkBoldTextStyle(
+          size: AppConstants.smallFont,
+          color: AppColors.blackColor,
+          fontWeight: FontWeight.bold),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
 
 Widget subTitleValueText(BuildContext context, String subTitle) => Text(
       subTitle,
-      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.normal),
+      style: AppStyles.rkRegularTextStyle(
+          size: AppConstants.smallFont,
+          color: AppColors.blackColor,
+          fontWeight: FontWeight.normal),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
 
-Widget titleGreenText(BuildContext context, String title, ltr) => Directionality(
+Widget titleGreenText(BuildContext context, String title, ltr) =>
+    Directionality(
       textDirection: ltr,
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.bold),
+        style: AppStyles.rkBoldTextStyle(
+            size: AppConstants.smallFont,
+            color: AppColors.notificationColor,
+            fontWeight: FontWeight.bold),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
     );
 
 Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
-  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  SharedPreferencesHelper preferences =
+      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
   try {
-    printData("check here preferences.getGuestUser()${preferences.getGuestUser()}");
-    if(!preferences.getGuestUser()) {
-      final cartRes = await DioClient(context).post(
-          '${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
+    if (!preferences.getGuestUser()) {
+      final cartRes = await DioClient(context)
+          .post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
       final cartResponse = GetAllCartResModel.fromJson(cartRes);
 
       if (cartResponse.status == AppConstants.code_200) {
@@ -692,7 +723,10 @@ Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
 }
 
 Widget noDataWidget(String title) => Center(
-      child: Text(title, textAlign: TextAlign.center, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
+      child: Text(title,
+          textAlign: TextAlign.center,
+          style: AppStyles.rkRegularTextStyle(
+              size: AppConstants.smallFont, color: AppColors.textColor)),
     );
 
 Widget cartImageWidget() => Container(
@@ -702,7 +736,8 @@ Widget cartImageWidget() => Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.transparent, width: 1),
         gradient: AppColors.appMainGradientColor,
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+        borderRadius:
+            const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
       ),
       child: Center(
         child: SvgPicture.asset(
@@ -715,7 +750,8 @@ Widget cartImageWidget() => Container(
       ),
     );
 
-void inProgressSnackBarWidget(BuildContext context) => CustomSnackBar.showSnackBar(
+void inProgressSnackBarWidget(BuildContext context) =>
+    CustomSnackBar.showSnackBar(
       context: context,
       title: AppStrings.getLocalizedStrings('Oops! in progress', context),
       type: SnackBarType.success,
@@ -729,11 +765,16 @@ Widget smartRefreshCustomHeaderWidget() => CustomHeader(
         width: 30,
         margin: const EdgeInsets.only(top: 90, bottom: AppConstants.padding_30),
         decoration: BoxDecoration(
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withValues(alpha: 0.1),
+                blurRadius: AppConstants.blur_10)
+          ],
           color: AppColors.whiteColor,
           shape: BoxShape.circle,
         ),
-        child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_10),
+        child: CupertinoActivityIndicator(
+            color: AppColors.mainColor, radius: AppConstants.radius_10),
       );
     });
 
@@ -746,13 +787,20 @@ Widget imageNotAvailableWidget(double size) => Container(
     );
 
 Widget loaderWidget(double size) => Center(
-      child: SizedBox(width: size, height: size, child: CupertinoActivityIndicator(color: AppColors.blackColor)),
+      child: SizedBox(
+          width: size,
+          height: size,
+          child: CupertinoActivityIndicator(color: AppColors.blackColor)),
     );
 
-Widget invoiceOrderNumberWidget(String title) => Stack(alignment: Alignment.bottomLeft, children: [
+Widget invoiceOrderNumberWidget(String title) =>
+    Stack(alignment: Alignment.bottomLeft, children: [
       Text(
         title,
-        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
+        style: AppStyles.rkRegularTextStyle(
+            size: AppConstants.smallFont,
+            color: AppColors.notificationColor,
+            fontWeight: FontWeight.w400),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
@@ -760,27 +808,52 @@ Widget invoiceOrderNumberWidget(String title) => Stack(alignment: Alignment.bott
         bottom: 0,
         left: 0,
         right: 0,
-        child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
+        child: Container(
+            height: 1,
+            color: AppColors.notificationColor,
+            margin: const EdgeInsets.only(top: AppConstants.padding_3)),
       ),
     ]);
 
-String weekdayLabel(BuildContext context, int day) {
-  final l10n = AppLocalizations.of(context)!;
-  switch (day) {
+/// Maps API weekday codes to app labels.
+/// Supports 0=Sunday..6=Saturday and ISO 1=Monday..7=Sunday.
+int normalizeWeekdayIndex(int day) {
+  if (day < 0) {
+    return -1;
+  }
+  if (day == 0) {
+    return 0;
+  }
+  if (day <= 7) {
+    return day % 7;
+  }
+  return -1;
+}
+
+String weekdayLabel(
+  BuildContext context,
+  int day, {
+  AppLocalizations? l10n,
+}) {
+  final localizations = l10n ?? AppLocalizations.of(context);
+  if (localizations == null) {
+    return '';
+  }
+  switch (normalizeWeekdayIndex(day)) {
     case 0:
-      return l10n.sunday;
+      return localizations.sunday;
     case 1:
-      return l10n.monday;
+      return localizations.monday;
     case 2:
-      return l10n.tuesday;
+      return localizations.tuesday;
     case 3:
-      return l10n.wednesday;
+      return localizations.wednesday;
     case 4:
-      return l10n.thursday;
+      return localizations.thursday;
     case 5:
-      return l10n.friday_and_holiday_eves;
+      return localizations.friday_and_holiday_eves;
     case 6:
-      return l10n.saturday_and_holidays;
+      return localizations.saturday_and_holidays;
     default:
       return '';
   }

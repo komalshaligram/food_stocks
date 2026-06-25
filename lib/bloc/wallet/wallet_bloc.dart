@@ -62,7 +62,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 lastMonthExpense: response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
                 balance: response.data?.balanceAmount?.toDouble() ?? 0,
                 totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
-                expensePercentage: double.parse(response.data?.currentMonth?.expensePercentage ?? ''),
+                expensePercentage: double.tryParse(
+                      response.data?.currentMonth?.expensePercentage ?? '') ??
+                    0,
                 isProcess: false,
               ));
             } else {
@@ -90,7 +92,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 reverseList = number.toList();
               }
               response.data?.forEach((element) {
-                temp.add(FlSpot(reverseList[element.month!.toInt() - 1].toDouble(), element.totalExpenses?.toDouble() ?? 0));
+                final monthIndex = (element.month ?? 1).toInt() - 1;
+                if (monthIndex < 0 || monthIndex >= reverseList.length) return;
+                temp.add(FlSpot(
+                    reverseList[monthIndex].toDouble(),
+                    element.totalExpenses?.toDouble() ?? 0));
               });
               List<String> graphList = [];
               response.data?.forEach((element) {

@@ -54,11 +54,27 @@ class SupplierCityDeliveryDay {
 
   factory SupplierCityDeliveryDay.fromJson(Map<String, dynamic> json) {
     return SupplierCityDeliveryDay(
-      deliveryDay: json['deliveryDay'] as int?,
-      orderUntilDay: json['orderUntilDay'] as int?,
+      deliveryDay: _readInt(json['deliveryDay']),
+      orderUntilDay: _readInt(json['orderUntilDay']),
       deliveryUntilTime: _readTime(json['deliveryUntilTime']),
       orderUntilTime: _readTime(json['orderUntilTime']),
     );
+  }
+
+  static int? _readInt(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is int) {
+      return value;
+    }
+    if (value is num) {
+      return value.toInt();
+    }
+    if (value is String) {
+      return int.tryParse(value.trim());
+    }
+    return null;
   }
 
   static String? _readTime(dynamic value) {

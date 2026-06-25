@@ -28,7 +28,7 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>FDAllFilesDownloadedMessage</key>	    
+	<key>FDAllFilesDownloadedMessage</key>
 	<string>All files have been downloaded</string>
 	<key>FLTEnableImpeller</key>
 	<false/>
@@ -45,8 +45,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>io.flutter.embedded_views_preview</key>
-    <true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access is used to scan product barcodes and take profile photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -81,5 +79,7 @@
 	<false/>
 	<key>flavor</key>
 	<string>$(flavor)</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>

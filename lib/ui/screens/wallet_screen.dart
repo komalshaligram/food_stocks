@@ -134,7 +134,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                 bloc.add(WalletEvent.getDropDownElementEvent(year: state.year));
                 bloc.add(WalletEvent.getPermissionList(context: context));
                 bloc.add(const WalletEvent.checkLanguage());
-                minDate = DateTime(state.yearList.last, 1, 1);
+                if (state.yearList.isNotEmpty) {
+                  minDate = DateTime(state.yearList.last, 1, 1);
+                }
               },
               child: AnimationLimiter(
                 child: SafeArea(
@@ -409,6 +411,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                               showTitles: true,
                               getTitlesWidget: ((value, meta) {
                                 final month = monthMap[value];
+                                if (month == null) {
+                                  return const SizedBox.shrink();
+                                }
                                 return Padding(
                                   padding: const EdgeInsets.only(top: AppConstants.padding_5),
                                   child: Text(
@@ -425,7 +430,11 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: ((value, meta) {
-                                final month = state.graphDataList[value.round()];
+                                final index = value.round();
+                                if (index < 0 || index >= state.graphDataList.length) {
+                                  return const SizedBox.shrink();
+                                }
+                                final month = state.graphDataList[index];
                                 return Text(
                                   month.toString() == "0.00" ? '0' : month.toString(),
                                   style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.blackColor.withValues(alpha: 0.45)),
@@ -614,6 +623,10 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
   }
 
   Widget dropDownWidget({required int date, required List<int> dateList, required BuildContext context1}) {
+    if (dateList.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final selectedYear = dateList.contains(date) ? date : dateList.first;
     WalletBloc bloc = context1.read<WalletBloc>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -626,7 +639,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
         icon: Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.blackColor.withValues(alpha: 0.5), size: 20),
         elevation: 0,
         isDense: true,
-        value: date,
+        value: selectedYear,
         underline: const SizedBox(),
         borderRadius: BorderRadius.circular(12),
         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -639,7 +652,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
           );
         }).toList(),
         onChanged: (value) {
-          bloc.add(WalletEvent.getDropDownElementEvent(year: value!));
+          if (value == null) return;
+          bloc.add(WalletEvent.getDropDownElementEvent(year: value));
           bloc.add(WalletEvent.getTotalExpenseEvent(year: value, context: context1));
         },
       ),
@@ -667,7 +681,7 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    transaction.createdAt!.replaceRange(11, 16, ''),
+                    _formatTransactionTime(transaction.createdAt),
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor.withValues(alpha: 0.45)),
                   ),
                   8.height,
@@ -722,6 +736,14 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
         );
       },
     );
+  }
+
+  String _formatTransactionTime(String? createdAt) {
+    if (createdAt == null || createdAt.isEmpty) return '';
+    if (createdAt.length >= 16) {
+      return createdAt.replaceRange(11, 16, '');
+    }
+    return createdAt;
   }
 
   String? getType(String type) {

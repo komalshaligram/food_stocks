@@ -30,7 +30,8 @@ class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => OrderBloc()..add(OrderEvent.getAllOrderEvent(context: context)),
+      create: (context) =>
+          OrderBloc()..add(OrderEvent.getAllOrderEvent(context: context)),
       child: const OrderScreenWidget(),
     );
   }
@@ -58,7 +59,10 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             title: AppLocalizations.of(context)!.orders,
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () {
-              Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+              Navigator.pushReplacementNamed(
+                  context, RouteDefine.bottomNavScreen.name, arguments: {
+                AppStrings.pushNavigationString: 'profileScreen'
+              });
             },
           ),
         ),
@@ -68,7 +72,9 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
             enablePullDown: true,
             controller: state.refreshController,
             header: const RefreshWidget(),
-            footer: CustomFooter(builder: (_, __) => const OrderSummaryScreenShimmerWidget(itemCount: 2)),
+            footer: CustomFooter(
+                builder: (_, __) =>
+                    const OrderSummaryScreenShimmerWidget(itemCount: 2)),
             enablePullUp: !state.isBottomOfProducts,
             onRefresh: () {
               bloc.add(OrderEvent.refreshListEvent(context: context));
@@ -77,7 +83,9 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
               bloc.add(OrderEvent.getAllOrderEvent(context: context));
             },
             child: SingleChildScrollView(
-              physics: state.orderDetailsList.isEmpty ? const NeverScrollableScrollPhysics() : null,
+              physics: state.orderDetailsList.isEmpty
+                  ? const NeverScrollableScrollPhysics()
+                  : null,
               child: Column(children: [
                 if (state.isShimmering)
                   const OrderSummaryScreenShimmerWidget(itemCount: 10)
@@ -93,13 +101,22 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                             position: index,
                             child: SlideAnimation(
                               verticalOffset: 44.0,
-                              child: FadeInAnimation(child: orderListItem(state: state, index: index, context: context, orderDetailsList: state.orderDetailsList)),
+                              child: FadeInAnimation(
+                                  child: orderListItem(
+                                      state: state,
+                                      index: index,
+                                      context: context,
+                                      orderDetailsList:
+                                          state.orderDetailsList)),
                             ),
                           );
                         }),
                   )
                 else
-                  SizedBox(height: getScreenHeight(context) * 0.8, child: noDataWidget(AppLocalizations.of(context)!.no_data)),
+                  SizedBox(
+                      height: getScreenHeight(context) * 0.8,
+                      child:
+                          noDataWidget(AppLocalizations.of(context)!.no_data)),
               ]),
             ),
           ),
@@ -108,15 +125,22 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
     });
   }
 
-  Widget orderListItem({required OrderState state, required int index, required BuildContext context, required List<Datum> orderDetailsList}) {
+  Widget orderListItem(
+      {required OrderState state,
+      required int index,
+      required BuildContext context,
+      required List<Datum> orderDetailsList}) {
     final order = orderDetailsList[index];
     final orderId = order.id ?? '';
     final orderNumber = order.orderNumber ?? '';
     final supplierName = order.supplierName ?? '';
     final isMultiSupplier = (order.suppliers ?? 0) > 1;
 
-    final amount = order.rivchitInvoicePrice != '0' ? formatSignedNumber(order.rivchitInvoicePrice) : formatSignedNumber(order.totalAmount);
-    final orderDate = order.createdAt?.replaceRange(11, 16, '').replaceRange(6, 8, '') ?? '';
+    final amount = order.rivchitInvoicePrice != '0'
+        ? formatSignedNumber(order.rivchitInvoicePrice)
+        : formatSignedNumber(order.totalAmount);
+    final orderDate =
+        order.createdAt?.replaceRange(11, 16, '').replaceRange(6, 8, '') ?? '';
     final dueDate = order.paymentMethod == AppStrings.creditCard
         ? "-"
         : (order.dueDate?.isNotEmpty ?? false)
@@ -125,33 +149,57 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
 
     return GestureDetector(
       onTap: () async {
-        final prefs = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+        final prefs = SharedPreferencesHelper(
+            prefs: await SharedPreferences.getInstance());
         prefs.setOrderId(productOrderId: orderId);
 
         if (isMultiSupplier) {
-          Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name, arguments: {AppStrings.orderIdString: orderId, AppStrings.orderNumberString: orderNumber});
+          Navigator.pushNamed(context, RouteDefine.orderDetailsScreen.name,
+              arguments: {
+                AppStrings.orderIdString: orderId,
+                AppStrings.orderNumberString: orderNumber
+              });
         } else {
           Navigator.push(
             context,
             PageRouteBuilder(
-                pageBuilder: (_, __, ___) => ProductDetailsScreen(statusList: state.statusList, orderNumber: orderNumber, orderId: orderId, isNavigateToProductDetailString: true),
+                pageBuilder: (_, __, ___) => ProductDetailsScreen(
+                    statusList: state.statusList,
+                    orderNumber: orderNumber,
+                    orderId: orderId,
+                    isNavigateToProductDetailString: true),
                 transitionsBuilder: (_, animation, __, child) {
-                  return SlideTransition(position: animation.drive(Tween(begin: const Offset(0, 1), end: Offset.zero).chain(CurveTween(curve: Curves.bounceIn))), child: child);
+                  return SlideTransition(
+                      position: animation.drive(
+                          Tween(begin: const Offset(0, 1), end: Offset.zero)
+                              .chain(CurveTween(curve: Curves.bounceIn))),
+                      child: child);
                 }),
           );
         }
       },
       child: Container(
         margin: const EdgeInsets.all(AppConstants.padding_10),
-        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
+        padding: const EdgeInsets.symmetric(
+            vertical: AppConstants.padding_15,
+            horizontal: AppConstants.padding_10),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withValues(alpha: 0.15),
+                blurRadius: AppConstants.blur_10)
+          ],
+          borderRadius:
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(orderNumber, style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.bold)),
+            Text(orderNumber,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.normalFont,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.bold)),
             5.width,
             Expanded(
               child: Center(
@@ -159,22 +207,33 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
                   supplierName,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor),
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont, color: AppColors.mainColor),
                 ),
               ),
             ),
             Container(
-              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)), border: Border.all(color: AppColors.borderColor)),
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                      Radius.circular(AppConstants.radius_100)),
+                  border: Border.all(color: AppColors.borderColor)),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppConstants.padding_10,
+                    vertical: AppConstants.padding_5),
                 decoration: BoxDecoration(
                   color: AppColors.lightGreyColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                  borderRadius: const BorderRadius.all(
+                      Radius.circular(AppConstants.radius_100)),
                   border: Border.all(color: AppColors.whiteColor),
                 ),
                 child: Directionality(
                   textDirection: TextDirection.ltr,
-                  child: Text(amount, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold)),
+                  child: Text(amount,
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_14,
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.bold)),
                 ),
               ),
             )
@@ -199,20 +258,29 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
               value: orderDate,
               titleColor: AppColors.blackColor,
               valueColor: AppColors.blackColor,
-              valueTextSize: getScreenWidth(context) < 380 ? AppConstants.font_14 : AppConstants.smallFont,
+              valueTextSize: getScreenWidth(context) < 380
+                  ? AppConstants.font_14
+                  : AppConstants.smallFont,
             ),
             5.width,
-            order.status?.orderStatusNo == 2 && order.paymentMethod == AppStrings.creditCard
+            order.status?.orderStatusNo == 2 &&
+                    order.paymentMethod == AppStrings.creditCard
                 ? Expanded(
                     flex: 4,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_5,
+                          vertical: AppConstants.padding_10),
                       decoration: BoxDecoration(
                         color: AppColors.iconBGColor,
-                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(AppConstants.radius_5)),
                         border: Border.all(color: AppColors.lightBorderColor),
                       ),
-                      child: Text(AppLocalizations.of(context)!.invoice_charge, style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_10)),
+                      child: Text(AppLocalizations.of(context)!.invoice_charge,
+                          style: TextStyle(
+                              color: AppColors.blackColor,
+                              fontSize: AppConstants.font_10)),
                     ),
                   )
                 : CommonOrderContentWidget(
@@ -230,16 +298,28 @@ class _OrderScreenWidgetState extends State<OrderScreenWidget> {
               borderCoder: AppColors.lightBorderColor,
               flexValue: 4,
               title: AppLocalizations.of(context)!.order_status,
-              value: getStatus(state.statusList, order.status?.statusName ?? '', state.language).toTitleCase(),
+              value: getStatus(state.statusList, order.status?.statusName ?? '',
+                      state.language)
+                  .toTitleCase(),
               titleColor: AppColors.blackColor,
-              valueColor: getStatusColor(state.statusList, order.status?.statusName ?? ''),
+              valueColor: getStatusColor(
+                  state.statusList, order.status?.statusName ?? ''),
             ),
           ]),
           7.height,
           RichText(
-            text: TextSpan(text: '${AppLocalizations.of(context)!.payment_type} : ', style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14), children: [
-              TextSpan(text: getType(order.paymentMethod.toString()) ?? '', style: TextStyle(color: AppColors.mainColor, fontWeight: FontWeight.w700)),
-            ]),
+            text: TextSpan(
+                text: '${AppLocalizations.of(context)!.payment_type} : ',
+                style: TextStyle(
+                    color: AppColors.blackColor,
+                    fontSize: AppConstants.font_14),
+                children: [
+                  TextSpan(
+                      text: getType(order.paymentMethod.toString()) ?? '',
+                      style: TextStyle(
+                          color: AppColors.mainColor,
+                          fontWeight: FontWeight.w700)),
+                ]),
           )
         ]),
       ),

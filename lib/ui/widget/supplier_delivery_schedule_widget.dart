@@ -17,30 +17,41 @@ class SupplierDeliveryScheduleWidget {
     required String cityName,
     required List<SupplierCityDeliveryDay> deliveryDays,
   }) {
+    final locale = Localizations.localeOf(context);
+    final l10n = AppLocalizations.of(context);
     return showMaterialModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
       enableDrag: true,
       isDismissible: true,
       builder: (sheetContext) {
-        final maxHeight = MediaQuery.sizeOf(sheetContext).height * 0.85;
-        return SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppConstants.padding_10,
-              0,
-              AppConstants.padding_10,
-              AppConstants.padding_10,
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: maxHeight),
-              child: SupplierDeliverySchedulePanel(
-                cityName: cityName,
-                deliveryDays: deliveryDays,
-                showDragHandle: true,
-              ),
-            ),
+        return Localizations(
+          locale: locale,
+          delegates: AppLocalizations.localizationsDelegates,
+          child: Builder(
+            builder: (localizedContext) {
+              final maxHeight = MediaQuery.sizeOf(localizedContext).height * 0.85;
+              return SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppConstants.padding_10,
+                    0,
+                    AppConstants.padding_10,
+                    AppConstants.padding_10,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: maxHeight),
+                    child: SupplierDeliverySchedulePanel(
+                      cityName: cityName,
+                      deliveryDays: deliveryDays,
+                      showDragHandle: true,
+                      l10n: l10n ?? AppLocalizations.of(localizedContext),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         );
       },
@@ -54,15 +65,20 @@ class SupplierDeliverySchedulePanel extends StatelessWidget {
     required this.cityName,
     required this.deliveryDays,
     this.showDragHandle = false,
+    this.l10n,
   });
 
   final String cityName;
   final List<SupplierCityDeliveryDay> deliveryDays;
   final bool showDragHandle;
+  final AppLocalizations? l10n;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final localizations = l10n ?? AppLocalizations.of(context);
+    if (localizations == null) {
+      return const SizedBox.shrink();
+    }
 
     return Container(
       width: double.infinity,
@@ -117,7 +133,7 @@ class SupplierDeliverySchedulePanel extends StatelessWidget {
                 8.width,
                 Expanded(
                   child: Text(
-                    l10n.supplier_delivery_schedule_title(cityName),
+                    localizations.supplier_delivery_schedule_title(cityName),
                     style: AppStyles.rkBoldTextStyle(
                       size: AppConstants.font_14,
                       color: AppColors.whiteColor,
@@ -136,7 +152,9 @@ class SupplierDeliverySchedulePanel extends StatelessWidget {
                 AppConstants.padding_10,
               ),
               child: Column(
-                children: deliveryDays.map((day) => _DeliveryDayRow(day: day)).toList(),
+                children: deliveryDays
+                    .map((day) => _DeliveryDayRow(day: day, l10n: localizations))
+                    .toList(),
               ),
             ),
           ),
@@ -147,15 +165,26 @@ class SupplierDeliverySchedulePanel extends StatelessWidget {
 }
 
 class _DeliveryDayRow extends StatelessWidget {
-  const _DeliveryDayRow({required this.day});
+  const _DeliveryDayRow({
+    required this.day,
+    required this.l10n,
+  });
 
   final SupplierCityDeliveryDay day;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final deliveryLabel = weekdayLabel(context, day.deliveryDay ?? -1);
-    final orderUntilLabel = weekdayLabel(context, day.orderUntilDay ?? -1);
+    final deliveryLabel = weekdayLabel(
+      context,
+      day.deliveryDay ?? -1,
+      l10n: l10n,
+    );
+    final orderUntilLabel = weekdayLabel(
+      context,
+      day.orderUntilDay ?? -1,
+      l10n: l10n,
+    );
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppConstants.padding_8),
@@ -223,6 +252,7 @@ class _DeliveryDayRow extends StatelessWidget {
                   child: _UntilTimeLabel(
                     untilTime: day.orderUntilTime,
                     accentColor: AppColors.blueColor,
+                    l10n: l10n,
                   ),
                 ),
                 const SizedBox(width: 34),
@@ -230,6 +260,7 @@ class _DeliveryDayRow extends StatelessWidget {
                   child: _UntilTimeLabel(
                     untilTime: day.deliveryUntilTime,
                     accentColor: AppColors.mainColor,
+                    l10n: l10n,
                   ),
                 ),
               ],
@@ -261,10 +292,12 @@ class _UntilTimeLabel extends StatelessWidget {
   const _UntilTimeLabel({
     required this.untilTime,
     required this.accentColor,
+    required this.l10n,
   });
 
   final String? untilTime;
   final Color accentColor;
+  final AppLocalizations l10n;
 
   String _formatUntilTime(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -284,6 +317,8 @@ class _UntilTimeLabel extends StatelessWidget {
       return 0.height;
     }
 
+    final untilLabel = l10n.supplier_delivery_schedule_until_time(formattedTime);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -291,7 +326,7 @@ class _UntilTimeLabel extends StatelessWidget {
         4.width,
         Flexible(
           child: Text(
-            AppLocalizations.of(context)!.supplier_delivery_schedule_until_time(formattedTime),
+            untilLabel,
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
