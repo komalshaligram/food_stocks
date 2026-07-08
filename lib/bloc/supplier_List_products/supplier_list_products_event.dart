@@ -12,6 +12,12 @@ class SupplierListProductsEvent with _$SupplierListProductsEvent {
 
   const factory SupplierListProductsEvent.getSupplierProductsListEvent({required BuildContext context, required String searchType, String? brandId,}) = _getSupplierProductsListEvent;
 
+  const factory SupplierListProductsEvent.selectBrandEvent({required BuildContext context, required String brandId}) = _selectBrandEvent;
+
+  const factory SupplierListProductsEvent.selectCategoryEvent({required BuildContext context, required String categoryId}) = _selectCategoryEvent;
+
+  const factory SupplierListProductsEvent.selectSubCategoryEvent({required BuildContext context, required String subCategoryId}) = _selectSubCategoryEvent;
+
   const factory SupplierListProductsEvent.getProductDetailsEvent({
     required BuildContext context,
     required String productId,
@@ -99,4 +105,6 @@ class SupplierListProductsEvent with _$SupplierListProductsEvent {
   const factory SupplierListProductsEvent.applyListCartQuantitiesEvent({required Map<String, int> cartQuantities}) = _applyListCartQuantitiesEvent;
 
   const factory SupplierListProductsEvent.getSupplierDeliveryScheduleEvent({required BuildContext context}) = _getSupplierDeliveryScheduleEvent;
+
+  const factory SupplierListProductsEvent.applySortOptionEvent({required BuildContext context, required ProductSortOption option}) = _applySortOptionEvent;
 }

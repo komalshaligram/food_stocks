@@ -177,20 +177,26 @@ class AppRouting {
       RouteDefine.profileMenuScreen.name: (_) => ProfileMenuRoute.route,
       RouteDefine.orderDetailsScreen.name: (_) => OrderDetailsRoute.route,
       RouteDefine.productDetailsScreen.name: (_) => ProductDetailsRoute.route,
-      RouteDefine.shipmentVerificationScreen.name: (_) => ShipmentVerificationRoute.route,
+      RouteDefine.shipmentVerificationScreen.name: (_) =>
+          ShipmentVerificationRoute.route,
       RouteDefine.storeCategoryScreen.name: (_) => StoreCategoryRoute.route,
       RouteDefine.orderSummaryScreen.name: (_) => OrderSummaryRoute.route,
-      RouteDefine.verifyClientDataScreen.name: (_) => VerifyClientDataRoute.route,
+      RouteDefine.verifyClientDataScreen.name: (_) =>
+          VerifyClientDataRoute.route,
       RouteDefine.orderSuccessfulScreen.name: (_) => OrderSuccessfulRoute.route,
       RouteDefine.supplierScreen.name: (_) => SupplierRoute.route,
-      RouteDefine.supplierProductsScreen.name: (_) => SupplierProductsRoute.route,
-      RouteDefine.supplierListProductsScreen.name: (_) => SupplierListProductsRoute.route,
+      RouteDefine.supplierProductsScreen.name: (_) =>
+          SupplierProductsRoute.route,
+      RouteDefine.supplierListProductsScreen.name: (_) =>
+          SupplierListProductsRoute.route,
       RouteDefine.productSaleScreen.name: (_) => ProductSaleRoute.route,
-      RouteDefine.planogramProductScreen.name: (_) => PlanogramProductRoute.route,
+      RouteDefine.planogramProductScreen.name: (_) =>
+          PlanogramProductRoute.route,
       RouteDefine.productCategoryScreen.name: (_) => ProductCategoryRoute.route,
       RouteDefine.companyScreen.name: (_) => CompanyRoute.route,
       RouteDefine.companyProductsScreen.name: (_) => CompanyProductsRoute.route,
-      RouteDefine.recommendationProductsScreen.name: (_) => RecommendationProductsRoute.route,
+      RouteDefine.recommendationProductsScreen.name: (_) =>
+          RecommendationProductsRoute.route,
       RouteDefine.reorderScreen.name: (_) => ReorderRoute.route,
       RouteDefine.formDataScreen.name: (_) => FormDataRoute.route,
       RouteDefine.bankInfoScreen.name: (_) => BankInfoRoute.route,
@@ -202,41 +208,68 @@ class AppRouting {
       RouteDefine.refundPdfScreen.name: (_) => RefundPdfRoute.route,
       RouteDefine.subUsersScreen.name: (_) => SubUsersRoute.route,
       RouteDefine.subUsersProfileScreen.name: (_) => SubUsersProfileRoute.route,
-      RouteDefine.accountPermissionScreen.name: (_) => AccountPermissionRoute.route,
-      RouteDefine.categoriesPermissionScreen.name: (_) => CategoriesPermissionRoute.route,
-      RouteDefine.brandPermissionScreen.name: (_) => BrandsPermissionRoute.route,
-      RouteDefine.supplierPermissionScreen.name: (_) => SupplierPermissionRoute.route,
+      RouteDefine.accountPermissionScreen.name: (_) =>
+          AccountPermissionRoute.route,
+      RouteDefine.categoriesPermissionScreen.name: (_) =>
+          CategoriesPermissionRoute.route,
+      RouteDefine.brandPermissionScreen.name: (_) =>
+          BrandsPermissionRoute.route,
+      RouteDefine.supplierPermissionScreen.name: (_) =>
+          SupplierPermissionRoute.route,
       RouteDefine.wayOfPaymentScreen.name: (_) => WayOfPaymentRoute.route,
-      RouteDefine.creditCardDetailsScreen.name: (_) => CreditCardDetailsRoute.route,
-      RouteDefine.manageCreditCardScreen.name: (_) => ManageCreditCardRoute.route,
+      RouteDefine.creditCardDetailsScreen.name: (_) =>
+          CreditCardDetailsRoute.route,
+      RouteDefine.manageCreditCardScreen.name: (_) =>
+          ManageCreditCardRoute.route,
       RouteDefine.bankTransferScreen.name: (_) => BankTransferScreenRoute.route,
       RouteDefine.owner1FormScreen.name: (_) => Owner1FormRoute.route,
       RouteDefine.owner2FormScreen.name: (_) => Owner2FormRoute.route,
       RouteDefine.returnListScreen.name: (_) => ReturnListRoute.route,
       RouteDefine.scanReturnProduct.name: (_) => ScanReturnProductRoute.route,
-      RouteDefine.productReturnInfoScreen.name: (_) => ProductReturnInfoRoute.route,
-      RouteDefine.createProductReturnListScreen.name: (_) => CreateProductReturnListRoute.route,
+      RouteDefine.productReturnInfoScreen.name: (_) =>
+          ProductReturnInfoRoute.route,
+      RouteDefine.createProductReturnListScreen.name: (_) =>
+          CreateProductReturnListRoute.route,
       RouteDefine.returnSummaryScreen.name: (_) => ReturnSummaryRoute.route,
-      RouteDefine.clientFormDetailsScreen.name: (_) => ClientFormDetailsRoute.route,
+      RouteDefine.clientFormDetailsScreen.name: (_) =>
+          ClientFormDetailsRoute.route,
       RouteDefine.returnDriverScreen.name: (_) => ReturnDriverRoute.route,
       RouteDefine.webViewScreen.name: (_) => WebViewRoute.route,
       RouteDefine.orderRefundsScreen.name: (_) => OrderRefundsRoute.route,
-      RouteDefine.myAccountingCardScreen.name: (_) => MyAccountingCardRoute.route,
-      RouteDefine.registrationSuccessScreen.name: (_) => RegistrationSuccessRoute.route,
+      RouteDefine.myAccountingCardScreen.name: (_) =>
+          MyAccountingCardRoute.route,
+      RouteDefine.registrationSuccessScreen.name: (_) =>
+          RegistrationSuccessRoute.route,
       RouteDefine.myClientsScreen.name: (_) => MyClientsRoute.route,
       RouteDefine.supplierBrandScreen.name: (_) => SupplierBrandRoute.route,
-      RouteDefine.supplierBrandProductsScreen.name: (_) => SupplierBrandProductsRoute.route,
-      RouteDefine.supplierCategoryScreen.name: (_) => SupplierCategoryRoute.route,
-      RouteDefine.invoicePaymentScreen.name:(_) => InvoicePaymentRoute.route,
-      RouteDefine.certificateScanningScreen.name: (_) => CertificateScanningRoute.route,
+      RouteDefine.supplierBrandProductsScreen.name: (_) =>
+          SupplierBrandProductsRoute.route,
+      RouteDefine.supplierCategoryScreen.name: (_) =>
+          SupplierCategoryRoute.route,
+      RouteDefine.invoicePaymentScreen.name: (_) => InvoicePaymentRoute.route,
+      RouteDefine.certificateScanningScreen.name: (_) =>
+          CertificateScanningRoute.route,
     };
 
-    final routeBuilder = routes[settings.name];
+    final routeName = settings.name;
+    final routeBuilder = routeName != null ? routes[routeName] : null;
+
+    if (routeBuilder == null) {
+      debugPrint(
+          'AppRouting: unknown route "$routeName", falling back to splash');
+      return MaterialPageRoute(
+        builder: (context) => SplashRoute.route,
+        settings: RouteSettings(
+          name: RouteDefine.splashScreen.name,
+          arguments: settings.arguments,
+        ),
+      );
+    }
 
     return MaterialPageRoute(
-      builder: (context) => routeBuilder!(context),
+      builder: (context) => routeBuilder(context),
       settings: RouteSettings(
-        name: settings.name,
+        name: routeName,
         arguments: settings.arguments,
       ),
     );

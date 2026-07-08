@@ -229,6 +229,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get docTypeOther => 'Other';
 
   @override
+  String get docTypeTaxInvoice => 'Tax/entry invoice';
+
+  @override
+  String get docTypeReturnInvoice => 'Return invoice';
+
+  @override
+  String get docTypeEntryCertificate => 'Entry certificate';
+
+  @override
+  String get docTypeReturnCertificate => 'Return certificate';
+
+  @override
+  String get docTypeInactiveSuffix => 'not active yet';
+
+  @override
   String get chooseDocumentType => 'Choose document type';
 
   @override
@@ -703,4 +718,336 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanNoImagesSelected => 'No images selected';
+
+  @override
+  String get scanDocumentSdk => 'Scan document SDK';
+
+  @override
+  String get scanDocumentFlutter => 'Scan document Flutter';
+
+  @override
+  String get scanDocumentNative => 'Scan document Native';
+
+  @override
+  String get manualScannerSelectScanTrack => 'Choose scan track';
+
+  @override
+  String get manualScannerAddPage => 'Add page';
+
+  @override
+  String get manualScannerFinishScan => 'Finish scan';
+
+  @override
+  String get manualScannerApplyFilter => 'Apply B/W filter';
+
+  @override
+  String get manualScannerFilterBw => 'B/W document';
+
+  @override
+  String get manualScannerFilterGrayscale => 'Grayscale';
+
+  @override
+  String get manualScannerFilterContrast => 'High contrast';
+
+  @override
+  String get manualScannerFilterThreshold => 'Threshold B/W';
+
+  @override
+  String get manualScannerFilterCleanDocument => 'Clean document';
+
+  @override
+  String get supplierNameField => 'Supplier name';
+
+  @override
+  String get allocationNumber => 'Allocation number';
+
+  @override
+  String get paymentDueDate => 'Payment due date';
+
+  @override
+  String get colDiscountPercent => 'Discount %';
+
+  @override
+  String get colPackagingDepositTax => 'Pkg/Tax/Deposit';
+
+  @override
+  String get colFinalUnitPrice => 'Final unit price';
+
+  @override
+  String get loadingSuppliers => 'Loading suppliers…';
+
+  @override
+  String get suppliersLoadError => 'Failed to load suppliers';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get runSyncButton => 'Sync';
+
+  @override
+  String get syncConfirmTitle => 'Run Comax sync';
+
+  @override
+  String get syncConfirmMessage =>
+      'The sync connects to your Comax and pulls all the data again (suppliers, products, prices and promotions).\n\nFor it to succeed you must be logged out of your Comax user — Comax allows only a single session. Log out of Comax first, then continue.';
+
+  @override
+  String get syncConfirmContinue => 'I\'m logged out — run sync';
+
+  @override
+  String get syncing => 'Syncing...';
+
+  @override
+  String get syncDone => 'Synced successfully';
+
+  @override
+  String get syncDoneMessage =>
+      'Supplier and product data were updated from Comax.';
+
+  @override
+  String get syncErrorTitle => 'Sync error';
+
+  @override
+  String get syncSessionInUse =>
+      'A user is logged into Comax. Log out of Comax, wait ~3 minutes, and try again.';
+
+  @override
+  String get syncBadCredentials =>
+      'Permissions need updating in the admin system.';
+
+  @override
+  String get syncFailed => 'Sync failed, try again later.';
+
+  @override
+  String get syncRateLimited => 'Try again in a minute.';
+
+  @override
+  String get syncNoPermission =>
+      'The API key lacks permission to trigger a fetch.';
+
+  @override
+  String get syncTimeout =>
+      'Sync is taking longer than expected, check again later.';
+
+  @override
+  String get rotateScreen => 'Rotate screen';
+
+  @override
+  String get editBarcodeTitle => 'Item no. / Barcode';
+
+  @override
+  String get barcodeLabel => 'Barcode';
+
+  @override
+  String get barcodeInCatalog => 'In catalog';
+
+  @override
+  String get barcodeNotInCatalog =>
+      'Not in catalog — this may be an alternative barcode; choose the product\'s primary barcode';
+
+  @override
+  String get searchByProductName => 'Search product by name';
+
+  @override
+  String get productSearchHint => 'Type a product name…';
+
+  @override
+  String get noProductsFound => 'No products found';
+
+  @override
+  String get catalogLoading => 'Loading product catalog…';
+
+  @override
+  String get barcodeIssuesTitle => 'Barcodes not in catalog';
+
+  @override
+  String get barcodeIssuesMessage =>
+      'Some items have a barcode that is not in the catalog. It may be an alternative barcode — choose the product\'s primary barcode. You cannot send to the cash register until fixed.';
+
+  @override
+  String get jumpToFirstIssue => 'Jump to first issue';
+
+  @override
+  String get validating => 'Validating...';
+
+  @override
+  String get validationSuccessTitle => 'Data is valid';
+
+  @override
+  String get validationSuccessMessage =>
+      'The data is valid and ready to be posted to the cash register.';
+
+  @override
+  String get validationErrorsTitle => 'Issues to fix';
+
+  @override
+  String get validationFailedTitle => 'Validation failed';
+
+  @override
+  String get validationNetworkErrorTitle => 'Connection problem';
+
+  @override
+  String get validationNetworkErrorMessage =>
+      'Could not reach the server. Check your connection and try again.';
+
+  @override
+  String get validationConfigError =>
+      'System configuration error. Contact support (scope/customer code).';
+
+  @override
+  String get validationRateLimited =>
+      'Too many requests. Try again in a moment.';
+
+  @override
+  String get validationGenericError =>
+      'Validation failed, please try again later.';
+
+  @override
+  String get lineLabel => 'Line';
+
+  @override
+  String get suggestionsLabel => 'Suggestions';
+
+  @override
+  String get chooseCorrectSupplier => 'Choose the correct supplier';
+
+  @override
+  String get submitting => 'Sending to register...';
+
+  @override
+  String get submitBackground => 'Continuing in background…';
+
+  @override
+  String get submitSuccessTitle => 'Received successfully';
+
+  @override
+  String get submitSuccessMessage =>
+      'The invoice was received into Comax successfully.';
+
+  @override
+  String get submitErrorTitle => 'Send to register failed';
+
+  @override
+  String get submitNetworkError =>
+      'Connection problem while sending to the register. Try again.';
+
+  @override
+  String get submitGenericError => 'Send to register failed, try again.';
+
+  @override
+  String get submitTimeout =>
+      'Receiving is taking a while. Check later whether the invoice was received.';
+
+  @override
+  String get submitAlreadyReceivedTitle => 'Invoice already received';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get customerCodeLabel => 'Customer code';
+
+  @override
+  String get customerCodeHint => 'Enter customer code';
+
+  @override
+  String get scanModelLabel => 'Scan model';
+
+  @override
+  String get createNewProductButton => 'Create new product';
+
+  @override
+  String get editNewProductButton => 'Edit new product';
+
+  @override
+  String get newProductTitle => 'New product';
+
+  @override
+  String get editProductTitle => 'Edit product';
+
+  @override
+  String get npItem => 'Item';
+
+  @override
+  String get npBarcode => 'Barcode';
+
+  @override
+  String get npName => 'Name';
+
+  @override
+  String get npDepartment => 'Department';
+
+  @override
+  String get npGroup => 'Group';
+
+  @override
+  String get npMainSupplier => 'Main supplier';
+
+  @override
+  String get npSupplierItem => 'Supplier item';
+
+  @override
+  String get npSupplierPrice => 'Supplier price';
+
+  @override
+  String get npDiscountPct => 'Discount %';
+
+  @override
+  String get npProfitPct => 'Profit %';
+
+  @override
+  String get npSalePrice => 'Sale price';
+
+  @override
+  String get npManageDeposit => 'Manage deposit';
+
+  @override
+  String get npDraggedToRegister => 'Dragged to register';
+
+  @override
+  String get npDepositItem => 'Deposit item';
+
+  @override
+  String get npMisc => 'Misc';
+
+  @override
+  String get npRequiredMissing => 'Please fill in all required fields';
+
+  @override
+  String get npSelectDepartmentFirst => 'Select a department first';
+
+  @override
+  String get selectHint => 'Select';
+
+  @override
+  String get tbdOptions => 'To be defined';
+
+  @override
+  String get loadingEllipsis => 'Loading…';
+
+  @override
+  String get searchHintGeneric => 'Search…';
+
+  @override
+  String get npSectionItem => 'Item details';
+
+  @override
+  String get npSectionClassification => 'Classification';
+
+  @override
+  String get npSectionSupplier => 'Supplier';
+
+  @override
+  String get npSectionPricing => 'Pricing';
+
+  @override
+  String get npSectionMore => 'Additional settings';
+
+  @override
+  String get scannerUnknownFailure =>
+      'Could not open the scanner. Please try again.';
 }

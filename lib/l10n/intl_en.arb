@@ -1,4 +1,6 @@
 {
+  "all": "All",
+  "showing_all_products": "Showing all products again",
   "app_language": "Hebrew Language",
   "register": "Register",
   "login": "Login",
@@ -95,6 +97,8 @@
   "return_products_list": "Return products list",
   "product_Name": "Product Name",
   "product_issue": "Product Issue",
+  "product_information": "Product Information",
+  "kosher": "Kosher",
   "shipment_verification": "Shipment Verification",
   "driver_return": "Driver Return",
   "signature": "Signature",
@@ -393,6 +397,7 @@
   "kgBox": "Kg in box",
   "price": "Price",
   "per_unit": "per unit",
+  "per_kg": "per kg",
   "sub_categories": "Sub Categories",
   "delivery_date_value":"Delivery up to 3 business days",
   "monthly_credit":"Monthly Credits",
@@ -757,5 +762,15 @@
   "customer_service_not_configured": "Not configured",
   "customer_service_whatsapp_unavailable": "Customer service WhatsApp number is not configured",
   "customer_service_phone_unavailable": "Customer service phone number is not configured",
-  "customer_service": "Customer Service"
+  "customer_service": "Customer Service",
+  "whatsapp_optin_title": "Let's stay in touch on WhatsApp",
+  "whatsapp_optin_body": "I agree to receive WhatsApp messages from Tavili including updates, perks, promotions and service notices. I can withdraw this consent at any time.",
+  "whatsapp_optin_approve": "I agree",
+  "whatsapp_optin_not_now": "Not now",
+  "sort_products": "Sort products",
+  "sort_none": "No sorting",
+  "sort_a_to_z": "Sort A-Z",
+  "sort_price_low_high": "Price: low to high",
+  "sort_price_high_low": "Price: high to low",
+  "show_only_sales": "Show only sales"
 }

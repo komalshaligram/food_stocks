@@ -30,6 +30,9 @@ class Data with _$Data {
     String? firstSupplierOrderMessageTemplate,
     String? customerServicePhone,
     String? customerServiceWhatsApp,
+    bool? showWhatsappOptinPopup,
+    String? whatsappOptinPopupTitle,
+    String? whatsappOptinPopupText,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

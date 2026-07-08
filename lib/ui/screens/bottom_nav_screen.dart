@@ -32,9 +32,11 @@ class BottomNavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => BottomNavBloc()..add(BottomNavEvent.getPreferencesDataEvent(context: context)),
+      create: (context) => BottomNavBloc()
+        ..add(BottomNavEvent.getPreferencesDataEvent(context: context)),
       child: BottomNavScreenWidget(
         basketScreen: args?[AppStrings.isBasketScreenString] ?? '',
         storeScreen: args?[AppStrings.pushNavigationString] ?? '',
@@ -49,7 +51,11 @@ class BottomNavScreenWidget extends StatelessWidget {
   final String basketScreen;
   final String profileScreen;
 
-  BottomNavScreenWidget({super.key, this.storeScreen = '', this.basketScreen = '', this.profileScreen = ''});
+  BottomNavScreenWidget(
+      {super.key,
+      this.storeScreen = '',
+      this.basketScreen = '',
+      this.profileScreen = ''});
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   @override
@@ -59,10 +65,24 @@ class BottomNavScreenWidget extends StatelessWidget {
       listener: (context, state) {
         bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
         bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
-        bloc.add(BottomNavEvent.navigateToStoreScreenEvent(context: context, storeScreen: storeScreen, basketScreen: basketScreen, profileScreen: profileScreen));
+        bloc.add(BottomNavEvent.navigateToStoreScreenEvent(
+            context: context,
+            storeScreen: storeScreen,
+            basketScreen: basketScreen,
+            profileScreen: profileScreen));
       },
-      child: BlocBuilder<BottomNavBloc, BottomNavState>(builder: (context, state) {
-        return WillPopScope(
+      child:
+          BlocBuilder<BottomNavBloc, BottomNavState>(builder: (context, state) {
+            // Store tab is hidden from the bottom bar. The StoreScreen still lives in
+            // the page stack at index 1 (so every changePage(index:) across the app
+            // keeps its meaning), but no icon points at it. navPages maps each visible
+            // nav position to its underlying page index.
+            final List<int> navPages =
+            state.isSubUserSeeWallet ? const [0, 2, 3, 4] : const [0, 2, 3];
+            int selectedNavIndex = navPages.indexOf(state.index);
+            if (selectedNavIndex < 0) selectedNavIndex = 0;
+
+            return WillPopScope(
           onWillPop: () {
             if (state.index == 0) {
               return Future.value(true);
@@ -79,42 +99,90 @@ class BottomNavScreenWidget extends StatelessWidget {
                 resizeToAvoidBottomInset: false,
                 backgroundColor: AppColors.pageColor,
                 bottomNavigationBar: Container(
-                  decoration: BoxDecoration(color: Colors.transparent, boxShadow: [
-                    BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10),
+                  decoration:
+                      BoxDecoration(color: Colors.transparent, boxShadow: [
+                    BoxShadow(
+                        color: AppColors.shadowColor.withValues(alpha: 0.1),
+                        blurRadius: AppConstants.blur_10),
                   ]),
                   child: CurvedNavigationBar(
                       key: _bottomNavigationKey,
-                      index: state.index == 4 && !state.isSubUserSeeWallet ? (state.index - 1) : state.index,
+                      index: selectedNavIndex,
                       height: 65.0,
                       items: state.isSubUserSeeWallet
                           ? [
-                              navItem(pos: 0, img: AppImagePath.home, isRTL: context.rtl, state: state),
-                              navItem(pos: 1, img: AppImagePath.store, isRTL: context.rtl, state: state),
-                              navItem(pos: 2, img: AppImagePath.cart, isRTL: context.rtl, state: state, isCart: true),
-                              navItem(pos: 3, img: AppImagePath.wallet, isRTL: context.rtl, state: state),
-                              navItem(pos: 4, img: AppImagePath.profile, isRTL: context.rtl, state: state),
+                              navItem(
+                                  pos: 0,
+                                  img: AppImagePath.home,
+                                  isRTL: context.rtl,
+                                  state: state),
+                              // navItem(
+                              //     pos: 1,
+                              //     img: AppImagePath.store,
+                              //     isRTL: context.rtl,
+                              //     state: state),
+                              navItem(
+                                  pos: 2,
+                                  img: AppImagePath.cart,
+                                  isRTL: context.rtl,
+                                  state: state,
+                                  isCart: true),
+                              navItem(
+                                  pos: 3,
+                                  img: AppImagePath.wallet,
+                                  isRTL: context.rtl,
+                                  state: state),
+                              navItem(
+                                  pos: 4,
+                                  img: AppImagePath.profile,
+                                  isRTL: context.rtl,
+                                  state: state),
                             ]
                           : [
-                              navItem(pos: 0, img: AppImagePath.home, isRTL: context.rtl, state: state),
-                              navItem(pos: 1, img: AppImagePath.store, isRTL: context.rtl, state: state),
-                              navItem(pos: 2, img: AppImagePath.cart, isRTL: context.rtl, state: state, isCart: true),
-                              navItem(pos: 3, img: AppImagePath.profile, isRTL: context.rtl, state: state),
+                              navItem(
+                                  pos: 0,
+                                  img: AppImagePath.home,
+                                  isRTL: context.rtl,
+                                  state: state),
+                              // navItem(
+                              //     pos: 1,
+                              //     img: AppImagePath.store,
+                              //     isRTL: context.rtl,
+                              //     state: state),
+                              navItem(
+                                  pos: 2,
+                                  img: AppImagePath.cart,
+                                  isRTL: context.rtl,
+                                  state: state,
+                                  isCart: true),
+                              navItem(
+                                  pos: 3,
+                                  img: AppImagePath.profile,
+                                  isRTL: context.rtl,
+                                  state: state),
                             ],
                       color: AppColors.whiteColor,
                       buttonBackgroundColor: AppColors.whiteColor,
                       backgroundColor: Colors.transparent,
                       animationCurve: Curves.decelerate,
                       animationDuration: const Duration(milliseconds: 600),
-                      onTap: (index) async {
-                        SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                      onTap: (navIndex) async {
+                        final int pageIndex = navPages[navIndex];
+
+                        SharedPreferencesHelper preferences =
+                            SharedPreferencesHelper(
+                                prefs: await SharedPreferences.getInstance());
                         if (preferences.getGuestUser()) {
-                          if (index == 0 || index == 1) {
-                            bloc.add(BottomNavEvent.changePage(index: index, context: context));
+                          if (pageIndex == 0 || pageIndex == 1) {
+                            bloc.add(BottomNavEvent.changePage(
+                                index: pageIndex, context: context));
                           } else {
-                            Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+                            Navigator.pushNamed(
+                                context, RouteDefine.connectScreen.name);
                           }
                         } else {
-                          bloc.add(BottomNavEvent.changePage(index: index, context: context));
+                          bloc.add(BottomNavEvent.changePage(
+                              index: pageIndex, context: context));
                         }
                       },
                       letIndexChange: (index) {
@@ -123,10 +191,18 @@ class BottomNavScreenWidget extends StatelessWidget {
                 ),
                 body: FocusDetector(
                   onFocusGained: () {
-                    bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
-                    bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
+                    bloc.add(
+                        BottomNavEvent.updateCartCountEvent(context: context));
+                    bloc.add(BottomNavEvent.getPreferencesDataEvent(
+                        context: context));
                   },
-                  child: SafeArea(child: Stack(children: [_pageContainers(screenHeight: getScreenHeight(context), screenWidth: getScreenWidth(context), state: state)])),
+                  child: SafeArea(
+                      child: Stack(children: [
+                    _pageContainers(
+                        screenHeight: getScreenHeight(context),
+                        screenWidth: getScreenWidth(context),
+                        state: state)
+                  ])),
                 ),
               ),
             ),
@@ -136,7 +212,10 @@ class BottomNavScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _pageContainers({required double screenHeight, required double screenWidth, required BottomNavState state}) {
+  Widget _pageContainers(
+      {required double screenHeight,
+      required double screenWidth,
+      required BottomNavState state}) {
     return SizedBox(
       height: screenHeight,
       width: screenWidth,
@@ -150,11 +229,21 @@ class BottomNavScreenWidget extends StatelessWidget {
                   const WalletScreen(),
                   const ProfileMenuScreen(),
                 ]
-              : [const HomeScreen(isSubCategory: 'false'), const StoreScreen(), const BasketScreen(), const ProfileMenuScreen()]),
+              : [
+                  const HomeScreen(isSubCategory: 'false'),
+                  const StoreScreen(),
+                  const BasketScreen(),
+                  const ProfileMenuScreen()
+                ]),
     );
   }
 
-  Widget navItem({required int pos, required bool isRTL, required String img, bool isCart = false, required BottomNavState state}) {
+  Widget navItem(
+      {required int pos,
+      required bool isRTL,
+      required String img,
+      bool isCart = false,
+      required BottomNavState state}) {
     return GestureDetector(
       child: Stack(children: [
         Container(
@@ -162,8 +251,12 @@ class BottomNavScreenWidget extends StatelessWidget {
           width: 50,
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
-            gradient: pos == (state.index) ? AppColors.appMainGradientColor : LinearGradient(colors: [AppColors.whiteColor, AppColors.whiteColor]),
-            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+            gradient: pos == (state.index)
+                ? AppColors.appMainGradientColor
+                : LinearGradient(
+                    colors: [AppColors.whiteColor, AppColors.whiteColor]),
+            borderRadius: const BorderRadius.all(
+                Radius.circular(AppConstants.radius_100)),
           ),
           child: Center(
             child: Transform(
@@ -174,7 +267,11 @@ class BottomNavScreenWidget extends StatelessWidget {
                 height: 26,
                 width: 26,
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(pos == (state.index) ? AppColors.whiteColor : AppColors.navSelectedColor, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                    pos == (state.index)
+                        ? AppColors.whiteColor
+                        : AppColors.navSelectedColor,
+                    BlendMode.srcIn),
               ),
             ),
           ),
@@ -194,13 +291,27 @@ class BottomNavScreenWidget extends StatelessWidget {
                             width: 24,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              gradient: state.index == 2 ? LinearGradient(colors: [AppColors.whiteColor, AppColors.whiteColor]) : AppColors.appMainGradientColor,
-                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                              border: Border.all(color: state.index == 2 ? AppColors.mainColor : AppColors.whiteColor, width: 1),
+                              gradient: state.index == 2
+                                  ? LinearGradient(colors: [
+                                      AppColors.whiteColor,
+                                      AppColors.whiteColor
+                                    ])
+                                  : AppColors.appMainGradientColor,
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(AppConstants.radius_100)),
+                              border: Border.all(
+                                  color: state.index == 2
+                                      ? AppColors.mainColor
+                                      : AppColors.whiteColor,
+                                  width: 1),
                             ),
                             child: Text(
                               '${state.cartCount}',
-                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: state.index == 2 ? AppColors.mainColor : AppColors.whiteColor),
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.font_10,
+                                  color: state.index == 2
+                                      ? AppColors.mainColor
+                                      : AppColors.whiteColor),
                             ),
                           ),
                         ]),
@@ -216,7 +327,12 @@ class BottomNavScreenWidget extends StatelessWidget {
                       width: 25,
                       child: Visibility(
                         visible: state.duringCelebration,
-                        child: IgnorePointer(child: Confetti(isStopped: !state.duringCelebration, snippingCount: 10, snipSize: 3.0, colors: [AppColors.mainColor])),
+                        child: IgnorePointer(
+                            child: Confetti(
+                                isStopped: !state.duringCelebration,
+                                snippingCount: 10,
+                                snipSize: 3.0,
+                                colors: [AppColors.mainColor])),
                       ),
                     ),
                   )

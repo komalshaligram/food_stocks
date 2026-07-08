@@ -131,6 +131,7 @@ class DioClient {
           Navigator.pop(context);
         }),
       );
+      throw Exception('Network Error');
     }
   }
 

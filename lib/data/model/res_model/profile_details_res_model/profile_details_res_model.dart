@@ -118,6 +118,7 @@ class ClientDetail with _$ClientDetail {
     @JsonKey(name: "agent") Agent? agent,
     @JsonKey(name: "showClientDataOnApp") bool? showClientDataOnApp,
     @JsonKey(name: "showDocumentScanOnApp") bool? showDocumentScanOnApp,
+    @JsonKey(name: "whatsappOptIn") bool? whatsappOptIn,
     @JsonKey(name: "isWalletApproved") bool? isWalletApproved,
     @JsonKey(name: "wazeURL") String? wazeURL,
     @JsonKey(name: "deliveryLocationDescription") String? deliveryLocationDescription,

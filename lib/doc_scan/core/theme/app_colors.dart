@@ -31,4 +31,7 @@ class AppColors {
   static const Color textPrimary = Color(0xFF1E293B);
   static const Color textSecondary = Color(0xFF64748B);
   static const Color divider = Color(0xFFE2E8F0);
+
+  // אדום לשגיאות/אזהרות (למשל ברקוד שאינו קיים בקטלוג).
+  static const Color error = Color(0xFFD32F2F);
 }

@@ -872,6 +872,13 @@ class PesachProductsBloc
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
       } else if (event is _globalSearchEvent) {
+        final String requestedSearch = state.searchController.text;
+        // Debounce: coalesce the per-keystroke dispatches into a single API
+        // call. If the user keeps typing within the window, a newer
+        // globalSearchEvent supersedes this one and we bail out early.
+        await Future.delayed(const Duration(milliseconds: 350));
+        if (state.searchController.text != requestedSearch) return;
+
         emit(state.copyWith(
             search: state.searchController.text,
             bottleDeposit: state.bottleDeposit));
@@ -886,6 +893,15 @@ class PesachProductsBloc
               AppUrlEndPoints.getPlanogramAllProductForSearchUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
+          // Stale-response guard: if the query changed while this request was
+          // in flight, discard the (now outdated) result instead of letting an
+          // older response overwrite the newer, correct results. (An emptied
+          // search box falls through to the category list below.)
+          if (state.searchController.text.isNotEmpty &&
+              state.searchController.text != requestedSearch) {
+            return;
+          }
+
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList

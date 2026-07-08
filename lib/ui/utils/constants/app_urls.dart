@@ -21,10 +21,12 @@ class AppUrlEndPoints {
   static const String loginOTPUrl = '/v1/auth/clientLogin';
   // static const String registrationUrl = '/v1/clients/createClient';
   static const String fileUploadUrl = '/v1/files/upload';
+
   static const String fileUpdateUrl = '/v1/admin/updateFiles';
   static const String businessTypesUrl = '/v1/settings/ClientTypes';
   // static const String getProfileDetailsUrl = '/v1/admin/getAllClients';
   static const String updateProfileDetailsUrl = '/v1/clients/updateClient';
+  static const String whatsappOptinUrl = '/v1/clients/whatsappOptin';
   static const String updateClientInfoDetailsUrl = '/v1/admin/updateClient';
   static const String formsListUrl = '/v1/settings/ClientForms';
   static const String filesListUrl = '/v1/settings/ClientFiles';
@@ -145,6 +147,8 @@ class AppUrlEndPoints {
       '/v3/store/getPalnogramProducts';
   static const String getPlanogramAllProductUrl = '/v1/store/getAllProducts';
   static const String getCompanyProductsUrl = '/v3/store/getBrandProducts';
+  // Brand page with category + sub-category facets/filtering (supplier-page engine, keyed by brand).
+  static const String getBrandCategoryProductsUrl = '/v3/store/getBrandCategoryProducts';
   static const String getRecommendationProductsUrl =
       '/v3/recommendation/products';
   static const String getPreviousOrderProductsUrl =

@@ -25,13 +25,17 @@ class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
         final preferences = SharedPreferencesHelper(
             prefs: await SharedPreferences.getInstance());
         try {
-          await preferences.setIsGuestUser(isGuestUser: true);
-          final res = await DioClient(event.context)
-              .post(AppUrlEndPoints.guestLogin);
+          final res =
+              await DioClient(event.context).post(AppUrlEndPoints.guestLogin);
 
-          printData("check here guest user response ${res}");
+          if (res == null || res is! Map<String, dynamic>) {
+            throw Exception('Network Error');
+          }
+
+          printData("check here guest user response $res");
           final response = GuestUserLoginResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
+            await preferences.setIsGuestUser(isGuestUser: true);
             await preferences.setAuthToken(
                 accToken: response.data?.tokenData.accessToken ?? '');
             await preferences.setRefreshToken(
@@ -40,9 +44,7 @@ class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
             if (event.context.mounted) {
               await Navigator.pushNamed(
                   event.context, RouteDefine.bottomNavScreen.name,
-                  arguments: {
-                    AppStrings.pushNavigationString: 'homeScreen'
-                  });
+                  arguments: {AppStrings.pushNavigationString: 'homeScreen'});
             }
           } else {
             await preferences.setIsGuestUser(isGuestUser: false);
@@ -60,14 +62,15 @@ class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
         } catch (e) {
           await preferences.setIsGuestUser(isGuestUser: false);
           emit(state.copyWith(isLoading: false));
-          if (event.context.mounted) {
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                  e.toString(), event.context),
-              type: SnackBarType.failure,
-            );
+          if (!event.context.mounted) return;
+          if (e.toString().contains('Network Error')) {
+            return;
           }
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppStrings.getLocalizedStrings(e.toString(), event.context),
+            type: SnackBarType.failure,
+          );
         }
       }
     });

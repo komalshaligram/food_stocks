@@ -11,6 +11,61 @@ import 'package:uuid/uuid.dart';
 import '../../models/invoice_document.dart';
 import '../../models/invoice_item.dart';
 
+/// בחירת המשתמש לפני הסריקה מקבלת עדיפות; רק אם לא נבחר ספק — נשאר מה שחולץ ב-OCR.
+String? mergeCompanyNamePreferPreScan(String? preScanName, String? ocrName) {
+  final p = preScanName?.trim();
+  if (p != null && p.isNotEmpty) return p;
+  final o = ocrName?.trim();
+  if (o != null && o.isNotEmpty) return o;
+  return null;
+}
+
+/// חילוץ שם ספק/חברה מתשובת השרת — מפתחות חלופיים ומבנים מקוננים (Firestore / job result).
+String? extractCompanyNameFromPayload(
+  Map<String, dynamic> map, [
+  int depth = 0,
+]) {
+  if (depth > 5) return null;
+  const directKeys = [
+    'company_name',
+    'supplier_name',
+    'vendor_name',
+    'business_name',
+    'seller_name',
+    'companyName',
+    'supplier',
+  ];
+  for (final k in directKeys) {
+    final v = map[k];
+    if (v == null) continue;
+    final s = v.toString().trim();
+    if (s.isNotEmpty) return s;
+  }
+  const nestedKeys = [
+    'data',
+    'extracted',
+    'result',
+    'parsed',
+    'invoice',
+    'document',
+    'fields',
+  ];
+  for (final nk in nestedKeys) {
+    final inner = map[nk];
+    if (inner is Map<String, dynamic>) {
+      final hit = extractCompanyNameFromPayload(inner, depth + 1);
+      if (hit != null) return hit;
+    } else if (inner is Map) {
+      final hit = extractCompanyNameFromPayload(
+        Map<String, dynamic>.from(inner),
+        depth + 1,
+      );
+      if (hit != null) return hit;
+    }
+  }
+  return null;
+}
+
 /// פריט בודד במסמך לאחר חילוץ.
 class DocumentItem {
   final int lineNumber;
@@ -20,6 +75,8 @@ class DocumentItem {
   final num? unitsPerPack;
   final num quantity;
   final double unitPrice;
+  final double? discountPercent;
+  final double? packagingDepositTax;
   final double lineTotal;
 
   DocumentItem({
@@ -30,6 +87,8 @@ class DocumentItem {
     this.unitsPerPack,
     required this.quantity,
     required this.unitPrice,
+    this.discountPercent,
+    this.packagingDepositTax,
     required this.lineTotal,
   });
 
@@ -49,6 +108,8 @@ class DocumentItem {
       unitsPerPack: toNum(map['units_per_pack']),
       quantity: toNum(map['quantity']) ?? 0,
       unitPrice: toNum(map['unit_price'])?.toDouble() ?? 0,
+      discountPercent: toNum(map['discount_percent'])?.toDouble(),
+      packagingDepositTax: toNum(map['packaging_deposit_tax'])?.toDouble(),
       lineTotal: toNum(map['line_total'])?.toDouble() ?? 0,
     );
   }
@@ -62,6 +123,8 @@ class DocumentItem {
       packages: packs?.toInt(),
       units: unitsPerPack?.toInt(),
       pricePerUnit: unitPrice,
+      discountPercent: discountPercent,
+      packagingDepositTax: packagingDepositTax,
       totalPrice: lineTotal,
     );
   }
@@ -71,6 +134,7 @@ class DocumentItem {
 class ParsedDocument {
   final String? documentType;
   final String? documentNumber;
+  final String? allocationNumber;
   final String? companyName;
   final String? companyId;
   final String? date;
@@ -91,6 +155,7 @@ class ParsedDocument {
   ParsedDocument({
     this.documentType,
     this.documentNumber,
+    this.allocationNumber,
     this.companyName,
     this.companyId,
     this.date,
@@ -133,10 +198,14 @@ class ParsedDocument {
             .toList() ??
         const [];
 
+    final companyFromPayload = extractCompanyNameFromPayload(payload) ??
+        extractCompanyNameFromPayload(response);
+
     return ParsedDocument(
       documentType: payload['document_type'],
       documentNumber: payload['document_number'],
-      companyName: payload['company_name'],
+      allocationNumber: payload['allocation_number']?.toString(),
+      companyName: companyFromPayload,
       companyId: payload['company_id'],
       date: payload['date'],
       time: payload['time'],
@@ -178,7 +247,9 @@ class ParsedDocument {
       companyName: companyName,
       companyId: companyId,
       documentNumber: documentNumber,
+      allocationNumber: allocationNumber,
       documentDate: date,
+      paymentDueDate: paymentDueDate,
       subtotal: subtotalValue,
       vatAmount: vat,
       totalAmount: total,

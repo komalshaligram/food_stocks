@@ -5,6 +5,7 @@ import '../../ui/widget/common_product_details_button.dart';
 import '../../ui/widget/common_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart';
 import '../../data/model/res_model/product_details_res_model/product_details_res_model.dart';
 import '../utils/app_utils.dart';
@@ -68,6 +69,23 @@ class CommonProductDetailsWidget extends StatelessWidget {
     this.recommendedRetailConsumerPricerOffer,
   });
 
+  /// Raw HTML of the product description coming from the admin (CKEditor).
+  String get _productDescriptionHtml =>
+      productDetails.first.productDescription ?? '';
+
+  /// True only when the description actually has visible text (so we never show
+  /// an info button for empty / `<p></p>` / `&nbsp;`-only descriptions).
+  bool get _hasProductDescription {
+    final html = _productDescriptionHtml.trim();
+    if (html.isEmpty) return false;
+    final text = parse(html).body?.text ?? '';
+    return text.trim().isNotEmpty;
+  }
+
+  /// Free-text kosher certification entered by the admin (shown only if present).
+  String get _kosher => (productDetails.first.kosher ?? '').trim();
+  bool get _hasKosher => _kosher.isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -81,7 +99,31 @@ class CommonProductDetailsWidget extends StatelessWidget {
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Expanded(child: 0.width),
+            Expanded(
+              child: _hasProductDescription
+                  ? Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: () => _showProductInfoSheet(context),
+                        behavior: HitTestBehavior.opaque,
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              left: AppConstants.padding_5),
+                          padding: const EdgeInsets.all(AppConstants.padding_5),
+                          decoration: BoxDecoration(
+                            color: AppColors.mainColor.withValues(alpha: 0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.info_outline_rounded,
+                            size: 26,
+                            color: AppColors.mainColor,
+                          ),
+                        ),
+                      ),
+                    )
+                  : 0.width,
+            ),
             Expanded(
               flex: 4,
               child: Text(
@@ -120,9 +162,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 ? '(${AppLocalizations.of(context)?.price_includes_vat}): '
                                 : '')
                             : (isIncludedVat
-                                ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit} '
-                                    '(${AppLocalizations.of(context)?.price_includes_vat}):'
-                                : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}: '),
+                                ? '${AppLocalizations.of(context)?.price} '
+                                    '${scaleType == 'kg' ? AppLocalizations.of(context)?.per_kg : AppLocalizations.of(context)?.per_unit} '
+                                    '(${AppLocalizations.of(context)?.price_includes_vat}): '
+                                : '${AppLocalizations.of(context)?.price} '
+                                    '${scaleType == 'kg' ? AppLocalizations.of(context)?.per_kg : AppLocalizations.of(context)?.per_unit}: '),
                         style: AppStyles.rkRegularTextStyle(
                           size: AppConstants.font_14,
                           color: AppColors.blackColor,
@@ -153,9 +197,9 @@ class CommonProductDetailsWidget extends StatelessWidget {
                               ? '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} (${AppLocalizations.of(context)?.price_includes_vat})'
                               : '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}')
                           : (isIncludedVat
-                              ? '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:'
+                              ? '${AppLocalizations.of(context)?.price} ${scaleType == 'kg' ? AppLocalizations.of(context)?.per_kg : AppLocalizations.of(context)?.per_unit}: '
                                   '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)} (${AppLocalizations.of(context)?.price_includes_vat})'
-                              : '${AppLocalizations.of(context)?.price} ${AppLocalizations.of(context)?.per_unit}:'
+                              : '${AppLocalizations.of(context)?.price} ${scaleType == 'kg' ? AppLocalizations.of(context)?.per_kg : AppLocalizations.of(context)?.per_unit}: '
                                   '${AppLocalizations.of(context)?.currency}${productUnitPrice.toStringAsFixed(2)}'),
                       style: AppStyles.rkRegularTextStyle(
                         size: AppConstants.font_14,
@@ -192,6 +236,40 @@ class CommonProductDetailsWidget extends StatelessWidget {
               : 0.width,
         ]),
         Column(mainAxisSize: MainAxisSize.min, children: [
+          _hasKosher ? 8.height : 0.height,
+          _hasKosher
+              ? Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_10,
+                        vertical: AppConstants.padding_5),
+                    decoration: BoxDecoration(
+                      color: AppColors.mainColor.withValues(alpha: 0.12),
+                      borderRadius:
+                          BorderRadius.circular(AppConstants.radius_100),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.verified_rounded,
+                            size: 18, color: AppColors.mainColor),
+                        5.width,
+                        Flexible(
+                          child: Text(
+                            '${AppLocalizations.of(context)!.kosher}: $_kosher',
+                            style: AppStyles.rkBoldTextStyle(
+                                size: AppConstants.font_13,
+                                color: AppColors.mainColor,
+                                fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : 0.width,
           (productDetails.first.isPesach ?? false) ? 5.height : 0.height,
           (productDetails.first.isPesach ?? false)
               ? Container(
@@ -258,11 +336,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                 child: Image.network(
                                     "${AppUrlEndPoints.baseFileUrl}${productImages.first}",
                                     height: getItemHeight(context, false) ==
-                                        350.0
+                                            350.0
                                         ? 200
                                         : getItemHeight(context, false) == 260.0
-                                        ? 180
-                                        : 150,
+                                            ? 180
+                                            : 150,
                                     fit: BoxFit.contain, loadingBuilder:
                                         (context, child, loadingProgress) {
                                   if (loadingProgress?.cumulativeBytesLoaded !=
@@ -286,11 +364,11 @@ class CommonProductDetailsWidget extends StatelessWidget {
                                     AppImagePath.imageNotAvailable5,
                                     fit: BoxFit.cover,
                                     height: getItemHeight(context, false) ==
-                                        350.0
+                                            350.0
                                         ? 200
                                         : getItemHeight(context, false) == 260.0
-                                        ? 180
-                                        : 150,
+                                            ? 180
+                                            : 150,
                                   );
                                 }),
                               )
@@ -676,6 +754,140 @@ class CommonProductDetailsWidget extends StatelessWidget {
               ]),
         ])
       ]),
+    );
+  }
+
+  /// Opens a modern, scrollable bottom sheet that renders the product's
+  /// rich-text (HTML) description.
+  void _showProductInfoSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.55,
+          minChildSize: 0.3,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (sheetContext, controller) {
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(AppConstants.radius_30),
+                  topRight: Radius.circular(AppConstants.radius_30),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // drag handle
+                  Center(
+                    child: Container(
+                      margin:
+                          const EdgeInsets.only(top: AppConstants.padding_10),
+                      width: 44,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: AppColors.borderColor,
+                        borderRadius:
+                            BorderRadius.circular(AppConstants.radius_10),
+                      ),
+                    ),
+                  ),
+                  // header: info icon + title + close
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                        AppConstants.padding_15,
+                        AppConstants.padding_15,
+                        AppConstants.padding_15,
+                        AppConstants.padding_10),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(AppConstants.padding_5),
+                          decoration: BoxDecoration(
+                            color: AppColors.mainColor.withValues(alpha: 0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.info_outline_rounded,
+                              size: 22, color: AppColors.mainColor),
+                        ),
+                        AppConstants.padding_10.width,
+                        Expanded(
+                          child: Text(
+                            AppLocalizations.of(context)!.product_information,
+                            style: AppStyles.rkBoldTextStyle(
+                              size: AppConstants.normalFont,
+                              color: AppColors.blackColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(sheetContext),
+                          behavior: HitTestBehavior.opaque,
+                          child: Icon(Icons.close,
+                              size: 28, color: AppColors.greyColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // product name subtitle
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.padding_15),
+                    child: Text(
+                      productDetails.first.productName ?? '',
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_14,
+                        color: AppColors.greyColor,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: AppConstants.padding_10),
+                    child: Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: AppColors.borderColor.withValues(alpha: 0.5)),
+                  ),
+                  // scrollable HTML content
+                  Flexible(
+                    child: SingleChildScrollView(
+                      controller: controller,
+                      padding: const EdgeInsets.fromLTRB(
+                          AppConstants.padding_15,
+                          0,
+                          AppConstants.padding_15,
+                          AppConstants.padding_30),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: Html(
+                          data: _productDescriptionHtml,
+                          shrinkWrap: true,
+                          style: {
+                            "body": Style(
+                              margin: Margins.zero,
+                              padding: HtmlPaddings.zero,
+                              fontSize: FontSize(15),
+                              lineHeight: const LineHeight(1.6),
+                              color: AppColors.blackColor,
+                            ),
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

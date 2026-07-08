@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/komal-sit/Documents/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/komal-sit/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/komal-sit/Documents/Projects/30-06-2025/food_stocks/android/app/.cxx/RelWithDebInfo/101g5e1j/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/komal-sit/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/komal-sit/Documents/Projects/30-06-2025/food_stocks/android/app/.cxx/RelWithDebInfo/101g5e1j/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

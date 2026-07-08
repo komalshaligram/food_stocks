@@ -50,6 +50,18 @@
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <!-- App Links (deep link): open the app for https://tiny.tavili.net/openApp .
+                 autoVerify is verified against /.well-known/assetlinks.json (prod package
+                 com.foodstock.dev). Covers /openApp and /openApp/* via pathPrefix. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="tiny.tavili.net"
+                    android:pathPrefix="/openApp" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

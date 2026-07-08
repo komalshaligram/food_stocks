@@ -27,7 +27,9 @@ class InvoiceDocument {
     this.companyName,
     this.companyId,
     this.documentNumber,
+    this.allocationNumber,
     this.documentDate,
+    this.paymentDueDate,
     this.subtotal,
     this.vatAmount,
     this.totalAmount,
@@ -35,6 +37,10 @@ class InvoiceDocument {
     this.errorMessage,
     this.scanModel,
     this.items = const [],
+    this.comaxDocNumber,
+    this.comaxDocumentId,
+    this.comaxStatus,
+    this.comaxReceiveError,
   });
 
   final String id;
@@ -51,7 +57,11 @@ class InvoiceDocument {
   final String? companyName;
   final String? companyId;
   final String? documentNumber;
+  /// מספר הקצאה (אם מופיע במסמך).
+  final String? allocationNumber;
   final String? documentDate;
+  /// תאריך פירעון / תאריך לתשלום (אם מופיע במסמך).
+  final String? paymentDueDate;
   final double? subtotal;
   final double? vatAmount;
   final double? totalAmount;
@@ -62,6 +72,25 @@ class InvoiceDocument {
   /// מפתח מודל ה-AI ששימש לסריקת המסמך.
   final String? scanModel;
   final List<InvoiceItem> items;
+
+  /// מספר המסמך שנוצר ב-Comax לאחר קליטה מוצלחת ("שלח לקופה").
+  final String? comaxDocNumber;
+
+  /// ה-documentId שהוחזר מ-/validate ושומש ל-/submit — מפתח הקורלציה ל-webhook
+  /// שמעדכן את הסטטוס הסופי בצד השרת. ראו §11.
+  final String? comaxDocumentId;
+
+  /// סטטוס הקליטה ל-Comax: processing | received | failed (ריק = לא נשלח עדיין).
+  final String? comaxStatus;
+
+  /// סיבת כשל הקליטה ל-Comax (כש-comaxStatus == 'failed').
+  final String? comaxReceiveError;
+
+  /// האם קיימת קליטת Comax בתהליך/הושלמה — חוסם שליחה כפולה.
+  bool get isComaxIntakeInFlightOrDone =>
+      status == DocumentStatus.sentToCashRegister ||
+      comaxStatus == 'processing' ||
+      comaxStatus == 'received';
 
   InvoiceDocument copyWith({
     String? id,
@@ -76,7 +105,9 @@ class InvoiceDocument {
     String? companyName,
     String? companyId,
     String? documentNumber,
+    String? allocationNumber,
     String? documentDate,
+    String? paymentDueDate,
     double? subtotal,
     double? vatAmount,
     double? totalAmount,
@@ -84,6 +115,10 @@ class InvoiceDocument {
     String? errorMessage,
     String? scanModel,
     List<InvoiceItem>? items,
+    String? comaxDocNumber,
+    String? comaxDocumentId,
+    String? comaxStatus,
+    String? comaxReceiveError,
   }) {
     return InvoiceDocument(
       id: id ?? this.id,
@@ -98,7 +133,9 @@ class InvoiceDocument {
       companyName: companyName ?? this.companyName,
       companyId: companyId ?? this.companyId,
       documentNumber: documentNumber ?? this.documentNumber,
+      allocationNumber: allocationNumber ?? this.allocationNumber,
       documentDate: documentDate ?? this.documentDate,
+      paymentDueDate: paymentDueDate ?? this.paymentDueDate,
       subtotal: subtotal ?? this.subtotal,
       vatAmount: vatAmount ?? this.vatAmount,
       totalAmount: totalAmount ?? this.totalAmount,
@@ -106,6 +143,10 @@ class InvoiceDocument {
       errorMessage: errorMessage ?? this.errorMessage,
       scanModel: scanModel ?? this.scanModel,
       items: items ?? this.items,
+      comaxDocNumber: comaxDocNumber ?? this.comaxDocNumber,
+      comaxDocumentId: comaxDocumentId ?? this.comaxDocumentId,
+      comaxStatus: comaxStatus ?? this.comaxStatus,
+      comaxReceiveError: comaxReceiveError ?? this.comaxReceiveError,
     );
   }
 
@@ -122,7 +163,9 @@ class InvoiceDocument {
         'companyName': companyName,
         'companyId': companyId,
         'documentNumber': documentNumber,
+        'allocationNumber': allocationNumber,
         'documentDate': documentDate,
+        'paymentDueDate': paymentDueDate,
         'subtotal': subtotal,
         'vatAmount': vatAmount,
         'totalAmount': totalAmount,
@@ -130,6 +173,10 @@ class InvoiceDocument {
         'errorMessage': errorMessage,
         'scanModel': scanModel,
         'items': items.map((e) => e.toJson()).toList(),
+        'comaxDocNumber': comaxDocNumber,
+        'comaxDocumentId': comaxDocumentId,
+        'comaxStatus': comaxStatus,
+        'comaxReceiveError': comaxReceiveError,
       };
 
   factory InvoiceDocument.fromJson(Map<String, dynamic> json) {
@@ -152,7 +199,9 @@ class InvoiceDocument {
       companyName: json['companyName'] as String?,
       companyId: json['companyId'] as String?,
       documentNumber: json['documentNumber'] as String?,
+      allocationNumber: json['allocationNumber'] as String?,
       documentDate: json['documentDate'] as String?,
+      paymentDueDate: json['paymentDueDate'] as String?,
       subtotal: (json['subtotal'] as num?)?.toDouble(),
       vatAmount: (json['vatAmount'] as num?)?.toDouble(),
       totalAmount: (json['totalAmount'] as num?)?.toDouble(),
@@ -163,6 +212,10 @@ class InvoiceDocument {
               ?.map((e) => InvoiceItem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      comaxDocNumber: json['comaxDocNumber'] as String?,
+      comaxDocumentId: json['comaxDocumentId'] as String?,
+      comaxStatus: json['comaxStatus'] as String?,
+      comaxReceiveError: json['comaxReceiveError'] as String?,
     );
   }
 

@@ -164,6 +164,7 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
             pageLimit: AppConstants.supplierProductPageLimit,
             pageNum: state.pageNum + 1,
             categoryId: event.categoryId,
+            subCategoryId: state.selectedSubCategoryId.isEmpty ? null : state.selectedSubCategoryId,
           );
           Map<String, dynamic> req = request.toJson()..removeWhere((key, value) => value == null);
           final res = await DioClient(event.context).post(AppUrlEndPoints.getSupplierBrandProducts, data: req);
@@ -183,7 +184,12 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
             productStockList[1].clear();
             productStockList[1].addAll(stockList);
 
-            emit(state.copyWith(productList: productList, productStockList: productStockList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false, isProgress: false));
+            // The backend computes the sub-category chip list from the
+            // category-filtered set BEFORE applying the sub-category filter, so
+            // it's stable across selections — safe to refresh it on every page.
+            final List<SupplierSubCategoryData> subCategoryList = response.data?.subCategories ?? state.subCategoryList;
+
+            emit(state.copyWith(productList: productList, productStockList: productStockList, subCategoryList: subCategoryList, pageNum: state.pageNum + 1, isLoadMore: false, isShimmering: false, isProgress: false));
             emit(state.copyWith(isBottomOfProducts: productList.length == (response.metaData?.totalFilteredCount ?? 0), isProgress: false));
           } else {
             emit(state.copyWith(isLoadMore: false, isProgress: false));
@@ -194,6 +200,35 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
+      } else if (event is _selectSubCategoryEvent) {
+        // Re-tapping the already-selected sub-category toggles back to "All".
+        final bool isDeselect = event.subCategoryId.isNotEmpty && event.subCategoryId == state.selectedSubCategoryId;
+        final String targetSubCategoryId = isDeselect ? '' : event.subCategoryId;
+        if (targetSubCategoryId == state.selectedSubCategoryId) {
+          // Tapped "All" while already showing all — nothing to do.
+          return;
+        }
+        emit(state.copyWith(
+          selectedSubCategoryId: targetSubCategoryId,
+          productList: [],
+          productStockList: [state.productStockList[0], [], []],
+          pageNum: 0,
+          isBottomOfProducts: false,
+          isProgress: false,
+          isLoadMore: false,
+        ));
+        if (isDeselect) {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppLocalizations.of(event.context)!.showing_all_products,
+            type: SnackBarType.success,
+          );
+        }
+        add(SupplierBrandProductsEvent.getCategoryProductsListEvent(
+          context: event.context,
+          supplierId: event.supplierId,
+          categoryId: event.categoryId,
+        ));
       } else if (event is _refreshListEvent) {
         add(SupplierBrandProductsEvent.getPermissionList(context: event.context));
         emit(state.copyWith(isShimmering: true, pageNum: 0, isProgress: false, productList: [], productStockList: [state.productStockList[0], [], []], isBottomOfProducts: false));
@@ -269,41 +304,41 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
               }
               List<ProductSupplierModel> supplierList = [];
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
-                    return ProductSupplierModel(
-                      supplierId: supplier.supplierId ?? '',
-                      companyName: supplier.supplierCompanyName ?? '',
-                      basePrice: double.parse(supplier.productPrice ?? ''),
-                      quantity: _productQuantity,
-                      stock: supplier.productStock.toString(),
-                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
-                      selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
-                          ? !supplier.saleProduct!.contains(
-                              supplier.saleProduct?.firstWhere(
-                                    (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
-                                    orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
-                                  ) ??
-                                  const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
-                            )
-                              ? -2
-                              : supplier.saleProduct?.indexOf(
-                                    supplier.saleProduct?.firstWhere(
-                                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
-                                          orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
-                                        ) ??
-                                        const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
-                                  ) ??
-                                  -1
-                          : -1,
-                      supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(productStock: sale.productStock ?? 0, quantity: _productQuantity, saleId: sale.saleId ?? '', saleName: sale.saleName ?? '', maxQty: sale.saleMaxQuantity, saleDescription: parse(sale.salesDescription ?? '').body?.text ?? '', salePrice: double.parse(sale.discountedPrice ?? '0.0'), saleDiscount: double.parse(sale.discountPercentage ?? '0.0'))).toList() ?? [],
-                    );
-                  }).toList() ??
+                return ProductSupplierModel(
+                  supplierId: supplier.supplierId ?? '',
+                  companyName: supplier.supplierCompanyName ?? '',
+                  basePrice: double.parse(supplier.productPrice ?? ''),
+                  quantity: _productQuantity,
+                  stock: supplier.productStock.toString(),
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
+                  selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
+                      ? !supplier.saleProduct!.contains(
+                    supplier.saleProduct?.firstWhere(
+                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
+                      orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                    ) ??
+                        const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                  )
+                      ? -2
+                      : supplier.saleProduct?.indexOf(
+                    supplier.saleProduct?.firstWhere(
+                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
+                      orElse: () => const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                    ) ??
+                        const SaleProduct(isSale: false, saleDescription: '', saleFromDate: '', saleMaxQuantity: '0', salePrice: '0', saleUntilDate: ''),
+                  ) ??
+                      -1
+                      : -1,
+                  supplierSales: supplier.saleProduct?.map((sale) => SupplierSaleModel(productStock: sale.productStock ?? 0, quantity: _productQuantity, saleId: sale.saleId ?? '', saleName: sale.saleName ?? '', maxQty: sale.saleMaxQuantity, saleDescription: parse(sale.salesDescription ?? '').body?.text ?? '', salePrice: double.parse(sale.discountedPrice ?? '0.0'), saleDiscount: double.parse(sale.discountPercentage ?? '0.0'))).toList() ?? [],
+                );
+              }).toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == '0');
               String note = productStockList.isEmpty
                   ? ''
                   : productStockList.indexOf(state.productStockList.last) == productListIndex
-                      ? ''
-                      : productStockList[productListIndex][0].note;
+                  ? ''
+                  : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(
                 productDetails: response.product ?? [],
@@ -600,6 +635,13 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
       } else if (event is _globalSearchEvent) {
+        final String requestedSearch = state.searchController.text;
+        // Debounce: coalesce the per-keystroke dispatches into a single API
+        // call. If the user keeps typing within the window, a newer
+        // globalSearchEvent supersedes this one and we bail out early.
+        await Future.delayed(const Duration(milliseconds: 350));
+        if (state.searchController.text != requestedSearch) return;
+
         emit(state.copyWith(search: state.searchController.text, bottleDeposit: preferences.getBottleTax()));
         try {
           GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(
@@ -610,14 +652,23 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
           emit(state.copyWith(isSearching: true));
           final res = await DioClient(event.context).post(AppUrlEndPoints.getPlanogramAllProductForSearchUrl, data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
+          // Stale-response guard: if the query changed while this request was
+          // in flight, discard the (now outdated) result instead of letting an
+          // older response overwrite the newer, correct results. (An emptied
+          // search box falls through to the category list below.)
+          if (state.searchController.text.isNotEmpty &&
+              state.searchController.text != requestedSearch) {
+            return;
+          }
+
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) => SearchModel(
-                  searchId: category.id ?? '',
-                  name: category.categoryName ?? '',
-                  searchType: SearchTypes.category,
-                  image: category.categoryImage ?? '',
-                )));
+              searchId: category.id ?? '',
+              name: category.categoryName ?? '',
+              searchType: SearchTypes.category,
+              image: category.categoryImage ?? '',
+            )));
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
@@ -625,29 +676,29 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
             List<SearchModel> searchList = [];
 
             searchList.addAll(response.data
-                    ?.map((supplier) => SearchModel(
-                          searchId: supplier.id ?? '',
-                          name: supplier.productName ?? '',
-                          searchType: SearchTypes.product,
-                          image: supplier.mainImage ?? '',
-                          productStock: supplier.productStock.toString(),
-                          numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
-                          scaleType: supplier.scaleType ?? '',
-                          priceOfBox: double.parse(supplier.productPrice.toString()),
-                          lowStock: supplier.lowStock.toString(),
-                          isPesach: supplier.isPesach ?? false,
-                          salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
-                          salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
-                          supplierId: supplier.supplierId,
-                          isSale: supplier.sale?.isSale,
-                          saleMinQuantity: supplier.sale?.saleMinQuantity,
-                          saleMaxQuantity: supplier.sale?.saleMaxQuantity,
-                          isMixedSale: supplier.sale?.isMixedSale,
-                          sameSaleProducts: supplier.sale?.sameSaleProducts,
-                          recommendedConsumerOffer: supplier.recommendedConsumerOffer,
-                          recommendedRetailPrice: supplier.recommendedRetailPrice,
-                        ))
-                    .toList() ??
+                ?.map((supplier) => SearchModel(
+              searchId: supplier.id ?? '',
+              name: supplier.productName ?? '',
+              searchType: SearchTypes.product,
+              image: supplier.mainImage ?? '',
+              productStock: supplier.productStock.toString(),
+              numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+              scaleType: supplier.scaleType ?? '',
+              priceOfBox: double.parse(supplier.productPrice.toString()),
+              lowStock: supplier.lowStock.toString(),
+              isPesach: supplier.isPesach ?? false,
+              salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
+              salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
+              supplierId: supplier.supplierId,
+              isSale: supplier.sale?.isSale,
+              saleMinQuantity: supplier.sale?.saleMinQuantity,
+              saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+              isMixedSale: supplier.sale?.isMixedSale,
+              sameSaleProducts: supplier.sale?.sameSaleProducts,
+              recommendedConsumerOffer: supplier.recommendedConsumerOffer,
+              recommendedRetailPrice: supplier.recommendedRetailPrice,
+            ))
+                .toList() ??
                 []);
 
             final cartMap = await fetchCartQuantities(event.context);
@@ -684,11 +735,11 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             searchList.addAll(response.data?.categories?.map((category) => SearchModel(
-                      searchId: category.id ?? '',
-                      name: category.categoryName ?? '',
-                      searchType: SearchTypes.category,
-                      image: category.categoryImage ?? '',
-                    )) ??
+              searchId: category.id ?? '',
+              name: category.categoryName ?? '',
+              searchType: SearchTypes.category,
+              image: category.categoryImage ?? '',
+            )) ??
                 []);
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference == true) ?? true;
             emit(state.copyWith(isCatVisible: productVisible, productCategoryList: response.data?.categories ?? [], searchList: searchList, isShimmering: false));
@@ -716,8 +767,8 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
 
           final newRelatedList = response.data?.map((product) {
-                return ProductStockModel(productId: product.id ?? '', stock: product.productStock.toString(), quantity: cartMap[product.id] ?? 0);
-              }).toList() ??
+            return ProductStockModel(productId: product.id ?? '', stock: product.productStock.toString(), quantity: cartMap[product.id] ?? 0);
+          }).toList() ??
               [];
 
           productStockList[2] = productStockList[2].map((product) {

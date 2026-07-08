@@ -5,23 +5,29 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../bootstrap/doc_scan_bootstrap.dart';
 import '../core/constants/app_constants.dart';
 import '../core/services/direct_image_capture_service.dart';
 import '../core/services/scan_export_service.dart';
 import '../core/services/document_parser_service.dart';
+import '../core/services/sync_service.dart';
 import '../core/theme/app_colors.dart';
 import '../gen_l10n/app_localizations.dart';
 import '../models/invoice_document.dart';
+import '../providers/customer_code_provider.dart';
 import '../providers/documents_provider.dart';
 import '../providers/document_parser_provider.dart';
 import '../providers/locale_provider.dart';
+import '../providers/suppliers_provider.dart';
 import '../core/utils/date_utils.dart';
 import '../widgets/document_card.dart';
 import '../widgets/staggered_fade_in.dart';
 import '../widgets/adaptive_bottom_sheet.dart';
+import '../widgets/pre_scan_setup_sheet.dart';
 import '../widgets/scan_source_sheet.dart';
 
 enum _HomeSortMode {
@@ -86,6 +92,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   static const Duration _processingTimeout = Duration(minutes: 20);
 
   _HomeSortMode _sortMode = _HomeSortMode.none;
+
+  /// §8: האם "הרצת שליפה" (סנכרון Comax) רצה כעת.
+  bool _isSyncing = false;
 
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -235,8 +244,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             jobId: null,
             pdfPath: current.pdfPath,
             imagePaths: current.imagePaths,
-            documentType: parsedDoc.documentType ?? current.documentType,
-            companyName: parsedDoc.companyName ?? current.companyName,
+            // §13: בחירת המשתמש לפני הסריקה גוברת על מה שחולץ ב-OCR.
+            documentType: current.documentType ?? parsedDoc.documentType,
+            companyName: mergeCompanyNamePreferPreScan(
+              current.companyName,
+              parsedDoc.companyName,
+            ),
             scanModel: _extractJobModelKey(payload) ?? current.scanModel,
             errorMessage: null,
           ),
@@ -346,6 +359,244 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .toList();
     names.sort();
     return names;
+  }
+
+  // ===== §8: "הרצת שליפה" — סנכרון נתוני Comax (trigger + polling בצד הקליינט) =====
+
+  /// אישור לפני שליפה: המשתמש חייב להיות מנותק מה-Comax שלו (חיבור יחיד).
+  Future<bool> _confirmRunSync(AppLocalizations l10n) async {
+    final isIos = Theme.of(context).platform == TargetPlatform.iOS;
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogCtx) {
+        if (isIos) {
+          return CupertinoAlertDialog(
+            title: Text(l10n.syncConfirmTitle),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(l10n.syncConfirmMessage),
+            ),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () => Navigator.of(dialogCtx).pop(false),
+                child: Text(l10n.cancel),
+              ),
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () => Navigator.of(dialogCtx).pop(true),
+                child: Text(l10n.syncConfirmContinue),
+              ),
+            ],
+          );
+        }
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(CupertinoIcons.exclamationmark_triangle,
+                  color: AppColors.accentGreen, size: 22),
+              const SizedBox(width: 8),
+              Expanded(child: Text(l10n.syncConfirmTitle)),
+            ],
+          ),
+          content: Text(l10n.syncConfirmMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogCtx).pop(false),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.accentGreen),
+              onPressed: () => Navigator.of(dialogCtx).pop(true),
+              child: Text(l10n.syncConfirmContinue),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false;
+  }
+
+  Future<void> _runSync() async {
+    if (_isSyncing) return;
+    final l10n = AppLocalizations.of(context);
+    // אישור — לוודא שהמשתמש מנותק מ-Comax לפני שליפה (חיבור יחיד; אחרת session_in_use).
+    final confirmed = await _confirmRunSync(l10n);
+    if (confirmed != true || !mounted) return;
+    setState(() => _isSyncing = true);
+    final svc = SyncService(app: DocScanBootstrap.firebaseApp);
+    final customerCode = ref.read(customerCodeProvider);
+    try {
+      // שלב 1: הפעלה (POST /run) — מחזיר מיד success / running / error.
+      final trigger = await svc.triggerFetch(customerCode: customerCode);
+      if (!mounted) return;
+
+      if (trigger.phase == 'success') {
+        _onSyncSuccess(l10n);
+        return;
+      }
+      if (trigger.phase == 'error') {
+        await _showSyncErrorDialog(
+          _syncCodeMessage(trigger.code, trigger.message, l10n),
+        );
+        return;
+      }
+
+      // שלב 2: polling (התקבל running) — בודקים סטטוס כל 10 שניות, עד 6 דקות.
+      final deadline = DateTime.now().add(const Duration(minutes: 6));
+      while (DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(seconds: 10));
+        if (!mounted) return;
+        RunStatusResult st;
+        try {
+          st = await svc.getRunStatus(customerCode: customerCode);
+        } catch (_) {
+          continue; // שגיאת רשת זמנית — ממשיכים ל-poll.
+        }
+        if (!mounted) return;
+        final s = st.status;
+        if (s == 'success') {
+          _onSyncSuccess(l10n);
+          return;
+        }
+        if (s == 'session_in_use' ||
+            s == 'bad_credentials' ||
+            s == 'failed' ||
+            s == 'error') {
+          await _showSyncErrorDialog(
+            _syncCodeMessage(s == 'error' ? st.code : s, st.message, l10n),
+          );
+          return;
+        }
+        // queued / running / unknown → ממשיכים.
+      }
+      await _showSyncErrorDialog(l10n.syncTimeout);
+    } on FirebaseFunctionsException catch (e) {
+      if (!mounted) return;
+      final code =
+          e.details is Map ? (e.details as Map)['error']?.toString() : null;
+      await _showSyncErrorDialog(_syncCodeMessage(code, e.message, l10n));
+    } catch (e) {
+      if (!mounted) return;
+      await _showSyncErrorDialog(l10n.unexpectedError(e.toString()));
+    } finally {
+      if (mounted) setState(() => _isSyncing = false);
+    }
+  }
+
+  void _onSyncSuccess(AppLocalizations l10n) {
+    // הנתונים התעדכנו — מרעננים את ה-cache של הספקים והקטלוג.
+    ref.read(suppliersProvider.notifier).load(force: true);
+    _showSyncSuccessDialog(l10n);
+  }
+
+  Future<void> _showSyncSuccessDialog(AppLocalizations l10n) async {
+    final isIos = Theme.of(context).platform == TargetPlatform.iOS;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogCtx) {
+        if (isIos) {
+          return CupertinoAlertDialog(
+            title: Text(l10n.syncDone),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(l10n.syncDoneMessage),
+            ),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () => Navigator.of(dialogCtx).pop(),
+                child: Text(l10n.ok),
+              ),
+            ],
+          );
+        }
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(CupertinoIcons.check_mark_circled_solid,
+                  color: AppColors.accentGreen, size: 24),
+              const SizedBox(width: 8),
+              Text(l10n.syncDone),
+            ],
+          ),
+          content: Text(l10n.syncDoneMessage),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.of(dialogCtx).pop(),
+              child: Text(l10n.ok),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _syncCodeMessage(
+    String? code,
+    String? apiMessage,
+    AppLocalizations l10n,
+  ) {
+    switch (code) {
+      case 'session_in_use':
+        return l10n.syncSessionInUse;
+      case 'bad_credentials':
+        return l10n.syncBadCredentials;
+      case 'fetch_failed':
+      case 'failed':
+        return l10n.syncFailed;
+      case 'rate_limited':
+        return l10n.syncRateLimited;
+      case 'insufficient_scope':
+        return l10n.syncNoPermission;
+      default:
+        final m = (apiMessage ?? '').trim();
+        return m.isNotEmpty ? m : l10n.syncFailed;
+    }
+  }
+
+  Future<void> _showSyncErrorDialog(String message) async {
+    final l10n = AppLocalizations.of(context);
+    final isIos = Theme.of(context).platform == TargetPlatform.iOS;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogCtx) {
+        if (isIos) {
+          return CupertinoAlertDialog(
+            title: Text(l10n.syncErrorTitle),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(message),
+            ),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () => Navigator.of(dialogCtx).pop(),
+                child: Text(l10n.ok),
+              ),
+            ],
+          );
+        }
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(CupertinoIcons.exclamationmark_triangle,
+                  color: Colors.red, size: 22),
+              const SizedBox(width: 8),
+              Text(l10n.syncErrorTitle),
+            ],
+          ),
+          content: Text(message),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.of(dialogCtx).pop(),
+              child: Text(l10n.ok),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -469,7 +720,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          // §8: "הרצת שליפה" — רענון נתוני ה-Comax (ספקים/מוצרים/מחירים/מבצעים).
+          IconButton(
+            tooltip: l10n.runSyncButton,
+            onPressed: _isSyncing ? null : _runSync,
+            icon: _isSyncing
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.accentGreen,
+                    ),
+                  )
+                : const Icon(CupertinoIcons.arrow_2_circlepath,
+                    color: AppColors.accentGreen),
+          ),
+          const SizedBox(width: 4),
           TextButton.icon(
             onPressed: () => _showFilterSheet(context, l10n),
             icon: const Icon(CupertinoIcons.slider_horizontal_3,
@@ -2059,6 +2326,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         onPressed: () async {
           HapticFeedback.lightImpact();
 
+          // §6/§13: בחירת סוג מסמך + ספק לפני הסריקה (גוברת על ה-OCR).
+          final setup = await showPreScanSetupSheet(context, ref);
+          if (!context.mounted || setup == null) return;
+
           final source = await showScanSourceSheet(context);
           if (!context.mounted || source == null) return;
 
@@ -2096,6 +2367,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   imageFiles.map((f) => f.path).toList(growable: false),
               'didTryImageExport': true,
               'imageExportError': null,
+              'initialDocumentType': setup.documentType,
+              'initialSupplierName': setup.supplierName,
             },
           );
         },

@@ -17,8 +17,8 @@
   # In Windows, build-name is used as the major, minor, and patch parts
   # of the product and file versions while build-number is used as the build suffix.
 
-#  version: 1.0.57+1 # ios
-  version: 1.0.58+72 # Android
+#  version: 1.0.59+1 # ios
+  version: 1.0.60+74 # Android
 
 
   environment:
@@ -112,6 +112,8 @@
     webview_flutter: ^4.13.0
     google_mlkit_document_scanner: ^0.3.0
     pdf: ^3.11.3
+    app_links: ^6.4.0
+
 
   dependency_overrides:
     intl: ^0.18.0

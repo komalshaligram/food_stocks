@@ -34,13 +34,13 @@ class SubUserProfileScreen extends StatelessWidget {
           subUserId: args?[AppStrings.subUserIdString] ?? '',
         ))
         ..add(SubUsersProfileEvent.getAppLanguageEvent(context: context)),
-      child: SubUserProfileScreenWidget(),
+      child: const SubUserProfileScreenWidget(),
     );
   }
 }
 
 class SubUserProfileScreenWidget extends StatefulWidget {
-  SubUserProfileScreenWidget({super.key});
+  const SubUserProfileScreenWidget({super.key});
 
   @override
   State<SubUserProfileScreenWidget> createState() => _SubUserProfileScreenWidgetState();

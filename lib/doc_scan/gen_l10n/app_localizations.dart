@@ -155,7 +155,7 @@ abstract class AppLocalizations {
   /// No description provided for @scanInvoice.
   ///
   /// In he, this message translates to:
-  /// **'סרוק חשבונית'**
+  /// **'סרוק תעודה'**
   String get scanInvoice;
 
   /// No description provided for @chooseScanModelTitle.
@@ -529,6 +529,36 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'אחר'**
   String get docTypeOther;
+
+  /// No description provided for @docTypeTaxInvoice.
+  ///
+  /// In he, this message translates to:
+  /// **'חשבונית מס/כניסה'**
+  String get docTypeTaxInvoice;
+
+  /// No description provided for @docTypeReturnInvoice.
+  ///
+  /// In he, this message translates to:
+  /// **'חשבונית החזר'**
+  String get docTypeReturnInvoice;
+
+  /// No description provided for @docTypeEntryCertificate.
+  ///
+  /// In he, this message translates to:
+  /// **'תעודת כניסה'**
+  String get docTypeEntryCertificate;
+
+  /// No description provided for @docTypeReturnCertificate.
+  ///
+  /// In he, this message translates to:
+  /// **'תעודת החזר'**
+  String get docTypeReturnCertificate;
+
+  /// No description provided for @docTypeInactiveSuffix.
+  ///
+  /// In he, this message translates to:
+  /// **'לא פעיל כרגע'**
+  String get docTypeInactiveSuffix;
 
   /// No description provided for @chooseDocumentType.
   ///
@@ -1292,29 +1322,707 @@ abstract class AppLocalizations {
   /// **'אתחול Docutain נכשל. הרישיון קשור ל-applicationId. באפליקציה זו: scanner.tavili.com. הנפק רישיון ניסיון עם ID זה: https://sdk.docutain.com/TrialLicense'**
   String get docutainInitFailedWithoutSdkError;
 
+  /// No description provided for @scanSourceTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'איך לצלם את המסמך?'**
   String get scanSourceTitle;
 
+  /// No description provided for @scanSourceCamera.
+  ///
+  /// In he, this message translates to:
+  /// **'מצלמה'**
   String get scanSourceCamera;
 
+  /// No description provided for @scanSourceGallery.
+  ///
+  /// In he, this message translates to:
+  /// **'גלריה'**
   String get scanSourceGallery;
 
+  /// No description provided for @scanAddAnotherPageTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'הוספת דף'**
   String get scanAddAnotherPageTitle;
 
+  /// No description provided for @scanAddAnotherPageMessage.
+  ///
+  /// In he, this message translates to:
+  /// **'צילמת {count} דפים. להוסיף עוד דף?'**
   String scanAddAnotherPageMessage(int count);
 
+  /// No description provided for @scanFinishCapture.
+  ///
+  /// In he, this message translates to:
+  /// **'סיום'**
   String get scanFinishCapture;
 
+  /// No description provided for @scanAddPage.
+  ///
+  /// In he, this message translates to:
+  /// **'צלם דף נוסף'**
   String get scanAddPage;
 
+  /// No description provided for @scanCropPageTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'עריכת דף'**
   String get scanCropPageTitle;
 
+  /// No description provided for @scanCropPageCounter.
+  ///
+  /// In he, this message translates to:
+  /// **'דף {current} מתוך {total}'**
   String scanCropPageCounter(int current, int total);
 
+  /// No description provided for @scanMaxPagesReached.
+  ///
+  /// In he, this message translates to:
+  /// **'הגעת למקסימום {max} דפים'**
   String scanMaxPagesReached(int max);
 
+  /// No description provided for @scanPermissionDenied.
+  ///
+  /// In he, this message translates to:
+  /// **'נדרשת הרשאה למצלמה או לגלריה'**
   String get scanPermissionDenied;
 
+  /// No description provided for @scanNoImagesSelected.
+  ///
+  /// In he, this message translates to:
+  /// **'לא נבחרו תמונות'**
   String get scanNoImagesSelected;
+
+  /// No description provided for @scanDocumentSdk.
+  ///
+  /// In he, this message translates to:
+  /// **'סרוק מסמך SDK'**
+  String get scanDocumentSdk;
+
+  /// No description provided for @scanDocumentFlutter.
+  ///
+  /// In he, this message translates to:
+  /// **'סרוק מסמך Flutter'**
+  String get scanDocumentFlutter;
+
+  /// No description provided for @scanDocumentNative.
+  ///
+  /// In he, this message translates to:
+  /// **'סרוק מסמך Native'**
+  String get scanDocumentNative;
+
+  /// No description provided for @manualScannerSelectScanTrack.
+  ///
+  /// In he, this message translates to:
+  /// **'בחר מסלול סריקה'**
+  String get manualScannerSelectScanTrack;
+
+  /// No description provided for @manualScannerAddPage.
+  ///
+  /// In he, this message translates to:
+  /// **'הוסף עמוד'**
+  String get manualScannerAddPage;
+
+  /// No description provided for @manualScannerFinishScan.
+  ///
+  /// In he, this message translates to:
+  /// **'סיים סריקה'**
+  String get manualScannerFinishScan;
+
+  /// No description provided for @manualScannerApplyFilter.
+  ///
+  /// In he, this message translates to:
+  /// **'החל פילטר שחור/לבן'**
+  String get manualScannerApplyFilter;
+
+  /// No description provided for @manualScannerFilterBw.
+  ///
+  /// In he, this message translates to:
+  /// **'מסמך שחור/לבן'**
+  String get manualScannerFilterBw;
+
+  /// No description provided for @manualScannerFilterGrayscale.
+  ///
+  /// In he, this message translates to:
+  /// **'גווני אפור'**
+  String get manualScannerFilterGrayscale;
+
+  /// No description provided for @manualScannerFilterContrast.
+  ///
+  /// In he, this message translates to:
+  /// **'ניגודיות גבוהה'**
+  String get manualScannerFilterContrast;
+
+  /// No description provided for @manualScannerFilterThreshold.
+  ///
+  /// In he, this message translates to:
+  /// **'סף שחור/לבן'**
+  String get manualScannerFilterThreshold;
+
+  /// No description provided for @manualScannerFilterCleanDocument.
+  ///
+  /// In he, this message translates to:
+  /// **'ניקוי מסמך'**
+  String get manualScannerFilterCleanDocument;
+
+  /// No description provided for @supplierNameField.
+  ///
+  /// In he, this message translates to:
+  /// **'שם ספק'**
+  String get supplierNameField;
+
+  /// No description provided for @allocationNumber.
+  ///
+  /// In he, this message translates to:
+  /// **'מספר הקצאה'**
+  String get allocationNumber;
+
+  /// No description provided for @paymentDueDate.
+  ///
+  /// In he, this message translates to:
+  /// **'תאריך פירעון'**
+  String get paymentDueDate;
+
+  /// No description provided for @colDiscountPercent.
+  ///
+  /// In he, this message translates to:
+  /// **'אחוז הנחה'**
+  String get colDiscountPercent;
+
+  /// No description provided for @colPackagingDepositTax.
+  ///
+  /// In he, this message translates to:
+  /// **'אריזה/מס/פיקדון'**
+  String get colPackagingDepositTax;
+
+  /// No description provided for @colFinalUnitPrice.
+  ///
+  /// In he, this message translates to:
+  /// **'מחיר ליח\' סופי'**
+  String get colFinalUnitPrice;
+
+  /// No description provided for @loadingSuppliers.
+  ///
+  /// In he, this message translates to:
+  /// **'טוען ספקים…'**
+  String get loadingSuppliers;
+
+  /// No description provided for @suppliersLoadError.
+  ///
+  /// In he, this message translates to:
+  /// **'שגיאה בטעינת ספקים'**
+  String get suppliersLoadError;
+
+  /// No description provided for @retry.
+  ///
+  /// In he, this message translates to:
+  /// **'נסה שוב'**
+  String get retry;
+
+  /// No description provided for @ok.
+  ///
+  /// In he, this message translates to:
+  /// **'אישור'**
+  String get ok;
+
+  /// No description provided for @runSyncButton.
+  ///
+  /// In he, this message translates to:
+  /// **'סנכרון'**
+  String get runSyncButton;
+
+  /// No description provided for @syncConfirmTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'הרצת סנכרון מ-Comax'**
+  String get syncConfirmTitle;
+
+  /// No description provided for @syncConfirmMessage.
+  ///
+  /// In he, this message translates to:
+  /// **'הסנכרון מתחבר ל-Comax שלך ומושך מחדש את כל הנתונים (ספקים, מוצרים, מחירים ומבצעים).\n\nכדי שהסנכרון יצליח עליך להיות מנותק מהמשתמש שלך ב-Comax — מערכת Comax מאפשרת חיבור יחיד בלבד. נתק/י קודם את המשתמש ב-Comax, ואז המשך/י.'**
+  String get syncConfirmMessage;
+
+  /// No description provided for @syncConfirmContinue.
+  ///
+  /// In he, this message translates to:
+  /// **'התנתקתי — הרץ סנכרון'**
+  String get syncConfirmContinue;
+
+  /// No description provided for @syncing.
+  ///
+  /// In he, this message translates to:
+  /// **'מבצע סנכרון...'**
+  String get syncing;
+
+  /// No description provided for @syncDone.
+  ///
+  /// In he, this message translates to:
+  /// **'סונכרן בהצלחה'**
+  String get syncDone;
+
+  /// No description provided for @syncDoneMessage.
+  ///
+  /// In he, this message translates to:
+  /// **'נתוני הספקים והמוצרים עודכנו מ-Comax.'**
+  String get syncDoneMessage;
+
+  /// No description provided for @syncErrorTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'שגיאת סנכרון'**
+  String get syncErrorTitle;
+
+  /// No description provided for @syncSessionInUse.
+  ///
+  /// In he, this message translates to:
+  /// **'יש משתמש מחובר ל-Comax. התנתק מ-Comax, המתן כ-3 דקות, ונסה שוב.'**
+  String get syncSessionInUse;
+
+  /// No description provided for @syncBadCredentials.
+  ///
+  /// In he, this message translates to:
+  /// **'נדרש עדכון הרשאות במערכת הניהול.'**
+  String get syncBadCredentials;
+
+  /// No description provided for @syncFailed.
+  ///
+  /// In he, this message translates to:
+  /// **'הסנכרון נכשל, נסה שוב מאוחר יותר.'**
+  String get syncFailed;
+
+  /// No description provided for @syncRateLimited.
+  ///
+  /// In he, this message translates to:
+  /// **'נסה שוב בעוד דקה.'**
+  String get syncRateLimited;
+
+  /// No description provided for @syncNoPermission.
+  ///
+  /// In he, this message translates to:
+  /// **'למפתח אין הרשאה להריץ שליפה.'**
+  String get syncNoPermission;
+
+  /// No description provided for @syncTimeout.
+  ///
+  /// In he, this message translates to:
+  /// **'הסנכרון אורך זמן רב מהצפוי, בדוק שוב מאוחר יותר.'**
+  String get syncTimeout;
+
+  /// No description provided for @rotateScreen.
+  ///
+  /// In he, this message translates to:
+  /// **'סובב מסך'**
+  String get rotateScreen;
+
+  /// No description provided for @editBarcodeTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'מס\' פריט / ברקוד'**
+  String get editBarcodeTitle;
+
+  /// No description provided for @barcodeLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'ברקוד'**
+  String get barcodeLabel;
+
+  /// No description provided for @barcodeInCatalog.
+  ///
+  /// In he, this message translates to:
+  /// **'קיים בקטלוג'**
+  String get barcodeInCatalog;
+
+  /// No description provided for @barcodeNotInCatalog.
+  ///
+  /// In he, this message translates to:
+  /// **'אינו בקטלוג — ייתכן שזהו ברקוד חלופי; בחר את הברקוד הראשי של המוצר'**
+  String get barcodeNotInCatalog;
+
+  /// No description provided for @searchByProductName.
+  ///
+  /// In he, this message translates to:
+  /// **'חיפוש מוצר לפי שם'**
+  String get searchByProductName;
+
+  /// No description provided for @productSearchHint.
+  ///
+  /// In he, this message translates to:
+  /// **'הקלד שם מוצר…'**
+  String get productSearchHint;
+
+  /// No description provided for @noProductsFound.
+  ///
+  /// In he, this message translates to:
+  /// **'לא נמצאו מוצרים'**
+  String get noProductsFound;
+
+  /// No description provided for @catalogLoading.
+  ///
+  /// In he, this message translates to:
+  /// **'טוען קטלוג מוצרים…'**
+  String get catalogLoading;
+
+  /// No description provided for @barcodeIssuesTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'ברקודים שאינם קיימים בקטלוג'**
+  String get barcodeIssuesTitle;
+
+  /// No description provided for @barcodeIssuesMessage.
+  ///
+  /// In he, this message translates to:
+  /// **'יש מוצרים שהברקוד שלהם אינו קיים בקטלוג. ייתכן שמדובר בברקוד חלופי — יש לבחור את הברקוד הראשי של המוצר. לא ניתן לשלוח לקופה עד לתיקון.'**
+  String get barcodeIssuesMessage;
+
+  /// No description provided for @jumpToFirstIssue.
+  ///
+  /// In he, this message translates to:
+  /// **'קפוץ לבעיה הראשונה'**
+  String get jumpToFirstIssue;
+
+  /// No description provided for @validating.
+  ///
+  /// In he, this message translates to:
+  /// **'מאמת...'**
+  String get validating;
+
+  /// No description provided for @validationSuccessTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'הנתונים תקינים'**
+  String get validationSuccessTitle;
+
+  /// No description provided for @validationSuccessMessage.
+  ///
+  /// In he, this message translates to:
+  /// **'הנתונים תקינים ומוכנים לקליטה לקופה.'**
+  String get validationSuccessMessage;
+
+  /// No description provided for @validationErrorsTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'נמצאו בעיות לתיקון'**
+  String get validationErrorsTitle;
+
+  /// No description provided for @validationFailedTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'האימות נכשל'**
+  String get validationFailedTitle;
+
+  /// No description provided for @validationNetworkErrorTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'בעיית תקשורת'**
+  String get validationNetworkErrorTitle;
+
+  /// No description provided for @validationNetworkErrorMessage.
+  ///
+  /// In he, this message translates to:
+  /// **'לא ניתן היה לפנות לשרת. בדוק את החיבור ונסה שוב.'**
+  String get validationNetworkErrorMessage;
+
+  /// No description provided for @validationConfigError.
+  ///
+  /// In he, this message translates to:
+  /// **'תקלת הגדרה במערכת. פנה לתמיכה (הרשאות/קוד לקוח).'**
+  String get validationConfigError;
+
+  /// No description provided for @validationRateLimited.
+  ///
+  /// In he, this message translates to:
+  /// **'יותר מדי בקשות. נסה שוב בעוד רגע.'**
+  String get validationRateLimited;
+
+  /// No description provided for @validationGenericError.
+  ///
+  /// In he, this message translates to:
+  /// **'האימות נכשל, נסה שוב מאוחר יותר.'**
+  String get validationGenericError;
+
+  /// No description provided for @lineLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'שורה'**
+  String get lineLabel;
+
+  /// No description provided for @suggestionsLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'הצעות'**
+  String get suggestionsLabel;
+
+  /// No description provided for @chooseCorrectSupplier.
+  ///
+  /// In he, this message translates to:
+  /// **'בחר את הספק הנכון'**
+  String get chooseCorrectSupplier;
+
+  /// No description provided for @submitting.
+  ///
+  /// In he, this message translates to:
+  /// **'שולח לקופה...'**
+  String get submitting;
+
+  /// No description provided for @submitBackground.
+  ///
+  /// In he, this message translates to:
+  /// **'ממשיך ברקע…'**
+  String get submitBackground;
+
+  /// No description provided for @submitSuccessTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'נקלט בהצלחה'**
+  String get submitSuccessTitle;
+
+  /// No description provided for @submitSuccessMessage.
+  ///
+  /// In he, this message translates to:
+  /// **'החשבונית נקלטה ל-Comax בהצלחה.'**
+  String get submitSuccessMessage;
+
+  /// No description provided for @submitErrorTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'השליחה לקופה נכשלה'**
+  String get submitErrorTitle;
+
+  /// No description provided for @submitNetworkError.
+  ///
+  /// In he, this message translates to:
+  /// **'בעיית תקשורת בשליחה לקופה. נסה שוב.'**
+  String get submitNetworkError;
+
+  /// No description provided for @submitGenericError.
+  ///
+  /// In he, this message translates to:
+  /// **'השליחה לקופה נכשלה, נסה שוב.'**
+  String get submitGenericError;
+
+  /// No description provided for @submitTimeout.
+  ///
+  /// In he, this message translates to:
+  /// **'הקליטה נמשכת זמן רב. בדוק מאוחר יותר אם החשבונית נקלטה.'**
+  String get submitTimeout;
+
+  /// No description provided for @submitAlreadyReceivedTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'החשבונית כבר נקלטה'**
+  String get submitAlreadyReceivedTitle;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'הגדרות'**
+  String get settingsTitle;
+
+  /// No description provided for @customerCodeLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'קוד לקוח'**
+  String get customerCodeLabel;
+
+  /// No description provided for @customerCodeHint.
+  ///
+  /// In he, this message translates to:
+  /// **'הזן קוד לקוח'**
+  String get customerCodeHint;
+
+  /// No description provided for @scanModelLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'מודל סריקה'**
+  String get scanModelLabel;
+
+  /// No description provided for @createNewProductButton.
+  ///
+  /// In he, this message translates to:
+  /// **'צור פריט חדש'**
+  String get createNewProductButton;
+
+  /// No description provided for @editNewProductButton.
+  ///
+  /// In he, this message translates to:
+  /// **'ערוך פריט חדש'**
+  String get editNewProductButton;
+
+  /// No description provided for @newProductTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'פריט חדש'**
+  String get newProductTitle;
+
+  /// No description provided for @editProductTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'עריכת פריט'**
+  String get editProductTitle;
+
+  /// No description provided for @npItem.
+  ///
+  /// In he, this message translates to:
+  /// **'פריט'**
+  String get npItem;
+
+  /// No description provided for @npBarcode.
+  ///
+  /// In he, this message translates to:
+  /// **'ברקוד'**
+  String get npBarcode;
+
+  /// No description provided for @npName.
+  ///
+  /// In he, this message translates to:
+  /// **'שם'**
+  String get npName;
+
+  /// No description provided for @npDepartment.
+  ///
+  /// In he, this message translates to:
+  /// **'מחלקה'**
+  String get npDepartment;
+
+  /// No description provided for @npGroup.
+  ///
+  /// In he, this message translates to:
+  /// **'קבוצה'**
+  String get npGroup;
+
+  /// No description provided for @npMainSupplier.
+  ///
+  /// In he, this message translates to:
+  /// **'ספק ראשי'**
+  String get npMainSupplier;
+
+  /// No description provided for @npSupplierItem.
+  ///
+  /// In he, this message translates to:
+  /// **'פריט ספק'**
+  String get npSupplierItem;
+
+  /// No description provided for @npSupplierPrice.
+  ///
+  /// In he, this message translates to:
+  /// **'מחיר ספק'**
+  String get npSupplierPrice;
+
+  /// No description provided for @npDiscountPct.
+  ///
+  /// In he, this message translates to:
+  /// **'% הנחה'**
+  String get npDiscountPct;
+
+  /// No description provided for @npProfitPct.
+  ///
+  /// In he, this message translates to:
+  /// **'% רווח'**
+  String get npProfitPct;
+
+  /// No description provided for @npSalePrice.
+  ///
+  /// In he, this message translates to:
+  /// **'מחיר מכירה'**
+  String get npSalePrice;
+
+  /// No description provided for @npManageDeposit.
+  ///
+  /// In he, this message translates to:
+  /// **'ניהול פיקדון'**
+  String get npManageDeposit;
+
+  /// No description provided for @npDraggedToRegister.
+  ///
+  /// In he, this message translates to:
+  /// **'נגרר לקופה'**
+  String get npDraggedToRegister;
+
+  /// No description provided for @npDepositItem.
+  ///
+  /// In he, this message translates to:
+  /// **'פריט פקדון'**
+  String get npDepositItem;
+
+  /// No description provided for @npMisc.
+  ///
+  /// In he, this message translates to:
+  /// **'שונות'**
+  String get npMisc;
+
+  /// No description provided for @npRequiredMissing.
+  ///
+  /// In he, this message translates to:
+  /// **'יש למלא את כל שדות החובה'**
+  String get npRequiredMissing;
+
+  /// No description provided for @npSelectDepartmentFirst.
+  ///
+  /// In he, this message translates to:
+  /// **'בחר מחלקה תחילה'**
+  String get npSelectDepartmentFirst;
+
+  /// No description provided for @selectHint.
+  ///
+  /// In he, this message translates to:
+  /// **'בחר'**
+  String get selectHint;
+
+  /// No description provided for @tbdOptions.
+  ///
+  /// In he, this message translates to:
+  /// **'יוגדר בהמשך'**
+  String get tbdOptions;
+
+  /// No description provided for @loadingEllipsis.
+  ///
+  /// In he, this message translates to:
+  /// **'טוען…'**
+  String get loadingEllipsis;
+
+  /// No description provided for @searchHintGeneric.
+  ///
+  /// In he, this message translates to:
+  /// **'חיפוש…'**
+  String get searchHintGeneric;
+
+  /// No description provided for @npSectionItem.
+  ///
+  /// In he, this message translates to:
+  /// **'פרטי פריט'**
+  String get npSectionItem;
+
+  /// No description provided for @npSectionClassification.
+  ///
+  /// In he, this message translates to:
+  /// **'סיווג'**
+  String get npSectionClassification;
+
+  /// No description provided for @npSectionSupplier.
+  ///
+  /// In he, this message translates to:
+  /// **'ספק'**
+  String get npSectionSupplier;
+
+  /// No description provided for @npSectionPricing.
+  ///
+  /// In he, this message translates to:
+  /// **'מחירים'**
+  String get npSectionPricing;
+
+  /// No description provided for @npSectionMore.
+  ///
+  /// In he, this message translates to:
+  /// **'הגדרות נוספות'**
+  String get npSectionMore;
+
+  /// No description provided for @scannerUnknownFailure.
+  ///
+  /// In he, this message translates to:
+  /// **'לא ניתן לפתוח את הסורק. נסה שוב.'**
+  String get scannerUnknownFailure;
 }
 
 class _AppLocalizationsDelegate

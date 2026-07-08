@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,7 +9,6 @@ import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/connect_screen/connect_bloc.dart';
 import '../../routes/app_routes.dart';
 import '../utils/app_utils.dart';
-import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_img_path.dart';
 import '../widget/custom_button_widget.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
@@ -21,7 +22,8 @@ class ConnectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (context) => ConnectBloc(), child: const ConnectScreenWidget());
+    return BlocProvider(
+        create: (context) => ConnectBloc(), child: const ConnectScreenWidget());
   }
 }
 
@@ -37,13 +39,16 @@ class ConnectScreenWidget extends StatelessWidget {
       },
       child: BlocBuilder<ConnectBloc, ConnectState>(builder: (context, state) {
         return Scaffold(
+          backgroundColor: AppColors.pageColor,
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(left: 38, right: 38),
               child: Center(
                 child: Column(children: [
                   SizedBox(height: getScreenHeight(context) * 0.15),
-                  SvgPicture.asset(AppImagePath.splashLogo, height: getScreenHeight(context) * 0.18, width: getScreenWidth(context) * 0.48),
+                  SvgPicture.asset(AppImagePath.splashLogo,
+                      height: getScreenHeight(context) * 0.18,
+                      width: getScreenWidth(context) * 0.48),
                   SizedBox(height: getScreenHeight(context) * 0.01),
                   CustomButtonWidget(
                       buttonText: AppLocalizations.of(context)!.login,
@@ -52,22 +57,28 @@ class ConnectScreenWidget extends StatelessWidget {
                       isFromConnectScreen: true,
                       enable: !state.isLoading,
                       onPressed: () {
-                        Navigator.pushNamed(context, RouteDefine.loginScreen.name, arguments: {AppStrings.isRegisterString: false});
+                        Navigator.pushNamed(
+                            context, RouteDefine.loginScreen.name,
+                            arguments: {AppStrings.isRegisterString: false});
                       }),
                   20.height,
-                  CustomButtonWidget(
-                      buttonText: AppLocalizations.of(context)!.login_as_guest,
-                      fontColors: AppColors.mainColor,
-                      borderColor: AppColors.mainColor,
-                      isFromConnectScreen: true,
-                      isLoading: state.isLoading,
-                      loadingColor: AppColors.mainColor,
-                      enable: !state.isLoading,
-                      onPressed: state.isLoading
-                          ? null
-                          : () {
-                              bloc.add(ConnectEvent.logInAsGuest(context: context));
-                            }),
+                  Platform.isIOS
+                      ? CustomButtonWidget(
+                          buttonText:
+                              AppLocalizations.of(context)!.login_as_guest,
+                          fontColors: AppColors.mainColor,
+                          borderColor: AppColors.mainColor,
+                          isFromConnectScreen: true,
+                          isLoading: state.isLoading,
+                          loadingColor: AppColors.mainColor,
+                          enable: !state.isLoading,
+                          onPressed: state.isLoading
+                              ? null
+                              : () {
+                                  bloc.add(ConnectEvent.logInAsGuest(
+                                      context: context));
+                                })
+                      : 0.width,
                 ]),
               ),
             ),

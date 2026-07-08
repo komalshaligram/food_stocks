@@ -8,6 +8,11 @@ import 'app_localizations.dart';
 class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
+  String get all => 'All';
+
+  @override
+  String get showing_all_products => 'Showing all products again';
+
   @override
   String get app_language => 'Hebrew Language';
 
@@ -292,6 +297,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get product_issue => 'Product Issue';
+
+  @override
+  String get product_information => 'Product Information';
+
+  @override
+  String get kosher => 'Kosher';
 
   @override
   String get shipment_verification => 'Shipment Verification';
@@ -694,12 +705,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failed_download => 'Failed to download';
 
   @override
-  String get camera_permission =>
-      'Please allow camera permission from settings';
+  String get camera_permission => 'Camera access is required to take a photo.';
+
 
   @override
   String get storage_permission =>
-      'Please allow storage permission from settings';
+      'Storage access is required to choose a file.';
 
   @override
   String get enter_4digit_otp => 'Please enter 4 digit otp code';
@@ -1222,6 +1233,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get per_unit => 'per unit';
+
+  @override
+  String get per_kg => 'per kg';
 
   @override
   String get delivery_date_value => 'Delivery up to 3 business days';
@@ -2318,4 +2332,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get customer_service => 'Customer Service';
+
+  @override
+  String get whatsapp_optin_title => 'Let\'s stay in touch on WhatsApp';
+
+  @override
+  String get whatsapp_optin_body =>
+      'I agree to receive WhatsApp messages from Tavili including updates, perks, promotions and service notices. I can withdraw this consent at any time.';
+
+  @override
+  String get whatsapp_optin_approve => 'I agree';
+
+  @override
+  String get whatsapp_optin_not_now => 'Not now';
+
+
+  @override
+  String get sort_products => 'Sort products';
+
+  @override
+  String get sort_none => 'No sorting';
+
+  @override
+  String get sort_a_to_z => 'Sort A-Z';
+
+  @override
+  String get sort_price_low_high => 'Price: low to high';
+
+  @override
+  String get sort_price_high_low => 'Price: high to low';
+
+  @override
+  String get show_only_sales => 'Show only sales';
+
 }

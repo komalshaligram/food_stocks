@@ -28,6 +28,7 @@ class SupplierListProductsData with _$SupplierListProductsData {
   const factory SupplierListProductsData({
     @JsonKey(name: "brands") List<BrandData>? brands,
     @JsonKey(name: "categories") List<SupplierCategoryData>? categories,
+    @JsonKey(name: "subCategories") List<SupplierSubCategoryData>? subCategories,
     @JsonKey(name: "products") List<ProductData>? products,
   }) = _SupplierListProductsData;
 
@@ -47,6 +48,17 @@ class SupplierCategoryData with _$SupplierCategoryData {
 
   factory SupplierCategoryData.fromJson(Map<String, dynamic> json) =>
       _$SupplierCategoryDataFromJson(json);
+}
+
+@freezed
+class SupplierSubCategoryData with _$SupplierSubCategoryData {
+  const factory SupplierSubCategoryData({
+    @JsonKey(name: "_id") String? id,
+    @JsonKey(name: "subCategoryName") String? subCategoryName,
+  }) = _SupplierSubCategoryData;
+
+  factory SupplierSubCategoryData.fromJson(Map<String, dynamic> json) =>
+      _$SupplierSubCategoryDataFromJson(json);
 }
 
 @freezed

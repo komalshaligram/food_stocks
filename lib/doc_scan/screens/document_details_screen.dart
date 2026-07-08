@@ -7,18 +7,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../bootstrap/doc_scan_bootstrap.dart';
 import '../core/constants/app_constants.dart';
+import '../core/services/invoice_api_client.dart';
 import '../core/services/invoice_excel_export_payload.dart';
 import '../core/services/invoice_excel_export_service.dart';
+import '../core/services/invoice_validation_payload.dart';
 import '../core/theme/app_colors.dart';
 import '../gen_l10n/app_localizations.dart';
 import '../core/utils/date_utils.dart';
 import '../core/utils/number_utils.dart';
 import '../models/invoice_document.dart';
 import '../models/invoice_item.dart';
+import '../models/product.dart';
+import '../models/supplier.dart';
+import '../providers/customer_code_provider.dart';
 import '../providers/documents_provider.dart';
 import '../providers/embedded_ui_provider.dart';
 import '../providers/model_provider.dart';
+import '../providers/products_provider.dart';
+import '../providers/supplier_code_cache_provider.dart';
+import '../providers/suppliers_provider.dart';
 import '../router/app_router.dart';
 import '../utils/document_media_resolver.dart';
 import '../utils/embedded_app_bar.dart';
@@ -26,6 +35,7 @@ import '../widgets/adaptive_bottom_sheet.dart';
 import '../widgets/editable_field.dart';
 import '../widgets/gradient_button.dart';
 import '../widgets/retrieve_scan_model_sheet.dart';
+import '../widgets/searchable_picker.dart';
 import '../widgets/status_badge.dart';
 import 'package:food_stock/main.dart' show navigatorKey;
 import 'package:food_stock/ui/utils/app_utils.dart';
@@ -137,20 +147,86 @@ class _DocumentDetailsScreenState
 
   late String _documentType;
   late String _companyName;
+
+  /// קוד הספק שנבחר מהרשימה — נשלח ב-header.supplierCode (גובר על ח.פ; מזהה ספק
+  /// מדויק גם כשלאותה ישות יש כמה רשומות, רשת מול "לעסקים"). null עד שהמשתמש בוחר.
+  String? _supplierCode;
   late String _companyId;
   late String _documentNumber;
   late String _documentDate;
   late String _subtotal;
   late String _vatAmount;
   late String _totalAmount;
+  late String _allocationNumber;
+  late String _paymentDueDate;
   String? _parsedJson;
   late List<InvoiceItem> _items;
   String _itemSearchQuery = '';
+
+  /// אינדקסי שורות שקיבלו שגיאת אימות (422) — לסימון רקע אדום. ראו §10.
+  Set<int> _validationErrorLines = <int>{};
+
+  /// מפתחות לגלילה אל בעיית הברקוד הראשונה (§9).
+  final GlobalKey _itemsCardKey = GlobalKey();
+  final GlobalKey _firstBadCellKey = GlobalKey();
+
+  /// "שלח לקופה" — אימות (§10) ואז קליטה ל-Comax (§11).
+  bool _isValidating = false;
+  bool _isSubmitting = false;
+  String? _validatedDocumentId;
+  late final InvoiceApiClient _apiClient =
+      InvoiceApiClient(app: DocScanBootstrap.firebaseApp);
+
+  // §5: סיבוב מסך מותר רק בדף הפרטים (לראות טבלה רחבה).
+  static const List<DeviceOrientation> _rotatableOrientations = [
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ];
+
+  /// נעילת ה-orientation של האפליקציה הראשית (main.dart) — לשחזור ביציאה מהדף,
+  /// כדי לא לשבור את התנהגות שאר האפליקציה (embedded-safe).
+  static const List<DeviceOrientation> _mainAppOrientations = [
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ];
 
   @override
   void initState() {
     super.initState();
     _initFromDocument();
+    // אפשר סיבוב מסך — רק בדף פרטי המסמך.
+    SystemChrome.setPreferredOrientations(_rotatableOrientations);
+    // טעינת קטלוג המוצרים לזיהוי ברקודים שאינם בקטלוג (§9).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(productsProvider.notifier).load();
+    });
+  }
+
+  @override
+  void dispose() {
+    // החזרת נעילת ה-orientation של האפליקציה הראשית ביציאה מהדף.
+    SystemChrome.setPreferredOrientations(_mainAppOrientations);
+    super.dispose();
+  }
+
+  /// כפתור סיבוב ידני: מסובב לכיוון ההפוך מהנוכחי, ואז משחזר סיבוב חופשי
+  /// כדי שגם סיבוב פיזי של המכשיר ימשיך לעבוד.
+  Future<void> _toggleRotation() async {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    await SystemChrome.setPreferredOrientations(
+      isPortrait
+          ? const [
+              DeviceOrientation.landscapeRight,
+              DeviceOrientation.landscapeLeft,
+            ]
+          : _mainAppOrientations,
+    );
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
+    await SystemChrome.setPreferredOrientations(_rotatableOrientations);
   }
 
   Future<void> _confirmAndDeleteDocument(InvoiceDocument doc) async {
@@ -202,6 +278,12 @@ class _DocumentDetailsScreenState
 
     final notifier = ref.read(embeddedDetailsHeaderActionsProvider.notifier);
     final actions = <EmbeddedDetailsHeaderAction>[
+      // §5: סיבוב מסך — רק בדף הפרטים.
+      EmbeddedDetailsHeaderAction(
+        tooltip: l10n.rotateScreen,
+        icon: Icons.screen_rotation,
+        onPressed: _toggleRotation,
+      ),
       EmbeddedDetailsHeaderAction(
         tooltip: l10n.delete,
         icon: CupertinoIcons.trash,
@@ -234,6 +316,7 @@ class _DocumentDetailsScreenState
     if (doc == null) return;
     _documentType = doc.documentType ?? '';
     _companyName = doc.companyName ?? '';
+    _supplierCode = null;
     _companyId = doc.companyId ?? '';
     _documentNumber = doc.documentNumber ?? '';
     _documentDate = doc.documentDate ?? '';
@@ -241,6 +324,8 @@ class _DocumentDetailsScreenState
     _vatAmount = doc.vatAmount != null ? formatCurrency(doc.vatAmount!) : '';
     _totalAmount =
         doc.totalAmount != null ? formatCurrency(doc.totalAmount!) : '';
+    _allocationNumber = doc.allocationNumber ?? '';
+    _paymentDueDate = doc.paymentDueDate ?? '';
     _parsedJson = doc.parsedJson;
     _items = List<InvoiceItem>.from(doc.items);
   }
@@ -279,7 +364,8 @@ class _DocumentDetailsScreenState
     }
 
     final theme = Theme.of(context);
-    final isCashSent = doc.status == DocumentStatus.sentToCashRegister;
+    // נשלח לקופה — או שהקליטה ל-Comax בתהליך/הושלמה (חוסם שליחה כפולה ועריכה).
+    final isCashSent = doc.isComaxIntakeInFlightOrDone;
     final isProcessing = doc.status == DocumentStatus.processing;
     final isUploading = doc.status == DocumentStatus.uploading;
     final isError = doc.status == DocumentStatus.error;
@@ -443,6 +529,15 @@ class _DocumentDetailsScreenState
             const SizedBox(height: 12),
             if (isError) _buildErrorDiagnostics(context, l10n, doc),
             if (!isProcessing && !isUploading && !isError) ...[
+              Builder(builder: (context) {
+                final badCount =
+                    _unknownBarcodeIndices(ref.watch(productsProvider)).length;
+                if (badCount == 0) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _buildBarcodeWarningBanner(l10n, badCount),
+                );
+              }),
               _buildGeneralCard(context, l10n, isCashSent),
               const SizedBox(height: 8),
               _buildItemsCard(context, l10n, isCashSent),
@@ -471,7 +566,9 @@ class _DocumentDetailsScreenState
                               AppColors.headerGradientStart,
                               AppColors.headerGradientEnd,
                             ],
-                            onPressed: _onSave,
+                            onPressed: (_isValidating || _isSubmitting)
+                                ? null
+                                : _onSave,
                           ),
                         ),
                       ),
@@ -483,7 +580,9 @@ class _DocumentDetailsScreenState
                             elevation: 0,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(12),
-                              onTap: _onUpdateInCash,
+                              onTap: (_isValidating || _isSubmitting)
+                                  ? null
+                                  : _onUpdateInCash,
                               child: Container(
                                 width: double.infinity,
                                 height: double.infinity,
@@ -502,16 +601,42 @@ class _DocumentDetailsScreenState
                                   ),
                                 ),
                                 child: Center(
-                                  child: Text(
-                                    l10n.updateInCash,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelLarge
-                                        ?.copyWith(
-                                          color: AppColors.accentGreen,
-                                          fontWeight: FontWeight.w600,
+                                  child: (_isValidating || _isSubmitting)
+                                      ? Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const SizedBox(
+                                              width: 16,
+                                              height: 16,
+                                              child: CircularProgressIndicator(
+                                                  strokeWidth: 2),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              _isSubmitting
+                                                  ? l10n.submitting
+                                                  : l10n.validating,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelLarge
+                                                  ?.copyWith(
+                                                    color:
+                                                        AppColors.accentGreen,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                            ),
+                                          ],
+                                        )
+                                      : Text(
+                                          l10n.updateInCash,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge
+                                              ?.copyWith(
+                                                color: AppColors.accentGreen,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                         ),
-                                  ),
                                 ),
                               ),
                             ),
@@ -676,10 +801,11 @@ class _DocumentDetailsScreenState
             Column(
               children: [
                 EditableField(
+                  // §6: שם הספק נבחר מתוך רשימת הספקים (לא הקלדה חופשית).
                   label: l10n.companyName,
                   value: _companyName.isEmpty ? AppConstants.emptyFieldPlaceholder : _companyName,
                   icon: CupertinoIcons.briefcase,
-                  onChanged: isReadOnly ? null : (v) => setState(() => _companyName = v),
+                  onTap: isReadOnly ? null : _pickSupplierForCompanyName,
                 ),
                 const SizedBox(height: 10),
                 EditableField(
@@ -772,6 +898,39 @@ class _DocumentDetailsScreenState
                 ),
               ],
             ),
+            const SizedBox(height: 12),
+            // §4: מספר הקצאה + תאריך לתשלום
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: EditableField(
+                    label: l10n.allocationNumber,
+                    value: _allocationNumber.isEmpty
+                        ? AppConstants.emptyFieldPlaceholder
+                        : _allocationNumber,
+                    icon: CupertinoIcons.number_square,
+                    keyboardType: TextInputType.number,
+                    onChanged: isReadOnly
+                        ? null
+                        : (v) => setState(() => _allocationNumber = v),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: EditableField(
+                    label: l10n.paymentDueDate,
+                    value: _paymentDueDate.isEmpty
+                        ? AppConstants.emptyFieldPlaceholder
+                        : _paymentDueDate,
+                    icon: CupertinoIcons.calendar_badge_plus,
+                    onChanged: isReadOnly
+                        ? null
+                        : (v) => setState(() => _paymentDueDate = v),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -785,7 +944,11 @@ class _DocumentDetailsScreenState
   ) {
     final theme = Theme.of(context);
     final filtered = _filteredItems;
+    final productsState = ref.watch(productsProvider);
+    final badIndices = _unknownBarcodeIndices(productsState);
+    final firstBadIndex = badIndices.isEmpty ? -1 : badIndices.first;
     return Card(
+      key: _itemsCardKey,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
@@ -916,6 +1079,33 @@ class _DocumentDetailsScreenState
                     DataColumn(
                       label: Align(
                         alignment: Alignment.center,
+                        child: Text(
+                          l10n.colDiscountPercent,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          l10n.colPackagingDepositTax,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          l10n.colFinalUnitPrice,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Align(
+                        alignment: Alignment.center,
                         child: Text(l10n.colTotalNis, textAlign: TextAlign.center),
                       ),
                     ),
@@ -927,6 +1117,9 @@ class _DocumentDetailsScreenState
                       color:
                           WidgetStateProperty.resolveWith<Color?>((states) {
                         // ×¤×¡ ×¢×“×™×Ÿ ×œ×”×¤×¨×“×ª ×©×•×¨×•×ª (×ž×•×“×¨× ×™ ×™×•×ª×¨).
+                        if (_validationErrorLines.contains(globalIndex)) {
+                          return AppColors.error.withOpacity(0.10);
+                        }
                         final isEven = entry.key % 2 == 0;
                         return isEven
                             ? AppColors.accentGreen.withOpacity(0.035)
@@ -938,22 +1131,24 @@ class _DocumentDetailsScreenState
                             : _deleteCell(globalIndex),
                         isReadOnly
                             ? _cellReadOnly(item.itemNumber ?? AppConstants.emptyFieldPlaceholder)
-                            : _cell(
+                            : _cellColored(
                                 item.itemNumber ?? AppConstants.emptyFieldPlaceholder,
-                                () => _editItemCell(
+                                () => _editBarcodeCell(
                                   context,
                                   l10n,
                                   globalIndex,
-                                  l10n.colItemNumber,
-                                  item.itemNumber ?? '',
-                                  (v) {
-                                    setState(() {
-                                      _items[globalIndex] = item.copyWith(
-                                        itemNumber: v.isEmpty ? null : v,
-                                      );
-                                    });
-                                  },
+                                  item,
                                 ),
+                                background: item.newProduct != null
+                                    ? AppColors.accentGreen.withOpacity(0.15)
+                                    : (productsState.hasCatalog &&
+                                            !productsState.isKnownItemNumber(
+                                                item.itemNumber))
+                                        ? AppColors.error.withOpacity(0.18)
+                                        : null,
+                                cellKey: globalIndex == firstBadIndex
+                                    ? _firstBadCellKey
+                                    : null,
                               ),
                         isReadOnly
                             ? _cellReadOnlyRight(item.description)
@@ -987,11 +1182,12 @@ class _DocumentDetailsScreenState
                                   (v) {
                                     final n = int.tryParse(v);
                                     if (n == null) return;
-                                    setState(() {
-                                      _items[globalIndex] = item.copyWith(
-                                        units: v.isEmpty ? null : n,
-                                      );
-                                    });
+                                    _setItem(
+                                      globalIndex,
+                                      _recalcItemFromPacks(
+                                        item.copyWith(units: n),
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
@@ -1007,11 +1203,14 @@ class _DocumentDetailsScreenState
                                   item.packages?.toString() ?? '',
                                   (v) {
                                     final n = int.tryParse(v);
-                                    setState(() {
-                                      _items[globalIndex] = item.copyWith(
-                                        packages: v.isEmpty ? null : n,
-                                      );
-                                    });
+                                    _setItem(
+                                      globalIndex,
+                                      _recalcItemFromPacks(
+                                        item.copyWith(
+                                          packages: v.isEmpty ? null : n,
+                                        ),
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
@@ -1028,12 +1227,12 @@ class _DocumentDetailsScreenState
                                   (v) {
                                     final n = double.tryParse(v);
                                     if (n == null) return;
-                                    setState(() {
-                                      _items[globalIndex] = item.copyWith(
-                                        quantity: n,
-                                        totalPrice: n * item.pricePerUnit,
-                                      );
-                                    });
+                                    _setItem(
+                                      globalIndex,
+                                      _withRecalculatedLineTotal(
+                                        item.copyWith(quantity: n),
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
@@ -1050,15 +1249,85 @@ class _DocumentDetailsScreenState
                                   (v) {
                                     final n = double.tryParse(v);
                                     if (n == null) return;
-                                    setState(() {
-                                      _items[globalIndex] = item.copyWith(
-                                        pricePerUnit: n,
-                                        totalPrice: item.quantity * n,
-                                      );
-                                    });
+                                    _setItem(
+                                      globalIndex,
+                                      _withRecalculatedLineTotal(
+                                        item.copyWith(pricePerUnit: n),
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
+                        // אחוז הנחה לשורה (ניתן לעריכה; ריק = ללא הנחה).
+                        isReadOnly
+                            ? _cellReadOnly(_discountCellText(item.discountPercent))
+                            : _cell(
+                                _discountCellText(item.discountPercent),
+                                () => _editItemCell(
+                                  context,
+                                  l10n,
+                                  globalIndex,
+                                  l10n.colDiscountPercent,
+                                  item.discountPercent?.toString() ?? '',
+                                  (v) {
+                                    final t = v.trim().replaceAll('%', '');
+                                    if (t.isEmpty) {
+                                      _setItem(
+                                        globalIndex,
+                                        _withRecalculatedLineTotal(
+                                          item.copyWith(discountPercent: null),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    final n = double.tryParse(t);
+                                    if (n == null) return;
+                                    _setItem(
+                                      globalIndex,
+                                      _withRecalculatedLineTotal(
+                                        item.copyWith(discountPercent: n),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                        // אריזה/מס/פיקדון לשורה (ניתן לעריכה; ריק = ללא תוספת).
+                        isReadOnly
+                            ? _cellReadOnly(
+                                _amountOrDash(item.packagingDepositTax))
+                            : _cell(
+                                _amountOrDash(item.packagingDepositTax),
+                                () => _editItemCell(
+                                  context,
+                                  l10n,
+                                  globalIndex,
+                                  l10n.colPackagingDepositTax,
+                                  item.packagingDepositTax?.toString() ?? '',
+                                  (v) {
+                                    final t = v.trim();
+                                    if (t.isEmpty) {
+                                      _setItem(
+                                        globalIndex,
+                                        _withRecalculatedLineTotal(
+                                          item.copyWith(
+                                              packagingDepositTax: null),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    final n = double.tryParse(t);
+                                    if (n == null) return;
+                                    _setItem(
+                                      globalIndex,
+                                      _withRecalculatedLineTotal(
+                                        item.copyWith(packagingDepositTax: n),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                        // מחיר ליחידה סופי (סה"כ ÷ כמות) — קריאה בלבד.
+                        _cellReadOnly(_finalUnitPriceText(item)),
                         isReadOnly
                             ? _cellReadOnly(formatCurrency(item.totalPrice))
                             : _cell(
@@ -1072,10 +1341,10 @@ class _DocumentDetailsScreenState
                                   (v) {
                                     final n = double.tryParse(v);
                                     if (n == null) return;
-                                    setState(() {
-                                      _items[globalIndex] =
-                                          item.copyWith(totalPrice: n);
-                                    });
+                                    _setItem(
+                                      globalIndex,
+                                      item.copyWith(totalPrice: n),
+                                    );
                                   },
                                 ),
                               ),
@@ -1165,6 +1434,35 @@ class _DocumentDetailsScreenState
     );
   }
 
+  /// תא ניתן-ללחיצה עם רקע אופציונלי (לסימון ברקוד שאינו בקטלוג) ומפתח אופציונלי
+  /// (לגלילה אל הבעיה הראשונה). ראו §9.
+  DataCell _cellColored(
+    String text,
+    VoidCallback onTap, {
+    Color? background,
+    Key? cellKey,
+  }) {
+    return DataCell(
+      InkWell(
+        onTap: onTap,
+        child: Container(
+          key: cellKey,
+          color: background,
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   DataCell _deleteCell(int globalIndex) {
     return DataCell(
       IconButton(
@@ -1200,6 +1498,382 @@ class _DocumentDetailsScreenState
       final item = _items[i];
       if (item.lineNumber != i + 1) {
         _items[i] = item.copyWith(lineNumber: i + 1);
+      }
+    }
+  }
+
+  static const double _vatRate = 0.18;
+
+  /// חישוב מחדש של סכומי המסמך מתוך שורות הפריטים:
+  /// סכום ביניים = סכום סה"כ השורות, מע"מ = 18%, סה"כ = סכום ביניים + מע"מ.
+  /// כשאין פריטים — לא נוגעים בערכים שהגיעו מה-OCR (למסמכים ללא שורות).
+  void _recalculateDocumentTotals() {
+    if (_items.isEmpty) return;
+    final subtotal = _items.fold<double>(0, (sum, it) => sum + it.totalPrice);
+    final vat = subtotal * _vatRate;
+    final total = subtotal + vat;
+    _subtotal = formatCurrency(double.parse(subtotal.toStringAsFixed(2)));
+    _vatAmount = formatCurrency(double.parse(vat.toStringAsFixed(2)));
+    _totalAmount = formatCurrency(double.parse(total.toStringAsFixed(2)));
+  }
+
+  /// עדכון פריט בודד ברשימה + חישוב מחדש של סכומי המסמך, בתוך setState אחד.
+  void _setItem(int index, InvoiceItem newItem) {
+    setState(() {
+      _items[index] = newItem;
+      _recalculateDocumentTotals();
+      // עריכת שורה מבטלת סימוני שגיאות אימות ישנים.
+      _validationErrorLines = {};
+    });
+  }
+
+  /// חישוב מחדש של סה"כ השורה: כמות × מחיר ליחידה, בניכוי אחוז הנחה (אם קיים),
+  /// בתוספת אריזה/מס/פיקדון. מעוגל ל-2 ספרות אחרי הנקודה.
+  InvoiceItem _withRecalculatedLineTotal(InvoiceItem it) {
+    final gross = it.quantity * it.pricePerUnit;
+    final factor = 1 - ((it.discountPercent ?? 0) / 100);
+    final extras = it.packagingDepositTax ?? 0;
+    final total = double.parse((gross * factor + extras).toStringAsFixed(2));
+    return it.copyWith(totalPrice: total);
+  }
+
+  /// בעריכת מארזים / יח' במארז: גוזר כמות = מארזים × יח' (כששניהם קיימים וגדולים מ-0),
+  /// ואז מחשב מחדש את סה"כ השורה.
+  InvoiceItem _recalcItemFromPacks(InvoiceItem it) {
+    final packs = it.packages;
+    final units = it.units;
+    if (packs != null && units != null && packs > 0 && units > 0) {
+      it = it.copyWith(quantity: (packs * units).toDouble());
+    }
+    return _withRecalculatedLineTotal(it);
+  }
+
+  /// תצוגת סכום כספי או '—' כשאין נתון (לעמודת אריזה/מס/פיקדון).
+  String _amountOrDash(double? value) =>
+      value == null ? '—' : formatCurrency(value);
+
+  /// תצוגת מחיר ליחידה סופי (סה"כ ÷ כמות) או '—' כשאין כמות.
+  String _finalUnitPriceText(InvoiceItem item) {
+    final p = item.finalUnitPrice;
+    return p == null ? '—' : formatCurrency(p);
+  }
+
+  /// תצוגת אחוז הנחה: '99.99%' או '—' כשאין נתון. מסיר אפסים עשרוניים מיותרים.
+  String _discountCellText(double? percent) {
+    if (percent == null) return '—';
+    var s = percent.toStringAsFixed(2);
+    if (s.contains('.')) {
+      s = s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+    }
+    return '$s%';
+  }
+
+  // ===== §9: זיהוי מול קטלוג + עורך ברקוד "חלופי" =====
+
+  /// אינדקסי שורות שהברקוד/קוד שלהן אינו קיים בקטלוג (לסימון אדום + חסימת שליחה).
+  List<int> _unknownBarcodeIndices(ProductsState products) {
+    if (!products.hasCatalog) return const [];
+    final out = <int>[];
+    for (var i = 0; i < _items.length; i++) {
+      final it = _items[i];
+      // שורה שנוצר לה "פריט חדש" נחשבת מסודרת — לא חוסמת ולא אדומה.
+      if (it.newProduct != null) continue;
+      if (!products.isKnownItemNumber(it.itemNumber)) out.add(i);
+    }
+    return out;
+  }
+
+  /// באנר אזהרה בראש הדף כשיש ברקודים שאינם קיימים בקטלוג.
+  Widget _buildBarcodeWarningBanner(AppLocalizations l10n, int count) {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.error.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.error.withOpacity(0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(CupertinoIcons.exclamationmark_triangle_fill,
+                  color: AppColors.error, size: 22),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${l10n.barcodeIssuesTitle} ($count)',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.barcodeIssuesMessage,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.error,
+                side: const BorderSide(color: AppColors.error),
+              ),
+              icon: const Icon(CupertinoIcons.arrow_down_circle, size: 18),
+              label: Text(l10n.jumpToFirstIssue),
+              onPressed: _jumpToFirstBadBarcode,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// גולל אל בעיית הברקוד הראשונה (אל התא עצמו אם גלוי, אחרת אל כרטיס הפריטים).
+  void _jumpToFirstBadBarcode() {
+    final cellCtx = _firstBadCellKey.currentContext;
+    final target = cellCtx ?? _itemsCardKey.currentContext;
+    if (target == null) return;
+    Scrollable.ensureVisible(
+      target,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      alignment: 0.1,
+    );
+  }
+
+  /// עורך תא הברקוד: עריכה ידנית + חיפוש מוצר לפי שם (רק מוצרי ספק החשבונית).
+  void _editBarcodeCell(
+    BuildContext context,
+    AppLocalizations l10n,
+    int index,
+    InvoiceItem item,
+  ) {
+    final theme = Theme.of(context);
+    final products = ref.read(productsProvider);
+    final barcodeController = TextEditingController(text: item.itemNumber ?? '');
+
+    void save(String value) {
+      final v = value.trim();
+      setState(() {
+        _items[index] = _items[index].copyWith(
+          itemNumber: v.isEmpty ? null : v,
+        );
+        _validationErrorLines = {};
+      });
+    }
+
+    showAdaptiveBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+          child: SafeArea(
+            child: StatefulBuilder(
+              builder: (ctx, setSheet) {
+                final barcode = barcodeController.text.trim();
+                final matched = products.productForBarcode(barcode);
+                final known = products.isKnownItemNumber(barcode);
+
+                Widget statusLine() {
+                  if (!products.hasCatalog || barcode.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  final ok = known;
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Row(
+                      children: [
+                        Icon(
+                          ok
+                              ? CupertinoIcons.check_mark_circled_solid
+                              : CupertinoIcons.xmark_circle_fill,
+                          size: 18,
+                          color: ok ? AppColors.accentGreen : AppColors.error,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            ok
+                                ? (matched != null
+                                    ? '${l10n.barcodeInCatalog}: ${matched.name}'
+                                    : l10n.barcodeInCatalog)
+                                : l10n.barcodeNotInCatalog,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color:
+                                  ok ? AppColors.accentGreen : AppColors.error,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        l10n.editBarcodeTitle,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: _actionSheetGreen,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: barcodeController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: l10n.barcodeLabel,
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.divider),
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.divider),
+                          ),
+                          isDense: true,
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.accentGreen),
+                          ),
+                        ),
+                        onChanged: (_) => setSheet(() {}),
+                      ),
+                      statusLine(),
+                      const SizedBox(height: 16),
+                      // §9: חיפוש מוצר נפתח כמסך חיפוש נגלל (כמו בורר הספק),
+                      // מסונן למוצרי ספק החשבונית. כך אין overflow כשהמקלדת פתוחה.
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.accentGreen,
+                            side:
+                                const BorderSide(color: AppColors.accentGreen),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          icon: const Icon(CupertinoIcons.search, size: 20),
+                          label: Text(l10n.searchByProductName),
+                          onPressed: () async {
+                            // חיפוש בכל מוצרי הלקוח (לא מסונן לפי ספק).
+                            final items = products.products;
+                            if (items.isEmpty) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(l10n.noProductsFound)),
+                              );
+                              return;
+                            }
+                            final picked = await showSearchablePicker<Product>(
+                              context: context,
+                              title: l10n.searchByProductName,
+                              searchHint: l10n.productSearchHint,
+                              items: items,
+                              labelOf: (p) => p.name,
+                              sublabelOf: (p) => p.barcode,
+                            );
+                            if (picked != null) {
+                              barcodeController.text = picked.barcode;
+                              setSheet(() {});
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: _actionSheetGreen,
+                              ),
+                              onPressed: () => Navigator.of(ctx).pop(),
+                              child: Text(l10n.cancel),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: GradientButton(
+                              label: l10n.update,
+                              colors: const [
+                                AppColors.headerGradientStart,
+                                AppColors.headerGradientEnd,
+                              ],
+                              onPressed: () {
+                                save(barcodeController.text);
+                                Navigator.of(ctx).pop();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// בחירת שם הספק מתוך רשימת הספקים (במקום הקלדה חופשית).
+  Future<void> _pickSupplierForCompanyName() async {
+    final l10n = AppLocalizations.of(context);
+    if (!ref.read(suppliersProvider).loaded) {
+      await ref.read(suppliersProvider.notifier).load();
+      if (!mounted) return;
+    }
+    final suppliers = ref.read(suppliersProvider).suppliers;
+    final picked = await showSearchablePicker<Supplier>(
+      context: context,
+      title: l10n.supplierNameField,
+      searchHint: l10n.searchHintGeneric,
+      items: suppliers,
+      labelOf: (s) => s.name,
+      sublabelOf: (s) => s.code,
+    );
+    if (picked != null && mounted) {
+      final code = picked.code.trim();
+      setState(() {
+        _companyName = picked.name;
+        _supplierCode = code.isEmpty ? null : code;
+        _validationErrorLines = {};
+      });
+      // שמירת הקוד שנבחר לסשן לפי ח.פ של החשבונית — לשליחה אוטומטית בעתיד.
+      final taxId =
+          InvoiceValidationPayload.supplierTaxIdOf(_documentSnapshotForPersist());
+      if (taxId.isNotEmpty && _supplierCode != null) {
+        final cache =
+            Map<String, String>.from(ref.read(supplierCodeCacheProvider));
+        cache[taxId] = _supplierCode!;
+        ref.read(supplierCodeCacheProvider.notifier).state = cache;
       }
     }
   }
@@ -1601,8 +2275,12 @@ class _DocumentDetailsScreenState
       companyId: _companyId.isEmpty ? original.companyId : _companyId,
       documentNumber:
           _documentNumber.isEmpty ? original.documentNumber : _documentNumber,
+      allocationNumber:
+          _allocationNumber.isEmpty ? original.allocationNumber : _allocationNumber,
       documentDate:
           _documentDate.isEmpty ? original.documentDate : _documentDate,
+      paymentDueDate:
+          _paymentDueDate.isEmpty ? original.paymentDueDate : _paymentDueDate,
       subtotal: _parseAmount(_subtotal, fallback: original.subtotal),
       vatAmount: _parseAmount(_vatAmount, fallback: original.vatAmount),
       totalAmount: _parseAmount(_totalAmount, fallback: original.totalAmount),
@@ -1631,33 +2309,598 @@ class _DocumentDetailsScreenState
     context.go(AppConstants.routeHome);
   }
 
+  // ===== §10/§11: "שלח לקופה" = אימות → קליטה ל-Comax (דרך הקראולר) =====
+
+  /// "שלח לקופה" — שלב ראשון: אימות מול ה-API. חסום אם יש ברקודים שאינם בקטלוג.
   void _onUpdateInCash() {
+    final l10n = AppLocalizations.of(context);
+    final productsState = ref.read(productsProvider);
+    if (_unknownBarcodeIndices(productsState).isNotEmpty) {
+      _showValidationInfoDialog(
+        l10n.barcodeIssuesTitle,
+        l10n.barcodeIssuesMessage,
+        isError: true,
+      );
+      _jumpToFirstBadBarcode();
+      return;
+    }
+    _runValidation();
+  }
+
+  /// מריץ אימות. [supplierCode] — אם נשלח (אחרי בחירת ספק מההצעות), נשלח ב-header.
+  /// אם לא נשלח — נבדק זיכרון מקומי {ח.פ → קוד} לשליחה אוטומטית.
+  Future<void> _runValidation({String? supplierCode}) async {
     final original = widget.document;
     if (original == null) {
       context.go(AppConstants.routeHome);
       return;
     }
+    if (_isValidating || _isSubmitting) return;
+
+    HapticFeedback.lightImpact();
+    setState(() {
+      _isValidating = true;
+      _validationErrorLines = {};
+    });
+
+    final snapshot = _documentSnapshotForPersist();
+    final taxId = InvoiceValidationPayload.supplierTaxIdOf(snapshot);
+    final cache = ref.read(supplierCodeCacheProvider);
+    // קדימות: בחירת מועמד מפורשת → ספק שהמשתמש בחר מהרשימה → זיכרון לפי ח.פ.
+    final effectiveCode = supplierCode ??
+        ((_supplierCode != null && _supplierCode!.isNotEmpty)
+            ? _supplierCode
+            : null) ??
+        (taxId.isNotEmpty ? cache[taxId] : null);
+
+    // שולחים את הברקוד **המלא מהקטלוג** כשבחשבונית הופיע ברקוד מקוצר (התאמה קנונית),
+    // כדי שה-validate/קליטה ב-Comax ימצאו את הפריט (אחרת line_item_not_found).
+    final productsState = ref.read(productsProvider);
+    final payload = InvoiceValidationPayload.fromDocument(
+      snapshot,
+      supplierCode: effectiveCode,
+      barcodeOf: (item) =>
+          productsState.productForBarcode(item.itemNumber)?.barcode ??
+          (item.itemNumber ?? ''),
+    );
+
+    ValidationResponse? res;
+    Object? failure;
+    try {
+      res = await _apiClient.validateInvoice(
+        payload,
+        customerCode: ref.read(customerCodeProvider),
+      );
+    } catch (e) {
+      failure = e;
+    }
+
+    if (!mounted) return;
+    setState(() => _isValidating = false);
 
     final l10n = AppLocalizations.of(context);
+    if (failure != null) {
+      _showValidationInfoDialog(l10n.validationNetworkErrorTitle,
+          l10n.validationNetworkErrorMessage,
+          isError: true);
+      return;
+    }
 
-    _showConfirmDialog(
-      title: l10n.confirmSendToCashTitle,
-      message: l10n.confirmSendToCashMessage,
-      cancelLabel: l10n.no,
-      confirmLabel: l10n.yes,
+    final r = res!;
+    if (r.valid) {
+      _validatedDocumentId = r.documentId;
+      _showValidationSuccessDialog(l10n, r);
+      return;
+    }
+    if (r.httpStatus == 422) {
+      setState(() {
+        _validationErrorLines =
+            r.errors.map((e) => e.lineIndex).whereType<int>().toSet();
+      });
+      _showValidationErrorsDialog(l10n, r.errors, taxId);
+      return;
+    }
+    _showValidationInfoDialog(
+      l10n.validationFailedTitle,
+      _generalErrorMessage(l10n, r.generalErrorCode),
+      isError: true,
+    );
+  }
+
+  /// המשתמש בחר ספק מההצעות: שומר את הקוד לח.פ זה (לסשן) ושולח שוב עם supplierCode.
+  void _onPickSupplierCandidate(String taxId, String code) {
+    if (code.trim().isNotEmpty) {
+      _supplierCode = code.trim();
+    }
+    if (taxId.isNotEmpty && code.isNotEmpty) {
+      final cache =
+          Map<String, String>.from(ref.read(supplierCodeCacheProvider));
+      cache[taxId] = code;
+      ref.read(supplierCodeCacheProvider.notifier).state = cache;
+    }
+    _runValidation(supplierCode: code);
+  }
+
+  String _generalErrorMessage(AppLocalizations l10n, String? code) {
+    switch (code) {
+      case 'unauthorized':
+      case 'insufficient_scope':
+      case 'customer_not_found':
+      case 'customer_not_allowed':
+      case 'ambiguous_customer_code':
+        return l10n.validationConfigError;
+      case 'rate_limited':
+        return l10n.validationRateLimited;
+      default:
+        return l10n.validationGenericError;
+    }
+  }
+
+  /// שלב שני: קליטה בפועל ל-Comax. עם ?wait=false הקראולר מחזיר 202 מיד,
+  /// והסטטוס הסופי מגיע דרך webhook → FoodStock-Backend (לא polling מהמכשיר).
+  Future<void> _startSubmit(String documentId) async {
+    if (_isSubmitting) return;
+    final l10n = AppLocalizations.of(context);
+    HapticFeedback.lightImpact();
+    setState(() => _isSubmitting = true);
+
+    SubmitResponse? res;
+    Object? failure;
+    try {
+      res = await _apiClient.submitDocument(
+        documentId,
+        customerCode: ref.read(customerCodeProvider),
+      );
+    } catch (e) {
+      failure = e;
+    }
+    if (!mounted) return;
+    setState(() => _isSubmitting = false);
+
+    if (failure != null) {
+      _showSubmitErrorDialog(l10n.submitNetworkError, documentId,
+          canRetry: true);
+      return;
+    }
+
+    final r = res!;
+    // נקלט מיד (לרוב לא יקרה עם wait=false, אבל נתמך).
+    if (r.success) {
+      _onSubmitReceived(documentId, r.comaxDocNumber, r.message);
+      return;
+    }
+    // 202 — ממשיך ברקע; הסטטוס הסופי יגיע מה-webhook.
+    if (r.processing) {
+      _onSubmitProcessing(documentId);
+      return;
+    }
+    _handleSubmitError(r, documentId);
+  }
+
+  /// 202: לסמן "ממשיך ברקע" + לשמור את comaxDocumentId (מפתח הקורלציה ל-webhook)
+  /// ולסנכרן לבקאנד, כך שה-webhook יוכל לאתר את הרשומה. חוזרים לבית.
+  void _onSubmitProcessing(String documentId) {
+    final l10n = AppLocalizations.of(context);
+    final updated = _documentSnapshotForPersist().copyWith(
+      comaxDocumentId: documentId,
+      comaxStatus: 'processing',
+    );
+    ref.read(documentsProvider.notifier).upsert(updated);
+    HapticFeedback.mediumImpact();
+    showDialog<void>(
+      context: context,
       barrierDismissible: false,
-    ).then((confirmed) {
-      if (confirmed != true || !mounted) return;
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.submitSuccessTitle),
+        content: Text(l10n.submitBackground),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              context.go(AppConstants.routeHome);
+            },
+            child: Text(l10n.ok),
+          ),
+        ],
+      ),
+    );
+  }
 
-      HapticFeedback.lightImpact();
+  /// קליטה הצליחה מיד — לסמן נשלחה (מונע שליחה כפולה) ולהציג הצלחה.
+  void _onSubmitReceived(
+      String documentId, String? comaxDocNumber, String? message) {
+    final l10n = AppLocalizations.of(context);
+    final updated = _documentSnapshotForPersist().copyWith(
+      status: DocumentStatus.sentToCashRegister,
+      comaxDocumentId: documentId,
+      comaxDocNumber: comaxDocNumber,
+      comaxStatus: 'received',
+    );
+    ref.read(documentsProvider.notifier).upsert(updated);
+    HapticFeedback.mediumImpact();
 
+    final text = (message != null && message.isNotEmpty)
+        ? message
+        : (comaxDocNumber != null && comaxDocNumber.isNotEmpty
+            ? '${l10n.submitSuccessMessage} ($comaxDocNumber)'
+            : l10n.submitSuccessMessage);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(CupertinoIcons.check_mark_circled_solid,
+                color: AppColors.accentGreen),
+            const SizedBox(width: 8),
+            Expanded(child: Text(l10n.submitSuccessTitle)),
+          ],
+        ),
+        content: Text(text),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              context.go(AppConstants.routeHome);
+            },
+            child: Text(l10n.ok),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleSubmitError(SubmitResponse r, String documentId) {
+    final l10n = AppLocalizations.of(context);
+    final code = r.errorCode ?? '';
+    final msg = (r.message != null && r.message!.isNotEmpty)
+        ? r.message!
+        : l10n.submitGenericError;
+
+    // החשבונית כבר נקלטה — לחסום שליחה חוזרת ולסמן כ"נשלחה".
+    if (code == 'invoice_already_received') {
       final updated = _documentSnapshotForPersist().copyWith(
         status: DocumentStatus.sentToCashRegister,
+        comaxDocumentId: documentId,
+        comaxDocNumber: r.comaxDocNumber,
+        comaxStatus: 'received',
       );
-
       ref.read(documentsProvider.notifier).upsert(updated);
-      context.go(AppConstants.routeHome);
-    });
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          title: Text(l10n.submitAlreadyReceivedTitle),
+          content: Text(msg),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                context.go(AppConstants.routeHome);
+              },
+              child: Text(l10n.ok),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final retryable = code == 'session_in_use' ||
+        code == 'busy' ||
+        r.httpStatus >= 500 ||
+        code.isEmpty ||
+        code == 'unknown';
+    _showSubmitErrorDialog(msg, documentId, canRetry: retryable);
+  }
+
+  void _showSubmitErrorDialog(String message, String documentId,
+      {required bool canRetry}) {
+    final l10n = AppLocalizations.of(context);
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(CupertinoIcons.exclamationmark_triangle_fill,
+                color: AppColors.error),
+            const SizedBox(width: 8),
+            Expanded(child: Text(l10n.submitErrorTitle)),
+          ],
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.ok),
+          ),
+          if (canRetry)
+            FilledButton(
+              style:
+                  FilledButton.styleFrom(backgroundColor: AppColors.accentGreen),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                _startSubmit(documentId);
+              },
+              child: Text(l10n.retry),
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// דיאלוג הצלחת אימות — תצוגה מקדימה מ-resolved + כפתור "שלח לקופה" (submit).
+  void _showValidationSuccessDialog(
+      AppLocalizations l10n, ValidationResponse r) {
+    final theme = Theme.of(context);
+    final resolved = r.resolved ?? const {};
+    final supplier = resolved['supplier'];
+    final totals = resolved['totals'];
+    final lines = resolved['lines'];
+    final supplierName =
+        supplier is Map ? (supplier['name']?.toString() ?? '') : '';
+    final supplierCode =
+        supplier is Map ? (supplier['code']?.toString() ?? '') : '';
+    final linesCount = lines is List ? lines.length : 0;
+
+    String money(dynamic v) {
+      final d = (v is num) ? v.toDouble() : double.tryParse('$v');
+      return d == null ? '—' : formatCurrency(d);
+    }
+
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(CupertinoIcons.check_mark_circled_solid,
+                color: AppColors.accentGreen),
+            const SizedBox(width: 8),
+            Expanded(child: Text(l10n.validationSuccessTitle)),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(r.message ?? l10n.validationSuccessMessage),
+              const SizedBox(height: 12),
+              if (supplierName.isNotEmpty)
+                _kvRow(
+                    theme,
+                    l10n.supplierNameLabel,
+                    supplierCode.isEmpty
+                        ? supplierName
+                        : '$supplierName ($supplierCode)'),
+              if (totals is Map) ...[
+                _kvRow(theme, l10n.subtotalNoVat, money(totals['subtotal'])),
+                _kvRow(theme, l10n.vatAmount, money(totals['vat'])),
+                _kvRow(theme, l10n.totalToPay, money(totals['total'])),
+              ],
+              _kvRow(theme, l10n.items, '$linesCount'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.cancel),
+          ),
+          if (_validatedDocumentId != null)
+            FilledButton(
+              style:
+                  FilledButton.styleFrom(backgroundColor: AppColors.accentGreen),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                _startSubmit(_validatedDocumentId!);
+              },
+              child: Text(l10n.updateInCash),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _kvRow(ThemeData theme, String key, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$key: ',
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w700)),
+          Expanded(child: Text(value, style: theme.textTheme.bodyMedium)),
+        ],
+      ),
+    );
+  }
+
+  /// דיאלוג שגיאות אימות — מציג את *כל* ההודעות (כולל בחירת ספק לפי ח.פ).
+  void _showValidationErrorsDialog(
+      AppLocalizations l10n, List<ValidationError> errors, String taxId) {
+    final theme = Theme.of(context);
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        void pick(String code) {
+          Navigator.of(ctx).pop();
+          _onPickSupplierCandidate(taxId, code);
+        }
+
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(CupertinoIcons.exclamationmark_triangle_fill,
+                  color: AppColors.error),
+              const SizedBox(width: 8),
+              Expanded(
+                  child: Text(
+                      '${l10n.validationErrorsTitle} (${errors.length})')),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final e in errors)
+                    _validationErrorTile(theme, l10n, e, pick),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(l10n.ok),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  bool _isSupplierCandidateError(ValidationError e) =>
+      (e.code == 'supplier_not_found' || e.code == 'supplier_ambiguous') &&
+      e.field == 'header.supplierTaxId' &&
+      e.extra['candidates'] is List &&
+      (e.extra['candidates'] as List).isNotEmpty;
+
+  Widget _validationErrorTile(ThemeData theme, AppLocalizations l10n,
+      ValidationError e, void Function(String code) onPick) {
+    final prefix =
+        e.lineIndex != null ? '${l10n.lineLabel} ${e.lineIndex! + 1}: ' : '';
+    final candidates = e.extra['candidates'];
+    final isSupplierPick = _isSupplierCandidateError(e);
+
+    String? hint;
+    if (!isSupplierPick && candidates is List && candidates.isNotEmpty) {
+      final names = candidates.whereType<Object?>().map((c) {
+        if (c is Map) {
+          final n = c['name']?.toString() ?? '';
+          final code = c['code']?.toString() ?? '';
+          return code.isEmpty ? n : '$n ($code)';
+        }
+        return c.toString();
+      }).join(', ');
+      hint = '${l10n.suggestionsLabel}: $names';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 3),
+            child: Icon(CupertinoIcons.circle_fill,
+                size: 8, color: AppColors.error),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('$prefix${e.message}', style: theme.textTheme.bodyMedium),
+                if (hint != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(hint,
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: AppColors.textSecondary)),
+                  ),
+                if (isSupplierPick)
+                  _supplierCandidatePicker(
+                      theme, l10n, candidates as List, onPick),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _supplierCandidatePicker(ThemeData theme, AppLocalizations l10n,
+      List candidates, void Function(String code) onPick) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('${l10n.chooseCorrectSupplier}:',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 4),
+          for (final c in candidates.whereType<Object?>())
+            if (c is Map)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.accentGreen,
+                      side: const BorderSide(color: AppColors.accentGreen),
+                      alignment: AlignmentDirectional.centerStart,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                    ),
+                    onPressed: () => onPick((c['code'] ?? '').toString()),
+                    child: Text(
+                      _supplierCandidateLabel(c),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                ),
+              ),
+        ],
+      ),
+    );
+  }
+
+  String _supplierCandidateLabel(Map c) {
+    final name = (c['name'] ?? '').toString();
+    final code = (c['code'] ?? '').toString();
+    final taxId = (c['taxId'] ?? '').toString();
+    final parts = <String>[
+      if (name.isNotEmpty) name,
+      if (code.isNotEmpty) '($code)',
+      if (taxId.isNotEmpty) 'ח.פ. $taxId',
+    ];
+    return parts.join('  ');
+  }
+
+  void _showValidationInfoDialog(String title, String message,
+      {bool isError = false}) {
+    final l10n = AppLocalizations.of(context);
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(
+              isError
+                  ? CupertinoIcons.exclamationmark_triangle_fill
+                  : CupertinoIcons.info_circle_fill,
+              color: isError ? AppColors.error : AppColors.accentGreen,
+            ),
+            const SizedBox(width: 8),
+            Expanded(child: Text(title)),
+          ],
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.ok),
+          ),
+        ],
+      ),
+    );
   }
 
   double? _parseAmount(String raw, {double? fallback}) {

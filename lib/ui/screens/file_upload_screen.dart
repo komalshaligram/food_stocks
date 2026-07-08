@@ -317,7 +317,7 @@ class FileUploadScreenWidget extends StatelessWidget {
           DottedBorder(
             color: AppColors.mainColor.withValues(alpha: 0.35),
             strokeWidth: 1.2,
-            radius: Radius.circular(_uploadRadius),
+            radius: const Radius.circular(_uploadRadius),
             borderType: BorderType.RRect,
             dashPattern: const [6, 4],
             child: ClipRRect(

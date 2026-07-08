@@ -8,6 +8,11 @@ import 'app_localizations.dart';
 class AppLocalizationsHe extends AppLocalizations {
   AppLocalizationsHe([String locale = 'he']) : super(locale);
 
+  String get all => 'הכל';
+
+  @override
+  String get showing_all_products => 'מציג שוב את כל המוצרים בקטגוריה';
+
   @override
   String get app_language => 'שפה עברית';
 
@@ -293,6 +298,12 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get product_issue => 'בעיה במוצר';
+
+  @override
+  String get product_information => 'מידע על המוצר';
+
+  @override
+  String get kosher => 'כשרות';
 
   @override
   String get shipment_verification => 'אישור משלוח';
@@ -690,10 +701,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get failed_download => 'ההורדה נכשלה';
 
   @override
-  String get camera_permission => 'אנא אפשר הרשאות מצלמה';
+  String get camera_permission => 'נדרשת גישה למצלמה כדי לצלם תמונה.';
 
   @override
-  String get storage_permission => 'אנא אפשר הרשאות אכסון';
+  String get storage_permission => 'נדרשת גישה לאחסון כדי לבחור קובץ.';
 
   @override
   String get enter_4digit_otp => 'אנא הזן קוד בין 4 ספרות';
@@ -1193,6 +1204,9 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get per_unit => 'ליחידה';
+
+  @override
+  String get per_kg => 'לק״ג';
 
   @override
   String get delivery_date_value => 'משלוח עד 3 ימי עסקים';
@@ -2277,4 +2291,37 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get customer_service => 'שירות לקוחות';
+
+  @override
+  String get whatsapp_optin_title => 'נשמח להישאר בקשר בוואטסאפ';
+
+  @override
+  String get whatsapp_optin_body =>
+      'אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.';
+
+  @override
+  String get whatsapp_optin_approve => 'אני מאשר/ת';
+
+  @override
+  String get whatsapp_optin_not_now => 'לא עכשיו';
+
+
+  @override
+  String get sort_products => 'מיון מוצרים';
+
+  @override
+  String get sort_none => 'ללא מיון';
+
+  @override
+  String get sort_a_to_z => 'מיון לפי א-ב';
+
+  @override
+  String get sort_price_low_high => 'מיון לפי מחיר: מהנמוך לגבוה';
+
+  @override
+  String get sort_price_high_low => 'מיון לפי מחיר: מהגבוה לנמוך';
+
+  @override
+  String get show_only_sales => 'הצג רק מבצעים';
+
 }

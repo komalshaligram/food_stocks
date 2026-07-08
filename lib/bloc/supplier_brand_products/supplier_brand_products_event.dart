@@ -8,6 +8,8 @@ class SupplierBrandProductsEvent with _$SupplierBrandProductsEvent {
 
   const factory SupplierBrandProductsEvent.getCategoryProductsListEvent({required BuildContext context, required String supplierId, required String categoryId}) = _getCategoryProductsListEvent;
 
+  const factory SupplierBrandProductsEvent.selectSubCategoryEvent({required BuildContext context, required String supplierId, required String categoryId, required String subCategoryId}) = _selectSubCategoryEvent;
+
   const factory SupplierBrandProductsEvent.getProductDetailsEvent({
     required BuildContext context,
     required String productId,

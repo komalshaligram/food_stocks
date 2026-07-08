@@ -32,8 +32,10 @@ class InvoiceExcelExportPayload {
     put('document_type', document.documentType);
     put('company_name', document.companyName);
     put('document_number', document.documentNumber);
+    put('allocation_number', document.allocationNumber);
     put('company_id', document.companyId);
     put('date', document.documentDate);
+    put('payment_due_date', document.paymentDueDate);
 
     if (document.subtotal != null) {
       map['subtotal'] = document.subtotal;
@@ -60,6 +62,9 @@ class InvoiceExcelExportPayload {
       'packs': item.packages,
       'quantity': item.quantity,
       'unit_price': item.pricePerUnit,
+      'discount_percent': item.discountPercent,
+      'packaging_deposit_tax': item.packagingDepositTax,
+      'final_unit_price': item.finalUnitPrice,
       'line_total': item.totalPrice,
     };
   }

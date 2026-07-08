@@ -11,7 +11,7 @@ class SplashState with _$SplashState{
 
   factory SplashState.initial()=> const SplashState(
     isRedirected: false,
-        isAnimate: false,
+        isAnimate: true,
         pushNavigation: '',
       );
 

@@ -17,6 +17,7 @@ class SupplierBrandProductRequestModel with _$SupplierBrandProductRequestModel {
     @JsonKey(name: "pageNum") int? pageNum,
     @JsonKey(name: "brandId") String? brandId,
     @JsonKey(name: "categoryId") String? categoryId,
+    @JsonKey(name: "subCategoryId") String? subCategoryId,
   }) = _SupplierBrandProductRequestModel;
 
   factory SupplierBrandProductRequestModel.fromJson(Map<String, dynamic> json) => _$SupplierBrandProductRequestModelFromJson(json);

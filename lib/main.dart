@@ -10,6 +10,7 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/screens/my_app_screen.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/push_notification_service.dart';
+import 'app_config.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,12 +31,16 @@ void main() async {
     await Firebase.initializeApp();
     await PushNotificationService().setupInteractedMessage();
     await dotenv.load(fileName: '.env');
+    await AppConfig.initializeAppConfig();
 
     if (Platform.isAndroid) {
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
     }
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SharedPreferencesHelper preferencesHelper =
+        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     if (!preferencesHelper.getUserLoggedIn()) {
       await Permission.notification.isDenied.then((isPermissionDenied) async {
         if (isPermissionDenied) {
@@ -44,5 +49,7 @@ void main() async {
       });
     }
     runApp(const MyApp());
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+  },
+      (error, stack) =>
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }

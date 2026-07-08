@@ -308,6 +308,7 @@ class AppConstants {
 
   //pagination
   static const int defaultPageLimit = 6;
+  static const int supplierListPageLimit = 20;
   static const int supplierPageLimit = 18;
   static const int companyPageLimit = 18;
   static const int searchPageLimit = 6;

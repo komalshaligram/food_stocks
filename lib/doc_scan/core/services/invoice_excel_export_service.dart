@@ -22,6 +22,18 @@ class InvoiceExcelExportService {
   /// First row index after the template item block (Excel row 44).
   static const int _insertExtraItemsAtRowIndex = 43;
 
+  /// Item header row (Excel row 19 → 0-based 18), where column titles live.
+  static const int _itemHeaderRowIndex = _firstItemRowIndex - 1;
+
+  /// Extra item columns appended after the template's A–H (§12):
+  /// I = discount %, J = packaging/tax/deposit, K = final unit price (read-only).
+  static const int _discountColIndex = 8;
+  static const int _packagingColIndex = 9;
+  static const int _finalUnitPriceColIndex = 10;
+
+  /// Empty template row used for the allocation number (Excel row 11 → 0-based 10).
+  static const int _allocationRowIndex = 10;
+
   Future<Uint8List> buildFromParsedJsonString(String jsonString) async {
     final decoded = jsonDecode(jsonString);
     if (decoded is! Map<String, dynamic>) {
@@ -41,6 +53,7 @@ class InvoiceExcelExportService {
 
     _writeHeaderBlock(sheet, data);
     _writeHeaderLabels(sheet);
+    _writeAllocationNumber(sheet, data);
     _writeTotalsBlock(sheet, data);
 
     final items = _readItems(data);
@@ -96,6 +109,14 @@ class InvoiceExcelExportService {
     }
   }
 
+  /// מספר הקצאה אינו בתבנית — נכתב בשורה הריקה 11 (תווית A11, ערך B11) אם קיים.
+  void _writeAllocationNumber(Sheet sheet, Map<String, dynamic> data) {
+    final value = _stringify(data['allocation_number']);
+    if (value.trim().isEmpty) return;
+    _setCellText(sheet, 0, _allocationRowIndex, 'מספר הקצאה');
+    _setCellText(sheet, 1, _allocationRowIndex, value);
+  }
+
   void _writeHeaderBlock(Sheet sheet, Map<String, dynamic> data) {
     // B1–B10 → row indices 0–9, column index 1
     final pairs = <String>[
@@ -148,6 +169,12 @@ class InvoiceExcelExportService {
   void _writeItemRows(Sheet sheet, List<Map<String, dynamic>> items) {
     final n = items.length;
 
+    // §12: העמודות הנוספות אינן בתבנית — כותבים כותרות (I/J/K) בשורת כותרות הפריטים.
+    _setCellText(sheet, _discountColIndex, _itemHeaderRowIndex, 'אחוז הנחה');
+    _setCellText(sheet, _packagingColIndex, _itemHeaderRowIndex, 'אריזה/מס/פיקדון');
+    _setCellText(
+        sheet, _finalUnitPriceColIndex, _itemHeaderRowIndex, 'מחיר ליח\' סופי');
+
     // Fill up to 24 rows in the template range.
     final fillCount = n < _templateItemRowCount ? n : _templateItemRowCount;
     for (var i = 0; i < fillCount; i++) {
@@ -186,10 +213,17 @@ class InvoiceExcelExportService {
     _setCellNumber(sheet, 5, rowIndex, _toDouble(item['quantity']));
     _setCellNumber(sheet, 6, rowIndex, _toDouble(item['unit_price']));
     _setCellNumber(sheet, 7, rowIndex, _toDouble(item['line_total']));
+    // §12: עמודות נוספות I/J/K — ריקות כשאין נתון.
+    _setCellNumber(
+        sheet, _discountColIndex, rowIndex, _toDouble(item['discount_percent']));
+    _setCellNumber(sheet, _packagingColIndex, rowIndex,
+        _toDouble(item['packaging_deposit_tax']));
+    _setCellNumber(sheet, _finalUnitPriceColIndex, rowIndex,
+        _toDouble(item['final_unit_price']));
   }
 
   void _clearItemRow(Sheet sheet, int rowIndex) {
-    for (var c = 0; c < 8; c++) {
+    for (var c = 0; c <= _finalUnitPriceColIndex; c++) {
       sheet.updateCell(
         CellIndex.indexByColumnRow(columnIndex: c, rowIndex: rowIndex),
         TextCellValue(''),

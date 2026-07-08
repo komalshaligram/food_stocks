@@ -37,6 +37,7 @@ import '../utils/constants/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
 import '../widget/common_dialog_with_one_button.dart';
 import '../widget/customer_service_contact_widget.dart';
+import '../widget/whatsapp_optin_dialog.dart';
 import '../widget/common_marquee_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_search_widget.dart';
@@ -64,7 +65,12 @@ class HomeScreen extends StatelessWidget {
         final bloc = HomeBloc();
         bloc.add(const HomeEvent.getPreferencesDataEvent());
         bloc.add(HomeEvent.getSuppliersDataListEvent(context: context));
+        bloc.add(HomeEvent.getProductCategoriesListEvent(context: context));
+        bloc.add(HomeEvent.getCompaniesListEvent(context: context));
         bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+        bloc.add(
+            HomeEvent.getRecommendationProductsListEvent(context: context));
+        bloc.add(HomeEvent.getPreviousOrderProductsListEvent(context: context));
         bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
         return bloc;
       },
@@ -76,6 +82,9 @@ class HomeScreen extends StatelessWidget {
 class HomeScreenWidget extends StatelessWidget {
   final String isNavigation;
   static bool _noMinimumDialogShownInSession = false;
+  static bool _whatsappOptinDialogShownInSession = false;
+  // Source tag recorded with the WhatsApp consent (per app).
+  static const String _whatsappOptinSource = 'tavili_app_popup';
   static final Set<String> _handledBackgroundNavigations = {};
   const HomeScreenWidget({super.key, this.isNavigation = ''});
 
@@ -89,7 +98,9 @@ class HomeScreenWidget extends StatelessWidget {
           previous.messageCount != current.messageCount ||
           previous.isAccountPermissionShimmering !=
               current.isAccountPermissionShimmering ||
-          previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey,
+          previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey ||
+          previous.showWhatsappOptinPopup != current.showWhatsappOptinPopup ||
+          previous.whatsappOptIn != current.whatsappOptIn,
       listener: (context, state) async {
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context)
@@ -103,6 +114,17 @@ class HomeScreenWidget extends StatelessWidget {
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<HomeBloc>(context)
               .add(HomeEvent.updateMaintenanceEvent(context: context));
+        }
+        // WhatsApp marketing opt-in: show once per session while the global
+        // setting is on and the client hasn't approved yet. Dismissing it
+        // ("not now") lets it reappear on the next app launch.
+        if (!_whatsappOptinDialogShownInSession &&
+            state.showWhatsappOptinPopup &&
+            !state.whatsappOptIn &&
+            !state.isGuestUser &&
+            !state.isAppOnMaintenance) {
+          _whatsappOptinDialogShownInSession = true;
+          whatsappOptinDialog(context: context, state: state);
         }
         final isHomeTabActive = context.read<BottomNavBloc>().state.index == 0;
         if (!isHomeTabActive) {
@@ -137,6 +159,8 @@ class HomeScreenWidget extends StatelessWidget {
               bloc.add(HomeEvent.getSuppliersDataListEvent(context: context));
               bloc.add(HomeEvent.getProductSalesListEvent(context: context));
               bloc.add(HomeEvent.getRecommendationProductsListEvent(
+                  context: context));
+              bloc.add(HomeEvent.getPreviousOrderProductsListEvent(
                   context: context));
               if (!preferences.getGuestUser()) {
                 bloc.add(HomeEvent.getCartCountEvent(context: context));
@@ -206,11 +230,18 @@ class HomeScreenWidget extends StatelessWidget {
                             }
                             bloc.add(HomeEvent.getSuppliersDataListEvent(
                                 context: context));
+                            bloc.add(HomeEvent.getProductCategoriesListEvent(
+                                context: context));
+                            bloc.add(HomeEvent.getCompaniesListEvent(
+                                context: context));
                             bloc.add(
                                 HomeEvent.getRecommendationProductsListEvent(
                                     context: context));
                             bloc.add(HomeEvent.getProductSalesListEvent(
                                 context: context));
+                            bloc.add(
+                                HomeEvent.getPreviousOrderProductsListEvent(
+                                    context: context));
                             handleMessageOnBackground();
                             bloc.add(HomeEvent.checkVersionOfAppEvent(
                                 context: context));
@@ -232,11 +263,14 @@ class HomeScreenWidget extends StatelessWidget {
                               pesachBannerWidget(context, state),
                               10.height,
                               supplierDataListWidget(context, bloc, state),
+                              categoryListWidget(context, bloc, state),
+                              companyListWidget(context, bloc, state),
                               productSaleWidget(context, bloc, state),
                               productRecommendedWidget(context, bloc, state),
-                              bottomButtonWidget(context, state),
-                              30.height,
-                              messageListWidget(context, state),
+                              previousOrderProductWidget(context, bloc, state),
+                              // bottomButtonWidget(context, state),
+                              // 30.height,
+                              // messageListWidget(context, state),
                               AppConstants.bottomNavSpace.height,
                             ]),
                           ),
@@ -316,56 +350,364 @@ class HomeScreenWidget extends StatelessWidget {
               : 0.width;
 
   Widget supplierDataListWidget(
-          BuildContext context, HomeBloc bloc, HomeState state) =>
+      BuildContext context, HomeBloc bloc, HomeState state) {
+    if (state.suppliersDataList.isEmpty) {
+      return 0.width;
+    }
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      return 0.width;
+    }
+    return Column(children: [
+      buildListTitles(
+          context: context,
+          title: l10n.suppliers,
+          subTitle: l10n.all_suppliers,
+          onTap: () {
+            Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
+          }),
+      SizedBox(
+        width: getScreenWidth(context),
+        height: 130,
+        child: ListView.builder(
+            physics: const ClampingScrollPhysics(),
+            itemCount: state.suppliersDataList.length,
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            padding:
+                const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+            itemBuilder: (context, index) {
+              return buildSupplierListDataItem(
+                  supplierLogo: state.suppliersDataList[index].logo ?? '',
+                  supplierContactName: state.suppliersDataList[index]
+                          .supplierDetail?.displayName ??
+                      '',
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, RouteDefine.supplierListProductsScreen.name,
+                        arguments: {
+                          AppStrings.supplierIdString:
+                              state.suppliersDataList[index].id ?? '',
+                          AppStrings.supplierNameString: state
+                              .suppliersDataList[index]
+                              .supplierDetail
+                              ?.displayName,
+                          AppStrings.minimumOrderText: state
+                              .suppliersDataList[index]
+                              .supplierDetail
+                              ?.minOrderAmount,
+                        });
+                  });
+            }),
+      ),
+    ]);
+  }
+
+  Widget categoryListWidget(
+      BuildContext context, HomeBloc bloc, HomeState state) =>
       AnimatedCrossFade(
           firstChild: getScreenWidth(context).width,
           secondChild: Column(children: [
-            buildListTitles(
+            state.isCatVisible
+                ? buildListTitles(
                 context: context,
-                title: AppLocalizations.of(context)!.suppliers,
-                subTitle: AppLocalizations.of(context)!.all_suppliers,
-                onTap: () {
-                  Navigator.pushNamed(context, RouteDefine.supplierScreen.name);
-                }),
+                title: AppLocalizations.of(context)!.categories,
+                subTitle: AppLocalizations.of(context)!.all_categories,
+                onTap: () async {
+                  dynamic searchResult = await Navigator.pushNamed(
+                    context,
+                    RouteDefine.productCategoryScreen.name,
+                    arguments: {
+                      AppStrings.searchString: state.search,
+                      AppStrings.searchResultString: state.searchList
+                    },
+                  );
+                  if (searchResult != null) {
+                    bloc.add(HomeEvent.updateGlobalSearchEvent(
+                        search: searchResult[AppStrings.searchString],
+                        searchList:
+                        searchResult[AppStrings.searchResultString]));
+                  }
+                })
+                : Container(),
             SizedBox(
               width: getScreenWidth(context),
-              height: 130,
+              height: state.isCatVisible ? 135 : 0,
               child: ListView.builder(
                   physics: const ClampingScrollPhysics(),
-                  itemCount: state.suppliersDataList.length,
+                  itemCount: state.productCategoryList.length,
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(
                       horizontal: AppConstants.padding_5),
                   itemBuilder: (context, index) {
-                    return buildSupplierListDataItem(
-                        supplierLogo: state.suppliersDataList[index].logo ?? '',
-                        supplierContactName: state.suppliersDataList[index]
-                                .supplierDetail?.displayName ??
-                            '',
-                        onTap: () {
-                          Navigator.pushNamed(context,
-                              RouteDefine.supplierListProductsScreen.name,
+                    bool isHomePreference =
+                        state.productCategoryList[index].isHomePreference ??
+                            false;
+                    return !isHomePreference
+                        ? 0.width
+                        : Container(
+                      height: 150,
+                      width: 105,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.padding_5,
+                          vertical: AppConstants.padding_10),
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(AppConstants.radius_10)),
+                        color: AppColors.whiteColor,
+                        boxShadow: [
+                          BoxShadow(
+                              color: AppColors.shadowColor
+                                  .withValues(alpha: 0.15),
+                              blurRadius: AppConstants.blur_10)
+                        ],
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          dynamic searchResult =
+                          await Navigator.pushNamed(context,
+                              RouteDefine.storeCategoryScreen.name,
                               arguments: {
-                                AppStrings.supplierIdString:
-                                    state.suppliersDataList[index].id ?? '',
-                                AppStrings.supplierNameString: state
-                                    .suppliersDataList[index]
-                                    .supplierDetail
-                                    ?.displayName,
-                                AppStrings.minimumOrderText: state
-                                    .suppliersDataList[index]
-                                    .supplierDetail
-                                    ?.minOrderAmount,
+                                AppStrings.categoryIdString:
+                                state.productCategoryList[index].id,
+                                AppStrings.categoryNameString: state
+                                    .productCategoryList[index]
+                                    .categoryName,
+                              });
+                          if (searchResult != null) {
+                            bloc.add(HomeEvent.updateGlobalSearchEvent(
+                                search:
+                                searchResult[AppStrings.searchString],
+                                searchList: searchResult[
+                                AppStrings.searchResultString]));
+                          }
+                        },
+                        child: Stack(children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                                Radius.circular(AppConstants.padding_10)),
+                            child: (state.productCategoryList[index]
+                                .categoryImage ??
+                                '')
+                                .isNotEmpty
+                                ? CachedNetworkImage(
+                                imageUrl:
+                                "${AppUrlEndPoints.baseFileUrl}${state.productCategoryList[index].categoryImage}",
+                                fit: BoxFit.cover,
+                                height: 140,
+                                width: 105,
+                                alignment: Alignment.center,
+                                placeholder: (context, url) {
+                                  return CommonShimmerWidget(
+                                      child: Container(
+                                          height: 140,
+                                          width: 105,
+                                          decoration: BoxDecoration(
+                                              color: AppColors
+                                                  .whiteColor)));
+                                },
+                                errorWidget:
+                                    (context, error, stackTrace) {
+                                  return Image.asset(
+                                      AppImagePath.imageNotAvailable5,
+                                      fit: BoxFit.cover,
+                                      width: 140,
+                                      height: 110);
+                                })
+                                : Image.asset(
+                                AppImagePath.imageNotAvailable5,
+                                fit: BoxFit.cover,
+                                width: 140,
+                                height: 110),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: AppConstants.padding_5,
+                                  vertical: AppConstants.padding_2),
+                              decoration: BoxDecoration(
+                                gradient: AppColors.appMainGradientColor,
+                                borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(
+                                        AppConstants.radius_10),
+                                    bottomRight: Radius.circular(
+                                        AppConstants.radius_10)),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: CommonMarqueeWidget(
+                                direction: Axis.horizontal,
+                                child: Text(
+                                  state.productCategoryList[index]
+                                      .categoryName ??
+                                      '',
+                                  style: AppStyles.rkRegularTextStyle(
+                                      size: AppConstants.font_14,
+                                      color: AppColors.whiteColor),
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          )
+                        ]),
+                      ),
+                    );
+                  }),
+            ),
+          ]),
+          crossFadeState: state.productCategoryList.isEmpty
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          duration: const Duration(milliseconds: 300));
+
+  Widget companyListWidget(
+      BuildContext context, HomeBloc bloc, HomeState state) =>
+      AnimatedCrossFade(
+          firstChild: getScreenWidth(context).width,
+          secondChild: Column(children: [
+            state.isCompanyVisible
+                ? buildListTitles(
+                context: context,
+                title: AppLocalizations.of(context)!.brands,
+                subTitle: AppLocalizations.of(context)!.all_brands,
+                onTap: () {
+                  Navigator.pushNamed(
+                      context, RouteDefine.companyScreen.name);
+                })
+                : Container(),
+            SizedBox(
+              width: getScreenWidth(context),
+              height: state.isCompanyVisible ? 130 : 0,
+              child: ListView.builder(
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: state.companiesList.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppConstants.padding_5),
+                  itemBuilder: (context, index) {
+                    return buildCompanyListItem(
+                        companyLogo: state.companiesList[index].brandLogo ?? '',
+                        companyName: state.companiesList[index].brandName ?? '',
+                        isHomePreference:
+                        state.companiesList[index].isHomePreference ??
+                            false,
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, RouteDefine.companyProductsScreen.name,
+                              arguments: {
+                                AppStrings.companyIdString:
+                                state.companiesList[index].id ?? '',
+                                AppStrings.companyLogo:
+                                state.companiesList[index].brandLogo ?? '',
+                                AppStrings.companyName:
+                                state.companiesList[index].brandName ?? '',
                               });
                         });
                   }),
             ),
           ]),
-          crossFadeState: state.suppliersDataList.isEmpty
+          crossFadeState: state.companiesList.isEmpty
               ? CrossFadeState.showFirst
               : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 300));
+
+  Widget buildCompanyListItem(
+      {required String companyLogo,
+        required String companyName,
+        required void Function() onTap,
+        bool? isHomePreference}) {
+    return !(isHomePreference ?? true)
+        ? 0.width
+        : Container(
+      height: 150,
+      width: 105,
+      clipBehavior: Clip.hardEdge,
+      margin: const EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_5),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
+            Radius.circular(AppConstants.radius_10)),
+        color: AppColors.whiteColor,
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withValues(alpha: 0.15),
+              blurRadius: AppConstants.blur_10)
+        ],
+      ),
+      child: InkWell(
+        borderRadius: const BorderRadius.all(
+            Radius.circular(AppConstants.radius_10)),
+        onTap: onTap,
+        child: Stack(children: [
+          Padding(
+            padding:
+            const EdgeInsets.only(bottom: AppConstants.padding_20),
+            child: companyLogo.isNotEmpty
+                ? CachedNetworkImage(
+                imageUrl:
+                "${AppUrlEndPoints.baseFileUrl}$companyLogo",
+                fit: BoxFit.scaleDown,
+                height: 110,
+                width: 105,
+                placeholder: (context, url) {
+                  return CommonShimmerWidget(
+                      child: Container(
+                          height: 110,
+                          width: 105,
+                          decoration: BoxDecoration(
+                              color: AppColors.whiteColor)));
+                },
+                errorWidget: (context, error, stackTrace) {
+                  return Image.asset(AppImagePath.imageNotAvailable5,
+                      fit: BoxFit.cover, width: 110, height: 105);
+                })
+                : Image.asset(AppImagePath.imageNotAvailable5,
+                fit: BoxFit.cover, width: 110, height: 105),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 25,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.padding_5,
+                  vertical: AppConstants.padding_2),
+              decoration: BoxDecoration(
+                gradient: AppColors.appMainGradientColor,
+                borderRadius: const BorderRadius.only(
+                    bottomRight: Radius.circular(AppConstants.radius_10),
+                    bottomLeft: Radius.circular(AppConstants.radius_10)),
+              ),
+              child: CommonMarqueeWidget(
+                direction: Axis.horizontal,
+                child: Text(
+                  companyName,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.whiteColor),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          )
+        ]),
+      ),
+    );
+  }
+
+
 
   Widget buildSupplierListDataItem(
       {required String supplierLogo,
@@ -487,7 +829,6 @@ class HomeScreenWidget extends StatelessWidget {
                                 onGuestLoginRequired: () => Navigator.pushNamed(
                                     context, RouteDefine.connectScreen.name),
                                 height: AppConstants.salesProductItemHeight,
-
                                 width: getItemWidth(context),
                                 productName: productSaleData.productName ?? '',
                                 saleImage: productSaleData.mainImage ?? '',
@@ -639,9 +980,10 @@ class HomeScreenWidget extends StatelessWidget {
                     ),
             ),
           ]),
-          crossFadeState: state.productSalesList.isEmpty
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
+          crossFadeState: (state.isProductSaleShimmering ||
+                  state.productSalesList.isNotEmpty)
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 300));
 
   Widget productRecommendedWidget(
@@ -840,10 +1182,215 @@ class HomeScreenWidget extends StatelessWidget {
                       }),
             ),
           ]),
-          crossFadeState: state.recommendedProductsList.isEmpty
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
+          crossFadeState: (state.isShimmering ||
+                  state.recommendedProductsList.isNotEmpty)
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 300));
+
+  Widget previousOrderProductWidget(
+      BuildContext context, HomeBloc bloc, HomeState state) =>
+      !state.isGuestUser
+          ? AnimatedCrossFade(
+          firstChild: getScreenWidth(context).width,
+          secondChild: Column(children: [
+            buildListTitles(
+                context: context,
+                title:
+                AppLocalizations.of(context)!.previous_order_products,
+                subTitle: AppLocalizations.of(context)!.more,
+                onTap: () {
+                  Navigator.pushNamed(
+                      context, RouteDefine.reorderScreen.name);
+                }),
+            SizedBox(
+              width: getScreenWidth(context),
+              height: getItemHeight(context, state.isSaleOn),
+              child: state.isPreviousOrderShimmering
+                  ? const CommonProductListShimmerWidget()
+                  : ListView.builder(
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: state.previousOrderProductsList.length,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppConstants.padding_5),
+                  itemBuilder: (context, index) {
+                    var previousOrderData =
+                    state.previousOrderProductsList[index];
+                    var productStockData =
+                    state.productStockList[4][index];
+                    return CommonProductSaleItemWidget(
+                        isSale: previousOrderData.sale?.isSale,
+                        isGuestUser: state.isGuestUser,
+                        onGuestLoginRequired: () => Navigator.pushNamed(
+                            context, RouteDefine.connectScreen.name),
+                        height: AppConstants.salesProductItemHeight,
+                        width: getItemWidth(context),
+                        productName:
+                        previousOrderData.productName ?? '',
+                        saleImage: previousOrderData.mainImage ?? '',
+                        title: previousOrderData.name,
+                        description: parse(previousOrderData
+                            .sale?.saleDescription)
+                            .body
+                            ?.text ??
+                            '',
+                        discountedPrice: double.parse(
+                            previousOrderData.sale?.salePrice ?? '0'),
+                        originalPrice: previousOrderData.productPrice,
+                        productStock:
+                        previousOrderData.productStock.toString(),
+                        lowStock: previousOrderData.lowStock ?? '',
+                        isPesach: previousOrderData.isPesach,
+                        quantity: productStockData.quantity,
+                        minQuantity:
+                        previousOrderData.sale?.saleMinQuantity,
+                        maxQuantity:
+                        previousOrderData.sale?.saleMaxQuantity,
+                        isMixedSale:
+                        previousOrderData.sale?.isMixedSale,
+                        numberOfUnits:
+                        previousOrderData.numberOfUnit.toString(),
+                        scaleType: previousOrderData.scaleType,
+                        onQuantityChanged: () {
+                          context.read<HomeBloc>().add(
+                              HomeEvent.updateListQuantityOfProduct(
+                                context: context,
+                                quantity: productStockData.quantity
+                                    .toString(),
+                                productListIndex: 4,
+                                productStockUpdateIndex: index,
+                                productSupplierIds: previousOrderData
+                                    .supplierId
+                                    .toString(),
+                              ));
+                        },
+                        onQuantityIncreaseTap: () {
+                          if (int.parse(previousOrderData
+                              .sale?.saleMinQuantity ??
+                              '0') <=
+                              productStockData.quantity + 1) {
+                            bloc.add(
+                                HomeEvent.increaseListQuantityOfProduct(
+                                  context: context,
+                                  productListIndex: 4,
+                                  productStockUpdateIndex: index,
+                                  productSupplierIds: previousOrderData
+                                      .supplierId
+                                      .toString(),
+                                ));
+
+                            bloc.add(
+                                HomeEvent.addToCartListProductEvent(
+                                  context: context,
+                                  productId:
+                                  previousOrderData.id.toString(),
+                                  productListIndex: 4,
+                                  productStockUpdateIndex: index,
+                                  productSupplierIds: previousOrderData
+                                      .supplierId
+                                      .toString(),
+                                ));
+                          } else {
+                            showMinMaxQtyConfirmDialog(
+                              context: context,
+                              productId:
+                              previousOrderData.id.toString(),
+                              minBox: previousOrderData
+                                  .sale?.saleMinQuantity
+                                  .toString() ??
+                                  '0',
+                              index: index,
+                              supplierId: previousOrderData.supplierId
+                                  .toString(),
+                              productListIndex: 4,
+                              isMixedSale:
+                              previousOrderData.sale?.isMixedSale ??
+                                  false,
+                              sameSaleProducts: previousOrderData
+                                  .sale?.sameSaleProducts,
+                              isIncrease: true,
+                            );
+                          }
+                        },
+                        onQuantityDecreaseTap: () {
+                          if (productStockData.quantity != 0) {
+                            if (int.parse(previousOrderData
+                                .sale?.saleMinQuantity ??
+                                '0') <=
+                                productStockData.quantity - 1) {
+                              bloc.add(HomeEvent
+                                  .decreaseListQuantityOfProduct(
+                                context: context,
+                                productListIndex: 4,
+                                productStockUpdateIndex: index,
+                                productSupplierIds: previousOrderData
+                                    .supplierId
+                                    .toString(),
+                              ));
+
+                              bloc.add(
+                                  HomeEvent.addToCartListProductEvent(
+                                    context: context,
+                                    productId:
+                                    previousOrderData.id.toString(),
+                                    productListIndex: 4,
+                                    productStockUpdateIndex: index,
+                                    productSupplierIds: previousOrderData
+                                        .supplierId
+                                        .toString(),
+                                  ));
+                            } else {
+                              showMinMaxQtyConfirmDialog(
+                                context: context,
+                                productId:
+                                previousOrderData.id.toString(),
+                                minBox: previousOrderData
+                                    .sale?.saleMinQuantity
+                                    .toString() ??
+                                    '0',
+                                index: index,
+                                supplierId: previousOrderData.supplierId
+                                    .toString(),
+                                productListIndex: 4,
+                                isMixedSale: previousOrderData
+                                    .sale?.isMixedSale ??
+                                    false,
+                                sameSaleProducts: previousOrderData
+                                    .sale?.sameSaleProducts,
+                                isIncrease: false,
+                              );
+                            }
+                          }
+                        },
+                        onButtonTap: () {
+                          if (!state.isGuestUser) {
+                            showProductDetails(
+                              isSaleOn: state.isSaleOn,
+                              context: context,
+                              productId: previousOrderData.id ?? '',
+                              productStock: previousOrderData
+                                  .productStock
+                                  .toString(),
+                              productListIndex: 4,
+                            );
+                          } else {
+                            Navigator.pushNamed(context,
+                                RouteDefine.connectScreen.name);
+                          }
+                        });
+                  }),
+            ),
+          ]),
+          crossFadeState: (state.isPreviousOrderShimmering ||
+                  state.previousOrderProductsList.isNotEmpty)
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
+          duration: const Duration(milliseconds: 300))
+          : 0.width;
+
+
 
   Widget searchWidget(BuildContext context, HomeBloc bloc, HomeState state) =>
       CommonSearchWidget(
@@ -1253,7 +1800,7 @@ class HomeScreenWidget extends StatelessWidget {
                       // var productDetailsData = state.productDetails.first;
                       // var productStockData = state.productStockList[state.productListIndex][state.productStockUpdateIndex];
                       return Container(
-                        height: getScreenHeight(context),
+                        height: getScreenHeight(blocContext),
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(AppConstants.radius_30),
@@ -2141,5 +2688,57 @@ class HomeScreenWidget extends StatelessWidget {
           .read<HomeBloc>()
           .add(HomeEvent.updateMaintenanceEvent(context: context));
     }
+  }
+
+  /// WhatsApp marketing consent popup. "Approve" records consent on the server
+  /// (the dialog auto-closes once the opt-in succeeds); "Not now" just dismisses.
+  whatsappOptinDialog(
+      {required BuildContext context, required HomeState state}) {
+    // Tapping outside the popup is treated like "Not now" — it just closes and
+    // reappears on the next app open (no opt-out recorded).
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (dialogContext) => BlocProvider.value(
+              value: context.read<HomeBloc>(),
+              child: BlocConsumer<HomeBloc, HomeState>(
+                listenWhen: (previous, current) =>
+                    previous.whatsappOptIn != current.whatsappOptIn,
+                listener: (context, state) {
+                  if (state.whatsappOptIn) {
+                    Navigator.of(dialogContext).pop();
+                  }
+                },
+                builder: (context, state) {
+                  // Title/text come from the admin settings; fall back to the
+                  // bundled localized defaults when the settings value is empty.
+                  final String title = state.whatsappOptinPopupTitle.isNotEmpty
+                      ? state.whatsappOptinPopupTitle
+                      : AppLocalizations.of(context)!.whatsapp_optin_title;
+                  final String body = state.whatsappOptinPopupText.isNotEmpty
+                      ? state.whatsappOptinPopupText
+                      : AppLocalizations.of(context)!.whatsapp_optin_body;
+                  return WhatsappOptinDialog(
+                    directionality: state.language,
+                    title: title,
+                    body: body,
+                    approveTitle:
+                        AppLocalizations.of(context)!.whatsapp_optin_approve,
+                    notNowTitle:
+                        AppLocalizations.of(context)!.whatsapp_optin_not_now,
+                    isProcessing: state.isWhatsappOptinProcessing,
+                    onApprove: () {
+                      // Record the exact text shown to the client as the consent.
+                      context.read<HomeBloc>().add(
+                          HomeEvent.sendWhatsappOptinEvent(
+                              context: context,
+                              source: _whatsappOptinSource,
+                              consentText: body));
+                    },
+                    onNotNow: () => Navigator.of(dialogContext).pop(),
+                  );
+                },
+              ),
+            ));
   }
 }

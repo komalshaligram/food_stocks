@@ -1,4 +1,6 @@
 {
+  "all": "הכל",
+  "showing_all_products": "מציג שוב את כל המוצרים בקטגוריה",
   "app_language": "שפה עברית",
   "register": "הרשמה",
   "login": "התחברות",
@@ -94,6 +96,8 @@
   "return_products_list": "רשימת מוצרים להחזרה",
   "product_Name": "שם המוצר",
   "product_issue": "בעיה במוצר",
+  "product_information": "מידע על המוצר",
+  "kosher": "כשרות",
   "shipment_verification": "אישור משלוח",
   "driver_return": "החזרת נהג",
   "signature": "חתימה",
@@ -390,6 +394,7 @@
   "price": "מחיר",
   "sub_categories": "תתי קטגויות",
   "per_unit": "ליחידה",
+  "per_kg": "לק״ג",
   "delivery_date_value":"משלוח עד 3 ימי עסקים",
   "order":"הזמנה",
   "monthly_credit":"זיכוי חודשי",
@@ -752,5 +757,15 @@
   "customer_service_not_configured": "לא הוגדר במערכת",
   "customer_service_whatsapp_unavailable": "מספר וואטסאפ לשירות לקוחות לא הוגדר",
   "customer_service_phone_unavailable": "מספר טלפון לשירות לקוחות לא הוגדר",
-  "customer_service": "שירות לקוחות"
+  "customer_service": "שירות לקוחות",
+  "whatsapp_optin_title": "נשמח להישאר בקשר בוואטסאפ",
+  "whatsapp_optin_body": "אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.",
+  "whatsapp_optin_approve": "אני מאשר/ת",
+  "whatsapp_optin_not_now": "לא עכשיו",
+  "sort_products": "מיון מוצרים",
+  "sort_none": "ללא מיון",
+  "sort_a_to_z": "מיון לפי א-ב",
+  "sort_price_low_high": "מיון לפי מחיר: מהנמוך לגבוה",
+  "sort_price_high_low": "מיון לפי מחיר: מהגבוה לנמוך",
+  "show_only_sales": "הצג רק מבצעים"
 }

@@ -48,6 +48,11 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../data/model/res_model/recommendation_products_res_model/recommendation_products_res_model.dart';
 import '../../data/model/res_model/product_categories_res_model/product_categories_res_model.dart';
+import '../../data/model/req_model/product_categories_req_model/product_categories_req_model.dart';
+import '../../data/model/req_model/company_req_model/company_req_model.dart';
+import '../../data/model/req_model/previous_order_products_req_model/previous_order_products_req_model.dart';
+import '../../data/model/res_model/company_res_model/company_res_model.dart';
+import '../../data/model/res_model/previous_order_products_res_model/previous_order_products_res_model.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
@@ -938,7 +943,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             preferences.setEmailId(userEmailId: clientData?.email ?? '');
             emit(state.copyWith(
                 showClientDataOnApp:
-                    clientData?.clientDetail?.showClientDataOnApp ?? false));
+                    clientData?.clientDetail?.showClientDataOnApp ?? false,
+                whatsappOptIn:
+                    clientData?.clientDetail?.whatsappOptIn ?? false));
             if (!preferences.getSubUser()) {
               preferences.setUserImageUrl(
                   imageUrl: clientData?.profileImage ?? '');
@@ -1021,6 +1028,92 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         } catch (_) {
           emit(state.copyWith(isShimmering: false, allShimmering: false));
         }
+      } else if (event is _getProductCategoriesListEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+              AppUrlEndPoints.getProductCategoriesUrl,
+              data: const ProductCategoriesReqModel(pageNum: 1, pageLimit: 18)
+                  .toJson());
+          ProductCategoriesResModel response =
+              ProductCategoriesResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            bool productVisible = response.data?.categories
+                    ?.any((element) => element.isHomePreference == true) ??
+                true;
+            emit(state.copyWith(
+                isCatVisible: productVisible,
+                productCategoryList: response.data?.categories ?? []));
+          }
+        } on ServerException {
+          //
+        } catch (_) {
+          //
+        }
+      } else if (event is _getCompaniesListEvent) {
+        try {
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.getCompaniesUrl,
+            data: const CompanyReqModel(
+                    pageNum: 1, pageLimit: AppConstants.companyPageLimit)
+                .toJson(),
+          );
+          CompanyResModel response = CompanyResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            bool company = response.data?.brandList
+                    ?.any((element) => element.isHomePreference == true) ??
+                true;
+            emit(state.copyWith(
+                isCompanyVisible: company,
+                companiesList: response.data?.brandList ?? []));
+          }
+        } on ServerException {
+          //
+        } catch (_) {
+          //
+        }
+      } else if (event is _getPreviousOrderProductsListEvent) {
+        if (!preferences.getGuestUser()) {
+          try {
+            emit(state.copyWith(isPreviousOrderShimmering: true));
+            final res = await DioClient(event.context).post(
+              AppUrlEndPoints.getPreviousOrderProductsUrl,
+              data: const PreviousOrderProductsReqModel(
+                      pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                  .toJson(),
+            );
+            PreviousOrderProductsResModel response =
+                PreviousOrderProductsResModel.fromJson(res);
+            if (response.status == AppConstants.code_200) {
+              final cartMap = await fetchCartQuantities(event.context);
+              List<List<ProductStockModel>> productStockList =
+                  state.productStockList.toList(growable: true);
+              final stockList =
+                  response.previousProductData?.map((previousOrderProduct) {
+                final productId = previousOrderProduct.id ?? '';
+                return ProductStockModel(
+                  maxQty: (previousOrderProduct.sale?.isSale ?? false)
+                      ? int.parse(
+                          previousOrderProduct.sale?.saleMaxQuantity ?? '0')
+                      : 0,
+                  productId: productId,
+                  stock: previousOrderProduct.productStock.toString(),
+                  quantity: cartMap[productId] ?? 0,
+                );
+              }).toList();
+              productStockList[4] = stockList ?? [];
+              emit(state.copyWith(
+                  previousOrderProductsList: response.previousProductData ?? [],
+                  productStockList: productStockList,
+                  isPreviousOrderShimmering: false));
+            } else {
+              emit(state.copyWith(isPreviousOrderShimmering: false));
+            }
+          } on ServerException {
+            emit(state.copyWith(isPreviousOrderShimmering: false));
+          } catch (_) {
+            emit(state.copyWith(isPreviousOrderShimmering: false));
+          }
+        }
       } else if (event is _changeCategoryExpansion) {
         if (event.isOpened == false) {
           emit(state.copyWith(searchList: []));
@@ -1031,6 +1124,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
       } else if (event is _globalSearchEvent) {
+        final String requestedSearch = state.searchController.text;
+        // Debounce: coalesce the per-keystroke dispatches into a single API
+        // call. If the user keeps typing within the window, a newer
+        // globalSearchEvent supersedes this one and we bail out early.
+        await Future.delayed(const Duration(milliseconds: 350));
+        if (state.searchController.text != requestedSearch) return;
+
         emit(state.copyWith(search: state.searchController.text));
         try {
           GlobalSearchReqModel globalSearchReqModel = GlobalSearchReqModel(
@@ -1044,6 +1144,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               AppUrlEndPoints.getPlanogramAllProductForSearchUrl,
               data: globalSearchReqModel.toJson());
           GlobalSearchResModel response = GlobalSearchResModel.fromJson(res);
+
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList
@@ -1056,6 +1157,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
+          // Stale-response guard: if the query changed while this request was
+          // in flight, discard the (now outdated) result instead of letting an
+          // older response overwrite the newer, correct results.
+          if (state.searchController.text != requestedSearch) return;
+
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             searchList.addAll(response.data
@@ -1197,6 +1303,33 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(state.copyWith(relatedProductList: []));
       } else if (event is _updateMaintenanceEvent) {
         emit(state.copyWith(isDialogOpen: true));
+      } else if (event is _sendWhatsappOptinEvent) {
+        try {
+          emit(state.copyWith(isWhatsappOptinProcessing: true));
+          final res = await DioClient(event.context).post(
+            '${AppUrlEndPoints.whatsappOptinUrl}/${preferences.getUserId()}',
+            data: {
+              'whatsappOptInSource': event.source,
+              'whatsappOptInText': event.consentText,
+            },
+            options: Options(
+              headers: {
+                HttpHeaders.authorizationHeader:
+                    'Bearer ${preferences.getAuthToken()}'
+              },
+            ),
+          );
+          if (res != null && res['status'] == AppConstants.code_200) {
+            // Phone is recorded server-side from the account; just mark opted-in
+            // locally so the popup does not reappear this session.
+            emit(state.copyWith(
+                whatsappOptIn: true, isWhatsappOptinProcessing: false));
+          } else {
+            emit(state.copyWith(isWhatsappOptinProcessing: false));
+          }
+        } catch (_) {
+          emit(state.copyWith(isWhatsappOptinProcessing: false));
+        }
       } else if (event is _generalSettings) {
         try {
           emit(state.copyWith(
@@ -1258,6 +1391,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               customerServicePhone: response.data?.customerServicePhone ?? '',
               customerServiceWhatsApp:
                   response.data?.customerServiceWhatsApp ?? '',
+              showWhatsappOptinPopup:
+                  response.data?.showWhatsappOptinPopup ?? false,
+              whatsappOptinPopupTitle:
+                  response.data?.whatsappOptinPopupTitle ?? '',
+              whatsappOptinPopupText:
+                  response.data?.whatsappOptinPopupText ?? '',
             ));
           } else {
             emit(state.copyWith(
@@ -1799,6 +1938,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           } catch (_) {}
         }
+      } else if (event is _getRecommendationProductsListEvent) {
+        emit(state.copyWith(noMinimumDialogEventKey: null));
       } else if (event is _clearNoMinimumDialogTriggerEvent) {
         emit(state.copyWith(noMinimumDialogEventKey: null));
       } else if (event is _getSuppliersDataListEvent) {
@@ -1807,7 +1948,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.getSuppliersList,
             data: const SuppliersReqModel(
-                    pageNum: 1, pageLimit: AppConstants.defaultPageLimit)
+                    pageNum: 1, pageLimit: AppConstants.supplierListPageLimit)
                 .toJson(),
           );
           SuppliersListResponseModel response =

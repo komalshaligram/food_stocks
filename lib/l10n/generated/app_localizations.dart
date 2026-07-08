@@ -98,6 +98,20 @@ abstract class AppLocalizations {
     Locale('he')
   ];
 
+  /// No description provided for @all.
+  ///
+  /// In he, this message translates to:
+  /// **'הכל'**
+  String get all;
+
+  /// No description provided for @showing_all_products.
+  ///
+  /// In he, this message translates to:
+  /// **'מציג שוב את כל המוצרים בקטגוריה'**
+  String get showing_all_products;
+
+
+
   /// No description provided for @app_language.
   ///
   /// In he, this message translates to:
@@ -667,6 +681,18 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'בעיה במוצר'**
   String get product_issue;
+
+  /// No description provided for @product_information.
+  ///
+  /// In he, this message translates to:
+  /// **'מידע על המוצר'**
+  String get product_information;
+
+  /// No description provided for @kosher.
+  ///
+  /// In he, this message translates to:
+  /// **'כשרות'**
+  String get kosher;
 
   /// No description provided for @shipment_verification.
   ///
@@ -1445,13 +1471,13 @@ abstract class AppLocalizations {
   /// No description provided for @camera_permission.
   ///
   /// In he, this message translates to:
-  /// **'אנא אפשר הרשאות מצלמה'**
+  /// **'נדרשת גישה למצלמה כדי לצלם תמונה.'**
   String get camera_permission;
 
   /// No description provided for @storage_permission.
   ///
   /// In he, this message translates to:
-  /// **'אנא אפשר הרשאות אכסון'**
+  /// **'נדרשת גישה לאחסון כדי לבחור קובץ.'**
   String get storage_permission;
 
   /// No description provided for @enter_4digit_otp.
@@ -2425,6 +2451,12 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'ליחידה'**
   String get per_unit;
+
+  /// No description provided for @per_kg.
+  ///
+  /// In he, this message translates to:
+  /// **'ליחידה'**
+  String get per_kg;
 
   /// No description provided for @delivery_date_value.
   ///
@@ -4513,6 +4545,67 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'שירות לקוחות'**
   String get customer_service;
+
+  /// No description provided for @whatsapp_optin_title.
+  ///
+  /// In he, this message translates to:
+  /// **'נשמח להישאר בקשר בוואטסאפ'**
+  String get whatsapp_optin_title;
+
+  /// No description provided for @whatsapp_optin_body.
+  ///
+  /// In he, this message translates to:
+  /// **'אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.'**
+  String get whatsapp_optin_body;
+
+  /// No description provided for @whatsapp_optin_approve.
+  ///
+  /// In he, this message translates to:
+  /// **'אני מאשר/ת'**
+  String get whatsapp_optin_approve;
+
+  /// No description provided for @whatsapp_optin_not_now.
+  ///
+  /// In he, this message translates to:
+  /// **'לא עכשיו'**
+  String get whatsapp_optin_not_now;
+
+
+  /// No description provided for @sort_products.
+  ///
+  /// In he, this message translates to:
+  /// **'מיון מוצרים'**
+  String get sort_products;
+
+  /// No description provided for @sort_none.
+  ///
+  /// In he, this message translates to:
+  /// **'ללא מיון'**
+  String get sort_none;
+
+  /// No description provided for @sort_a_to_z.
+  ///
+  /// In he, this message translates to:
+  /// **'מיון לפי א-ב'**
+  String get sort_a_to_z;
+
+  /// No description provided for @sort_price_low_high.
+  ///
+  /// In he, this message translates to:
+  /// **'מיון לפי מחיר: מהנמוך לגבוה'**
+  String get sort_price_low_high;
+
+  /// No description provided for @sort_price_high_low.
+  ///
+  /// In he, this message translates to:
+  /// **'מיון לפי מחיר: מהגבוה לנמוך'**
+  String get sort_price_high_low;
+
+  /// No description provided for @show_only_sales.
+  ///
+  /// In he, this message translates to:
+  /// **'הצג רק מבצעים'**
+  String get show_only_sales;
 }
 
 class _AppLocalizationsDelegate

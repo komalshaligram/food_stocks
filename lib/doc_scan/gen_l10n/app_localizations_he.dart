@@ -229,6 +229,21 @@ class AppLocalizationsHe extends AppLocalizations {
   String get docTypeOther => 'אחר';
 
   @override
+  String get docTypeTaxInvoice => 'חשבונית מס/כניסה';
+
+  @override
+  String get docTypeReturnInvoice => 'חשבונית החזר';
+
+  @override
+  String get docTypeEntryCertificate => 'תעודת כניסה';
+
+  @override
+  String get docTypeReturnCertificate => 'תעודת החזר';
+
+  @override
+  String get docTypeInactiveSuffix => 'לא פעיל כרגע';
+
+  @override
   String get chooseDocumentType => 'בחר סוג מסמך';
 
   @override
@@ -701,4 +716,326 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get scanNoImagesSelected => 'לא נבחרו תמונות';
+
+  @override
+  String get scanDocumentSdk => 'סרוק מסמך SDK';
+
+  @override
+  String get scanDocumentFlutter => 'סרוק מסמך Flutter';
+
+  @override
+  String get scanDocumentNative => 'סרוק מסמך Native';
+
+  @override
+  String get manualScannerSelectScanTrack => 'בחר מסלול סריקה';
+
+  @override
+  String get manualScannerAddPage => 'הוסף עמוד';
+
+  @override
+  String get manualScannerFinishScan => 'סיים סריקה';
+
+  @override
+  String get manualScannerApplyFilter => 'החל פילטר שחור/לבן';
+
+  @override
+  String get manualScannerFilterBw => 'מסמך שחור/לבן';
+
+  @override
+  String get manualScannerFilterGrayscale => 'גווני אפור';
+
+  @override
+  String get manualScannerFilterContrast => 'ניגודיות גבוהה';
+
+  @override
+  String get manualScannerFilterThreshold => 'סף שחור/לבן';
+
+  @override
+  String get manualScannerFilterCleanDocument => 'ניקוי מסמך';
+
+  @override
+  String get supplierNameField => 'שם ספק';
+
+  @override
+  String get allocationNumber => 'מספר הקצאה';
+
+  @override
+  String get paymentDueDate => 'תאריך פירעון';
+
+  @override
+  String get colDiscountPercent => 'אחוז הנחה';
+
+  @override
+  String get colPackagingDepositTax => 'אריזה/מס/פיקדון';
+
+  @override
+  String get colFinalUnitPrice => 'מחיר ליח\' סופי';
+
+  @override
+  String get loadingSuppliers => 'טוען ספקים…';
+
+  @override
+  String get suppliersLoadError => 'שגיאה בטעינת ספקים';
+
+  @override
+  String get retry => 'נסה שוב';
+
+  @override
+  String get ok => 'אישור';
+
+  @override
+  String get runSyncButton => 'סנכרון';
+
+  @override
+  String get syncConfirmTitle => 'הרצת סנכרון מ-Comax';
+
+  @override
+  String get syncConfirmMessage =>
+      'הסנכרון מתחבר ל-Comax שלך ומושך מחדש את כל הנתונים (ספקים, מוצרים, מחירים ומבצעים).\n\nכדי שהסנכרון יצליח עליך להיות מנותק מהמשתמש שלך ב-Comax — מערכת Comax מאפשרת חיבור יחיד בלבד. נתק/י קודם את המשתמש ב-Comax, ואז המשך/י.';
+
+  @override
+  String get syncConfirmContinue => 'התנתקתי — הרץ סנכרון';
+
+  @override
+  String get syncing => 'מבצע סנכרון...';
+
+  @override
+  String get syncDone => 'סונכרן בהצלחה';
+
+  @override
+  String get syncDoneMessage => 'נתוני הספקים והמוצרים עודכנו מ-Comax.';
+
+  @override
+  String get syncErrorTitle => 'שגיאת סנכרון';
+
+  @override
+  String get syncSessionInUse =>
+      'יש משתמש מחובר ל-Comax. התנתק מ-Comax, המתן כ-3 דקות, ונסה שוב.';
+
+  @override
+  String get syncBadCredentials => 'נדרש עדכון הרשאות במערכת הניהול.';
+
+  @override
+  String get syncFailed => 'הסנכרון נכשל, נסה שוב מאוחר יותר.';
+
+  @override
+  String get syncRateLimited => 'נסה שוב בעוד דקה.';
+
+  @override
+  String get syncNoPermission => 'למפתח אין הרשאה להריץ שליפה.';
+
+  @override
+  String get syncTimeout => 'הסנכרון אורך זמן רב מהצפוי, בדוק שוב מאוחר יותר.';
+
+  @override
+  String get rotateScreen => 'סובב מסך';
+
+  @override
+  String get editBarcodeTitle => 'מס\' פריט / ברקוד';
+
+  @override
+  String get barcodeLabel => 'ברקוד';
+
+  @override
+  String get barcodeInCatalog => 'קיים בקטלוג';
+
+  @override
+  String get barcodeNotInCatalog =>
+      'אינו בקטלוג — ייתכן שזהו ברקוד חלופי; בחר את הברקוד הראשי של המוצר';
+
+  @override
+  String get searchByProductName => 'חיפוש מוצר לפי שם';
+
+  @override
+  String get productSearchHint => 'הקלד שם מוצר…';
+
+  @override
+  String get noProductsFound => 'לא נמצאו מוצרים';
+
+  @override
+  String get catalogLoading => 'טוען קטלוג מוצרים…';
+
+  @override
+  String get barcodeIssuesTitle => 'ברקודים שאינם קיימים בקטלוג';
+
+  @override
+  String get barcodeIssuesMessage =>
+      'יש מוצרים שהברקוד שלהם אינו קיים בקטלוג. ייתכן שמדובר בברקוד חלופי — יש לבחור את הברקוד הראשי של המוצר. לא ניתן לשלוח לקופה עד לתיקון.';
+
+  @override
+  String get jumpToFirstIssue => 'קפוץ לבעיה הראשונה';
+
+  @override
+  String get validating => 'מאמת...';
+
+  @override
+  String get validationSuccessTitle => 'הנתונים תקינים';
+
+  @override
+  String get validationSuccessMessage => 'הנתונים תקינים ומוכנים לקליטה לקופה.';
+
+  @override
+  String get validationErrorsTitle => 'נמצאו בעיות לתיקון';
+
+  @override
+  String get validationFailedTitle => 'האימות נכשל';
+
+  @override
+  String get validationNetworkErrorTitle => 'בעיית תקשורת';
+
+  @override
+  String get validationNetworkErrorMessage =>
+      'לא ניתן היה לפנות לשרת. בדוק את החיבור ונסה שוב.';
+
+  @override
+  String get validationConfigError =>
+      'תקלת הגדרה במערכת. פנה לתמיכה (הרשאות/קוד לקוח).';
+
+  @override
+  String get validationRateLimited => 'יותר מדי בקשות. נסה שוב בעוד רגע.';
+
+  @override
+  String get validationGenericError => 'האימות נכשל, נסה שוב מאוחר יותר.';
+
+  @override
+  String get lineLabel => 'שורה';
+
+  @override
+  String get suggestionsLabel => 'הצעות';
+
+  @override
+  String get chooseCorrectSupplier => 'בחר את הספק הנכון';
+
+  @override
+  String get submitting => 'שולח לקופה...';
+
+  @override
+  String get submitBackground => 'ממשיך ברקע…';
+
+  @override
+  String get submitSuccessTitle => 'נקלט בהצלחה';
+
+  @override
+  String get submitSuccessMessage => 'החשבונית נקלטה ל-Comax בהצלחה.';
+
+  @override
+  String get submitErrorTitle => 'השליחה לקופה נכשלה';
+
+  @override
+  String get submitNetworkError => 'בעיית תקשורת בשליחה לקופה. נסה שוב.';
+
+  @override
+  String get submitGenericError => 'השליחה לקופה נכשלה, נסה שוב.';
+
+  @override
+  String get submitTimeout =>
+      'הקליטה נמשכת זמן רב. בדוק מאוחר יותר אם החשבונית נקלטה.';
+
+  @override
+  String get submitAlreadyReceivedTitle => 'החשבונית כבר נקלטה';
+
+  @override
+  String get settingsTitle => 'הגדרות';
+
+  @override
+  String get customerCodeLabel => 'קוד לקוח';
+
+  @override
+  String get customerCodeHint => 'הזן קוד לקוח';
+
+  @override
+  String get scanModelLabel => 'מודל סריקה';
+
+  @override
+  String get createNewProductButton => 'צור פריט חדש';
+
+  @override
+  String get editNewProductButton => 'ערוך פריט חדש';
+
+  @override
+  String get newProductTitle => 'פריט חדש';
+
+  @override
+  String get editProductTitle => 'עריכת פריט';
+
+  @override
+  String get npItem => 'פריט';
+
+  @override
+  String get npBarcode => 'ברקוד';
+
+  @override
+  String get npName => 'שם';
+
+  @override
+  String get npDepartment => 'מחלקה';
+
+  @override
+  String get npGroup => 'קבוצה';
+
+  @override
+  String get npMainSupplier => 'ספק ראשי';
+
+  @override
+  String get npSupplierItem => 'פריט ספק';
+
+  @override
+  String get npSupplierPrice => 'מחיר ספק';
+
+  @override
+  String get npDiscountPct => '% הנחה';
+
+  @override
+  String get npProfitPct => '% רווח';
+
+  @override
+  String get npSalePrice => 'מחיר מכירה';
+
+  @override
+  String get npManageDeposit => 'ניהול פיקדון';
+
+  @override
+  String get npDraggedToRegister => 'נגרר לקופה';
+
+  @override
+  String get npDepositItem => 'פריט פקדון';
+
+  @override
+  String get npMisc => 'שונות';
+
+  @override
+  String get npRequiredMissing => 'יש למלא את כל שדות החובה';
+
+  @override
+  String get npSelectDepartmentFirst => 'בחר מחלקה תחילה';
+
+  @override
+  String get selectHint => 'בחר';
+
+  @override
+  String get tbdOptions => 'יוגדר בהמשך';
+
+  @override
+  String get loadingEllipsis => 'טוען…';
+
+  @override
+  String get searchHintGeneric => 'חיפוש…';
+
+  @override
+  String get npSectionItem => 'פרטי פריט';
+
+  @override
+  String get npSectionClassification => 'סיווג';
+
+  @override
+  String get npSectionSupplier => 'ספק';
+
+  @override
+  String get npSectionPricing => 'מחירים';
+
+  @override
+  String get npSectionMore => 'הגדרות נוספות';
+
+  @override
+  String get scannerUnknownFailure => 'לא ניתן לפתוח את הסורק. נסה שוב.';
 }
