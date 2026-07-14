@@ -339,7 +339,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         context: context,
         productListIndex: 1,
         productStockUpdateIndex: index,
-        productSupplierIds: product!.supplierId.toString(),
+        productSupplierIds: product.supplierId.toString(),
       ));
 
       context
@@ -357,11 +357,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         productId: item.id ?? '',
         minBox: minQty.toString(),
         index: index,
-        supplierId: product?.supplierId.toString(),
+        supplierId: product.supplierId.toString(),
         productListIndex: 1,
         isIncrease: true,
-        isMixedSale: product?.sale?.isMixedSale,
-        sameSaleProducts: product?.sale?.sameSaleProducts,
+        isMixedSale: product.sale?.isMixedSale,
+        sameSaleProducts: product.sale?.sameSaleProducts,
       );
     }
   }
@@ -382,7 +382,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         context: context,
         productListIndex: 1,
         productStockUpdateIndex: index,
-        productSupplierIds: product!.supplierId.toString(),
+        productSupplierIds: product.supplierId.toString(),
       ));
 
       context
@@ -400,11 +400,11 @@ class CompanyProductsScreenWidget extends StatelessWidget {
         productId: item.id ?? '',
         minBox: minQty.toString(),
         index: index,
-        supplierId: product?.supplierId.toString(),
+        supplierId: product.supplierId.toString(),
         productListIndex: 1,
         isIncrease: false,
-        isMixedSale: product?.sale?.isMixedSale,
-        sameSaleProducts: product?.sale?.sameSaleProducts,
+        isMixedSale: product.sale?.isMixedSale,
+        sameSaleProducts: product.sale?.sameSaleProducts,
       );
     }
   }
@@ -440,25 +440,25 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             final stock = state.productStockList[1][index];
 
             return CommonProductSaleItemWidget(
-                title: product?.productName ?? '',
-                description: product?.sale?.saleDescription ?? '',
-                isPesach: product?.isPesach ?? false,
+                title: product.productName ?? '',
+                description: product.sale?.saleDescription ?? '',
+                isPesach: product.isPesach ?? false,
                 isGuestUser: state.isGuestUser,
-                lowStock: product?.lowStock.toString() ?? '',
+                lowStock: product.lowStock.toString(),
                 height: AppConstants.relatedProductItemHeight,
                 width: 140,
-                productStock: product?.productStock.toString() ?? '0',
-                saleImage: product?.mainImage ?? '',
-                productName: product?.productName ?? '',
-                originalPrice: product?.productPrice ?? 0.0,
-                isSale: product?.sale?.isSale,
-                discountedPrice: double.parse(product?.sale?.salePrice ?? '0'),
+                productStock: product.productStock.toString(),
+                saleImage: product.mainImage ?? '',
+                productName: product.productName ?? '',
+                originalPrice: product.productPrice ?? 0.0,
+                isSale: product.sale?.isSale,
+                discountedPrice: double.parse(product.sale?.salePrice ?? '0'),
                 quantity: stock.quantity,
-                minQuantity: product?.sale?.saleMinQuantity,
-                maxQuantity: product?.sale?.saleMaxQuantity,
-                isMixedSale: product?.sale?.isMixedSale,
-                numberOfUnits: product?.numberOfUnit.toString(),
-                scaleType: product?.scaleType,
+                minQuantity: product.sale?.saleMinQuantity,
+                maxQuantity: product.sale?.saleMaxQuantity,
+                isMixedSale: product.sale?.isMixedSale,
+                numberOfUnits: product.numberOfUnit.toString(),
+                scaleType: product.scaleType,
                 onQuantityChanged: () => updateQty(context, state, index),
                 onQuantityIncreaseTap: () =>
                     handleIncrease(context, state, index),
@@ -469,7 +469,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                     showProductDetails(
                       context: context,
                       productId: item.id ?? '',
-                      productStock: product?.productStock.toString() ?? '0',
+                      productStock: product.productStock.toString(),
                       productListIndex: 1,
                       isSaleOn: state.isSaleOn,
                     );
@@ -494,24 +494,24 @@ class CompanyProductsScreenWidget extends StatelessWidget {
 
             return CommonSaleListView(
                 context: context,
-                isPesach: product?.isPesach ?? false,
+                isPesach: product.isPesach ?? false,
                 isGuestUser: state.isGuestUser,
-                lowStock: product?.lowStock.toString() ?? '',
-                productStock: product?.productStock.toString() ?? '0',
-                productImage: product?.mainImage ?? '',
-                productName: product?.productName ?? '',
-                price: product?.productPrice ?? 0.0,
-                discountedPrice: (product?.sale?.isSale ?? false)
-                    ? double.parse(product?.sale?.salePrice ?? '0')
+                lowStock: product.lowStock.toString(),
+                productStock: product.productStock.toString(),
+                productImage: product.mainImage ?? '',
+                productName: product.productName ?? '',
+                price: product.productPrice ?? 0.0,
+                discountedPrice: (product.sale?.isSale ?? false)
+                    ? double.parse(product.sale?.salePrice ?? '0')
                     : 0.0,
-                isFromSale: product?.sale?.isSale,
-                salesDesc: product?.sale?.saleDescription,
+                isFromSale: product.sale?.isSale,
+                salesDesc: product.sale?.saleDescription,
                 quantity: stock.quantity,
-                minQuantity: product?.sale?.saleMinQuantity,
-                maxQuantity: product?.sale?.saleMaxQuantity,
-                isMixedSale: product?.sale?.isMixedSale,
-                numberOfUnits: product?.numberOfUnit ?? '0',
-                scaleType: product?.scaleType,
+                minQuantity: product.sale?.saleMinQuantity,
+                maxQuantity: product.sale?.saleMaxQuantity,
+                isMixedSale: product.sale?.isMixedSale,
+                numberOfUnits: product.numberOfUnit ?? '0',
+                scaleType: product.scaleType,
                 onQuantityChanged: () => updateQty(context, state, index),
                 onQuantityIncreaseTap: () =>
                     handleIncrease(context, state, index),
@@ -522,7 +522,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                     showProductDetails(
                       context: context,
                       productId: item.id ?? '',
-                      productStock: product?.productStock.toString() ?? '0',
+                      productStock: product.productStock.toString(),
                       productListIndex: 1,
                       isSaleOn: state.isSaleOn,
                     );

@@ -729,6 +729,13 @@ Widget noDataWidget(String title) => Center(
               size: AppConstants.smallFont, color: AppColors.textColor)),
     );
 
+Widget noDataWithEmpty(String title, BuildContext context) => Container(
+      height: getScreenHeight(context) - 80,
+      width: getScreenWidth(context),
+      alignment: Alignment.center,
+      child: noDataWidget(title),
+    );
+
 Widget cartImageWidget() => Container(
       height: 50,
       width: 50,

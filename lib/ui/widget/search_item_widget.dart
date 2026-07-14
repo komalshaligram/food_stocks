@@ -114,7 +114,7 @@ class SearchItemWidget extends StatelessWidget {
                       : salePrice != 0.0
                           ? minQuantity != '0' || maxQuantity != '0' && isMixedSale == true
                               ? 220
-                              : 160
+                              : 195
                           : 150
                   : isPesach
                       ? 130

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import '../../bloc/splash/splash_bloc.dart';
+import '../../data/services/startup_navigation.dart';
 import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/utils/constants/app_img_path.dart';
 import '../../ui/utils/constants/app_strings.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/storage/shared_preferences_helper.dart';
-import '../../data/services/startup_navigation.dart';
-import '../../ui/utils/constants/app_colors.dart';
 
 class SplashRoute {
   static Widget get route => const SplashScreen();
@@ -20,48 +18,36 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
+    final Map<dynamic, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map?;
+
     return BlocProvider(
       create: (context) => SplashBloc()
-        ..add(SplashEvent.splashLoaded(
-            pushNavigation: args?[AppStrings.pushNavigationString] ?? '')),
+        ..add(
+          SplashEvent.splashLoaded(
+            pushNavigation: args?[AppStrings.pushNavigationString] ?? '',
+          ),
+        ),
       child: const SplashScreenWidget(),
     );
   }
 }
 
 class SplashScreenWidget extends StatelessWidget {
-  const SplashScreenWidget({Key? key}) : super(key: key);
-
-  void getVersion(SharedPreferencesHelper preferences) async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String version = packageInfo.version;
-    preferences.setAppVersion(version: version);
-  }
+  const SplashScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) async {
-        if (state.isRedirected) {
-          if (!context.mounted) {
-            return;
-          }
-          final preferences = SharedPreferencesHelper(
-              prefs: await SharedPreferences.getInstance());
-          if (!context.mounted) {
-            return;
-          }
-          getVersion(preferences);
-
-          await StartupNavigation.replaceWithStartupRoute(
-            context: context,
-            arguments: preferences.getUserLoggedIn()
-                ? {AppStrings.pushNavigationString: state.pushNavigation}
-                : null,
-          );
+        if (!state.isRedirected || !context.mounted) {
+          return;
         }
+
+        await StartupNavigation.replaceWithStartupRoute(
+          context: context,
+          arguments: state.startupArguments,
+        );
       },
       child: BlocBuilder<SplashBloc, SplashState>(builder: (context, state) {
         return Scaffold(
@@ -76,9 +62,12 @@ class SplashScreenWidget extends StatelessWidget {
                   curve: Curves.decelerate,
                   scale: state.isAnimate ? 1 : 1.2,
                   duration: const Duration(milliseconds: 600),
-                  child: SvgPicture.asset(AppImagePath.splashLogo,
-                      height: getScreenHeight(context) * 0.30,
-                      width: getScreenWidth(context) * 0.65),
+                  child: SvgPicture.asset(
+                    AppImagePath.splashLogo,
+                    width: getScreenWidth(context) * 0.55,
+                    height: getScreenHeight(context) * 0.16,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),

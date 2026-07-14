@@ -119,14 +119,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                 ? const ProductSaleScreenShimmerWidget()
                                 : const StoreCategoryScreenSubcategoryShimmerWidget()
                             : state.productSalesList.isEmpty
-                                ? Container(
-                                    height: getScreenHeight(context) - 80,
-                                    width: getScreenWidth(context),
-                                    alignment: Alignment.center,
-                                    child: noDataWidget(AppLocalizations.of(
-                                            context)!
-                                        .currently_products_are_not_on_sale),
-                                  )
+                                ? noDataWithEmpty(
+                                    AppLocalizations.of(context)!
+                                        .currently_products_are_not_on_sale,
+                                    context)
                                 : state.isGridView
                                     ? gridViewWidget(context, state)
                                     : listViewWidget(context, state)

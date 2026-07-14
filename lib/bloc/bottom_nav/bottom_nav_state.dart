@@ -2,6 +2,8 @@ part of 'bottom_nav_bloc.dart';
 
 @freezed
 class BottomNavState with _$BottomNavState {
+  const BottomNavState._();
+
   const factory BottomNavState({
     required int index,
     required int cartCount,
@@ -13,7 +15,6 @@ class BottomNavState with _$BottomNavState {
     required String arg,
     required bool isSubUserSeeWallet,
     required bool isRefreshing,
-    required List<BottomNavModel> navList,
   }) = _BottomNavState;
 
   factory BottomNavState.initial() => const BottomNavState(
@@ -27,6 +28,17 @@ class BottomNavState with _$BottomNavState {
         arg: '',
         isSubUserSeeWallet: true,
         isRefreshing: false,
-        navList: [],
       );
+
+  List<int> get visibleNavPages =>
+      isSubUserSeeWallet ? const [0, 2, 3, 4] : const [0, 2, 3];
+
+  int get selectedNavIndex {
+    final i = visibleNavPages.indexOf(index);
+    return i < 0 ? 0 : i;
+  }
+
+  bool get showCartBadge => cartCount > 0 && index != 2;
+
+  int get profilePageIndex => isSubUserSeeWallet ? 4 : 3;
 }

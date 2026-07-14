@@ -26,10 +26,12 @@ class SupplierScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => SupplierBloc()
-        ..add(SupplierEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
+        ..add(SupplierEvent.setSearchEvent(
+            search: args?[AppStrings.searchString] ?? ''))
         ..add(SupplierEvent.getSuppliersListEvent(context: context)),
       child: const SupplierScreenWidget(),
     );
@@ -59,13 +61,19 @@ class SupplierScreenWidget extends StatelessWidget {
             enablePullDown: true,
             controller: state.refreshController,
             header: const RefreshWidget(),
-            footer: CustomFooter(builder: (context, mode) => const SupplierScreenShimmerWidget()),
+            footer: CustomFooter(
+                builder: (context, mode) =>
+                    const SupplierScreenShimmerWidget()),
             enablePullUp: !state.isBottomOfSuppliers,
             onRefresh: () {
-              context.read<SupplierBloc>().add(SupplierEvent.refreshListEvent(context: context));
+              context
+                  .read<SupplierBloc>()
+                  .add(SupplierEvent.refreshListEvent(context: context));
             },
             onLoading: () {
-              context.read<SupplierBloc>().add(SupplierEvent.getSuppliersListEvent(context: context));
+              context
+                  .read<SupplierBloc>()
+                  .add(SupplierEvent.getSuppliersListEvent(context: context));
             },
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
@@ -73,30 +81,49 @@ class SupplierScreenWidget extends StatelessWidget {
                 state.isShimmering
                     ? const SupplierScreenShimmerWidget()
                     : state.suppliersDataList.isEmpty
-                        ? Container(
-                            height: getScreenHeight(context) - 80,
-                            width: getScreenWidth(context),
-                            alignment: Alignment.center,
-                            child: noDataWidget(AppLocalizations.of(context)!.suppliers_not_available),
-                          )
+                        ? noDataWithEmpty(
+                            AppLocalizations.of(context)!
+                                .suppliers_not_available,
+                            context)
                         : GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: state.suppliersDataList.length,
-                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
-                            itemBuilder: (context, index) => buildSupplierListItem(
-                                index: index,
-                                context: context,
-                                supplierLogo: state.suppliersDataList[index].logo ?? '',
-                                supplierName: state.suppliersDataList[index].supplierDetail?.displayName ?? '',
-                                onTap: () {
-                                  Navigator.pushNamed(context, RouteDefine.supplierListProductsScreen.name, arguments: {
-                                    AppStrings.supplierIdString: state.suppliersDataList[index].id ?? '',
-                                    AppStrings.supplierNameString: state.suppliersDataList[index].supplierDetail?.displayName,
-                                    AppStrings.minimumOrderText: state.suppliersDataList[index].supplierDetail?.minOrderAmount,
-                                  });
-                                })),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppConstants.padding_10),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3, childAspectRatio: 0.9),
+                            itemBuilder: (context, index) =>
+                                buildSupplierListItem(
+                                    index: index,
+                                    context: context,
+                                    supplierLogo:
+                                        state.suppliersDataList[index].logo ??
+                                            '',
+                                    supplierName: state.suppliersDataList[index]
+                                            .supplierDetail?.displayName ??
+                                        '',
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context,
+                                          RouteDefine
+                                              .supplierListProductsScreen.name,
+                                          arguments: {
+                                            AppStrings.supplierIdString: state
+                                                    .suppliersDataList[index]
+                                                    .id ??
+                                                '',
+                                            AppStrings.supplierNameString: state
+                                                .suppliersDataList[index]
+                                                .supplierDetail
+                                                ?.displayName,
+                                            AppStrings.minimumOrderText: state
+                                                .suppliersDataList[index]
+                                                .supplierDetail
+                                                ?.minOrderAmount
+                                          });
+                                    })),
               ]),
             ),
           ),
@@ -105,19 +132,31 @@ class SupplierScreenWidget extends StatelessWidget {
     });
   }
 
-  Widget buildSupplierListItem({required int index, required String supplierLogo, required String supplierName, required BuildContext context, required void Function() onTap}) {
+  Widget buildSupplierListItem(
+      {required int index,
+      required String supplierLogo,
+      required String supplierName,
+      required BuildContext context,
+      required void Function() onTap}) {
     return Container(
       height: getScreenHeight(context),
       width: getScreenWidth(context),
       clipBehavior: Clip.hardEdge,
-      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
+      margin: const EdgeInsets.symmetric(
+          vertical: AppConstants.padding_10,
+          horizontal: AppConstants.padding_5),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        color: AppColors.whiteColor,
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-      ),
+          borderRadius:
+              const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          color: AppColors.whiteColor,
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.shadowColor.withValues(alpha: 0.15),
+                blurRadius: AppConstants.blur_10)
+          ]),
       child: InkWell(
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+        borderRadius:
+            const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
         child: Column(children: [
           Expanded(
@@ -132,7 +171,10 @@ class SupplierScreenWidget extends StatelessWidget {
                         width: getScreenWidth(context),
                         decoration: BoxDecoration(
                           color: AppColors.whiteColor,
-                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_10), topRight: Radius.circular(AppConstants.radius_10)),
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(AppConstants.radius_10),
+                              topRight:
+                                  Radius.circular(AppConstants.radius_10)),
                         ),
                       ),
                     ),
@@ -140,26 +182,33 @@ class SupplierScreenWidget extends StatelessWidget {
                       height: getScreenHeight(context),
                       width: getScreenWidth(context),
                       color: AppColors.whiteColor,
-                      child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
+                      child: Image.asset(AppImagePath.imageNotAvailable5,
+                          fit: BoxFit.cover),
                     ),
                   )
                 : Container(
                     height: getScreenHeight(context),
                     width: getScreenWidth(context),
                     color: AppColors.whiteColor,
-                    child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
+                    child: Image.asset(AppImagePath.imageNotAvailable5,
+                        fit: BoxFit.cover),
                   ),
           ),
           Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
+            padding: const EdgeInsets.symmetric(
+                vertical: AppConstants.padding_5,
+                horizontal: AppConstants.padding_5),
             decoration: BoxDecoration(
               gradient: AppColors.appMainGradientColor,
-              borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
+              borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(AppConstants.radius_10),
+                  bottomRight: Radius.circular(AppConstants.radius_10)),
             ),
             child: Text(
               supplierName,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_14, color: AppColors.whiteColor),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,

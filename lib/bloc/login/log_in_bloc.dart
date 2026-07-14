@@ -28,14 +28,18 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
       if (state.isLoading) {
         return;
       }
-      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _logInApiDataEvent) {
         emit(state.copyWith(isLoading: true));
         preferences.setIsGuestUser(isGuestUser: false);
         try {
-          LoginReqModel reqMap = LoginReqModel(contact: event.contactNumber, applicationName: AppStrings.appName);
-          final res = await DioClient(event.context).post(AppUrlEndPoints.existingUserLoginUrl, data: reqMap);
+          LoginReqModel reqMap = LoginReqModel(
+              contact: event.contactNumber,
+              applicationName: AppStrings.appName);
+          final res = await DioClient(event.context)
+              .post(AppUrlEndPoints.existingUserLoginUrl, data: reqMap);
           LoginResModel response = LoginResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             await SmsAutoFill().listenForCode();
@@ -44,22 +48,28 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
               preferences.setUserId(id: response.user?.id ?? '');
               preferences.setPhoneNumber(userPhoneNumber: event.contactNumber);
             }
-            Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {
-              AppStrings.contactString: event.contactNumber,
-              AppStrings.isRegisterString: !(response.data?.isUserExists ?? false),
-            });
+            Navigator.pushNamed(event.context, RouteDefine.otpScreen.name,
+                arguments: {
+                  AppStrings.contactString: event.contactNumber,
+                  AppStrings.isRegisterString:
+                      !(response.data?.isUserExists ?? false),
+                });
             emit(state.copyWith(isLoading: false));
           } else if (response.status == AppConstants.code_403) {
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ?? response.message!,
+                  event.context),
               type: SnackBarType.failure,
             );
             emit(state.copyWith(isLoading: false));
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ?? response.message!,
+                  event.context),
               type: SnackBarType.failure,
             );
             emit(state.copyWith(isLoading: false));
@@ -77,9 +87,17 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
           printData(value.appURL);
           printData(value.errorMessage);
           if (value.canUpdate && Platform.isAndroid) {
-            customShowUpdateDialog(event.context, preferences.getAppLanguage(), value.appURL ?? 'https://play.google.com/store/apps/details?id=com.foodstock.dev');
+            customShowUpdateDialog(
+                event.context,
+                preferences.getAppLanguage(),
+                value.appURL ??
+                    'https://play.google.com/store/apps/details?id=com.foodstock.dev');
           } else if (value.canUpdate && Platform.isIOS) {
-            customShowUpdateDialog(event.context, preferences.getAppLanguage(), value.appURL ?? 'https://apps.apple.com/ua/app/tavili/id6468264054');
+            customShowUpdateDialog(
+                event.context,
+                preferences.getAppLanguage(),
+                value.appURL ??
+                    'https://apps.apple.com/ua/app/tavili/id6468264054');
           }
         });
       } else if (event is _changeAuthEvent) {

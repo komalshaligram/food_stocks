@@ -22,19 +22,41 @@ class LogInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => LogInBloc()..add(LogInEvent.changeAuthEvent(isRegister: args?[AppStrings.isRegisterString] ?? false)),
-      child: LogInScreenWidget(),
+      create: (context) => LogInBloc()
+        ..add(LogInEvent.changeAuthEvent(
+            isRegister: args?[AppStrings.isRegisterString] ?? false)),
+      child: const LogInScreenWidget(),
     );
   }
 }
 
-class LogInScreenWidget extends StatelessWidget {
-  LogInScreenWidget({super.key});
+class LogInScreenWidget extends StatefulWidget {
+  const LogInScreenWidget({super.key});
 
-  final TextEditingController phoneController = TextEditingController();
+  @override
+  State<LogInScreenWidget> createState() => _LogInScreenWidgetState();
+}
+
+class _LogInScreenWidgetState extends State<LogInScreenWidget> {
+  final TextEditingController _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  void _onSubmitPressed() {
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+    context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(
+        contactNumber: _phoneController.text, context: context));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +66,14 @@ class LogInScreenWidget extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.whiteColor,
-            title: state.isRegister ? AppLocalizations.of(context)!.register : AppLocalizations.of(context)!.login,
-            iconData: Icons.arrow_back_ios_sharp,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+              bgColor: AppColors.whiteColor,
+              title: state.isRegister
+                  ? AppLocalizations.of(context)!.register
+                  : AppLocalizations.of(context)!.login,
+              iconData: Icons.arrow_back_ios_sharp,
+              onTap: () {
+                Navigator.pop(context);
+              }),
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -58,36 +81,40 @@ class LogInScreenWidget extends StatelessWidget {
             child: Form(
               key: _formKey,
               child: Padding(
-                padding: EdgeInsets.only(left: getScreenWidth(context) * 0.1, right: getScreenWidth(context) * 0.1),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  30.height,
-                  Text(AppLocalizations.of(context)!.enter_your_phone, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-                  30.height,
-                  CustomFormField(
-                    inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
-                    context: context,
-                    controller: phoneController,
-                    keyboardType: TextInputType.phone,
-                    hint: AppStrings.hintNumberString,
-                    fillColor: AppColors.whiteColor,
-                    textInputAction: TextInputAction.done,
-                    validator: AppStrings.mobileValString,
-                  ),
-                  30.height,
-                  CustomButtonWidget(
-                    buttonText: AppLocalizations.of(context)!.next,
-                    bGColor: AppColors.mainColor,
-                    isLoading: state.isLoading,
-                    onPressed: state.isLoading
-                        ? null
-                        : () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(contactNumber: phoneController.text, context: context));
-                            }
-                          },
-                    fontColors: AppColors.whiteColor,
-                  ),
-                ]),
+                padding: EdgeInsets.only(
+                    left: getScreenWidth(context) * 0.1,
+                    right: getScreenWidth(context) * 0.1),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      30.height,
+                      Text(AppLocalizations.of(context)!.enter_your_phone,
+                          style: AppStyles.rkRegularTextStyle(
+                              size: AppConstants.smallFont,
+                              color: AppColors.blackColor)),
+                      30.height,
+                      CustomFormField(
+                        inputFormat: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10)
+                        ],
+                        context: context,
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        hint: AppStrings.hintNumberString,
+                        fillColor: AppColors.whiteColor,
+                        textInputAction: TextInputAction.done,
+                        validator: AppStrings.mobileValString,
+                      ),
+                      30.height,
+                      CustomButtonWidget(
+                        buttonText: AppLocalizations.of(context)!.next,
+                        bGColor: AppColors.mainColor,
+                        isLoading: state.isLoading,
+                        onPressed: state.isLoading ? null : _onSubmitPressed,
+                        fontColors: AppColors.whiteColor,
+                      ),
+                    ]),
               ),
             ),
           ),
