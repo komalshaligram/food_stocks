@@ -316,10 +316,10 @@ class SearchItemWidget extends StatelessWidget {
                 GestureDetector(
                   onTap: onQuantityIncreaseTap,
                   child: Container(
-                    width: 25,
-                    height: 25,
+                    width: 32,
+                    height: 32,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_2), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
-                    child: const Icon(Icons.add, size: 15),
+                    child: const Icon(Icons.add, size: 20),
                   ),
                 ),
                 15.width,
@@ -329,10 +329,10 @@ class SearchItemWidget extends StatelessWidget {
                   onTap: onQuantityDecreaseTap,
                   child: Container(
                     alignment: Alignment.center,
-                    width: 25,
-                    height: 25,
+                    width: 32,
+                    height: 32,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
-                    child: const Icon(Icons.remove, size: 15),
+                    child: const Icon(Icons.remove, size: 20),
                   ),
                 )
               ]),

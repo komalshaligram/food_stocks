@@ -12,7 +12,10 @@ class CommonAppBar extends StatelessWidget {
   final double? height;
   final Color bgColor;
 
-  const CommonAppBar({super.key, required this.title, required this.iconData, this.onTap, this.trailingWidget, this.height, this.width, required this.bgColor});
+  /// ווידג'ט אופציונלי שמוצג **ליד** חץ החזרה (באותו צד). null = רק החץ.
+  final Widget? leadingExtra;
+
+  const CommonAppBar({super.key, required this.title, required this.iconData, this.onTap, this.trailingWidget, this.height, this.width, required this.bgColor, this.leadingExtra});
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +24,20 @@ class CommonAppBar extends StatelessWidget {
       titleSpacing: 0,
       backgroundColor: bgColor,
       surfaceTintColor: AppColors.pageColor,
-      leading: Container(
-        padding: const EdgeInsets.all(AppConstants.padding_10),
-        child: InkWell(
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-          onTap: onTap,
-          child: Icon(iconData, size: 26, color: AppColors.blackColor),
-        ),
+      leadingWidth: leadingExtra == null ? null : 96,
+      leading: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(AppConstants.padding_10),
+            child: InkWell(
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+              onTap: onTap,
+              child: Icon(iconData, size: 26, color: AppColors.blackColor),
+            ),
+          ),
+          if (leadingExtra != null) leadingExtra!,
+        ],
       ),
       actions: [
         SizedBox(height: height, width: width, child: trailingWidget ?? const SizedBox()),

@@ -11,9 +11,9 @@ import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
+import '../widget/common_app_bar.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
-import '../widget/custom_container_widget.dart';
 import '../widget/custom_form_field_widget.dart';
 import '../widget/form_data_screen_shimmer_widget.dart';
 
@@ -35,8 +35,11 @@ class FormDataScreen extends StatelessWidget {
 
 class FormDataScreenWidget extends StatelessWidget {
   FormDataScreenWidget({super.key});
+
   final _formKey = GlobalKey<FormState>();
-  final String ownerName = '';
+
+  static const double _horizontalPadding = 16;
+  static const double _fieldRadius = 12;
 
   @override
   Widget build(BuildContext context) {
@@ -45,114 +48,181 @@ class FormDataScreenWidget extends StatelessWidget {
       return WillPopScope(
         onWillPop: () async {
           SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-          if (!preferences.getUserLoggedIn()) {
-            return Future.value(true);
-          } else {
-            return Future.value(false);
-          }
+          return Future.value(!preferences.getUserLoggedIn());
         },
         child: Scaffold(
-          backgroundColor: AppColors.whiteColor,
-          appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
-            leading: GestureDetector(
-                onTap: () async {
-                  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                  if (!preferences.getUserLoggedIn()) {
-                    Navigator.pop(context);
-                  }
-                },
-                child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
-            title: Align(
-              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.data_for_form, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+          backgroundColor: AppColors.pageColor,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+            child: CommonAppBar(
+              bgColor: AppColors.pageColor,
+              title: AppLocalizations.of(context)!.data_for_form,
+              iconData: Icons.arrow_back_ios_new_rounded,
+              trailingWidget: _buildAppBarIcon(),
+              onTap: () async {
+                SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+                if (!preferences.getUserLoggedIn() && context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
             ),
-            backgroundColor: AppColors.whiteColor,
-            titleSpacing: 0,
-            elevation: 0,
           ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: state.isShimmering || state.isAgentListShimmering
-                  ? const FormDataScreenShimmerWidget()
-                  : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: getScreenWidth(context) * 0.1),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          10.height,
-                          CustomContainerWidget(name: AppLocalizations.of(context)!.my_agent_code),
-                          CustomFormField(
-                            inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
-                            context: context,
-                            controller: state.agentCodeController,
-                            keyboardType: TextInputType.number,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            maxLimits: 6,
-                            validator: AppStrings.agentCodeString,
-                          ),
-                          7.height,
-                          CustomContainerWidget(name: AppLocalizations.of(context)!.type_of_business),
+          body: state.isShimmering || state.isAgentListShimmering
+              ? const FormDataScreenShimmerWidget()
+              : SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildFormCard(
+                    context,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildFieldLabel(context, AppLocalizations.of(context)!.my_agent_code),
+                        _buildTextField(
+                          context: context,
+                          controller: state.agentCodeController,
+                          keyboardType: TextInputType.number,
+                          validator: AppStrings.agentCodeString,
+                          textInputAction: TextInputAction.next,
+                          maxLimits: 6,
+                          inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
+                        ),
+                        14.height,
+                        _buildFieldLabel(context, AppLocalizations.of(context)!.type_of_business),
+                        CommonDropDownButton(
+                          items: state.businessTypeList.map((business) {
+                            return DropdownMenuItem<String>(value: business.businessTypeName, child: Text(business.businessTypeName ?? ''));
+                          }).toList(),
+                          onChanged: (newBusiness) {
+                            bloc.add(FormDataEvent.selectBusinessTypeEvent(business: newBusiness ?? '', haveMultiple: true));
+                          },
+                          value: state.business,
+                          color: AppColors.lightBorderColor,
+                          borderRadius: _fieldRadius,
+                          useFilledBackground: true,
+                        ),
+                        if (state.haveMultiple) ...[
+                          14.height,
+                          _buildFieldLabel(context, AppLocalizations.of(context)!.select_number_of_owners),
                           CommonDropDownButton(
-                            items: state.businessTypeList.map((business) {
-                              return DropdownMenuItem<String>(value: business.businessTypeName, child: Text(business.businessTypeName ?? ''));
+                            items: state.ownerList.map((String value) {
+                              return DropdownMenuItem<String>(value: value, child: Text(value));
                             }).toList(),
-                            onChanged: (newBusiness) {
-                              bloc.add(FormDataEvent.selectBusinessTypeEvent(business: newBusiness ?? '', haveMultiple: true));
-                              if (!state.haveMultiple) {
-                                /*    state.guarantee1NameController.text = '';
-                                    state.guarantee1addressController.text = '';
-                                    state.guarantee1idController.text = '';
-                                    state.guarantee1PhoneController.text = '';
-                                    state.guarantee2NameController.text = '';
-                                    state.guarantee2addressController.text = '';
-                                    state.guarantee2idController.text = '';
-                                    state.guarantee2PhoneController.text = '';
-                                    state.owner2NameController.text = '';
-                                    state.owner2israelIdController.text = '';*/
-                              }
+                            onChanged: (v) {
+                              bloc.add(FormDataEvent.selectOwnerNoEvent(owner: v ?? ''));
                             },
-                            value: state.business,
+                            value: state.owner,
+                            color: AppColors.lightBorderColor,
+                            borderRadius: _fieldRadius,
+                            useFilledBackground: true,
                           ),
-                          7.height,
-                          state.haveMultiple ? CustomContainerWidget(name: AppLocalizations.of(context)!.select_number_of_owners) : 0.height,
-                          state.haveMultiple
-                              ? CommonDropDownButton(
-                                  items: state.ownerList.map((String value) {
-                                    return DropdownMenuItem<String>(value: value, child: Text(value));
-                                  }).toList(),
-                                  onChanged: (v) {
-                                    bloc.add(FormDataEvent.selectOwnerNoEvent(owner: v ?? ''));
-                                  },
-                                  value: state.owner,
-                                )
-                              : 0.height,
-                          30.height,
-                          CustomButtonWidget(
-                            buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
-                            bGColor: AppColors.mainColor,
-                            onPressed: () {
-                              if (state.business != AppLocalizations.of(context)!.type_of_business) {
-                                if (_formKey.currentState!.validate()) {
-                                  bloc.add(FormDataEvent.verifyAgentEvent(context: context));
-                                }
-                              } else {
-                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
-                              }
-                            },
-                            fontColors: AppColors.whiteColor,
-                          ),
-                          20.height,
-                        ]),
-                      ),
+                        ],
+                      ],
                     ),
+                  ),
+                  24.height,
+                  CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                    bGColor: AppColors.mainColor,
+                    radius: 14,
+                    onPressed: () {
+                      if (state.business != AppLocalizations.of(context)!.type_of_business) {
+                        if (_formKey.currentState!.validate()) {
+                          bloc.add(FormDataEvent.verifyAgentEvent(context: context));
+                        }
+                      } else {
+                        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
+                      }
+                    },
+                    fontColors: AppColors.whiteColor,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       );
     });
+  }
+
+  Widget _buildFormCard(BuildContext context, {required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: child,
+    );
+  }
+
+  Widget _buildAppBarIcon() {
+    return Container(
+      height: 40,
+      width: 40,
+      decoration: BoxDecoration(
+        color: AppColors.mainColor.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(Icons.assignment_outlined, size: 21, color: AppColors.mainColor),
+    );
+  }
+
+  Widget _buildFieldLabel(BuildContext context, String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('* ', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.redColor)),
+          Expanded(
+            child: Text(
+              label,
+              style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_13,
+                color: AppColors.blackColor.withValues(alpha: 0.55),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required BuildContext context,
+    required TextEditingController controller,
+    required TextInputType keyboardType,
+    required String validator,
+    TextInputAction? textInputAction,
+    int? maxLimits,
+    List<TextInputFormatter>? inputFormat,
+  }) {
+    return CustomFormField(
+      context: context,
+      controller: controller,
+      keyboardType: keyboardType,
+      hint: '',
+      fillColor: AppColors.pageColor,
+      textInputAction: textInputAction,
+      validator: validator,
+      maxLimits: maxLimits,
+      inputFormat: inputFormat,
+      border: _fieldRadius,
+      cursorColor: AppColors.mainColor,
+    );
   }
 }

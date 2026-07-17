@@ -1,16 +1,19 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../bloc/connect_screen/connect_bloc.dart';
-import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/widget/custom_button_widget.dart';
+import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
+import '../../bloc/login/log_in_bloc.dart';
 import '../utils/app_utils.dart';
+import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_img_path.dart';
+import '../widget/custom_form_field_widget.dart';
 
 class ConnectRoute {
   static Widget get route => const ConnectScreen();
@@ -21,79 +24,290 @@ class ConnectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (_) => ConnectBloc(), child: const ConnectScreenWidget());
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => ConnectBloc()),
+        BlocProvider(create: (context) => LogInBloc())
+      ],
+      child: const ConnectScreenWidget(),
+    );
   }
 }
 
-class ConnectScreenWidget extends StatelessWidget {
+/// The app's brand gradient (linear-gradient(90deg, #1D5499 0%, #8BC53F 100%))
+/// used across the hero + primary button so the whole screen reads as one
+/// Tavili-branded surface. Mirrors [AppColors.appMainGradientColor].
+const Gradient _brandGradient = LinearGradient(
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+  colors: [Color(0xff1D5499), Color(0xff8BC53F)],
+);
+
+class ConnectScreenWidget extends StatefulWidget {
   const ConnectScreenWidget({super.key});
 
-  void _onLoginPressed(BuildContext context) {
-    Navigator.pushNamed(context, RouteDefine.loginScreen.name,
-        arguments: {AppStrings.isRegisterString: false});
+  @override
+  State<ConnectScreenWidget> createState() => _ConnectScreenWidgetState();
+}
+
+class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
+  final TextEditingController phoneController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
   }
 
-  void _onGuestLoginPressed(BuildContext context) {
-    context
-        .read<ConnectBloc>()
-        .add(ConnectEvent.logInAsGuest(context: context));
+  void _submitPhone(BuildContext context) {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState?.validate() ?? false) {
+      context.read<LogInBloc>().add(LogInEvent.logInApiDataEvent(
+          contactNumber: phoneController.text, context: context));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget buttonWidget(
-            {required bool enabled,
-            required VoidCallback onPressed,
-            bool? isLoading,
-            required String buttonText}) =>
-        CustomButtonWidget(
-          buttonText: buttonText,
-          fontColors: AppColors.mainColor,
-          borderColor: AppColors.mainColor,
-          isFromConnectScreen: true,
-          isLoading: isLoading ?? false,
-          loadingColor: AppColors.mainColor,
-          enable: enabled,
-          onPressed: enabled ? onPressed : null,
-        );
-
-    return PopScope(
-      canPop: false,
-      child: BlocBuilder<ConnectBloc, ConnectState>(builder: (context, state) {
-        final bool isGuestLoading = state.isLoading;
-        final bool areButtonsEnabled = !isGuestLoading;
-
-        return Scaffold(
-          backgroundColor: AppColors.pageColor,
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 38, right: 38),
-              child: Center(
+    final double screenHeight = getScreenHeight(context);
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Container(
+          width: double.maxFinite,
+          height: double.maxFinite,
+          decoration: const BoxDecoration(gradient: _brandGradient),
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: screenHeight),
+              child: IntrinsicHeight(
                 child: Column(children: [
-                  SizedBox(height: getScreenHeight(context) * 0.15),
-                  SvgPicture.asset(AppImagePath.splashLogo,
-                      height: getScreenHeight(context) * 0.18,
-                      width: getScreenWidth(context) * 0.48),
-                  SizedBox(height: getScreenHeight(context) * 0.01),
-                  buttonWidget(
-                      enabled: areButtonsEnabled,
-                      onPressed: () => _onLoginPressed(context),
-                      buttonText: AppLocalizations.of(context)!.login),
-                  20.height,
-                  if (Platform.isIOS)
-                    buttonWidget(
-                        enabled: areButtonsEnabled,
-                        isLoading: isGuestLoading,
-                        onPressed: () => _onGuestLoginPressed(context),
-                        buttonText:
-                            AppLocalizations.of(context)!.login_as_guest)
+                  _buildHero(context),
+                  Expanded(child: _buildCard(context))
                 ]),
               ),
             ),
           ),
-        );
-      }),
+        ),
+      ),
     );
+  }
+
+  Widget _buildHero(BuildContext context) {
+    final double topPadding = MediaQuery.of(context).padding.top;
+    return Stack(children: [
+      // Subtle decorative circles for depth (like the reference design).
+      Positioned(
+          top: -40,
+          left: -50,
+          child: _decorCircle(160, Colors.white.withOpacity(0.08))),
+      Positioned(
+          top: 70,
+          right: -60,
+          child: _decorCircle(140, Colors.white.withOpacity(0.06))),
+      Padding(
+        padding: EdgeInsets.only(
+            top: topPadding + 34, left: 28, right: 28, bottom: 26),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 26),
+            decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.12),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8)),
+                ]),
+            child: SvgPicture.asset(AppImagePath.splashLogo,
+                height: 110, fit: BoxFit.contain),
+          ),
+          22.height,
+          Text(AppLocalizations.of(context)!.welcome_title,
+              textAlign: TextAlign.center,
+              style: AppStyles.rkBoldTextStyle(
+                  size: 24,
+                  color: AppColors.whiteColor,
+                  fontWeight: FontWeight.w700)),
+          12.height,
+          Text(AppLocalizations.of(context)!.app_slogan,
+              textAlign: TextAlign.center,
+              style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.smallFont,
+                color: AppColors.whiteColor.withOpacity(0.92),
+                fontWeight: FontWeight.w400,
+              ).copyWith(height: 1.5)),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget _buildCard(BuildContext context) {
+    return BlocBuilder<LogInBloc, LogInState>(builder: (context, loginState) {
+      return Container(
+        width: double.maxFinite,
+        padding: EdgeInsets.fromLTRB(
+            28, 20, 28, 30 + MediaQuery.of(context).padding.bottom),
+        decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(34), topRight: Radius.circular(34)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.10),
+                  blurRadius: 24,
+                  offset: const Offset(0, -6)),
+            ]),
+        child: Form(
+          key: _formKey,
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 46,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: AppColors.borderColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                22.height,
+                Text(AppLocalizations.of(context)!.login,
+                    style: AppStyles.rkBoldTextStyle(
+                        size: 22,
+                        color: AppColors.blackColor,
+                        fontWeight: FontWeight.w700)),
+                8.height,
+                Text(AppLocalizations.of(context)!.login_subtitle,
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_14,
+                        color: AppColors.greyColor,
+                        fontWeight: FontWeight.w400)),
+                24.height,
+                Text(
+                  AppLocalizations.of(context)!.enter_your_phone,
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_14,
+                    color: AppColors.blackColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                10.height,
+                CustomFormField(
+                  inputFormat: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10)
+                  ],
+                  context: context,
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                  hint: AppStrings.hintNumberString,
+                  fillColor: AppColors.whiteColor,
+                  textInputAction: TextInputAction.done,
+                  validator: AppStrings.mobileValString,
+                  border: 12,
+                  contentPaddingTop: 16,
+                  contentPaddingBottom: 16,
+                  onFieldSubmitted: (_) => _submitPhone(context),
+                  postIconBtn: Padding(
+                      padding: const EdgeInsets.only(left: 12, right: 12),
+                      child: Icon(Icons.phone_outlined,
+                          color: AppColors.mainColor, size: 22)),
+                ),
+                24.height,
+                _buildPrimaryButton(context, isLoading: loginState.isLoading),
+                22.height,
+                _buildOrDivider(context),
+                18.height,
+                CustomButtonWidget(
+                    buttonText: AppLocalizations.of(context)!.login_as_guest,
+                    fontColors: AppColors.mainColor,
+                    borderColor: AppColors.mainColor,
+                    isFromConnectScreen: true,
+                    isLoading: context.watch<ConnectBloc>().state.isLoading,
+                    loadingColor: AppColors.mainColor,
+                    fontSize: 16,
+                    enable: !loginState.isLoading,
+                    onPressed: context.watch<ConnectBloc>().state.isLoading
+                        ? null
+                        : () {
+                            context.read<ConnectBloc>().add(
+                                ConnectEvent.logInAsGuest(context: context));
+                          }),
+              ]),
+        ),
+      );
+    });
+  }
+
+  Widget _buildPrimaryButton(BuildContext context, {required bool isLoading}) {
+    return Container(
+      height: AppConstants.buttonHeight,
+      width: double.maxFinite,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+          gradient: _brandGradient,
+          borderRadius: BorderRadius.circular(AppConstants.radius_10),
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.blueColor.withOpacity(0.30),
+                blurRadius: 14,
+                offset: const Offset(0, 6)),
+          ]),
+      child: MaterialButton(
+        onPressed: isLoading ? null : () => _submitPhone(context),
+        padding: EdgeInsets.zero,
+        child: isLoading
+            ? const Center(
+                child: SizedBox(
+                    height: 22,
+                    width: 22,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2, color: Colors.white)))
+            : Stack(alignment: Alignment.center, children: [
+                Center(
+                  child: Text(AppLocalizations.of(context)!.next,
+                      style: AppStyles.rkBoldTextStyle(
+                          size: 17,
+                          color: AppColors.whiteColor,
+                          fontWeight: FontWeight.w600)),
+                ),
+                const Positioned(
+                  left: 18,
+                  child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Icon(Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white, size: 15)),
+                ),
+              ]),
+      ),
+    );
+  }
+
+  Widget _buildOrDivider(BuildContext context) {
+    return Row(children: [
+      Expanded(child: Divider(color: AppColors.borderColor, thickness: 1)),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Text(AppLocalizations.of(context)!.or,
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_14, color: AppColors.lightGreyColor)),
+      ),
+      Expanded(child: Divider(color: AppColors.borderColor, thickness: 1)),
+    ]);
+  }
+
+  Widget _decorCircle(double size, Color color) {
+    return Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle));
   }
 }

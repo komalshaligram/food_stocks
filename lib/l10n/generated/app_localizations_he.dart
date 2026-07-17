@@ -8,6 +8,7 @@ import 'app_localizations.dart';
 class AppLocalizationsHe extends AppLocalizations {
   AppLocalizationsHe([String locale = 'he']) : super(locale);
 
+  @override
   String get all => 'הכל';
 
   @override
@@ -21,6 +22,24 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get login => 'התחברות';
+
+  @override
+  String get welcome_title => 'ברוכים הבאים ל‑TAVILI';
+
+  @override
+  String get app_slogan => 'אפליקציה חדשנית בעולם הקמעונאות שמתווכת בין ספקים ויצרנים ישירות לבעלי חנויות מזון ומציעה פתרונות פיננסיים ייחודיים וחדשניים';
+
+  @override
+  String get splash_tagline => 'מחברים ספקים לחנויות מזון';
+
+  @override
+  String get splash_brand => 'Tavili';
+
+  @override
+  String get login_subtitle => 'הזינו את מספר הטלפון שלכם ונשלח לכם קוד אימות';
+
+  @override
+  String get or => 'או';
 
   @override
   String get business_details => 'פרופיל אישי';
@@ -245,14 +264,34 @@ class AppLocalizationsHe extends AppLocalizations {
   String get phone => 'טלפון';
 
   @override
-  String get enter_the_code_sent_to_phone_num =>
-      'הזן את הקוד שנשלח למספר הטלפון שהזנת';
+  String get enter_the_code_sent_to_phone_num => 'הזן את הקוד שנשלח למספר הטלפון שהזנת';
 
   @override
   String get not_receive_verification_code => 'לא קיבלת קוד אימות ?';
 
   @override
   String get send_again => 'שלח שוב';
+
+  @override
+  String get verify_phone_title => 'אימות מספר טלפון';
+
+  @override
+  String get otp_sent_subtitle => 'שלחנו קוד בן 4 ספרות ב‑SMS למספר';
+
+  @override
+  String get enter_verification_code => 'הזינו את קוד האימות';
+
+  @override
+  String get verify_and_login => 'אימות והתחברות';
+
+  @override
+  String get resend_code_in => 'שליחת קוד מחדש בעוד';
+
+  @override
+  String get resend_code => 'שליחת קוד מחדש';
+
+  @override
+  String get seconds_short => 'שנ׳';
 
   @override
   String get log_out => 'התנתק';
@@ -534,8 +573,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get please_enter_valid_phone_number => 'אנא הזן מספר טלפון תקין';
 
   @override
-  String get phone_number_must_be_10digit =>
-      'מספר טלפון צריך להיות בן 10 ספרות';
+  String get phone_number_must_be_10digit => 'מספר טלפון צריך להיות בן 10 ספרות';
 
   @override
   String get please_enter_your_business_name => 'אנא הזן את שם העסק';
@@ -598,20 +636,16 @@ class AppLocalizationsHe extends AppLocalizations {
   String get image_not_set => 'לא הוזנה תמונה';
 
   @override
-  String get file_size_must_be_less_then =>
-      'KB 1024 משקל הקובץ צריך להיות קטן מ';
+  String get file_size_must_be_less_then => 'KB 1024 משקל הקובץ צריך להיות קטן מ';
 
   @override
-  String get please_select_opening_time_after_previous_closing_time =>
-      'אנא בחר שעת פתיחה שונה מהקודמת';
+  String get please_select_opening_time_after_previous_closing_time => 'אנא בחר שעת פתיחה שונה מהקודמת';
 
   @override
-  String get please_select_opening_time_before_closing_time =>
-      'אנא בחר שעת פתיחה מוקדמת יותר משעת סגירה';
+  String get please_select_opening_time_before_closing_time => 'אנא בחר שעת פתיחה מוקדמת יותר משעת סגירה';
 
   @override
-  String get please_select_closing_time_after_opening_time =>
-      'אנא בחר שעת סגירה מאוחרת יותר משעת פתיחה';
+  String get please_select_closing_time_after_opening_time => 'אנא בחר שעת סגירה מאוחרת יותר משעת פתיחה';
 
   @override
   String get please_select_opening_time => 'אנא בחר שעת פתיחה';
@@ -626,8 +660,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get please_enter_otp => 'אנא הזן את הקוד';
 
   @override
-  String get please_select_time_grater_then_0 =>
-      'אנא בחר שעה גדולה יותר מ 00:00';
+  String get please_select_time_grater_then_0 => 'אנא בחר שעה גדולה יותר מ 00:00';
 
   @override
   String get please_fill_up_closing_time => 'אנא הזן שעת סגירה';
@@ -660,15 +693,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get messages_not_found => 'לא נמצאו הודעות';
 
   @override
-  String get currently_this_Supplier_has_no_products =>
-      'כרגע אין מוצרים עבור ספק זה';
+  String get currently_this_Supplier_has_no_products => 'כרגע אין מוצרים עבור ספק זה';
 
   @override
   String get currently_products_are_not_on_sale => 'כרגע אין מוצרים במבצע';
 
   @override
-  String get recommendation_products_are_not_available =>
-      'מוצרים מומלצים לא קיימים';
+  String get recommendation_products_are_not_available => 'מוצרים מומלצים לא קיימים';
 
   @override
   String get companies_not_available => 'חברות לא קיימות';
@@ -713,8 +744,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get you_want_clear_cart => 'האם אתה בטוח שאתה רוצה לאפס את סל הקניות?';
 
   @override
-  String get you_want_delete_product =>
-      'האם אתה בטוח שאתה רוצה למחוק את המוצר?';
+  String get you_want_delete_product => 'האם אתה בטוח שאתה רוצה למחוק את המוצר?';
 
   @override
   String get select_issue => 'אנא בחר סוג בעיה';
@@ -732,8 +762,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get driver_signature_missing => 'על הנהג לחתום פה';
 
   @override
-  String get surface_validation =>
-      'הזנת מספר משטחים גדול מידי אנא נסה מספר נמוך יותר';
+  String get surface_validation => 'הזנת מספר משטחים גדול מידי אנא נסה מספר נמוך יותר';
 
   @override
   String get connection_timed_out => 'בעיית  חיבור לשרת';
@@ -811,8 +840,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get invalid_credentials => 'פרטי הכניסה אינם תקינים';
 
   @override
-  String get verification_email_sent =>
-      'נשלח אימייל לאימות לכתובת האימייל הרשומה שלך. אנא בדוק את תיקיית הדואר הנכנס שלך';
+  String get verification_email_sent => 'נשלח אימייל לאימות לכתובת האימייל הרשומה שלך. אנא בדוק את תיקיית הדואר הנכנס שלך';
 
   @override
   String get invalid_code => 'קוד אימות לא תקין. אנא בדוק את הקוד ונסה שוב';
@@ -827,12 +855,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get verification_success => 'אימות בוצע בהצלחה';
 
   @override
-  String get invalid_verification_code =>
-      'קוד אימות לא תקין. אנא בדוק את הקוד ונסה שוב';
+  String get invalid_verification_code => 'קוד אימות לא תקין. אנא בדוק את הקוד ונסה שוב';
 
   @override
-  String get expired_verification_code =>
-      'קוד אימות פג תוקף. אנא בקש קוד אימות חדש';
+  String get expired_verification_code => 'קוד אימות פג תוקף. אנא בקש קוד אימות חדש';
 
   @override
   String get unverified_verification_code => 'קוד אימות לא אומת. אנא אמת תחילה';
@@ -841,8 +867,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get user_not_found => 'משתמש לא נמצא';
 
   @override
-  String get new_password_same_as_old =>
-      'סיסמה חדשה חייבת להיות שונה מהסיסמה הקיימת';
+  String get new_password_same_as_old => 'סיסמה חדשה חייבת להיות שונה מהסיסמה הקיימת';
 
   @override
   String get reset_successful => 'איפוס סיסמה בוצע בהצלחה';
@@ -851,8 +876,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get set_successful => 'הגדרת סיסמה בוצעה בהצלחה';
 
   @override
-  String get current_password_wrong =>
-      'הסיסמה הנוכחית שלך אינה נכונה אנא הכנס את הסיסמה הנכונה';
+  String get current_password_wrong => 'הסיסמה הנוכחית שלך אינה נכונה אנא הכנס את הסיסמה הנכונה';
 
   @override
   String get change_successful => 'שינוי סיסמה בוצע בהצלחה';
@@ -927,8 +951,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get product_removal_sale_failure => ' הסרת המוצר מהמכירה נכשלה';
 
   @override
-  String get insufficient_data_for_product_removal_from_sale =>
-      'מידע לא מספיק להסרת מוצר מהמכירה';
+  String get insufficient_data_for_product_removal_from_sale => 'מידע לא מספיק להסרת מוצר מהמכירה';
 
   @override
   String get product_not_found => 'המוצר לא נמצא';
@@ -1033,8 +1056,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get product_updated_in_cart => 'המוצר עודכן בהצלחה לעגלת הקניות שלך';
 
   @override
-  String get order_issue_created_notification_title =>
-      'בעיות דווחו במספר הזמנת הספק #';
+  String get order_issue_created_notification_title => 'בעיות דווחו במספר הזמנת הספק #';
 
   @override
   String get file_not_found => 'קובץ לא נמצא';
@@ -1064,12 +1086,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get admin_type_already_exist => 'סוג מנהל קיים כבר';
 
   @override
-  String get already_linked_with_user =>
-      'לא ניתן למחוק את סוג המנהל הזה כי הוא שייך כבר למנהל';
+  String get already_linked_with_user => 'לא ניתן למחוק את סוג המנהל הזה כי הוא שייך כבר למנהל';
 
   @override
-  String get qty_must_above_zero =>
-      'לא ניתן להוסיף את המוצר, כמות צריכה להיות יותר מ 0';
+  String get qty_must_above_zero => 'לא ניתן להוסיף את המוצר, כמות צריכה להיות יותר מ 0';
 
   @override
   String get not_enough_qty => 'אין מספיק מלאי עבור המוצר הזה';
@@ -1120,8 +1140,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get deduction_is_negative => 'החזרים יוצגו במינוס בארנק';
 
   @override
-  String get missing_quantity_not_more_than_original =>
-      'כמות לא יכולה להיות יותר מהכמות המקורית';
+  String get missing_quantity_not_more_than_original => 'כמות לא יכולה להיות יותר מהכמות המקורית';
 
   @override
   String get check_all => 'בחר הכל';
@@ -1133,8 +1152,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get otp_resend_success => 'הקוד נשלח שוב בהצלחה';
 
   @override
-  String get select_valid_document_format =>
-      'אנא בחר רק קבצים מסוג: jpg, jpeg, png, heic, pdf';
+  String get select_valid_document_format => 'אנא בחר רק קבצים מסוג: jpg, jpeg, png, heic, pdf';
 
   @override
   String get select_next_day_shift => 'אנא בחר ביום הבא';
@@ -1269,8 +1287,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get issue_removed => 'הבעיה הוסרה בהצלחה';
 
   @override
-  String get wallet_information_sent_to_your_email =>
-      'קובץ תנועות האנרק שלח נשלח למייל שלך';
+  String get wallet_information_sent_to_your_email => 'קובץ תנועות האנרק שלח נשלח למייל שלך';
 
   @override
   String get form_date => 'מתאריך';
@@ -1285,15 +1302,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get delete_account => 'מחיקת חשבון';
 
   @override
-  String get delete_pop_up_msg =>
-      'קיבלנו את בקשת מחיקת החשבון שלך, אנו נטפל בזה בימים הקרובים.';
+  String get delete_pop_up_msg => 'קיבלנו את בקשת מחיקת החשבון שלך, אנו נטפל בזה בימים הקרובים.';
 
   @override
   String get login_as_guest => 'כניסה כאורח';
 
   @override
-  String get new_version_app_update =>
-      'קיימת גירסה חדשה עבור האפליקציה אנא עדכן את האפליקציה';
+  String get new_version_app_update => 'קיימת גירסה חדשה עבור האפליקציה אנא עדכן את האפליקציה';
 
   @override
   String get update => 'עדכן';
@@ -1308,8 +1323,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get duplicate_order => 'שכפל הזמנה';
 
   @override
-  String get you_want_to_duplicate_this_order =>
-      'שים לב, מוצרים שלא קיימים יותר או שחסרים במלאי לא יוספו להזמנה החדשה. האם אתה בטוח שברצונך לשכפל את ההזמנה ?';
+  String get you_want_to_duplicate_this_order => 'שים לב, מוצרים שלא קיימים יותר או שחסרים במלאי לא יוספו להזמנה החדשה. האם אתה בטוח שברצונך לשכפל את ההזמנה ?';
 
   @override
   String get wallet_refund => 'זיכוי ארנק';
@@ -1375,6 +1389,24 @@ class AppLocalizationsHe extends AppLocalizations {
   String get owner_1_israel_id => 'ת.ז. בעלים 1';
 
   @override
+  String get owner_details => 'נתוני בעלים';
+
+  @override
+  String get guarantor_details => 'נתוני הערב';
+
+  @override
+  String get owner_label => 'בעלים';
+
+  @override
+  String get guarantor_label => 'הערב';
+
+  @override
+  String get address_label => 'כתובת';
+
+  @override
+  String get phone_label => 'טלפון';
+
+  @override
   String get owner2_full_name => 'שם בעלים 2';
 
   @override
@@ -1406,6 +1438,9 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get bank_info => 'פרטי חשבון בנק';
+
+  @override
+  String get bank_info_note => 'פרטי החשבון משמשים לגבייה בלבד, בתנאי שוטף + 45. לא נחייב ללא אישורך.';
 
   @override
   String get name_of_bank => 'שם בנק';
@@ -1471,6 +1506,24 @@ class AppLocalizationsHe extends AppLocalizations {
   String get guarantee2_sign => 'חתימה ערב 2';
 
   @override
+  String get signatures_section => 'חתימות';
+
+  @override
+  String get read_full_agreement => 'קריאת ההסכם המלא';
+
+  @override
+  String get tap_to_sign => 'הקש לחתימה';
+
+  @override
+  String get owner_sign_label => 'חתימת בעלים';
+
+  @override
+  String get guarantor_sign_label => 'חתימת הערב';
+
+  @override
+  String get agreement_signed => 'נחתם';
+
+  @override
   String get upload_document => 'אנא העלה את המסמך';
 
   @override
@@ -1522,8 +1575,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get approve_previous_order => 'עליך לאשר הזמנה קודמת';
 
   @override
-  String get order_sign_dialog =>
-      'לא ניתן לשדר הזמנה בגלל שיש הזמנות שקיבלת ולא חתמת עליהם\nאנא עבור על רשימת ההזמנות שלך ואשר שקיבלת אותם\nלאחר שתאשר תוכל לשדר את ההזמנה\nתודה !';
+  String get order_sign_dialog => 'לא ניתן לשדר הזמנה בגלל שיש הזמנות שקיבלת ולא חתמת עליהם\nאנא עבור על רשימת ההזמנות שלך ואשר שקיבלת אותם\nלאחר שתאשר תוכל לשדר את ההזמנה\nתודה !';
 
   @override
   String get show_order => 'הצג הזמנות';
@@ -1616,8 +1668,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get not_sufficient_permission => 'אין לך הרשאה';
 
   @override
-  String get phone_number_of_other_sub_user =>
-      'מספר הטלפון כבר משוייך למשתמש אחר';
+  String get phone_number_of_other_sub_user => 'מספר הטלפון כבר משוייך למשתמש אחר';
 
   @override
   String get delete_sub_user_account => 'מחיקת משתמש';
@@ -1632,8 +1683,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get maximum_qty => 'מקסימום מארזים להזמנה עבור המבצע';
 
   @override
-  String get not_add_more_than_max_qty =>
-      'לא ניתן להוסיף יותר מהמקסימום עבור המבצע הזה';
+  String get not_add_more_than_max_qty => 'לא ניתן להוסיף יותר מהמקסימום עבור המבצע הזה';
 
   @override
   String get apply => 'הצג';
@@ -1660,11 +1710,22 @@ class AppLocalizationsHe extends AppLocalizations {
   String get way_of_payment => 'אופן התשלום';
 
   @override
-  String get collection_from_bank_account =>
-      'גבייה מחשבון בנק לפי תנאי התשלום שנקבעו';
+  String get collection_from_bank_account => 'גבייה מחשבון בנק לפי תנאי התשלום שנקבעו';
 
   @override
   String get credit_card => 'כרטיס אשראי';
+
+  @override
+  String get payment_bank_title => 'אובליגו וארנק לתשלום';
+
+  @override
+  String get payment_bank_subtitle => 'פתח מסגרת אשראי וארנק דיגיטלי — שלם לכל הספקים במקום אחד, בתשלומים נוחים';
+
+  @override
+  String get payment_card_subtitle => 'הזן פרטי כרטיס — יישמרו לתשלומים הבאים';
+
+  @override
+  String get payment_secure_note => 'התשלום מאובטח ומוצפן. פרטי הכרטיס נשמרים לתשלומים הבאים.';
 
   @override
   String get credit_card_details => 'פרטי כרטיס אשראי';
@@ -1676,8 +1737,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get validity => 'תוקף';
 
   @override
-  String get some_products_out_of_stock_Do_you_want_submit_order =>
-      'נמצאו מספר מוצרים שאינם במלאי. האם אתה רוצה לשלוח את ההזמנה ללא המוצרים שאינם במלאי ?';
+  String get some_products_out_of_stock_Do_you_want_submit_order => 'נמצאו מספר מוצרים שאינם במלאי. האם אתה רוצה לשלוח את ההזמנה ללא המוצרים שאינם במלאי ?';
 
   @override
   String get enter_credit_card_number => 'אנא הזן מספר כרטיס';
@@ -1689,8 +1749,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get manage_credit_card => 'ניהול כרטיס אשראי';
 
   @override
-  String get israel_id_or_business_id_number_error =>
-      'נתגלתה שגיאה במספר ת.ז. או במספק עוסק מורשה';
+  String get israel_id_or_business_id_number_error => 'נתגלתה שגיאה במספר ת.ז. או במספק עוסק מורשה';
 
   @override
   String get rivchitclienterror => 'rivchitclienterror';
@@ -1711,15 +1770,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get pay_with_wallet => 'תשלום מהארנק';
 
   @override
-  String get israel_id_exist =>
-      'מספר הת.ז. או מספר העוסק מורשה כבר קיים במערכת';
+  String get israel_id_exist => 'מספר הת.ז. או מספר העוסק מורשה כבר קיים במערכת';
 
   @override
   String get add_credit_card => 'הוספת כרטיס אשראי';
 
   @override
-  String get under_maintenance =>
-      'האפליקציה כרגע בתחזוקה, אנא נסה שוב מאוחר יותר';
+  String get under_maintenance => 'האפליקציה כרגע בתחזוקה, אנא נסה שוב מאוחר יותר';
 
   @override
   String get retry => 'נסה שוב';
@@ -1728,27 +1785,22 @@ class AppLocalizationsHe extends AppLocalizations {
   String get invalid_agent_code => 'קוד הסוכן אינו תקין';
 
   @override
-  String get agent_block =>
-      'עברת את מקסימום הנסיונות, אנא נסה שוב בעוד 30 דקות';
+  String get agent_block => 'עברת את מקסימום הנסיונות, אנא נסה שוב בעוד 30 דקות';
 
   @override
   String get warning_agent_code => 'נותרו לך עוד 2 נסיונות להזין קוד סוכן תקין';
 
   @override
-  String get please_enter_valid_israel_id_owner1 =>
-      'הזן ת.ז. תקינה עבור בעלים 1';
+  String get please_enter_valid_israel_id_owner1 => 'הזן ת.ז. תקינה עבור בעלים 1';
 
   @override
-  String get please_enter_valid_israel_id_owner2 =>
-      'הזן ת.ז. תקינה עבור בעלים 2';
+  String get please_enter_valid_israel_id_owner2 => 'הזן ת.ז. תקינה עבור בעלים 2';
 
   @override
-  String get please_enter_valid_israel_id_guarantee1 =>
-      'הזן ת.ז. תקינה עבור ערב 1';
+  String get please_enter_valid_israel_id_guarantee1 => 'הזן ת.ז. תקינה עבור ערב 1';
 
   @override
-  String get please_enter_valid_israel_id_guarantee2 =>
-      'הזן ת.ז. תקינה עבור ערב 2';
+  String get please_enter_valid_israel_id_guarantee2 => 'הזן ת.ז. תקינה עבור ערב 2';
 
   @override
   String get please_enter_valid_guarantee_name1 => 'הזן שם תקין עבור ערב 1';
@@ -1757,8 +1809,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get please_enter_valid_guarantee_name2 => 'הזן שם תקין עבור ערב 2';
 
   @override
-  String get approve_for_promotional_info =>
-      'אני מאשר קבלת חומר שיווקי על מבצעים במייל, טלפון, SMS, הודעת PUSH, וכדומה מאפליקציית TAVILI ו/או קבוצת חברות סטוק טק.';
+  String get approve_for_promotional_info => 'אני מאשר קבלת חומר שיווקי על מבצעים במייל, טלפון, SMS, הודעת PUSH, וכדומה מאפליקציית TAVILI ו/או קבוצת חברות סטוק טק.';
 
   @override
   String get delete_credit_card => 'מחיקת כרטיס';
@@ -1827,12 +1878,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get sale_other_text1 => 'מוצרים לא תקבל את מחיר המבצע';
 
   @override
-  String get mixed_sale_other_text =>
-      'תוכל להזמין גם משאר המוצרים המשתתפים במבצע';
+  String get mixed_sale_other_text => 'תוכל להזמין גם משאר המוצרים המשתתפים במבצע';
 
   @override
-  String get mix_minimum_box_title =>
-      'מספר הקופסאות המינימלי למכירה מעורבת זו הוא: ';
+  String get mix_minimum_box_title => 'מספר הקופסאות המינימלי למכירה מעורבת זו הוא: ';
 
   @override
   String get confirm_minimum_box => ', אתה בטוח שאתה לא רוצה את מחיר המבצע ?';
@@ -1970,16 +2019,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get add_driver_delivery_document_img => 'צילום של תעודת משלוח שקיבלת';
 
   @override
-  String get add_driver_delivery_document_img_note =>
-      'יש לצלם את תעודת המשלוח כהוכחה לקבלת הסחורה';
+  String get add_driver_delivery_document_img_note => 'יש לצלם את תעודת המשלוח כהוכחה לקבלת הסחורה';
 
   @override
-  String get driver_return_delivery_document_img =>
-      'צילום של תעודת חזרה שקיבלת ';
+  String get driver_return_delivery_document_img => 'צילום של תעודת חזרה שקיבלת ';
 
   @override
-  String get driver_return_delivery_document_img_note =>
-      'יש לצלם את תעודת החזרה כהוכחה להחזרת הסחורה';
+  String get driver_return_delivery_document_img_note => 'יש לצלם את תעודת החזרה כהוכחה להחזרת הסחורה';
 
   @override
   String get add_notes => 'הוסף הערות';
@@ -2054,8 +2100,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get you_have => 'יש לך ';
 
   @override
-  String get countdown =>
-      'שעות ליצירת הזמנות נוספות ללא הגבלה מינימלית לספק Tavili.';
+  String get countdown => 'שעות ליצירת הזמנות נוספות ללא הגבלה מינימלית לספק Tavili.';
 
   @override
   String get call_the_agent => 'תתקשר לסוכן';
@@ -2070,8 +2115,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get send_any_way => 'שלח בכל זאת';
 
   @override
-  String get waiting_for_new_order_success_msg =>
-      'ההחזרה נרשמה בהצלחה. לנוחיותכם, ההחזרה תישלח ביום ביצוע ההזמנה הבאה שלכם. עד אז, תוכלו להוסיף החזרות נוספות.';
+  String get waiting_for_new_order_success_msg => 'ההחזרה נרשמה בהצלחה. לנוחיותכם, ההחזרה תישלח ביום ביצוע ההזמנה הבאה שלכם. עד אז, תוכלו להוסיף החזרות נוספות.';
 
   @override
   String get issue_text => 'הסתייגות:';
@@ -2080,12 +2124,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get return_number_text => 'מספר החזרה:';
 
   @override
-  String get return_delivery_document_image =>
-      'יש להוסיף תמונה של תעודת המשלוח חתומה כולל ההערות';
+  String get return_delivery_document_image => 'יש להוסיף תמונה של תעודת המשלוח חתומה כולל ההערות';
 
   @override
-  String get driver_return_document_image =>
-      'יש להוסיף תמונה של תעודת החזרה חתומה';
+  String get driver_return_document_image => 'יש להוסיף תמונה של תעודת החזרה חתומה';
 
   @override
   String get basket_loader_text => 'ההזמנה שלך נשלחת עכשיו';
@@ -2151,8 +2193,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get select_date => 'בחר תאריך';
 
   @override
-  String get maximum_three_month_date_range_required =>
-      'טווח תאריכים מקסימלי של 3 חודשים';
+  String get maximum_three_month_date_range_required => 'טווח תאריכים מקסימלי של 3 חודשים';
 
   @override
   String get date_range => 'טווח תאריכים';
@@ -2176,12 +2217,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get clients_no_minimum => 'אין מינימום';
 
   @override
-  String get confirmation_no_minimum =>
-      'האם אתה בטוח שברצונך לעדכן שלא יהיה מינימום הזמנה בשעה הקרובה?';
+  String get confirmation_no_minimum => 'האם אתה בטוח שברצונך לעדכן שלא יהיה מינימום הזמנה בשעה הקרובה?';
 
   @override
-  String get confirmation_minimum =>
-      'האם אתה בטוח שאתה רוצה לעדכן שכן יהיה מינימום הזמנה?';
+  String get confirmation_minimum => 'האם אתה בטוח שאתה רוצה לעדכן שכן יהיה מינימום הזמנה?';
 
   @override
   String get switch_client_message => 'אתה מחובר עכשיו כלקוח: ';
@@ -2199,12 +2238,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get making_pay_with_credit_card => 'ביצוע תשלום בכרטיס אשראי';
 
   @override
-  String get credit_card_payment_error =>
-      'אירעה שגיאה בעת עיבוד התשלום בכרטיס האשראי עבור החשבונית';
+  String get credit_card_payment_error => 'אירעה שגיאה בעת עיבוד התשלום בכרטיס האשראי עבור החשבונית';
 
   @override
-  String get credit_card_payment_success =>
-      'הצלחה! החשבונית שלך שולמה באמצעות כרטיס האשראי שלך.';
+  String get credit_card_payment_success => 'הצלחה! החשבונית שלך שולמה באמצעות כרטיס האשראי שלך.';
 
   @override
   String get pdf_loading => 'קובץ ה-PDF עדיין נטען. אנא המתן.';
@@ -2238,8 +2275,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get verify_data_correct => 'וודא שהנתונים נכונים';
 
   @override
-  String get verify_form_subtitle =>
-      'אנא בדוק ועדכן את הפרטים לפני המשך ההזמנה';
+  String get verify_form_subtitle => 'אנא בדוק ועדכן את הפרטים לפני המשך ההזמנה';
 
   @override
   String get business_details_section => 'פרטי העסק';
@@ -2269,8 +2305,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get delivery_location_photo => 'תמונה של מיקום להורדת סחורה';
 
   @override
-  String get customer_service_sheet_title =>
-      'יצירת קשר עם שירות הלקוחות של TAVILI';
+  String get customer_service_sheet_title => 'יצירת קשר עם שירות הלקוחות של TAVILI';
 
   @override
   String get customer_service_write_to_us => 'כתוב לנו';
@@ -2282,12 +2317,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get customer_service_not_configured => 'לא הוגדר במערכת';
 
   @override
-  String get customer_service_whatsapp_unavailable =>
-      'מספר וואטסאפ לשירות לקוחות לא הוגדר';
+  String get customer_service_whatsapp_unavailable => 'מספר וואטסאפ לשירות לקוחות לא הוגדר';
 
   @override
-  String get customer_service_phone_unavailable =>
-      'מספר טלפון לשירות לקוחות לא הוגדר';
+  String get customer_service_phone_unavailable => 'מספר טלפון לשירות לקוחות לא הוגדר';
 
   @override
   String get customer_service => 'שירות לקוחות';
@@ -2296,15 +2329,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get whatsapp_optin_title => 'נשמח להישאר בקשר בוואטסאפ';
 
   @override
-  String get whatsapp_optin_body =>
-      'אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.';
+  String get whatsapp_optin_body => 'אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.';
 
   @override
   String get whatsapp_optin_approve => 'אני מאשר/ת';
 
   @override
   String get whatsapp_optin_not_now => 'לא עכשיו';
-
 
   @override
   String get sort_products => 'מיון מוצרים';
@@ -2324,4 +2355,9 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get show_only_sales => 'הצג רק מבצעים';
 
+  @override
+  String get please_set_waze_location => 'אנא הוסף את מיקום ה Waze';
+
+  @override
+  String get please_upload_delivery_location_photo => 'אנא הוסף תמונה של מיקום הורדת סחורה';
 }

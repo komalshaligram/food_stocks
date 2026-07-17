@@ -1,6 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import '../../models/comax_document_status.dart';
+
 /// שגיאת ולידציה בודדת שחזרה מה-API (422).
 class ValidationError {
   const ValidationError({
@@ -231,6 +233,69 @@ class InvoiceApiClient {
       comaxDocNumber: data['comaxDocNumber']?.toString(),
       receiveError: data['receiveError']?.toString(),
     );
+  }
+
+  /// סטטוס של **כמה** מסמכים בבת אחת (עד 100), כולל `terminal` ו-`diagnosis`.
+  ///
+  /// זו לא [getDocumentStatus] הישנה: זו מחזירה את הסיבה המדויקת לכישלון, ולכן
+  /// היא זו שמאפשרת להציג "Comax ייבא 21 מתוך 22" במקום "נכשל".
+  Future<List<ComaxDocumentStatus>> getDocumentsStatus(
+    List<String> documentIds, {
+    String? customerCode,
+  }) async {
+    final ids = documentIds.map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    if (ids.isEmpty) return const [];
+
+    final callable = _functions.httpsCallable(
+      'getDocumentsStatus',
+      options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
+    );
+    final result = await callable.call(<String, dynamic>{
+      'documentIds': ids,
+      if (customerCode != null && customerCode.trim().isNotEmpty)
+        'customerCode': customerCode.trim(),
+    });
+    final root = _asMap(result.data);
+    final data = _asMap(root['data']);
+    final docs = (data['documents'] as List?) ?? const [];
+    return docs
+        .whereType<Object?>()
+        .map((e) => ComaxDocumentStatus.fromJson(Map<String, dynamic>.from(e as Map)))
+        .toList();
+  }
+
+  /// האם החשבונית כבר נקלטה ל-Comax (כולל **הקלדה ידנית** של הלקוח)?
+  ///
+  /// נקרא מיד עם הסריקה, לפני שהמשתמש ממלא משהו. הבדיקה מצליבה את רשימת
+  /// החשבוניות מ-Comax עם המסמכים שעברו דרכנו — זה מה שתופס את המקרה שקרה
+  /// בפועל: אותה חשבונית נקלטה פעמיים כי שדה האסמכתא ב-Comax מוגבל ל-9 ספרות.
+  Future<InvoiceExistsResult?> checkInvoiceExists({
+    required String invoiceNumber,
+    String documentType = 'purchase_invoice',
+    String? supplierCode,
+    String? supplierTaxId,
+    String? customerCode,
+  }) async {
+    final callable = _functions.httpsCallable(
+      'checkInvoiceExists',
+      options: HttpsCallableOptions(timeout: const Duration(seconds: 30)),
+    );
+    final result = await callable.call(<String, dynamic>{
+      // הממשק האחיד /documents/exists בודק לפי סוג המסמך. שולחים גם invoiceNumber
+      // (תאימות) וגם documentNumber, ו-documentType קובע מול איזו טבלה בודקים.
+      'documentNumber': invoiceNumber.trim(),
+      'invoiceNumber': invoiceNumber.trim(),
+      'documentType': documentType.trim(),
+      if (supplierCode != null && supplierCode.trim().isNotEmpty)
+        'supplierCode': supplierCode.trim(),
+      if (supplierTaxId != null && supplierTaxId.trim().isNotEmpty)
+        'supplierTaxId': supplierTaxId.trim(),
+      if (customerCode != null && customerCode.trim().isNotEmpty)
+        'customerCode': customerCode.trim(),
+    });
+    final root = _asMap(result.data);
+    if ((root['httpStatus'] as num?)?.toInt() != 200) return null;
+    return InvoiceExistsResult.fromJson(_asMap(root['data']));
   }
 
   String _codeForStatus(int status) {

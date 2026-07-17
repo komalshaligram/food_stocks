@@ -62,8 +62,7 @@ import 'app_localizations_he.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,8 +82,7 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -641,7 +638,7 @@ abstract class AppLocalizations {
   /// No description provided for @statusCompleted.
   ///
   /// In he, this message translates to:
-  /// **'בוצע'**
+  /// **'נשמר, טרם נשלח לקופה'**
   String get statusCompleted;
 
   /// No description provided for @statusDeleted.
@@ -2023,10 +2020,123 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'לא ניתן לפתוח את הסורק. נסה שוב.'**
   String get scannerUnknownFailure;
+
+  /// No description provided for @suggestedMatches.
+  ///
+  /// In he, this message translates to:
+  /// **'התאמות מוצעות'**
+  String get suggestedMatches;
+
+  /// No description provided for @resolvingBarcodes.
+  ///
+  /// In he, this message translates to:
+  /// **'מזהה ברקודים מהקטלוג…'**
+  String get resolvingBarcodes;
+
+  /// No description provided for @autoFilledBarcodesTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'שורות שהושלמו אוטומטית'**
+  String get autoFilledBarcodesTitle;
+
+  /// No description provided for @autoFilledBarcodesSubtitle.
+  ///
+  /// In he, this message translates to:
+  /// **'הברקוד שוחזר מהקטלוג לפי שם ומחיר. כדאי לוודא את השורות המסומנות בכתום לפני שליחה לקופה.'**
+  String get autoFilledBarcodesSubtitle;
+
+  /// No description provided for @duplicateFoundTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'החשבונית כבר קיימת ב-Comax'**
+  String get duplicateFoundTitle;
+
+  /// No description provided for @duplicateSimilarTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'נמצאה חשבונית דומה ב-Comax'**
+  String get duplicateSimilarTitle;
+
+  /// No description provided for @duplicateReversedTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'מסמך זה היה קיים ב-Comax אך בוטל — ניתן לשלוח שוב'**
+  String get duplicateReversedTitle;
+
+  /// No description provided for @comaxDocumentLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'מסמך'**
+  String get comaxDocumentLabel;
+
+  /// No description provided for @duplicateSnapshotNote.
+  ///
+  /// In he, this message translates to:
+  /// **'הנתונים נכונים לשליפה האחרונה מ-Comax:'**
+  String get duplicateSnapshotNote;
+
+  /// No description provided for @duplicateReferenceLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'אסמכתא ב-Comax:'**
+  String get duplicateReferenceLabel;
+
+  /// No description provided for @duplicateSuffixExplain.
+  ///
+  /// In he, this message translates to:
+  /// **'סיומת של מספר החשבונית'**
+  String get duplicateSuffixExplain;
+
+  /// No description provided for @consistencyBlockTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'המספרים בחשבונית אינם מתחברים'**
+  String get consistencyBlockTitle;
+
+  /// No description provided for @consistencyBlockSubtitle.
+  ///
+  /// In he, this message translates to:
+  /// **'לא ניתן לשלוח לקופה עד שהמספרים יתוקנו. ה-OCR כנראה קרא שורות בצורה שגויה:'**
+  String get consistencyBlockSubtitle;
+
+  /// No description provided for @consistencyBannerSubtitle.
+  ///
+  /// In he, this message translates to:
+  /// **'סכום השורות אינו תואם לסה\"כ. בדוק את השורות המסומנות לפני שליחה לקופה.'**
+  String get consistencyBannerSubtitle;
+
+  /// No description provided for @consistencyWarnTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'הסכום בחשבונית שונה מהחישוב'**
+  String get consistencyWarnTitle;
+
+  /// No description provided for @consistencyWarnQuestion.
+  ///
+  /// In he, this message translates to:
+  /// **'לשלוח לקופה בכל זאת?'**
+  String get consistencyWarnQuestion;
+
+  /// No description provided for @consistencyWarnSendAnyway.
+  ///
+  /// In he, this message translates to:
+  /// **'שלח בכל זאת'**
+  String get consistencyWarnSendAnyway;
+
+  /// No description provided for @filterBySupplier.
+  ///
+  /// In he, this message translates to:
+  /// **'הצג רק מוצרים של ספק החשבונית'**
+  String get filterBySupplier;
+
+  /// No description provided for @fromInvoiceLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'מהחשבונית:'**
+  String get fromInvoiceLabel;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2035,25 +2145,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'he'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'he'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'he':
-      return AppLocalizationsHe();
+    case 'en': return AppLocalizationsEn();
+    case 'he': return AppLocalizationsHe();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }

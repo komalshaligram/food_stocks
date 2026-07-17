@@ -105,7 +105,7 @@ class _StatusBadgeState extends State<StatusBadge>
       case DocumentStatus.readyForUpdate:
         return (l10n.statusReadyForUpdate, AppColors.statusReadyForUpdate, false, false);
       case DocumentStatus.completed:
-        return (l10n.statusCompleted, AppColors.statusCompleted, false, true);
+        return (l10n.statusCompleted, AppColors.statusCompleted, false, false);
       case DocumentStatus.sentToCashRegister:
         return (l10n.statusSentToCashRegister,
             AppColors.statusSentToCashRegister, false, true);

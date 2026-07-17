@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_smartlook/flutter_smartlook.dart';
 import 'package:food_stock/ui/utils/app_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -72,29 +71,6 @@ class MyClientsBloc extends Bloc<MyClientsEvent, MyClientsState> {
             preferences.setIsAgent(isAgent: response.data?.isAgent ?? false);
             preferences.setIsAgentSwitchToAssignedStore(isAgentSwitchToAssignedStore: response.data?.isAgentSwitchToAssignedStore ?? false);
 
-            String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
-            String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
-            if (Platform.isAndroid) {
-              if (businessName != '' || businessName != null) {
-                Smartlook.instance.user.properties.removeString(AppStrings.userBusinessName);
-              }
-              if (phoneNumber != '' || phoneNumber != null) {
-                Smartlook.instance.user.properties.removeString(AppStrings.userPhoneNum);
-              }
-              Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: response.data?.user?.phoneNumber);
-              Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: response.data?.user?.clientDetail?.bussinessName ?? '');
-            } else {
-              if (businessName == '' || businessName == null) {
-                Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: response.data?.user?.clientDetail?.bussinessName ?? '');
-              } else if (phoneNumber == '' || phoneNumber == null) {
-                Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: response.data?.user?.phoneNumber);
-              }
-            }
-            Smartlook.instance.user.setIdentifier(
-              (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '',
-            );
-            Smartlook.instance.user.setEmail(response.data?.user?.phoneNumber ?? '');
-            Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
             if (response.data?.adminType == AppStrings.subUserString) {
               var res = response.data?.subUserPermissions;
               preferences.setSubUserId(id: response.data?.user?.id ?? '');

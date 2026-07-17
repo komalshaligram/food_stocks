@@ -175,7 +175,6 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				E5EA9C6C12DAE131C2728B7A /* FlutterFire: "flutterfire upload-crashlytics-symbols" */,
-				B6CAADB100EBD64B10AFB062 /* [CP] Embed Pods Frameworks */,
 				8EC97F8E590DB0C9B0DFBB15 /* [CP] Copy Pods Resources */,
 				A1B2C3D42E82066939B8F6F2 /* Set App.framework MinimumOSVersion */,
 			);
@@ -299,23 +298,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "APP_FRAMEWORK=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/App.framework\"\nAPP_FRAMEWORK_PLIST=\"${APP_FRAMEWORK}/Info.plist\"\nif [ -f \"$APP_FRAMEWORK_PLIST\" ]; then\n  /usr/libexec/PlistBuddy -c \"Delete :MinimumOSVersion\" \"$APP_FRAMEWORK_PLIST\" 2>/dev/null || true\n  /usr/libexec/PlistBuddy -c \"Add :MinimumOSVersion string ${IPHONEOS_DEPLOYMENT_TARGET}\" \"$APP_FRAMEWORK_PLIST\"\n  SIGN_IDENTITY=\"${EXPANDED_CODE_SIGN_IDENTITY}\"\n  if [ -z \"$SIGN_IDENTITY\" ] || [ \"$SIGN_IDENTITY\" = \"-\" ]; then\n    SIGN_IDENTITY=\"-\"\n  fi\n  /usr/bin/codesign --force --sign \"$SIGN_IDENTITY\" --timestamp=none \"$APP_FRAMEWORK\"\nfi\n";
-		};
-		B6CAADB100EBD64B10AFB062 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		BB41091E62D753837F5AB5E3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

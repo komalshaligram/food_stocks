@@ -3,8 +3,6 @@ import 'package:app_links/app_links.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../bloc/my_app/my_app_bloc.dart';
 import '../../data/services/my_behavior.dart';
 import '../../routes/app_routes.dart';
@@ -13,7 +11,6 @@ import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import 'package:provider/provider.dart';
 import '../../app_config.dart';
-
 import '../../data/services/deep_link_launch_coordinator.dart';
 import '../../data/services/locale_provider.dart';
 import '../../data/services/startup_navigation.dart';
@@ -37,7 +34,6 @@ class MyAppWidget extends StatefulWidget {
 }
 
 class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
-  final Smartlook smartLook = Smartlook.instance;
   final AppLinks _appLinks = AppLinks();
   StreamSubscription<Uri>? _deepLinkSub;
   String? _lastHandledDeepLink;
@@ -54,17 +50,6 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
 
     _initDeepLinks();
 
-    Future.microtask(() {
-      try {
-        smartLook.start();
-        smartLook.preferences.setProjectKey(dotenv.env['SMART_LOOK_KEY']!);
-        smartLook.sensitivity.changeWidgetClassSensitivity(
-            classType: TextField, isSensitive: false);
-      } catch (e, s) {
-        FirebaseCrashlytics.instance
-            .recordError(e, s, reason: 'Smartlook initialization failed');
-      }
-    });
 
     super.initState();
   }
@@ -188,8 +173,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
     return ChangeNotifierProvider(
         create: (context) => LocaleProvider()..setAppLocale(),
         builder: (context, child) {
-          return SmartlookRecordingWidget(
-            child: MaterialApp(
+          return  MaterialApp(
               navigatorKey: navigatorKey,
               debugShowCheckedModeBanner: false,
               locale: Provider.of<LocaleProvider>(context).locale,
@@ -222,7 +206,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
               ),
               scrollBehavior: MyBehavior(),
               onGenerateRoute: AppRouting.generateRoute,
-            ),
+
           );
         });
   }

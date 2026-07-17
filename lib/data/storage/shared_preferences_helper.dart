@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreferencesHelper {
   static const String lang = "lang";
   static const String userLoggedIn = "loggedIn";
+  static const String registrationIncomplete = "registrationIncomplete";
   static const String accessToken = "accessToken";
   static const String refreshToken = "refreshToken";
   static const String userId = "userId";
@@ -102,6 +103,7 @@ class SharedPreferencesHelper {
       await prefs.remove(walletId);
       await prefs.remove(lang);
       await prefs.remove(userLoggedIn);
+      await prefs.remove(registrationIncomplete);
       await prefs.remove(appVersion);
       await prefs.remove(subUser);
       await prefs.remove(companyName);
@@ -144,6 +146,15 @@ class SharedPreferencesHelper {
       await prefs.remove(productReturnList);
     }
     await prefs.setBool(userLoggedIn, isLoggedIn);
+  }
+
+  // true = the logged-in client is still PENDING and must resume registration.
+  Future<void> setRegistrationIncomplete({bool isIncomplete = false}) async {
+    await prefs.setBool(registrationIncomplete, isIncomplete);
+  }
+
+  bool getRegistrationIncomplete() {
+    return prefs.getBool(registrationIncomplete) ?? false;
   }
 
   Future<void> setPaymentMethod({required String method}) async {

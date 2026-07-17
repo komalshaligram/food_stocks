@@ -45,8 +45,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get deleteDocumentTitle => 'מחיקת מסמך';
 
   @override
-  String get deleteDocumentConfirm =>
-      'האם אתה בטוח שאתה רוצה למחוק את המסמך הזה?';
+  String get deleteDocumentConfirm => 'האם אתה בטוח שאתה רוצה למחוק את המסמך הזה?';
 
   @override
   String get documentDeletedSuccess => 'המסמך נמחק בהצלחה';
@@ -132,8 +131,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get exportToExcel => 'ייצוא לאקסל';
 
   @override
-  String get exportExcelFailed =>
-      'לא ניתן לייצא לאקסל. ודא שנתוני המסמך תקינים.';
+  String get exportExcelFailed => 'לא ניתן לייצא לאקסל. ודא שנתוני המסמך תקינים.';
 
   @override
   String get save => 'שמור';
@@ -283,7 +281,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get statusReadyForUpdate => 'ממתין לשליחה לקופה';
 
   @override
-  String get statusCompleted => 'בוצע';
+  String get statusCompleted => 'נשמר, טרם נשלח לקופה';
 
   @override
   String get statusDeleted => 'נמחק';
@@ -443,15 +441,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get confirmRetrieveDataAgainTitle => 'אישור';
 
   @override
-  String get confirmRetrieveDataAgainMessage =>
-      'האם אתה בטוח שאתה רוצה לאחזר את נתוני המסמך מחדש?\nזה יכול לקחת זמן...';
+  String get confirmRetrieveDataAgainMessage => 'האם אתה בטוח שאתה רוצה לאחזר את נתוני המסמך מחדש?\nזה יכול לקחת זמן...';
 
   @override
   String get confirmSendToCashTitle => 'אישור';
 
   @override
-  String get confirmSendToCashMessage =>
-      'האם אתה בטוח שברצונך לשלוח את המסמך לעדכון הקופה שלך?';
+  String get confirmSendToCashMessage => 'האם אתה בטוח שברצונך לשלוח את המסמך לעדכון הקופה שלך?';
 
   @override
   String get imageExportFailureTitle => 'שגיאה בייצוא תמונות';
@@ -466,8 +462,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get continueButton => 'המשך';
 
   @override
-  String get imageExportDebugIntro =>
-      'לא הצלחנו לייצא תמונות מהסריקה. לא נשלח PDF ל-API.';
+  String get imageExportDebugIntro => 'לא הצלחנו לייצא תמונות מהסריקה. לא נשלח PDF ל-API.';
 
   @override
   String imageExportErrorLine(Object error) {
@@ -493,8 +488,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get imageExportFailedNull => 'ייצוא תמונות נכשל (null)';
 
   @override
-  String get imageExportReturnedEmpty =>
-      'ייצוא תמונות החזיר רשימה ריקה (לא נמצאו תמונות תקינות)';
+  String get imageExportReturnedEmpty => 'ייצוא תמונות החזיר רשימה ריקה (לא נמצאו תמונות תקינות)';
 
   @override
   String imageExportPathExamples(Object paths) {
@@ -581,16 +575,13 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get parseErrorScanJobEmptyResponse =>
-      'שגיאה ביצירת משימת סריקה: תשובה ריקה';
+  String get parseErrorScanJobEmptyResponse => 'שגיאה ביצירת משימת סריקה: תשובה ריקה';
 
   @override
-  String get parseErrorScanJobMissingJobId =>
-      'שגיאה ביצירת משימת סריקה: jobId חסר';
+  String get parseErrorScanJobMissingJobId => 'שגיאה ביצירת משימת סריקה: jobId חסר';
 
   @override
-  String get parseErrorDocumentProcessingEmptyResponse =>
-      'שגיאה בעיבוד המסמך: תשובה ריקה';
+  String get parseErrorDocumentProcessingEmptyResponse => 'שגיאה בעיבוד המסמך: תשובה ריקה';
 
   @override
   String get parseErrorUnauthenticated => 'יש להתחבר לפני שליחת מסמכים';
@@ -663,8 +654,7 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get docutainInitLicenseKeyMissing =>
-      'מפתח רישיון Docutain לא הוגדר. הוסף ב־app_config.dart (defaultValue) או הרץ עם: --dart-define=DOCUTAIN_LICENSE_KEY=המפתח_שלך';
+  String get docutainInitLicenseKeyMissing => 'מפתח רישיון Docutain לא הוגדר. הוסף ב־app_config.dart (defaultValue) או הרץ עם: --dart-define=DOCUTAIN_LICENSE_KEY=המפתח_שלך';
 
   @override
   String docutainInitFailedWithSdkError(Object sdkError) {
@@ -672,8 +662,7 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get docutainInitFailedWithoutSdkError =>
-      'אתחול Docutain נכשל. הרישיון קשור ל-applicationId. באפליקציה זו: scanner.tavili.com. הנפק רישיון ניסיון עם ID זה: https://sdk.docutain.com/TrialLicense';
+  String get docutainInitFailedWithoutSdkError => 'אתחול Docutain נכשל. הרישיון קשור ל-applicationId. באפליקציה זו: scanner.tavili.com. הנפק רישיון ניסיון עם ID זה: https://sdk.docutain.com/TrialLicense';
 
   @override
   String get scanSourceTitle => 'איך לצלם את המסמך?';
@@ -790,8 +779,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get syncConfirmTitle => 'הרצת סנכרון מ-Comax';
 
   @override
-  String get syncConfirmMessage =>
-      'הסנכרון מתחבר ל-Comax שלך ומושך מחדש את כל הנתונים (ספקים, מוצרים, מחירים ומבצעים).\n\nכדי שהסנכרון יצליח עליך להיות מנותק מהמשתמש שלך ב-Comax — מערכת Comax מאפשרת חיבור יחיד בלבד. נתק/י קודם את המשתמש ב-Comax, ואז המשך/י.';
+  String get syncConfirmMessage => 'הסנכרון מתחבר ל-Comax שלך ומושך מחדש את כל הנתונים (ספקים, מוצרים, מחירים ומבצעים).\n\nכדי שהסנכרון יצליח עליך להיות מנותק מהמשתמש שלך ב-Comax — מערכת Comax מאפשרת חיבור יחיד בלבד. נתק/י קודם את המשתמש ב-Comax, ואז המשך/י.';
 
   @override
   String get syncConfirmContinue => 'התנתקתי — הרץ סנכרון';
@@ -809,8 +797,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get syncErrorTitle => 'שגיאת סנכרון';
 
   @override
-  String get syncSessionInUse =>
-      'יש משתמש מחובר ל-Comax. התנתק מ-Comax, המתן כ-3 דקות, ונסה שוב.';
+  String get syncSessionInUse => 'יש משתמש מחובר ל-Comax. התנתק מ-Comax, המתן כ-3 דקות, ונסה שוב.';
 
   @override
   String get syncBadCredentials => 'נדרש עדכון הרשאות במערכת הניהול.';
@@ -840,8 +827,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get barcodeInCatalog => 'קיים בקטלוג';
 
   @override
-  String get barcodeNotInCatalog =>
-      'אינו בקטלוג — ייתכן שזהו ברקוד חלופי; בחר את הברקוד הראשי של המוצר';
+  String get barcodeNotInCatalog => 'אינו בקטלוג — ייתכן שזהו ברקוד חלופי; בחר את הברקוד הראשי של המוצר';
 
   @override
   String get searchByProductName => 'חיפוש מוצר לפי שם';
@@ -859,8 +845,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get barcodeIssuesTitle => 'ברקודים שאינם קיימים בקטלוג';
 
   @override
-  String get barcodeIssuesMessage =>
-      'יש מוצרים שהברקוד שלהם אינו קיים בקטלוג. ייתכן שמדובר בברקוד חלופי — יש לבחור את הברקוד הראשי של המוצר. לא ניתן לשלוח לקופה עד לתיקון.';
+  String get barcodeIssuesMessage => 'יש מוצרים שהברקוד שלהם אינו קיים בקטלוג. ייתכן שמדובר בברקוד חלופי — יש לבחור את הברקוד הראשי של המוצר. לא ניתן לשלוח לקופה עד לתיקון.';
 
   @override
   String get jumpToFirstIssue => 'קפוץ לבעיה הראשונה';
@@ -884,12 +869,10 @@ class AppLocalizationsHe extends AppLocalizations {
   String get validationNetworkErrorTitle => 'בעיית תקשורת';
 
   @override
-  String get validationNetworkErrorMessage =>
-      'לא ניתן היה לפנות לשרת. בדוק את החיבור ונסה שוב.';
+  String get validationNetworkErrorMessage => 'לא ניתן היה לפנות לשרת. בדוק את החיבור ונסה שוב.';
 
   @override
-  String get validationConfigError =>
-      'תקלת הגדרה במערכת. פנה לתמיכה (הרשאות/קוד לקוח).';
+  String get validationConfigError => 'תקלת הגדרה במערכת. פנה לתמיכה (הרשאות/קוד לקוח).';
 
   @override
   String get validationRateLimited => 'יותר מדי בקשות. נסה שוב בעוד רגע.';
@@ -928,8 +911,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get submitGenericError => 'השליחה לקופה נכשלה, נסה שוב.';
 
   @override
-  String get submitTimeout =>
-      'הקליטה נמשכת זמן רב. בדוק מאוחר יותר אם החשבונית נקלטה.';
+  String get submitTimeout => 'הקליטה נמשכת זמן רב. בדוק מאוחר יותר אם החשבונית נקלטה.';
 
   @override
   String get submitAlreadyReceivedTitle => 'החשבונית כבר נקלטה';
@@ -1038,4 +1020,61 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get scannerUnknownFailure => 'לא ניתן לפתוח את הסורק. נסה שוב.';
+
+  @override
+  String get suggestedMatches => 'התאמות מוצעות';
+
+  @override
+  String get resolvingBarcodes => 'מזהה ברקודים מהקטלוג…';
+
+  @override
+  String get autoFilledBarcodesTitle => 'שורות שהושלמו אוטומטית';
+
+  @override
+  String get autoFilledBarcodesSubtitle => 'הברקוד שוחזר מהקטלוג לפי שם ומחיר. כדאי לוודא את השורות המסומנות בכתום לפני שליחה לקופה.';
+
+  @override
+  String get duplicateFoundTitle => 'החשבונית כבר קיימת ב-Comax';
+
+  @override
+  String get duplicateSimilarTitle => 'נמצאה חשבונית דומה ב-Comax';
+
+  @override
+  String get duplicateReversedTitle => 'מסמך זה היה קיים ב-Comax אך בוטל — ניתן לשלוח שוב';
+
+  @override
+  String get comaxDocumentLabel => 'מסמך';
+
+  @override
+  String get duplicateSnapshotNote => 'הנתונים נכונים לשליפה האחרונה מ-Comax:';
+
+  @override
+  String get duplicateReferenceLabel => 'אסמכתא ב-Comax:';
+
+  @override
+  String get duplicateSuffixExplain => 'סיומת של מספר החשבונית';
+
+  @override
+  String get consistencyBlockTitle => 'המספרים בחשבונית אינם מתחברים';
+
+  @override
+  String get consistencyBlockSubtitle => 'לא ניתן לשלוח לקופה עד שהמספרים יתוקנו. ה-OCR כנראה קרא שורות בצורה שגויה:';
+
+  @override
+  String get consistencyBannerSubtitle => 'סכום השורות אינו תואם לסה\"כ. בדוק את השורות המסומנות לפני שליחה לקופה.';
+
+  @override
+  String get consistencyWarnTitle => 'הסכום בחשבונית שונה מהחישוב';
+
+  @override
+  String get consistencyWarnQuestion => 'לשלוח לקופה בכל זאת?';
+
+  @override
+  String get consistencyWarnSendAnyway => 'שלח בכל זאת';
+
+  @override
+  String get filterBySupplier => 'הצג רק מוצרים של ספק החשבונית';
+
+  @override
+  String get fromInvoiceLabel => 'מהחשבונית:';
 }

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/res_model/city_list_model/city_list_res_model.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart' as req;
@@ -34,7 +33,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProfileModelEvent) {
-        if (!state.isUpdate) {
+        // During a PENDING resume we fetch the real values from the API (below),
+        // so don't overwrite them here with the (empty) cached preferences.
+        if (!state.isUpdate && !preferences.getRegistrationIncomplete()) {
+
           emit(state.copyWith(
             streetNameController: TextEditingController(text: preferences.getStreetName()),
             streetNumberController: TextEditingController(text: preferences.getStreetNumber()),
@@ -91,7 +93,6 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             req_update.ProfileDetailsUpdateResModel response = req_update.ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(isLoading: false));
-              Smartlook.instance.user.setEmail(response.data?.client?.phoneNumber ?? '');
               preferences.setEmailId(userEmailId: response.data?.client?.email ?? '');
               if (!preferences.getSubUser()) {
                 preferences.setUserName(name: response.data?.client?.clientDetail?.ownerName ?? '');
@@ -147,38 +148,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             final response = await DioClient(event.context).post(AppUrlEndPoints.registrationUrl, data: reqMap);
             res.ProfileResModel profileResModel = res.ProfileResModel.fromJson(response);
             if (profileResModel.status == AppConstants.code_200) {
-              String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
-              String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
               preferences.setUserId(id: profileResModel.data?.client?.clientData?.id ?? '');
               preferences.setEmailId(userEmailId: profileResModel.data?.client?.clientData?.email ?? '');
               preferences.setCartId(cartId: profileResModel.data?.client?.cartId ?? '');
               preferences.setAuthToken(accToken: profileResModel.data?.authToken?.accessToken ?? '');
               preferences.setRefreshToken(refToken: profileResModel.data?.authToken?.refreshToken ?? '');
-              if (Platform.isAndroid) {
-                if (businessName != '' || businessName != null) {
-                  Smartlook.instance.user.properties.removeString(AppStrings.userBusinessName);
-                }
-                if (phoneNumber != '' || phoneNumber != null) {
-                  Smartlook.instance.user.properties.removeString(AppStrings.userPhoneNum);
-                }
-                Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: profileResModel.data?.client?.clientData?.phoneNumber ?? '');
-                Smartlook.instance.user.properties.putString(
-                  AppStrings.userBusinessName,
-                  value: profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? '',
-                );
-              } else {
-                if (businessName == '' || businessName == null) {
-                  Smartlook.instance.user.properties.putString(
-                    AppStrings.userBusinessName,
-                    value: profileResModel.data?.client?.clientData?.clientDetail?.bussinessName ?? '',
-                  );
-                } else if (phoneNumber == '' || phoneNumber == null) {
-                  Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: profileResModel.data?.client?.clientData?.phoneNumber ?? '');
-                }
-              }
-              Smartlook.instance.user.setIdentifier(profileResModel.data?.client?.clientData?.id ?? '');
-              Smartlook.instance.user.setEmail(profileResModel.data?.client?.clientData?.phoneNumber.toString() ?? '');
-              Smartlook.instance.user.setName(profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
               if (!preferences.getSubUser()) {
                 preferences.setUserName(name: profileResModel.data?.client?.clientData?.clientDetail?.ownerName ?? '');
                 if ((profileResModel.data?.client?.clientData?.profileImage ?? '') != '') {
@@ -216,7 +190,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         emit(state.copyWith(selectCity: event.city));
       } else if (event is _getProfileMoreDetailsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
-        if (state.isUpdate) {
+        // Fetch + pre-fill from the API both when editing (isUpdate) and when a
+        // PENDING client resumes registration (registrationIncomplete).
+        if (state.isUpdate || preferences.getRegistrationIncomplete()) {
+
           try {
             emit(state.copyWith(isUpdating: true));
             final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson());

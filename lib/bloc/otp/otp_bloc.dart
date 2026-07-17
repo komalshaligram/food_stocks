@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../data/model/res_model/login_otp_res_model/login_otp_res_model.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
@@ -18,7 +17,6 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
-import 'dart:io';
 part 'otp_event.dart';
 
 part 'otp_state.dart';
@@ -80,30 +78,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferences.setIsAgent(isAgent: response.data?.isAgent ?? false);
               preferences.setIsAgentSwitchToAssignedStore(isAgentSwitchToAssignedStore: response.data?.isAgentSwitchToAssignedStore ?? false);
 
-              String? businessName = await Smartlook.instance.user.properties.getString(AppStrings.userBusinessName);
-              String? phoneNumber = await Smartlook.instance.user.properties.getString(AppStrings.userPhoneNum);
-              if (Platform.isAndroid) {
-                if (businessName != '' || businessName != null) {
-                  Smartlook.instance.user.properties.removeString(AppStrings.userBusinessName);
-                }
-                if (phoneNumber != '' || phoneNumber != null) {
-                  Smartlook.instance.user.properties.removeString(AppStrings.userPhoneNum);
-                }
-                Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: response.data?.user?.phoneNumber);
-                Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: response.data?.user?.clientDetail?.bussinessName ?? '');
-              } else {
-                if (businessName == '' || businessName == null) {
-                  Smartlook.instance.user.properties.putString(AppStrings.userBusinessName, value: response.data?.user?.clientDetail?.bussinessName ?? '');
-                } else if (phoneNumber == '' || phoneNumber == null) {
-                  Smartlook.instance.user.properties.putString(AppStrings.userPhoneNum, value: response.data?.user?.phoneNumber);
-                }
-              }
-
-              Smartlook.instance.user.setIdentifier(
-                (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '',
-              );
-              Smartlook.instance.user.setEmail(response.data?.user?.phoneNumber ?? '');
-              Smartlook.instance.user.setName(response.data?.user?.clientDetail?.ownerName ?? '');
               if (response.data?.adminType == AppStrings.subUserString) {
                 var res = response.data?.subUserPermissions;
                 preferences.setSubUserId(id: response.data?.user?.id ?? '');
@@ -120,7 +94,21 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 preferences.setCanScanDocuments(isCanScanDocuments: res?.canScanDocuments ?? false);
               }
               emit(state.copyWith(isLoading: false));
-              Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);
+              // A PENDING client hasn't finished registration — send them back
+              // into the registration flow (fields pre-fill) instead of home.
+              final bool isRegistrationComplete = (res['data'] is Map) ? (res['data']['isRegistrationComplete'] ?? true) : true;
+              preferences.setRegistrationIncomplete(isIncomplete: !isRegistrationComplete);
+              if (isRegistrationComplete) {
+                Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);
+              } else {
+                Navigator.pushNamedAndRemoveUntil(
+                  event.context,
+                  RouteDefine.profileScreen.name,
+                      (Route route) => route.isFirst,
+                  arguments: {AppStrings.contactString: event.contact},
+                );
+              }
+
               CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),

@@ -22,8 +22,8 @@ class AppColors {
   static const Color statusScanning = Color(0xFFF9A825);
   /// סטטוס: מוכן לעדכון
   static const Color statusReadyForUpdate = Color(0xFF1A73E8);
-  /// סטטוס: בוצע
-  static const Color statusCompleted = Color(0xFF34A853);
+  /// סטטוס: נשמר, טרם נשלח לקופה — ניטרלי בכוונה, הירוק שמור ל"נשלח לקופה".
+  static const Color statusCompleted = Color(0xFF5F6368);
 
   /// סטטוס: נשלח לקופה
   static const Color statusSentToCashRegister = Color(0xFF34A853);
@@ -34,4 +34,7 @@ class AppColors {
 
   // אדום לשגיאות/אזהרות (למשל ברקוד שאינו קיים בקטלוג).
   static const Color error = Color(0xFFD32F2F);
+
+  /// אזהרה רכה — "ממולא אוטומטית, כדאי לאמת". לא חוסם, בניגוד ל-[error].
+  static const Color warning = Color(0xFFF9A825);
 }

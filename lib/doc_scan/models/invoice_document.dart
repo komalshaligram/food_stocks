@@ -30,6 +30,7 @@ class InvoiceDocument {
     this.allocationNumber,
     this.documentDate,
     this.paymentDueDate,
+    this.discount,
     this.subtotal,
     this.vatAmount,
     this.totalAmount,
@@ -41,6 +42,7 @@ class InvoiceDocument {
     this.comaxDocumentId,
     this.comaxStatus,
     this.comaxReceiveError,
+    this.comaxDiagnosis,
   });
 
   final String id;
@@ -62,6 +64,9 @@ class InvoiceDocument {
   final String? documentDate;
   /// תאריך פירעון / תאריך לתשלום (אם מופיע במסמך).
   final String? paymentDueDate;
+  /// הנחה ברמת המסמך (לא ברמת השורה), אם מופיעה במסמך.
+  final double? discount;
+  /// סכום ביניים **אחרי** [discount] — זה מה שהמע"מ מחושב עליו.
   final double? subtotal;
   final double? vatAmount;
   final double? totalAmount;
@@ -86,6 +91,10 @@ class InvoiceDocument {
   /// סיבת כשל הקליטה ל-Comax (כש-comaxStatus == 'failed').
   final String? comaxReceiveError;
 
+  /// פירוט הכישלון מהקראולר, כפי שהבקאנד שמר אותו. קיים רק כש-
+  /// `comaxReceiveError == 'total_mismatch'`. גולמי (Map) — נוסח ב-UI.
+  final Map<String, dynamic>? comaxDiagnosis;
+
   /// האם קיימת קליטת Comax בתהליך/הושלמה — חוסם שליחה כפולה.
   bool get isComaxIntakeInFlightOrDone =>
       status == DocumentStatus.sentToCashRegister ||
@@ -108,6 +117,7 @@ class InvoiceDocument {
     String? allocationNumber,
     String? documentDate,
     String? paymentDueDate,
+    double? discount,
     double? subtotal,
     double? vatAmount,
     double? totalAmount,
@@ -119,6 +129,7 @@ class InvoiceDocument {
     String? comaxDocumentId,
     String? comaxStatus,
     String? comaxReceiveError,
+    Map<String, dynamic>? comaxDiagnosis,
   }) {
     return InvoiceDocument(
       id: id ?? this.id,
@@ -136,6 +147,7 @@ class InvoiceDocument {
       allocationNumber: allocationNumber ?? this.allocationNumber,
       documentDate: documentDate ?? this.documentDate,
       paymentDueDate: paymentDueDate ?? this.paymentDueDate,
+      discount: discount ?? this.discount,
       subtotal: subtotal ?? this.subtotal,
       vatAmount: vatAmount ?? this.vatAmount,
       totalAmount: totalAmount ?? this.totalAmount,
@@ -147,6 +159,7 @@ class InvoiceDocument {
       comaxDocumentId: comaxDocumentId ?? this.comaxDocumentId,
       comaxStatus: comaxStatus ?? this.comaxStatus,
       comaxReceiveError: comaxReceiveError ?? this.comaxReceiveError,
+      comaxDiagnosis: comaxDiagnosis ?? this.comaxDiagnosis,
     );
   }
 
@@ -166,6 +179,7 @@ class InvoiceDocument {
         'allocationNumber': allocationNumber,
         'documentDate': documentDate,
         'paymentDueDate': paymentDueDate,
+        'discount': discount,
         'subtotal': subtotal,
         'vatAmount': vatAmount,
         'totalAmount': totalAmount,
@@ -177,6 +191,7 @@ class InvoiceDocument {
         'comaxDocumentId': comaxDocumentId,
         'comaxStatus': comaxStatus,
         'comaxReceiveError': comaxReceiveError,
+        'comaxDiagnosis': comaxDiagnosis,
       };
 
   factory InvoiceDocument.fromJson(Map<String, dynamic> json) {
@@ -202,6 +217,7 @@ class InvoiceDocument {
       allocationNumber: json['allocationNumber'] as String?,
       documentDate: json['documentDate'] as String?,
       paymentDueDate: json['paymentDueDate'] as String?,
+      discount: (json['discount'] as num?)?.toDouble(),
       subtotal: (json['subtotal'] as num?)?.toDouble(),
       vatAmount: (json['vatAmount'] as num?)?.toDouble(),
       totalAmount: (json['totalAmount'] as num?)?.toDouble(),
@@ -216,6 +232,9 @@ class InvoiceDocument {
       comaxDocumentId: json['comaxDocumentId'] as String?,
       comaxStatus: json['comaxStatus'] as String?,
       comaxReceiveError: json['comaxReceiveError'] as String?,
+      comaxDiagnosis: json['comaxDiagnosis'] is Map
+          ? Map<String, dynamic>.from(json['comaxDiagnosis'] as Map)
+          : null,
     );
   }
 

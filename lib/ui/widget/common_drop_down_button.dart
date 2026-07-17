@@ -33,6 +33,11 @@ class CommonDropDownButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final focusColor = focusedBorderColor ?? (useFilledBackground ? AppColors.mainColor : color);
+    // Bind the selected value so the field reflects the current selection.
+    // Only bind when the value actually exists among the items — otherwise
+    // DropdownButtonFormField asserts (e.g. before the list has loaded).
+    final bool hasMatch = value.isNotEmpty && (items?.any((item) => item.value == value) ?? false);
+
     return DropdownButtonFormField<String>(
       icon: Icon(
         useFilledBackground ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_down,
@@ -53,6 +58,7 @@ class CommonDropDownButton extends StatelessWidget {
       elevation: 0,
       value: _selectedValue,
       style: TextStyle(fontSize: AppConstants.smallFont, color: AppColors.blackColor),
+      // initialValue: hasMatch ? value : null,
       items: items,
       onChanged: onChanged,
       dropdownColor: AppColors.pageColor,

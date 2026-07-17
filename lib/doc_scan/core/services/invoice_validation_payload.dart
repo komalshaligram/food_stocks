@@ -10,21 +10,39 @@ class InvoiceValidationPayload {
   /// וגובר על התאמת הח.פ. שדה supplierTaxId נשאר תמיד.
   /// [barcodeOf] — אופציונלי: מחזיר את הברקוד שיישלח לשורה (למשל הברקוד **המלא**
   /// מהקטלוג כשבחשבונית הופיע ברקוד מקוצר). אם null — נשלח item.itemNumber כפי שהוא.
+  /// ערכי documentType של ה-API (§ חוזה הקרולר):
+  /// - `purchase_invoice` — חשבונית מס / חשבונית כניסה.
+  /// - `goods_receipt` — תעודת כניסה / תעודת משלוח.
+  /// - `goods_return` — תעודת החזר (החזרת סחורה לספק, Doc271 ב-Comax).
+  /// שני האחרונים זהים לחשבונית למעט: supplierInvoiceNumber = מספר התעודה (אותו
+  /// שדה), **בלי** allocationNumber (אין מספר הקצאה), ו-totalWithVat אופציונלי.
+  static const String typePurchaseInvoice = 'purchase_invoice';
+  static const String typeGoodsReceipt = 'goods_receipt';
+  static const String typeGoodsReturn = 'goods_return';
+
   static Map<String, dynamic> fromDocument(
     InvoiceDocument doc, {
     String? supplierCode,
+    String documentType = typePurchaseInvoice,
     String Function(InvoiceItem item)? barcodeOf,
   }) {
+    // תעודת כניסה ותעודת החזר — שתיהן בלי allocationNumber (רק חשבונית מס דורשת).
+    final omitsAllocation =
+        documentType == typeGoodsReceipt || documentType == typeGoodsReturn;
     final header = <String, dynamic>{
       // זיהוי הספק לפי ח.פ. (מספר עוסק מורשה) — שדה חובה.
       'supplierTaxId': _digitsOnly(doc.companyId),
       // שם הספק — רשות (לתיעוד ורמז בלבד; לא משמש לזיהוי).
       'supplierName': (doc.companyName ?? '').trim(),
       'invoiceDate': _toIsoDate(doc.documentDate) ?? (doc.documentDate ?? '').trim(),
+      // תעודת כניסה/החזר: מספר התעודה נכנס לאותו שדה (ספרות בלבד).
       'supplierInvoiceNumber': _digitsOnly(doc.documentNumber),
-      'allocationNumber': (doc.allocationNumber ?? '').trim(),
       'totalWithVat': _round2(doc.totalAmount) ?? 0,
     };
+    // מספר הקצאה הוא דרישת מס של חשבונית בלבד — לתעודת כניסה/החזר אין. משמיטים.
+    if (!omitsAllocation) {
+      header['allocationNumber'] = (doc.allocationNumber ?? '').trim();
+    }
     if (supplierCode != null && supplierCode.trim().isNotEmpty) {
       header['supplierCode'] = supplierCode.trim();
     }
@@ -38,7 +56,7 @@ class InvoiceValidationPayload {
     }
 
     return <String, dynamic>{
-      'documentType': 'purchase_invoice',
+      'documentType': documentType,
       'header': header,
       'lines': lines,
     };

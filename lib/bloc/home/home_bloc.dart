@@ -3,7 +3,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../data/model/req_model/product_sales_req_model/product_sales_req_model.dart';
 import '../../data/model/req_model/suppliers_req_model/suppliers_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
@@ -952,20 +951,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               emit(state.copyWith(
                   userImageUrl: clientData?.profileImage ?? '',
                   context: event.context));
-            }
-            String? phoneNumber = await Smartlook.instance.user.properties
-                .getString(AppStrings.userPhoneNum);
-
-            if (phoneNumber == '' || phoneNumber == null) {
-              Smartlook.instance.user.setIdentifier(preferences.getUserId());
-              Smartlook.instance.user.setEmail(preferences.getPhoneNumber());
-              Smartlook.instance.user.setName(preferences.getUserName());
-              Smartlook.instance.user.properties.putString(
-                  AppStrings.userBusinessName,
-                  value: preferences.getBusinessName());
-              Smartlook.instance.user.properties.putString(
-                  AppStrings.userPhoneNum,
-                  value: preferences.getPhoneNumber());
             }
 
             final supplierDetails = clientData?.supplierCustomerDetails ?? [];

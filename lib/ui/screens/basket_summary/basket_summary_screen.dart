@@ -295,14 +295,62 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                   ]),
             ),
           ),
-          _loaderWidget(state, context),
+          state.isLoading
+              ? Positioned.fill(
+                  child: Container(
+                    color: AppColors.blackColor.withValues(alpha: 0.3),
+                    child: Center(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          padding: const EdgeInsets.all(AppConstants.padding_5),
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            borderRadius:
+                                BorderRadius.circular(AppConstants.radius_7),
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: AppConstants.radius_10,
+                                  offset: Offset(0, 4))
+                            ],
+                          ),
+                          child:
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                            SizedBox(
+                                height: 80,
+                                width: 130,
+                                child: Lottie.asset(
+                                    'assets/images/super_market.json',
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.fill)),
+                            10.height,
+                            Text(
+                              AppLocalizations.of(context)!.basket_loader_text,
+                              style: TextStyle(
+                                  color: AppColors.blackColor,
+                                  fontSize: AppConstants.font_14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            4.height,
+                            Text(AppLocalizations.of(context)!.please_wait_text,
+                                style: TextStyle(
+                                    fontSize: AppConstants.font_14,
+                                    color: AppColors.greyColor)),
+                            8.height,
+                          ]),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : 0.width
         ]);
       }),
     );
   }
-
-
-
 
   void paymentOptionPopupOne(
       BasketSummaryState state, BuildContext context, BasketSummaryBloc bloc,

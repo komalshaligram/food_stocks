@@ -19,6 +19,10 @@ import '../core/utils/date_utils.dart';
 import '../core/utils/number_utils.dart';
 import '../models/invoice_document.dart';
 import '../models/invoice_item.dart';
+import '../models/resolved_item.dart';
+import '../models/comax_document_status.dart';
+import '../core/services/invoice_items_resolver_service.dart';
+import '../core/services/invoice_consistency.dart';
 import '../models/product.dart';
 import '../models/supplier.dart';
 import '../providers/customer_code_provider.dart';
@@ -34,6 +38,7 @@ import '../utils/embedded_app_bar.dart';
 import '../widgets/adaptive_bottom_sheet.dart';
 import '../widgets/editable_field.dart';
 import '../widgets/gradient_button.dart';
+import '../widgets/pre_scan_setup_sheet.dart';
 import '../widgets/retrieve_scan_model_sheet.dart';
 import '../widgets/searchable_picker.dart';
 import '../widgets/status_badge.dart';
@@ -157,6 +162,19 @@ class _DocumentDetailsScreenState
   late String _subtotal;
   late String _vatAmount;
   late String _totalAmount;
+
+  /// הנחה ברמת המסמך כפי שנקראה מה-OCR — נשמרת בין עריכות שורה כדי שלא
+  /// "תיעלם" מהסכום ביניים. 0 כשאין הנחה כללית.
+  double _documentDiscount = 0;
+
+  /// הסה"כ שה-OCR קרא מבלוק הסיכום — נשמר גם אחרי שהתצוגה מוחלפת בערך המחושב,
+  /// כדי להשוות ולהזהיר על פער. null כשה-OCR לא קרא סיכום.
+  double? _ocrSubtotal;
+  double? _ocrTotal;
+
+  /// שיעור המע"מ של המסמך, נגזר מהערכים שבמסמך עצמו ולא מקובע —
+  /// חשבוניות אילת (0%) וחשבוניות ישנות (17%) חייבות להישמר כפי שהן.
+  double _vatRate = _defaultVatRate;
   late String _allocationNumber;
   late String _paymentDueDate;
   String? _parsedJson;
@@ -176,6 +194,21 @@ class _DocumentDetailsScreenState
   String? _validatedDocumentId;
   late final InvoiceApiClient _apiClient =
       InvoiceApiClient(app: DocScanBootstrap.firebaseApp);
+
+  /// שחזור ברקודים לחשבונית שהגיעה בלעדיהם (§13). רץ פעם אחת לכל פתיחת מסך.
+  late final InvoiceItemsResolverService _resolverService =
+      InvoiceItemsResolverService(app: DocScanBootstrap.firebaseApp);
+  bool _isResolvingBarcodes = false;
+  bool _barcodeResolveAttempted = false;
+
+  /// תוצאת בדיקת "האם החשבונית כבר ב-Comax", מיד עם פתיחת המסמך. null = לא נבדק
+  /// או שהבדיקה נכשלה — **אף פעם לא חוסמים בגלל כשל בדיקה**.
+  InvoiceExistsResult? _duplicateCheck;
+  bool _duplicateCheckDone = false;
+
+  /// מועמדים מדורגים לכל שורה שההצלבה לא הכריעה בה, לפי globalIndex.
+  /// מוצגים ב-picker של תא הברקוד כדי שהמשתמש לא יחפש בעיוורון.
+  final Map<int, List<ResolvedCandidate>> _barcodeSuggestions = {};
 
   // §5: סיבוב מסך מותר רק בדף הפרטים (לראות טבלה רחבה).
   static const List<DeviceOrientation> _rotatableOrientations = [
@@ -201,6 +234,10 @@ class _DocumentDetailsScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       ref.read(productsProvider.notifier).load();
+      // §13: חשבונית ללא ברקודים — שחזור מהקטלוג בצד השרת.
+      _maybeResolveMissingBarcodes();
+      // §14: האם החשבונית הזו כבר נקלטה ל-Comax (כולל הקלדה ידנית)?
+      _maybeCheckDuplicate();
     });
   }
 
@@ -211,8 +248,11 @@ class _DocumentDetailsScreenState
     super.dispose();
   }
 
-  /// כפתור סיבוב ידני: מסובב לכיוון ההפוך מהנוכחי, ואז משחזר סיבוב חופשי
-  /// כדי שגם סיבוב פיזי של המכשיר ימשיך לעבוד.
+  /// כפתור סיבוב ידני: **נועל** לכיוון ההפוך מהנוכחי, ונשאר שם עד לחיצה חוזרת.
+  ///
+  /// קודם היה בכך באג: אחרי הכפייה ל-landscape הקוד שיחזר מיד "סיבוב חופשי"
+  /// (שכולל portrait), והמכשיר — שמוחזק פיזית לאורך — קפץ מיד בחזרה ל-portrait,
+  /// כך שנראה שהכפתור לא עושה כלום. עכשיו הכיוון נעול עד שלוחצים שוב.
   Future<void> _toggleRotation() async {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
@@ -222,11 +262,8 @@ class _DocumentDetailsScreenState
               DeviceOrientation.landscapeRight,
               DeviceOrientation.landscapeLeft,
             ]
-          : _mainAppOrientations,
+          : const [DeviceOrientation.portraitUp],
     );
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-    if (!mounted) return;
-    await SystemChrome.setPreferredOrientations(_rotatableOrientations);
   }
 
   Future<void> _confirmAndDeleteDocument(InvoiceDocument doc) async {
@@ -308,7 +345,23 @@ class _DocumentDetailsScreenState
   @override
   void didUpdateWidget(DocumentDetailsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.document != widget.document) _initFromDocument();
+    if (oldWidget.document != widget.document) {
+      // רענון רקע של ה-sync יוצר instance חדש של אותו מסמך (InvoiceDocument הוא
+      // reference-equality). כשמדובר באותו מסמך, לא לאבד את קוד הספק שהמשתמש בחר
+      // ידנית — אחרת ה-toggle "רק ספק זה" נעלם אחרי כל רענון. מאפסים רק כשה-id
+      // באמת מתחלף (מעבר למסמך אחר).
+      final sameDocument = oldWidget.document?.id == widget.document?.id;
+      final pickedSupplierCode = sameDocument ? _supplierCode : null;
+      _initFromDocument();
+      if (pickedSupplierCode != null && pickedSupplierCode.isNotEmpty) {
+        _supplierCode = pickedSupplierCode;
+      }
+      // במסמך שזה עתה נסרק, `initState` רץ בזמן ש-`status == processing` ומספר
+      // החשבונית עדיין ריק — בדיוק המצב שבו שתי הבדיקות למטה יוצאות מוקדם.
+      // כשה-OCR מסתיים, המסמך מתחלף והן חייבות לרוץ עכשיו.
+      _maybeCheckDuplicate();
+      _maybeResolveMissingBarcodes();
+    }
   }
 
   void _initFromDocument() {
@@ -316,7 +369,11 @@ class _DocumentDetailsScreenState
     if (doc == null) return;
     _documentType = doc.documentType ?? '';
     _companyName = doc.companyName ?? '';
-    _supplierCode = null;
+    // אם שם החברה תואם ספק ידוע בקטלוג (למשל הספק שנבחר בזמן הסריקה) — גוזרים
+    // את קוד הספק מיד, כדי שה-toggle "רק ספק זה" והוולידציה יעבדו בלי לבחור ספק
+    // שוב. חשוב לספקים ללא ח.פ בקומקס (רגבים) שבהם codesForTaxId ריק.
+    final codeFromName = ref.read(suppliersProvider).codeForName(_companyName);
+    _supplierCode = codeFromName.isEmpty ? null : codeFromName;
     _companyId = doc.companyId ?? '';
     _documentNumber = doc.documentNumber ?? '';
     _documentDate = doc.documentDate ?? '';
@@ -328,6 +385,35 @@ class _DocumentDetailsScreenState
     _paymentDueDate = doc.paymentDueDate ?? '';
     _parsedJson = doc.parsedJson;
     _items = List<InvoiceItem>.from(doc.items);
+    _documentDiscount = doc.discount ?? 0;
+    _vatRate = _deriveVatRate(doc);
+    _ocrSubtotal = doc.subtotal;
+    _ocrTotal = doc.totalAmount;
+    _applyComputedTotals();
+  }
+
+  /// כשהשורות עקביות (אין ממצא חוסם) — **מציג את הסיכומים לפי החישוב מהשורות**,
+  /// גם אם ה-OCR קרא סה"כ אחר. הפער מול מה שקרא ה-OCR מוצג כאזהרה (לא חוסמת),
+  /// ו-[_ocrSubtotal]/[_ocrTotal] שומרים את המקור להשוואה. כשיש ממצא חוסם
+  /// (שורה שגויה) — לא נוגעים, המחושב לא מהימן.
+  void _applyComputedTotals() {
+    final report = _consistencyReport;
+    if (!report.isConsistent) return;
+    final t = report.computedTotals;
+    _subtotal = t.subtotal.toStringAsFixed(2);
+    _vatAmount = t.vat.toStringAsFixed(2);
+    _totalAmount = t.total.toStringAsFixed(2);
+  }
+
+  /// שיעור המע"מ של המסמך = מע"מ ÷ סכום ביניים (שכבר אחרי הנחה). נופל ל-18%
+  /// כשאין ממה לגזור, ומתעלם מערכים לא סבירים שנובעים מקריאת OCR שגויה.
+  static double _deriveVatRate(InvoiceDocument doc) {
+    final subtotal = doc.subtotal;
+    final vat = doc.vatAmount;
+    if (subtotal == null || vat == null || subtotal <= 0) return _defaultVatRate;
+    final rate = double.parse((vat / subtotal).toStringAsFixed(4));
+    if (rate < 0 || rate > 0.5) return _defaultVatRate;
+    return rate;
   }
 
   List<InvoiceItem> get _filteredItems {
@@ -529,6 +615,16 @@ class _DocumentDetailsScreenState
             const SizedBox(height: 12),
             if (isError) _buildErrorDiagnostics(context, l10n, doc),
             if (!isProcessing && !isUploading && !isError) ...[
+              if (_duplicateCheck != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _buildDuplicateBanner(l10n, _duplicateCheck!),
+                ),
+              if (_isResolvingBarcodes)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _buildResolvingBarcodesBanner(l10n),
+                ),
               Builder(builder: (context) {
                 final badCount =
                     _unknownBarcodeIndices(ref.watch(productsProvider)).length;
@@ -537,6 +633,31 @@ class _DocumentDetailsScreenState
                   padding: const EdgeInsets.only(bottom: 8),
                   child: _buildBarcodeWarningBanner(l10n, badCount),
                 );
+              }),
+              Builder(builder: (context) {
+                final autoFilled = _mediumConfidenceCount;
+                if (autoFilled == 0) return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _buildAutoFilledBanner(l10n, autoFilled),
+                );
+              }),
+              Builder(builder: (context) {
+                if (isCashSent) return const SizedBox.shrink();
+                final report = _consistencyReport;
+                if (!report.isConsistent) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: _buildConsistencyBanner(l10n, report),
+                  );
+                }
+                if (report.hasWarnings) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: _buildTotalsWarningBanner(l10n, report),
+                  );
+                }
+                return const SizedBox.shrink();
               }),
               _buildGeneralCard(context, l10n, isCashSent),
               const SizedBox(height: 8),
@@ -946,6 +1067,12 @@ class _DocumentDetailsScreenState
     final filtered = _filteredItems;
     final productsState = ref.watch(productsProvider);
     final badIndices = _unknownBarcodeIndices(productsState);
+    final badIndexSet = badIndices.toSet();
+    // שורות שבהן כמות×מחיר ≠ סה"כ — לצביעה אדומה ולקישור לבאנר העקביות.
+    final inconsistentLines = _consistencyReport.blockingIssues
+        .where((i) => i.lineNumber != null)
+        .map((i) => i.lineNumber! - 1)
+        .toSet();
     final firstBadIndex = badIndices.isEmpty ? -1 : badIndices.first;
     return Card(
       key: _itemsCardKey,
@@ -1034,6 +1161,12 @@ class _DocumentDetailsScreenState
                   columnSpacing: 12,
                   columns: [
                     const DataColumn(label: SizedBox.shrink()),
+                    const DataColumn(
+                      label: Align(
+                        alignment: Alignment.center,
+                        child: Text('#', textAlign: TextAlign.center),
+                      ),
+                    ),
                     DataColumn(
                       label: Align(
                         alignment: Alignment.center,
@@ -1117,7 +1250,8 @@ class _DocumentDetailsScreenState
                       color:
                           WidgetStateProperty.resolveWith<Color?>((states) {
                         // ×¤×¡ ×¢×“×™×Ÿ ×œ×”×¤×¨×“×ª ×©×•×¨×•×ª (×ž×•×“×¨× ×™ ×™×•×ª×¨).
-                        if (_validationErrorLines.contains(globalIndex)) {
+                        if (_validationErrorLines.contains(globalIndex) ||
+                            inconsistentLines.contains(globalIndex)) {
                           return AppColors.error.withOpacity(0.10);
                         }
                         final isEven = entry.key % 2 == 0;
@@ -1129,6 +1263,9 @@ class _DocumentDetailsScreenState
                         isReadOnly
                             ? const DataCell(SizedBox.shrink())
                             : _deleteCell(globalIndex),
+                        // מספר השורה — תואם למספרים בדיאלוג שגיאות האימות
+                        // (שם: lineIndex + 1), ולכן יציב גם כשהטבלה מסוננת בחיפוש.
+                        _cellReadOnly('${globalIndex + 1}'),
                         isReadOnly
                             ? _cellReadOnly(item.itemNumber ?? AppConstants.emptyFieldPlaceholder)
                             : _cellColored(
@@ -1139,13 +1276,17 @@ class _DocumentDetailsScreenState
                                   globalIndex,
                                   item,
                                 ),
+                                // אותו מקור אמת כמו הבאנר האדום וחסימת השליחה:
+                                // ברקוד חסר, או ברקוד שאינו בקטלוג.
                                 background: item.newProduct != null
                                     ? AppColors.accentGreen.withOpacity(0.15)
-                                    : (productsState.hasCatalog &&
-                                            !productsState.isKnownItemNumber(
-                                                item.itemNumber))
+                                    : badIndexSet.contains(globalIndex)
                                         ? AppColors.error.withOpacity(0.18)
-                                        : null,
+                                        // מולא אוטומטית ממידע חלקי — כתום, לאימות.
+                                        : item.barcodeConfidence ==
+                                                BarcodeConfidence.medium
+                                            ? AppColors.warning.withOpacity(0.22)
+                                            : null,
                                 cellKey: globalIndex == firstBadIndex
                                     ? _firstBadCellKey
                                     : null,
@@ -1487,10 +1628,26 @@ class _DocumentDetailsScreenState
       if (confirmed == true && mounted) {
         setState(() {
           _items.removeAt(globalIndex);
+          _shiftBarcodeSuggestionsAfterRemoval(globalIndex);
           _renumberLineNumbers();
+          _recalculateDocumentTotals(allowEmpty: true);
         });
       }
     });
+  }
+
+  /// ההצעות ממופתחות לפי מיקום השורה, ולכן מחיקת שורה חייבת להזיז אותן —
+  /// אחרת ההצעות של שורה 5 יידבקו לשורה 4 אחרי מחיקת שורה 3.
+  void _shiftBarcodeSuggestionsAfterRemoval(int removedIndex) {
+    if (_barcodeSuggestions.isEmpty) return;
+    final shifted = <int, List<ResolvedCandidate>>{};
+    _barcodeSuggestions.forEach((index, candidates) {
+      if (index == removedIndex) return;
+      shifted[index > removedIndex ? index - 1 : index] = candidates;
+    });
+    _barcodeSuggestions
+      ..clear()
+      ..addAll(shifted);
   }
 
   void _renumberLineNumbers() {
@@ -1502,14 +1659,19 @@ class _DocumentDetailsScreenState
     }
   }
 
-  static const double _vatRate = 0.18;
+  static const double _defaultVatRate = 0.18;
 
   /// חישוב מחדש של סכומי המסמך מתוך שורות הפריטים:
-  /// סכום ביניים = סכום סה"כ השורות, מע"מ = 18%, סה"כ = סכום ביניים + מע"מ.
-  /// כשאין פריטים — לא נוגעים בערכים שהגיעו מה-OCR (למסמכים ללא שורות).
-  void _recalculateDocumentTotals() {
-    if (_items.isEmpty) return;
-    final subtotal = _items.fold<double>(0, (sum, it) => sum + it.totalPrice);
+  /// סכום ביניים = סכום סה"כ השורות − הנחת המסמך, מע"מ = סכום ביניים × שיעור
+  /// המע"מ של המסמך, סה"כ = סכום ביניים + מע"מ.
+  /// כשאין פריטים — לא נוגעים בערכים שהגיעו מה-OCR (למסמכים ללא שורות),
+  /// אלא אם [allowEmpty] — כלומר המשתמש מחק את השורה האחרונה ומצפה לאיפוס.
+  void _recalculateDocumentTotals({bool allowEmpty = false}) {
+    if (_items.isEmpty && !allowEmpty) return;
+    final lineSum = _items.fold<double>(0, (sum, it) => sum + it.totalPrice);
+    // מחיקת שורות עלולה להוריד את סכום השורות מתחת להנחה — אין סכום ביניים שלילי.
+    final subtotal =
+        (lineSum - _documentDiscount).clamp(0.0, double.infinity).toDouble();
     final vat = subtotal * _vatRate;
     final total = subtotal + vat;
     _subtotal = formatCurrency(double.parse(subtotal.toStringAsFixed(2)));
@@ -1568,22 +1730,437 @@ class _DocumentDetailsScreenState
     return '$s%';
   }
 
+  // ===== §14: האם החשבונית כבר נקלטה ל-Comax? =====
+
+  /// נקרא מיד עם פתיחת המסמך, לפני שהמשתמש נוגע במשהו.
+  ///
+  /// הרקע: אותה חשבונית של פיליפ מוריס (₪26,075) נקלטה ל-Comax **פעמיים** —
+  /// פעם בהקלדה ידנית של הלקוח ופעם דרכנו. שדה האסמכתא ב-Comax מוגבל ל-9 ספרות,
+  /// הלקוח הקליד רק את הסיומת, ובדיקת הייחודיות של Comax לא ראתה בזה אותה חשבונית.
+  ///
+  /// ⚠️ **מזהיר, לא חוסם.** `match: "suffix"` הוא סימן חזק אך לא ודאות, וכשל
+  /// בבדיקה עצמה לא ימנע מהמשתמש להמשיך.
+  Future<void> _maybeCheckDuplicate() async {
+    if (_duplicateCheckDone) return;
+    if (widget.document?.isComaxIntakeInFlightOrDone ?? false) return;
+    // הממשק האחיד /documents/exists בודק לפי סוג המסמך — עובד גם לחשבוניות וגם
+    // לתעודות כניסה, כל אחת מול הטבלה שלה (בלי הצלבה).
+    final apiType =
+        apiDocumentTypeForLabel(AppLocalizations.of(context), _documentType);
+    // עוד אין תוצאת OCR — נחזור לכאן מ-didUpdateWidget כשהיא תגיע.
+    final invoiceNumber = _documentNumber.trim();
+    if (invoiceNumber.isEmpty) return;
+
+    _duplicateCheckDone = true;
+    try {
+      await ref.read(customerCodeProvider.notifier).ready;
+      if (!mounted) return;
+
+      // /documents/exists **דורש supplierCode**. קדימות: הבחירה הידנית → קוד
+      // הספק הנגזר משם החברה (חשוב לספקים ללא ח.פ כמו רגבים) → תרגום הח.פ.
+      final candidates = <String>{
+        if (_supplierCode != null && _supplierCode!.isNotEmpty) _supplierCode!,
+      };
+      if (candidates.isEmpty) {
+        await ref.read(suppliersProvider.notifier).load();
+        if (!mounted) return;
+        final s = ref.read(suppliersProvider);
+        final byName = s.codeForName(_companyName);
+        if (byName.isNotEmpty) candidates.add(byName);
+        // ח.פ אחד יכול להתאים לכמה רשומות ספק — בודקים את כולן, כי הכפילות
+        // רשומה תחת אחת מהן ואיננו יודעים מראש איזו.
+        candidates.addAll(s.codesForTaxId(_companyId).take(3));
+      }
+      if (candidates.isEmpty) {
+        // ספק לא מזוהה — לא ניתן לבדוק. הבדיקה תרוץ שוב אם המשתמש יבחר ספק.
+        _duplicateCheckDone = false;
+        return;
+      }
+
+      final customerCode = ref.read(customerCodeProvider);
+      for (final supplierCode in candidates) {
+        final result = await _apiClient.checkInvoiceExists(
+          invoiceNumber: invoiceNumber,
+          documentType: apiType,
+          supplierCode: supplierCode,
+          customerCode: customerCode,
+        );
+        if (!mounted) return;
+        // מציגים באנר גם על כפילות חיה (exists) וגם על מסמך שבוטל (reversed).
+        if (result != null && (result.exists || result.isReversed)) {
+          setState(() => _duplicateCheck = result);
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint('checkInvoiceExists failed: $e');
+      // כשל בדיקה = "לא ידוע". לא מציגים כלום ולא חוסמים.
+    }
+  }
+
+  /// `2026-07-09` -> `09/07/2026`. הקראולר מחזיר ISO; המשתמש קורא אירופאי,
+  /// כמו כל שאר התאריכים במסך.
+  String _formatIsoDate(String iso) {
+    final m = RegExp(r'^(\d{4})-(\d{2})-(\d{2})').firstMatch(iso.trim());
+    return m == null ? iso : '${m.group(3)}/${m.group(2)}/${m.group(1)}';
+  }
+
+  /// באנר "נמצאה חשבונית דומה". מנוסח בזהירות בכוונה — ראו [_maybeCheckDuplicate].
+  Widget _buildDuplicateBanner(AppLocalizations l10n, InvoiceExistsResult r) {
+    final theme = Theme.of(context);
+    // מסמך שבוטל (reversed) — לא כפילות חוסמת אלא מידע: אפשר לשלוח שוב.
+    final isReversed = r.isReversed && !r.exists;
+    final exactMatch = r.comaxInvoices.any((i) => i.isExact);
+    final title = isReversed
+        ? l10n.duplicateReversedTitle
+        : (exactMatch ? l10n.duplicateFoundTitle : l10n.duplicateSimilarTitle);
+    final accent = isReversed ? AppColors.accentGreen : AppColors.warning;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: accent.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: accent.withOpacity(0.55)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                  isReversed
+                      ? CupertinoIcons.info_circle_fill
+                      : CupertinoIcons.exclamationmark_circle_fill,
+                  color: accent,
+                  size: 22),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          for (final inv in r.comaxInvoices) ...[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2),
+              child: Text(
+                '${l10n.comaxDocumentLabel} ${inv.comaxDocNumber}'
+                '${inv.amount != null ? ' · ${formatCurrency(inv.amount!)}' : ''}'
+                '${inv.invoiceDate != null && inv.invoiceDate!.isNotEmpty ? ' · ${inv.invoiceDate}' : ''}'
+                '${inv.warehouseName != null && inv.warehouseName!.isNotEmpty ? ' · ${inv.warehouseName}' : ''}',
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: AppColors.textSecondary),
+              ),
+            ),
+            // **חובה להסביר למה זו התאמה.** בלי זה האזהרה נראית שרירותית: האסמכתא
+            // ב-Comax היא "42386" בעוד מספר החשבונית שלנו הוא "8003542386", כי
+            // שדה האסמכתא מוגבל באורך והלקוח מקליד רק את הסיומת.
+            if (inv.reference != null && inv.reference!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Text(
+                  inv.isExact
+                      ? '${l10n.duplicateReferenceLabel} ${inv.reference}'
+                      : '${l10n.duplicateReferenceLabel} ${inv.reference} — ${l10n.duplicateSuffixExplain}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+          ],
+          if (r.snapshotDate != null) ...[
+            const SizedBox(height: 4),
+            // הצילום הוא מהשליפה האחרונה: היעדר התאמה אינו הוכחה, ונוכחות התאמה
+            // עשויה להיות ישנה. אומרים את זה למשתמש במקום להעמיד פנים.
+            Text(
+              '${l10n.duplicateSnapshotNote} ${_formatIsoDate(r.snapshotDate!)}',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: AppColors.textSecondary, fontSize: 11),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // ===== §13: שחזור ברקודים לחשבונית שהגיעה בלעדיהם =====
+
+  /// חלק מהספקים (למשל פיליפ מוריס) מדפיסים חשבונית **ללא ברקודים** — רק תיאור
+  /// מוצר מקוצץ. `/documents/validate` מזהה פריטים לפי ברקוד בלבד, ולכן בלי
+  /// השחזור הזה אי אפשר לשלוח מסמך כזה לקופה.
+  ///
+  /// רץ פעם אחת, ורק כשיש בפועל שורה בלי ברקוד. שורות שכבר יש להן ברקוד
+  /// (מה-OCR או מהמשתמש) **לעולם לא נדרסות** — הן נשלחות רק כדי שהשיבוץ
+  /// החד-חד-ערכי בשרת ידע שהמועמד שלהן תפוס.
+  Future<void> _maybeResolveMissingBarcodes() async {
+    if (_barcodeResolveAttempted || _isResolvingBarcodes) return;
+    // מסמך שכבר בדרכו לקופה (או נקלט) הוא לקריאה בלבד.
+    if (widget.document?.isComaxIntakeInFlightOrDone ?? false) return;
+
+    final hasMissing = _items.any(
+      (it) => (it.itemNumber ?? '').trim().isEmpty && it.newProduct == null,
+    );
+    if (!hasMissing) return;
+
+    _barcodeResolveAttempted = true;
+    setState(() => _isResolvingBarcodes = true);
+
+    try {
+      // ה-clientId נקרא מהדיסק אסינכרונית; בלי ההמתנה נשלח את לקוח ברירת המחדל
+      // ונצליב מול הקטלוג של לקוח אחר לגמרי.
+      await ref.read(customerCodeProvider.notifier).ready;
+      if (!mounted) return;
+      final result = await _resolverService.resolve(
+        items: _items,
+        customerCode: ref.read(customerCodeProvider),
+        supplierCode: _supplierCode,
+      );
+      if (!mounted) return;
+
+      final byLine = {for (final r in result.items) r.lineNumber: r};
+      setState(() {
+        for (var i = 0; i < _items.length; i++) {
+          final item = _items[i];
+          final resolved = byLine[item.lineNumber];
+          if (resolved == null) continue;
+
+          _barcodeSuggestions[i] = [
+            // המועמד המוביל הוא עצמו חלופה לגיטימית כשלא מילאנו אותו.
+            if (!resolved.shouldAutoFill && resolved.barcode != null)
+              ResolvedCandidate(
+                barcode: resolved.barcode!,
+                name: resolved.matchedName ?? '',
+              ),
+            ...resolved.alternatives,
+          ];
+
+          final alreadyHasBarcode = (item.itemNumber ?? '').trim().isNotEmpty;
+          if (alreadyHasBarcode || !resolved.shouldAutoFill) continue;
+
+          _items[i] = item.copyWith(
+            itemNumber: resolved.barcode,
+            barcodeConfidence: resolved.confidence,
+          );
+        }
+        _isResolvingBarcodes = false;
+      });
+      // לא שומרים כאן: המסמך נשמר כשהמשתמש לוחץ "שמור" (_onSave), כמו כל עריכה
+      // אחרת בדף. כך מילוי אוטומטי לעולם לא כותב לדיסק בלי ידיעתו.
+    } catch (e, st) {
+      debugPrint('resolveInvoiceItems failed: $e\n$st');
+      if (!mounted) return;
+      // כישלון אינו חוסם: השורות פשוט נשארות אדומות והמשתמש ימלא ידנית.
+      setState(() => _isResolvingBarcodes = false);
+    }
+  }
+
   // ===== §9: זיהוי מול קטלוג + עורך ברקוד "חלופי" =====
 
-  /// אינדקסי שורות שהברקוד/קוד שלהן אינו קיים בקטלוג (לסימון אדום + חסימת שליחה).
+  /// אינדקסי שורות שאי אפשר לשלוח לקופה: **ברקוד חסר**, או ברקוד שאינו בקטלוג.
+  /// (לסימון אדום + חסימת שליחה.)
+  ///
+  /// ⚠️ שורה **ריקה** חייבת להיספר כאן. `ProductsState.isKnownItemNumber('')`
+  /// מחזיר `true` בכוונה ("אין מה לסמן"), וזה היה תקף כל עוד ה-OCR תמיד ייצר
+  /// ברקוד כלשהו. מאז ההצלבה האוטומטית (§13), שורה שלא הוכרעה נשארת **ריקה** —
+  /// ובלי הבדיקה הזו היא עוברת בשקט ל-`/documents/validate` בלי מזהה פריט.
+  /// קוד הספק לזיהוי/סינון: הבחירה הידנית, אחרת נגזר משם החברה (הספק שנבחר
+  /// בסריקה). null כשלא ניתן לזהות ספק — אז ההתאמה נשארת גלובלית.
+  String? get _effectiveSupplierCode {
+    if (_supplierCode != null && _supplierCode!.isNotEmpty) return _supplierCode;
+    final byName = ref.read(suppliersProvider).codeForName(_companyName);
+    return byName.isEmpty ? null : byName;
+  }
+
   List<int> _unknownBarcodeIndices(ProductsState products) {
-    if (!products.hasCatalog) return const [];
     final out = <int>[];
+    final sup = _effectiveSupplierCode;
     for (var i = 0; i < _items.length; i++) {
       final it = _items[i];
       // שורה שנוצר לה "פריט חדש" נחשבת מסודרת — לא חוסמת ולא אדומה.
       if (it.newProduct != null) continue;
-      if (!products.isKnownItemNumber(it.itemNumber)) out.add(i);
+      if ((it.itemNumber ?? '').trim().isEmpty) {
+        out.add(i);
+        continue;
+      }
+      // בלי קטלוג טעון אי אפשר לדעת אם הברקוד קיים — לא מסמנים.
+      if (products.hasCatalog &&
+          !products.isKnownItemNumber(it.itemNumber, supplierCode: sup)) {
+        out.add(i);
+      }
     }
     return out;
   }
 
   /// באנר אזהרה בראש הדף כשיש ברקודים שאינם קיימים בקטלוג.
+  /// כמה שורות מולאו אוטומטית בוודאות בינונית (כתומות). אינן חוסמות שליחה.
+  int get _mediumConfidenceCount => _items
+      .where((it) => it.barcodeConfidence == BarcodeConfidence.medium)
+      .length;
+
+  /// חיווי בזמן ההצלבה מול הקטלוג (רץ פעם אחת בפתיחת המסך).
+  Widget _buildResolvingBarcodesBanner(AppLocalizations l10n) {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primary.withOpacity(0.35)),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 18,
+            height: 18,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation(AppColors.primary),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              l10n.resolvingBarcodes,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// באנר כתום — שורות שהברקוד שלהן שוחזר ממידע חלקי. **אינו חוסם** שליחה,
+  /// בניגוד לבאנר האדום; הוא רק מבקש אימות ויזואלי של התאים הכתומים.
+  Widget _buildAutoFilledBanner(AppLocalizations l10n, int count) {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.warning.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.warning.withOpacity(0.55)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(CupertinoIcons.info_circle_fill,
+              color: AppColors.warning, size: 22),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${l10n.autoFilledBarcodesTitle} ($count)',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.autoFilledBarcodesSubtitle,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// באנר כתום — הסה"כ שבחשבונית שונה מהחישוב. **אינו חוסם**; המשתמש מחליט.
+  Widget _buildTotalsWarningBanner(AppLocalizations l10n, ConsistencyReport report) {
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.warning.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.warning.withOpacity(0.55)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(CupertinoIcons.exclamationmark_circle_fill,
+              color: AppColors.warning, size: 22),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.consistencyWarnTitle,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                for (final w in report.warningIssues)
+                  Text(w.message,
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: AppColors.textSecondary)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// באנר אדום — המספרים בשורות עצמן לא מתחברים. חוסם שליחה (טעות קריאה ודאית).
+  Widget _buildConsistencyBanner(AppLocalizations l10n, ConsistencyReport report) {
+    final theme = Theme.of(context);
+    final count = report.blockingIssues.length;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.error.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.error.withOpacity(0.5)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(CupertinoIcons.exclamationmark_triangle_fill,
+              color: AppColors.error, size: 22),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${l10n.consistencyBlockTitle} ($count)',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                        color: AppColors.error, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                Text(l10n.consistencyBannerSubtitle,
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: AppColors.textSecondary)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBarcodeWarningBanner(AppLocalizations l10n, int count) {
     final theme = Theme.of(context);
     return Container(
@@ -1657,6 +2234,89 @@ class _DocumentDetailsScreenState
     );
   }
 
+  /// המועמדים שההצלבה האוטומטית הציעה לשורה, מדורגים. ריק כשלא הוצע דבר.
+  ///
+  /// ⚠️ מציג **שם + ברקוד + מחיר קניה**, לא רק שם: הקטלוג מכיל פריטים שונים
+  /// בעלי שם זהה תו-בתו (שני "מרלבורו גולד" ב-33.46 ₪), ובלי הברקוד המשתמש
+  /// היה רואה שתי שורות זהות ואין לו על מה לבסס בחירה.
+  Widget _suggestionsBlock(
+    ThemeData theme,
+    AppLocalizations l10n,
+    int index, {
+    required String selected,
+    required ValueChanged<ResolvedCandidate> onPick,
+  }) {
+    final candidates = _barcodeSuggestions[index] ?? const <ResolvedCandidate>[];
+    if (candidates.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.suggestedMatches,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          for (final c in candidates)
+            InkWell(
+              onTap: () => onPick(c),
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: c.barcode == selected
+                        ? AppColors.accentGreen
+                        : AppColors.divider,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  color: c.barcode == selected
+                      ? AppColors.accentGreen.withOpacity(0.08)
+                      : null,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            c.name,
+                            style: theme.textTheme.bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            c.purchasePrice != null
+                                ? '${c.barcode}  ·  ${formatCurrency(c.purchasePrice!)}'
+                                : c.barcode,
+                            style: theme.textTheme.bodySmall
+                                ?.copyWith(color: AppColors.textSecondary),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (c.barcode == selected)
+                      const Icon(
+                        CupertinoIcons.check_mark_circled_solid,
+                        size: 18,
+                        color: AppColors.accentGreen,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   /// עורך תא הברקוד: עריכה ידנית + חיפוש מוצר לפי שם (רק מוצרי ספק החשבונית).
   void _editBarcodeCell(
     BuildContext context,
@@ -1673,6 +2333,8 @@ class _DocumentDetailsScreenState
       setState(() {
         _items[index] = _items[index].copyWith(
           itemNumber: v.isEmpty ? null : v,
+          // המשתמש הכריע — השורה כבר לא "מולאה אוטומטית", ולכן לא כתומה.
+          barcodeConfidence: null,
         );
         _validationErrorLines = {};
       });
@@ -1691,8 +2353,11 @@ class _DocumentDetailsScreenState
             child: StatefulBuilder(
               builder: (ctx, setSheet) {
                 final barcode = barcodeController.text.trim();
-                final matched = products.productForBarcode(barcode);
-                final known = products.isKnownItemNumber(barcode);
+                final sup = _effectiveSupplierCode;
+                final matched =
+                    products.productForBarcode(barcode, supplierCode: sup);
+                final known =
+                    products.isKnownItemNumber(barcode, supplierCode: sup);
 
                 Widget statusLine() {
                   if (!products.hasCatalog || barcode.isEmpty) {
@@ -1737,6 +2402,39 @@ class _DocumentDetailsScreenState
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      if (item.description.trim().isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.accentGreen.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color: AppColors.accentGreen.withOpacity(0.25)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                // מה שה-OCR קרא לשורה הזו — כדי לזכור מה מחפשים.
+                                Text(l10n.fromInvoiceLabel,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                        color: AppColors.textSecondary,
+                                        fontSize: 11)),
+                                const SizedBox(height: 2),
+                                Text(item.description.trim(),
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.textPrimary)),
+                                if ((item.itemNumber ?? '').trim().isNotEmpty)
+                                  Text('${l10n.barcodeLabel}: ${item.itemNumber!.trim()}',
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                          color: AppColors.textSecondary)),
+                              ],
+                            ),
+                          ),
+                        ),
                       Text(
                         l10n.editBarcodeTitle,
                         style: theme.textTheme.titleMedium?.copyWith(
@@ -1764,6 +2462,17 @@ class _DocumentDetailsScreenState
                         onChanged: (_) => setSheet(() {}),
                       ),
                       statusLine(),
+                      _suggestionsBlock(
+                        theme,
+                        l10n,
+                        index,
+                        selected: barcode,
+                        onPick: (candidate) {
+                          barcodeController.text = candidate.barcode;
+                          setSheet(() {});
+                          save(candidate.barcode);
+                        },
+                      ),
                       const SizedBox(height: 16),
                       // §9: חיפוש מוצר נפתח כמסך חיפוש נגלל (כמו בורר הספק),
                       // מסונן למוצרי ספק החשבונית. כך אין overflow כשהמקלדת פתוחה.
@@ -1788,13 +2497,47 @@ class _DocumentDetailsScreenState
                               );
                               return;
                             }
+                            // קודי הספק של החשבונית (מהבחירה, מהשם, או מהח.פ שה-OCR
+                            // קרא), ל-toggle "רק ספק זה". כבוי כברירת מחדל.
+                            final suppliersState = ref.read(suppliersProvider);
+                            final codeByName =
+                                suppliersState.codeForName(_companyName);
+                            final supplierCodes = <String>{
+                              if (_supplierCode != null &&
+                                  _supplierCode!.isNotEmpty)
+                                _supplierCode!,
+                              if (codeByName.isNotEmpty) codeByName,
+                              ...suppliersState.codesForTaxId(_companyId),
+                            };
                             final picked = await showSearchablePicker<Product>(
                               context: context,
                               title: l10n.searchByProductName,
                               searchHint: l10n.productSearchHint,
+                              // מה שנקרא מהחשבונית לשורה הזו, כהקשר לחיפוש.
+                              contextTitle: item.description.trim().isEmpty
+                                  ? null
+                                  : item.description.trim(),
+                              contextSubtitle:
+                                  (item.itemNumber ?? '').trim().isEmpty
+                                      ? null
+                                      : '${l10n.barcodeLabel}: ${item.itemNumber!.trim()}',
                               items: items,
                               labelOf: (p) => p.name,
-                              sublabelOf: (p) => p.barcode,
+                              // מציג "קוד מוצר, ברקוד" (הקוד לפני הברקוד). תת-הכותרת
+                              // נכללת גם בטקסט החיפוש, אז זה גם מאפשר חיפוש לפי קוד מוצר.
+                              sublabelOf: (p) {
+                                final code = p.code.trim();
+                                final barcode = p.barcode.trim();
+                                if (code.isEmpty) return barcode;
+                                if (barcode.isEmpty) return code;
+                                return '$code, $barcode';
+                              },
+                              filterLabel: supplierCodes.isEmpty
+                                  ? null
+                                  : l10n.filterBySupplier,
+                              matchesFilter: supplierCodes.isEmpty
+                                  ? null
+                                  : (p) => supplierCodes.contains(p.supplierCode),
                             );
                             if (picked != null) {
                               barcodeController.text = picked.barcode;
@@ -1857,13 +2600,17 @@ class _DocumentDetailsScreenState
       searchHint: l10n.searchHintGeneric,
       items: suppliers,
       labelOf: (s) => s.name,
-      sublabelOf: (s) => s.code,
+      // מציגים וגם מחפשים לפי ח.פ (עוסק מורשה) — לא לפי מספר הספק הפנימי.
+      sublabelOf: (s) => s.taxId.isEmpty ? '' : 'ח.פ ${s.taxId}',
+      searchExtra: (s) => s.taxId,
     );
     if (picked != null && mounted) {
       final code = picked.code.trim();
       setState(() {
         _companyName = picked.name;
         _supplierCode = code.isEmpty ? null : code;
+        // עכשיו יש קוד ספק — אם בדיקת הכפילות דילגה מחוסר זיהוי, היא יכולה לרוץ.
+        if (!_duplicateCheckDone) _maybeCheckDuplicate();
         _validationErrorLines = {};
       });
       // שמירת הקוד שנבחר לסשן לפי ח.פ של החשבונית — לשליחה אוטומטית בעתיד.
@@ -2019,12 +2766,9 @@ class _DocumentDetailsScreenState
 
   void _showDocumentTypeSheet() {
     final l10n = AppLocalizations.of(context);
-    final options = [
-      l10n.docTypeInvoice,
-      l10n.docTypeDelivery,
-      l10n.docTypeReturn,
-      l10n.docTypeOther,
-    ];
+    // אותן אפשרויות בדיוק כמו בסריקה חדשה (מקור אמת משותף): פעילים —
+    // חשבונית מס/כניסה + תעודת כניסה; השאר מושבתים.
+    final options = docScanDocumentTypeOptions(l10n);
     showAdaptiveBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -2035,7 +2779,9 @@ class _DocumentDetailsScreenState
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
+            // הכותרת + 4 ה-ListTile חורגים ב-3px מגובה ה-sheet במסכים מסוימים.
+            child: SingleChildScrollView(
+              child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -2048,114 +2794,22 @@ class _DocumentDetailsScreenState
                 ),
                 const SizedBox(height: 16),
                 ...options.map((opt) {
-                  final isOther = opt == l10n.docTypeOther;
                   return ListTile(
-                    title: Text(opt),
-                    onTap: () {
-                      Navigator.of(ctx).pop();
-                      if (!isOther) {
-                        setState(() => _documentType = opt);
-                      } else {
-                        _showCustomDocumentTypeSheet();
-                      }
-                    },
+                    enabled: opt.active,
+                    title: Text(
+                      opt.active
+                          ? opt.label
+                          : '${opt.label}  (${l10n.docTypeInactiveSuffix})',
+                    ),
+                    onTap: opt.active
+                        ? () {
+                            Navigator.of(ctx).pop();
+                            setState(() => _documentType = opt.label);
+                          }
+                        : null,
                   );
                 }),
               ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showCustomDocumentTypeSheet() {
-    final l10n = AppLocalizations.of(context);
-    final controller = TextEditingController(text: '');
-    showAdaptiveBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        final theme = Theme.of(ctx);
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(ctx).viewInsets.bottom,
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    l10n.enterDocumentType,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: _actionSheetGreen,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: controller,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      labelText: l10n.documentTypeLabel,
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.divider),
-                      ),
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.divider),
-                      ),
-                      isDense: true,
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: _actionSheetGreen,
-                        ),
-                      ),
-                    ),
-                    onSubmitted: (v) {
-                      final value = v.trim().isEmpty ? l10n.docTypeOther : v.trim();
-                      setState(() => _documentType = value);
-                      Navigator.of(ctx).pop();
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: _actionSheetGreen,
-                          ),
-                          onPressed: () => Navigator.of(ctx).pop(),
-                          child: Text(l10n.cancel),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: GradientButton(
-                          label: l10n.update,
-                          colors: const [
-                            AppColors.headerGradientStart,
-                            AppColors.headerGradientEnd,
-                          ],
-                          onPressed: () {
-                            final value =
-                                controller.text.trim().isEmpty
-                                    ? l10n.docTypeOther
-                                    : controller.text.trim();
-                            setState(() => _documentType = value);
-                            Navigator.of(ctx).pop();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ),
             ),
           ),
@@ -2281,6 +2935,7 @@ class _DocumentDetailsScreenState
           _documentDate.isEmpty ? original.documentDate : _documentDate,
       paymentDueDate:
           _paymentDueDate.isEmpty ? original.paymentDueDate : _paymentDueDate,
+      discount: _documentDiscount,
       subtotal: _parseAmount(_subtotal, fallback: original.subtotal),
       vatAmount: _parseAmount(_vatAmount, fallback: original.vatAmount),
       totalAmount: _parseAmount(_totalAmount, fallback: original.totalAmount),
@@ -2288,6 +2943,18 @@ class _DocumentDetailsScreenState
       errorMessage: original.errorMessage,
       scanModel: original.scanModel,
       items: _items,
+      // ⚠️ חובה להעביר את שדות ה-Comax מהמסמך המקורי.
+      //
+      // הפונקציה בונה InvoiceDocument **חדש** מהשדות שב-UI, ולא copyWith. לפני
+      // התיקון הזה, לחיצה על "שמור" אחרי "שלח לקופה" אִפְסה את `comaxDocumentId` —
+      // מפתח הקורלציה היחיד שלנו מול הקראולר. בלעדיו קרון הפולינג לא מוצא את
+      // התעודה לעולם, והיא נשארת "ממתין לשליחה" בזמן שהחשבונית כבר ב-Comax.
+      // זה בדיוק מה שקרה לחשבונית 0122538768 (מסמך Comax 2501470) בפרודקשן.
+      comaxDocumentId: original.comaxDocumentId,
+      comaxDocNumber: original.comaxDocNumber,
+      comaxStatus: original.comaxStatus,
+      comaxReceiveError: original.comaxReceiveError,
+      comaxDiagnosis: original.comaxDiagnosis,
     );
   }
 
@@ -2301,17 +2968,37 @@ class _DocumentDetailsScreenState
 
     HapticFeedback.lightImpact();
 
-    final updated = _documentSnapshotForPersist().copyWith(
-      status: DocumentStatus.completed,
-    );
+    final snapshot = _documentSnapshotForPersist();
+    // "שמור" לא רשאי להוריד בדרגה מסמך שכבר בדרכו לקופה או שנקלט בה. אחרת
+    // מסמך ב-`processing` היה חוזר ל-`completed`, קרון הפולינג היה מפסיק לחפש
+    // אותו (הוא סורק לפי `comaxStatus`), והסטטוס האמיתי מ-Comax לא היה מגיע לעולם.
+    final updated = snapshot.isComaxIntakeInFlightOrDone
+        ? snapshot
+        : snapshot.copyWith(status: DocumentStatus.completed);
 
     ref.read(documentsProvider.notifier).upsert(updated);
     context.go(AppConstants.routeHome);
   }
 
+  // ===== §15: מעקה בטיחות — עקביות אריתמטית לפני שליחה ל-Comax =====
+
+  /// דוח העקביות הנוכחי (מחושב מהשורות + הסכומים ב-UI).
+  ///
+  /// מוצלב מול הסה"כ שה-OCR קרא. כשהמסמך עקבי — הדוח נותן גם את הסיכומים
+  /// המחושבים למילוי אוטומטי. כשלא — הוא זה שחוסם את "שלח לקופה".
+  ConsistencyReport get _consistencyReport => analyzeInvoice(
+        _items,
+        // מול הסה"כ **שה-OCR קרא**, לא מול השדה המוצג (שהוחלף בערך המחושב) —
+        // אחרת ההשוואה הייתה מחושב-מול-מחושב והאזהרה לעולם לא הייתה עולה.
+        documentSubtotal: _ocrSubtotal,
+        documentTotal: _ocrTotal,
+        vatRate: _vatRate,
+      );
+
   // ===== §10/§11: "שלח לקופה" = אימות → קליטה ל-Comax (דרך הקראולר) =====
 
-  /// "שלח לקופה" — שלב ראשון: אימות מול ה-API. חסום אם יש ברקודים שאינם בקטלוג.
+  /// "שלח לקופה" — שלב ראשון: אימות מול ה-API. חסום אם יש ברקודים שאינם בקטלוג,
+  /// **או** אם המספרים לא מתחברים (השורות/הסה"כ) — קריאת OCR שגויה לא תגיע ל-Comax.
   void _onUpdateInCash() {
     final l10n = AppLocalizations.of(context);
     final productsState = ref.read(productsProvider);
@@ -2324,7 +3011,111 @@ class _DocumentDetailsScreenState
       _jumpToFirstBadBarcode();
       return;
     }
+    final report = _consistencyReport;
+    if (!report.isConsistent) {
+      _showConsistencyBlockDialog(report);
+      return;
+    }
+    if (report.hasWarnings) {
+      // פער מול הסה"כ שבחשבונית — לא חוסם, אבל מבקשים אישור מפורש.
+      _showConsistencyWarningDialog(report);
+      return;
+    }
     _runValidation();
+  }
+
+  /// אזהרת פער-סכומים לפני שליחה. המשתמש מחליט אם לשלוח בכל זאת.
+  void _showConsistencyWarningDialog(ConsistencyReport report) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(CupertinoIcons.exclamationmark_circle_fill,
+                color: AppColors.warning, size: 22),
+            const SizedBox(width: 8),
+            Expanded(child: Text(l10n.consistencyWarnTitle)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final w in report.warningIssues)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Text('• ${w.message}', style: theme.textTheme.bodySmall),
+              ),
+            const SizedBox(height: 8),
+            Text(l10n.consistencyWarnQuestion,
+                style: theme.textTheme.bodyMedium),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              _runValidation();
+            },
+            child: Text(l10n.consistencyWarnSendAnyway),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// דיאלוג חסימה כשהמספרים לא מתחברים — מראה את הממצאים המדויקים.
+  void _showConsistencyBlockDialog(ConsistencyReport report) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final blocking = report.blockingIssues;
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(CupertinoIcons.exclamationmark_triangle_fill,
+                color: AppColors.error, size: 22),
+            const SizedBox(width: 8),
+            Expanded(child: Text(l10n.consistencyBlockTitle)),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.consistencyBlockSubtitle,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: AppColors.textSecondary)),
+              const SizedBox(height: 12),
+              for (final issue in blocking.take(12))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Text('• ${issue.message}',
+                      style: theme.textTheme.bodySmall),
+                ),
+              if (blocking.length > 12)
+                Text('… ועוד ${blocking.length - 12}',
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: AppColors.textSecondary)),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.ok),
+          ),
+        ],
+      ),
+    );
   }
 
   /// מריץ אימות. [supplierCode] — אם נשלח (אחרי בחירת ספק מההצעות), נשלח ב-header.
@@ -2353,14 +3144,21 @@ class _DocumentDetailsScreenState
             : null) ??
         (taxId.isNotEmpty ? cache[taxId] : null);
 
+    // סוג המסמך שנבחר → ערך ה-API (תעודת כניסה/משלוח → goods_receipt).
+    final docTypeForApi =
+        apiDocumentTypeForLabel(AppLocalizations.of(context), _documentType);
+
     // שולחים את הברקוד **המלא מהקטלוג** כשבחשבונית הופיע ברקוד מקוצר (התאמה קנונית),
     // כדי שה-validate/קליטה ב-Comax ימצאו את הפריט (אחרת line_item_not_found).
     final productsState = ref.read(productsProvider);
     final payload = InvoiceValidationPayload.fromDocument(
       snapshot,
       supplierCode: effectiveCode,
+      documentType: docTypeForApi,
       barcodeOf: (item) =>
-          productsState.productForBarcode(item.itemNumber)?.barcode ??
+          productsState
+              .productForBarcode(item.itemNumber, supplierCode: effectiveCode)
+              ?.barcode ??
           (item.itemNumber ?? ''),
     );
 
@@ -2464,12 +3262,15 @@ class _DocumentDetailsScreenState
     }
 
     final r = res!;
+    // אזהרות כפילות מגיעות **רק** מ-/documents/exists **לפני** השליחה. הקראולר
+    // הסיר את possibleDuplicate מתשובת ה-submit (כפילות אמיתית נחסמת שם ב-409
+    // לפני הקליטה), אז אין כאן יותר טיפול בכפילות — קליטה מוצלחת = תשובה נקייה.
     // נקלט מיד (לרוב לא יקרה עם wait=false, אבל נתמך).
     if (r.success) {
       _onSubmitReceived(documentId, r.comaxDocNumber, r.message);
       return;
     }
-    // 202 — ממשיך ברקע; הסטטוס הסופי יגיע מה-webhook.
+    // 202 — ממשיך ברקע; הסטטוס הסופי נקבע ע"י קרון הפולינג בשרת.
     if (r.processing) {
       _onSubmitProcessing(documentId);
       return;
@@ -2477,8 +3278,8 @@ class _DocumentDetailsScreenState
     _handleSubmitError(r, documentId);
   }
 
-  /// 202: לסמן "ממשיך ברקע" + לשמור את comaxDocumentId (מפתח הקורלציה ל-webhook)
-  /// ולסנכרן לבקאנד, כך שה-webhook יוכל לאתר את הרשומה. חוזרים לבית.
+  /// 202: לסמן "ממשיך ברקע" + לשמור את comaxDocumentId ולסנכרן לבקאנד — זהו
+  /// מפתח הקורלציה שקרון הפולינג בשרת מחפש לפיו. חוזרים לבית.
   void _onSubmitProcessing(String documentId) {
     final l10n = AppLocalizations.of(context);
     final updated = _documentSnapshotForPersist().copyWith(
@@ -2635,18 +3436,12 @@ class _DocumentDetailsScreenState
     final theme = Theme.of(context);
     final resolved = r.resolved ?? const {};
     final supplier = resolved['supplier'];
-    final totals = resolved['totals'];
     final lines = resolved['lines'];
     final supplierName =
         supplier is Map ? (supplier['name']?.toString() ?? '') : '';
     final supplierCode =
         supplier is Map ? (supplier['code']?.toString() ?? '') : '';
     final linesCount = lines is List ? lines.length : 0;
-
-    String money(dynamic v) {
-      final d = (v is num) ? v.toDouble() : double.tryParse('$v');
-      return d == null ? '—' : formatCurrency(d);
-    }
 
     showDialog<void>(
       context: context,
@@ -2673,11 +3468,6 @@ class _DocumentDetailsScreenState
                     supplierCode.isEmpty
                         ? supplierName
                         : '$supplierName ($supplierCode)'),
-              if (totals is Map) ...[
-                _kvRow(theme, l10n.subtotalNoVat, money(totals['subtotal'])),
-                _kvRow(theme, l10n.vatAmount, money(totals['vat'])),
-                _kvRow(theme, l10n.totalToPay, money(totals['total'])),
-              ],
               _kvRow(theme, l10n.items, '$linesCount'),
             ],
           ),

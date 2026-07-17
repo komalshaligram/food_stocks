@@ -101,78 +101,120 @@ class PrivacyPolicyBloc extends Bloc<PrivacyPolicyEvent, PrivacyPolicyState> {
       } else if (event is _signaturePadSavedEvent) {
         if (event.fieldName == AppStrings.owner1SignatureString) {
           owner1Signature = event.localImagePath;
+          emit(state.copyWith(owner1SignaturePath: event.localImagePath));
         } else if (event.fieldName == AppStrings.owner2SignatureString) {
           owner2Signature = event.localImagePath;
+          emit(state.copyWith(owner2SignaturePath: event.localImagePath));
         } else if (event.fieldName == AppStrings.guarantee1SignatureString) {
           guarantee1Signature = event.localImagePath;
+          emit(state.copyWith(guarantee1SignaturePath: event.localImagePath));
         } else if (event.fieldName == AppStrings.guarantee2SignatureString) {
           guarantee2Signature = event.localImagePath;
         }
 
-        if (state.isOwner2Available) {
-          if (owner1Signature != '' && owner2Signature != '' && guarantee1Signature != '' && guarantee2Signature != '') {
-            emit(state.copyWith(isNextEnable: true));
-          }
-        } else if (owner1Signature != '') {
-          if (state.isGuarantee1Available && guarantee1Signature == '') {
-            emit(state.copyWith(isNextEnable: false));
-          } else {
-            emit(state.copyWith(isNextEnable: true));
-          }
-        }
+        // Required signatures: owner1 always; owner2 only if a second owner
+        // exists; a single guarantor (guarantee1) only if a guarantor exists.
+        // (guarantee2 is no longer collected — one guarantor per the new model.)
+        final bool allSigned = owner1Signature != '' &&
+            (!state.isOwner2Available || owner2Signature != '') &&
+            (!state.isGuarantee1Available || guarantee1Signature != '');
+        emit(state.copyWith(isNextEnable: allSigned));
       }
     });
   }
 
   Future<void> showCustomSignaturePadDialog(BuildContext context, String fieldName, String signaturePadName) async {
-    await showDialog(
+    isSign = false;
+    await showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            signaturePadName,
-            textAlign: TextAlign.center,
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: Colors.black),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext sheetContext) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
           ),
-          titlePadding: const EdgeInsets.all(8),
-          contentPadding: const EdgeInsets.all(12),
-          content: Container(
-            height: 200,
-            width: 300,
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-            child: SfSignaturePad(
-              key: _signaturePadKey,
-              onDrawStart: () {
-                isSign = true;
-                return false;
-              },
-            ),
+          padding: EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 20 + MediaQuery.of(sheetContext).padding.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(width: 46, height: 5, decoration: BoxDecoration(color: AppColors.borderColor, borderRadius: BorderRadius.circular(10))),
+              const SizedBox(height: 18),
+              Text(signaturePadName, style: AppStyles.rkBoldTextStyle(size: 18, color: AppColors.blackColor, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 6),
+              Text(AppLocalizations.of(sheetContext)!.tap_to_sign, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.greyColor)),
+              const SizedBox(height: 16),
+              Container(
+                height: 220,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  color: AppColors.pageColor,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.borderColor),
+                ),
+                child: SfSignaturePad(
+                  key: _signaturePadKey,
+                  backgroundColor: Colors.transparent,
+                  strokeColor: AppColors.blackColor,
+                  onDrawStart: () {
+                    isSign = true;
+                    return false;
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () {
+                          isSign = false;
+                          _signaturePadKey.currentState?.clear();
+                        },
+                        child: Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.redColor.withValues(alpha: 0.5)),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(sheetContext)!.remove,
+                            style: AppStyles.rkBoldTextStyle(size: 16, color: AppColors.redColor, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(12)),
+                      child: MaterialButton(
+                        onPressed: () async {
+                          if (isSign) {
+                            await saveSignature(sheetContext, fieldName);
+                            isSign = false;
+                          }
+                          if (sheetContext.mounted) Navigator.pop(sheetContext);
+                        },
+                        child: Text(
+                          AppLocalizations.of(sheetContext)!.save,
+                          style: AppStyles.rkBoldTextStyle(size: 16, color: AppColors.whiteColor, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                isSign = false;
-                _signaturePadKey.currentState!.clear();
-              },
-              child: Text(
-                AppLocalizations.of(context)!.remove,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.redColor),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                if (isSign) {
-                  saveSignature(context, fieldName);
-                  isSign = false;
-                }
-              },
-              child: Text(
-                AppLocalizations.of(context)!.save,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor),
-              ),
-            ),
-          ],
         );
       },
     );

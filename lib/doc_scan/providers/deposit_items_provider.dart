@@ -32,14 +32,20 @@ class DepositItemsNotifier extends StateNotifier<DepositItemsState> {
   final DepositItemsService _service;
   final Ref _ref;
 
+  /// קוד הלקוח שעבורו נטענו הנתונים הנוכחיים. `customerCodeProvider` מתחיל בקוד
+  /// ברירת מחדל וקורא את ה-clientId האמיתי אסינכרונית — בלי המעקב הזה, הקריאה
+  /// הראשונה נועלת את הנתונים של לקוח ברירת המחדל לכל הסשן.
+  String? _loadedCustomerCode;
+
   Future<void> load({bool force = false}) async {
     if (state.loading) return;
-    if (state.loaded && !force) return;
+    await _ref.read(customerCodeProvider.notifier).ready;
+    final customerCode = _ref.read(customerCodeProvider);
+    if (state.loaded && !force && _loadedCustomerCode == customerCode) return;
     state = const DepositItemsState(loading: true);
     try {
-      final res = await _service.fetchDepositItems(
-        customerCode: _ref.read(customerCodeProvider),
-      );
+      final res = await _service.fetchDepositItems(customerCode: customerCode);
+      _loadedCustomerCode = customerCode;
       state = DepositItemsState(
         misc: res.misc,
         draggedToRegister: res.draggedToRegister,

@@ -20,6 +20,7 @@ import '../gen_l10n/app_localizations.dart';
 import '../models/invoice_document.dart';
 import '../providers/customer_code_provider.dart';
 import '../providers/documents_provider.dart';
+import '../core/services/doc_scan_notifications.dart';
 import '../providers/document_parser_provider.dart';
 import '../providers/locale_provider.dart';
 import '../providers/suppliers_provider.dart';
@@ -87,6 +88,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final Map<String, StreamSubscription<Map<String, dynamic>>>
       _jobSubscriptions = {};
   final Map<String, Timer> _jobTimers = {};
+
+  /// מתי כל job נכנס למצב processing (בזיכרון). לא ניתן להסתמך על `doc.createdAt`
+  /// כי סריקה-מחדש מחזירה מסמך ישן ל-processing, ו-createdAt נשאר הישן —
+  /// אחרת הטיימר "פג תוקף אחרי 20 דק'" יורה מיד על מסמך שנסרק לפני יומיים.
+  final Map<String, DateTime> _processingSince = {};
   ProviderSubscription<List<InvoiceDocument>>? _documentsSubscription;
   Timer? _processingTimeoutTimer;
   static const Duration _processingTimeout = Duration(minutes: 20);
@@ -128,7 +134,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       documentsProvider,
       (previous, next) {
         _startWatchingProcessingJobs(next);
+        _notifyComaxTransitions(next);
       },
+      fireImmediately: true,
     );
     _processingTimeoutTimer = Timer.periodic(
       const Duration(minutes: 1),
@@ -152,6 +160,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.dispose();
   }
 
+  /// סטטוסים שראינו לאחרונה פר-מסמך — לזיהוי **מעבר** (לא כל rebuild).
+  /// מקור אמת יחיד לכל ההתראות: גם סטטוס הסריקה וגם סטטוס הקליטה ל-Comax
+  /// עוברים דרך documentsProvider, כך שכל המסלולים (בית / ProcessingScreen /
+  /// שליחה לקופה / קרון) מכוסים במקום אחד.
+  final Map<String, DocumentStatus> _lastStatus = {};
+  final Map<String, String?> _lastComaxStatus = {};
+
+  void _notifyComaxTransitions(List<InvoiceDocument> documents) {
+    for (final d in documents) {
+      // מסמך שנראה בפעם הראשונה (טעינה מהאחסון/שרת, hot restart) — רק רושמים
+      // את מצבו, בלי להתריע. כך אין מבול התראות על מסמכים ישנים שכבר סופיים.
+      final firstSeen = !_lastStatus.containsKey(d.id);
+
+      final prevStatus = _lastStatus[d.id];
+      _lastStatus[d.id] = d.status;
+      if (!firstSeen && d.status != prevStatus) {
+        if (d.status == DocumentStatus.readyForUpdate) {
+          DocScanNotifications.instance.scanReady(d);
+        } else if (d.status == DocumentStatus.error) {
+          DocScanNotifications.instance.scanFailed(d);
+        }
+      }
+
+      final prevComax = _lastComaxStatus[d.id];
+      _lastComaxStatus[d.id] = d.comaxStatus;
+      if (!firstSeen && d.comaxStatus != prevComax) {
+        if (d.comaxStatus == 'received') {
+          DocScanNotifications.instance.intakeReceived(d);
+        } else if (d.comaxStatus == 'failed') {
+          DocScanNotifications.instance.intakeFailed(d);
+        }
+      }
+    }
+  }
+
   void _startWatchingProcessingJobs(List<InvoiceDocument> documents) {
     final activeProcessingJobIds = <String>{};
 
@@ -162,6 +205,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           jobId != null &&
           jobId.isNotEmpty) {
         activeProcessingJobIds.add(jobId);
+        _processingSince.putIfAbsent(jobId, () => DateTime.now());
         _watchJob(doc.id, jobId);
       }
     }
@@ -173,6 +217,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         );
     for (final jobId in stale) {
       _jobTimers.remove(jobId)?.cancel();
+      _processingSince.remove(jobId);
     }
   }
 
@@ -236,38 +281,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           imagePaths: current.imagePaths,
         );
 
-        notifier.upsert(
-          parsedDoc.copyWith(
-            id: current.id,
-            createdAt: current.createdAt,
-            status: DocumentStatus.readyForUpdate,
-            jobId: null,
-            pdfPath: current.pdfPath,
-            imagePaths: current.imagePaths,
-            // §13: בחירת המשתמש לפני הסריקה גוברת על מה שחולץ ב-OCR.
-            documentType: current.documentType ?? parsedDoc.documentType,
-            companyName: mergeCompanyNamePreferPreScan(
-              current.companyName,
-              parsedDoc.companyName,
-            ),
-            scanModel: _extractJobModelKey(payload) ?? current.scanModel,
-            errorMessage: null,
+        final readyDoc = parsedDoc.copyWith(
+          id: current.id,
+          createdAt: current.createdAt,
+          status: DocumentStatus.readyForUpdate,
+          jobId: null,
+          pdfPath: current.pdfPath,
+          imagePaths: current.imagePaths,
+          // §13: בחירת המשתמש לפני הסריקה גוברת על מה שחולץ ב-OCR.
+          documentType: current.documentType ?? parsedDoc.documentType,
+          companyName: mergeCompanyNamePreferPreScan(
+            current.companyName,
+            parsedDoc.companyName,
           ),
+          scanModel: _extractJobModelKey(payload) ?? current.scanModel,
+          errorMessage: null,
         );
+        notifier.upsert(readyDoc);
         _jobSubscriptions.remove(jobId)?.cancel();
         return;
       }
 
       if (status == 'error' || status == 'failed') {
         final errorDetails = _extractJobError(payload);
-        notifier.upsert(
-          current.copyWith(
-            status: DocumentStatus.error,
-            scanModel: _extractJobModelKey(payload) ?? current.scanModel,
-            errorMessage: errorDetails,
-            parsedJson: const JsonEncoder.withIndent('  ').convert(payload),
-          ),
+        final failedDoc = current.copyWith(
+          status: DocumentStatus.error,
+          scanModel: _extractJobModelKey(payload) ?? current.scanModel,
+          errorMessage: errorDetails,
+          parsedJson: const JsonEncoder.withIndent('  ').convert(payload),
         );
+        notifier.upsert(failedDoc);
         _jobSubscriptions.remove(jobId)?.cancel();
         return;
       }
@@ -334,7 +377,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           doc.status != DocumentStatus.uploading) {
         continue;
       }
-      if (now.difference(doc.createdAt) < _processingTimeout) continue;
+      // נמדד מרגע שה-job נכנס ל-processing (בסשן הנוכחי), לא מ-createdAt.
+      // מסמך שסונכרן משרת ואיננו מכירים מתי החל — לא נפסול בטעות; נתחיל למדוד עכשיו.
+      final jobId0 = doc.jobId;
+      final since = jobId0 != null
+          ? _processingSince.putIfAbsent(jobId0, () => now)
+          : (_processingSince[doc.id] ??= now);
+      if (now.difference(since) < _processingTimeout) continue;
       notifier.upsert(
         doc.copyWith(
           status: DocumentStatus.error,

@@ -15,6 +15,10 @@ class Supplier {
   /// כל העמודות מקומקס (מפתחות בעברית), as-is.
   final Map<String, String> fields;
 
+  /// ח.פ / עוסק מורשה. ה-OCR מחלץ אותו מהחשבונית, אבל `/invoices/exists` דורש
+  /// **`supplierCode`** ואינו מקבל ח.פ — לכן הממיר יושב כאן.
+  String get taxId => (fields['עוסק מורשה'] ?? '').trim();
+
   factory Supplier.fromJson(Map<String, dynamic> json) {
     final rawFields = json['fields'];
     final fields = <String, String>{};

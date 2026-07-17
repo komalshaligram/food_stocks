@@ -228,9 +228,12 @@ class ParsedDocument {
     String? pdfPath,
     List<String> imagePaths = const [],
   }) {
-    // ה-UI משתמש ב-subtotal ללא מע״מ, ו-vat/total.
-    final subtotalValue =
-        subtotalAfterDiscount ?? subtotal ?? 0.0; // fallback מקומי.
+    // ה-UI משתמש ב-subtotal ללא מע״מ, ו-vat/total. ה-subtotal חייב להיות *אחרי*
+    // ההנחה — ממנו נגזר שיעור המע"מ במסך הפרטים. כשה-OCR לא החזיר
+    // subtotal_after_discount, מחסירים את ההנחה בעצמנו.
+    final subtotalValue = subtotalAfterDiscount ??
+        (subtotal != null ? subtotal! - (discount ?? 0) : null) ??
+        0.0;
 
     // UI מציג createdAt -> אין לנו createdAt מהתשובה, לכן:
     // ניצור createdAt ש״ווה עכשיו״ וה-documentDate נשמור בנפרד.
@@ -250,6 +253,7 @@ class ParsedDocument {
       allocationNumber: allocationNumber,
       documentDate: date,
       paymentDueDate: paymentDueDate,
+      discount: discount,
       subtotal: subtotalValue,
       vatAmount: vat,
       totalAmount: total,

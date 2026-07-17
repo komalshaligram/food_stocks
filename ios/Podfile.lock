@@ -1391,8 +1391,6 @@ PODS:
     - Flutter
   - flutter_localization (0.0.1):
     - Flutter
-  - flutter_smartlook (4.1.30):
-    - Flutter
   - google_mlkit_document_scanner (0.3.0):
     - Flutter
   - GoogleDataTransport (10.1.0):
@@ -1586,7 +1584,6 @@ DEPENDENCIES:
   - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_localization (from `.symlinks/plugins/flutter_localization/ios`)
-  - flutter_smartlook (from `.symlinks/plugins/flutter_smartlook/ios`)
   - google_mlkit_document_scanner (from `.symlinks/plugins/google_mlkit_document_scanner/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
@@ -1682,8 +1679,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_localization:
     :path: ".symlinks/plugins/flutter_localization/ios"
-  flutter_smartlook:
-    :path: ".symlinks/plugins/flutter_smartlook/ios"
   google_mlkit_document_scanner:
     :path: ".symlinks/plugins/google_mlkit_document_scanner/ios"
   image_cropper:
@@ -1757,7 +1752,6 @@ SPEC CHECKSUMS:
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
   flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
   flutter_localization: 72299fb6cb4e51cae587bd953ed0b958040b71e6
-  flutter_smartlook: f1318f4d50209ff8639179b104a38ad06b1e595c
   google_mlkit_document_scanner: 9165fc129ac452163c21f81805cc33634b25989c
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 4f2618a4a1e762a1ee134a1e2323bba9843e06da

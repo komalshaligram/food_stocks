@@ -65,12 +65,33 @@ class EmbeddedDocScanScaffold extends ConsumerWidget {
         ? ref.watch(embeddedDetailsHeaderActionsProvider)
         : const <EmbeddedDetailsHeaderAction>[];
 
+    // כפתור סיבוב המסך מוצג ליד חץ החזרה (בקשת המשתמש), שאר הכפתורים בצד השני.
+    EmbeddedDetailsHeaderAction? rotateAction;
+    final otherActions = <EmbeddedDetailsHeaderAction>[];
+    for (final a in headerActions) {
+      if (rotateAction == null && a.icon == Icons.screen_rotation) {
+        rotateAction = a;
+      } else {
+        otherActions.add(a);
+      }
+    }
+
+    Widget? leadingExtra;
+    if (rotateAction != null) {
+      leadingExtra = IconButton(
+        icon: Icon(rotateAction.icon, size: 24),
+        color: rotateAction.iconColor ?? fs.AppColors.blackColor,
+        tooltip: rotateAction.tooltip,
+        onPressed: rotateAction.onPressed,
+      );
+    }
+
     Widget? trailingWidget;
-    if (headerActions.isNotEmpty) {
+    if (otherActions.isNotEmpty) {
       trailingWidget = Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          for (final action in headerActions)
+          for (final action in otherActions)
             IconButton(
               icon: Icon(action.icon, size: 24),
               color: action.iconColor ?? fs.AppColors.blackColor,
@@ -97,6 +118,7 @@ class EmbeddedDocScanScaffold extends ConsumerWidget {
         title: title,
         iconData: Icons.arrow_back_ios_sharp,
         onTap: () => _handleBack(context, ref),
+        leadingExtra: leadingExtra,
         trailingWidget: trailingWidget,
       ),
     );

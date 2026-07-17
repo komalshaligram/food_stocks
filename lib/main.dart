@@ -53,3 +53,4 @@ void main() async {
       (error, stack) =>
           FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
+

@@ -13,6 +13,17 @@ Future<T?> showSearchablePicker<T>({
   required List<T> items,
   required String Function(T) labelOf,
   String Function(T)? sublabelOf,
+  // טקסט נוסף לחיפוש בלבד (לא מוצג) — למשל ח.פ, כדי לחפש לפי ספרות בלבד.
+  String Function(T)? searchExtra,
+  // כותרת הקשר אופציונלית (שם + ברקוד שנקראו מהחשבונית לשורה הזו), מוצגת
+  // בראש הגיליון כדי שהמשתמש יזכור מה הוא מחפש.
+  String? contextTitle,
+  String? contextSubtitle,
+  // פילטר אופציונלי (toggle). null = בלי toggle. [filterLabel] = הטקסט ליד ה-switch,
+  // [matchesFilter] = מי עובר כשה-toggle דלוק. **כבוי כברירת מחדל בכוונה** —
+  // סינון לפי ספק עלול להסתיר מוצרים שמתויגים לספק "כללי" או ללא ספק כלל.
+  String? filterLabel,
+  bool Function(T)? matchesFilter,
 }) {
   return showModalBottomSheet<T>(
     context: context,
@@ -27,6 +38,11 @@ Future<T?> showSearchablePicker<T>({
       items: items,
       labelOf: labelOf,
       sublabelOf: sublabelOf,
+      searchExtra: searchExtra,
+      contextTitle: contextTitle,
+      contextSubtitle: contextSubtitle,
+      filterLabel: filterLabel,
+      matchesFilter: matchesFilter,
     ),
   );
 }
@@ -41,6 +57,11 @@ class _SearchablePickerSheet<T> extends StatefulWidget {
     required this.items,
     required this.labelOf,
     this.sublabelOf,
+    this.searchExtra,
+    this.contextTitle,
+    this.contextSubtitle,
+    this.filterLabel,
+    this.matchesFilter,
   });
 
   final String title;
@@ -48,6 +69,11 @@ class _SearchablePickerSheet<T> extends StatefulWidget {
   final List<T> items;
   final String Function(T) labelOf;
   final String Function(T)? sublabelOf;
+  final String Function(T)? searchExtra;
+  final String? contextTitle;
+  final String? contextSubtitle;
+  final String? filterLabel;
+  final bool Function(T)? matchesFilter;
 
   @override
   State<_SearchablePickerSheet<T>> createState() =>
@@ -56,6 +82,7 @@ class _SearchablePickerSheet<T> extends StatefulWidget {
 
 class _SearchablePickerSheetState<T> extends State<_SearchablePickerSheet<T>> {
   final TextEditingController _controller = TextEditingController();
+  bool _filterOn = false;
 
   @override
   void dispose() {
@@ -65,7 +92,8 @@ class _SearchablePickerSheetState<T> extends State<_SearchablePickerSheet<T>> {
 
   String _key(T item) {
     final sub = widget.sublabelOf?.call(item) ?? '';
-    return normalizeHebrewForSearch('${widget.labelOf(item)} $sub');
+    final extra = widget.searchExtra?.call(item) ?? '';
+    return normalizeHebrewForSearch('${widget.labelOf(item)} $sub $extra');
   }
 
   @override
@@ -73,9 +101,13 @@ class _SearchablePickerSheetState<T> extends State<_SearchablePickerSheet<T>> {
     final theme = Theme.of(context);
     final q = normalizeHebrewForSearch(_controller.text);
     final words = q.split(' ').where((w) => w.isNotEmpty).toList();
+    final hasFilter = widget.filterLabel != null && widget.matchesFilter != null;
+    final base = (hasFilter && _filterOn)
+        ? widget.items.where(widget.matchesFilter!).toList()
+        : widget.items;
     final filtered = words.isEmpty
-        ? widget.items
-        : widget.items.where((it) {
+        ? base
+        : base.where((it) {
             final k = _key(it);
             return words.every((w) => k.contains(w));
           }).toList();
@@ -126,6 +158,41 @@ class _SearchablePickerSheetState<T> extends State<_SearchablePickerSheet<T>> {
                   ],
                 ),
                 const SizedBox(height: 8),
+                if ((widget.contextTitle ?? '').isNotEmpty ||
+                    (widget.contextSubtitle ?? '').isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentGreen.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: AppColors.accentGreen.withOpacity(0.25)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if ((widget.contextTitle ?? '').isNotEmpty)
+                          Text(
+                            widget.contextTitle!,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        if ((widget.contextSubtitle ?? '').isNotEmpty) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            widget.contextSubtitle!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 TextField(
                   controller: _controller,
                   autofocus: true,
@@ -168,6 +235,26 @@ class _SearchablePickerSheetState<T> extends State<_SearchablePickerSheet<T>> {
                     ),
                   ),
                 ),
+                if (hasFilter) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.filterLabel!,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                      Switch.adaptive(
+                        value: _filterOn,
+                        activeColor: AppColors.accentGreen,
+                        onChanged: (v) => setState(() => _filterOn = v),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 8),
                 Expanded(
                   child: filtered.isEmpty

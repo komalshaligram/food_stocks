@@ -332,7 +332,8 @@ Future<CroppedFile?> cropImage(
     {required String path,
     CropStyle shape = CropStyle.rectangle,
     int quality = 100,
-    bool? isLogoCrop = false}) async {
+      bool lockAspectRatio = true,
+      bool? isLogoCrop = false}) async {
   return await ImageCropper().cropImage(
     sourcePath: path,
     compressQuality: quality,
@@ -352,7 +353,7 @@ Future<CroppedFile?> cropImage(
       ),
       IOSUiSettings(
         title: AppStrings.cropImageString,
-        aspectRatioLockEnabled: true,
+        aspectRatioLockEnabled: lockAspectRatio,
         hidesNavigationBar: true,
         resetButtonHidden: true,
         rotateButtonsHidden: true,

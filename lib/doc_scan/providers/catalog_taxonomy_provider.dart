@@ -53,15 +53,23 @@ class CatalogTaxonomyNotifier extends StateNotifier<CatalogTaxonomyState> {
   final Ref _ref;
   Future<void>? _inFlight;
 
+  /// קוד הלקוח שעבורו נטענו הנתונים הנוכחיים. `customerCodeProvider` מתחיל בקוד
+  /// ברירת מחדל וקורא את ה-clientId האמיתי אסינכרונית — בלי המעקב הזה, הקריאה
+  /// הראשונה נועלת את הנתונים של לקוח ברירת המחדל לכל הסשן.
+  String? _loadedCustomerCode;
+
+
   /// מחזיר את הבקשה שכבר רצה (אם יש) כדי שניתן להמתין לה גם בקריאה חוזרת.
   Future<void> load({bool force = false}) {
     if (_inFlight != null) return _inFlight!;
-    if (state.loaded && !force) return Future<void>.value();
-    _inFlight = _doLoad();
+    _inFlight = _doLoad(force: force);
     return _inFlight!;
   }
 
-  Future<void> _doLoad() async {
+  Future<void> _doLoad({bool force = false}) async {
+    await _ref.read(customerCodeProvider.notifier).ready;
+    if (state.loaded && !force &&
+        _loadedCustomerCode == _ref.read(customerCodeProvider)) return;
     state = state.copyWith(loading: true, clearError: true);
     try {
       final res = await _service.fetchTaxonomy(

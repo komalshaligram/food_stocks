@@ -234,6 +234,7 @@ class _ProcessingScreenState extends ConsumerState<ProcessingScreen> {
             companyId: existing?.companyId,
             documentNumber: existing?.documentNumber,
             documentDate: existing?.documentDate,
+            discount: existing?.discount,
             subtotal: existing?.subtotal,
             vatAmount: existing?.vatAmount,
             totalAmount: existing?.totalAmount,

@@ -62,8 +62,7 @@ import 'app_localizations_he.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,8 +82,7 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -110,8 +107,6 @@ abstract class AppLocalizations {
   /// **'מציג שוב את כל המוצרים בקטגוריה'**
   String get showing_all_products;
 
-
-
   /// No description provided for @app_language.
   ///
   /// In he, this message translates to:
@@ -129,6 +124,42 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'התחברות'**
   String get login;
+
+  /// No description provided for @welcome_title.
+  ///
+  /// In he, this message translates to:
+  /// **'ברוכים הבאים ל‑TAVILI'**
+  String get welcome_title;
+
+  /// No description provided for @app_slogan.
+  ///
+  /// In he, this message translates to:
+  /// **'אפליקציה חדשנית בעולם הקמעונאות שמתווכת בין ספקים ויצרנים ישירות לבעלי חנויות מזון ומציעה פתרונות פיננסיים ייחודיים וחדשניים'**
+  String get app_slogan;
+
+  /// No description provided for @splash_tagline.
+  ///
+  /// In he, this message translates to:
+  /// **'מחברים ספקים לחנויות מזון'**
+  String get splash_tagline;
+
+  /// No description provided for @splash_brand.
+  ///
+  /// In he, this message translates to:
+  /// **'Tavili'**
+  String get splash_brand;
+
+  /// No description provided for @login_subtitle.
+  ///
+  /// In he, this message translates to:
+  /// **'הזינו את מספר הטלפון שלכם ונשלח לכם קוד אימות'**
+  String get login_subtitle;
+
+  /// No description provided for @or.
+  ///
+  /// In he, this message translates to:
+  /// **'או'**
+  String get or;
 
   /// No description provided for @business_details.
   ///
@@ -591,6 +622,48 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'שלח שוב'**
   String get send_again;
+
+  /// No description provided for @verify_phone_title.
+  ///
+  /// In he, this message translates to:
+  /// **'אימות מספר טלפון'**
+  String get verify_phone_title;
+
+  /// No description provided for @otp_sent_subtitle.
+  ///
+  /// In he, this message translates to:
+  /// **'שלחנו קוד בן 4 ספרות ב‑SMS למספר'**
+  String get otp_sent_subtitle;
+
+  /// No description provided for @enter_verification_code.
+  ///
+  /// In he, this message translates to:
+  /// **'הזינו את קוד האימות'**
+  String get enter_verification_code;
+
+  /// No description provided for @verify_and_login.
+  ///
+  /// In he, this message translates to:
+  /// **'אימות והתחברות'**
+  String get verify_and_login;
+
+  /// No description provided for @resend_code_in.
+  ///
+  /// In he, this message translates to:
+  /// **'שליחת קוד מחדש בעוד'**
+  String get resend_code_in;
+
+  /// No description provided for @resend_code.
+  ///
+  /// In he, this message translates to:
+  /// **'שליחת קוד מחדש'**
+  String get resend_code;
+
+  /// No description provided for @seconds_short.
+  ///
+  /// In he, this message translates to:
+  /// **'שנ׳'**
+  String get seconds_short;
 
   /// No description provided for @log_out.
   ///
@@ -2455,7 +2528,7 @@ abstract class AppLocalizations {
   /// No description provided for @per_kg.
   ///
   /// In he, this message translates to:
-  /// **'ליחידה'**
+  /// **'לק״ג'**
   String get per_kg;
 
   /// No description provided for @delivery_date_value.
@@ -2782,6 +2855,42 @@ abstract class AppLocalizations {
   /// **'ת.ז. בעלים 1'**
   String get owner_1_israel_id;
 
+  /// No description provided for @owner_details.
+  ///
+  /// In he, this message translates to:
+  /// **'נתוני בעלים'**
+  String get owner_details;
+
+  /// No description provided for @guarantor_details.
+  ///
+  /// In he, this message translates to:
+  /// **'נתוני הערב'**
+  String get guarantor_details;
+
+  /// No description provided for @owner_label.
+  ///
+  /// In he, this message translates to:
+  /// **'בעלים'**
+  String get owner_label;
+
+  /// No description provided for @guarantor_label.
+  ///
+  /// In he, this message translates to:
+  /// **'הערב'**
+  String get guarantor_label;
+
+  /// No description provided for @address_label.
+  ///
+  /// In he, this message translates to:
+  /// **'כתובת'**
+  String get address_label;
+
+  /// No description provided for @phone_label.
+  ///
+  /// In he, this message translates to:
+  /// **'טלפון'**
+  String get phone_label;
+
   /// No description provided for @owner2_full_name.
   ///
   /// In he, this message translates to:
@@ -2847,6 +2956,12 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'פרטי חשבון בנק'**
   String get bank_info;
+
+  /// No description provided for @bank_info_note.
+  ///
+  /// In he, this message translates to:
+  /// **'פרטי החשבון משמשים לגבייה בלבד, בתנאי שוטף + 45. לא נחייב ללא אישורך.'**
+  String get bank_info_note;
 
   /// No description provided for @name_of_bank.
   ///
@@ -2973,6 +3088,42 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'חתימה ערב 2'**
   String get guarantee2_sign;
+
+  /// No description provided for @signatures_section.
+  ///
+  /// In he, this message translates to:
+  /// **'חתימות'**
+  String get signatures_section;
+
+  /// No description provided for @read_full_agreement.
+  ///
+  /// In he, this message translates to:
+  /// **'קריאת ההסכם המלא'**
+  String get read_full_agreement;
+
+  /// No description provided for @tap_to_sign.
+  ///
+  /// In he, this message translates to:
+  /// **'הקש לחתימה'**
+  String get tap_to_sign;
+
+  /// No description provided for @owner_sign_label.
+  ///
+  /// In he, this message translates to:
+  /// **'חתימת בעלים'**
+  String get owner_sign_label;
+
+  /// No description provided for @guarantor_sign_label.
+  ///
+  /// In he, this message translates to:
+  /// **'חתימת הערב'**
+  String get guarantor_sign_label;
+
+  /// No description provided for @agreement_signed.
+  ///
+  /// In he, this message translates to:
+  /// **'נחתם'**
+  String get agreement_signed;
 
   /// No description provided for @upload_document.
   ///
@@ -3357,6 +3508,30 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'כרטיס אשראי'**
   String get credit_card;
+
+  /// No description provided for @payment_bank_title.
+  ///
+  /// In he, this message translates to:
+  /// **'אובליגו וארנק לתשלום'**
+  String get payment_bank_title;
+
+  /// No description provided for @payment_bank_subtitle.
+  ///
+  /// In he, this message translates to:
+  /// **'פתח מסגרת אשראי וארנק דיגיטלי — שלם לכל הספקים במקום אחד, בתשלומים נוחים'**
+  String get payment_bank_subtitle;
+
+  /// No description provided for @payment_card_subtitle.
+  ///
+  /// In he, this message translates to:
+  /// **'הזן פרטי כרטיס — יישמרו לתשלומים הבאים'**
+  String get payment_card_subtitle;
+
+  /// No description provided for @payment_secure_note.
+  ///
+  /// In he, this message translates to:
+  /// **'התשלום מאובטח ומוצפן. פרטי הכרטיס נשמרים לתשלומים הבאים.'**
+  String get payment_secure_note;
 
   /// No description provided for @credit_card_details.
   ///
@@ -4570,7 +4745,6 @@ abstract class AppLocalizations {
   /// **'לא עכשיו'**
   String get whatsapp_optin_not_now;
 
-
   /// No description provided for @sort_products.
   ///
   /// In he, this message translates to:
@@ -4606,10 +4780,21 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'הצג רק מבצעים'**
   String get show_only_sales;
+
+  /// No description provided for @please_set_waze_location.
+  ///
+  /// In he, this message translates to:
+  /// **'אנא הוסף את מיקום ה Waze'**
+  String get please_set_waze_location;
+
+  /// No description provided for @please_upload_delivery_location_photo.
+  ///
+  /// In he, this message translates to:
+  /// **'אנא הוסף תמונה של מיקום הורדת סחורה'**
+  String get please_upload_delivery_location_photo;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -4618,25 +4803,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'he'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'he'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'he':
-      return AppLocalizationsHe();
+    case 'en': return AppLocalizationsEn();
+    case 'he': return AppLocalizationsHe();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }

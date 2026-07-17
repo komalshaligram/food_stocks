@@ -222,9 +222,6 @@ class AppStrings {
   static const statusList = 'statusList';
   static const textIdProof = 'צילום תעודת זהות';
   static const isRegisterFileString = 'isRegisterFile';
-  //smartlook keys
-  static const userBusinessName = 'User business name';
-  static const userPhoneNum = "User phone number";
 
   static const openText = "Open";
   static const closedText = "Closed";

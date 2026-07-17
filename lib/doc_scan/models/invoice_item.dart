@@ -1,4 +1,5 @@
 import 'new_product_draft.dart';
+import 'resolved_item.dart';
 
 /// סמן פנימי שמבדיל בין "לא הועבר ארגומנט" (השאר כפי שהוא) לבין העברת null (אפס/נקה).
 const Object _undefined = Object();
@@ -17,6 +18,7 @@ class InvoiceItem {
     this.packagingDepositTax,
     required this.totalPrice,
     this.newProduct,
+    this.barcodeConfidence,
   });
 
   final int lineNumber;
@@ -34,6 +36,11 @@ class InvoiceItem {
 
   /// טיוטת "פריט חדש" שנוצרה לשורה (כשהברקוד אינו בקטלוג). null אם לא נוצר.
   final NewProductDraft? newProduct;
+
+  /// מולא ע"י ההצלבה האוטומטית (`resolveInvoiceItems`) כשהחשבונית הגיעה ללא ברקוד.
+  /// `medium` נצבע בכתום כדי שהמשתמש יאמת. **null = הברקוד מקורי או אושר ידנית**,
+  /// ולכן עריכה ידנית של הברקוד מאפסת את השדה.
+  final BarcodeConfidence? barcodeConfidence;
 
   /// מחיר ליחידה סופי (אחרי הנחה ותוספות) = סה"כ ÷ כמות. מחושב, לא נשמר.
   double? get finalUnitPrice {
@@ -53,6 +60,7 @@ class InvoiceItem {
         'packagingDepositTax': packagingDepositTax,
         'totalPrice': totalPrice,
         'newProduct': newProduct?.toJson(),
+        'barcodeConfidence': barcodeConfidence?.name,
       };
 
   factory InvoiceItem.fromJson(Map<String, dynamic> json) {
@@ -71,6 +79,8 @@ class InvoiceItem {
           ? NewProductDraft.fromJson(
               Map<String, dynamic>.from(json['newProduct'] as Map))
           : null,
+      barcodeConfidence:
+          BarcodeConfidence.fromName(json['barcodeConfidence'] as String?),
     );
   }
 
@@ -88,6 +98,7 @@ class InvoiceItem {
     Object? packagingDepositTax = _undefined,
     double? totalPrice,
     Object? newProduct = _undefined,
+    Object? barcodeConfidence = _undefined,
   }) {
     return InvoiceItem(
       lineNumber: lineNumber ?? this.lineNumber,
@@ -108,6 +119,9 @@ class InvoiceItem {
       newProduct: identical(newProduct, _undefined)
           ? this.newProduct
           : newProduct as NewProductDraft?,
+      barcodeConfidence: identical(barcodeConfidence, _undefined)
+          ? this.barcodeConfidence
+          : barcodeConfidence as BarcodeConfidence?,
     );
   }
 }

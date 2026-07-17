@@ -10,12 +10,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/error/exceptions.dart';
-import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart' as req;
+import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
+    as req;
 import '../../data/model/req_model/profile_req_model/profile_model.dart';
 import '../../data/model/res_model/city_list_model/city_list_res_model.dart';
 import '../../data/model/res_model/file_upload_model/file_upload_model.dart';
-import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart' as res_get;
-import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart' as req_update;
+import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
+    as res_get;
+import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
+    as req_update;
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -32,25 +35,35 @@ part 'verify_client_data_bloc.freezed.dart';
 /// saves Waze/address fields before continuing to order summary (first-order flow).
 ///
 /// See docs/en/FIRST-ORDER-AND-CLIENT-VERIFICATION.md
-class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataState> {
+class VerifyClientDataBloc
+    extends Bloc<VerifyClientDataEvent, VerifyClientDataState> {
   VerifyClientDataBloc() : super(VerifyClientDataState.initial()) {
     on<VerifyClientDataEvent>((event, emit) async {
-      final preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      final preferences =
+          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _initEvent) {
-        emit(state.copyWith(isShimmering: true, language: preferences.getAppLanguage()));
+        emit(state.copyWith(
+            isShimmering: true, language: preferences.getAppLanguage()));
         try {
-          final cityResponse = await DioClient(event.context).get(path: AppUrlEndPoints.cityListUrl);
+          final cityResponse = await DioClient(event.context)
+              .get(path: AppUrlEndPoints.cityListUrl);
           final cityListResModel = CityListResModel.fromJson(cityResponse);
-          final cities = cityListResModel.data?.cities?.map((e) => e.cityName.toString()).toList() ?? [];
+          final cities = cityListResModel.data?.cities
+                  ?.map((e) => e.cityName.toString())
+                  .toList() ??
+              [];
 
           final profileResponse = await DioClient(event.context).post(
             AppUrlEndPoints.getProfileDetailsUrl,
-            data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson(),
+            data: req.ProfileDetailsReqModel(id: preferences.getUserId())
+                .toJson(),
           );
-          final profile = res_get.ProfileDetailsResModel.fromJson(profileResponse);
+          final profile =
+              res_get.ProfileDetailsResModel.fromJson(profileResponse);
 
-          if (profile.status == AppConstants.code_200 && profile.data?.clients?.isNotEmpty == true) {
+          if (profile.status == AppConstants.code_200 &&
+              profile.data?.clients?.isNotEmpty == true) {
             final client = profile.data!.clients!.first;
             final detail = client.clientDetail;
             emit(state.copyWith(
@@ -59,12 +72,18 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
               filterList: cities,
               cityListResModel: cityListResModel,
               selectCity: client.city?.cityName ?? '',
-              businessNameController: TextEditingController(text: detail?.bussinessName ?? ''),
-              contactNameController: TextEditingController(text: client.contactName ?? ''),
-              streetNameController: TextEditingController(text: detail?.streetName ?? ''),
-              streetNumberController: TextEditingController(text: detail?.streetNumber ?? ''),
-              phoneController: TextEditingController(text: client.phoneNumber ?? ''),
-              deliveryDescriptionController: TextEditingController(text: detail?.deliveryLocationDescription ?? ''),
+              businessNameController:
+                  TextEditingController(text: detail?.bussinessName ?? ''),
+              contactNameController:
+                  TextEditingController(text: client.contactName ?? ''),
+              streetNameController:
+                  TextEditingController(text: detail?.streetName ?? ''),
+              streetNumberController:
+                  TextEditingController(text: detail?.streetNumber ?? ''),
+              phoneController:
+                  TextEditingController(text: client.phoneNumber ?? ''),
+              deliveryDescriptionController: TextEditingController(
+                  text: detail?.deliveryLocationDescription ?? ''),
               wazeUrl: detail?.wazeURL ?? '',
               deliveryLocationImageUrl: detail?.deliveryLocationImage ?? '',
               nextRouteName: event.nextRouteName,
@@ -77,7 +96,10 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
           emit(state.copyWith(isShimmering: false));
         }
       } else if (event is _citySearchEvent) {
-        emit(state.copyWith(cityList: state.filterList.where((city) => city.contains(event.search)).toList()));
+        emit(state.copyWith(
+            cityList: state.filterList
+                .where((city) => city.contains(event.search))
+                .toList()));
       } else if (event is _selectCityEvent) {
         emit(state.copyWith(selectCity: event.city));
       } else if (event is _pickDeliveryImageEvent) {
@@ -91,7 +113,8 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
             isImageUploading: true,
             deliveryLocationImageFile: File(pickedFile.path),
           ));
-          final response = await DioClient(event.context).uploadFileProgressWithFormData(
+          final response =
+              await DioClient(event.context).uploadFileProgressWithFormData(
             path: AppUrlEndPoints.fileUploadUrl,
             formData: FormData.fromMap({
               'deliveryLocationImage': await MultipartFile.fromFile(
@@ -102,10 +125,12 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
           );
           final uploadModel = FileUploadModel.fromJson(response);
           if (uploadModel.filepath == null || uploadModel.filepath!.isEmpty) {
-            emit(state.copyWith(isImageUploading: false, deliveryLocationImageFile: null));
+            emit(state.copyWith(
+                isImageUploading: false, deliveryLocationImageFile: null));
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
+              title: AppLocalizations.of(event.context)!
+                  .something_is_wrong_try_again,
               type: SnackBarType.failure,
             );
             return;
@@ -116,10 +141,12 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
             deliveryLocationImageFile: File(pickedFile.path),
           ));
         } on ServerException {
-          emit(state.copyWith(isImageUploading: false, deliveryLocationImageFile: null));
+          emit(state.copyWith(
+              isImageUploading: false, deliveryLocationImageFile: null));
           CustomSnackBar.showSnackBar(
             context: event.context,
-            title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
+            title: AppLocalizations.of(event.context)!
+                .something_is_wrong_try_again,
             type: SnackBarType.failure,
           );
         }
@@ -140,6 +167,8 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
           }
         }
       } else if (event is _submitEvent) {
+        final hasDeliveryImage = state.deliveryLocationImageUrl.isNotEmpty ||
+            state.deliveryLocationImageFile != null;
         if (state.selectCity.isEmpty) {
           CustomSnackBar.showSnackBar(
             context: event.context,
@@ -148,12 +177,31 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
           );
           return;
         }
-
-        final matchedCities = state.cityListResModel?.data?.cities?.where((city) => city.cityName == state.selectCity).toList() ?? [];
+        final matchedCities = state.cityListResModel?.data?.cities
+                ?.where((city) => city.cityName == state.selectCity)
+                .toList() ??
+            [];
         if (matchedCities.isEmpty || matchedCities.first.id == null) {
           CustomSnackBar.showSnackBar(
             context: event.context,
             title: AppLocalizations.of(event.context)!.cities_not_available,
+            type: SnackBarType.failure,
+          );
+          return;
+        }
+        if (state.wazeUrl.trim().isEmpty) {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppLocalizations.of(event.context)!.please_set_waze_location,
+            type: SnackBarType.failure,
+          );
+          return;
+        }
+        if (!hasDeliveryImage) {
+          CustomSnackBar.showSnackBar(
+            context: event.context,
+            title: AppLocalizations.of(event.context)!
+                .please_upload_delivery_location_photo,
             type: SnackBarType.failure,
           );
           return;
@@ -168,8 +216,11 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
             streetName: state.streetNameController.text.trim(),
             streetNumber: state.streetNumberController.text.trim(),
             wazeURL: state.wazeUrl,
-            deliveryLocationDescription: state.deliveryDescriptionController.text.trim(),
-            deliveryLocationImage: state.deliveryLocationImageUrl.isNotEmpty ? state.deliveryLocationImageUrl : null,
+            deliveryLocationDescription:
+                state.deliveryDescriptionController.text.trim(),
+            deliveryLocationImage: state.deliveryLocationImageUrl.isNotEmpty
+                ? state.deliveryLocationImageUrl
+                : null,
           ),
         );
 
@@ -185,11 +236,14 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
             '${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}',
             data: reqMap,
           );
-          final response = req_update.ProfileDetailsUpdateResModel.fromJson(res);
+          final response =
+              req_update.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));
-            if (state.nextRouteName != null && state.nextRouteName!.isNotEmpty) {
-              Navigator.pushNamed(event.context, state.nextRouteName!, arguments: state.nextRouteArgs);
+            if (state.nextRouteName != null &&
+                state.nextRouteName!.isNotEmpty) {
+              Navigator.pushNamed(event.context, state.nextRouteName!,
+                  arguments: state.nextRouteArgs);
             } else {
               Navigator.pop(event.context);
             }
@@ -197,7 +251,9 @@ class VerifyClientDataBloc extends Bloc<VerifyClientDataEvent, VerifyClientDataS
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
               context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+              title: AppStrings.getLocalizedStrings(
+                  response.message?.toLocalization() ?? response.message!,
+                  event.context),
               type: SnackBarType.failure,
             );
           }

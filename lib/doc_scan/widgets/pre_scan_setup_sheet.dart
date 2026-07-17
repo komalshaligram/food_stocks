@@ -2,12 +2,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/services/invoice_validation_payload.dart';
 import '../core/theme/app_colors.dart';
 import '../gen_l10n/app_localizations.dart';
 import '../models/supplier.dart';
 import '../providers/suppliers_provider.dart';
 import 'adaptive_bottom_sheet.dart';
 import 'searchable_picker.dart';
+
+/// אפשרויות סוג המסמך — **מקור אמת יחיד** ל**סריקה חדשה** ול**מסך נתוני מסמך**,
+/// כדי ששניהם יציגו בדיוק את אותן אפשרויות. פעילים: חשבונית מס/כניסה + תעודת
+/// כניסה + תעודת החזר. חשבונית החזר (זיכוי) עדיין לא נתמכת (active: false).
+List<({String label, bool active})> docScanDocumentTypeOptions(
+        AppLocalizations l10n) =>
+    [
+      (label: l10n.docTypeTaxInvoice, active: true),
+      (label: l10n.docTypeEntryCertificate, active: true),
+      (label: l10n.docTypeReturnCertificate, active: true),
+      (label: l10n.docTypeReturnInvoice, active: false),
+    ];
+
+/// ממפה את תווית סוג המסמך שנבחרה (מ-docScanDocumentTypeOptions) לערך ה-API:
+/// תעודת החזר → goods_return; תעודת כניסה/משלוח → goods_receipt;
+/// חשבונית מס/כניסה → purchase_invoice.
+String apiDocumentTypeForLabel(AppLocalizations l10n, String? label) {
+  final l = (label ?? '').trim();
+  if (l == l10n.docTypeReturnCertificate) {
+    return InvoiceValidationPayload.typeGoodsReturn;
+  }
+  if (l == l10n.docTypeEntryCertificate || l == l10n.docTypeDelivery) {
+    return InvoiceValidationPayload.typeGoodsReceipt;
+  }
+  return InvoiceValidationPayload.typePurchaseInvoice;
+}
 
 /// תוצאת בחירת פרטי המסמך לפני הסריקה (§6/§13): סוג מסמך + שם ספק.
 /// הבחירה הזו תיווצר על המסמך ותגבר על מה שיחולץ ב-OCR.
@@ -33,17 +60,9 @@ Future<PreScanSetup?> showPreScanSetupSheet(
 
   var supplierName = '';
 
-  // סוגי מסמך — כרגע רק "חשבונית מס/כניסה" פעיל; השאר מושבתים ("לא פעיל כרגע").
-  List<({String label, bool active})> documentTypeOptions(
-          AppLocalizations l10n) =>
-      [
-        (label: l10n.docTypeTaxInvoice, active: true),
-        (label: l10n.docTypeReturnInvoice, active: false),
-        (label: l10n.docTypeEntryCertificate, active: false),
-        (label: l10n.docTypeReturnCertificate, active: false),
-      ];
-
-  // ברירת מחדל: האפשרות הפעילה היחידה (כדי שלא צריך לבחור ידנית).
+  // סוגי מסמך — מקור אמת משותף (docScanDocumentTypeOptions). פעילים: חשבונית
+  // מס/כניסה + תעודת כניסה; השאר מושבתים ("לא פעיל כרגע").
+  // ברירת מחדל: האפשרות הפעילה הראשונה (כדי שלא צריך לבחור ידנית).
   String? selectedType = AppLocalizations.of(context).docTypeTaxInvoice;
 
   return showAdaptiveBottomSheet<PreScanSetup>(
@@ -59,7 +78,7 @@ Future<PreScanSetup?> showPreScanSetupSheet(
       return StatefulBuilder(
         builder: (ctx, setSheet) {
           final maxSheetHeight = MediaQuery.of(ctx).size.height * 0.82;
-          final options = documentTypeOptions(l10n);
+          final options = docScanDocumentTypeOptions(l10n);
           final canContinue =
               selectedType != null && supplierName.trim().isNotEmpty;
 
@@ -255,7 +274,8 @@ class _SupplierPickerFieldState extends State<_SupplierPickerField> {
       searchHint: l10n.supplierNameHint,
       items: sState.suppliers,
       labelOf: (s) => s.name,
-      sublabelOf: (s) => s.code,
+      sublabelOf: (s) => s.taxId.isEmpty ? '' : 'ח.פ ${s.taxId}',
+      searchExtra: (s) => s.taxId,
     );
     if (picked != null) widget.onPicked(picked.name);
   }

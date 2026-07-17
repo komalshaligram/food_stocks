@@ -17,6 +17,39 @@ class SuppliersState {
   });
 
   final List<Supplier> suppliers;
+
+  /// **כל** קודי הספק שנושאים את הח.פ הזה.
+  ///
+  /// לא בהכרח אחד: ב-644 הספקים של לקוח אחד, 12 ח.פ מופיעים ביותר מרשומה אחת
+  /// (שופרסל, למשל, מופיע בשלוש — רשת, "עסקים", וסיטונאות). בחירת הראשון הייתה
+  /// שרירותית ועלולה לבדוק כפילות מול הספק הלא נכון.
+  ///
+  /// ההשוואה על ספרות בלבד: ה-OCR מוסיף לפעמים רווחים או מקפים.
+  List<String> codesForTaxId(String taxId) {
+    final key = taxId.replaceAll(RegExp(r'[^0-9]'), '');
+    if (key.isEmpty) return const [];
+    return suppliers
+        .where((s) => s.taxId.replaceAll(RegExp(r'[^0-9]'), '') == key)
+        .map((s) => s.code)
+        .where((c) => c.isNotEmpty)
+        .toList(growable: false);
+  }
+
+  /// קוד הספק ששמו תואם (נורמליזציה עברית), או '' אם אין התאמה/יש עמימות
+  /// (יותר מקוד אחד). משמש לגזירת קוד הספק מ-`companyName` שנבחר בזמן הסריקה,
+  /// כדי שה-toggle "רק ספק זה" יופיע ישר בלי לבחור ספק שוב במסך הפרטים. חשוב
+  /// לספקים ללא ח.פ בקומקס (כמו רגבים) שבהם `codesForTaxId` מחזיר ריק.
+  String codeForName(String name) {
+    final key = normalizeHebrewForSearch(name);
+    if (key.isEmpty) return '';
+    final matches = suppliers
+        .where((s) => normalizeHebrewForSearch(s.name) == key)
+        .map((s) => s.code)
+        .where((c) => c.isNotEmpty)
+        .toSet();
+    return matches.length == 1 ? matches.first : '';
+  }
+
   final bool loading;
   final bool loaded;
   final String? error;
@@ -52,20 +85,27 @@ class SuppliersNotifier extends StateNotifier<SuppliersState> {
   final Ref _ref;
   Future<void>? _inFlight;
 
+  /// קוד הלקוח שעבורו נטענו הנתונים הנוכחיים. `customerCodeProvider` מתחיל בקוד
+  /// ברירת מחדל וקורא את ה-clientId האמיתי אסינכרונית — בלי המעקב הזה, הקריאה
+  /// הראשונה נועלת את הנתונים של לקוח ברירת המחדל לכל הסשן.
+  String? _loadedCustomerCode;
+
+
   /// טוען את רשימת הספקים. מחזיר את הבקשה שכבר רצה (אם יש) כדי שניתן להמתין לה.
   Future<void> load({bool force = false}) {
     if (_inFlight != null) return _inFlight!;
-    if (state.loaded && !force) return Future<void>.value();
-    _inFlight = _doLoad();
+    _inFlight = _doLoad(force: force);
     return _inFlight!;
   }
 
-  Future<void> _doLoad() async {
+  Future<void> _doLoad({bool force = false}) async {
+    await _ref.read(customerCodeProvider.notifier).ready;
+    final customerCode = _ref.read(customerCodeProvider);
+    if (state.loaded && !force && _loadedCustomerCode == customerCode) return;
     state = state.copyWith(loading: true, clearError: true);
     try {
-      final res = await _service.fetchSuppliers(
-        customerCode: _ref.read(customerCodeProvider),
-      );
+      final res = await _service.fetchSuppliers(customerCode: customerCode);
+      _loadedCustomerCode = customerCode;
       state = SuppliersState(
         suppliers: res.suppliers,
         loading: false,

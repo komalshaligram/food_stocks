@@ -17,8 +17,15 @@ final customerCodeProvider =
 
 class CustomerCodeNotifier extends StateNotifier<String> {
   CustomerCodeNotifier() : super(defaultCustomerCode) {
-    _load();
+    ready = _load();
   }
+
+  /// מסתיים כשה-clientId האמיתי נקרא מ-SharedPreferences.
+  ///
+  /// ⚠️ עד אז [state] מחזיר את [defaultCustomerCode] — קוד של **לקוח אמיתי**.
+  /// כל צרכן שמעביר את הקוד ל-Cloud Function (קטלוג, ספקים, אימות חשבונית,
+  /// שליחה לקופה) **חייב** להמתין לזה, אחרת הוא עלול לפעול מול הלקוח הלא נכון.
+  late final Future<void> ready;
 
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();

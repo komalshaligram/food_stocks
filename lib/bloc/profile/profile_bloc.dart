@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_smartlook/flutter_smartlook.dart';
 import '../../data/model/req_model/profile_details_req_model/profile_details_req_model.dart'
     as req;
 import '../../data/model/res_model/business_type_model/business_type_model.dart';
@@ -223,7 +222,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (event is _getProfileDetailsEvent) {
         mobileNo = event.mobileNo;
         emit(state.copyWith(isUpdate: event.isUpdate));
-        if (state.isUpdate) {
+        // Fetch + pre-fill existing data both when editing the profile (isUpdate)
+        // and when a PENDING client resumes registration (registrationIncomplete),
+        // so the fields the user already filled come back populated.
+        if (state.isUpdate || preferences.getRegistrationIncomplete()) {
+
           emit(state.copyWith(isUpdating: true));
           try {
             final res = await DioClient(event.context).post(
@@ -233,18 +236,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             resGet.ProfileDetailsResModel response =
                 resGet.ProfileDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
-              String? businessName = await Smartlook.instance.user.properties
-                  .getString(AppStrings.userBusinessName);
 
-              if (businessName == '' || businessName == null) {
-                Smartlook.instance.user.properties.putString(
-                    AppStrings.userBusinessName,
-                    value: response
-                        .data?.clients?.first.clientDetail?.bussinessName);
-              }
-
-              Smartlook.instance.user.setName(
-                  response.data?.clients?.first.clientDetail?.ownerName ?? '');
               preferences.setPaymentMethodCount(
                   count: response.data?.clients?.first.clientDetail
                           ?.availablePaymentTypes.length
