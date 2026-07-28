@@ -34,6 +34,9 @@ class InvoiceDocument {
     this.subtotal,
     this.vatAmount,
     this.totalAmount,
+    this.discountPercent,
+    this.warehouseCode,
+    this.warehouseName,
     this.parsedJson,
     this.errorMessage,
     this.scanModel,
@@ -42,6 +45,7 @@ class InvoiceDocument {
     this.comaxDocumentId,
     this.comaxStatus,
     this.comaxReceiveError,
+    this.comaxReceiveErrorMessage,
     this.comaxDiagnosis,
   });
 
@@ -70,6 +74,18 @@ class InvoiceDocument {
   final double? subtotal;
   final double? vatAmount;
   final double? totalAmount;
+
+  /// אחוז הנחה על המסמך (למשל 5 = 5%). ההנחה חלה על הסה"כ לפני מע"מ, ואז המע"מ
+  /// והסה"כ לתשלום מחושבים מחדש על הסכום שאחרי ההנחה. null/0 = אין הנחה.
+  final double? discountPercent;
+
+  /// קוד מחסן היעד לקליטה ל-Comax (§5c). נבחר ע"י המשתמש; null/ריק = מחסן
+  /// ברירת המחדל של Comax. נשלח כ-`header.warehouseCode` בקליטה.
+  final String? warehouseCode;
+
+  /// שם מחסן היעד (לתצוגה ולתיעוד; נשלח כ-`header.warehouseName`).
+  final String? warehouseName;
+
   /// JSON שחזר מ-parseInvoice (לצורכי דיבוג בלבד).
   final String? parsedJson;
   /// הודעת שגיאה אחרונה לעיבוד המסמך (אם קיימת).
@@ -89,7 +105,14 @@ class InvoiceDocument {
   final String? comaxStatus;
 
   /// סיבת כשל הקליטה ל-Comax (כש-comaxStatus == 'failed').
+  /// ⚠️ **קוד מכונה** מהקרולר (`total_mismatch`, `session_in_use`, ...).
+  /// לא להצגה למשתמש — לתצוגה יש [comaxReceiveErrorMessage].
   final String? comaxReceiveError;
+
+  /// סיבת הכישלון **בעברית, מוכנה להצגה**, כפי שנוסחה בקרולר במקום שבו
+  /// הכישלון מובן (למשל `session_in_use` → "משתמש כבר מחובר ל-Comax של לקוח
+  /// זה..."). זה השדה שמופיע במסך ובהתראה.
+  final String? comaxReceiveErrorMessage;
 
   /// פירוט הכישלון מהקראולר, כפי שהבקאנד שמר אותו. קיים רק כש-
   /// `comaxReceiveError == 'total_mismatch'`. גולמי (Map) — נוסח ב-UI.
@@ -121,6 +144,9 @@ class InvoiceDocument {
     double? subtotal,
     double? vatAmount,
     double? totalAmount,
+    double? discountPercent,
+    String? warehouseCode,
+    String? warehouseName,
     String? parsedJson,
     String? errorMessage,
     String? scanModel,
@@ -129,6 +155,7 @@ class InvoiceDocument {
     String? comaxDocumentId,
     String? comaxStatus,
     String? comaxReceiveError,
+    String? comaxReceiveErrorMessage,
     Map<String, dynamic>? comaxDiagnosis,
   }) {
     return InvoiceDocument(
@@ -151,6 +178,9 @@ class InvoiceDocument {
       subtotal: subtotal ?? this.subtotal,
       vatAmount: vatAmount ?? this.vatAmount,
       totalAmount: totalAmount ?? this.totalAmount,
+      discountPercent: discountPercent ?? this.discountPercent,
+      warehouseCode: warehouseCode ?? this.warehouseCode,
+      warehouseName: warehouseName ?? this.warehouseName,
       parsedJson: parsedJson ?? this.parsedJson,
       errorMessage: errorMessage ?? this.errorMessage,
       scanModel: scanModel ?? this.scanModel,
@@ -159,6 +189,8 @@ class InvoiceDocument {
       comaxDocumentId: comaxDocumentId ?? this.comaxDocumentId,
       comaxStatus: comaxStatus ?? this.comaxStatus,
       comaxReceiveError: comaxReceiveError ?? this.comaxReceiveError,
+      comaxReceiveErrorMessage:
+          comaxReceiveErrorMessage ?? this.comaxReceiveErrorMessage,
       comaxDiagnosis: comaxDiagnosis ?? this.comaxDiagnosis,
     );
   }
@@ -183,6 +215,9 @@ class InvoiceDocument {
         'subtotal': subtotal,
         'vatAmount': vatAmount,
         'totalAmount': totalAmount,
+        'discountPercent': discountPercent,
+        'warehouseCode': warehouseCode,
+        'warehouseName': warehouseName,
         'parsedJson': parsedJson,
         'errorMessage': errorMessage,
         'scanModel': scanModel,
@@ -191,6 +226,7 @@ class InvoiceDocument {
         'comaxDocumentId': comaxDocumentId,
         'comaxStatus': comaxStatus,
         'comaxReceiveError': comaxReceiveError,
+        'comaxReceiveErrorMessage': comaxReceiveErrorMessage,
         'comaxDiagnosis': comaxDiagnosis,
       };
 
@@ -221,6 +257,9 @@ class InvoiceDocument {
       subtotal: (json['subtotal'] as num?)?.toDouble(),
       vatAmount: (json['vatAmount'] as num?)?.toDouble(),
       totalAmount: (json['totalAmount'] as num?)?.toDouble(),
+      discountPercent: (json['discountPercent'] as num?)?.toDouble(),
+      warehouseCode: json['warehouseCode'] as String?,
+      warehouseName: json['warehouseName'] as String?,
       parsedJson: json['parsedJson'] as String?,
       errorMessage: json['errorMessage'] as String?,
       scanModel: json['scanModel'] as String?,
@@ -232,6 +271,7 @@ class InvoiceDocument {
       comaxDocumentId: json['comaxDocumentId'] as String?,
       comaxStatus: json['comaxStatus'] as String?,
       comaxReceiveError: json['comaxReceiveError'] as String?,
+      comaxReceiveErrorMessage: json['comaxReceiveErrorMessage'] as String?,
       comaxDiagnosis: json['comaxDiagnosis'] is Map
           ? Map<String, dynamic>.from(json['comaxDiagnosis'] as Map)
           : null,

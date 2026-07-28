@@ -79,7 +79,8 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                                 title: category.category?.categoryName ?? '',
                                 value: category.isAllowed ?? false,
                                 onChanged: (_) {
-                                  bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: -1));
+                                  bloc.add(
+                                      CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: -1));
                                 },
                               ),
                               ...List.generate(subCategories.length, (subIndex) {
@@ -88,7 +89,8 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
                                   value: subCategories[subIndex].isAllowed ?? false,
                                   isSubItem: true,
                                   onChanged: (_) {
-                                    bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: subIndex));
+                                    bloc.add(CategoriesPermissionEvent.switchButtonEvent(
+                                        context: context, categoriesIndex: index, subCategoriesIndex: subIndex));
                                   },
                                 );
                               }),

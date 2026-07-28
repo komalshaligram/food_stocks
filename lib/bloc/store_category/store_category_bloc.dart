@@ -1853,6 +1853,20 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(messageCount: response.data ?? 0));
           }
         } catch (_) {}
+      } else if (event is _applyCartQuantitiesEvent) {
+        final cartMap = event.cartQuantities;
+        final productStockList = state.productStockList
+            .map((sub) => sub.map((item) {
+          final pid = item.productId;
+          if (pid.isEmpty) return item;
+          return item.copyWith(
+            quantity: cartMap[pid] ?? 0,
+            cartProductId: '',
+            totalPrice: 0.0,
+          );
+        }).toList())
+            .toList();
+        emit(state.copyWith(productStockList: productStockList));
       }
     });
   }

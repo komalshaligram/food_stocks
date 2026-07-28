@@ -94,6 +94,15 @@
   "resend_code_in": "שליחת קוד מחדש בעוד",
   "resend_code": "שליחת קוד מחדש",
   "seconds_short": "שנ׳",
+  "did_not_get_sms": "לא קיבלת את הקוד ב-SMS?",
+  "send_code_via_whatsapp": "שליחת הקוד ב-WhatsApp",
+  "otp_sent_via_whatsapp_title": "הקוד נשלח ב-WhatsApp",
+  "otp_sent_via_whatsapp_message": "שלחנו לך את קוד האימות בהודעת WhatsApp למספר",
+  "otp_sent_via_whatsapp_action": "מעולה, הבנתי",
+  "whatsappotpsent": "הקוד נשלח ב-WhatsApp",
+  "whatsappotpsendfailed": "שליחת הקוד ב-WhatsApp נכשלה, נסו שוב",
+  "whatsappnotconfigured": "שליחה ב-WhatsApp אינה זמינה כרגע",
+  "whatsappotptoosoon": "נשלח לך קוד ב-WhatsApp ממש עכשיו, אנא המתן מעט",
   "log_out": "התנתק",
   "save": "שמור",
   "brands": "מותגים",
@@ -200,6 +209,7 @@
   "please_enter_israel_id" : "אנא הזן מספר ת.ז.",
   "please_enter_valid_israel_id" : "נא להזין תעודה מזהה ישראלית תקפה",
   "please_enter_contact_name" : "אנא הזם שם איש קשר",
+  "please_enter_contact_person_name": "אנא הזן שם מלא, שם פרטי ושם משפחה",
   "please_enter_address" : "אנא הזן כתובת",
   "please_enter_fax_number" : "אנא הזן מספר פקס",
   "please_enter_valid_fax_number" : "אנא הזן מספר פקס תקין",
@@ -772,6 +782,9 @@
   },
   "verify_data_correct": "וודא שהנתונים נכונים",
   "verify_form_subtitle": "אנא בדוק ועדכן את הפרטים לפני המשך ההזמנה",
+  "validation_errors_title": "כמעט סיימנו!",
+  "validation_errors_message": "יש כמה שדות בטופס שצריך להשלים או לתקן לפני שממשיכים בהזמנה.",
+  "show_errors": "הצג שגיאות",
   "business_details_section": "פרטי העסק",
   "address_section": "כתובת העסק",
   "delivery_section": "פרטי הורדת סחורה",
@@ -788,6 +801,8 @@
   "customer_service_whatsapp_unavailable": "מספר וואטסאפ לשירות לקוחות לא הוגדר",
   "customer_service_phone_unavailable": "מספר טלפון לשירות לקוחות לא הוגדר",
   "customer_service": "שירות לקוחות",
+  "agent_code_help_message": "לא יודעים מה קוד הסוכן או מי הסוכן שלכם? אין בעיה — צוות שירות הלקוחות שלנו כאן כדי לעזור לכם.",
+  "agent_code_contact_support": "פנייה לשירות לקוחות",
   "whatsapp_optin_title": "נשמח להישאר בקשר בוואטסאפ",
   "whatsapp_optin_body": "אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.",
   "whatsapp_optin_approve": "אני מאשר/ת",
@@ -799,5 +814,28 @@
   "sort_price_high_low": "מיון לפי מחיר: מהגבוה לנמוך",
   "show_only_sales": "הצג רק מבצעים",
   "please_set_waze_location": "אנא הוסף את מיקום ה Waze",
-  "please_upload_delivery_location_photo": "אנא הוסף תמונה של מיקום הורדת סחורה"
+  "please_upload_delivery_location_photo": "אנא הוסף תמונה של מיקום הורדת סחורה",
+  "promo_sheet_reach_min_title": "השלימו את הכמות למחיר המבצע",
+  "promo_sheet_min_reached": "מעולה! הגעתם למחיר המבצע",
+  "promo_sheet_add_to_cart": "הוסף לעגלה",
+  "promo_sheet_empty": "לא נמצאו מוצרים למבצע זה",
+  "promo_sheet_remaining": "עוד {count} מארזים למחיר המבצע",
+  "@promo_sheet_remaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "promo_sheet_of_packages": "{selected} מתוך {min} מארזים",
+  "@promo_sheet_of_packages": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  }
 }

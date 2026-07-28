@@ -47,6 +47,8 @@ class CustomFormField extends StatelessWidget {
     this.border = 3.0,
     this.textDirection,
     this.availableQtyVal = 0,
+    this.fieldKey,
+    this.showErrorBorder = false,
   })  : _keyboardType = keyboardType,
         _fillColor = fillColor,
         _hint = hint,
@@ -90,14 +92,18 @@ class CustomFormField extends StatelessWidget {
   final double border;
   final TextDirection? textDirection;
   final int? availableQtyVal;
+  final Key? fieldKey;
+  final bool showErrorBorder;
 
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-        textSelectionTheme: TextSelectionThemeData(cursorColor: AppColors.mainColor, selectionColor: AppColors.mainColor, selectionHandleColor: AppColors.mainColor),
+        textSelectionTheme:
+            TextSelectionThemeData(cursorColor: AppColors.mainColor, selectionColor: AppColors.mainColor, selectionHandleColor: AppColors.mainColor),
       ),
       child: TextFormField(
+        key: fieldKey,
         controller: _controller,
         inputFormatters: inputFormat,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -130,17 +136,25 @@ class CustomFormField extends StatelessWidget {
             hintStyle: TextStyle(color: AppColors.textColor),
             errorMaxLines: 2,
             errorStyle: TextStyle(color: AppColors.redColor, height: height, overflow: TextOverflow.visible, fontWeight: FontWeight.w400),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(border), borderSide: isBorderVisible ? BorderSide(color: AppColors.mainColor, width: 1) : BorderSide.none),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(border),
+                borderSide: isBorderVisible ? BorderSide(color: AppColors.mainColor, width: 1) : BorderSide.none),
             contentPadding: EdgeInsets.fromLTRB(AppConstants.padding_10, contentPaddingTop, AppConstants.padding_10, contentPaddingBottom),
-            disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(border), borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(border), borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none),
+            disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(border),
+                borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(border),
+                borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(border),
-              borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor, width: 1) : BorderSide.none,
+              borderSide: showErrorBorder
+                  ? BorderSide(color: AppColors.redColor, width: 1.4)
+                  : (isBorderVisible ? BorderSide(color: AppColors.borderColor, width: 1) : BorderSide.none),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(border),
-              borderSide: isBorderVisible ? BorderSide(color: AppColors.redColor, width: 1) : BorderSide.none,
+              borderSide: showErrorBorder || isBorderVisible ? BorderSide(color: AppColors.redColor, width: 1.4) : BorderSide.none,
             )),
       ),
     );

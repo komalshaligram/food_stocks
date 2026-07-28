@@ -4,9 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ui/utils/app_utils.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/widget/sized_box_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../bloc/form_data/form_data_bloc.dart';
-import '../../data/storage/shared_preferences_helper.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
@@ -15,6 +13,7 @@ import '../widget/common_app_bar.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_form_field_widget.dart';
+import '../widget/customer_service_contact_widget.dart';
 import '../widget/form_data_screen_shimmer_widget.dart';
 
 class FormDataRoute {
@@ -47,8 +46,9 @@ class FormDataScreenWidget extends StatelessWidget {
     return BlocBuilder<FormDataBloc, FormDataState>(builder: (context, state) {
       return WillPopScope(
         onWillPop: () async {
-          SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-          return Future.value(!preferences.getUserLoggedIn());
+          // Registration screens are always pushed onto a stack — going back to the
+          // previous step must always work. Only the stack root has nowhere to go.
+          return Future.value(Navigator.canPop(context));
         },
         child: Scaffold(
           backgroundColor: AppColors.pageColor,
@@ -60,8 +60,7 @@ class FormDataScreenWidget extends StatelessWidget {
               iconData: Icons.arrow_back_ios_new_rounded,
               trailingWidget: _buildAppBarIcon(),
               onTap: () async {
-                SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                if (!preferences.getUserLoggedIn() && context.mounted) {
+                if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
               },
@@ -125,6 +124,8 @@ class FormDataScreenWidget extends StatelessWidget {
                       ],
                     ),
                   ),
+                  16.height,
+                  _buildAgentCodeHelp(context, state),
                   24.height,
                   CustomButtonWidget(
                     buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
@@ -165,6 +166,95 @@ class FormDataScreenWidget extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(16),
       child: child,
+    );
+  }
+
+  /// Friendly help block shown under the agent-code field: users who don't know
+  /// their agent code (or who their agent is) can reach customer service. Opens
+  /// the same WhatsApp/phone bottom sheet used across the app.
+  Widget _buildAgentCodeHelp(BuildContext context, FormDataState state) {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.mainColor.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.mainColor.withValues(alpha: 0.15)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 40,
+                width: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.mainColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(Icons.help_outline_rounded, size: 22, color: AppColors.mainColor),
+              ),
+              12.width,
+              Expanded(
+                child: Text(
+                  l10n.agent_code_help_message,
+                  style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_13,
+                    color: AppColors.blackColor.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          14.height,
+          _buildContactSupportButton(context, state),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactSupportButton(BuildContext context, FormDataState state) {
+    final l10n = AppLocalizations.of(context)!;
+    return Material(
+      color: AppColors.whiteColor,
+      borderRadius: BorderRadius.circular(_fieldRadius),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(_fieldRadius),
+        onTap: () {
+          showCustomerServiceBottomSheet(
+            context: context,
+            customerServicePhone: state.customerServicePhone,
+            customerServiceWhatsApp: state.customerServiceWhatsApp,
+          );
+        },
+        child: Container(
+          height: 46,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(_fieldRadius),
+            border: Border.all(color: AppColors.mainColor, width: 1.4),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.headset_mic_rounded, size: 20, color: AppColors.mainColor),
+              8.width,
+              Text(
+                l10n.agent_code_contact_support,
+                style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_15,
+                  color: AppColors.mainColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

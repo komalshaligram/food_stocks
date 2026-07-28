@@ -1,6 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:in_app_update/in_app_update.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:store_version_checker/store_version_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +28,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
+import 'package:food_stock/main.dart' show navigatorKey;
 import 'package:another_flushbar/flushbar.dart';
 import 'constants/app_img_path.dart';
 import 'constants/app_urls.dart';
@@ -41,8 +47,7 @@ enum SnackBarType { success, failure }
 
 bool isTablet(BuildContext context) {
   bool isTablet = false;
-  if (MediaQuery.of(context).size.height > 800 &&
-      MediaQuery.of(context).size.height > 500) {
+  if (MediaQuery.of(context).size.height > 800 && MediaQuery.of(context).size.height > 500) {
     isTablet = true;
   } else {
     return false;
@@ -52,15 +57,11 @@ bool isTablet(BuildContext context) {
 
 String maskCreditCardNumber(String cardNumber) {
   var firstDigits = cardNumber.substring(0, 4);
-  var lastDigits =
-      cardNumber.substring(cardNumber.length - 4, cardNumber.length);
+  var lastDigits = cardNumber.substring(cardNumber.length - 4, cardNumber.length);
   var requiredMask = 'X' * (16 - firstDigits.length);
   var maskedString = requiredMask + lastDigits;
-  var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(
-      RegExp(r'.{4}'), (match) => '${match.group(0)}-');
-  return maskedCardNumberWithSpaces
-      .toString()
-      .substring(0, maskedCardNumberWithSpaces.length - 1);
+  var maskedCardNumberWithSpaces = maskedString.replaceAllMapped(RegExp(r'.{4}'), (match) => '${match.group(0)}-');
+  return maskedCardNumberWithSpaces.toString().substring(0, maskedCardNumberWithSpaces.length - 1);
 }
 
 String formatExpiryDate(String text) {
@@ -76,8 +77,7 @@ String formatExpiryDate(String text) {
 }
 
 Future<String> getBottleTax() async {
-  SharedPreferencesHelper preferences =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
   var value = preferences.getBottleTax().toString();
   return Future.value(value.toString());
 }
@@ -86,37 +86,25 @@ Color getStatusColor(List<StatusData> statusList, String status) {
   if (status.isEmpty) {
     return AppColors.mainColor;
   }
-  String color =
-      statusList.where((e) => e.statusNameKey == status).first.statusColor ??
-          '';
+  String color = statusList.where((e) => e.statusNameKey == status).first.statusColor ?? '';
   final hexCode = color.replaceAll('#', '');
   return Color(int.parse('FF$hexCode', radix: 16));
 }
 
-String getStatus(
-    List<StatusData> statusList, String currentStatus, String language) {
+String getStatus(List<StatusData> statusList, String currentStatus, String language) {
   String status = '';
   if (currentStatus.isEmpty) {
     return status;
   }
   if (language == AppStrings.hebrewString) {
-    status = statusList
-            .where((e) => e.statusNameKey == currentStatus)
-            .first
-            .statusNameHebrew ??
-        '';
+    status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameHebrew ?? '';
   } else {
-    status = statusList
-            .where((e) => e.statusNameKey == currentStatus)
-            .first
-            .statusNameEnglish ??
-        '';
+    status = statusList.where((e) => e.statusNameKey == currentStatus).first.statusNameEnglish ?? '';
   }
   return status;
 }
 
-String getLocalizedReason(
-    {required String apiReason, required BuildContext context}) {
+String getLocalizedReason({required String apiReason, required BuildContext context}) {
   final l10n = AppLocalizations.of(context);
   if (l10n == null) {
     return apiReason;
@@ -154,9 +142,7 @@ double getChildAspectRatio(BuildContext context, bool isSaleOn) {
 double getItemHeight(BuildContext context, bool isSaleOn) {
   return getScreenHeight(context) > 1000 && getScreenWidth(context) > 700
       ? 350
-      : getScreenHeight(context) < 1000 &&
-              getScreenHeight(context) > 800 &&
-              getScreenWidth(context) > 550
+      : getScreenHeight(context) < 1000 && getScreenHeight(context) > 800 && getScreenWidth(context) > 550
           ? 260
           : isSaleOn
               ? AppConstants.salesProductItemHeight
@@ -180,8 +166,7 @@ Widget isPesachLabelShow(bool isPesach, BuildContext context) {
           border: Border.all(color: AppColors.pesachBGColor),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
-        child: Text(AppLocalizations.of(context)!.pesach,
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13)));
+        child: Text(AppLocalizations.of(context)!.pesach, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13)));
   } else {
     return 0.height;
   }
@@ -189,25 +174,50 @@ Widget isPesachLabelShow(bool isPesach, BuildContext context) {
 
 class CustomSnackBar {
   static bool isSnackBarOpen = false;
-  static void showSnackBar(
-      {required BuildContext context,
-      required String title,
-      required SnackBarType type}) {
-    Flushbar(
-      backgroundColor: type == SnackBarType.success
-          ? AppColors.mainColor.withValues(alpha: 0.85)
-          : AppColors.redColor.withValues(alpha: 0.85),
-      messageText: Text(title,
+  static Flushbar? _activeFlushbar;
+
+  static void showSnackBar({required BuildContext context, required String title, required SnackBarType type}) {
+    if (!context.mounted) return;
+
+    // Defer so we never push a Flushbar route while Navigator is locked
+    // (e.g. another Flushbar/dialog is popping) — avoids Crashlytics asserts.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!context.mounted) return;
+      try {
+        if (_activeFlushbar != null) {
+          await _activeFlushbar!.dismiss(true);
+          _activeFlushbar = null;
+        }
+      } catch (_) {}
+
+      if (!context.mounted) return;
+      final flushbar = Flushbar(
+        backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withValues(alpha: 0.85) : AppColors.redColor.withValues(alpha: 0.85),
+        messageText: Text(
+          title,
           style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.smallFont,
-              color: AppColors.whiteColor,
-              fontWeight: FontWeight.w400)),
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.all(20),
-      borderRadius: BorderRadius.circular(15),
-      duration: const Duration(seconds: 3),
-      flushbarPosition: FlushbarPosition.TOP,
-    ).show(context);
+            size: AppConstants.smallFont,
+            color: AppColors.whiteColor,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(20),
+        borderRadius: BorderRadius.circular(15),
+        duration: const Duration(seconds: 3),
+        flushbarPosition: FlushbarPosition.TOP,
+      );
+      _activeFlushbar = flushbar;
+      try {
+        await flushbar.show(context);
+      } catch (e) {
+        printData('Flushbar show failed: $e');
+      } finally {
+        if (identical(_activeFlushbar, flushbar)) {
+          _activeFlushbar = null;
+        }
+      }
+    });
   }
 }
 
@@ -215,19 +225,182 @@ printData(String? message) {
   debugPrint(message ?? '');
 }
 
-customShowUpdateDialog(
-    BuildContext context, String directionality, String storeUrl) {
-  return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context1) {
-        return PopScope(
-          canPop: false,
-          child: AlertDialog(
+int otpCooldownSeconds(int sendCount) {
+  if (sendCount <= 1) return 30;
+  if (sendCount == 2) return 60;
+  return 180;
+}
+
+/// True when [storeVersion] is strictly newer than [currentVersion].
+/// Trims / strips non-numeric noise so StoreVersionChecker false negatives
+/// (hidden chars, parse failures) do not block the update dialog.
+bool isStoreVersionNewer(String currentVersion, String storeVersion) {
+  List<int> parse(String raw) {
+    final cleaned = raw.trim().replaceAll(RegExp(r'[^0-9.]'), '');
+    if (cleaned.isEmpty) return [0];
+    return cleaned.split('.').where((part) => part.isNotEmpty).map((part) => int.tryParse(part) ?? 0).toList();
+  }
+
+  final current = parse(currentVersion);
+  final store = parse(storeVersion);
+  final maxLen = current.length > store.length ? current.length : store.length;
+
+  for (var i = 0; i < maxLen; i++) {
+    final left = i < current.length ? current[i] : 0;
+    final right = i < store.length ? store[i] : 0;
+    if (left < right) return true;
+    if (left > right) return false;
+  }
+  return false;
+}
+
+bool _updateDialogShownInSession = false;
+bool _updateDialogShowing = false;
+bool _updateCheckInProgress = false;
+int _updateDialogPresentGeneration = 0;
+String? _pendingUpdateLanguage;
+String? _pendingUpdateStoreUrl;
+
+BuildContext? _resolveUpdateDialogContext(BuildContext? context) {
+  final root = navigatorKey.currentContext;
+  if (root != null && root.mounted) return root;
+  if (context != null && context.mounted) return context;
+  return null;
+}
+
+bool _isNavigatorOverlayReady() {
+  final nav = navigatorKey.currentState;
+  return nav != null && nav.mounted && nav.overlay?.mounted == true;
+}
+
+Future<void> _waitForNavigatorReady() async {
+  for (var attempt = 0; attempt < 30; attempt++) {
+    if (_isNavigatorOverlayReady()) return;
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+  }
+}
+
+Future<void> _waitForUpdateCheckSlot() async {
+  for (var attempt = 0; attempt < 40; attempt++) {
+    if (_updateDialogShownInSession) return;
+    if (!_updateCheckInProgress) return;
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+  }
+}
+
+/// Runs the update check once at app startup (splash / login / before home).
+Future<void> scheduleAppUpdateCheckIfNeeded() async {
+  final preferences = SharedPreferencesHelper(
+    prefs: await SharedPreferences.getInstance(),
+  );
+  for (var attempt = 0; attempt < 5; attempt++) {
+    if (_resolveUpdateDialogContext(null) != null) break;
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+  }
+  await checkAndShowAppUpdateIfNeeded(
+    language: preferences.getAppLanguage(),
+  );
+}
+
+/// Waits for the route transition/layout to finish, then checks for updates.
+/// Use on login and home screens so the dialog is not delayed until user input.
+Future<void> scheduleScreenUpdateCheck(BuildContext? context) async {
+  await _waitForNavigatorReady();
+  final preferences = SharedPreferencesHelper(
+    prefs: await SharedPreferences.getInstance(),
+  );
+  await checkAndShowAppUpdateIfNeeded(
+    context: _resolveUpdateDialogContext(context),
+    language: preferences.getAppLanguage(),
+  );
+  await _flushPendingUpdateDialog();
+}
+
+void _queuePendingUpdateDialog(String language, String storeUrl) {
+  _pendingUpdateLanguage = language;
+  _pendingUpdateStoreUrl = storeUrl;
+}
+
+Future<void> _flushPendingUpdateDialog() async {
+  final language = _pendingUpdateLanguage;
+  final storeUrl = _pendingUpdateStoreUrl;
+  if (language == null || storeUrl == null) return;
+  if (_updateDialogShownInSession) {
+    _pendingUpdateLanguage = null;
+    _pendingUpdateStoreUrl = null;
+    return;
+  }
+
+  final shown = await _presentUpdateDialog(
+    context: null,
+    directionality: language,
+    storeUrl: storeUrl,
+  );
+  if (shown) {
+    _pendingUpdateLanguage = null;
+    _pendingUpdateStoreUrl = null;
+  }
+}
+
+void _showUpdateDialogOrQueue({
+  required BuildContext? context,
+  required String language,
+  required String storeUrl,
+}) {
+  if (_updateDialogShownInSession) return;
+  _queuePendingUpdateDialog(language, storeUrl);
+  unawaited(_presentUpdateDialog(
+    context: context,
+    directionality: language,
+    storeUrl: storeUrl,
+  ).then((shown) {
+    if (shown) {
+      _pendingUpdateLanguage = null;
+      _pendingUpdateStoreUrl = null;
+    }
+  }));
+}
+
+/// Shows the force-update dialog safely after the current frame so it does
+/// not race Flushbar / other Navigator pops (`_debugLocked` asserts).
+/// Only one dialog is shown per app session.
+Future<bool> _presentUpdateDialog({
+  required BuildContext? context,
+  required String directionality,
+  required String storeUrl,
+}) async {
+  if (_updateDialogShownInSession) return true;
+  if (_updateDialogShowing) return false;
+
+  final generation = ++_updateDialogPresentGeneration;
+
+  for (var attempt = 0; attempt < 40; attempt++) {
+    if (generation != _updateDialogPresentGeneration) return false;
+    if (_updateDialogShownInSession) return true;
+
+    await _waitForNavigatorReady();
+    final dialogContext = _resolveUpdateDialogContext(context);
+    if (dialogContext == null || !dialogContext.mounted) {
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+      continue;
+    }
+
+    try {
+      _updateDialogShowing = true;
+      showDialog<void>(
+        barrierDismissible: false,
+        context: dialogContext,
+        useRootNavigator: true,
+        builder: (dialogContext) {
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
               title: Text(
-                AppLocalizations.of(context)!.new_version_app_update,
+                AppLocalizations.of(dialogContext)!.new_version_app_update,
                 style: AppStyles.rkRegularTextStyle(
-                    color: AppColors.blackColor, size: AppConstants.mediumFont),
+                  color: AppColors.blackColor,
+                  size: AppConstants.mediumFont,
+                ),
               ),
               actions: [
                 Align(
@@ -237,25 +410,233 @@ customShowUpdateDialog(
                       _launchUrl(storeUrl);
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5.0, vertical: 5.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                       alignment: Alignment.center,
                       width: AppConstants.containerHeight_80,
                       decoration: BoxDecoration(
-                          gradient: AppColors.appMainGradientColor,
-                          borderRadius: BorderRadius.circular(8.0)),
+                        gradient: AppColors.appMainGradientColor,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                       child: Text(
-                        AppLocalizations.of(context)!.update,
+                        AppLocalizations.of(dialogContext)!.update,
                         style: AppStyles.rkRegularTextStyle(
-                            color: AppColors.whiteColor,
-                            size: AppConstants.font_14),
+                          color: AppColors.whiteColor,
+                          size: AppConstants.font_14,
+                        ),
                       ),
                     ),
                   ),
                 )
-              ]),
-        );
+              ],
+            ),
+          );
+        },
+      ).whenComplete(() {
+        _updateDialogShowing = false;
       });
+      _updateDialogShownInSession = true;
+      return true;
+    } catch (e) {
+      printData('Update dialog show failed (attempt $attempt): $e');
+      _updateDialogShowing = false;
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+    }
+  }
+
+  return false;
+}
+
+void customShowUpdateDialog(BuildContext context, String directionality, String storeUrl) {
+  _showUpdateDialogOrQueue(
+    context: context,
+    language: directionality,
+    storeUrl: storeUrl,
+  );
+}
+
+/// Uses store versions from [StoreVersionChecker] but ignores its flaky
+/// [canUpdate] flag; opens the dialog when store > installed.
+void showUpdateDialogIfStoreNewer({
+  required BuildContext? context,
+  required String language,
+  required String currentVersion,
+  required String? newVersion,
+  required String? appUrl,
+  required String androidFallbackUrl,
+  required String iosFallbackUrl,
+}) {
+  final storeVersion = newVersion?.trim();
+  if (storeVersion == null || storeVersion.isEmpty) {
+    printData('Update dialog skipped: empty store version');
+    return;
+  }
+
+  final shouldUpdate = isStoreVersionNewer(currentVersion, storeVersion);
+  printData('Update compare: current=$currentVersion store=$storeVersion shouldUpdate=$shouldUpdate');
+
+  if (!shouldUpdate) return;
+
+  if (Platform.isAndroid) {
+    _showUpdateDialogOrQueue(
+      context: context,
+      language: language,
+      storeUrl: appUrl ?? androidFallbackUrl,
+    );
+  } else if (Platform.isIOS) {
+    _showUpdateDialogOrQueue(
+      context: context,
+      language: language,
+      storeUrl: appUrl ?? iosFallbackUrl,
+    );
+  }
+}
+
+const String kAndroidPlayStorePackageId = 'com.foodstock.dev';
+const String kAndroidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=$kAndroidPlayStorePackageId';
+const String kIosAppStoreUrl = 'https://apps.apple.com/ua/app/tavili/id6468264054';
+
+/// Scrapes the public Play Store page when [StoreVersionChecker] returns no
+/// version (common on production devices / HTML changes).
+Future<String?> fetchPlayStoreVersionName(String packageId) async {
+  const locales = ['en-US', 'en-GB', 'he-IL'];
+  final patterns = [
+    RegExp(r'\[\[\["([0-9]+\.[0-9]+(?:\.[0-9]+)?)"\]\]'),
+    RegExp(
+      r'Current Version</div>.*?>([0-9]+\.[0-9]+(?:\.[0-9]+)?)<',
+      dotAll: true,
+    ),
+    RegExp(r'"softwareVersion"\s*:\s*"([0-9]+\.[0-9]+(?:\.[0-9]+)?)"'),
+  ];
+
+  for (final locale in locales) {
+    try {
+      final uri = Uri.parse(
+        'https://play.google.com/store/apps/details?id=$packageId&hl=$locale',
+      );
+      final response = await http.get(
+        uri,
+        headers: const {
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+        },
+      ).timeout(const Duration(seconds: 12));
+      if (response.statusCode != 200) continue;
+
+      for (final pattern in patterns) {
+        final match = pattern.firstMatch(response.body);
+        final version = match?.group(1)?.trim();
+        if (version != null && version.isNotEmpty) {
+          return version;
+        }
+      }
+    } catch (e) {
+      printData('Play Store scrape failed ($locale): $e');
+    }
+  }
+  return null;
+}
+
+/// Android: Play In-App Update API first (Play installs only), then store
+/// checker + scrape fallback. iOS: [StoreVersionChecker] with custom compare.
+Future<void> checkAndShowAppUpdateIfNeeded({
+  BuildContext? context,
+  required String language,
+}) async {
+  if (_updateDialogShownInSession) {
+    printData('Update check skipped: dialog already shown');
+    return;
+  }
+  if (_updateCheckInProgress) {
+    await _waitForUpdateCheckSlot();
+    if (_updateDialogShownInSession || _updateCheckInProgress) {
+      printData('Update check skipped: dialog shown or check still in progress');
+      return;
+    }
+  }
+
+  _updateCheckInProgress = true;
+  try {
+    if (Platform.isAndroid) {
+      final packageInfo = await PackageInfo.fromPlatform();
+      final installedVersion = packageInfo.version;
+      // Play Core In-App Update only works for Play Store installs.
+      // Skip it for Drive / sideloaded APKs to avoid native failures.
+      final installer = packageInfo.installerStore?.toLowerCase() ?? '';
+      final fromPlayStore = installer.contains('vending') || installer.contains('google') || installer == 'com.android.vending';
+
+      if (fromPlayStore) {
+        try {
+          final updateInfo = await InAppUpdate.checkForUpdate();
+          printData('InAppUpdate availability: ${updateInfo.updateAvailability}');
+          if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+            _showUpdateDialogOrQueue(
+              context: context,
+              language: language,
+              storeUrl: kAndroidPlayStoreUrl,
+            );
+            return;
+          }
+        } catch (e) {
+          printData('InAppUpdate check failed: $e');
+        }
+      } else {
+        printData('Skipping InAppUpdate (installer=$installer) — not a Play install');
+      }
+
+      try {
+        final checker = StoreVersionChecker();
+        final value = await checker.checkUpdate();
+        printData('StoreVersionChecker current=${value.currentVersion} store=${value.newVersion} error=${value.errorMessage}');
+
+        var storeVersion = value.newVersion?.trim();
+        if (storeVersion == null || storeVersion.isEmpty) {
+          storeVersion = await fetchPlayStoreVersionName(kAndroidPlayStorePackageId);
+          printData('Play Store scrape version: $storeVersion');
+        }
+
+        showUpdateDialogIfStoreNewer(
+          context: context,
+          language: language,
+          currentVersion: value.currentVersion.isNotEmpty ? value.currentVersion : installedVersion,
+          newVersion: storeVersion,
+          appUrl: value.appURL,
+          androidFallbackUrl: kAndroidPlayStoreUrl,
+          iosFallbackUrl: kIosAppStoreUrl,
+        );
+      } catch (e) {
+        printData('Android store version check failed: $e');
+        final scraped = await fetchPlayStoreVersionName(kAndroidPlayStorePackageId);
+        if (scraped == null) return;
+        showUpdateDialogIfStoreNewer(
+          context: context,
+          language: language,
+          currentVersion: installedVersion,
+          newVersion: scraped,
+          appUrl: kAndroidPlayStoreUrl,
+          androidFallbackUrl: kAndroidPlayStoreUrl,
+          iosFallbackUrl: kIosAppStoreUrl,
+        );
+      }
+      return;
+    }
+
+    if (Platform.isIOS) {
+      final checker = StoreVersionChecker();
+      final value = await checker.checkUpdate();
+      showUpdateDialogIfStoreNewer(
+        context: context,
+        language: language,
+        currentVersion: value.currentVersion,
+        newVersion: value.newVersion,
+        appUrl: value.appURL,
+        androidFallbackUrl: kAndroidPlayStoreUrl,
+        iosFallbackUrl: kIosAppStoreUrl,
+      );
+    }
+  } catch (e) {
+    printData('checkAndShowAppUpdateIfNeeded failed: $e');
+  } finally {
+    _updateCheckInProgress = false;
+  }
 }
 
 String normalizeWhatsAppPhone(String phoneNumber) {
@@ -329,11 +710,7 @@ bool isValidIsraeliID(String id) {
 }
 
 Future<CroppedFile?> cropImage(
-    {required String path,
-    CropStyle shape = CropStyle.rectangle,
-    int quality = 100,
-      bool lockAspectRatio = true,
-      bool? isLogoCrop = false}) async {
+    {required String path, CropStyle shape = CropStyle.rectangle, int quality = 100, bool lockAspectRatio = true, bool? isLogoCrop = false}) async {
   return await ImageCropper().cropImage(
     sourcePath: path,
     compressQuality: quality,
@@ -341,9 +718,7 @@ Future<CroppedFile?> cropImage(
       AndroidUiSettings(
         activeControlsWidgetColor: AppColors.mainColor,
         cropFrameColor: AppColors.greyColor,
-        initAspectRatio: isLogoCrop ?? false
-            ? CropAspectRatioPreset.ratio16x9
-            : CropAspectRatioPreset.square,
+        initAspectRatio: isLogoCrop ?? false ? CropAspectRatioPreset.ratio16x9 : CropAspectRatioPreset.square,
         hideBottomControls: true,
         showCropGrid: false,
         lockAspectRatio: false,
@@ -421,11 +796,7 @@ Future<bool> ensureBarcodeScannerCameraPermission(BuildContext context) async {
 
   if (await Permission.camera.isPermanentlyDenied) {
     if (context.mounted) {
-      CustomSnackBar.showSnackBar(
-        context: context,
-        title: AppLocalizations.of(context)!.camera_permission,
-        type: SnackBarType.failure,
-      );
+      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.camera_permission, type: SnackBarType.failure);
     }
     return false;
   }
@@ -436,27 +807,19 @@ Future<bool> ensureBarcodeScannerCameraPermission(BuildContext context) async {
   }
 
   if (context.mounted) {
-    CustomSnackBar.showSnackBar(
-      context: context,
-      title: AppLocalizations.of(context)!.camera_permission,
-      type: SnackBarType.failure,
-    );
+    CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.camera_permission, type: SnackBarType.failure);
   }
   return false;
 }
 
-Future<String> scanBarcodeOrQRCode(
-    {required BuildContext context,
-    required String cancelText,
-    required ScanMode scanMode}) async {
+Future<String> scanBarcodeOrQRCode({required BuildContext context, required String cancelText, required ScanMode scanMode}) async {
   if (!await ensureBarcodeScannerCameraPermission(context)) {
     return '-1';
   }
 
   String barcodeSOrQRScanRes;
   try {
-    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode(
-        '#ff20BF6B', cancelText, true, scanMode);
+    barcodeSOrQRScanRes = await FlutterBarcodeScanner.scanBarcode('#ff20BF6B', cancelText, true, scanMode);
     printData(barcodeSOrQRScanRes);
   } on PlatformException {
     barcodeSOrQRScanRes = 'Failed to get platform version.';
@@ -472,10 +835,7 @@ bool isRTLContent({required BuildContext context}) {
 }
 
 extension RTLExtension on BuildContext {
-  bool get rtl => [const Locale(AppStrings.hebrewString)]
-          .contains(Localizations.localeOf(this))
-      ? true
-      : false;
+  bool get rtl => [const Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
 }
 
 String splitNumber(String price) {
@@ -488,71 +848,46 @@ String splitNumber(String price) {
 }
 
 extension StringCasingExtension on String {
-  String toCapitalized() =>
-      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
-  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
-      .split(' ')
-      .map((str) => str.toCapitalized())
-      .join(' ');
+  String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
   String toLocalization() => contains('.') ? split('.')[1].toLowerCase() : this;
 }
 
 String formatNumber({required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;
-  final formatted =
-      NumberFormat.simpleCurrency(locale: local).format(number.abs());
+  final formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs());
   final String result = isNegative ? '-$formatted' : formatted;
   return splitNumber(result);
 }
 
 String formatSignedNumber(dynamic value) {
-  final double amount = value is num
-      ? value.toDouble()
-      : double.tryParse(value?.toString() ?? '0') ?? 0;
+  final double amount = value is num ? value.toDouble() : double.tryParse(value?.toString() ?? '0') ?? 0;
   final formatted = NumberFormat.decimalPattern('en_IN').format(amount.abs());
   return amount.isNegative ? '-$formatted ₪' : '$formatted ₪';
 }
 
-String formatNumberPositiveToNegative(
-    {required String value, required String local}) {
+String formatNumberPositiveToNegative({required String value, required String local}) {
   final double number = double.parse(value);
   final bool isNegative = number < 0;
-  String formatted =
-      NumberFormat.simpleCurrency(locale: local).format(number.abs());
+  String formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs());
   formatted = formatted.replaceAll(RegExp(r'\s+'), '');
   return isNegative ? ' -$formatted' : formatted;
 }
 
-String formatNumberForWallet(
-    {required String value,
-    required String local,
-    required BuildContext context}) {
+String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
   final currency = AppLocalizations.of(context)?.currency ?? '₪';
   final parsed = double.tryParse(value) ?? 0;
-  final integerPart =
-      value.contains('.') ? value.split('.').first : parsed.toStringAsFixed(0);
+  final integerPart = value.contains('.') ? value.split('.').first : parsed.toStringAsFixed(0);
   return '$integerPart$currency';
 }
 
-double vatCalculation(
-    {required double price,
-    required double vat,
-    double qty = 0,
-    double deposit = 0}) {
-  double result = price +
-      ((price * vat) / 100) +
-      (qty * deposit) +
-      ((qty * deposit * vat) / 100);
+double vatCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
+  double result = price + ((price * vat) / 100) + (qty * deposit) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-double vatCalculationRefund(
-    {required double price,
-    required double vat,
-    double qty = 0,
-    double deposit = 0,
-    double? refund}) {
+double vatCalculationRefund({required double price, required double vat, double qty = 0, double deposit = 0, double? refund}) {
   double priceWithVat = price + ((price * vat) / 100);
   double depositWithVat = (qty * deposit) + ((qty * deposit * vat) / 100);
   double total = priceWithVat + depositWithVat;
@@ -571,48 +906,34 @@ double vatCalculationRefund(
   return total;
 }
 
-double totalVatAmountCalculation(
-    {required double price,
-    required double vat,
-    double qty = 0,
-    double deposit = 0}) {
+double totalVatAmountCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
   double result = ((price * vat) / 100) + ((qty * deposit * vat) / 100);
   return result;
 }
 
-double bottleDepositCalculation(
-    {double units = 1, required double deposit, required double qty}) {
+double bottleDepositCalculation({double units = 1, required double deposit, required double qty}) {
   double result = qty * deposit * units;
   return result;
 }
 
-double bottleDepositCalculationWithVat(
-    {required double deposit, required double qty, double vatPercentage = 1}) {
+double bottleDepositCalculationWithVat({required double deposit, required double qty, double vatPercentage = 1}) {
   double result = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
   return result;
 }
 
 /// Sum of product [totalVatAmount] from cart API.
 double sumProductTotalVatAmounts(Iterable<double?> productTotalVatAmounts) {
-  return productTotalVatAmounts.fold<double>(
-      0, (sum, amount) => sum + (amount ?? 0));
+  return productTotalVatAmounts.fold<double>(0, (sum, amount) => sum + (amount ?? 0));
 }
 
 /// Grand total: sum(totalVatAmount) + bottle deposit + 18% on deposit when [bottleQuantities] > 0.
 double calculateBasketGrandTotal(
-    {required double productsTotalWithVat,
-    required double bottleTax,
-    required double vatPercentage,
-    required int bottleQuantities}) {
+    {required double productsTotalWithVat, required double bottleTax, required double vatPercentage, required int bottleQuantities}) {
   if (bottleQuantities <= 0) {
     return productsTotalWithVat;
   }
 
-  return productsTotalWithVat +
-      bottleDepositCalculationWithVat(
-          deposit: bottleTax,
-          qty: bottleQuantities.toDouble(),
-          vatPercentage: vatPercentage);
+  return productsTotalWithVat + bottleDepositCalculationWithVat(deposit: bottleTax, qty: bottleQuantities.toDouble(), vatPercentage: vatPercentage);
 }
 
 // double bottleDepositCalculationWithVatRefund({required double deposit, required double qty, double vatPercentage = 1, double? refund}) {
@@ -641,8 +962,7 @@ String formatInvoiceDate(String date) {
 }
 
 Widget getPaymentStatusWidget(String status, BuildContext context) => Container(
-      padding: const EdgeInsets.symmetric(
-          vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppConstants.radius_50),
         color: status == AppStrings.openText
@@ -661,55 +981,40 @@ Widget getPaymentStatusWidget(String status, BuildContext context) => Container(
                 : status == AppStrings.inProgressText
                     ? AppLocalizations.of(context)!.in_progress_text
                     : AppLocalizations.of(context)!.partially_closed_text,
-        style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.font_12,
-            color: AppColors.whiteColor,
-            fontWeight: FontWeight.w400),
+        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
       ),
     );
 
 Widget titleText(BuildContext context, String title) => Text(
       title,
-      style: AppStyles.rkBoldTextStyle(
-          size: AppConstants.smallFont,
-          color: AppColors.blackColor,
-          fontWeight: FontWeight.bold),
+      style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
 
 Widget subTitleValueText(BuildContext context, String subTitle) => Text(
       subTitle,
-      style: AppStyles.rkRegularTextStyle(
-          size: AppConstants.smallFont,
-          color: AppColors.blackColor,
-          fontWeight: FontWeight.normal),
+      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.normal),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
 
-Widget titleGreenText(BuildContext context, String title, ltr) =>
-    Directionality(
+Widget titleGreenText(BuildContext context, String title, ltr) => Directionality(
       textDirection: ltr,
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: AppStyles.rkBoldTextStyle(
-            size: AppConstants.smallFont,
-            color: AppColors.notificationColor,
-            fontWeight: FontWeight.bold),
+        style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.bold),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
     );
 
 Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
-  SharedPreferencesHelper preferences =
-      SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
   try {
     if (!preferences.getGuestUser()) {
-      final cartRes = await DioClient(context)
-          .post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
+      final cartRes = await DioClient(context).post('${AppUrlEndPoints.getAllCartUrl}${preferences.getCartId()}');
       final cartResponse = GetAllCartResModel.fromJson(cartRes);
 
       if (cartResponse.status == AppConstants.code_200) {
@@ -724,10 +1029,7 @@ Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
 }
 
 Widget noDataWidget(String title) => Center(
-      child: Text(title,
-          textAlign: TextAlign.center,
-          style: AppStyles.rkRegularTextStyle(
-              size: AppConstants.smallFont, color: AppColors.textColor)),
+      child: Text(title, textAlign: TextAlign.center, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
     );
 
 Widget noDataWithEmpty(String title, BuildContext context) => Container(
@@ -742,11 +1044,9 @@ Widget cartImageWidget() => Container(
       width: 50,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.transparent, width: 1),
-        gradient: AppColors.appMainGradientColor,
-        borderRadius:
-            const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-      ),
+          border: Border.all(color: Colors.transparent, width: 1),
+          gradient: AppColors.appMainGradientColor,
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
       child: Center(
         child: SvgPicture.asset(
           AppImagePath.cart,
@@ -758,8 +1058,7 @@ Widget cartImageWidget() => Container(
       ),
     );
 
-void inProgressSnackBarWidget(BuildContext context) =>
-    CustomSnackBar.showSnackBar(
+void inProgressSnackBarWidget(BuildContext context) => CustomSnackBar.showSnackBar(
       context: context,
       title: AppStrings.getLocalizedStrings('Oops! in progress', context),
       type: SnackBarType.success,
@@ -773,16 +1072,11 @@ Widget smartRefreshCustomHeaderWidget() => CustomHeader(
         width: 30,
         margin: const EdgeInsets.only(top: 90, bottom: AppConstants.padding_30),
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: AppColors.shadowColor.withValues(alpha: 0.1),
-                blurRadius: AppConstants.blur_10)
-          ],
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
           color: AppColors.whiteColor,
           shape: BoxShape.circle,
         ),
-        child: CupertinoActivityIndicator(
-            color: AppColors.mainColor, radius: AppConstants.radius_10),
+        child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_10),
       );
     });
 
@@ -795,20 +1089,13 @@ Widget imageNotAvailableWidget(double size) => Container(
     );
 
 Widget loaderWidget(double size) => Center(
-      child: SizedBox(
-          width: size,
-          height: size,
-          child: CupertinoActivityIndicator(color: AppColors.blackColor)),
+      child: SizedBox(width: size, height: size, child: CupertinoActivityIndicator(color: AppColors.blackColor)),
     );
 
-Widget invoiceOrderNumberWidget(String title) =>
-    Stack(alignment: Alignment.bottomLeft, children: [
+Widget invoiceOrderNumberWidget(String title) => Stack(alignment: Alignment.bottomLeft, children: [
       Text(
         title,
-        style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.smallFont,
-            color: AppColors.notificationColor,
-            fontWeight: FontWeight.w400),
+        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
@@ -816,10 +1103,7 @@ Widget invoiceOrderNumberWidget(String title) =>
         bottom: 0,
         left: 0,
         right: 0,
-        child: Container(
-            height: 1,
-            color: AppColors.notificationColor,
-            margin: const EdgeInsets.only(top: AppConstants.padding_3)),
+        child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
       ),
     ]);
 

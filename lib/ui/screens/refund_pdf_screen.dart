@@ -25,16 +25,12 @@ class RefundPdfScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    final Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
-      create: (context) => RefundPdfBloc()
-        ..add(RefundPdfEvent.getArgumentEvent(
-            invoiceDetailsList: args?[AppStrings.invoiceListString],
-            context: context)),
-      child: RefundPdfScreenWidget(
-          invoiceDetailsList: args?[AppStrings.invoiceListString]),
+      create: (context) =>
+          RefundPdfBloc()..add(RefundPdfEvent.getArgumentEvent(invoiceDetailsList: args?[AppStrings.invoiceListString], context: context)),
+      child: RefundPdfScreenWidget(invoiceDetailsList: args?[AppStrings.invoiceListString]),
     );
   }
 }
@@ -122,12 +118,9 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
     try {
       final bytes = await _getOrDownloadBytes(url);
       final tempDir = await getTemporaryDirectory();
-      final rawName = fileNameWithoutExt.trim().isEmpty
-          ? 'document'
-          : fileNameWithoutExt.trim();
+      final rawName = fileNameWithoutExt.trim().isEmpty ? 'document' : fileNameWithoutExt.trim();
       final safeName = rawName.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_');
-      final trimmedName =
-          safeName.length > 60 ? safeName.substring(0, 60) : safeName;
+      final trimmedName = safeName.length > 60 ? safeName.substring(0, 60) : safeName;
       final filePath = '${tempDir.path}/$trimmedName.pdf';
       await File(filePath).writeAsBytes(bytes, flush: true);
 
@@ -139,10 +132,7 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
       );
     } catch (_) {
       if (!context.mounted) return;
-      CustomSnackBar.showSnackBar(
-          context: context,
-          title: AppLocalizations.of(context)!.unable_pdf,
-          type: SnackBarType.failure);
+      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.unable_pdf, type: SnackBarType.failure);
     } finally {
       if (mounted) {
         setState(() {
@@ -155,12 +145,10 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RefundPdfBloc, RefundPdfState>(
-        builder: (context, state) {
+    return BlocBuilder<RefundPdfBloc, RefundPdfState>(builder: (context, state) {
       final bloc = context.read<RefundPdfBloc>();
       final String? fullUrl = state.invoiceDetailsList?.invoiceLink;
-      final bool showShareIcon =
-          state.hasValidLink == true && bloc.isValidLink(fullUrl);
+      final bool showShareIcon = state.hasValidLink == true && bloc.isValidLink(fullUrl);
 
       return Scaffold(
         backgroundColor: AppColors.pageColor,
@@ -177,11 +165,8 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
                       onTap: _shareLocked
                           ? null
                           : () async {
-                              final box =
-                                  shareContext.findRenderObject() as RenderBox?;
-                              final origin = box == null
-                                  ? null
-                                  : (box.localToGlobal(Offset.zero) & box.size);
+                              final box = shareContext.findRenderObject() as RenderBox?;
+                              final origin = box == null ? null : (box.localToGlobal(Offset.zero) & box.size);
 
                               await _sharePdf(
                                 context: shareContext,
@@ -191,11 +176,7 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
                               );
                             },
                       child: _isPreparingShare
-                          ? SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CupertinoActivityIndicator(
-                                  color: AppColors.mainColor))
+                          ? SizedBox(width: 22, height: 22, child: CupertinoActivityIndicator(color: AppColors.mainColor))
                           : Icon(Icons.share, color: AppColors.mainColor),
                     ),
                   )
@@ -208,8 +189,7 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
           }
 
           if (state.hasValidLink == false || !bloc.isValidLink(fullUrl)) {
-            return Center(
-                child: Text(AppLocalizations.of(context)!.no_invoice_file));
+            return Center(child: Text(AppLocalizations.of(context)!.no_invoice_file));
           }
 
           _startCacheIfNeeded(fullUrl!);

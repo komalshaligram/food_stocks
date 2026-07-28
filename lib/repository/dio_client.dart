@@ -35,8 +35,7 @@ Future<void> forceLogoutToConnect({
 
     final navContext = navigatorKey.currentContext;
     if (navContext != null && navContext.mounted) {
-      await Provider.of<LocaleProvider>(navContext, listen: false)
-          .setAppLocale(locale: const Locale(AppStrings.hebrewString));
+      await Provider.of<LocaleProvider>(navContext, listen: false).setAppLocale(locale: const Locale(AppStrings.hebrewString));
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -87,9 +86,7 @@ class DioClient {
             }
             if (response.statusCode == AppConstants.code_501) {
               final navContext = navigatorKey.currentContext ?? _context;
-              final message = navContext.mounted
-                  ? AppLocalizations.of(navContext)!.account_not_approve
-                  : 'חשבון לא מאושר';
+              final message = navContext.mounted ? AppLocalizations.of(navContext)!.account_not_approve : 'חשבון לא מאושר';
               await forceLogoutToConnect(snackbarMessage: message);
             }
             return handler.next(response);
@@ -100,14 +97,23 @@ class DioClient {
             return handler.next(e);
           }));
 
+  /// Content filters on "kosher" phones run as a local VPN, so the active transport
+  /// reports as `vpn` — which connectivity_plus checks *before* `mobile`. Gating on an
+  /// allow-list of transports therefore blocked those users on cellular data before any
+  /// request was sent. Block only when there is no transport at all.
+  Future<bool> _hasNetwork() async => await Connectivity().checkConnectivity() != ConnectivityResult.none;
+
   Future post(String path, {Object? data, Map<String, dynamic>? queryParameters, Options? options}) async {
     SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-    final connectivityResult = await (Connectivity().checkConnectivity());
+    // final connectivityResult = await (Connectivity().checkConnectivity());
     preferences.setApiUrl(apiUrl: path);
     printData('URL = ${AppUrlEndPoints.baseUrl}$path');
     printData('token = ${preferences.getAuthToken()}');
     printData('req:${data.toString()}');
-    if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi || connectivityResult == ConnectivityResult.ethernet) {
+    // if (connectivityResult == ConnectivityResult.mobile ||
+    //     connectivityResult == ConnectivityResult.wifi ||
+    //     connectivityResult == ConnectivityResult.ethernet) {
+    if (await _hasNetwork()) {
       try {
         Options requestOptions = options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'});
         requestOptions.headers = requestOptions.headers ?? {};
@@ -152,7 +158,8 @@ class DioClient {
     }
   }
 
-  manageAccessTokenWork(SharedPreferencesHelper preferencesHelper, dynamic res, String type, Map<String, dynamic> queryParams, String path, Object? data) async {
+  manageAccessTokenWork(
+      SharedPreferencesHelper preferencesHelper, dynamic res, String type, Map<String, dynamic> queryParams, String path, Object? data) async {
     preferencesHelper.setUserLoggedIn(isLoggedIn: true);
     preferencesHelper.setAuthToken(accToken: res.data?.accessToken ?? '');
     preferencesHelper.setRefreshToken(refToken: res.data?.refreshToken ?? '');
@@ -183,9 +190,7 @@ class DioClient {
     if (response.statusCode == AppConstants.code_200) {
       printData('Token Expired = ${response.data}');
       final navContext = navigatorKey.currentContext ?? _context;
-      final message = navContext.mounted
-          ? AppLocalizations.of(navContext)!.logged_out_successfully
-          : '';
+      final message = navContext.mounted ? AppLocalizations.of(navContext)!.logged_out_successfully : '';
       await forceLogoutToConnect(
         snackbarMessage: message.isNotEmpty ? message : null,
         snackbarType: SnackBarType.success,
@@ -201,10 +206,15 @@ class DioClient {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       printData('URL = ${AppUrlEndPoints.baseUrl}$path');
       printData('token = ${preferences.getAuthToken()}');
-      final connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi || connectivityResult == ConnectivityResult.ethernet) {
+      // final connectivityResult = await (Connectivity().checkConnectivity());
+      // if (connectivityResult == ConnectivityResult.mobile ||
+      //     connectivityResult == ConnectivityResult.wifi ||
+      //     connectivityResult == ConnectivityResult.ethernet) {
+      if (await _hasNetwork()) {
         try {
-          final response = await _dio.get(path, queryParameters: query, options: options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
+          final response = await _dio.get(path,
+              queryParameters: query,
+              options: options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
           printData("$path: RES: ${response.toString()}");
           isInProgress = false;
           return response.data as Map<String, dynamic>;
@@ -244,8 +254,12 @@ class DioClient {
   // PUT
   Future put({required String path, Map<String, dynamic>? data, Map<String, dynamic>? query, Options? options}) async {
     try {
-      final connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi || connectivityResult == ConnectivityResult.ethernet) {
+      // final connectivityResult = await (Connectivity().checkConnectivity());
+      // if (connectivityResult == ConnectivityResult.mobile ||
+      //     connectivityResult == ConnectivityResult.wifi ||
+      //     connectivityResult == ConnectivityResult.ethernet) {
+      if (await _hasNetwork()) {
+
         SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         try {
           printData('URL = ${AppUrlEndPoints.baseUrl}$path');
@@ -287,8 +301,11 @@ class DioClient {
   //delete
   Future delete({required String path, Map<String, dynamic>? data, Map<String, dynamic>? query, Options? options}) async {
     try {
-      final connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi || connectivityResult == ConnectivityResult.ethernet) {
+      // final connectivityResult = await (Connectivity().checkConnectivity());
+      // if (connectivityResult == ConnectivityResult.mobile ||
+      //     connectivityResult == ConnectivityResult.wifi ||
+      //     connectivityResult == ConnectivityResult.ethernet) {
+      if (await _hasNetwork()) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         try {
           printData('URL = ${AppUrlEndPoints.baseUrl}$path');

@@ -88,4 +88,8 @@ class PesachProductsEvent with _$PesachProductsEvent {
   }) = _addToCartListProductEvent;
 
   const factory PesachProductsEvent.getCartCountNoEvent({required BuildContext context}) = _getCartCountNoEvent;
+
+  const factory PesachProductsEvent.applyCartQuantitiesEvent({
+    required Map<String, int> cartQuantities,
+  }) = _applyCartQuantitiesEvent;
 }

@@ -61,11 +61,9 @@ class ProductDetailsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProductDetailsBloc()
         ..add(isNavigateToProductDetailString
-            ? ProductDetailsEvent.getOrderByIdEvent(
-          context: context,
-          orderId: orderId,
-        )
-            : ProductDetailsEvent.getProductDataEvent(context: context, orderId: orderId, orderData: orderData, orderBySupplierProduct: productData, statusList: statusList)),
+            ? ProductDetailsEvent.getOrderByIdEvent(context: context, orderId: orderId)
+            : ProductDetailsEvent.getProductDataEvent(
+                context: context, orderId: orderId, orderData: orderData, orderBySupplierProduct: productData, statusList: statusList)),
       child: ProductDetailsScreenWidget(orderId: orderId, orderNumber: orderNumber, statusList: statusList, isFromBasket: isFromBasket),
     );
   }
@@ -75,7 +73,8 @@ class ProductDetailsScreenWidget extends StatefulWidget {
   final String orderId;
   final String orderNumber;
   final List<StatusData> statusList;
-  const ProductDetailsScreenWidget({super.key, required this.orderId, required this.orderNumber, required this.statusList, required this.isFromBasket});
+  const ProductDetailsScreenWidget(
+      {super.key, required this.orderId, required this.orderNumber, required this.statusList, required this.isFromBasket});
   final bool isFromBasket;
 
   @override
@@ -91,64 +90,63 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
   Widget build(BuildContext context) {
     ProductDetailsBloc bloc = context.read<ProductDetailsBloc>();
 
-    Widget itemOne(ProductDetailsState state) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        titleText(context, AppLocalizations.of(context)!.supplier),
-        subTitleValueText(context, state.orderBySupplierProduct.supplierName?.toString() ?? ''),
-      ]),
-      state.orderData.orderstatus != null
-          ? Container(
-        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppConstants.radius_50),
-          color: getStatusColor(widget.statusList, state.orderData.orderstatus?.statusName ?? ''),
-        ),
-        child: Text(
-          getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
-          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
-        ),
-      )
-          : 0.width
-    ]);
+    Widget itemOne(ProductDetailsState state) =>
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            titleText(context, AppLocalizations.of(context)!.supplier),
+            subTitleValueText(context, state.orderBySupplierProduct.supplierName?.toString() ?? '')
+          ]),
+          state.orderData.orderstatus != null
+              ? Container(
+                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppConstants.radius_50),
+                      color: getStatusColor(widget.statusList, state.orderData.orderstatus?.statusName ?? '')),
+                  child: Text(getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w400)))
+              : 0.width
+        ]);
 
-    Widget itemTwo(ProductDetailsState state) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [titleText(context, AppLocalizations.of(context)!.order_number), subTitleValueText(context, state.orderData.orderNumber.toString())],
-        ),
-      ),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [titleText(context, AppLocalizations.of(context)!.order_date), subTitleValueText(context, state.orderBySupplierProduct.orderDate.toString())],
-        ),
-      ),
-    ]);
+    Widget itemTwo(ProductDetailsState state) =>
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              titleText(context, AppLocalizations.of(context)!.order_number),
+              subTitleValueText(context, state.orderData.orderNumber.toString())
+            ]),
+          ),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+              titleText(context, AppLocalizations.of(context)!.order_date),
+              subTitleValueText(context, state.orderBySupplierProduct.orderDate.toString())
+            ]),
+          ),
+        ]);
 
-    Widget itemThree(ProductDetailsState state) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          titleText(context, AppLocalizations.of(context)!.order_amount),
-          Directionality(textDirection: TextDirection.ltr, child: subTitleValueText(context, formatSignedNumber(state.orderData.totalVatAmount.toString()))),
-        ]),
-      ),
-      Expanded(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          titleText(context, AppLocalizations.of(context)!.payment_type),
-          subTitleValueText(
-              context,
-              state.orderData.paymentMethod.toString() == AppStrings.wallet
-                  ? AppLocalizations.of(context)!.payment_wallet
-                  : state.orderData.paymentMethod.toString() == AppStrings.creditCard
-                  ? AppLocalizations.of(context)!.payment_credit_card
-                  : state.orderData.paymentMethod.toString() == AppStrings.bankTransfer
-                  ? AppLocalizations.of(context)!.payment_bank_transfer
-                  : AppLocalizations.of(context)!.payment_bank_check)
-        ]),
-      ),
-    ]);
+    Widget itemThree(ProductDetailsState state) =>
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              titleText(context, AppLocalizations.of(context)!.order_amount),
+              Directionality(
+                  textDirection: TextDirection.ltr, child: subTitleValueText(context, formatSignedNumber(state.orderData.totalVatAmount.toString()))),
+            ]),
+          ),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              titleText(context, AppLocalizations.of(context)!.payment_type),
+              subTitleValueText(
+                  context,
+                  state.orderData.paymentMethod.toString() == AppStrings.wallet
+                      ? AppLocalizations.of(context)!.payment_wallet
+                      : state.orderData.paymentMethod.toString() == AppStrings.creditCard
+                          ? AppLocalizations.of(context)!.payment_credit_card
+                          : state.orderData.paymentMethod.toString() == AppStrings.bankTransfer
+                              ? AppLocalizations.of(context)!.payment_bank_transfer
+                              : AppLocalizations.of(context)!.payment_bank_check)
+            ]),
+          ),
+        ]);
 
     Widget invoiceRefundAmountItem({
       required String title,
@@ -188,90 +186,97 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                 paymentMethod: refundInvoiceData.paymentMethod,
               );
 
-              Navigator.pushNamed(
-                context,
-                RouteDefine.invoicePdfScreen.name,
-                arguments: {AppStrings.invoiceListString: invoiceData, AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices},
-              );
+              Navigator.pushNamed(context, RouteDefine.invoicePdfScreen.name, arguments: {
+                AppStrings.invoiceListString: invoiceData,
+                AppStrings.invoiceTitleNameString: AppLocalizations.of(context)!.my_invoices
+              });
             } else {
-              Navigator.pushNamed(context, RouteDefine.orderRefundsScreen.name, arguments: {AppStrings.orderIdString: orderId, AppStrings.orderNumberString: orderNumber});
+              Navigator.pushNamed(context, RouteDefine.orderRefundsScreen.name,
+                  arguments: {AppStrings.orderIdString: orderId, AppStrings.orderNumberString: orderNumber});
             }
           },
           child: value == '0 ₪' || value == '0.0 ₪'
               ? Directionality(
-            textDirection: TextDirection.ltr,
-            child: Text(
-              value,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          )
+                  textDirection: TextDirection.ltr,
+                  child: Text(value,
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w400),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
+                )
               : Stack(alignment: Alignment.center, children: [
-            Directionality(
-              textDirection: TextDirection.ltr,
-              child: Text(
-                value,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_5)),
-            ),
-          ]),
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(value,
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_5)),
+                  ),
+                ]),
         )
       ]);
     }
 
     Widget itemFour(totalAmount, InvoiceDetails? invoiceDetails) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      titleText(context, AppLocalizations.of(context)!.total_payment),
-      Directionality(
-        textDirection: TextDirection.ltr,
-        child: subTitleValueText(context, invoiceDetails == null || invoiceDetails.invoiceNumber == null ? '---' : formatSignedNumber(totalAmount)),
-      ),
-    ]);
+          titleText(context, AppLocalizations.of(context)!.total_payment),
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child:
+                subTitleValueText(context, invoiceDetails == null || invoiceDetails.invoiceNumber == null ? '---' : formatSignedNumber(totalAmount)),
+          ),
+        ]);
 
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(builder: (context, state) {
       final double invoiceAmount = state.orderData.rivchitInvoicePrice ?? 0;
       final double refundAmount = state.orderData.adjustedRefundAmount ?? 0.0;
       final double totalAmount = invoiceAmount + refundAmount;
-      final bool showDriverProofSection = state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' || state.orderData.orderstatus?.statusName == 'ORDERSTATUS_6' || (state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard);
-      final bool disableDriverProofTap = state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' || (state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard);
-      final bool isOrderStatusCardType = state.orderData.orderstatus?.orderStatusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard;
+      final bool showDriverProofSection = state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' ||
+          state.orderData.orderstatus?.statusName == 'ORDERSTATUS_6' ||
+          (state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus &&
+              state.orderData.pendingDeliveryConfirmation! == true &&
+              state.orderData.paymentMethod.toString() == AppStrings.creditCard);
+      final bool disableDriverProofTap = state.orderData.orderstatus?.statusName == 'ORDERSTATUS_5' ||
+          (state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus &&
+              state.orderData.pendingDeliveryConfirmation! == true &&
+              state.orderData.paymentMethod.toString() == AppStrings.creditCard);
+      final bool isOrderStatusCardType = state.orderData.orderstatus?.orderStatusNumber == AppConstants.onTheWayStatus ||
+          state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus &&
+              state.orderData.pendingDeliveryConfirmation! == true &&
+              state.orderData.paymentMethod.toString() == AppStrings.creditCard;
 
       Widget buildDriverProofSlot({required File file, required int index, required bool isDisabled, required String language}) {
         return InkWell(
           onTap: isDisabled
               ? null
               : () async {
-            if (await file.exists() || file.path.contains("https")) {
-              uploadDriverProofBottomSheet(context: context, file: file, index: index, language: language, productIssueData: {}, selectedRadio: state.selectedRadioTile);
-              return;
-            }
-            cameraDriverProofEvent(context: context, index: index, productIssueData: {}, selectedRadio: state.selectedRadioTile);
-          },
+                  if (await file.exists() || file.path.contains("https")) {
+                    uploadDriverProofBottomSheet(
+                        context: context, file: file, index: index, language: language, productIssueData: {}, selectedRadio: state.selectedRadioTile);
+                    return;
+                  }
+                  cameraDriverProofEvent(context: context, index: index, productIssueData: {}, selectedRadio: state.selectedRadioTile);
+                },
           child: Container(
               height: 120,
               width: 120,
               decoration: BoxDecoration(color: AppColors.whiteColor),
               alignment: Alignment.center,
               child: file.path.contains("https")
-                  ? Image.network(
-                file.path,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return loaderWidget(AppConstants.containerHeight_80);
-                },
-                errorBuilder: (context, error, stackTrace) => imageNotAvailableWidget(AppConstants.containerHeight_100),
-              )
+                  ? Image.network(file.path,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return loaderWidget(AppConstants.containerHeight_80);
+                      },
+                      errorBuilder: (context, error, stackTrace) => imageNotAvailableWidget(AppConstants.containerHeight_100))
                   : file.existsSync()
-                  ? Image.file(file, fit: BoxFit.cover, height: 120, width: 120)
-                  : const Icon(Icons.add, size: 60)),
+                      ? Image.file(file, fit: BoxFit.cover, height: 120, width: 120)
+                      : const Icon(Icons.add, size: 60)),
         );
       }
 
@@ -294,60 +299,52 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       child: state.orderBySupplierProduct.totalPayment == 0.0
                           ? const CupertinoActivityIndicator()
                           : Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                          border: Border.all(color: AppColors.borderColor, width: 1),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
-                          decoration: BoxDecoration(
-                            color: AppColors.lightGreyColor,
-                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                            border: Border.all(color: AppColors.whiteColor, width: 1),
-                          ),
-                          child: Row(children: [
-                            Text(
-                              '${AppLocalizations.of(context)!.total}:',
-                              style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400),
-                            ),
-                            Directionality(
-                              textDirection: TextDirection.ltr,
-                              child: Text(
-                                state.orderData.comaxInvoicePrice != 0.0
-                                    ? formatNumber(
-                                  value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0',
-                                  local: AppStrings.hebrewLocal,
-                                )
-                                    : formatNumber(
-                                  value: (state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0',
-                                  local: AppStrings.hebrewLocal,
-                                ),
-                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold),
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                                  border: Border.all(color: AppColors.borderColor, width: 1)),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_5),
+                                decoration: BoxDecoration(
+                                    color: AppColors.lightGreyColor,
+                                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                                    border: Border.all(color: AppColors.whiteColor, width: 1)),
+                                child: Row(children: [
+                                  Text('${AppLocalizations.of(context)!.total}:',
+                                      style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.w400)),
+                                  Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Text(
+                                        state.orderData.comaxInvoicePrice != 0.0
+                                            ? formatNumber(
+                                                value: (state.orderData.comaxInvoicePrice?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0',
+                                                local: AppStrings.hebrewLocal)
+                                            : formatNumber(
+                                                value: (state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength)) ?? '0',
+                                                local: AppStrings.hebrewLocal),
+                                        style: AppStyles.rkRegularTextStyle(
+                                            size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.bold)),
+                                  ),
+                                ]),
                               ),
-                            ),
-                          ]),
-                        ),
-                      )),
+                            )),
                   state.isSubUserCreateDuplicateOrder
                       ? GestureDetector(
-                    onTap: () {
-                      duplicateOrderDialog(context: context, directionality: state.language);
-                    },
-                    child: Container(
-                      height: 35,
-                      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-                      padding: const EdgeInsets.all(AppConstants.padding_5),
-                      decoration: BoxDecoration(
-                        gradient: AppColors.appMainGradientColor,
-                        border: Border.all(color: AppColors.borderColor),
-                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)),
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context)!.duplicate_order,
-                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  )
+                          onTap: () {
+                            duplicateOrderDialog(context: context, directionality: state.language);
+                          },
+                          child: Container(
+                            height: 35,
+                            margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+                            padding: const EdgeInsets.all(AppConstants.padding_5),
+                            decoration: BoxDecoration(
+                                gradient: AppColors.appMainGradientColor,
+                                border: Border.all(color: AppColors.borderColor),
+                                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
+                            child: Text(AppLocalizations.of(context)!.duplicate_order,
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w600)),
+                          ),
+                        )
                       : 0.width
                 ]),
                 onTap: () {
@@ -357,216 +354,232 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           body: state.isShimmering && state.isLoading || (state.orderBySupplierProduct.products?.isEmpty ?? false)
               ? const ProductDetailsScreenShimmerWidget()
               : SingleChildScrollView(
-            controller: _scrollController,
-            physics: const ClampingScrollPhysics(),
-            child: SafeArea(
-              child: AnimationLimiter(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: AnimationConfiguration.toStaggeredList(
-                        duration: const Duration(seconds: 1),
-                        childAnimationBuilder: (widget) => SlideAnimation(
-                          horizontalOffset: MediaQuery.of(context).size.width / 2,
-                          child: FadeInAnimation(child: widget),
-                        ),
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(AppConstants.padding_10),
-                            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
-                            decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              border: Border.all(color: AppColors.borderColor),
-                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-                            ),
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-                              itemOne(state),
-                              const DividerWidget(height: 20.0),
-                              itemTwo(state),
-                              const DividerWidget(height: 20.0),
-                              itemThree(state),
-                              const DividerWidget(height: 20.0),
-                              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                invoiceRefundAmountItem(
-                                  title: AppLocalizations.of(context)!.invoice_amount,
-                                  value: formatSignedNumber(state.orderData.rivchitInvoicePrice),
-                                  orderId: state.orderData.id,
-                                  orderNumber: state.orderData.orderNumber,
-                                  orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
-                                  paymentMethod: state.orderData.paymentMethod,
-                                ),
-                                10.height,
-                                invoiceRefundAmountItem(
-                                  title: AppLocalizations.of(context)!.refund_amount,
-                                  value: state.orderData.adjustedRefundAmount.toString() == 'null' || state.orderData.adjustedRefundAmount == null ? '0 ₪' : formatSignedNumber(state.orderData.adjustedRefundAmount),
-                                  orderId: state.orderData.id,
-                                  orderNumber: state.orderData.orderNumber,
-                                  orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
-                                  paymentMethod: state.orderData.paymentMethod,
-                                )
-                              ]),
-                              const DividerWidget(height: 20.0),
-                              itemFour(totalAmount, state.orderData.invoiceDetails),
-                            ]),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_15),
-                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                              Text(
-                                AppLocalizations.of(context)!.order_products_list,
-                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-                              ),
-                              isOrderStatusCardType
-                                  ? GestureDetector(
-                                onTap: () {
-                                  bloc.add(const ProductDetailsEvent.checkAllEvent());
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(AppConstants.padding_5),
+                  controller: _scrollController,
+                  physics: const ClampingScrollPhysics(),
+                  child: SafeArea(
+                    child: AnimationLimiter(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: AnimationConfiguration.toStaggeredList(
+                              duration: const Duration(seconds: 1),
+                              childAnimationBuilder: (widget) =>
+                                  SlideAnimation(horizontalOffset: MediaQuery.of(context).size.width / 2, child: FadeInAnimation(child: widget)),
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(AppConstants.padding_10),
+                                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
                                   decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.padding_3)),
-                                    color: state.isAllCheck ? AppColors.mainColor : AppColors.lightBorderColor,
-                                    border: Border.all(color: AppColors.lightGreyColor),
+                                    color: AppColors.whiteColor,
+                                    border: Border.all(color: AppColors.borderColor),
+                                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                                   ),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.check_all,
-                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: state.isAllCheck ? AppColors.whiteColor : AppColors.blackColor),
-                                  ),
-                                ),
-                              )
-                                  : const SizedBox()
-                            ]),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: AppConstants.padding_85),
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                              ListView.builder(
-                                  itemCount: state.orderBySupplierProduct.products?.length ?? 0,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                                  itemBuilder: (context, index) {
-                                    return productListItem(
-                                        numberOfUnit: state.orderBySupplierProduct.products?[index].numberOfUnit ?? 0,
-                                        quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
-                                        updatedUnitQuantity: state.orderBySupplierProduct.products?[index].updatedUnitQuantity ?? 0,
-                                        unitQuantity: state.orderBySupplierProduct.products?[index].unitQuantity ?? 0,
-                                        sku: state.orderBySupplierProduct.products?[index].sku ?? '',
-                                        isUpdated: state.orderBySupplierProduct.products?[index].isUpdated ?? false,
-                                        index: index,
-                                        context: context,
-                                        statusNumber: state.orderData.orderstatus?.orderStatusNumber ?? 0,
-                                        issue: state.orderBySupplierProduct.products?[index].issue ?? '',
-                                        isIssue: state.orderBySupplierProduct.products?[index].isIssue ?? false,
-                                        missingQuantity: state.orderBySupplierProduct.products?[index].missingQuantity ?? 0,
-                                        issueStatus: state.orderBySupplierProduct.products?[index].issueStatus!.statusName.toString().toTitleCase() ?? '',
-                                        barcode: state.orderBySupplierProduct.products?[index].barcode,
-                                        orderId: state.orderBySupplierProduct.id,
-                                        language: state.language,
-                                        orderSupplierProduct: state.orderBySupplierProduct,
-                                        isOrderStatusCardType: isOrderStatusCardType);
-                                  }),
-                              showDriverProofSection
-                                  ? Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
-                                child: Text(
-                                  AppLocalizations.of(context)!.add_driver_delivery_document_img,
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),
-                                  textAlign: TextAlign.start,
-                                ),
-                              )
-                                  : const IgnorePointer(),
-                              showDriverProofSection
-                                  ? Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
-                                child: Text(
-                                  '${AppLocalizations.of(context)!.note}: ${AppLocalizations.of(context)!.add_driver_delivery_document_img_note}',
-                                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor),
-                                  textAlign: TextAlign.start,
-                                ),
-                              )
-                                  : const IgnorePointer(),
-                              showDriverProofSection ? 5.height : const IgnorePointer(),
-                              showDriverProofSection
-                                  ? Padding(
-                                padding: const EdgeInsets.all(AppConstants.padding_8),
-                                child: SingleChildScrollView(
-                                  physics: const ClampingScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(children: [
-                                    buildDriverProofSlot(file: state.driverDeliveryProofFile, index: 1, isDisabled: disableDriverProofTap, language: state.language),
-                                    8.width,
-                                    buildDriverProofSlot(file: state.driverDeliveryProofFile1, index: 2, isDisabled: disableDriverProofTap, language: state.language),
-                                    8.width,
-                                    buildDriverProofSlot(file: state.driverDeliveryProofFile2, index: 3, isDisabled: disableDriverProofTap, language: state.language),
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+                                    itemOne(state),
+                                    const DividerWidget(height: 20.0),
+                                    itemTwo(state),
+                                    const DividerWidget(height: 20.0),
+                                    itemThree(state),
+                                    const DividerWidget(height: 20.0),
+                                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                      invoiceRefundAmountItem(
+                                        title: AppLocalizations.of(context)!.invoice_amount,
+                                        value: formatSignedNumber(state.orderData.rivchitInvoicePrice),
+                                        orderId: state.orderData.id,
+                                        orderNumber: state.orderData.orderNumber,
+                                        orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
+                                        paymentMethod: state.orderData.paymentMethod,
+                                      ),
+                                      10.height,
+                                      invoiceRefundAmountItem(
+                                        title: AppLocalizations.of(context)!.refund_amount,
+                                        value:
+                                            state.orderData.adjustedRefundAmount.toString() == 'null' || state.orderData.adjustedRefundAmount == null
+                                                ? '0 ₪'
+                                                : formatSignedNumber(state.orderData.adjustedRefundAmount),
+                                        orderId: state.orderData.id,
+                                        orderNumber: state.orderData.orderNumber,
+                                        orderData: state.orderData.invoiceDetails ?? const InvoiceDetails(),
+                                        paymentMethod: state.orderData.paymentMethod,
+                                      )
+                                    ]),
+                                    const DividerWidget(height: 20.0),
+                                    itemFour(totalAmount, state.orderData.invoiceDetails),
                                   ]),
                                 ),
-                              )
-                                  : const IgnorePointer(),
-                            ]),
-                          ),
-                        ])),
-              ),
-            ),
-          ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_15),
+                                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                    Text(AppLocalizations.of(context)!.order_products_list,
+                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+                                    isOrderStatusCardType
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              bloc.add(const ProductDetailsEvent.checkAllEvent());
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.all(AppConstants.padding_5),
+                                              decoration: BoxDecoration(
+                                                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.padding_3)),
+                                                color: state.isAllCheck ? AppColors.mainColor : AppColors.lightBorderColor,
+                                                border: Border.all(color: AppColors.lightGreyColor),
+                                              ),
+                                              child: Text(AppLocalizations.of(context)!.check_all,
+                                                  style: AppStyles.rkRegularTextStyle(
+                                                      size: AppConstants.font_14,
+                                                      color: state.isAllCheck ? AppColors.whiteColor : AppColors.blackColor)),
+                                            ),
+                                          )
+                                        : const SizedBox()
+                                  ]),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: AppConstants.padding_85),
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                    ListView.builder(
+                                        itemCount: state.orderBySupplierProduct.products?.length ?? 0,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.vertical,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                                        itemBuilder: (context, index) {
+                                          return productListItem(
+                                              numberOfUnit: state.orderBySupplierProduct.products?[index].numberOfUnit ?? 0,
+                                              quantity: state.orderBySupplierProduct.products?[index].quantity ?? 0,
+                                              updatedUnitQuantity: state.orderBySupplierProduct.products?[index].updatedUnitQuantity ?? 0,
+                                              unitQuantity: state.orderBySupplierProduct.products?[index].unitQuantity ?? 0,
+                                              sku: state.orderBySupplierProduct.products?[index].sku ?? '',
+                                              isUpdated: state.orderBySupplierProduct.products?[index].isUpdated ?? false,
+                                              index: index,
+                                              context: context,
+                                              statusNumber: state.orderData.orderstatus?.orderStatusNumber ?? 0,
+                                              issue: state.orderBySupplierProduct.products?[index].issue ?? '',
+                                              isIssue: state.orderBySupplierProduct.products?[index].isIssue ?? false,
+                                              missingQuantity: state.orderBySupplierProduct.products?[index].missingQuantity ?? 0,
+                                              issueStatus:
+                                                  state.orderBySupplierProduct.products?[index].issueStatus!.statusName.toString().toTitleCase() ??
+                                                      '',
+                                              barcode: state.orderBySupplierProduct.products?[index].barcode,
+                                              orderId: state.orderBySupplierProduct.id,
+                                              language: state.language,
+                                              orderSupplierProduct: state.orderBySupplierProduct,
+                                              isOrderStatusCardType: isOrderStatusCardType);
+                                        }),
+                                    showDriverProofSection
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
+                                            child: Text(
+                                              AppLocalizations.of(context)!.add_driver_delivery_document_img,
+                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          )
+                                        : const IgnorePointer(),
+                                    showDriverProofSection
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8, vertical: AppConstants.padding_5),
+                                            child: Text(
+                                              '${AppLocalizations.of(context)!.note}: ${AppLocalizations.of(context)!.add_driver_delivery_document_img_note}',
+                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.redColor),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          )
+                                        : const IgnorePointer(),
+                                    showDriverProofSection ? 5.height : const IgnorePointer(),
+                                    showDriverProofSection
+                                        ? Padding(
+                                            padding: const EdgeInsets.all(AppConstants.padding_8),
+                                            child: SingleChildScrollView(
+                                              physics: const ClampingScrollPhysics(),
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(children: [
+                                                buildDriverProofSlot(
+                                                    file: state.driverDeliveryProofFile,
+                                                    index: 1,
+                                                    isDisabled: disableDriverProofTap,
+                                                    language: state.language),
+                                                8.width,
+                                                buildDriverProofSlot(
+                                                    file: state.driverDeliveryProofFile1,
+                                                    index: 2,
+                                                    isDisabled: disableDriverProofTap,
+                                                    language: state.language),
+                                                8.width,
+                                                buildDriverProofSlot(
+                                                    file: state.driverDeliveryProofFile2,
+                                                    index: 3,
+                                                    isDisabled: disableDriverProofTap,
+                                                    language: state.language),
+                                              ]),
+                                            ),
+                                          )
+                                        : const IgnorePointer(),
+                                  ]),
+                                ),
+                              ])),
+                    ),
+                  ),
+                ),
           bottomSheet: isOrderStatusCardType
               ? Container(
-            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_20, horizontal: AppConstants.padding_30),
-            color: AppColors.pageColor,
-            child: CustomButtonWidget(
-              onPressed: () {
-                if (!state.isAllCheck) {
-                  CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_checkbox, type: SnackBarType.failure);
-                } else {
-                  if (state.orderData.hasReturnProducts == true) {
-                    Navigator.pushNamed(context, RouteDefine.returnDriverScreen.name, arguments: {
-                      AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
-                      AppStrings.deliveryStatusString: getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
-                      AppStrings.totalOrderString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? '0',
-                      AppStrings.quantityString: state.orderBySupplierProduct.products?.length.toString() ?? '',
-                      AppStrings.totalAmountString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? 0,
-                      AppStrings.orderIdString: widget.orderId,
-                      AppStrings.supplierIdString: state.orderBySupplierProduct.id,
-                      AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
-                      AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
-                      AppStrings.supplierOrderNumberString: state.orderData.orderNumber,
-                      AppStrings.driverDeliveryDocumentsImages: state.driverDeliveryProofImagesList,
-                      AppStrings.vatString: state.orderData.vatAmount,
-                      AppStrings.usersIdString: state.userId,
-                      AppStrings.statusList: widget.statusList,
-                      AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
-                      AppStrings.availableSurfaceQuantityToReturn: state.orderData.availableSurfaceQuantityToReturn,
-                      AppStrings.isFromBasketScreen: widget.isFromBasket
-                    });
-                  } else {
-                    Navigator.pushNamed(context, RouteDefine.shipmentVerificationScreen.name, arguments: {
-                      AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
-                      AppStrings.deliveryStatusString: getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
-                      AppStrings.totalOrderString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? '0',
-                      AppStrings.quantityString: state.orderBySupplierProduct.products?.length.toString() ?? '',
-                      AppStrings.totalAmountString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? 0,
-                      AppStrings.orderIdString: widget.orderId,
-                      AppStrings.supplierIdString: state.orderBySupplierProduct.id,
-                      AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
-                      AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
-                      AppStrings.supplierOrderNumberString: state.orderData.orderNumber,
-                      AppStrings.driverDeliveryDocumentsImages: state.driverDeliveryProofImagesList,
-                      AppStrings.vatString: state.orderData.vatAmount,
-                      AppStrings.usersIdString: state.userId,
-                      AppStrings.statusList: widget.statusList,
-                      AppStrings.sentReturnData: [],
-                      AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
-                      AppStrings.availableSurfaceQuantityToReturn: state.orderData.availableSurfaceQuantityToReturn,
-                      AppStrings.isFromBasketScreen: widget.isFromBasket
-                    });
-                  }
-                }
-              },
-              buttonText: AppLocalizations.of(context)!.next,
-              bGColor: AppColors.mainColor,
-            ),
-          )
+                  padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_20, horizontal: AppConstants.padding_30),
+                  color: AppColors.pageColor,
+                  child: CustomButtonWidget(
+                    onPressed: () {
+                      if (!state.isAllCheck) {
+                        CustomSnackBar.showSnackBar(
+                            context: context, title: AppLocalizations.of(context)!.select_checkbox, type: SnackBarType.failure);
+                      } else {
+                        if (state.orderData.hasReturnProducts == true) {
+                          Navigator.pushNamed(context, RouteDefine.returnDriverScreen.name, arguments: {
+                            AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
+                            AppStrings.deliveryStatusString:
+                                getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
+                            AppStrings.totalOrderString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? '0',
+                            AppStrings.quantityString: state.orderBySupplierProduct.products?.length.toString() ?? '',
+                            AppStrings.totalAmountString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? 0,
+                            AppStrings.orderIdString: widget.orderId,
+                            AppStrings.supplierIdString: state.orderBySupplierProduct.id,
+                            AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
+                            AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
+                            AppStrings.supplierOrderNumberString: state.orderData.orderNumber,
+                            AppStrings.driverDeliveryDocumentsImages: state.driverDeliveryProofImagesList,
+                            AppStrings.vatString: state.orderData.vatAmount,
+                            AppStrings.usersIdString: state.userId,
+                            AppStrings.statusList: widget.statusList,
+                            AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
+                            AppStrings.availableSurfaceQuantityToReturn: state.orderData.availableSurfaceQuantityToReturn,
+                            AppStrings.isFromBasketScreen: widget.isFromBasket
+                          });
+                        } else {
+                          Navigator.pushNamed(context, RouteDefine.shipmentVerificationScreen.name, arguments: {
+                            AppStrings.supplierNameString: state.orderBySupplierProduct.supplierName?.toString() ?? '',
+                            AppStrings.deliveryStatusString:
+                                getStatus(widget.statusList, state.orderData.orderstatus?.statusName ?? '', state.language).toTitleCase(),
+                            AppStrings.totalOrderString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? '0',
+                            AppStrings.quantityString: state.orderBySupplierProduct.products?.length.toString() ?? '',
+                            AppStrings.totalAmountString: state.orderData.totalVatAmount?.toStringAsFixed(AppConstants.amountFrLength) ?? 0,
+                            AppStrings.orderIdString: widget.orderId,
+                            AppStrings.supplierIdString: state.orderBySupplierProduct.id,
+                            AppStrings.orderStatusNo: state.orderData.orderstatus?.orderStatusNumber ?? 2,
+                            AppStrings.deliveryDateString: state.orderBySupplierProduct.orderDeliveryDate,
+                            AppStrings.supplierOrderNumberString: state.orderData.orderNumber,
+                            AppStrings.driverDeliveryDocumentsImages: state.driverDeliveryProofImagesList,
+                            AppStrings.vatString: state.orderData.vatAmount,
+                            AppStrings.usersIdString: state.userId,
+                            AppStrings.statusList: widget.statusList,
+                            AppStrings.sentReturnData: [],
+                            AppStrings.orderIssueReturnId: state.returnList.data?.id ?? '',
+                            AppStrings.availableSurfaceQuantityToReturn: state.orderData.availableSurfaceQuantityToReturn,
+                            AppStrings.isFromBasketScreen: widget.isFromBasket
+                          });
+                        }
+                      }
+                    },
+                    buttonText: AppLocalizations.of(context)!.next,
+                    bGColor: AppColors.mainColor,
+                  ),
+                )
               : 0.width,
         ),
       );
@@ -600,234 +613,264 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
       final matchedProduct = matchedProductList != null && matchedProductList.isNotEmpty ? matchedProductList.first : null;
       final matchedProductIndex = matchedProduct != null ? state.returnList.data?.returnProducts?.indexOf(matchedProduct) : -1;
 
-      return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) || ((state.orderBySupplierProduct.products?[index].isBottle ?? false) ? sku == skuNumber : false)
+      return !(state.orderBySupplierProduct.products?[index].isBottle ?? false) ||
+              ((state.orderBySupplierProduct.products?[index].isBottle ?? false) ? sku == skuNumber : false)
           ? Container(
-        margin: const EdgeInsets.all(AppConstants.padding_10),
-        padding: EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: getScreenHeight(context) >= 730 ? AppConstants.padding_3 : 0),
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.padding_5),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(mainAxisAlignment: statusNumber == AppConstants.onTheWayStatus || state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus && state.orderData.pendingDeliveryConfirmation! == true && state.orderData.paymentMethod.toString() == AppStrings.creditCard ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start, children: [
-              isOrderStatusCardType
-                  ? SizedBox(
-                width: 30,
-                child: Checkbox(
-                    value: state.productListIndex.contains(index),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-                    side: BorderSide(width: 1.0, color: AppColors.greyColor),
-                    activeColor: AppColors.mainColor,
-                    onChanged: (value) {
-                      bloc.add(ProductDetailsEvent.productProblemEvent(isProductProblem: value!, index: matchedProductIndex! != -1 ? matchedProductIndex : index));
-                    }),
-              )
-                  : 10.width,
-              state.orderBySupplierProduct.products?[index].mainImage != ''
-                  ? Image.network('${AppUrlEndPoints.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}', width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80, fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                } else {
-                  return loaderWidget(AppConstants.containerHeight_80);
-                }
-              }, errorBuilder: (context, error, stackTrace) {
-                return imageNotAvailableWidget(AppConstants.containerHeight_80);
-              })
-                  : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80),
-              15.width,
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width > 370 ? MediaQuery.of(context).size.width / 2 : 160,
-                  child: Text(
-                    state.orderBySupplierProduct.products?[index].productName.toString() ?? '',
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Row(children: [
-                  isOrderStatusCardType && isUpdated
-                      ? Text(
-                    '${(updatedUnitQuantity / numberOfUnit).round()}${' '}'
-                        '${state.orderBySupplierProduct.products?[index].scaleType.toString()}',
-                    style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
-                  )
-                      : sku == skuNumber
-                      ? Text(
-                    '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}'
-                        '${AppLocalizations.of(context)!.units}',
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
-                    style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
-                  )
-                      : Text(
-                    '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}'
-                        '${state.orderBySupplierProduct.products?[index].scaleType.toString()}',
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
-                    style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
-                  ),
-                  5.width,
-                  isOrderStatusCardType && isUpdated
-                      ? Text(
-                    '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scaleType.toString()})',
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
-                    style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_12),
-                  )
-                      : 0.width,
+              margin: const EdgeInsets.all(AppConstants.padding_10),
+              padding:
+                  EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: getScreenHeight(context) >= 730 ? AppConstants.padding_3 : 0),
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.padding_5),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(
+                      mainAxisAlignment: statusNumber == AppConstants.onTheWayStatus ||
+                              state.orderData.orderstatus?.orderStatusNumber == AppConstants.paidStatus &&
+                                  state.orderData.pendingDeliveryConfirmation! == true &&
+                                  state.orderData.paymentMethod.toString() == AppStrings.creditCard
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.start,
+                      children: [
+                        isOrderStatusCardType
+                            ? SizedBox(
+                                width: 30,
+                                child: Checkbox(
+                                    value: state.productListIndex.contains(index),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+                                    side: BorderSide(width: 1.0, color: AppColors.greyColor),
+                                    activeColor: AppColors.mainColor,
+                                    onChanged: (value) {
+                                      bloc.add(ProductDetailsEvent.productProblemEvent(
+                                          isProductProblem: value!, index: matchedProductIndex! != -1 ? matchedProductIndex : index));
+                                    }),
+                              )
+                            : 10.width,
+                        state.orderBySupplierProduct.products?[index].mainImage != ''
+                            ? Image.network('${AppUrlEndPoints.baseFileUrl}${state.orderBySupplierProduct.products?[index].mainImage ?? ''}',
+                                width: AppConstants.containerHeight_80,
+                                height: AppConstants.containerHeight_80,
+                                fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return loaderWidget(AppConstants.containerHeight_80);
+                                }
+                              }, errorBuilder: (context, error, stackTrace) {
+                                return imageNotAvailableWidget(AppConstants.containerHeight_80);
+                              })
+                            : Image.asset(AppImagePath.imageNotAvailable5,
+                                fit: BoxFit.cover, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80),
+                        15.width,
+                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width > 370 ? MediaQuery.of(context).size.width / 2 : 160,
+                            child: Text(
+                              state.orderBySupplierProduct.products?[index].productName.toString() ?? '',
+                              style:
+                                  AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Row(children: [
+                            isOrderStatusCardType && isUpdated
+                                ? Text(
+                                    '${(updatedUnitQuantity / numberOfUnit).round()}${' '}'
+                                    '${state.orderBySupplierProduct.products?[index].scaleType.toString()}',
+                                    style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
+                                  )
+                                : sku == skuNumber
+                                    ? Text(
+                                        '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}'
+                                        '${AppLocalizations.of(context)!.units}',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.fade,
+                                        style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
+                                      )
+                                    : Text(
+                                        '${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}'
+                                        '${state.orderBySupplierProduct.products?[index].scaleType.toString()}',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.fade,
+                                        style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
+                                      ),
+                            5.width,
+                            isOrderStatusCardType && isUpdated
+                                ? Text(
+                                    '(${AppLocalizations.of(context)!.original_was}${' '}${(state.orderBySupplierProduct.products?[index].quantity.toString() ?? '')}${' '}${state.orderBySupplierProduct.products?[index].scaleType.toString()})',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.fade,
+                                    style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_12),
+                                  )
+                                : 0.width,
+                          ]),
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Transform.translate(
+                              offset: state.language == 'en' ? const Offset(-3, 0) : const Offset(0, 0),
+                              child: Text(
+                                  formatNumber(
+                                    value: (state.orderBySupplierProduct.products![index].discountedPrice) != 0
+                                        ? (vatCalculation(
+                                                price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0,
+                                                vat: state.orderData.vatPercentage ?? 0)
+                                            .toStringAsFixed(
+                                            AppConstants.amountFrLength,
+                                          ))
+                                        : (vatCalculation(
+                                                price: state.orderBySupplierProduct.products![index].totalPayment ?? 0,
+                                                vat: state.orderData.vatPercentage ?? 0)
+                                            .toStringAsFixed(2)),
+                                    local: AppStrings.hebrewLocal,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.clip,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      color: AppColors.blackColor, size: AppConstants.font_14, fontWeight: FontWeight.w700)),
+                            ),
+                          ),
+                          3.height,
+                          isOrderStatusCardType &&
+                                  sku != skuNumber &&
+                                  (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
+                              ? GestureDetector(
+                                  onTap: () async {
+                                    final product = state.orderBySupplierProduct.products?[index];
+                                    final productQuantity = product?.quantity ?? 1;
+                                    ProductDetailsState updatedState;
+
+                                    try {
+                                      updatedState = await bloc.stream.firstWhere((s) => s != state).timeout(const Duration(seconds: 0));
+                                    } catch (e) {
+                                      updatedState = state;
+                                    }
+
+                                    final returnProducts = updatedState.returnList.data?.returnProducts ?? [];
+                                    final Map<int, String> reasonsMap = {
+                                      1: AppLocalizations.of(context)!.product_did_not_arrive_at_all,
+                                      2: AppLocalizations.of(context)!.product_arrived_damaged,
+                                      3: AppLocalizations.of(context)!.product_arrived_incomplete,
+                                      4: AppLocalizations.of(context)!.expiration_date_issue,
+                                      5: AppLocalizations.of(context)!.wrong_product_received,
+                                    };
+
+                                    int? selectedRadio;
+                                    Map<int, int> quantitiesPerRadio = {};
+                                    int getQuantityForReason(String reason, int radioVal) {
+                                      try {
+                                        final returnData = returnProducts.firstWhere((item) => item.reasonToReturn == reason);
+                                        if (returnData.totalUnits != null) {
+                                          return returnData.totalUnits!;
+                                        }
+                                      } catch (_) {}
+                                      if (radioVal == 1 || radioVal == 5) {
+                                        return productQuantity;
+                                      }
+                                      return 1;
+                                    }
+
+                                    var returnIndex = returnProducts.indexWhere((returnProduct) => returnProduct.barcode == barcode);
+                                    for (var entry in reasonsMap.entries) {
+                                      final qty = getQuantityForReason(entry.value, entry.key);
+                                      quantitiesPerRadio[entry.key] = qty;
+                                      if (returnIndex != -1) {
+                                        if (selectedRadio == null && returnProducts[returnIndex].reasonToReturn == entry.value) {
+                                          selectedRadio = entry.key;
+                                        }
+                                      } else {
+                                        selectedRadio = 0;
+                                      }
+                                    }
+
+                                    final radioValue = selectedRadio ?? 0;
+                                    bloc.add(
+                                      ProductDetailsEvent.getArgumentEvent(
+                                        arguments: returnIndex != -1 ? returnProducts[returnIndex] : null,
+                                        context: context,
+                                        productQuantity: productQuantity * (product?.numberOfUnit ?? 1),
+                                      ),
+                                    );
+                                    bloc.add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: radioValue));
+
+                                    final newState = await bloc.stream.firstWhere((s) => s.productIssueData.isNotEmpty);
+                                    productProblemBottomSheet(
+                                        productIssueData: newState.productIssueData,
+                                        radioValue: radioValue,
+                                        context: context,
+                                        productName: product?.productName.toString() ?? '',
+                                        weight: product?.itemWeight?.toDouble() ?? 0.0,
+                                        price: double.parse((product?.totalPayment?.toStringAsFixed(AppConstants.amountFrLength) ?? '0')),
+                                        image: product?.mainImage ?? '',
+                                        listIndex: index,
+                                        productId: product?.productId ?? '',
+                                        supplierId: state.orderBySupplierProduct.id.toString(),
+                                        scale: product?.scaleType.toString() ?? '',
+                                        isIssue: isIssue,
+                                        issue: issue,
+                                        missingQuantity: missingQuantity,
+                                        quantity: product?.quantity ?? 0,
+                                        numberOfUnit: product?.numberOfUnit ?? 0,
+                                        isDeliver: (state.orderBySupplierProduct.orderDeliveryDate != '') ? true : false,
+                                        barcode: barcode,
+                                        returnProducts: returnProducts,
+                                        notes: returnIndex != -1 ? returnProducts[returnIndex].notes : '',
+                                        returnProductId: returnIndex != -1 ? returnProducts[returnIndex].returnProductId : '',
+                                        returnId: returnIndex != -1 ? returnProducts[returnIndex].returnId : '',
+                                        orderId: orderId,
+                                        language: language,
+                                        orderSupplierProduct: orderSupplierProduct);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
+                                    decoration: BoxDecoration(
+                                      color: (matchedProduct?.reasonToReturn?.isNotEmpty ?? false) ? AppColors.mainColor : AppColors.lightBorderColor,
+                                      border: Border.all(color: AppColors.lightGreyColor),
+                                      borderRadius: BorderRadius.circular(AppConstants.radius_3),
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.product_issue,
+                                      style: AppStyles.rkRegularTextStyle(
+                                        color: (matchedProduct?.reasonToReturn?.isNotEmpty ?? false) ? AppColors.whiteColor : AppColors.blackColor,
+                                        size: AppConstants.font_12,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity == 0 : false)
+                                  ? Text(
+                                      AppLocalizations.of(context)!.was_not_in_stock,
+                                      style: AppStyles.rkRegularTextStyle(
+                                          color: AppColors.redColor, size: AppConstants.font_12, fontWeight: FontWeight.w400),
+                                    )
+                                  : const SizedBox(),
+                          (matchedProduct?.reasonToReturn?.isNotEmpty ?? false)
+                              ? SizedBox(
+                                  width: MediaQuery.of(context).size.width > 370 ? MediaQuery.of(context).size.width / 2 : 160,
+                                  child: Text(
+                                    '${AppLocalizations.of(context)!.issue_text} '
+                                    '${getLocalizedReason(apiReason: matchedProduct!.reasonToReturn.toString(), context: context)}',
+                                    maxLines: 2,
+                                    style: AppStyles.rkRegularTextStyle(
+                                        color: AppColors.redColor, size: AppConstants.font_14, fontWeight: FontWeight.w400),
+                                  ))
+                              : const IgnorePointer(),
+                          (matchedProduct?.totalUnits != null)
+                              ? Text(
+                                  '${matchedProduct?.totalUnits?.toString() ?? ''} ${AppLocalizations.of(context)!.units} ',
+                                  maxLines: 2,
+                                  style: AppStyles.rkRegularTextStyle(
+                                      color: AppColors.redColor, size: AppConstants.font_14, fontWeight: FontWeight.w400),
+                                )
+                              : const IgnorePointer(),
+                        ]),
+                        10.width,
+                      ]),
                 ]),
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Transform.translate(
-                    offset: state.language == 'en' ? const Offset(-3, 0) : const Offset(0, 0),
-                    child: Text(
-                      formatNumber(
-                        value: (state.orderBySupplierProduct.products![index].discountedPrice) != 0
-                            ? (vatCalculation(price: state.orderBySupplierProduct.products![index].discountedPrice ?? 0, vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(
-                          AppConstants.amountFrLength,
-                        ))
-                            : (vatCalculation(price: state.orderBySupplierProduct.products![index].totalPayment ?? 0, vat: state.orderData.vatPercentage ?? 0).toStringAsFixed(2)),
-                        local: AppStrings.hebrewLocal,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.clip,
-                      style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_14, fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ),
-                3.height,
-                isOrderStatusCardType && sku != skuNumber && (!isUpdated || (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity != 0 : false))
-                    ? GestureDetector(
-                  onTap: () async {
-                    final product = state.orderBySupplierProduct.products?[index];
-                    final productQuantity = product?.quantity ?? 1;
-                    ProductDetailsState updatedState;
-
-                    try {
-                      updatedState = await bloc.stream.firstWhere((s) => s != state).timeout(const Duration(seconds: 0));
-                    } catch (e) {
-                      updatedState = state;
-                    }
-
-                    final returnProducts = updatedState.returnList.data?.returnProducts ?? [];
-                    final Map<int, String> reasonsMap = {
-                      1: AppLocalizations.of(context)!.product_did_not_arrive_at_all,
-                      2: AppLocalizations.of(context)!.product_arrived_damaged,
-                      3: AppLocalizations.of(context)!.product_arrived_incomplete,
-                      4: AppLocalizations.of(context)!.expiration_date_issue,
-                      5: AppLocalizations.of(context)!.wrong_product_received,
-                    };
-
-                    int? selectedRadio;
-                    Map<int, int> quantitiesPerRadio = {};
-                    int getQuantityForReason(String reason, int radioVal) {
-                      try {
-                        final returnData = returnProducts.firstWhere((item) => item.reasonToReturn == reason);
-                        if (returnData.totalUnits != null) return returnData.totalUnits!;
-                      } catch (_) {}
-                      if (radioVal == 1 || radioVal == 5) return productQuantity;
-                      return 1;
-                    }
-
-                    var returnIndex = returnProducts.indexWhere((returnProduct) => returnProduct.barcode == barcode);
-                    for (var entry in reasonsMap.entries) {
-                      final qty = getQuantityForReason(entry.value, entry.key);
-                      quantitiesPerRadio[entry.key] = qty;
-                      if (returnIndex != -1) {
-                        if (selectedRadio == null && returnProducts[returnIndex].reasonToReturn == entry.value) {
-                          selectedRadio = entry.key;
-                        }
-                      } else {
-                        selectedRadio = 0;
-                      }
-                    }
-
-                    final radioValue = selectedRadio ?? 0;
-                    bloc.add(
-                      ProductDetailsEvent.getArgumentEvent(
-                        arguments: returnIndex != -1 ? returnProducts[returnIndex] : null,
-                        context: context,
-                        productQuantity: productQuantity * (product?.numberOfUnit ?? 1),
-                      ),
-                    );
-                    bloc.add(ProductDetailsEvent.radioButtonEvent(selectRadioTile: radioValue));
-
-                    final newState = await bloc.stream.firstWhere((s) => s.productIssueData.isNotEmpty);
-                    productProblemBottomSheet(
-                        productIssueData: newState.productIssueData,
-                        radioValue: radioValue,
-                        context: context,
-                        productName: product?.productName.toString() ?? '',
-                        weight: product?.itemWeight?.toDouble() ?? 0.0,
-                        price: double.parse((product?.totalPayment?.toStringAsFixed(AppConstants.amountFrLength) ?? '0')),
-                        image: product?.mainImage ?? '',
-                        listIndex: index,
-                        productId: product?.productId ?? '',
-                        supplierId: state.orderBySupplierProduct.id.toString(),
-                        scale: product?.scaleType.toString() ?? '',
-                        isIssue: isIssue,
-                        issue: issue,
-                        missingQuantity: missingQuantity,
-                        quantity: product?.quantity ?? 0,
-                        numberOfUnit: product?.numberOfUnit ?? 0,
-                        isDeliver: (state.orderBySupplierProduct.orderDeliveryDate != '') ? true : false,
-                        barcode: barcode,
-                        returnProducts: returnProducts,
-                        notes: returnIndex != -1 ? returnProducts[returnIndex].notes : '',
-                        returnProductId: returnIndex != -1 ? returnProducts[returnIndex].returnProductId : '',
-                        returnId: returnIndex != -1 ? returnProducts[returnIndex].returnId : '',
-                        orderId: orderId,
-                        language: language,
-                        orderSupplierProduct: orderSupplierProduct);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
-                    decoration: BoxDecoration(
-                      color: (matchedProduct?.reasonToReturn?.isNotEmpty ?? false) ? AppColors.mainColor : AppColors.lightBorderColor,
-                      border: Border.all(color: AppColors.lightGreyColor),
-                      borderRadius: BorderRadius.circular(AppConstants.radius_3),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.product_issue,
-                      style: AppStyles.rkRegularTextStyle(
-                        color: (matchedProduct?.reasonToReturn?.isNotEmpty ?? false) ? AppColors.whiteColor : AppColors.blackColor,
-                        size: AppConstants.font_12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                )
-                    : (isUpdated ? state.orderBySupplierProduct.products![index].updatedUnitQuantity == 0 : false)
-                    ? Text(
-                  AppLocalizations.of(context)!.was_not_in_stock,
-                  style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_12, fontWeight: FontWeight.w400),
-                )
-                    : const SizedBox(),
-                (matchedProduct?.reasonToReturn?.isNotEmpty ?? false)
-                    ? SizedBox(
-                    width: MediaQuery.of(context).size.width > 370 ? MediaQuery.of(context).size.width / 2 : 160,
-                    child: Text(
-                      '${AppLocalizations.of(context)!.issue_text} '
-                          '${getLocalizedReason(apiReason: matchedProduct!.reasonToReturn.toString(), context: context)}',
-                      maxLines: 2,
-                      style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_14, fontWeight: FontWeight.w400),
-                    ))
-                    : const IgnorePointer(),
-                (matchedProduct?.totalUnits != null)
-                    ? Text(
-                  '${matchedProduct?.totalUnits?.toString() ?? ''} ${AppLocalizations.of(context)!.units} ',
-                  maxLines: 2,
-                  style: AppStyles.rkRegularTextStyle(color: AppColors.redColor, size: AppConstants.font_14, fontWeight: FontWeight.w400),
-                )
-                    : const IgnorePointer(),
-              ]),
-              10.width,
-            ]),
-          ]),
-        ),
-      )
+              ),
+            )
           : 0.width;
     });
   }
@@ -883,7 +926,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     decoration: BoxDecoration(
                       color: AppColors.pageColor,
-                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
                     ),
                     child: SingleChildScrollView(
                       physics: const ClampingScrollPhysics(),
@@ -895,7 +939,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             0.width,
                             Text(
                               AppLocalizations.of(context)!.product_issue,
-                              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
+                              style: AppStyles.rkRegularTextStyle(
+                                  size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
                             ),
                             GestureDetector(
                                 onTap: () {
@@ -914,26 +959,29 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           ),
                           child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                             image != ''
-                                ? Image.network('${AppUrlEndPoints.baseFileUrl}$image', width: AppConstants.containerSize_50, height: AppConstants.containerSize_50, fit: BoxFit.fill, loadingBuilder: (
-                                context,
-                                child,
-                                loadingProgress,
-                                ) {
-                              if (loadingProgress == null) {
-                                return child;
-                              } else {
-                                return loaderWidget(AppConstants.containerHeight_80);
-                              }
-                            }, errorBuilder: (context, error, stackTrace) {
-                              return imageNotAvailableWidget(AppConstants.containerSize_50);
-                            })
-                                : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: AppConstants.containerSize_50, height: AppConstants.containerSize_50),
+                                ? Image.network('${AppUrlEndPoints.baseFileUrl}$image',
+                                    width: AppConstants.containerSize_50, height: AppConstants.containerSize_50, fit: BoxFit.fill, loadingBuilder: (
+                                    context,
+                                    child,
+                                    loadingProgress,
+                                  ) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return loaderWidget(AppConstants.containerHeight_80);
+                                    }
+                                  }, errorBuilder: (context, error, stackTrace) {
+                                    return imageNotAvailableWidget(AppConstants.containerSize_50);
+                                  })
+                                : Image.asset(AppImagePath.imageNotAvailable5,
+                                    fit: BoxFit.cover, width: AppConstants.containerSize_50, height: AppConstants.containerSize_50),
                             SizedBox(
                               width: AppConstants.containerHeight_100,
                               child: Text(productName, style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_14)),
                             ),
                             Column(children: [
-                              Text('${quantity.toString()}${' '}$scale', style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12)),
+                              Text('${quantity.toString()}${' '}$scale',
+                                  style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12)),
                               Text(
                                 '${quantity * numberOfUnit}${' '}${AppLocalizations.of(context)!.units}',
                                 style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_12),
@@ -943,16 +991,17 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                               textDirection: TextDirection.ltr,
                               child: Text(
                                 formatNumber(value: price.toStringAsFixed(AppConstants.amountFrLength), local: AppStrings.hebrewLocal),
-                                style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_14, fontWeight: FontWeight.w700),
+                                style: AppStyles.rkRegularTextStyle(
+                                    color: AppColors.blackColor, size: AppConstants.font_14, fontWeight: FontWeight.w700),
                               ),
                             ),
                           ]),
                         ),
                         20.height,
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-                          child: Text(AppLocalizations.of(context)!.problem_detected, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-                        ),
+                            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+                            child: Text(AppLocalizations.of(context)!.problem_detected,
+                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor))),
                         20.height,
                         radioButtonWidget(
                           context: context,
@@ -1046,7 +1095,8 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         10.height,
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.padding_3),
-                          child: Text(AppLocalizations.of(context)!.notes, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
+                          child: Text(AppLocalizations.of(context)!.notes,
+                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
                         ),
                         5.height,
                         Padding(
@@ -1071,47 +1121,50 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           GestureDetector(
                             onTap: () async {
                               if (state.selectedRadioTile == 0) {
-                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_issue, type: SnackBarType.failure);
-                              } else if (state.selectedRadioTile == 2 && state.proofImagesList.isEmpty || state.selectedRadioTile == 4 && state.proofImagesList.isEmpty) {
-                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.add_one_proof_img, type: SnackBarType.failure);
+                                CustomSnackBar.showSnackBar(
+                                    context: context, title: AppLocalizations.of(context)!.select_issue, type: SnackBarType.failure);
+                              } else if (state.selectedRadioTile == 2 && state.proofImagesList.isEmpty ||
+                                  state.selectedRadioTile == 4 && state.proofImagesList.isEmpty) {
+                                CustomSnackBar.showSnackBar(
+                                    context: context, title: AppLocalizations.of(context)!.add_one_proof_img, type: SnackBarType.failure);
                               } else {
                                 if (returnProducts.isEmpty) {
                                   context.read<ProductDetailsBloc>().add(ProductDetailsEvent.createReturnEvent(
-                                    context: context,
-                                    bottomSheetContext: context1,
-                                    supplierId: supplierId,
-                                    productId: productId,
-                                    totalRefund: 0,
-                                    proofImages: productIssueData[state.selectedRadioTile]!['proofImage'],
-                                    notes: state.addNoteController.text,
-                                    productName: productName,
-                                    productImage: "${AppUrlEndPoints.baseFileUrl}$image",
-                                    barcode: barcode!,
-                                    totalUnits: productIssueData[state.selectedRadioTile]!['quantity'],
-                                    isApproved: false,
-                                    orderId: widget.orderId,
-                                    reasonToReturn: getReturnReason(context, state.selectedRadioTile),
-                                  ));
+                                        context: context,
+                                        bottomSheetContext: context1,
+                                        supplierId: supplierId,
+                                        productId: productId,
+                                        totalRefund: 0,
+                                        proofImages: productIssueData[state.selectedRadioTile]!['proofImage'],
+                                        notes: state.addNoteController.text,
+                                        productName: productName,
+                                        productImage: "${AppUrlEndPoints.baseFileUrl}$image",
+                                        barcode: barcode!,
+                                        totalUnits: productIssueData[state.selectedRadioTile]!['quantity'],
+                                        isApproved: false,
+                                        orderId: widget.orderId,
+                                        reasonToReturn: getReturnReason(context, state.selectedRadioTile),
+                                      ));
                                 } else {
                                   context.read<ProductDetailsBloc>().add(ProductDetailsEvent.updateReturnEvent(
-                                    context: context,
-                                    bottomSheetContext: context1,
-                                    supplierId: supplierId,
-                                    productId: productId,
-                                    totalRefund: 0,
-                                    proofImages: productIssueData[state.selectedRadioTile]!['proofImage'],
-                                    notes: state.addNoteController.text,
-                                    productName: productName,
-                                    productImage: "${AppUrlEndPoints.baseFileUrl}$image",
-                                    barcode: barcode!,
-                                    totalUnits: productIssueData[state.selectedRadioTile]!['quantity'],
-                                    isApproved: false,
-                                    orderId: widget.orderId,
-                                    returnProduct: returnProducts,
-                                    returnProductId: returnProductId,
-                                    isRemoved: false,
-                                    reasonToReturn: getReturnReason(context, state.selectedRadioTile),
-                                  ));
+                                        context: context,
+                                        bottomSheetContext: context1,
+                                        supplierId: supplierId,
+                                        productId: productId,
+                                        totalRefund: 0,
+                                        proofImages: productIssueData[state.selectedRadioTile]!['proofImage'],
+                                        notes: state.addNoteController.text,
+                                        productName: productName,
+                                        productImage: "${AppUrlEndPoints.baseFileUrl}$image",
+                                        barcode: barcode!,
+                                        totalUnits: productIssueData[state.selectedRadioTile]!['quantity'],
+                                        isApproved: false,
+                                        orderId: widget.orderId,
+                                        returnProduct: returnProducts,
+                                        returnProductId: returnProductId,
+                                        isRemoved: false,
+                                        reasonToReturn: getReturnReason(context, state.selectedRadioTile),
+                                      ));
                                 }
                               }
                             },
@@ -1127,52 +1180,52 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                           ),
                           returnProducts.any((item) => item.barcode == barcode)
                               ? GestureDetector(
-                            onTap: () {
-                              if (returnProducts.length > 1) {
-                                context.read<ProductDetailsBloc>().add(ProductDetailsEvent.updateReturnEvent(
-                                  context: context,
-                                  bottomSheetContext: context1,
-                                  supplierId: supplierId,
-                                  productId: productId,
-                                  totalRefund: 0,
-                                  proofImages: productIssueData[state.selectedRadioTile]!['proofImage'],
-                                  notes: state.addNoteController.text,
-                                  productName: productName,
-                                  productImage: "${AppUrlEndPoints.baseFileUrl}$image",
-                                  barcode: barcode!,
-                                  totalUnits: productIssueData[state.selectedRadioTile]!['quantity'],
-                                  isApproved: false,
-                                  orderId: widget.orderId,
-                                  returnProduct: returnProducts,
-                                  returnProductId: returnProductId,
-                                  isRemoved: true,
-                                  reasonToReturn: getReturnReason(context, state.selectedRadioTile),
-                                ));
-                              } else {
-                                context.read<ProductDetailsBloc>().add(ProductDetailsEvent.deleteEvent(
-                                  context: context,
-                                  bottomSheetContext: context1,
-                                  returnId: returnId,
-                                  reasonToReturn: getReturnReason(context, state.selectedRadioTile),
-                                  barcode: barcode!,
-                                  orderSupplierProduct: orderSupplierProduct,
-                                ));
-                              }
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_20, horizontal: AppConstants.padding_30),
-                              child: CustomButtonWidget(
-                                isFromConnectScreen: true,
-                                width: 120,
-                                buttonText: AppLocalizations.of(context)!.issue_remove,
-                                bGColor: AppColors.redColor,
-                                isLoading: state.isRemoveProcess,
-                                fontColors: AppColors.redColor,
-                                borderColor: AppColors.redColor,
-                                loadingColor: AppColors.mainColor,
-                              ),
-                            ),
-                          )
+                                  onTap: () {
+                                    if (returnProducts.length > 1) {
+                                      context.read<ProductDetailsBloc>().add(ProductDetailsEvent.updateReturnEvent(
+                                            context: context,
+                                            bottomSheetContext: context1,
+                                            supplierId: supplierId,
+                                            productId: productId,
+                                            totalRefund: 0,
+                                            proofImages: productIssueData[state.selectedRadioTile]!['proofImage'],
+                                            notes: state.addNoteController.text,
+                                            productName: productName,
+                                            productImage: "${AppUrlEndPoints.baseFileUrl}$image",
+                                            barcode: barcode!,
+                                            totalUnits: productIssueData[state.selectedRadioTile]!['quantity'],
+                                            isApproved: false,
+                                            orderId: widget.orderId,
+                                            returnProduct: returnProducts,
+                                            returnProductId: returnProductId,
+                                            isRemoved: true,
+                                            reasonToReturn: getReturnReason(context, state.selectedRadioTile),
+                                          ));
+                                    } else {
+                                      context.read<ProductDetailsBloc>().add(ProductDetailsEvent.deleteEvent(
+                                            context: context,
+                                            bottomSheetContext: context1,
+                                            returnId: returnId,
+                                            reasonToReturn: getReturnReason(context, state.selectedRadioTile),
+                                            barcode: barcode!,
+                                            orderSupplierProduct: orderSupplierProduct,
+                                          ));
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_20, horizontal: AppConstants.padding_30),
+                                    child: CustomButtonWidget(
+                                      isFromConnectScreen: true,
+                                      width: 120,
+                                      buttonText: AppLocalizations.of(context)!.issue_remove,
+                                      bGColor: AppColors.redColor,
+                                      isLoading: state.isRemoveProcess,
+                                      fontColors: AppColors.redColor,
+                                      borderColor: AppColors.redColor,
+                                      loadingColor: AppColors.mainColor,
+                                    ),
+                                  ),
+                                )
                               : 0.height,
                         ]),
                       ]),
@@ -1185,7 +1238,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
     ).then((onValue) {
       if (onValue['refresh']) {
         final deletedBarcode = onValue['deletedBarcode'] as String?;
-        context.read<ProductDetailsBloc>().add(ProductDetailsEvent.getReturnListEvent(context: context, excludeBarcodes: deletedBarcode != null ? [deletedBarcode] : null));
+        context
+            .read<ProductDetailsBloc>()
+            .add(ProductDetailsEvent.getReturnListEvent(context: context, excludeBarcodes: deletedBarcode != null ? [deletedBarcode] : null));
       }
     });
   }
@@ -1270,27 +1325,24 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       Row(children: [
                         GestureDetector(
                           onTap: () {
-                            bloc.add(
-                              ProductDetailsEvent.productIncrementEvent(
-                                productQuantity: totalQuantity!,
-                                listIndex: listIndex,
-                                context: bottomSheetContext,
-                                messingQuantity: currentQty!,
-                                radioValue: value,
-                                productIssueData: productIssueData,
-                              ),
-                            );
+                            bloc.add(ProductDetailsEvent.productIncrementEvent(
+                              productQuantity: totalQuantity!,
+                              listIndex: listIndex,
+                              context: bottomSheetContext,
+                              messingQuantity: currentQty!,
+                              radioValue: value,
+                              productIssueData: productIssueData,
+                            ));
                           },
                           child: Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(AppConstants.radius_2),
-                              border: Border.all(color: AppColors.greyColor),
-                              color: AppColors.pageColor,
-                            ),
-                            child: const Icon(Icons.add, size: 20),
-                          ),
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(AppConstants.radius_2),
+                                border: Border.all(color: AppColors.greyColor),
+                                color: AppColors.pageColor,
+                              ),
+                              child: const Icon(Icons.add, size: 20)),
                         ),
                         10.width,
                         Text(
@@ -1310,12 +1362,14 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                             ));
                           },
                           child: Container(
-                            alignment: Alignment.center,
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_3), border: Border.all(color: AppColors.greyColor), color: AppColors.pageColor),
-                            child: const Icon(Icons.remove, size: 20),
-                          ),
+                              alignment: Alignment.center,
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(AppConstants.radius_3),
+                                  border: Border.all(color: AppColors.greyColor),
+                                  color: AppColors.pageColor),
+                              child: const Icon(Icons.remove, size: 20)),
                         ),
                       ]),
                   ])
@@ -1359,17 +1413,17 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         alignment: Alignment.center,
                         child: state.proofFile.path.contains("https")
                             ? Image.network(state.proofFile.path, loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          } else {
-                            return loaderWidget(AppConstants.containerHeight_80);
-                          }
-                        }, errorBuilder: (context, error, stackTrace) {
-                          return imageNotAvailableWidget(AppConstants.containerHeight_100);
-                        })
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return loaderWidget(AppConstants.containerHeight_80);
+                                }
+                              }, errorBuilder: (context, error, stackTrace) {
+                                return imageNotAvailableWidget(AppConstants.containerHeight_100);
+                              })
                             : state.proofFile.existsSync()
-                            ? Image.file(state.proofFile, fit: BoxFit.cover, height: 120, width: 120)
-                            : const Icon(Icons.add, size: 60),
+                                ? Image.file(state.proofFile, fit: BoxFit.cover, height: 120, width: 120)
+                                : const Icon(Icons.add, size: 60),
                       ),
                     ),
                     8.width,
@@ -1395,17 +1449,17 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         alignment: Alignment.center,
                         child: state.proofFile1.path.contains("https")
                             ? Image.network(state.proofFile1.path, loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          } else {
-                            return loaderWidget(AppConstants.containerHeight_80);
-                          }
-                        }, errorBuilder: (context, error, stackTrace) {
-                          return imageNotAvailableWidget(AppConstants.containerHeight_100);
-                        })
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return loaderWidget(AppConstants.containerHeight_80);
+                                }
+                              }, errorBuilder: (context, error, stackTrace) {
+                                return imageNotAvailableWidget(AppConstants.containerHeight_100);
+                              })
                             : state.proofFile1.existsSync()
-                            ? Image.file(state.proofFile1, fit: BoxFit.cover, height: 120, width: 120)
-                            : const Icon(Icons.add, size: 60),
+                                ? Image.file(state.proofFile1, fit: BoxFit.cover, height: 120, width: 120)
+                                : const Icon(Icons.add, size: 60),
                       ),
                     ),
                     8.width,
@@ -1431,17 +1485,17 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                         alignment: Alignment.center,
                         child: state.proofFile2.path.contains("https")
                             ? Image.network(state.proofFile2.path, loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          } else {
-                            return loaderWidget(AppConstants.containerHeight_80);
-                          }
-                        }, errorBuilder: (context, error, stackTrace) {
-                          return imageNotAvailableWidget(AppConstants.containerHeight_100);
-                        })
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return loaderWidget(AppConstants.containerHeight_80);
+                                }
+                              }, errorBuilder: (context, error, stackTrace) {
+                                return imageNotAvailableWidget(AppConstants.containerHeight_100);
+                              })
                             : state.proofFile2.existsSync()
-                            ? Image.file(state.proofFile2, fit: BoxFit.cover, height: 120, width: 120)
-                            : const Icon(Icons.add, size: 60),
+                                ? Image.file(state.proofFile2, fit: BoxFit.cover, height: 120, width: 120)
+                                : const Icon(Icons.add, size: 60),
                       ),
                     ),
                   ]),
@@ -1477,13 +1531,12 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
           ),
           30.height,
           FileSelectionOptionWidget(
-            title: AppLocalizations.of(context)!.camera,
-            icon: Icons.camera_alt_rounded,
-            onTap: () {
-              Navigator.pop(context);
-              cameraEvent(context: context, index: index, productIssueData: productIssueData, selectedRadio: selectedRadio);
-            },
-          ),
+              title: AppLocalizations.of(context)!.camera,
+              icon: Icons.camera_alt_rounded,
+              onTap: () {
+                Navigator.pop(context);
+                cameraEvent(context: context, index: index, productIssueData: productIssueData, selectedRadio: selectedRadio);
+              }),
           FileSelectionOptionWidget(
               title: AppLocalizations.of(context)!.delete,
               icon: Icons.delete,
@@ -1504,11 +1557,11 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                       },
                       positiveOnTap: () async {
                         context.read<ProductDetailsBloc>().add(ProductDetailsEvent.deleteFileEvent(
-                          context: context,
-                          index: index,
-                          productIssueData: productIssueData,
-                          selectedRadio: selectedRadio,
-                        ));
+                              context: context,
+                              index: index,
+                              productIssueData: productIssueData,
+                              selectedRadio: selectedRadio,
+                            ));
                         Navigator.pop(context2);
                       }),
                 );
@@ -1534,12 +1587,12 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
       }
     } else if (Platform.isIOS) {}
     context.read<ProductDetailsBloc>().add(ProductDetailsEvent.pickDocumentEvent(
-      context: context,
-      isFromCamera: true,
-      value: index,
-      productIssueData: productIssueData,
-      selectedRadio: selectedRadio,
-    ));
+          context: context,
+          isFromCamera: true,
+          value: index,
+          productIssueData: productIssueData,
+          selectedRadio: selectedRadio,
+        ));
   }
 
   uploadDriverProofBottomSheet({
@@ -1621,14 +1674,13 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
   }
 
   Widget basketRow(String title, String amount, {bool isTitle = false, Color color = Colors.black}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: color, fontWeight: FontWeight.bold)),
-        20.width,
-        Text(amount, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: color, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
-      ],
-    );
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: color, fontWeight: FontWeight.bold)),
+      20.width,
+      Text(amount,
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: color, fontWeight: FontWeight.bold),
+          overflow: TextOverflow.ellipsis),
+    ]);
   }
 
   void duplicateOrderDialog({required BuildContext context, required String directionality}) {
@@ -1649,7 +1701,9 @@ class _ProductDetailsScreenWidgetState extends State<ProductDetailsScreenWidget>
                     positiveTitle: AppLocalizations.of(context)!.yes,
                     negativeTitle: AppLocalizations.of(context)!.no,
                     positiveOnTap: () {
-                      context.read<ProductDetailsBloc>().add(ProductDetailsEvent.duplicateOrderEvent(context: context, orderId: widget.orderId, dialogContext: context1));
+                      context
+                          .read<ProductDetailsBloc>()
+                          .add(ProductDetailsEvent.duplicateOrderEvent(context: context, orderId: widget.orderId, dialogContext: context1));
                     },
                     negativeOnTap: () {
                       Navigator.pop(context1);

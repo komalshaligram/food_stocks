@@ -8,6 +8,9 @@ class OtpState with _$OtpState {
     required bool isLoading,
     required String errorMessage,
     required bool isRegister,
+    required bool isWhatsappSending,
+    required int sendCount,
+    required bool showWhatsappOtpOption,
   }) = _OtpState;
 
   factory OtpState.initial() => const OtpState(
@@ -16,5 +19,8 @@ class OtpState with _$OtpState {
         isLoading: false,
         errorMessage: '',
         isRegister: false,
+        isWhatsappSending: false,
+        sendCount: 1,
+        showWhatsappOtpOption: false,
       );
 }

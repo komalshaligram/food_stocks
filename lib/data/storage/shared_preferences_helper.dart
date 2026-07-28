@@ -21,6 +21,9 @@ class SharedPreferencesHelper {
   static const String fcmToken = 'fcmToken';
   static const String userCartId = 'userCartId';
   static const String phoneNumber = 'phoneNumber';
+  static const String otpCooldownPhone = 'otpCooldownPhone';
+  static const String otpCooldownUntil = 'otpCooldownUntil';
+  static const String otpSendCount = 'otpSendCount';
   static const String walletId = 'walletId';
   static const String reqApiUrl = 'reqApiUrl';
   static const String apiPram = 'apiPram';
@@ -263,6 +266,47 @@ class SharedPreferencesHelper {
 
   Future<void> setPhoneNumber({required String userPhoneNumber}) async {
     await prefs.setString(phoneNumber, userPhoneNumber);
+  }
+
+  /// Records that a code was just sent to [contact], starting a cooldown of
+  /// [seconds]. [sendCount] is how many codes have gone out for this number,
+  /// which drives the escalating wait (30s / 60s / 3min).
+  Future<void> setOtpCooldown({
+    required String contact,
+    required int seconds,
+    required int sendCount,
+  }) async {
+    await prefs.setString(otpCooldownPhone, contact);
+    await prefs.setInt(otpCooldownUntil, DateTime.now().millisecondsSinceEpoch + seconds * 1000);
+    await prefs.setInt(otpSendCount, sendCount);
+  }
+
+  /// Seconds still left on the cooldown for [contact], or 0 if none is running
+  /// (or it belongs to a different number). Never negative.
+  int getOtpCooldownRemaining(String contact) {
+    if (prefs.getString(otpCooldownPhone) != contact) {
+      return 0;
+    }
+    final int until = prefs.getInt(otpCooldownUntil) ?? 0;
+    final int remainingMs = until - DateTime.now().millisecondsSinceEpoch;
+    return remainingMs <= 0 ? 0 : (remainingMs / 1000).ceil();
+  }
+
+  int getOtpSendCount(String contact) {
+    if (prefs.getString(otpCooldownPhone) != contact) {
+      return 0;
+    }
+    final int until = prefs.getInt(otpCooldownUntil) ?? 0;
+    if (DateTime.now().millisecondsSinceEpoch > until + 10 * 60 * 1000) {
+      return 0;
+    }
+    return prefs.getInt(otpSendCount) ?? 0;
+  }
+
+  Future<void> clearOtpCooldown() async {
+    await prefs.remove(otpCooldownPhone);
+    await prefs.remove(otpCooldownUntil);
+    await prefs.remove(otpSendCount);
   }
 
   Future<void> setWalletId({required String userWalletId}) async {

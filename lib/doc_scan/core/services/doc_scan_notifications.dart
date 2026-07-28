@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../../models/comax_document_status.dart';
 import '../../models/invoice_document.dart';
+import 'comax_diagnosis_text.dart';
 
 /// התראות **מקומיות** (המכשיר לעצמו) על מעברי סטטוס של סריקת מסמך.
 ///
@@ -150,9 +152,14 @@ class DocScanNotifications {
         'הקליטה לקופה נכשלה',
         _withSupplier(
           doc,
-          (doc.comaxReceiveError != null && doc.comaxReceiveError!.isNotEmpty)
-              ? doc.comaxReceiveError!
-              : 'אירעה שגיאה בהזנת המסמך ל-Comax.',
+          // ⚠️ היה כאן `comaxReceiveError` — קוד מכונה שהוצג למשתמש כטקסט
+          // ("total_mismatch"). ההודעה לתצוגה היא comaxReceiveErrorMessage.
+          describeIntakeFailure(
+                receiveErrorMessage: doc.comaxReceiveErrorMessage,
+                receiveError: doc.comaxReceiveError,
+                diagnosis: InvoiceDiagnosis.fromJsonOrNull(doc.comaxDiagnosis),
+              ) ??
+              'אירעה שגיאה בהזנת המסמך ל-Comax.',
         ),
         doc.id,
       );

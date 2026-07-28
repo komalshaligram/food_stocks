@@ -38,54 +38,54 @@ Widget totalAmountCard(
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
       child: Column(children: [
         const DividerWidget(height: 10.0),
         state.isIncludedVat
             ? basketRow(AppLocalizations.of(context)!.total_price_with_vat,
-            formattedTotal, isTitle: true)
+                formattedTotal, isTitle: true)
             : basketRow(AppLocalizations.of(context)!.total, formattedTotal,
-            isTitle: true),
+                isTitle: true),
         const DividerWidget(height: 10.0),
         5.height,
         state.isSubUserCanCreateOrder
             ? CustomButtonWidget(
-          buttonText: AppLocalizations.of(context)!.continues,
-          bGColor: AppColors.mainColor,
-          height: 45,
-          onPressed: () async {
-            List<double> basketProductStockList = [];
-            for (var element in state.basketProductList) {
-              basketProductStockList.add(element.productStock ?? 0);
-            }
-            basketProductStockList.sort();
-            if (basketProductStockList.first == 0.0 ||
-                basketProductStockList.first == 0) {
-              removeOutOfStockProductDialog(context: context);
-            } else {
-              if (!state.isRemoveProcess &&
-                  !state.isLoading &&
-                  !state.isShimmering) {
-                if (state.draftReturnExists) {
-                  await showDialog(
-                      context: context,
-                      builder: (_) => CallAgentDialog(
-                          language: state.language,
+                buttonText: AppLocalizations.of(context)!.continues,
+                bGColor: AppColors.mainColor,
+                height: 45,
+                onPressed: () async {
+                  List<double> basketProductStockList = [];
+                  for (var element in state.basketProductList) {
+                    basketProductStockList.add(element.productStock ?? 0);
+                  }
+                  basketProductStockList.sort();
+                  if (basketProductStockList.first == 0.0 ||
+                      basketProductStockList.first == 0) {
+                    removeOutOfStockProductDialog(context: context);
+                  } else {
+                    if (!state.isRemoveProcess &&
+                        !state.isLoading &&
+                        !state.isShimmering) {
+                      if (state.draftReturnExists) {
+                        await showDialog(
+                            context: context,
+                            builder: (_) => CallAgentDialog(
+                                language: state.language,
+                                state: state,
+                                context1: context,
+                                bloc: bloc));
+                      } else {
+                        await navigateFromBasketContinue(
+                          context: context,
                           state: state,
-                          context1: context,
-                          bloc: bloc));
-                } else {
-                  await navigateFromBasketContinue(
-                    context: context,
-                    state: state,
-                    formattedTotal: formattedTotal,
-                  );
-                }
-              }
-            }
-          },
-          fontColors: AppColors.whiteColor,
-        )
+                          formattedTotal: formattedTotal,
+                        );
+                      }
+                    }
+                  }
+                },
+                fontColors: AppColors.whiteColor,
+              )
             : 0.width,
         10.height
       ]));

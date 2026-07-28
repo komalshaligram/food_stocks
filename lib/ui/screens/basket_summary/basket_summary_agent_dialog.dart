@@ -15,10 +15,10 @@ class BasketSummaryCallAgentDialog extends StatelessWidget {
 
   const BasketSummaryCallAgentDialog(
       {Key? key,
-        required this.language,
-        required this.id,
-        required this.index,
-        required this.bloc})
+      required this.language,
+      required this.id,
+      required this.index,
+      required this.bloc})
       : super(key: key);
 
   @override
@@ -52,7 +52,7 @@ class BasketSummaryCallAgentDialog extends StatelessWidget {
                       decoration: BoxDecoration(
                           gradient: AppColors.appMainGradientColor,
                           borderRadius:
-                          BorderRadius.circular(AppConstants.radius_5)),
+                              BorderRadius.circular(AppConstants.radius_5)),
                       child: Row(mainAxisSize: MainAxisSize.min, children: [
                         Text(AppLocalizations.of(context)!.view_return,
                             style: AppStyles.rkRegularTextStyle(
@@ -72,7 +72,7 @@ class BasketSummaryCallAgentDialog extends StatelessWidget {
                       decoration: BoxDecoration(
                           gradient: AppColors.appMainGradientColor,
                           borderRadius:
-                          BorderRadius.circular(AppConstants.radius_5)),
+                              BorderRadius.circular(AppConstants.radius_5)),
                       child: Row(mainAxisSize: MainAxisSize.min, children: [
                         Text(AppLocalizations.of(context)!.send_any_way,
                             style: AppStyles.rkRegularTextStyle(

@@ -120,4 +120,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
   }) = _addToCartListProductEvent;
 
   const factory StoreCategoryEvent.getCartCountEvent({BuildContext? context}) = _getCartCountEvent;
+
+  const factory StoreCategoryEvent.applyCartQuantitiesEvent({
+    required Map<String, int> cartQuantities,
+  }) = _applyCartQuantitiesEvent;
 }

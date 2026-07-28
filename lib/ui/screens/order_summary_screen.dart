@@ -84,40 +84,42 @@ class OrderSummaryScreenWidget extends StatelessWidget {
             body: SafeArea(
               child: Column(children: [
                 state.tempList.isEmpty
-                    ? const OrderSummaryScreenShimmerWidget()
-                    : AnimationLimiter(
-                        child: ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: state.tempList.length,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                          itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
-                            duration: const Duration(seconds: 1),
-                            position: index,
-                            child: SlideAnimation(child: FadeInAnimation(child: orderListItem(index: index, context: context, bloc: bloc))),
-                          ),
-                        ),
+                    ? const Expanded(child: OrderSummaryScreenShimmerWidget())
+                    : Expanded(
+                  child: AnimationLimiter(
+                    child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: state.tempList.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+                      itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
+                        duration: const Duration(seconds: 1),
+                        position: index,
+                        child: SlideAnimation(child: FadeInAnimation(child: orderListItem(index: index, context: context, bloc: bloc))),
                       ),
+                    ),
+                  ),
+                ),
                 5.height,
                 state.tempList.isEmpty
                     ? refundShimmer()
                     : Wrap(alignment: WrapAlignment.center, spacing: 4, children: [
-                        Text(
-                          isHebrew
-                              ? '${AppLocalizations.of(context)!.refund_amount_3}'
-                                  ' ${refundAmount.abs().toStringAsFixed(2)}${'₪'}'
-                              : AppLocalizations.of(context)!.refund_amount_3,
-                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.notificationColor),
-                        ),
-                        Text(
-                          isHebrew
-                              ? AppLocalizations.of(context)!.refund_amount_4
-                              : '${refundAmount.abs().toStringAsFixed(2)}${'₪'} '
-                                  '${AppLocalizations.of(context)!.refund_amount_4} ',
-                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.notificationColor),
-                        ),
-                      ])
+                  Text(
+                    isHebrew
+                        ? '${AppLocalizations.of(context)!.refund_amount_3}'
+                        ' ${refundAmount.abs().toStringAsFixed(2)}${'₪'}'
+                        : AppLocalizations.of(context)!.refund_amount_3,
+                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.notificationColor),
+                  ),
+                  Text(
+                    isHebrew
+                        ? AppLocalizations.of(context)!.refund_amount_4
+                        : '${refundAmount.abs().toStringAsFixed(2)}${'₪'} '
+                        '${AppLocalizations.of(context)!.refund_amount_4} ',
+                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.notificationColor),
+                  ),
+                ])
               ]),
             ),
           ),
@@ -127,17 +129,17 @@ class OrderSummaryScreenWidget extends StatelessWidget {
   }
 
   Widget refundShimmer() => CommonShimmerWidget(
-        child: Container(
-          margin: const EdgeInsets.all(AppConstants.padding_10),
-          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
-          decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          ),
-          child: Container(height: 10),
-        ),
-      );
+    child: Container(
+      margin: const EdgeInsets.all(AppConstants.padding_10),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+      ),
+      child: Container(height: 10),
+    ),
+  );
 
   Widget orderListItem({required int index, required BuildContext context, required OrderSummaryBloc bloc}) {
     return BlocBuilder<OrderSummaryBloc, OrderSummaryState>(builder: (context, state) {
@@ -213,9 +215,9 @@ class OrderSummaryScreenWidget extends StatelessWidget {
           state.tempList[index].notMinimumOrder == false
               ? Text(AppLocalizations.of(context)!.you_can_send_the_order, style: TextStyle(color: AppColors.notificationColor))
               : Text(
-                  AppLocalizations.of(context)!.you_cant_send_the_order,
-                  style: TextStyle(color: AppColors.redColor),
-                ),
+            AppLocalizations.of(context)!.you_cant_send_the_order,
+            style: TextStyle(color: AppColors.redColor),
+          ),
           8.height,
           CustomButtonWidget(
             buttonText: AppLocalizations.of(context)!.continues,

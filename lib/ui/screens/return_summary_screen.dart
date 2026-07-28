@@ -21,9 +21,12 @@ class ReturnSummaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => ReturnSummaryBloc()..add(ReturnSummaryEvent.getSummaryListEvent(context: context, list: args ?? {})),
+      create: (context) => ReturnSummaryBloc()
+        ..add(ReturnSummaryEvent.getSummaryListEvent(
+            context: context, list: args ?? {})),
       child: const ReturnSummaryScreenWidget(),
     );
   }
@@ -35,7 +38,8 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ReturnSummaryBloc bloc = context.read<ReturnSummaryBloc>();
-    return BlocBuilder<ReturnSummaryBloc, ReturnSummaryState>(builder: (context, state) {
+    return BlocBuilder<ReturnSummaryBloc, ReturnSummaryState>(
+        builder: (context, state) {
       return Scaffold(
         backgroundColor: AppColors.pageColor,
         appBar: PreferredSize(
@@ -49,69 +53,94 @@ class ReturnSummaryScreenWidget extends StatelessWidget {
               }),
         ),
         body: SafeArea(
-          child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            state.isShimmer
-                ? const Expanded(child: OrderSummaryScreenShimmerWidget())
-                : Expanded(
-                    child: AnimationLimiter(
-                      child: SizedBox(
-                        height: 200,
-                        child: ListView(
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-                          children: state.supplierWiseMap.keys.map((supplierId) {
-                            return orderListItem(context: context, bloc: bloc, supplierId: supplierId ?? '');
-                          }).toList(),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                state.isShimmer
+                    ? const Expanded(child: OrderSummaryScreenShimmerWidget())
+                    : Expanded(
+                        child: AnimationLimiter(
+                          child: SizedBox(
+                            height: 200,
+                            child: ListView(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: AppConstants.padding_5),
+                              children:
+                                  state.supplierWiseMap.keys.map((supplierId) {
+                                return orderListItem(
+                                    context: context,
+                                    bloc: bloc,
+                                    supplierId: supplierId ?? '');
+                              }).toList(),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-          ]),
+              ]),
         ),
       );
     });
   }
 
-  Widget orderListItem({required BuildContext context, required ReturnSummaryBloc bloc, required String supplierId}) {
-    return BlocBuilder<ReturnSummaryBloc, ReturnSummaryState>(builder: (context1, state) {
+  Widget orderListItem(
+      {required BuildContext context,
+      required ReturnSummaryBloc bloc,
+      required String supplierId}) {
+    return BlocBuilder<ReturnSummaryBloc, ReturnSummaryState>(
+        builder: (context1, state) {
       return Container(
           height: 160,
           margin: const EdgeInsets.all(AppConstants.padding_10),
-          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+          padding: const EdgeInsets.symmetric(
+              vertical: AppConstants.padding_10,
+              horizontal: AppConstants.padding_10),
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
-            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.shadowColor.withValues(alpha: 0.15),
+                  blurRadius: AppConstants.blur_10)
+            ],
+            borderRadius:
+                const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
           ),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-            Text(
-              state.supplierWiseMap[supplierId]!.first.supplierName.toString(),
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-            ),
-            10.height,
-            CommonOrderContentWidget(
-              backGroundColor: AppColors.iconBGColor,
-              borderCoder: AppColors.lightBorderColor,
-              flexValue: 1,
-              title: AppLocalizations.of(context)!.products,
-              value: state.supplierWiseMap[supplierId]?.length.toString() ?? '',
-              titleColor: AppColors.mainColor,
-              valueColor: AppColors.blackColor,
-              valueTextWeight: FontWeight.w700,
-              valueTextSize: AppConstants.smallFont,
-            ),
-            8.height,
-            CustomButtonWidget(
-              buttonText: AppLocalizations.of(context)!.send_the_request,
-              bGColor: AppColors.mainColor,
-              height: 40,
-              isLoading: false,
-              onPressed: () {
-                bloc.add(ReturnSummaryEvent.updateReturnEvent(context: context, supplierId: supplierId));
-              },
-              fontColors: AppColors.whiteColor,
-            ),
-          ]));
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  state.supplierWiseMap[supplierId]!.first.supplierName
+                      .toString(),
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14, color: AppColors.blackColor),
+                ),
+                10.height,
+                CommonOrderContentWidget(
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 1,
+                  title: AppLocalizations.of(context)!.products,
+                  value: state.supplierWiseMap[supplierId]?.length.toString() ??
+                      '',
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextWeight: FontWeight.w700,
+                  valueTextSize: AppConstants.smallFont,
+                ),
+                8.height,
+                CustomButtonWidget(
+                  buttonText: AppLocalizations.of(context)!.send_the_request,
+                  bGColor: AppColors.mainColor,
+                  height: 40,
+                  isLoading: false,
+                  onPressed: () {
+                    bloc.add(ReturnSummaryEvent.updateReturnEvent(
+                        context: context, supplierId: supplierId));
+                  },
+                  fontColors: AppColors.whiteColor,
+                ),
+              ]));
     });
   }
 }

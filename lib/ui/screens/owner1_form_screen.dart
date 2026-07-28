@@ -34,13 +34,13 @@ class Owner1FormScreen extends StatelessWidget {
           businessTypeId: args?[AppStrings.businessTypeIdString] ?? '0',
           isFreelancer: args?[AppStrings.isFreelancer] ?? '',
         )),
-      child: Owner1FormScreenWidget(),
+      child: const Owner1FormScreenWidget(),
     );
   }
 }
 
 class Owner1FormScreenWidget extends StatefulWidget {
-  Owner1FormScreenWidget({super.key});
+  const Owner1FormScreenWidget({super.key});
 
   @override
   State<Owner1FormScreenWidget> createState() => _Owner1FormScreenWidgetState();
@@ -48,9 +48,6 @@ class Owner1FormScreenWidget extends StatefulWidget {
 
 class _Owner1FormScreenWidgetState extends State<Owner1FormScreenWidget> {
   final _formKey = GlobalKey<FormState>();
-
-  // Second owner is entered on this same screen (shown only when 2 owners were
-  // selected), so its controllers live here.
   final TextEditingController _owner2NameController = TextEditingController();
   final TextEditingController _owner2IdController = TextEditingController();
 
@@ -73,15 +70,18 @@ class _Owner1FormScreenWidgetState extends State<Owner1FormScreenWidget> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     if (!isValidIsraeliID(state.owner1israelIdController.text.trim())) {
-      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1, type: SnackBarType.failure);
+      CustomSnackBar.showSnackBar(
+          context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner1, type: SnackBarType.failure);
       return;
     }
     if (state.owner == '2' && !isValidIsraeliID(_owner2IdController.text.trim())) {
-      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner2, type: SnackBarType.failure);
+      CustomSnackBar.showSnackBar(
+          context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_owner2, type: SnackBarType.failure);
       return;
     }
     if (state.haveMultiple && !isValidIsraeliID(state.guarantee1idController.text.trim())) {
-      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1, type: SnackBarType.failure);
+      CustomSnackBar.showSnackBar(
+          context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1, type: SnackBarType.failure);
       return;
     }
 
@@ -111,8 +111,7 @@ class _Owner1FormScreenWidgetState extends State<Owner1FormScreenWidget> {
     return BlocBuilder<Owner1FormBloc, Owner1FormState>(builder: (context, state) {
       return WillPopScope(
         onWillPop: () async {
-          SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-          return Future.value(!preferences.getUserLoggedIn() || preferences.getRegistrationIncomplete());
+          return Future.value(Navigator.canPop(context));
         },
         child: Scaffold(
           backgroundColor: AppColors.pageColor,
@@ -124,8 +123,7 @@ class _Owner1FormScreenWidgetState extends State<Owner1FormScreenWidget> {
               iconData: Icons.arrow_back_ios_new_rounded,
               trailingWidget: _buildAppBarIcon(),
               onTap: () async {
-                SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                if ((!preferences.getUserLoggedIn() || preferences.getRegistrationIncomplete()) && context.mounted) {
+                if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
               },
@@ -211,7 +209,11 @@ class _Owner1FormScreenWidgetState extends State<Owner1FormScreenWidget> {
           _buildSectionTitle(context, AppLocalizations.of(context)!.guarantor_details),
           16.height,
           _buildFieldLabel(context, AppLocalizations.of(context)!.full_name),
-          _buildTextField(context: context, controller: state.guarantee1NameController, keyboardType: TextInputType.text, validator: AppStrings.guaranteeNameString),
+          _buildTextField(
+              context: context,
+              controller: state.guarantee1NameController,
+              keyboardType: TextInputType.text,
+              validator: AppStrings.guaranteeNameString),
           14.height,
           _buildFieldLabel(context, AppLocalizations.of(context)!.israel_id),
           _buildTextField(
@@ -223,7 +225,11 @@ class _Owner1FormScreenWidgetState extends State<Owner1FormScreenWidget> {
           ),
           14.height,
           _buildFieldLabel(context, AppLocalizations.of(context)!.address_label),
-          _buildTextField(context: context, controller: state.guarantee1addressController, keyboardType: TextInputType.text, validator: AppStrings.addressValString),
+          _buildTextField(
+              context: context,
+              controller: state.guarantee1addressController,
+              keyboardType: TextInputType.text,
+              validator: AppStrings.addressValString),
           14.height,
           _buildFieldLabel(context, AppLocalizations.of(context)!.phone_label),
           _buildTextField(
@@ -283,7 +289,8 @@ class _Owner1FormScreenWidgetState extends State<Owner1FormScreenWidget> {
           Expanded(
             child: Text(
               label,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
             ),
           ),
         ],

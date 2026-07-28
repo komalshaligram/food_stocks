@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import '../bootstrap/doc_scan_bootstrap.dart';
 import '../core/constants/app_constants.dart';
 import '../core/services/direct_image_capture_service.dart';
+import '../core/services/invoice_api_client.dart';
 import '../core/services/scan_export_service.dart';
 import '../core/services/document_parser_service.dart';
 import '../core/services/sync_service.dart';
@@ -95,6 +96,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final Map<String, DateTime> _processingSince = {};
   ProviderSubscription<List<InvoiceDocument>>? _documentsSubscription;
   Timer? _processingTimeoutTimer;
+  Timer? _comaxRefreshTimer;
+
+  /// ערכי comaxStatus שמשמעם "נשלח וממשיך ברקע" (טרם סופי) — כאלה מרעננים.
+  static const Set<String> _comaxInFlightStatuses = {
+    'pending',
+    'processing',
+    'queued',
+    'receiving',
+  };
   static const Duration _processingTimeout = Duration(minutes: 20);
 
   _HomeSortMode _sortMode = _HomeSortMode.none;
@@ -128,6 +138,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _startWatchingProcessingJobs(ref.read(documentsProvider));
+      // מסמכים שנשלחו לקופה וממתינים (comaxStatus in-flight) — מרעננים את הסטטוס
+      // מהקרולר, כדי לתפוס מסמכים שנקלטו/נכשלו בזמן שהאפליקציה הייתה סגורה (או
+      // מסמכים ישנים שנתקעו על "processing" לפני שהתשאול האוטומטי נוסף).
+      _refreshInFlightComaxStatuses();
     });
 
     _documentsSubscription = ref.listenManual<List<InvoiceDocument>>(
@@ -142,6 +156,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       const Duration(minutes: 1),
       (_) => _markStuckProcessingAsError(),
     );
+    // רענון תקופתי של סטטוס הקליטה כל עוד יש מסמכים in-flight.
+    _comaxRefreshTimer = Timer.periodic(
+      const Duration(seconds: 20),
+      (_) => _refreshInFlightComaxStatuses(),
+    );
   }
 
   @override
@@ -149,6 +168,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _searchController.dispose();
     _documentsSubscription?.close();
     _processingTimeoutTimer?.cancel();
+    _comaxRefreshTimer?.cancel();
     for (final timer in _jobTimers.values) {
       timer.cancel();
     }
@@ -192,6 +212,54 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           DocScanNotifications.instance.intakeFailed(d);
         }
       }
+    }
+  }
+
+  /// מרענן את סטטוס הקליטה של מסמכים in-flight מהקרולר (`getDocumentsStatus`).
+  /// תופס מסמכים שנקלטו/נכשלו בזמן שהאפליקציה הייתה סגורה, ומסמכים ישנים שנתקעו
+  /// על "processing" לפני שהתשאול האוטומטי נוסף. מעבר ל-received/failed יורה
+  /// התראה דרך [_notifyComaxTransitions] — בין אם הרענון הזה או תשאול מסך הפרטים
+  /// תפס אותו ראשון (upsert כפול של אותו סטטוס לא יורה פעמיים).
+  Future<void> _refreshInFlightComaxStatuses() async {
+    if (!mounted) return;
+    final docs = ref.read(documentsProvider);
+    final inFlight = docs
+        .where((d) =>
+            (d.comaxDocumentId?.isNotEmpty ?? false) &&
+            d.comaxStatus != null &&
+            _comaxInFlightStatuses.contains(d.comaxStatus))
+        .toList();
+    if (inFlight.isEmpty) return;
+
+    final apiClient = InvoiceApiClient(app: DocScanBootstrap.firebaseApp);
+    final customerCode = ref.read(customerCodeProvider);
+    final notifier = ref.read(documentsProvider.notifier);
+    try {
+      final statuses = await apiClient.getDocumentsStatus(
+        inFlight.map((d) => d.comaxDocumentId!).toList(),
+        customerCode: customerCode,
+      );
+      if (!mounted) return;
+      final byId = {for (final s in statuses) s.documentId: s};
+      for (final d in inFlight) {
+        final s = byId[d.comaxDocumentId];
+        if (s == null || s.comaxStatus.isEmpty || s.comaxStatus == 'unknown') {
+          continue;
+        }
+        if (s.comaxStatus == d.comaxStatus) continue;
+        // לא מדכאים התראה: מעבר ל-received/failed יורה "נקלט/נכשל בקופה" גם אם
+        // הרענון של מסך הבית הוא זה שתפס אותו (ולא תשאול מסך הפרטים).
+        notifier.upsert(d.copyWith(
+          comaxStatus: s.comaxStatus,
+          comaxDocNumber: s.comaxDocNumber ?? d.comaxDocNumber,
+          comaxReceiveError: s.receiveError,
+          comaxReceiveErrorMessage: s.receiveErrorMessage,
+          status:
+              s.isReceived ? DocumentStatus.sentToCashRegister : d.status,
+        ));
+      }
+    } catch (_) {
+      // כשל רשת — הרענון הבא (טיימר/פתיחת מסך) ינסה שוב.
     }
   }
 

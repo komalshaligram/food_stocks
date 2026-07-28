@@ -19,6 +19,7 @@ class EditableField extends StatelessWidget {
     this.keyboardType,
     this.onTap,
     this.onChanged,
+    this.maxLines = 2,
   });
 
   final String label;
@@ -29,6 +30,9 @@ class EditableField extends StatelessWidget {
   final bool isEditable;
   final TextInputType? keyboardType;
   final VoidCallback? onTap;
+
+  /// מספר שורות מרבי לערך. 1 = תמיד שורה אחת עם חיתוך "..." (למשל סוג מסמך).
+  final int maxLines;
   /// עדכון ערך בלחיצה – מציג דיאלוג עריכה. אם מוגדר, לחיצה על השדה תפתח עריכה.
   final ValueChanged<String>? onChanged;
 
@@ -96,7 +100,7 @@ class EditableField extends StatelessWidget {
                             : FontWeight.w500,
                         color: valueColor ?? AppColors.textPrimary,
                       ),
-                      maxLines: 2,
+                      maxLines: maxLines,
                       overflow: TextOverflow.ellipsis,
                     ),
                 ],

@@ -81,7 +81,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                 child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
             title: Align(
               alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.client_info, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+              child: Text(AppLocalizations.of(context)!.client_info,
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
             ),
             backgroundColor: AppColors.whiteColor,
             titleSpacing: 0,
@@ -205,7 +206,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                               ),
                               7.height,
                               CustomContainerWidget(
-                                name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_1_address}${1}' : AppLocalizations.of(context)!.guarantee_1_address,
+                                name: state.language == AppStrings.hebrewString
+                                    ? '${AppLocalizations.of(context)!.guarantee_1_address}${1}'
+                                    : AppLocalizations.of(context)!.guarantee_1_address,
                                 star: '',
                               ),
                               CustomFormField(
@@ -280,7 +283,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                             validator: '',
                           ),
                           7.height,
-                          CustomContainerWidget(name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}' : AppLocalizations.of(context)!.guarantee_2_address, star: ''),
+                          CustomContainerWidget(
+                              name: state.language == AppStrings.hebrewString
+                                  ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}'
+                                  : AppLocalizations.of(context)!.guarantee_2_address,
+                              star: ''),
                           CustomFormField(
                             context: context,
                             controller: state.guarantee2addressController,
@@ -311,7 +318,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                     Container(
                                         height: 120,
                                         width: 120,
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_8), border: Border.all(color: AppColors.borderColor)),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(AppConstants.radius_8),
+                                            border: Border.all(color: AppColors.borderColor)),
                                         child: state.owner1SignatureLocal.isNotEmpty
                                             ? Image.file(File(state.owner1SignatureLocal))
                                             : Container(
@@ -327,12 +336,14 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                     imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.owner1Signature}",
                                                     fit: BoxFit.scaleDown,
                                                     alignment: Alignment.center,
-                                                    placeholder: (context, url) => Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
+                                                    placeholder: (context, url) =>
+                                                        Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
                                                     errorWidget: (context, url, error) {
                                                       return Center(
                                                         child: Text(
                                                           AppStrings.failedToLoadString,
-                                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                                          style:
+                                                              AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
                                                         ),
                                                       );
                                                     }),
@@ -342,7 +353,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                       right: -10,
                                       child: GestureDetector(
                                         onTap: () {
-                                          bloc.add(ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.owner1SignatureString));
+                                          bloc.add(
+                                              ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.owner1SignatureString));
                                         },
                                         child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24),
                                       ),
@@ -374,7 +386,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                     Container(
                                         height: 120,
                                         width: 120,
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_8), border: Border.all(color: AppColors.borderColor)),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(AppConstants.radius_8),
+                                            border: Border.all(color: AppColors.borderColor)),
                                         child: state.owner2SignatureLocal.isNotEmpty
                                             ? Image.file(File(state.owner2SignatureLocal))
                                             : Container(
@@ -390,12 +404,14 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                     imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.owner2Signature}",
                                                     fit: BoxFit.scaleDown,
                                                     alignment: Alignment.center,
-                                                    placeholder: (context, url) => Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
+                                                    placeholder: (context, url) =>
+                                                        Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
                                                     errorWidget: (context, url, error) {
                                                       return Center(
                                                         child: Text(
                                                           AppStrings.failedToLoadString,
-                                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
+                                                          style:
+                                                              AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
                                                         ),
                                                       );
                                                     }),
@@ -405,7 +421,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                       right: -10,
                                       child: GestureDetector(
                                         onTap: () {
-                                          bloc.add(ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.owner2SignatureString));
+                                          bloc.add(
+                                              ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.owner2SignatureString));
                                         },
                                         child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24),
                                       ),
@@ -437,7 +454,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                     Container(
                                       height: 120,
                                       width: 120,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_8), border: Border.all(color: AppColors.borderColor)),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(AppConstants.radius_8),
+                                          border: Border.all(color: AppColors.borderColor)),
                                       child: state.guarantee1SignatureLocal.isNotEmpty
                                           ? Image.file(File(state.guarantee1SignatureLocal))
                                           : Container(
@@ -453,7 +472,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                   imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.guarantee1Signature}",
                                                   fit: BoxFit.scaleDown,
                                                   alignment: Alignment.center,
-                                                  placeholder: (context, url) => Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
+                                                  placeholder: (context, url) =>
+                                                      Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
                                                   errorWidget: (context, url, error) {
                                                     return Center(
                                                       child: Text(
@@ -469,7 +489,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                       right: -10,
                                       child: GestureDetector(
                                         onTap: () {
-                                          bloc.add(ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.guarantee1SignatureString));
+                                          bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                              context: context, fieldName: AppStrings.guarantee1SignatureString));
                                         },
                                         child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24),
                                       ),
@@ -501,7 +522,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                     Container(
                                       height: 120,
                                       width: 120,
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_8), border: Border.all(color: AppColors.borderColor)),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(AppConstants.radius_8),
+                                          border: Border.all(color: AppColors.borderColor)),
                                       child: state.guarantee2SignatureLocal.isNotEmpty
                                           ? Image.file(File(state.guarantee2SignatureLocal))
                                           : Container(
@@ -517,7 +540,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                   imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.guarantee2Signature}",
                                                   fit: BoxFit.scaleDown,
                                                   alignment: Alignment.center,
-                                                  placeholder: (context, url) => Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
+                                                  placeholder: (context, url) =>
+                                                      Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
                                                   errorWidget: (context, url, error) {
                                                     return Center(
                                                       child: Text(
@@ -533,7 +557,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                       right: -10,
                                       child: GestureDetector(
                                         onTap: () {
-                                          bloc.add(ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.guarantee2SignatureString));
+                                          bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                              context: context, fieldName: AppStrings.guarantee2SignatureString));
                                         },
                                         child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24),
                                       ),
@@ -568,7 +593,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                   bloc.add(ClientFormDetailsEvent.updateClientDataEvent(context: context));
                                 }
                               } else {
-                                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
+                                CustomSnackBar.showSnackBar(
+                                    context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
                               }
                             },
                             fontColors: AppColors.whiteColor,
@@ -589,7 +615,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
       if (isValidIsraeliID(state.guarantee1idController.text.toString().trim())) {
         return true;
       } else {
-        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1, type: SnackBarType.failure);
+        CustomSnackBar.showSnackBar(
+            context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id_guarantee1, type: SnackBarType.failure);
         return false;
       }
     } else {

@@ -40,3 +40,36 @@ String? describeDiagnosis(InvoiceDiagnosis? d) {
 
   return parts.isEmpty ? null : parts.join(' ');
 }
+
+/// סיבת כישלון הקליטה **להצגה למשתמש**, לפי סדר עדיפויות ברור.
+///
+/// 🔴 הכלל המרכזי: **`receiveError` הוא קוד מכונה ואסור להציג אותו כטקסט**
+/// (`total_mismatch`, `session_in_use`, `not_received`, `bad_credentials`,
+/// `transient`, `invoice_already_received`, או טקסט חופשי לשגיאה טכנית).
+/// השדה להצגה הוא `receiveErrorMessage` — הודעה בעברית שהקרולר מנסח **במקום
+/// שבו הכישלון מובן**. תיעוד: `foodstockComaxCrawler/docs/API.md` §5ג.
+///
+/// סדר העדיפויות:
+/// 1. [receiveErrorMessage] — ההודעה המוכנה מהשרת.
+/// 2. [describeDiagnosis] — פירוט `total_mismatch` (אילו פריטים חסרים, מה ההפרש).
+///    מצורף להודעה כשיש שניהם, כי הוא מוסיף מידע שאין בה.
+/// 3. null — ואז המסך נופל להודעה הגנרית.
+///
+/// [receiveError] נשאר בחתימה **בכוונה** ואינו מוצג: כך ברור בקריאה שהוא נשקל
+/// ונדחה, ולא נשכח.
+String? describeIntakeFailure({
+  String? receiveErrorMessage,
+  String? receiveError,
+  InvoiceDiagnosis? diagnosis,
+}) {
+  final message = receiveErrorMessage?.trim();
+  final detail = describeDiagnosis(diagnosis)?.trim();
+
+  if (message != null && message.isNotEmpty) {
+    if (detail != null && detail.isNotEmpty && !message.contains(detail)) {
+      return '$message $detail';
+    }
+    return message;
+  }
+  return (detail != null && detail.isNotEmpty) ? detail : null;
+}

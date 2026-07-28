@@ -36,9 +36,9 @@ Widget totalAmountCard(
   final double refundAmount1 = adjustedAmount.abs();
   final bool isRefundGreater = refundAmount1 > totalAmount;
   final double finalAmount =
-  isRefundGreater ? 0.0 : totalAmount - refundAmount1;
+      isRefundGreater ? 0.0 : totalAmount - refundAmount1;
   final double usedDisplayRefund =
-  isRefundGreater ? totalAmount : refundAmount1;
+      isRefundGreater ? totalAmount : refundAmount1;
   remainingRefund = isRefundGreater ? rawRefundAmount - totalAmount : 0.0;
   final displayAmount = usedDisplayRefund == 0.0
       ? '${usedDisplayRefund.toStringAsFixed(2)}₪'
@@ -59,32 +59,32 @@ Widget totalAmountCard(
       decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius:
-          const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+              const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
       child: Column(children: [
         state.tempList[index].bottleQuantities! > 0
             ? basketRow(
-            state.language == AppStrings.englishString
-                ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}'
-                '${state.tempList[index].bottleQuantities.toString()}'
-                : '${AppLocalizations.of(context)!.bottle_deposit}${state.tempList[index].bottleQuantities.toString()}${'X'}',
-            state.isIncludedVat
-                ? (formatNumber(
-                value: bottleDepositCalculationWithVat(
-                  deposit: state.tempList[index].bottleTax!,
-                  vatPercentage: state.tempList[index].vatPercentage!,
-                  qty: state.tempList[index].bottleQuantities
-                      ?.toDouble() ??
-                      0,
-                ).toStringAsFixed(2),
-                local: AppStrings.hebrewLocal))
-                : (formatNumber(
-                value: bottleDepositCalculation(
-                  deposit: state.tempList[index].bottleTax!,
-                  qty: state.tempList[index].bottleQuantities
-                      ?.toDouble() ??
-                      0,
-                ).toStringAsFixed(2),
-                local: AppStrings.hebrewLocal)))
+                state.language == AppStrings.englishString
+                    ? '${AppLocalizations.of(context)!.bottle_deposit}${'X'}'
+                        '${state.tempList[index].bottleQuantities.toString()}'
+                    : '${AppLocalizations.of(context)!.bottle_deposit}${state.tempList[index].bottleQuantities.toString()}${'X'}',
+                state.isIncludedVat
+                    ? (formatNumber(
+                        value: bottleDepositCalculationWithVat(
+                          deposit: state.tempList[index].bottleTax!,
+                          vatPercentage: state.tempList[index].vatPercentage!,
+                          qty: state.tempList[index].bottleQuantities
+                                  ?.toDouble() ??
+                              0,
+                        ).toStringAsFixed(2),
+                        local: AppStrings.hebrewLocal))
+                    : (formatNumber(
+                        value: bottleDepositCalculation(
+                          deposit: state.tempList[index].bottleTax!,
+                          qty: state.tempList[index].bottleQuantities
+                                  ?.toDouble() ??
+                              0,
+                        ).toStringAsFixed(2),
+                        local: AppStrings.hebrewLocal)))
             : 0.height,
         state.tempList[index].bottleQuantities! > 0
             ? const DividerWidget(height: 8.0)
@@ -92,57 +92,57 @@ Widget totalAmountCard(
         state.isIncludedVat
             ? const SizedBox()
             : basketRow(
-          AppLocalizations.of(context)!.total_amount_subject_to_vat,
-          formatNumber(
-              value: double.parse(state
-                  .tempList[index].totalAmountSubjectToVat!
-                  .toString())
-                  .toStringAsFixed(2),
-              local: AppStrings.hebrewLocal),
-        ),
+                AppLocalizations.of(context)!.total_amount_subject_to_vat,
+                formatNumber(
+                    value: double.parse(state
+                            .tempList[index].totalAmountSubjectToVat!
+                            .toString())
+                        .toStringAsFixed(2),
+                    local: AppStrings.hebrewLocal),
+              ),
         state.isIncludedVat
             ? const SizedBox()
             : const DividerWidget(height: 8.0),
         state.isIncludedVat
             ? const SizedBox()
             : basketRow(
-          AppLocalizations.of(context)!.total_amount_not_subject_to_vat,
-          formatNumber(
-              value: double.parse(state
-                  .tempList[index].totalAmountNotSubjectToVat!
-                  .toString())
-                  .toStringAsFixed(2),
-              local: AppStrings.hebrewLocal),
-        ),
+                AppLocalizations.of(context)!.total_amount_not_subject_to_vat,
+                formatNumber(
+                    value: double.parse(state
+                            .tempList[index].totalAmountNotSubjectToVat!
+                            .toString())
+                        .toStringAsFixed(2),
+                    local: AppStrings.hebrewLocal),
+              ),
         state.isIncludedVat
             ? const SizedBox()
             : const DividerWidget(height: 8.0),
         state.isIncludedVat
             ? const SizedBox()
             : basketRow(
-          AppLocalizations.of(context)!.vat,
-          double.parse(state.tempList[index].vatAmount.toString())
-              .toStringAsFixed(2),
-        ),
+                AppLocalizations.of(context)!.vat,
+                double.parse(state.tempList[index].vatAmount.toString())
+                    .toStringAsFixed(2),
+              ),
         state.isIncludedVat
             ? const SizedBox()
             : const DividerWidget(height: 8.0),
         state.isIncludedVat
             ? const SizedBox()
             : basketRow(
-            AppLocalizations.of(context)!.total_refunds, displayAmount),
+                AppLocalizations.of(context)!.total_refunds, displayAmount),
         state.isIncludedVat
             ? const SizedBox()
             : const DividerWidget(height: 8.0),
         state.isIncludedVat
             ? basketRow(AppLocalizations.of(context)!.total_price_with_vat,
-            finalAmount.toStringAsFixed(2),
-            isTitle: true)
+                finalAmount.toStringAsFixed(2),
+                isTitle: true)
             : basketRow(
-          AppLocalizations.of(context)!.total,
-          finalAmount.toStringAsFixed(2),
-          isTitle: true,
-        ),
+                AppLocalizations.of(context)!.total,
+                finalAmount.toStringAsFixed(2),
+                isTitle: true,
+              ),
         state.isIncludedVat
             ? const SizedBox()
             : const DividerWidget(height: 8.0),
@@ -152,7 +152,7 @@ Widget totalAmountCard(
                 isHebrew
                     ? AppLocalizations.of(context)!.refund_amount_1
                     : '${AppLocalizations.of(context)!.refund_amount_1} '
-                    '${remainingRefund.toStringAsFixed(2)}${'₪'}',
+                        '${remainingRefund.toStringAsFixed(2)}${'₪'}',
                 style: AppStyles.rkBoldTextStyle(
                     size: AppConstants.font_15,
                     color: AppColors.notificationColor)),

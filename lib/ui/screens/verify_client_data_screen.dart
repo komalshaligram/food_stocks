@@ -16,8 +16,6 @@ import '../../ui/widget/common_app_bar.dart';
 import '../../ui/widget/custom_form_field_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 
-/// Client data verification screen shown after first-order-from-supplier dialog.
-/// See docs/en/FIRST-ORDER-AND-CLIENT-VERIFICATION.md
 class VerifyClientDataRoute {
   static Widget get route => const VerifyClientDataScreen();
 }
@@ -40,19 +38,36 @@ class VerifyClientDataScreen extends StatelessWidget {
   }
 }
 
-class VerifyClientDataScreenWidget extends StatelessWidget {
+class VerifyClientDataScreenWidget extends StatefulWidget {
   const VerifyClientDataScreenWidget({super.key});
 
   @override
+  State<VerifyClientDataScreenWidget> createState() => _VerifyClientDataScreenWidgetState();
+}
+
+class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWidget> {
+  final _formKey = GlobalKey<FormState>();
+  final _listNotifier = ValueNotifier<List<String>>([]);
+  final _businessNameKey = GlobalKey<FormFieldState<String>>();
+  final _contactNameKey = GlobalKey<FormFieldState<String>>();
+  final _streetNameKey = GlobalKey<FormFieldState<String>>();
+  final _streetNumberKey = GlobalKey<FormFieldState<String>>();
+  final _phoneKey = GlobalKey<FormFieldState<String>>();
+
+  @override
+  void dispose() {
+    _listNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final listNotifier = ValueNotifier<List<String>>([]);
     final bloc = context.read<VerifyClientDataBloc>();
     final l10n = AppLocalizations.of(context)!;
 
     return BlocBuilder<VerifyClientDataBloc, VerifyClientDataState>(builder: (context, state) {
-      if (listNotifier.value.isEmpty && state.cityList.isNotEmpty) {
-        listNotifier.value = [...state.cityList];
+      if (_listNotifier.value.isEmpty && state.cityList.isNotEmpty) {
+        _listNotifier.value = [...state.cityList];
       }
 
       return Scaffold(
@@ -75,7 +90,7 @@ class VerifyClientDataScreenWidget extends StatelessWidget {
                       physics: const BouncingScrollPhysics(),
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                       child: Form(
-                        key: formKey,
+                        key: _formKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -91,6 +106,8 @@ class VerifyClientDataScreenWidget extends StatelessWidget {
                                   required: true,
                                   child: CustomFormField(
                                     context: context,
+                                    fieldKey: _businessNameKey,
+                                    showErrorBorder: true,
                                     controller: state.businessNameController,
                                     keyboardType: TextInputType.text,
                                     hint: l10n.business_name,
@@ -107,12 +124,14 @@ class VerifyClientDataScreenWidget extends StatelessWidget {
                                   required: true,
                                   child: CustomFormField(
                                     context: context,
+                                    fieldKey: _contactNameKey,
+                                    showErrorBorder: true,
                                     controller: state.contactNameController,
                                     keyboardType: TextInputType.name,
                                     hint: l10n.contact_name,
                                     fillColor: AppColors.iconBGColor,
                                     textInputAction: TextInputAction.next,
-                                    validator: AppStrings.contactNameValString,
+                                    validator: AppStrings.contactPersonNameValString,
                                     isBorderVisible: false,
                                     border: 12,
                                   ),
@@ -131,7 +150,7 @@ class VerifyClientDataScreenWidget extends StatelessWidget {
                                   child: _SelectField(
                                     value: state.selectCity,
                                     hint: l10n.city,
-                                    onTap: () => _showCityPicker(context, bloc, state, listNotifier),
+                                    onTap: () => _showCityPicker(context, bloc, state, _listNotifier),
                                   ),
                                 ),
                                 14.height,
@@ -145,6 +164,8 @@ class VerifyClientDataScreenWidget extends StatelessWidget {
                                         required: true,
                                         child: CustomFormField(
                                           context: context,
+                                          fieldKey: _streetNameKey,
+                                          showErrorBorder: true,
                                           controller: state.streetNameController,
                                           inputFormat: [LengthLimitingTextInputFormatter(50)],
                                           keyboardType: TextInputType.streetAddress,
@@ -165,6 +186,8 @@ class VerifyClientDataScreenWidget extends StatelessWidget {
                                         required: true,
                                         child: CustomFormField(
                                           context: context,
+                                          fieldKey: _streetNumberKey,
+                                          showErrorBorder: true,
                                           controller: state.streetNumberController,
                                           inputFormat: [LengthLimitingTextInputFormatter(50)],
                                           keyboardType: TextInputType.text,
@@ -185,6 +208,8 @@ class VerifyClientDataScreenWidget extends StatelessWidget {
                                   required: true,
                                   child: CustomFormField(
                                     context: context,
+                                    fieldKey: _phoneKey,
+                                    showErrorBorder: true,
                                     controller: state.phoneController,
                                     inputFormat: [FilteringTextInputFormatter.digitsOnly],
                                     keyboardType: TextInputType.phone,
@@ -254,18 +279,148 @@ class VerifyClientDataScreenWidget extends StatelessWidget {
                   _BottomContinueBar(
                     label: l10n.continues,
                     isLoading: state.isLoading,
-                    onPressed: state.isLoading
-                        ? null
-                        : () {
-                            if (formKey.currentState?.validate() ?? false) {
-                              bloc.add(VerifyClientDataEvent.submitEvent(context: context));
-                            }
-                          },
+                    onPressed: state.isLoading ? null : () => _onContinuePressed(context, bloc, state, l10n),
                   ),
                 ],
               ),
       );
     });
+  }
+
+  void _onContinuePressed(
+    BuildContext context,
+    VerifyClientDataBloc bloc,
+    VerifyClientDataState state,
+    AppLocalizations l10n,
+  ) {
+    final isFormValid = _formKey.currentState?.validate() ?? false;
+    if (isFormValid) {
+      bloc.add(VerifyClientDataEvent.submitEvent(context: context));
+      return;
+    }
+    _showValidationErrorsDialog(context, state.language, l10n);
+  }
+
+  GlobalKey<FormFieldState<String>>? _firstErrorFieldKey() {
+    for (final key in [
+      _businessNameKey,
+      _contactNameKey,
+      _streetNameKey,
+      _streetNumberKey,
+      _phoneKey,
+    ]) {
+      if (key.currentState?.hasError ?? false) return key;
+    }
+    return null;
+  }
+
+  Future<void> _scrollToFirstError() async {
+    final targetContext = _firstErrorFieldKey()?.currentContext;
+    if (targetContext == null || !targetContext.mounted) return;
+    await Scrollable.ensureVisible(
+      targetContext,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      alignment: 0.15,
+    );
+  }
+
+  void _showValidationErrorsDialog(BuildContext context, String language, AppLocalizations l10n) {
+    final isEnglish = language == AppStrings.englishString;
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogContext) => Directionality(
+        textDirection: isEnglish ? TextDirection.ltr : TextDirection.rtl,
+        child: Dialog(
+          surfaceTintColor: AppColors.whiteColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(AppConstants.padding_20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 84,
+                      width: 84,
+                      decoration: BoxDecoration(
+                        color: AppColors.orangeColor.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.edit_note_rounded, size: 46, color: AppColors.orangeColor),
+                    ),
+                    20.height,
+                    Text(
+                      l10n.validation_errors_title,
+                      textAlign: TextAlign.center,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.mediumFont,
+                        color: AppColors.blackColor,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    12.height,
+                    Text(
+                      l10n.validation_errors_message,
+                      textAlign: TextAlign.center,
+                      style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_15,
+                        color: AppColors.greyColor,
+                        fontWeight: FontWeight.w500,
+                      ).copyWith(height: 1.5),
+                    ),
+                    24.height,
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(dialogContext);
+                        _scrollToFirstError();
+                      },
+                      borderRadius: BorderRadius.circular(AppConstants.radius_40),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_11),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          gradient: AppColors.appMainGradientColor,
+                          borderRadius: BorderRadius.circular(AppConstants.radius_40),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.arrow_downward_rounded, color: AppColors.whiteColor, size: 20),
+                            8.width,
+                            Text(
+                              l10n.show_errors,
+                              style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.mediumFont,
+                                color: AppColors.whiteColor,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: AppConstants.padding_8,
+                left: isEnglish ? null : AppConstants.padding_8,
+                right: isEnglish ? AppConstants.padding_8 : null,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(dialogContext),
+                  child: Icon(Icons.close, size: 26, color: AppColors.blackColor),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _showCityPicker(

@@ -25,7 +25,8 @@ class ManageCreditCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ManageCreditCardBloc()..add(ManageCreditCardEvent.getCreditCardInfoEvent(context: context)),
+      create: (context) => ManageCreditCardBloc()
+        ..add(ManageCreditCardEvent.getCreditCardInfoEvent(context: context)),
       child: const ManageCreditCardWidget(),
     );
   }
@@ -42,7 +43,8 @@ class ManageCreditCardWidget extends StatelessWidget {
     ManageCreditCardBloc bloc = context.read<ManageCreditCardBloc>();
     final l10n = AppLocalizations.of(context)!;
 
-    return BlocBuilder<ManageCreditCardBloc, ManageCreditCardState>(builder: (context, state) {
+    return BlocBuilder<ManageCreditCardBloc, ManageCreditCardState>(
+        builder: (context, state) {
       return Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColors.pageColor,
@@ -57,11 +59,14 @@ class ManageCreditCardWidget extends StatelessWidget {
           ),
         ),
         body: FocusDetector(
-          onFocusGained: () => bloc.add(ManageCreditCardEvent.getCreditCardInfoEvent(context: context)),
+          onFocusGained: () => bloc.add(
+              ManageCreditCardEvent.getCreditCardInfoEvent(context: context)),
           child: state.isLoading
               ? const ManageCreditCardShimmer()
               : SafeArea(
-                  child: state.isCreditCardExist ? _buildExistingCardView(context, bloc, state, l10n) : _buildEmptyCardView(context, bloc, l10n),
+                  child: state.isCreditCardExist
+                      ? _buildExistingCardView(context, bloc, state, l10n)
+                      : _buildEmptyCardView(context, bloc, l10n),
                 ),
         ),
       );
@@ -76,13 +81,16 @@ class ManageCreditCardWidget extends StatelessWidget {
         color: AppColors.mainColor.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Icon(Icons.credit_card_outlined, size: 21, color: AppColors.mainColor),
+      child: Icon(Icons.credit_card_outlined,
+          size: 21, color: AppColors.mainColor),
     );
   }
 
-  Widget _buildExistingCardView(BuildContext context, ManageCreditCardBloc bloc, ManageCreditCardState state, AppLocalizations l10n) {
+  Widget _buildExistingCardView(BuildContext context, ManageCreditCardBloc bloc,
+      ManageCreditCardState state, AppLocalizations l10n) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 24),
+      padding: const EdgeInsets.fromLTRB(
+          _horizontalPadding, 8, _horizontalPadding, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -93,10 +101,15 @@ class ManageCreditCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildFieldLabel(l10n.credit_card_number),
-                _buildReadOnlyField(context, state.creditCardNumberController, AppStrings.creditCardNumberString, TextInputAction.next),
+                _buildReadOnlyField(context, state.creditCardNumberController,
+                    AppStrings.creditCardNumberString, TextInputAction.next),
                 14.height,
                 _buildFieldLabel(l10n.validity),
-                _buildReadOnlyField(context, state.validityController, formatExpiryDate(state.validityController.text.toString()), TextInputAction.done),
+                _buildReadOnlyField(
+                    context,
+                    state.validityController,
+                    formatExpiryDate(state.validityController.text.toString()),
+                    TextInputAction.done),
               ],
             ),
           ),
@@ -106,7 +119,8 @@ class ManageCreditCardWidget extends StatelessWidget {
             bGColor: AppColors.mainColor,
             isLoading: state.isLoading,
             radius: 14,
-            onPressed: () => bloc.add(ManageCreditCardEvent.addCreditCardEvent(context: context)),
+            onPressed: () => bloc.add(
+                ManageCreditCardEvent.addCreditCardEvent(context: context)),
             fontColors: AppColors.whiteColor,
           ),
           12.height,
@@ -116,7 +130,8 @@ class ManageCreditCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyCardView(BuildContext context, ManageCreditCardBloc bloc, AppLocalizations l10n) {
+  Widget _buildEmptyCardView(
+      BuildContext context, ManageCreditCardBloc bloc, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.all(_horizontalPadding),
       child: Column(
@@ -129,20 +144,24 @@ class ManageCreditCardWidget extends StatelessWidget {
               color: AppColors.mainColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(18),
             ),
-            child: Icon(Icons.credit_card_outlined, size: 32, color: AppColors.mainColor),
+            child: Icon(Icons.credit_card_outlined,
+                size: 32, color: AppColors.mainColor),
           ),
           20.height,
           Text(
             l10n.credit_card_not_found,
             textAlign: TextAlign.center,
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.blackColor.withValues(alpha: 0.55)),
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_15,
+                color: AppColors.blackColor.withValues(alpha: 0.55)),
           ),
           28.height,
           CustomButtonWidget(
             buttonText: l10n.add_credit_card,
             bGColor: AppColors.mainColor,
             radius: 14,
-            onPressed: () => bloc.add(ManageCreditCardEvent.addCreditCardEvent(context: context)),
+            onPressed: () => bloc.add(
+                ManageCreditCardEvent.addCreditCardEvent(context: context)),
             fontColors: AppColors.whiteColor,
           ),
         ],
@@ -169,17 +188,23 @@ class ManageCreditCardWidget extends StatelessWidget {
         children: [
           Align(
             alignment: AlignmentDirectional.centerEnd,
-            child: Image.asset(AppImagePath.chipIcon, height: 44, width: 44, color: AppColors.whiteColor.withValues(alpha: 0.9)),
+            child: Image.asset(AppImagePath.chipIcon,
+                height: 44,
+                width: 44,
+                color: AppColors.whiteColor.withValues(alpha: 0.9)),
           ),
           16.height,
           Text(
             state.creditCardNumberController.text,
-            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_22, color: AppColors.whiteColor),
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.font_22, color: AppColors.whiteColor),
           ),
           12.height,
           Text(
             state.validityController.text,
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.whiteColor.withValues(alpha: 0.85)),
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_15,
+                color: AppColors.whiteColor.withValues(alpha: 0.85)),
           ),
         ],
       ),
@@ -218,7 +243,11 @@ class ManageCreditCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildReadOnlyField(BuildContext context, TextEditingController controller, String validator, TextInputAction action) {
+  Widget _buildReadOnlyField(
+      BuildContext context,
+      TextEditingController controller,
+      String validator,
+      TextInputAction action) {
     return CustomFormField(
       context: context,
       controller: controller,
@@ -233,11 +262,15 @@ class ManageCreditCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDeleteButton(BuildContext context, ManageCreditCardBloc bloc, ManageCreditCardState state, AppLocalizations l10n) {
+  Widget _buildDeleteButton(BuildContext context, ManageCreditCardBloc bloc,
+      ManageCreditCardState state, AppLocalizations l10n) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: state.isDeleteLoading ? null : () => bloc.add(ManageCreditCardEvent.deleteCreditCardEvent(context: context)),
+        onTap: state.isDeleteLoading
+            ? null
+            : () => bloc.add(
+                ManageCreditCardEvent.deleteCreditCardEvent(context: context)),
         borderRadius: BorderRadius.circular(14),
         child: Container(
           height: AppConstants.buttonHeight,
@@ -245,13 +278,16 @@ class ManageCreditCardWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.redColor.withValues(alpha: 0.3)),
+            border:
+                Border.all(color: AppColors.redColor.withValues(alpha: 0.3)),
           ),
           child: state.isDeleteLoading
               ? SizedBox(
                   height: 22,
                   width: 22,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.redColor.withValues(alpha: 0.75)),
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.redColor.withValues(alpha: 0.75)),
                 )
               : Text(
                   l10n.delete_credit_card,

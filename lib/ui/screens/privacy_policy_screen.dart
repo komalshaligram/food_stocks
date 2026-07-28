@@ -24,13 +24,15 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
       create: (context) => PrivacyPolicyBloc()
         ..add(PrivacyPolicyEvent.getPdfDataEvent(
           context: context,
           pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
+          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ??
+              const TermsConditionReqModel(),
         )),
       child: const PrivacyPolicyWidget(),
     );
@@ -43,7 +45,8 @@ class PrivacyPolicyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PrivacyPolicyBloc bloc = context.read<PrivacyPolicyBloc>();
-    return BlocBuilder<PrivacyPolicyBloc, PrivacyPolicyState>(builder: (context, state) {
+    return BlocBuilder<PrivacyPolicyBloc, PrivacyPolicyState>(
+        builder: (context, state) {
       return Scaffold(
         backgroundColor: AppColors.pageColor,
         appBar: PreferredSize(
@@ -64,7 +67,8 @@ class PrivacyPolicyWidget extends StatelessWidget {
             children: [
               _buildAgreementCard(context, state),
               22.height,
-              _buildSectionTitle(context, AppLocalizations.of(context)!.signatures_section),
+              _buildSectionTitle(
+                  context, AppLocalizations.of(context)!.signatures_section),
               14.height,
               _buildSignaturesColumn(context, bloc, state),
             ],
@@ -80,7 +84,8 @@ class PrivacyPolicyWidget extends StatelessWidget {
             bGColor: AppColors.mainColor,
             enable: state.isNextEnable,
             isLoading: state.isShimmering,
-            onPressed: () => bloc.add(PrivacyPolicyEvent.navigationEvent(context: context)),
+            onPressed: () =>
+                bloc.add(PrivacyPolicyEvent.navigationEvent(context: context)),
             fontColors: AppColors.whiteColor,
           ),
         ),
@@ -95,7 +100,12 @@ class PrivacyPolicyWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withValues(alpha: 0.06),
+              blurRadius: 16,
+              offset: const Offset(0, 2))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,8 +115,11 @@ class PrivacyPolicyWidget extends StatelessWidget {
               Container(
                 width: 46,
                 height: 46,
-                decoration: BoxDecoration(color: AppColors.saleRedColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
-                child: Icon(Icons.picture_as_pdf_rounded, color: AppColors.saleRedColor, size: 24),
+                decoration: BoxDecoration(
+                    color: AppColors.saleRedColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Icon(Icons.picture_as_pdf_rounded,
+                    color: AppColors.saleRedColor, size: 24),
               ),
               12.width,
               Expanded(
@@ -115,10 +128,16 @@ class PrivacyPolicyWidget extends StatelessWidget {
                   children: [
                     Text(
                       AppLocalizations.of(context)!.privacy_policy,
-                      style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.blackColor, fontWeight: FontWeight.w700),
+                      style: AppStyles.rkBoldTextStyle(
+                          size: AppConstants.font_15,
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.w700),
                     ),
                     4.height,
-                    Text('PDF', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.greyColor)),
+                    Text('PDF',
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.font_13,
+                            color: AppColors.greyColor)),
                   ],
                 ),
               ),
@@ -136,11 +155,15 @@ class PrivacyPolicyWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.blueColor.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.blueColor.withValues(alpha: 0.25)),
+                  border: Border.all(
+                      color: AppColors.blueColor.withValues(alpha: 0.25)),
                 ),
                 child: Text(
                   AppLocalizations.of(context)!.read_full_agreement,
-                  style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14, color: AppColors.blueColor, fontWeight: FontWeight.w600),
+                  style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_14,
+                      color: AppColors.blueColor,
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -150,7 +173,8 @@ class PrivacyPolicyWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSignaturesColumn(BuildContext context, PrivacyPolicyBloc bloc, PrivacyPolicyState state) {
+  Widget _buildSignaturesColumn(
+      BuildContext context, PrivacyPolicyBloc bloc, PrivacyPolicyState state) {
     final List<Widget> cards = [
       _buildSignatureCard(
         context: context,
@@ -205,60 +229,83 @@ class PrivacyPolicyWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(
+              color: AppColors.shadowColor.withValues(alpha: 0.06),
+              blurRadius: 16,
+              offset: const Offset(0, 2))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Text(title, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.blackColor, fontWeight: FontWeight.w700)),
+              Text(title,
+                  style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_15,
+                      color: AppColors.blackColor,
+                      fontWeight: FontWeight.w700)),
               const Spacer(),
-              Text(tag, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.greyColor)),
+              Text(tag,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_13, color: AppColors.greyColor)),
             ],
           ),
           12.height,
           GestureDetector(
-            onTap: () => bloc.add(PrivacyPolicyEvent.signatureEvent(context: context, fieldName: fieldName, fieldNameForSign: title)),
+            onTap: () => bloc.add(PrivacyPolicyEvent.signatureEvent(
+                context: context,
+                fieldName: fieldName,
+                fieldNameForSign: title)),
             child: signed
                 ? Container(
-              height: 120,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.mainColor, width: 1.4),
-              ),
-              child: Stack(
-                children: [
-                  Center(child: Image.file(File(signaturePath), fit: BoxFit.contain)),
-                  Positioned(top: 0, right: 0, child: Icon(Icons.check_circle_rounded, color: AppColors.mainColor, size: 20)),
-                ],
-              ),
-            )
-                : DottedBorder(
-              borderType: BorderType.RRect,
-              radius: const Radius.circular(12),
-              color: AppColors.lightGreyColor,
-              dashPattern: const [6, 4],
-              strokeWidth: 1.5,
-              padding: EdgeInsets.zero,
-              child: Container(
-                height: 120,
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.tap_to_sign,
-                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.greyColor),
+                    height: 120,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border:
+                          Border.all(color: AppColors.mainColor, width: 1.4),
                     ),
-                    8.width,
-                    const Text('✍️', style: TextStyle(fontSize: 20)),
-                  ],
-                ),
-              ),
-            ),
+                    child: Stack(
+                      children: [
+                        Center(
+                            child: Image.file(File(signaturePath),
+                                fit: BoxFit.contain)),
+                        Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Icon(Icons.check_circle_rounded,
+                                color: AppColors.mainColor, size: 20)),
+                      ],
+                    ),
+                  )
+                : DottedBorder(
+                    borderType: BorderType.RRect,
+                    radius: const Radius.circular(12),
+                    color: AppColors.lightGreyColor,
+                    dashPattern: const [6, 4],
+                    strokeWidth: 1.5,
+                    padding: EdgeInsets.zero,
+                    child: Container(
+                      height: 120,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.tap_to_sign,
+                            style: AppStyles.rkRegularTextStyle(
+                                size: AppConstants.font_14,
+                                color: AppColors.greyColor),
+                          ),
+                          8.width,
+                          const Text('✍️', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -268,9 +315,18 @@ class PrivacyPolicyWidget extends StatelessWidget {
   Widget _buildSectionTitle(BuildContext context, String title) {
     return Row(
       children: [
-        Container(width: 4, height: 18, decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(2))),
+        Container(
+            width: 4,
+            height: 18,
+            decoration: BoxDecoration(
+                color: AppColors.mainColor,
+                borderRadius: BorderRadius.circular(2))),
         8.width,
-        Text(title, style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w700)),
+        Text(title,
+            style: AppStyles.rkBoldTextStyle(
+                size: AppConstants.smallFont,
+                color: AppColors.blackColor,
+                fontWeight: FontWeight.w700)),
       ],
     );
   }
@@ -279,8 +335,11 @@ class PrivacyPolicyWidget extends StatelessWidget {
     return Container(
       height: 40,
       width: 40,
-      decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
-      child: Icon(Icons.description_outlined, size: 21, color: AppColors.mainColor),
+      decoration: BoxDecoration(
+          color: AppColors.mainColor.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(12)),
+      child: Icon(Icons.description_outlined,
+          size: 21, color: AppColors.mainColor),
     );
   }
 
@@ -296,11 +355,14 @@ class PrivacyPolicyWidget extends StatelessWidget {
             elevation: 0.5,
             title: Text(
               AppLocalizations.of(context)!.privacy_policy,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.smallFont, color: AppColors.blackColor),
             ),
             iconTheme: IconThemeData(color: AppColors.blackColor),
           ),
-          body: state.pdfPath.length > 1 ? SfPdfViewer.memory(state.pdfPath) : const Center(child: CupertinoActivityIndicator()),
+          body: state.pdfPath.length > 1
+              ? SfPdfViewer.memory(state.pdfPath)
+              : const Center(child: CupertinoActivityIndicator()),
         ),
       ),
     );

@@ -22,12 +22,14 @@ class WayOfPaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
       create: (context) => WayOfPaymentBloc()
         ..add(WayOfPaymentEvent.getArgumentEvent(
-          termsReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
+          termsReqModel: args?[AppStrings.termsConditionParamString] ??
+              const TermsConditionReqModel(),
           isUpdate: args?[AppStrings.isUpdateParamString] ?? false,
         )),
       child: const WayOfPaymentScreenWidget(),
@@ -40,7 +42,8 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WayOfPaymentBloc, WayOfPaymentState>(builder: (context, state) {
+    return BlocBuilder<WayOfPaymentBloc, WayOfPaymentState>(
+        builder: (context, state) {
       final WayOfPaymentBloc bloc = context.read<WayOfPaymentBloc>();
       return Scaffold(
         backgroundColor: AppColors.pageColor,
@@ -103,7 +106,9 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           child: CustomButtonWidget(
             isLoading: false,
-            buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
+            buttonText: state.isUpdate
+                ? AppLocalizations.of(context)!.save.toUpperCase()
+                : AppLocalizations.of(context)!.next.toUpperCase(),
             bGColor: AppColors.mainColor,
             radius: 14,
             onPressed: () {
@@ -111,16 +116,21 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                 Navigator.pop(context);
               } else {
                 if (state.selectRadioTile == 0 && state.isEnablePayment) {
-                  Navigator.pushNamed(context, RouteDefine.bankInfoScreen.name, arguments: {
-                    AppStrings.termsConditionParamString: state.termsReqModel,
-                  });
+                  Navigator.pushNamed(context, RouteDefine.bankInfoScreen.name,
+                      arguments: {
+                        AppStrings.termsConditionParamString:
+                            state.termsReqModel,
+                      });
                 } else {
-                  Navigator.pushNamed(context, RouteDefine.creditCardDetailsScreen.name, arguments: {
-                    AppStrings.termsConditionParamString: state.termsReqModel,
-                    AppStrings.isFromRegFlow: true,
-                    AppStrings.isPaymentToNext: false,
-                    AppStrings.invoiceData: const MyCardInvoice(),
-                  });
+                  Navigator.pushNamed(
+                      context, RouteDefine.creditCardDetailsScreen.name,
+                      arguments: {
+                        AppStrings.termsConditionParamString:
+                            state.termsReqModel,
+                        AppStrings.isFromRegFlow: true,
+                        AppStrings.isPaymentToNext: false,
+                        AppStrings.invoiceData: const MyCardInvoice(),
+                      });
                 }
               }
             },
@@ -145,17 +155,21 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
-        onTap: () => bloc.add(WayOfPaymentEvent.radioButtonEvent(selectRadioTile: radioValue)),
+        onTap: () => bloc.add(
+            WayOfPaymentEvent.radioButtonEvent(selectRadioTile: radioValue)),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: selected ? AppColors.mainColor : AppColors.borderColor, width: selected ? 1.6 : 1),
+            border: Border.all(
+                color: selected ? AppColors.mainColor : AppColors.borderColor,
+                width: selected ? 1.6 : 1),
             boxShadow: [
               BoxShadow(
-                color: (selected ? AppColors.mainColor : AppColors.shadowColor).withValues(alpha: selected ? 0.12 : 0.05),
+                color: (selected ? AppColors.mainColor : AppColors.shadowColor)
+                    .withValues(alpha: selected ? 0.12 : 0.05),
                 blurRadius: 12,
                 offset: const Offset(0, 3),
               ),
@@ -166,7 +180,9 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
               Container(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                    color: iconColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12)),
                 child: Icon(icon, color: iconColor, size: 24),
               ),
               14.width,
@@ -174,9 +190,16 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.blackColor, fontWeight: FontWeight.w700)),
+                    Text(title,
+                        style: AppStyles.rkBoldTextStyle(
+                            size: AppConstants.font_17,
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.w700)),
                     4.height,
-                    Text(subtitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.greyColor)),
+                    Text(subtitle,
+                        style: AppStyles.rkRegularTextStyle(
+                            size: AppConstants.font_13,
+                            color: AppColors.greyColor)),
                   ],
                 ),
               ),
@@ -195,16 +218,19 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
       height: 22,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: selected ? AppColors.mainColor : AppColors.lightGreyColor, width: 2),
+        border: Border.all(
+            color: selected ? AppColors.mainColor : AppColors.lightGreyColor,
+            width: 2),
       ),
       child: selected
           ? Center(
-        child: Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.mainColor),
-        ),
-      )
+              child: Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: AppColors.mainColor),
+              ),
+            )
           : null,
     );
   }
@@ -218,12 +244,15 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.lock_outline_rounded, size: 18, color: AppColors.blueColor.withValues(alpha: 0.8)),
+          Icon(Icons.lock_outline_rounded,
+              size: 18, color: AppColors.blueColor.withValues(alpha: 0.8)),
           10.width,
           Expanded(
             child: Text(
               AppLocalizations.of(context)!.payment_secure_note,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blueColor.withValues(alpha: 0.85)),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_13,
+                  color: AppColors.blueColor.withValues(alpha: 0.85)),
             ),
           ),
         ],
@@ -235,8 +264,11 @@ class WayOfPaymentScreenWidget extends StatelessWidget {
     return Container(
       height: 40,
       width: 40,
-      decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
-      child: Icon(Icons.payments_outlined, size: 21, color: AppColors.mainColor),
+      decoration: BoxDecoration(
+          color: AppColors.mainColor.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(12)),
+      child:
+          Icon(Icons.payments_outlined, size: 21, color: AppColors.mainColor),
     );
   }
 }

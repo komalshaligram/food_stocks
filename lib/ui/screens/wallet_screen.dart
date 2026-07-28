@@ -163,7 +163,9 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                             _buildHistorySection(context, state, bloc),
                             12.height,
                             _buildTransactionList(context, state),
-                            state.isLoadMore ? const Padding(padding: EdgeInsets.only(bottom: 10), child: OrderSummaryScreenShimmerWidget(itemCount: 2)) : 0.width,
+                            state.isLoadMore
+                                ? const Padding(padding: EdgeInsets.only(bottom: 10), child: OrderSummaryScreenShimmerWidget(itemCount: 2))
+                                : 0.width,
                             AppConstants.bottomNavSpace.height,
                           ],
                         ),
@@ -314,7 +316,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                           context: context,
                           image: AppImagePath.expense,
                           title: AppLocalizations.of(context)!.last_months_expenses,
-                          value: formatNumberForWallet(value: state.lastMonthExpense.toStringAsFixed(0), local: AppStrings.hebrewLocal, context: context),
+                          value: formatNumberForWallet(
+                              value: state.lastMonthExpense.toStringAsFixed(0), local: AppStrings.hebrewLocal, context: context),
                         ),
                       ),
                     ],
@@ -418,7 +421,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                                   padding: const EdgeInsets.only(top: AppConstants.padding_5),
                                   child: Text(
                                     month.toString(),
-                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.blackColor.withValues(alpha: 0.45)),
+                                    style:
+                                        AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.blackColor.withValues(alpha: 0.45)),
                                   ),
                                 );
                               }),
@@ -476,7 +480,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                       final androidInfo = await deviceInfo.androidInfo;
                       if (androidInfo.version.sdkInt < 33) {
                         if (!statuses[Permission.storage]!.isGranted) {
-                          CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.storage_permission, type: SnackBarType.failure);
+                          CustomSnackBar.showSnackBar(
+                              context: context, title: AppLocalizations.of(context)!.storage_permission, type: SnackBarType.failure);
                           return;
                         }
                       }
@@ -703,7 +708,8 @@ class _WalletScreenWidgetState extends State<WalletScreenWidget> with SingleTick
                   child: Text(
                     isOrder
                         ? '- ${formatNumberForWallet(value: double.parse(transaction.amount ?? '0').toString(), local: AppStrings.hebrewLocal, context: context)}'
-                        : formatNumberForWallet(value: double.parse(transaction.amount ?? '0').toString(), local: AppStrings.hebrewLocal, context: context),
+                        : formatNumberForWallet(
+                            value: double.parse(transaction.amount ?? '0').toString(), local: AppStrings.hebrewLocal, context: context),
                     style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14, color: amountColor),
                   ),
                 ),

@@ -62,7 +62,8 @@ import 'app_localizations_he.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +84,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -365,6 +368,12 @@ abstract class AppLocalizations {
   /// **'סוג מסמך'**
   String get documentType;
 
+  /// No description provided for @discountPercentLabel.
+  ///
+  /// In he, this message translates to:
+  /// **'אחוז הנחה'**
+  String get discountPercentLabel;
+
   /// No description provided for @companyName.
   ///
   /// In he, this message translates to:
@@ -640,6 +649,18 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'נשמר, טרם נשלח לקופה'**
   String get statusCompleted;
+
+  /// No description provided for @statusSentInBackground.
+  ///
+  /// In he, this message translates to:
+  /// **'נשמר, נשלח לקופה ברקע'**
+  String get statusSentInBackground;
+
+  /// No description provided for @statusIntakeFailedRetry.
+  ///
+  /// In he, this message translates to:
+  /// **'קליטה נכשלה, נסה שנית'**
+  String get statusIntakeFailedRetry;
 
   /// No description provided for @statusDeleted.
   ///
@@ -1481,6 +1502,30 @@ abstract class AppLocalizations {
   /// **'תאריך פירעון'**
   String get paymentDueDate;
 
+  /// No description provided for @warehouseField.
+  ///
+  /// In he, this message translates to:
+  /// **'מחסן יעד'**
+  String get warehouseField;
+
+  /// No description provided for @warehouseLoading.
+  ///
+  /// In he, this message translates to:
+  /// **'טוען מחסנים…'**
+  String get warehouseLoading;
+
+  /// No description provided for @warehousesEmpty.
+  ///
+  /// In he, this message translates to:
+  /// **'לא נמצאו מחסנים'**
+  String get warehousesEmpty;
+
+  /// No description provided for @warehouseCodePrefix.
+  ///
+  /// In he, this message translates to:
+  /// **'קוד'**
+  String get warehouseCodePrefix;
+
   /// No description provided for @colDiscountPercent.
   ///
   /// In he, this message translates to:
@@ -1624,6 +1669,12 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'ברקוד'**
   String get barcodeLabel;
+
+  /// No description provided for @scanBarcodeTooltip.
+  ///
+  /// In he, this message translates to:
+  /// **'סרוק ברקוד'**
+  String get scanBarcodeTooltip;
 
   /// No description provided for @barcodeInCatalog.
   ///
@@ -1988,32 +2039,206 @@ abstract class AppLocalizations {
   /// No description provided for @npSectionItem.
   ///
   /// In he, this message translates to:
-  /// **'פרטי פריט'**
+  /// **'זיהוי הפריט'**
   String get npSectionItem;
 
   /// No description provided for @npSectionClassification.
   ///
   /// In he, this message translates to:
-  /// **'סיווג'**
+  /// **'שיוך'**
   String get npSectionClassification;
-
-  /// No description provided for @npSectionSupplier.
-  ///
-  /// In he, this message translates to:
-  /// **'ספק'**
-  String get npSectionSupplier;
 
   /// No description provided for @npSectionPricing.
   ///
   /// In he, this message translates to:
-  /// **'מחירים'**
+  /// **'תמחור'**
   String get npSectionPricing;
 
-  /// No description provided for @npSectionMore.
+  /// No description provided for @npSectionPackaging.
   ///
   /// In he, this message translates to:
-  /// **'הגדרות נוספות'**
-  String get npSectionMore;
+  /// **'אריזה והמרות'**
+  String get npSectionPackaging;
+
+  /// No description provided for @npSectionDeposit.
+  ///
+  /// In he, this message translates to:
+  /// **'פקדון ומאפיינים'**
+  String get npSectionDeposit;
+
+  /// No description provided for @npSectionRegisterClub.
+  ///
+  /// In he, this message translates to:
+  /// **'קופה ומועדון'**
+  String get npSectionRegisterClub;
+
+  /// No description provided for @npUnit.
+  ///
+  /// In he, this message translates to:
+  /// **'מידה'**
+  String get npUnit;
+
+  /// No description provided for @npWeighable.
+  ///
+  /// In he, this message translates to:
+  /// **'שקיל'**
+  String get npWeighable;
+
+  /// No description provided for @npNoSupplierDiscount.
+  ///
+  /// In he, this message translates to:
+  /// **'ללא הנחת ספק'**
+  String get npNoSupplierDiscount;
+
+  /// No description provided for @npConversionQty.
+  ///
+  /// In he, this message translates to:
+  /// **'המרה'**
+  String get npConversionQty;
+
+  /// No description provided for @npConversionUnit.
+  ///
+  /// In he, this message translates to:
+  /// **'המרה ב'**
+  String get npConversionUnit;
+
+  /// No description provided for @npPackageWeight.
+  ///
+  /// In he, this message translates to:
+  /// **'משקל אריזה'**
+  String get npPackageWeight;
+
+  /// No description provided for @npCalcQty.
+  ///
+  /// In he, this message translates to:
+  /// **'כמות לחישוב'**
+  String get npCalcQty;
+
+  /// No description provided for @npDelicatessen.
+  ///
+  /// In he, this message translates to:
+  /// **'מעדניה'**
+  String get npDelicatessen;
+
+  /// No description provided for @npClubCode.
+  ///
+  /// In he, this message translates to:
+  /// **'קוד מועדון'**
+  String get npClubCode;
+
+  /// No description provided for @npRegisterDiscount.
+  ///
+  /// In he, this message translates to:
+  /// **'הנחת קופה'**
+  String get npRegisterDiscount;
+
+  /// No description provided for @npPromotion.
+  ///
+  /// In he, this message translates to:
+  /// **'מבצע'**
+  String get npPromotion;
+
+  /// No description provided for @npSalePriceEstimate.
+  ///
+  /// In he, this message translates to:
+  /// **'הערכה — הערך הסופי נקבע באימות מול הקופה'**
+  String get npSalePriceEstimate;
+
+  /// No description provided for @npRequiredField.
+  ///
+  /// In he, this message translates to:
+  /// **'שדה חובה'**
+  String get npRequiredField;
+
+  /// No description provided for @npDigitsOnly.
+  ///
+  /// In he, this message translates to:
+  /// **'ספרות בלבד'**
+  String get npDigitsOnly;
+
+  /// No description provided for @npInvalidBarcode.
+  ///
+  /// In he, this message translates to:
+  /// **'ברקוד לא תקין'**
+  String get npInvalidBarcode;
+
+  /// No description provided for @npProfitTooHigh.
+  ///
+  /// In he, this message translates to:
+  /// **'% רווח חייב להיות קטן מ-100'**
+  String get npProfitTooHigh;
+
+  /// No description provided for @npDiscountRange.
+  ///
+  /// In he, this message translates to:
+  /// **'% הנחה חייב להיות בין 0 ל-100'**
+  String get npDiscountRange;
+
+  /// No description provided for @npOptionsError.
+  ///
+  /// In he, this message translates to:
+  /// **'לא ניתן לטעון את רשימות הבחירה'**
+  String get npOptionsError;
+
+  /// No description provided for @npOptionsNoData.
+  ///
+  /// In he, this message translates to:
+  /// **'עדיין לא נשלפו נתוני קופה עבור לקוח זה'**
+  String get npOptionsNoData;
+
+  /// No description provided for @npNone.
+  ///
+  /// In he, this message translates to:
+  /// **'ללא'**
+  String get npNone;
+
+  /// No description provided for @npSave.
+  ///
+  /// In he, this message translates to:
+  /// **'שמור פריט'**
+  String get npSave;
+
+  /// No description provided for @npDelete.
+  ///
+  /// In he, this message translates to:
+  /// **'מחק פריט חדש'**
+  String get npDelete;
+
+  /// No description provided for @npDeleteConfirm.
+  ///
+  /// In he, this message translates to:
+  /// **'למחוק את הפריט החדש מהשורה?'**
+  String get npDeleteConfirm;
+
+  /// No description provided for @npBadge.
+  ///
+  /// In he, this message translates to:
+  /// **'פריט חדש'**
+  String get npBadge;
+
+  /// No description provided for @npConfirmTitle.
+  ///
+  /// In he, this message translates to:
+  /// **'אישור יצירת פריטים חדשים'**
+  String get npConfirmTitle;
+
+  /// No description provided for @npConfirmIrreversible.
+  ///
+  /// In he, this message translates to:
+  /// **'יצירת פריט בקומקס אינה הפיכה — לא ניתן למחוק פריט, רק להעביר לארכיון.'**
+  String get npConfirmIrreversible;
+
+  /// No description provided for @npConfirmCount.
+  ///
+  /// In he, this message translates to:
+  /// **'{count, plural, =1{פריט חדש אחד ייווצר בקופה:} other{{count} פריטים חדשים ייווצרו בקופה:}}'**
+  String npConfirmCount(int count);
+
+  /// No description provided for @npConfirmAction.
+  ///
+  /// In he, this message translates to:
+  /// **'אשר ושלח לקופה'**
+  String get npConfirmAction;
 
   /// No description provided for @scannerUnknownFailure.
   ///
@@ -2136,7 +2361,8 @@ abstract class AppLocalizations {
   String get fromInvoiceLabel;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2145,25 +2371,25 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'he'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'he'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'he': return AppLocalizationsHe();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'he':
+      return AppLocalizationsHe();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

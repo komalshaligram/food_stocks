@@ -25,6 +25,8 @@ class InvoiceValidationPayload {
     String? supplierCode,
     String documentType = typePurchaseInvoice,
     String Function(InvoiceItem item)? barcodeOf,
+    String? warehouseCode,
+    String? warehouseName,
   }) {
     // תעודת כניסה ותעודת החזר — שתיהן בלי allocationNumber (רק חשבונית מס דורשת).
     final omitsAllocation =
@@ -45,6 +47,14 @@ class InvoiceValidationPayload {
     }
     if (supplierCode != null && supplierCode.trim().isNotEmpty) {
       header['supplierCode'] = supplierCode.trim();
+    }
+    // מחסן יעד — רשות (§5c). נשלח רק אם המשתמש בחר; אם מושמט, Comax קולט למחסן
+    // ברירת המחדל. warehouseName בלי warehouseCode → הקרולר מחזיר missing_field,
+    // לכן השם נכלל רק כשגם הקוד קיים.
+    if (warehouseCode != null && warehouseCode.trim().isNotEmpty) {
+      header['warehouseCode'] = warehouseCode.trim();
+      final wname = (warehouseName ?? '').trim();
+      if (wname.isNotEmpty) header['warehouseName'] = wname;
     }
     // תאריך לתשלום — רשות; נכלל רק אם קיים ותקין.
     final iso = _toIsoDate(doc.paymentDueDate);
@@ -76,7 +86,9 @@ class InvoiceValidationPayload {
       'lineTotal': _round2(item.totalPrice) ?? 0,
     };
     // discountPct מושמט בכוונה — ההנחה כבר מגולמת ב-unitPrice.
-    // "פריט חדש" — כרגע אין תמיכה ב-API; נשלח כהכנה לעתיד.
+    // "פריט חדש" — שורה עם newProduct לא תיפסל כ-line_item_not_found; היא פריט
+    // חדש לגיטימי שייווצר ב-Comax בקליטה. ראו new-product-spec.md §5.
+    // כמה פריטים חדשים באותו מסמך נתמכים במלואם (newProduct בכל שורה רלוונטית).
     if (item.newProduct != null) {
       line['newProduct'] = item.newProduct!.toJson();
     }
@@ -98,6 +110,11 @@ class InvoiceValidationPayload {
 
   /// נרמול תאריך ל-YYYY-MM-DD מתוך פורמטים נפוצים (DD/MM/YYYY, DD.MM.YYYY,
   /// YYYY-MM-DD וכו'). מחזיר null אם לא ניתן לפענח.
+  /// ממיר את התאריך שה-OCR קרא ל-`YYYY-MM-DD` (מה שה-API דורש).
+  ///
+  /// ⚠️ החזרת null כאן אינה חסרת-נזק: הקורא נופל ל-`doc.documentDate` **הגולמי**
+  /// ושולח אותו כמו שהוא, והקרולר מחזיר "תאריך החשבונית אינו תקין (צפוי
+  /// YYYY-MM-DD)". לכן הפורמטים שכן ניתן להכריע חייבים להיתמך כאן.
   static String? _toIsoDate(String? raw) {
     final s = (raw ?? '').trim();
     if (s.isEmpty) return null;
@@ -114,12 +131,62 @@ class InvoiceValidationPayload {
     if (a.length == 4) {
       return '$a-${_pad(b)}-${_pad(c)}';
     }
-    // אחרת DD MM YYYY
+    // YYYY בסוף → DD MM YYYY
     if (c.length == 4) {
       return '$c-${_pad(b)}-${_pad(a)}';
     }
-    return null;
+    // --- שנה דו-ספרתית: דו-משמעי, ולכן מוכרעים לפי סבירות ---
+    // `26/07/09` יכול להיות YY/MM/DD (2026-07-09) או DD/MM/YY (2009-07-26).
+    // שתי האפשרויות נבדקות כתאריך לוח חוקי, ונבחרת זו הקרובה יותר להיום —
+    // חשבונית נסרקת קרוב למועד הוצאתה, ולכן פער של שנים פוסל את הפרשנות.
+    // שוויון נשבר לטובת DD/MM/YY, הפורמט הישראלי הרווח.
+    return _resolveTwoDigitYear(a, b, c);
   }
+
+  /// בוחר בין DD/MM/YY לבין YY/MM/DD לפי קרבה להיום.
+  static String? _resolveTwoDigitYear(String a, String b, String c) {
+    final ai = int.tryParse(a), bi = int.tryParse(b), ci = int.tryParse(c);
+    if (ai == null || bi == null || ci == null) return null;
+
+    final today = DateTime.now();
+    // 26 → 2026, 09 → 2009. סף = השנה הנוכחית +1, כדי לא לזרוק תאריך עתידי קרוב
+    // (תאריך פירעון) למאה הקודמת.
+    int century(int yy) => yy <= (today.year % 100) + 1 ? 2000 + yy : 1900 + yy;
+
+    DateTime? build(int year, int month, int day) {
+      if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+      final d = DateTime(year, month, day);
+      // דוחה גלישה (למשל 31 בפברואר → 3 במרץ).
+      if (d.month != month || d.day != day) return null;
+      return d;
+    }
+
+    // חלון סבירות. בלעדיו, קלט כמו `31/02/26` (אין 31 בפברואר) פוסל את פרשנות
+    // DD/MM/YY, והפרשנות שנותרת מכריחה שנת **1931** — תאריך אבסורדי שהיה נשלח
+    // לקופה בשקט. מוטב להחזיר null, שאז המחרוזת הגולמית נשלחת והקרולר מחזיר
+    // שגיאת תאריך מפורשת שהמשתמש יכול לתקן.
+    bool plausible(DateTime? d) =>
+        d != null &&
+        d.isAfter(DateTime(today.year - 5)) &&
+        d.isBefore(DateTime(today.year + 2));
+
+    final asDayFirst = plausible(build(century(ci), bi, ai))
+        ? build(century(ci), bi, ai) // DD/MM/YY
+        : null;
+    final asYearFirst = plausible(build(century(ai), bi, ci))
+        ? build(century(ai), bi, ci) // YY/MM/DD
+        : null;
+    if (asDayFirst == null && asYearFirst == null) return null;
+    if (asYearFirst == null) return _iso(asDayFirst!);
+    if (asDayFirst == null) return _iso(asYearFirst);
+
+    final dayFirstGap = (asDayFirst.difference(today)).inDays.abs();
+    final yearFirstGap = (asYearFirst.difference(today)).inDays.abs();
+    return _iso(yearFirstGap < dayFirstGap ? asYearFirst : asDayFirst);
+  }
+
+  static String _iso(DateTime d) =>
+      '${d.year}-${_pad('${d.month}')}-${_pad('${d.day}')}';
 
   static String _pad(String n) => n.padLeft(2, '0');
 }

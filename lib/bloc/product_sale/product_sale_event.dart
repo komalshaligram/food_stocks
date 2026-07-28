@@ -76,4 +76,8 @@ class ProductSaleEvent with _$ProductSaleEvent {
   }) = _addToCartListProductEvent;
 
   const factory ProductSaleEvent.getCartCountEvent({required BuildContext context}) = _getCartCountEvent;
+
+  const factory ProductSaleEvent.applyCartQuantitiesEvent({
+    required Map<String, int> cartQuantities,
+  }) = _applyCartQuantitiesEvent;
 }

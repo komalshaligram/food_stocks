@@ -27,7 +27,9 @@ class FormDataState with _$FormDataState {
         required String language,
         required List<String> ownerList,
         required String owner,
-        required bool isRegistrationSuccess,}) = _FormDataState;
+        required bool isRegistrationSuccess,
+        required String customerServicePhone,
+        required String customerServiceWhatsApp,}) = _FormDataState;
 
   factory FormDataState.initial() => FormDataState(
 
@@ -55,5 +57,7 @@ class FormDataState with _$FormDataState {
     owner: '1',
     agentCodeController: TextEditingController(),
     isRegistrationSuccess: false,
+    customerServicePhone: '',
+    customerServiceWhatsApp: '',
   );
 }

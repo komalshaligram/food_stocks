@@ -84,7 +84,8 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                     ),
                     24.height,
                     CustomButtonWidget(
-                      buttonText: state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
+                      buttonText:
+                          state.isUpdate ? AppLocalizations.of(context)!.save.toUpperCase() : AppLocalizations.of(context)!.next.toUpperCase(),
                       fontColors: AppColors.whiteColor,
                       isLoading: state.isLoading,
                       radius: 14,
@@ -143,7 +144,8 @@ class ActivityTimeScreenWidget extends StatelessWidget {
             flex: 3,
             child: Text(
               '',
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
@@ -151,7 +153,8 @@ class ActivityTimeScreenWidget extends StatelessWidget {
             child: Text(
               AppLocalizations.of(context)!.from_time,
               textAlign: TextAlign.center,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
             ),
           ),
           const SizedBox(width: 8),
@@ -160,7 +163,8 @@ class ActivityTimeScreenWidget extends StatelessWidget {
             child: Text(
               AppLocalizations.of(context)!.until_time,
               textAlign: TextAlign.center,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
             ),
           ),
           const SizedBox(width: 44),
@@ -225,7 +229,9 @@ class ActivityTimeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ActivityTimeBloc, ActivityTimeState>(builder: (context, state) {
-      if (state.operationTimeList.isEmpty) return const CupertinoActivityIndicator();
+      if (state.operationTimeList.isEmpty) {
+        return const CupertinoActivityIndicator();
+      }
 
       final slots = state.operationTimeList[rowIndex].monday;
       return Column(
@@ -317,7 +323,8 @@ class TimeContainer extends StatelessWidget {
   final String dayString;
   final String time;
 
-  const TimeContainer({super.key, required this.openingIndex, required this.index, required this.dayString, required this.time, required this.rowIndex});
+  const TimeContainer(
+      {super.key, required this.openingIndex, required this.index, required this.dayString, required this.time, required this.rowIndex});
 
   static const double _fieldRadius = 12;
 

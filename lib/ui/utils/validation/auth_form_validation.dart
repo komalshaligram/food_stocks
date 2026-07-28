@@ -37,6 +37,9 @@ class AuthFormValidation {
       case AppStrings.contactNameValString:
         return formFieldValidation.contactNameField(value, context);
 
+      case AppStrings.contactPersonNameValString:
+        return formFieldValidation.contactPersonNameField(value, context);
+
       case AppStrings.addressValString:
         return formFieldValidation.addressNameField(value, context);
 

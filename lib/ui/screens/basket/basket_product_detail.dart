@@ -20,7 +20,6 @@ import '../../utils/constants/app_constants.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../utils/constants/app_strings.dart';
 
-
 void showProductDetails({
   required BuildContext context,
   bool isBarcode = false,
@@ -66,184 +65,181 @@ void showProductDetails({
                     ScrollController scrollController) {
                   return BlocBuilder<BasketBloc, BasketState>(
                       builder: (blocContext, state) {
-                        return AbsorbPointer(
-                          absorbing: state.isLoading ? true : false,
-                          child: Container(
-                            height: getScreenHeight(sheetContext),
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft:
-                                  Radius.circular(AppConstants.radius_30),
-                                  topRight:
+                    return AbsorbPointer(
+                      absorbing: state.isLoading ? true : false,
+                      child: Container(
+                        height: getScreenHeight(sheetContext),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(AppConstants.radius_30),
+                              topRight:
                                   Radius.circular(AppConstants.radius_30)),
-                              color: AppColors.whiteColor,
-                            ),
-                            child: state.isProductLoading
-                                ? const ProductDetailsShimmerWidget()
-                                : state.productDetails.isEmpty
+                          color: AppColors.whiteColor,
+                        ),
+                        child: state.isProductLoading
+                            ? const ProductDetailsShimmerWidget()
+                            : state.productDetails.isEmpty
                                 ? NoDataBottomSheet(dialogContext: context)
                                 : SingleChildScrollView(
-                              physics: const ClampingScrollPhysics(),
-                              controller: ModalScrollController.of(
-                                  sheetContext),
-                              child: Column(children: [
-                                CommonProductDetailsWidget(
-                                    isFromBasketScreen: true,
-                                    isIncludedVat: state.isIncludedVat,
-                                    productDetails:
-                                    state.productDetails,
-                                    isSubUserAddToBasket:
-                                    state.isSubUserAddToBasket,
-                                    bottleTax: state.bottleTax,
-                                    totalBottleDeposit: (state.bottleTax *
-                                        (state.productDetails.first.numberOfUnit ?? 1)
-                                            .toDouble() *
-                                        state
-                                            .productStockList[state.productListIndex][state
-                                            .productStockUpdateIndex]
-                                            .quantity),
-                                    isBottle: (state.productDetails.first.isBottle ??
-                                        false),
-                                    addToOrderTap: () {
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      context.read<BasketBloc>().add(
-                                          BasketEvent
-                                              .addToCartProductEvent(
-                                              context: sheetContext,
-                                              productId:
-                                              cartProductId));
-                                    },
-                                    isLoading: state.isLoading,
-                                    imageOnTap: () {
-                                      showDialog(
+                                    physics: const ClampingScrollPhysics(),
+                                    controller:
+                                        ModalScrollController.of(sheetContext),
+                                    child: Column(children: [
+                                      CommonProductDetailsWidget(
+                                          isFromBasketScreen: true,
+                                          isIncludedVat: state.isIncludedVat,
+                                          productDetails: state.productDetails,
+                                          isSubUserAddToBasket:
+                                              state.isSubUserAddToBasket,
+                                          bottleTax: state.bottleTax,
+                                          totalBottleDeposit: (state.bottleTax *
+                                              (state.productDetails.first.numberOfUnit ?? 1)
+                                                  .toDouble() *
+                                              state
+                                                  .productStockList[state.productListIndex][state
+                                                      .productStockUpdateIndex]
+                                                  .quantity),
+                                          isBottle:
+                                              (state.productDetails.first.isBottle ??
+                                                  false),
+                                          addToOrderTap: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            context.read<BasketBloc>().add(
+                                                BasketEvent
+                                                    .addToCartProductEvent(
+                                                        context: sheetContext,
+                                                        productId:
+                                                            cartProductId));
+                                          },
+                                          isLoading: state.isLoading,
+                                          imageOnTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (dialogContext) {
+                                                  return Stack(children: [
+                                                    SizedBox(
+                                                      height: getScreenHeight(
+                                                              context) -
+                                                          MediaQuery.of(context)
+                                                              .padding
+                                                              .top,
+                                                      width: getScreenWidth(
+                                                          context),
+                                                      child: GestureDetector(
+                                                        onVerticalDragStart:
+                                                            (dragDetails) {},
+                                                        onVerticalDragUpdate:
+                                                            (dragDetails) {},
+                                                        onVerticalDragEnd:
+                                                            (endDetails) {
+                                                          Navigator.pop(
+                                                              dialogContext);
+                                                        },
+                                                        child: PhotoView(
+                                                          imageProvider:
+                                                              NetworkImage(
+                                                                  '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}'),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              dialogContext);
+                                                        },
+                                                        child: Padding(
+                                                          padding: const EdgeInsets
+                                                              .only(
+                                                              top: AppConstants
+                                                                  .padding_10),
+                                                          child: Icon(
+                                                              Icons.close,
+                                                              color: AppColors
+                                                                  .whiteColor),
+                                                        )),
+                                                  ]);
+                                                });
+                                          },
                                           context: context,
-                                          builder: (dialogContext) {
-                                            return Stack(children: [
-                                              SizedBox(
-                                                height: getScreenHeight(
-                                                    context) -
-                                                    MediaQuery.of(
-                                                        context)
-                                                        .padding
-                                                        .top,
-                                                width: getScreenWidth(
-                                                    context),
-                                                child: GestureDetector(
-                                                  onVerticalDragStart:
-                                                      (dragDetails) {},
-                                                  onVerticalDragUpdate:
-                                                      (dragDetails) {},
-                                                  onVerticalDragEnd:
-                                                      (endDetails) {
-                                                    Navigator.pop(
-                                                        dialogContext);
-                                                  },
-                                                  child: PhotoView(
-                                                    imageProvider:
-                                                    NetworkImage(
-                                                        '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.productImageIndex].mainImage}'),
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.pop(
-                                                        dialogContext);
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .only(
-                                                        top: AppConstants
-                                                            .padding_10),
-                                                    child: Icon(
-                                                        Icons.close,
-                                                        color: AppColors
-                                                            .whiteColor),
-                                                  )),
-                                            ]);
-                                          });
-                                    },
-                                    context: context,
-                                    productImages: [
-                                      state.productDetails.first
-                                          .mainImage ??
-                                          ''
-                                    ],
-                                    productUnitPrice: double.parse(state
-                                        .productDetails
-                                        .first
-                                        .supplierSales
-                                        ?.first
-                                        .productPrice
-                                        .toString() ??
-                                        '0'),
-                                    scaleType: state.productDetails.first
-                                        .scaleType,
-                                    productPrice: (state.productDetails.first.sale?.isSale ?? false)
-                                        ? double.parse(state.productDetails.first.sale?.salePrice ?? '') *
-                                        state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity *
-                                        (state.productDetails.first.numberOfUnit ?? 1)
-                                        : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                    productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
-                                    scrollController: scrollController,
-                                    productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                                    isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                    recommendedRetailConsumerPricerOffer: clubAgentId == AppStrings.clubAgentIdText
-                                        ? state.productDetails.first.sale?.isSale == true
-                                        ? state.productDetails.first.recommendedConsumerOffer
-                                        : state.productDetails.first.recommendedRetailPrice
-                                        : '',
-                                    onQuantityChanged: (quantity) {
-                                      context.read<BasketBloc>().add(
-                                          BasketEvent
-                                              .updateQuantityOfProduct(
-                                              context: sheetContext,
-                                              quantity: quantity));
-                                    },
-                                    onQuantityIncreaseTap: () {
-                                      context.read<BasketBloc>().add(
-                                          BasketEvent
-                                              .increaseQuantityOfProduct(
-                                              context:
-                                              sheetContext));
-                                    },
-                                    onQuantityDecreaseTap: () {
-                                      if (state
-                                          .productStockList[state
-                                          .productListIndex]
-                                      [state
-                                          .productStockUpdateIndex]
-                                          .quantity >
-                                          1) {
-                                        context.read<BasketBloc>().add(
-                                            BasketEvent
-                                                .decreaseQuantityOfProduct(
-                                                context:
-                                                sheetContext));
-                                      }
-                                    },
-                                    onCloseTap: () {
-                                      context.read<BasketBloc>().add(
-                                          BasketEvent.getAllCartEvent(
-                                              context: context,
-                                              isFromUpdate: false));
-                                      Navigator.pop(context);
-                                    }),
-                                state.isRelatedShimmering
-                                    ? const RelatedProductShimmerWidget()
-                                    : state.relatedProductList.isEmpty
-                                    ? 0.height
-                                    : relatedProductWidget(
-                                    context,
-                                    state,
-                                    sheetContext,
-                                    isSaleOn),
-                              ]),
-                            ),
-                          ),
-                        );
-                      });
+                                          productImages: [
+                                            state.productDetails.first
+                                                    .mainImage ??
+                                                ''
+                                          ],
+                                          productUnitPrice: double.parse(state
+                                                  .productDetails
+                                                  .first
+                                                  .supplierSales
+                                                  ?.first
+                                                  .productPrice
+                                                  .toString() ??
+                                              '0'),
+                                          scaleType: state
+                                              .productDetails.first.scaleType,
+                                          productPrice: (state.productDetails.first.sale?.isSale ?? false)
+                                              ? double.parse(state.productDetails.first.sale?.salePrice ?? '') *
+                                                  state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity *
+                                                  (state.productDetails.first.numberOfUnit ?? 1)
+                                              : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
+                                          productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                                          scrollController: scrollController,
+                                          productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
+                                          isMixedSale: state.productDetails.first.sale!.isMixedSale,
+                                          recommendedRetailConsumerPricerOffer: clubAgentId == AppStrings.clubAgentIdText
+                                              ? state.productDetails.first.sale?.isSale == true
+                                                  ? state.productDetails.first.recommendedConsumerOffer
+                                                  : state.productDetails.first.recommendedRetailPrice
+                                              : '',
+                                          onQuantityChanged: (quantity) {
+                                            context.read<BasketBloc>().add(
+                                                BasketEvent
+                                                    .updateQuantityOfProduct(
+                                                        context: sheetContext,
+                                                        quantity: quantity));
+                                          },
+                                          onQuantityIncreaseTap: () {
+                                            context.read<BasketBloc>().add(
+                                                BasketEvent
+                                                    .increaseQuantityOfProduct(
+                                                        context: sheetContext));
+                                          },
+                                          onQuantityDecreaseTap: () {
+                                            if (state
+                                                    .productStockList[
+                                                        state.productListIndex][
+                                                        state
+                                                            .productStockUpdateIndex]
+                                                    .quantity >
+                                                1) {
+                                              context.read<BasketBloc>().add(
+                                                  BasketEvent
+                                                      .decreaseQuantityOfProduct(
+                                                          context:
+                                                              sheetContext));
+                                            }
+                                          },
+                                          onCloseTap: () {
+                                            context.read<BasketBloc>().add(
+                                                BasketEvent.getAllCartEvent(
+                                                    context: context,
+                                                    isFromUpdate: false));
+                                            Navigator.pop(context);
+                                          }),
+                                      state.isRelatedShimmering
+                                          ? const RelatedProductShimmerWidget()
+                                          : state.relatedProductList.isEmpty
+                                              ? 0.height
+                                              : relatedProductWidget(
+                                                  context,
+                                                  state,
+                                                  sheetContext,
+                                                  isSaleOn),
+                                    ]),
+                                  ),
+                      ),
+                    );
+                  });
                 }),
           ),
         );
@@ -260,16 +256,14 @@ Widget relatedProductWidget(BuildContext prevContext, BasketState state,
         children: [
           Align(
             alignment:
-            context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+                context.rtl ? Alignment.centerRight : Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.only(
-                  left: AppConstants.padding_8,
-                  right: AppConstants.padding_8),
+                  left: AppConstants.padding_8, right: AppConstants.padding_8),
               child: Text(
                 AppLocalizations.of(context)!.related_products,
                 style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.mediumFont,
-                    color: AppColors.blackColor),
+                    size: AppConstants.mediumFont, color: AppColors.blackColor),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -288,38 +282,35 @@ Widget relatedProductWidget(BuildContext prevContext, BasketState state,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (context2, i) {
                 return CommonProductSaleItemWidget(
-                    isSale:
-                    state.relatedProductList.elementAt(i).sale?.isSale,
+                    isSale: state.relatedProductList.elementAt(i).sale?.isSale,
                     isGuestUser: false,
                     height: AppConstants.salesProductItemHeight,
                     width: getItemWidth(context),
                     productName:
-                    state.relatedProductList.elementAt(i).productName ??
-                        '',
+                        state.relatedProductList.elementAt(i).productName ?? '',
                     saleImage:
-                    state.relatedProductList.elementAt(i).mainImage ?? '',
+                        state.relatedProductList.elementAt(i).mainImage ?? '',
                     title: state.relatedProductList.elementAt(i).name,
                     description:
-                    parse(state.relatedProductList.elementAt(i).sale?.saleDescription)
-                        .body
-                        ?.text ??
-                        '',
-                    discountedPrice: double.parse(state.relatedProductList
-                        .elementAt(i)
-                        .sale
-                        ?.salePrice ??
-                        '0'),
+                        parse(state.relatedProductList.elementAt(i).sale?.saleDescription)
+                                .body
+                                ?.text ??
+                            '',
+                    discountedPrice: double.parse(
+                        state.relatedProductList.elementAt(i).sale?.salePrice ??
+                            '0'),
                     originalPrice:
-                    state.relatedProductList.elementAt(i).productPrice,
+                        state.relatedProductList.elementAt(i).productPrice,
                     productStock: state.relatedProductList
                         .elementAt(i)
                         .productStock
                         .toString(),
                     lowStock:
-                    state.relatedProductList.elementAt(i).lowStock ?? '',
+                        state.relatedProductList.elementAt(i).lowStock ?? '',
                     isPesach: state.relatedProductList.elementAt(i).isPesach,
                     quantity: state.productStockList[1]
-                        .firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id)
+                        .firstWhere((test) =>
+                            test.productId == state.relatedProductList.elementAt(i).id)
                         .quantity,
                     isMixedSale: state.relatedProductList.elementAt(i).sale?.isMixedSale,
                     numberOfUnits: state.relatedProductList.elementAt(i).numberOfUnit.toString(),
@@ -328,96 +319,90 @@ Widget relatedProductWidget(BuildContext prevContext, BasketState state,
                       context2
                           .read<BasketBloc>()
                           .add(BasketEvent.updateListQuantityOfProduct(
-                        context: context2,
-                        quantity: state.productStockList[1]
-                            .firstWhere((test) =>
-                        test.productId ==
-                            state.relatedProductList.elementAt(i).id)
-                            .quantity
-                            .toString(),
-                        productListIndex: 1,
-                        productStockUpdateIndex: state.productStockList[1]
-                            .indexWhere((test) =>
-                        test.productId ==
-                            state.relatedProductList.elementAt(i).id),
-                        productSupplierIds: state
-                            .relatedProductList[i].supplierId
-                            .toString(),
-                      ));
+                            context: context2,
+                            quantity: state.productStockList[1]
+                                .firstWhere((test) =>
+                                    test.productId ==
+                                    state.relatedProductList.elementAt(i).id)
+                                .quantity
+                                .toString(),
+                            productListIndex: 1,
+                            productStockUpdateIndex: state.productStockList[1]
+                                .indexWhere((test) =>
+                                    test.productId ==
+                                    state.relatedProductList.elementAt(i).id),
+                            productSupplierIds: state
+                                .relatedProductList[i].supplierId
+                                .toString(),
+                          ));
                     },
                     onQuantityIncreaseTap: () {
                       context2
                           .read<BasketBloc>()
                           .add(BasketEvent.increaseListQuantityOfProduct(
-                        context: context2,
-                        productListIndex: 1,
-                        productStockUpdateIndex: state.productStockList[1]
-                            .indexWhere((test) =>
-                        test.productId ==
-                            state.relatedProductList.elementAt(i).id),
-                        productSupplierIds: state
-                            .relatedProductList[i].supplierId
-                            .toString(),
-                      ));
+                            context: context2,
+                            productListIndex: 1,
+                            productStockUpdateIndex: state.productStockList[1]
+                                .indexWhere((test) =>
+                                    test.productId ==
+                                    state.relatedProductList.elementAt(i).id),
+                            productSupplierIds: state
+                                .relatedProductList[i].supplierId
+                                .toString(),
+                          ));
 
                       context2
                           .read<BasketBloc>()
                           .add(BasketEvent.addToCartListProductEvent(
-                        context: context2,
-                        productId:
-                        state.relatedProductList[i].id.toString(),
-                        productListIndex: 1,
-                        productStockUpdateIndex: state.productStockList[1]
-                            .indexWhere((test) =>
-                        test.productId ==
-                            state.relatedProductList.elementAt(i).id),
-                        productSupplierIds: state
-                            .relatedProductList[i].supplierId
-                            .toString(),
-                      ));
+                            context: context2,
+                            productId:
+                                state.relatedProductList[i].id.toString(),
+                            productListIndex: 1,
+                            productStockUpdateIndex: state.productStockList[1]
+                                .indexWhere((test) =>
+                                    test.productId ==
+                                    state.relatedProductList.elementAt(i).id),
+                            productSupplierIds: state
+                                .relatedProductList[i].supplierId
+                                .toString(),
+                          ));
                     },
                     onQuantityDecreaseTap: () {
                       if (state.productStockList[1]
-                          .firstWhere((test) =>
-                      test.productId ==
-                          state.relatedProductList.elementAt(i).id)
-                          .quantity !=
+                              .firstWhere((test) =>
+                                  test.productId ==
+                                  state.relatedProductList.elementAt(i).id)
+                              .quantity !=
                           0) {
                         context2
                             .read<BasketBloc>()
                             .add(BasketEvent.decreaseListQuantityOfProduct(
-                          context: context2,
-                          productListIndex: 1,
-                          productStockUpdateIndex: state
-                              .productStockList[1]
-                              .indexWhere((test) =>
-                          test.productId ==
-                              state.relatedProductList
-                                  .elementAt(i)
-                                  .id),
-                          productSupplierIds: state
-                              .relatedProductList[i].supplierId
-                              .toString(),
-                        ));
+                              context: context2,
+                              productListIndex: 1,
+                              productStockUpdateIndex: state.productStockList[1]
+                                  .indexWhere((test) =>
+                                      test.productId ==
+                                      state.relatedProductList.elementAt(i).id),
+                              productSupplierIds: state
+                                  .relatedProductList[i].supplierId
+                                  .toString(),
+                            ));
 
                         context2
                             .read<BasketBloc>()
                             .add(BasketEvent.addToCartListProductEvent(
-                          context: context2,
-                          productId:
-                          state.relatedProductList[i].id.toString(),
-                          productListIndex: 1,
-                          productStockUpdateIndex: state
-                              .productStockList[1]
-                              .indexWhere((test) =>
-                          test.productId ==
-                              state.relatedProductList
-                                  .elementAt(i)
-                                  .id),
-                          productSupplierIds: state
-                              .relatedProductList[i].supplierId
-                              .toString(),
-                        ));
+                              context: context2,
+                              productId:
+                                  state.relatedProductList[i].id.toString(),
+                              productListIndex: 1,
+                              productStockUpdateIndex: state.productStockList[1]
+                                  .indexWhere((test) =>
+                                      test.productId ==
+                                      state.relatedProductList.elementAt(i).id),
+                              productSupplierIds: state
+                                  .relatedProductList[i].supplierId
+                                  .toString(),
+                            ));
                       }
                     },
                     onButtonTap: () {
@@ -429,8 +414,8 @@ Widget relatedProductWidget(BuildContext prevContext, BasketState state,
                             : context,
                         cartProductId: state.relatedProductList[i].id ?? '',
                         isBarcode: false,
-                        productStock: state.relatedProductList[i].productStock
-                            .toString(),
+                        productStock:
+                            state.relatedProductList[i].productStock.toString(),
                         productListIndex: 1,
                         clubAgentId: state.clubAgentId!,
                       );

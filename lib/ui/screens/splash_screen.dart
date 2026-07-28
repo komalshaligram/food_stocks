@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import '../../bloc/splash/splash_bloc.dart';
-import '../../data/services/startup_navigation.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_colors.dart';
@@ -19,36 +17,29 @@ class SplashRoute {
   static Widget get route => const SplashScreen();
 }
 
-/// Full-screen brand gradient for the splash (Salle orange, top→bottom for a
-/// richer hero feel than the horizontal one on the connect screen).
-const Gradient _brandGradient = LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-  colors: [Color(0xff1D5499), Color(0xff8BC53F)],
-);
+const Gradient _brandGradient = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xff1D5499), Color(0xff8BC53F)]);
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Map<dynamic, dynamic>? args =
-    ModalRoute.of(context)?.settings.arguments as Map?;
+    final Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
-      create: (context) => SplashBloc()
-        ..add(
-          SplashEvent.splashLoaded(
-            pushNavigation: args?[AppStrings.pushNavigationString] ?? '',
-          ),
-        ),
-      child: const SplashScreenWidget(),
-    );
+        create: (context) => SplashBloc()..add(SplashEvent.splashLoaded(pushNavigation: args?[AppStrings.pushNavigationString] ?? '')),
+        child: const SplashScreenWidget());
   }
 }
 
 class SplashScreenWidget extends StatelessWidget {
   const SplashScreenWidget({super.key});
+
+  void getVersion(SharedPreferencesHelper preferences) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+    preferences.setAppVersion(version: version);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,103 +52,75 @@ class SplashScreenWidget extends StatelessWidget {
 
           if (preferences.getUserLoggedIn()) {
             if (preferences.getRegistrationIncomplete()) {
-              // Client is logged in but still PENDING — resume registration.
-              Navigator.pushReplacementNamed(context, RouteDefine.profileScreen.name, arguments: {AppStrings.contactString: preferences.getPhoneNumber()});
+              Navigator.pushReplacementNamed(context, RouteDefine.profileScreen.name,
+                  arguments: {AppStrings.contactString: preferences.getPhoneNumber()});
             } else {
-              Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: state.pushNavigation});
+              Navigator.pushReplacementNamed(context, RouteDefine.bottomNavScreen.name,
+                  arguments: {AppStrings.pushNavigationString: state.pushNavigation});
             }
           } else {
             Navigator.pushReplacementNamed(context, RouteDefine.connectScreen.name);
           }
         }
       },
-      child: BlocBuilder<SplashBloc, SplashState>(
-        builder: (context, state) {
-          return Scaffold(
-            body: Container(
-              width: double.maxFinite,
-              height: double.maxFinite,
-              decoration: const BoxDecoration(gradient: _brandGradient),
-              child: Stack(
-                children: [
-                  // Soft decorative blobs for depth (mirrors the reference design).
-                  Positioned(top: -60, right: -70, child: _decorCircle(230, Colors.white.withValues(alpha: 0.07))),
-                  Positioned(top: 140, left: -90, child: _decorCircle(170, Colors.white.withValues(alpha: 0.05))),
-                  Positioned(bottom: -80, right: -60, child: _decorCircle(220, Colors.white.withValues(alpha: 0.06))),
-                  // Centered logo (inside faint concentric rings) + tagline.
-                  Center(
-                    child: AnimatedOpacity(
+      child: BlocBuilder<SplashBloc, SplashState>(builder: (context, state) {
+        return Scaffold(
+          body: Container(
+            width: double.maxFinite,
+            height: double.maxFinite,
+            decoration: const BoxDecoration(gradient: _brandGradient),
+            child: Stack(children: [
+              Positioned(top: -60, right: -70, child: _decorCircle(230, Colors.white.withValues(alpha: 0.07))),
+              Positioned(top: 140, left: -90, child: _decorCircle(170, Colors.white.withValues(alpha: 0.05))),
+              Positioned(bottom: -80, right: -60, child: _decorCircle(220, Colors.white.withValues(alpha: 0.06))),
+              Center(
+                child: AnimatedOpacity(
+                  curve: Curves.decelerate,
+                  opacity: state.isAnimate ? 1 : 0,
+                  duration: const Duration(milliseconds: 900),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    AnimatedScale(
                       curve: Curves.decelerate,
-                      opacity: state.isAnimate ? 1 : 0,
-                      duration: const Duration(milliseconds: 900),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AnimatedScale(
-                            curve: Curves.decelerate,
-                            scale: state.isAnimate ? 1 : 1.15,
-                            duration: const Duration(milliseconds: 700),
-                            child: SizedBox(
-                              width: getScreenWidth(context) * 0.82,
-                              height: getScreenWidth(context) * 0.82,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  // Radar-like rings that expand outward and fade.
-                                  const _PulseRings(),
-                                  SvgPicture.asset(
-                                    AppImagePath.splashLogoWhite,
-                                    width: getScreenWidth(context) * 0.42,
-                                    height: getScreenHeight(context) * 0.13,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 28),
-                          Text(
-                            AppLocalizations.of(context)!.splash_tagline,
-                            textAlign: TextAlign.center,
-                            style: AppStyles.rkBoldTextStyle(size: 16, color: AppColors.whiteColor, fontWeight: FontWeight.w700),
-                          ),
-                        ],
+                      scale: state.isAnimate ? 1 : 1.15,
+                      duration: const Duration(milliseconds: 700),
+                      child: SizedBox(
+                        width: getScreenWidth(context) * 0.82,
+                        height: getScreenWidth(context) * 0.82,
+                        child: Stack(alignment: Alignment.center, children: [
+                          const _PulseRings(),
+                          Image.asset(AppImagePath.splashLogoWhite,
+                              width: getScreenWidth(context) * 0.42, height: getScreenHeight(context) * 0.13, fit: BoxFit.contain),
+                        ]),
                       ),
                     ),
-                  ),
-                  // Bottom loading bar + brand name.
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: bottomPad + 26,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _loaderBar(),
-                        const SizedBox(height: 16),
-                        Text(
-                          AppLocalizations.of(context)!.splash_brand,
-                          textAlign: TextAlign.center,
-                          style: AppStyles.rkRegularTextStyle(size: 13, color: AppColors.whiteColor.withValues(alpha: 0.85)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                    const SizedBox(height: 28),
+                    Text(AppLocalizations.of(context)!.splash_tagline,
+                        textAlign: TextAlign.center,
+                        style: AppStyles.rkBoldTextStyle(size: 16, color: AppColors.whiteColor, fontWeight: FontWeight.w700)),
+                  ]),
+                ),
               ),
-            ),
-          );
-        },
-      ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: bottomPad + 26,
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  _loaderBar(),
+                  const SizedBox(height: 16),
+                  Text(AppLocalizations.of(context)!.splash_brand,
+                      textAlign: TextAlign.center,
+                      style: AppStyles.rkRegularTextStyle(size: 13, color: AppColors.whiteColor.withValues(alpha: 0.85))),
+                ]),
+              ),
+            ]),
+          ),
+        );
+      }),
     );
   }
 
   Widget _decorCircle(double size, Color color) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-    );
+    return Container(width: size, height: size, decoration: BoxDecoration(color: color, shape: BoxShape.circle));
   }
 
   Widget _loaderBar() {
@@ -165,19 +128,13 @@ class SplashScreenWidget extends StatelessWidget {
       child: Container(
         width: 140,
         height: 5,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.25),
-          borderRadius: BorderRadius.circular(10),
-        ),
+        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.25), borderRadius: BorderRadius.circular(10)),
         child: Align(
           alignment: AlignmentDirectional.centerStart,
           child: FractionallySizedBox(
             widthFactor: 0.5,
             child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
             ),
           ),
         ),
@@ -185,15 +142,9 @@ class SplashScreenWidget extends StatelessWidget {
     );
   }
 
-  void getVersion(SharedPreferencesHelper preferences) async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String version = packageInfo.version;
-    preferences.setAppVersion(version: version);
-  }
+
 }
 
-/// Radar-style rings that continuously expand outward from the logo and fade,
-/// giving the splash a gentle "pulse" animation (as in the reference frames).
 class _PulseRings extends StatefulWidget {
   const _PulseRings();
 
@@ -220,10 +171,7 @@ class _PulseRingsState extends State<_PulseRings> with SingleTickerProviderState
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, _) => CustomPaint(
-        size: Size.infinite,
-        painter: _RingsPainter(_controller.value),
-      ),
+      builder: (context, _) => CustomPaint(size: Size.infinite, painter: _RingsPainter(_controller.value)),
     );
   }
 }

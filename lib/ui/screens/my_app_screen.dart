@@ -21,8 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => MyAppBloc(), child: const MyAppWidget());
+    return BlocProvider(create: (context) => MyAppBloc(), child: const MyAppWidget());
   }
 }
 
@@ -42,14 +41,12 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FlutterError.onError =
-          FirebaseCrashlytics.instance.recordFlutterFatalError;
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
 
     WidgetsBinding.instance.addObserver(this);
 
     _initDeepLinks();
-
 
     super.initState();
   }
@@ -63,15 +60,13 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
         _scheduleDeepLink(initialUri);
       }
     } catch (e, s) {
-      FirebaseCrashlytics.instance
-          .recordError(e, s, reason: 'getInitialLink failed');
+      FirebaseCrashlytics.instance.recordError(e, s, reason: 'getInitialLink failed');
     }
 
     _deepLinkSub = _appLinks.uriLinkStream.listen(
       _scheduleDeepLink,
       onError: (Object e, StackTrace s) {
-        FirebaseCrashlytics.instance
-            .recordError(e, s, reason: 'uriLinkStream error');
+        FirebaseCrashlytics.instance.recordError(e, s, reason: 'uriLinkStream error');
       },
     );
   }
@@ -162,9 +157,7 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context
-          .read<MyAppBloc>()
-          .add(MyAppEvent.updateProfileDetailsEvent(context: context));
+      context.read<MyAppBloc>().add(MyAppEvent.updateProfileDetailsEvent(context: context));
     }
   }
 
@@ -173,40 +166,35 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
     return ChangeNotifierProvider(
         create: (context) => LocaleProvider()..setAppLocale(),
         builder: (context, child) {
-          return  MaterialApp(
-              navigatorKey: navigatorKey,
-              debugShowCheckedModeBanner: false,
-              locale: Provider.of<LocaleProvider>(context).locale,
-              title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
-              initialRoute: RouteDefine.splashScreen.name,
-              supportedLocales: AppLocalizations.supportedLocales,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              localeResolutionCallback: (locale, supportedLocales) {
-                if (locale != null) {
-                  for (final supported in supportedLocales) {
-                    if (supported.languageCode == locale.languageCode) {
-                      return supported;
-                    }
+          return MaterialApp(
+            navigatorKey: navigatorKey,
+            debugShowCheckedModeBanner: false,
+            locale: Provider.of<LocaleProvider>(context).locale,
+            title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
+            initialRoute: RouteDefine.splashScreen.name,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localeResolutionCallback: (locale, supportedLocales) {
+              if (locale != null) {
+                for (final supported in supportedLocales) {
+                  if (supported.languageCode == locale.languageCode) {
+                    return supported;
                   }
                 }
-                return supportedLocales.first;
-              },
-              theme: ThemeData(
-                textSelectionTheme: TextSelectionThemeData(
-                    cursorColor: AppColors.mainColor,
-                    selectionColor: AppColors.mainColor,
-                    selectionHandleColor: AppColors.mainColor),
-                primarySwatch: Colors.green,
-                canvasColor: Colors.white,
-                cardColor: AppColors.whiteColor,
-                scaffoldBackgroundColor: AppColors.pageColor,
-                snackBarTheme: SnackBarThemeData(
-                    backgroundColor: AppColors.mainColor,
-                    actionTextColor: AppColors.textColor),
-              ),
-              scrollBehavior: MyBehavior(),
-              onGenerateRoute: AppRouting.generateRoute,
-
+              }
+              return supportedLocales.first;
+            },
+            theme: ThemeData(
+              textSelectionTheme: TextSelectionThemeData(
+                  cursorColor: AppColors.mainColor, selectionColor: AppColors.mainColor, selectionHandleColor: AppColors.mainColor),
+              primarySwatch: Colors.green,
+              canvasColor: Colors.white,
+              cardColor: AppColors.whiteColor,
+              scaffoldBackgroundColor: AppColors.pageColor,
+              snackBarTheme: SnackBarThemeData(backgroundColor: AppColors.mainColor, actionTextColor: AppColors.textColor),
+            ),
+            scrollBehavior: MyBehavior(),
+            onGenerateRoute: AppRouting.generateRoute,
           );
         });
   }

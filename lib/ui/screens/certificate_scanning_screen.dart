@@ -33,48 +33,33 @@ class _CertificateScanningScreenState extends State<CertificateScanningScreen> {
     return PreferredSize(
       preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
       child: CommonAppBar(
-        bgColor: AppColors.pageColor,
-        title: AppLocalizations.of(context)!.certificate_scanning,
-        iconData: Icons.arrow_back_ios_sharp,
-        onTap: onBack ?? () => Navigator.pop(context),
-      ),
+          bgColor: AppColors.pageColor,
+          title: AppLocalizations.of(context)!.certificate_scanning,
+          iconData: Icons.arrow_back_ios_sharp,
+          onTap: onBack ?? () => Navigator.pop(context)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
-      future: _initFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Scaffold(
-            backgroundColor: AppColors.pageColor,
-            appBar: _buildAppBar(context),
-            body: const Center(child: CircularProgressIndicator()),
-          );
-        }
+        future: _initFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Scaffold(
+                backgroundColor: AppColors.pageColor, appBar: _buildAppBar(context), body: const Center(child: CircularProgressIndicator()));
+          }
 
-        if (snapshot.hasError) {
-          return Scaffold(
-            backgroundColor: AppColors.pageColor,
-            appBar: _buildAppBar(context),
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Text(snapshot.error.toString(), textAlign: TextAlign.center),
-              ),
-            ),
-          );
-        }
+          if (snapshot.hasError) {
+            return Scaffold(
+              backgroundColor: AppColors.pageColor,
+              appBar: _buildAppBar(context),
+              body: Center(child: Padding(padding: const EdgeInsets.all(24), child: Text(snapshot.error.toString(), textAlign: TextAlign.center))),
+            );
+          }
 
-        final homeTitle = AppLocalizations.of(context)!.certificate_scanning;
-        return ProviderScope(
-          overrides: [
-            embeddedScanHomeTitleProvider.overrideWithValue(homeTitle),
-          ],
-          child: const DocScanShell(),
-        );
-      },
-    );
+          final homeTitle = AppLocalizations.of(context)!.certificate_scanning;
+          return ProviderScope(overrides: [embeddedScanHomeTitleProvider.overrideWithValue(homeTitle)], child: const DocScanShell());
+        });
   }
 }

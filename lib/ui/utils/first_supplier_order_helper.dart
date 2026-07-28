@@ -29,9 +29,11 @@ Future<void> navigateToVerifyClientDataScreen({
   );
 }
 
-Future<String?> fetchFirstSupplierOrderMessageTemplate(BuildContext context) async {
+Future<String?> fetchFirstSupplierOrderMessageTemplate(
+    BuildContext context) async {
   try {
-    final res = await DioClient(context).get(path: AppUrlEndPoints.generalSettingUrl);
+    final res =
+        await DioClient(context).get(path: AppUrlEndPoints.generalSettingUrl);
     final response = SettingResModel.fromJson(res);
     if (response.status == AppConstants.code_200) {
       final template = response.data?.firstSupplierOrderMessageTemplate?.trim();
@@ -43,13 +45,16 @@ Future<String?> fetchFirstSupplierOrderMessageTemplate(BuildContext context) asy
   return null;
 }
 
-Future<CartProductsSupplierResModel?> fetchCartProductsBySupplier(BuildContext context) async {
+Future<CartProductsSupplierResModel?> fetchCartProductsBySupplier(
+    BuildContext context) async {
   try {
-    final preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    final preferences =
+        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     final cartId = preferences.getCartId();
     if (cartId.isEmpty) return null;
 
-    final res = await DioClient(context).post('${AppUrlEndPoints.listingCartProductsSupplierUrl}$cartId');
+    final res = await DioClient(context)
+        .post('${AppUrlEndPoints.listingCartProductsSupplierUrl}$cartId');
     final response = CartProductsSupplierResModel.fromJson(res);
     if (response.status == AppConstants.code_200) {
       return response;
@@ -69,7 +74,8 @@ Future<FirstOrderDialogResult> showFirstSupplierOrderDialogIfNeeded({
   if (!isFirstOrderFromSupplier) return FirstOrderDialogResult.notNeeded;
 
   final template = messageTemplate?.trim();
-  if (template == null || template.isEmpty) return FirstOrderDialogResult.notNeeded;
+  if (template == null || template.isEmpty)
+    return FirstOrderDialogResult.notNeeded;
 
   if (!context.mounted) return FirstOrderDialogResult.cancelled;
 
@@ -104,12 +110,14 @@ Future<FirstOrderDialogResult> checkAndShowFirstOrderDialogForSingleSupplier({
   final messageTemplate = results[1] as String?;
 
   final supplierData = supplierResponse?.data?.data;
-  if (supplierData == null || supplierData.isEmpty) return FirstOrderDialogResult.notNeeded;
+  if (supplierData == null || supplierData.isEmpty)
+    return FirstOrderDialogResult.notNeeded;
 
   return showFirstSupplierOrderDialogIfNeeded(
     context: context,
     language: language,
-    isFirstOrderFromSupplier: supplierData.first.isFirstOrderFromSupplier ?? false,
+    isFirstOrderFromSupplier:
+        supplierData.first.isFirstOrderFromSupplier ?? false,
     supplierDisplayName: supplierData.first.suppliers?.contactName ?? '',
     messageTemplate: messageTemplate,
   );

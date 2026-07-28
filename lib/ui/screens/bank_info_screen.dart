@@ -28,8 +28,10 @@ class BankInfoScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => BankInfoBloc()
         ..add(BankInfoEvent.getBankNameEvent(context: context))
-        ..add(BankInfoEvent.getTermsConditionModelEvent(context: context, termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()))
-        ..add(BankInfoEvent.getArgumentEvent(isPaymentFail: args?[AppStrings.isPaymentFail] ?? false, isUpdate: args?[AppStrings.updateString] ?? false)),
+        ..add(BankInfoEvent.getTermsConditionModelEvent(
+            context: context, termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel()))
+        ..add(BankInfoEvent.getArgumentEvent(
+            isPaymentFail: args?[AppStrings.isPaymentFail] ?? false, isUpdate: args?[AppStrings.updateString] ?? false)),
       child: BankInfoWidget(),
     );
   }
@@ -62,97 +64,97 @@ class BankInfoWidget extends StatelessWidget {
         body: state.isShimmering
             ? const BankInfoScreenShimmerWidget()
             : SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(_horizontalPadding, 12, _horizontalPadding, 120),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildInfoNote(context),
-                16.height,
-                _buildFormCard(
+                physics: const ClampingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(_horizontalPadding, 12, _horizontalPadding, 120),
+                child: Form(
+                  key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildFieldLabel(context, AppLocalizations.of(context)!.name_of_bank),
-                      CommonDropDownButton(
-                        items: state.bankList.map((element) {
-                          return DropdownMenuItem<String>(value: element.bankName, child: Text(element.bankName ?? ''));
-                        }).toList(),
-                        onChanged: (newBankName) {
-                          bloc.add(BankInfoEvent.selectBankEvent(bankName: newBankName ?? ''));
-                        },
-                        value: state.bankName,
-                        color: AppColors.lightBorderColor,
-                        borderRadius: _fieldRadius,
-                        useFilledBackground: true,
-                      ),
+                      _buildInfoNote(context),
                       16.height,
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Column(
+                      _buildFormCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildFieldLabel(context, AppLocalizations.of(context)!.name_of_bank),
+                            CommonDropDownButton(
+                              items: state.bankList.map((element) {
+                                return DropdownMenuItem<String>(value: element.bankName, child: Text(element.bankName ?? ''));
+                              }).toList(),
+                              onChanged: (newBankName) {
+                                bloc.add(BankInfoEvent.selectBankEvent(bankName: newBankName ?? ''));
+                              },
+                              value: state.bankName,
+                              color: AppColors.lightBorderColor,
+                              borderRadius: _fieldRadius,
+                              useFilledBackground: true,
+                            ),
+                            16.height,
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildFieldLabel(context, AppLocalizations.of(context)!.branch_number),
-                                _buildTextField(
-                                  context: context,
-                                  controller: state.branchController,
-                                  validator: AppStrings.branchValString,
-                                  textInputAction: TextInputAction.next,
-                                  inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _buildFieldLabel(context, AppLocalizations.of(context)!.branch_number),
+                                      _buildTextField(
+                                        context: context,
+                                        controller: state.branchController,
+                                        validator: AppStrings.branchValString,
+                                        textInputAction: TextInputAction.next,
+                                        inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                12.width,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _buildFieldLabel(context, AppLocalizations.of(context)!.account_number),
+                                      _buildTextField(
+                                        context: context,
+                                        controller: state.accountNumberController,
+                                        validator: AppStrings.accountValString,
+                                        textInputAction: TextInputAction.done,
+                                        inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                          12.width,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildFieldLabel(context, AppLocalizations.of(context)!.account_number),
-                                _buildTextField(
-                                  context: context,
-                                  controller: state.accountNumberController,
-                                  validator: AppStrings.accountValString,
-                                  textInputAction: TextInputAction.done,
-                                  inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
         bottomSheet: !state.isShimmering
             ? Container(
-          color: AppColors.pageColor,
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-          child: CustomButtonWidget(
-            isLoading: state.isApiShimmering,
-            buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
-            bGColor: AppColors.mainColor,
-            radius: 14,
-            onPressed: () {
-              if (_formKey.currentState?.validate() ?? false) {
-                if (!state.isUpdate) {
-                  bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
-                } else {
-                  bloc.add(BankInfoEvent.addBankInfoEvent(context: context));
-                }
-              }
-            },
-            fontColors: AppColors.whiteColor,
-          ),
-        )
+                color: AppColors.pageColor,
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                child: CustomButtonWidget(
+                  isLoading: state.isApiShimmering,
+                  buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                  bGColor: AppColors.mainColor,
+                  radius: 14,
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      if (!state.isUpdate) {
+                        bloc.add(BankInfoEvent.termsConditionApiEvent(context: context));
+                      } else {
+                        bloc.add(BankInfoEvent.addBankInfoEvent(context: context));
+                      }
+                    }
+                  },
+                  fontColors: AppColors.whiteColor,
+                ),
+              )
             : const SizedBox(),
       );
     });
@@ -172,7 +174,8 @@ class BankInfoWidget extends StatelessWidget {
           Expanded(
             child: Text(
               AppLocalizations.of(context)!.bank_info_note,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blueColor.withValues(alpha: 0.85)).copyWith(height: 1.4),
+              style:
+                  AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blueColor.withValues(alpha: 0.85)).copyWith(height: 1.4),
             ),
           ),
         ],
@@ -211,7 +214,8 @@ class BankInfoWidget extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
+              style: AppStyles.rkRegularTextStyle(
+                  size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.55), fontWeight: FontWeight.w500),
             ),
           ),
         ],

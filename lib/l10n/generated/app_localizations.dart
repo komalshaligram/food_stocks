@@ -665,6 +665,60 @@ abstract class AppLocalizations {
   /// **'שנ׳'**
   String get seconds_short;
 
+  /// No description provided for @did_not_get_sms.
+  ///
+  /// In he, this message translates to:
+  /// **'לא קיבלת את הקוד ב-SMS?'**
+  String get did_not_get_sms;
+
+  /// No description provided for @send_code_via_whatsapp.
+  ///
+  /// In he, this message translates to:
+  /// **'שליחת הקוד ב-WhatsApp'**
+  String get send_code_via_whatsapp;
+
+  /// No description provided for @otp_sent_via_whatsapp_title.
+  ///
+  /// In he, this message translates to:
+  /// **'הקוד נשלח ב-WhatsApp'**
+  String get otp_sent_via_whatsapp_title;
+
+  /// No description provided for @otp_sent_via_whatsapp_message.
+  ///
+  /// In he, this message translates to:
+  /// **'שלחנו לך את קוד האימות בהודעת WhatsApp למספר'**
+  String get otp_sent_via_whatsapp_message;
+
+  /// No description provided for @otp_sent_via_whatsapp_action.
+  ///
+  /// In he, this message translates to:
+  /// **'מעולה, הבנתי'**
+  String get otp_sent_via_whatsapp_action;
+
+  /// No description provided for @whatsappotpsent.
+  ///
+  /// In he, this message translates to:
+  /// **'הקוד נשלח ב-WhatsApp'**
+  String get whatsappotpsent;
+
+  /// No description provided for @whatsappotpsendfailed.
+  ///
+  /// In he, this message translates to:
+  /// **'שליחת הקוד ב-WhatsApp נכשלה, נסו שוב'**
+  String get whatsappotpsendfailed;
+
+  /// No description provided for @whatsappnotconfigured.
+  ///
+  /// In he, this message translates to:
+  /// **'שליחה ב-WhatsApp אינה זמינה כרגע'**
+  String get whatsappnotconfigured;
+
+  /// No description provided for @whatsappotptoosoon.
+  ///
+  /// In he, this message translates to:
+  /// **'נשלח לך קוד ב-WhatsApp ממש עכשיו, אנא המתן מעט'**
+  String get whatsappotptoosoon;
+
   /// No description provided for @log_out.
   ///
   /// In he, this message translates to:
@@ -1282,6 +1336,12 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'אנא הזם שם איש קשר'**
   String get please_enter_contact_name;
+
+  /// No description provided for @please_enter_contact_person_name.
+  ///
+  /// In he, this message translates to:
+  /// **'אנא הזן שם מלא, שם פרטי ושם משפחה'**
+  String get please_enter_contact_person_name;
 
   /// No description provided for @please_enter_address.
   ///
@@ -4625,6 +4685,24 @@ abstract class AppLocalizations {
   /// **'אנא בדוק ועדכן את הפרטים לפני המשך ההזמנה'**
   String get verify_form_subtitle;
 
+  /// No description provided for @validation_errors_title.
+  ///
+  /// In he, this message translates to:
+  /// **'כמעט סיימנו!'**
+  String get validation_errors_title;
+
+  /// No description provided for @validation_errors_message.
+  ///
+  /// In he, this message translates to:
+  /// **'יש כמה שדות בטופס שצריך להשלים או לתקן לפני שממשיכים בהזמנה.'**
+  String get validation_errors_message;
+
+  /// No description provided for @show_errors.
+  ///
+  /// In he, this message translates to:
+  /// **'הצג שגיאות'**
+  String get show_errors;
+
   /// No description provided for @business_details_section.
   ///
   /// In he, this message translates to:
@@ -4721,6 +4799,18 @@ abstract class AppLocalizations {
   /// **'שירות לקוחות'**
   String get customer_service;
 
+  /// No description provided for @agent_code_help_message.
+  ///
+  /// In he, this message translates to:
+  /// **'לא יודעים מה קוד הסוכן או מי הסוכן שלכם? אין בעיה — צוות שירות הלקוחות שלנו כאן כדי לעזור לכם.'**
+  String get agent_code_help_message;
+
+  /// No description provided for @agent_code_contact_support.
+  ///
+  /// In he, this message translates to:
+  /// **'פנייה לשירות לקוחות'**
+  String get agent_code_contact_support;
+
   /// No description provided for @whatsapp_optin_title.
   ///
   /// In he, this message translates to:
@@ -4792,6 +4882,42 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'אנא הוסף תמונה של מיקום הורדת סחורה'**
   String get please_upload_delivery_location_photo;
+
+  /// No description provided for @promo_sheet_reach_min_title.
+  ///
+  /// In he, this message translates to:
+  /// **'השלימו את הכמות למחיר המבצע'**
+  String get promo_sheet_reach_min_title;
+
+  /// No description provided for @promo_sheet_min_reached.
+  ///
+  /// In he, this message translates to:
+  /// **'מעולה! הגעתם למחיר המבצע'**
+  String get promo_sheet_min_reached;
+
+  /// No description provided for @promo_sheet_add_to_cart.
+  ///
+  /// In he, this message translates to:
+  /// **'הוסף לעגלה'**
+  String get promo_sheet_add_to_cart;
+
+  /// No description provided for @promo_sheet_empty.
+  ///
+  /// In he, this message translates to:
+  /// **'לא נמצאו מוצרים למבצע זה'**
+  String get promo_sheet_empty;
+
+  /// No description provided for @promo_sheet_remaining.
+  ///
+  /// In he, this message translates to:
+  /// **'עוד {count} מארזים למחיר המבצע'**
+  String promo_sheet_remaining(int count);
+
+  /// No description provided for @promo_sheet_of_packages.
+  ///
+  /// In he, this message translates to:
+  /// **'{selected} מתוך {min} מארזים'**
+  String promo_sheet_of_packages(int selected, int min);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -33,9 +33,9 @@ import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/confetti.dart';
-import '../widget/custom_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
+import '../widget/sale_promotion_sheet.dart';
 import '../widget/search_item_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/supplier_products_screen_shimmer_widget.dart';
@@ -105,7 +105,8 @@ class ReorderScreenWidget extends StatelessWidget {
                       controller: state.refreshController,
                       header: const RefreshWidget(),
                       footer: CustomFooter(
-                        builder: (context, mode) => state.isGridView ? const SupplierProductsScreenShimmerWidget() : const StoreCategoryScreenSubcategoryShimmerWidget(),
+                        builder: (context, mode) =>
+                            state.isGridView ? const SupplierProductsScreenShimmerWidget() : const StoreCategoryScreenSubcategoryShimmerWidget(),
                       ),
                       enablePullUp: !state.isBottomOfProducts,
                       onRefresh: () {
@@ -184,8 +185,9 @@ class ReorderScreenWidget extends StatelessWidget {
     final product = state.previousOrderProductsList[index];
     final quantity = state.productStockList[1][index].quantity;
     final minQty = int.tryParse(product.sale?.saleMinQuantity ?? '0') ?? 0;
+    final isMixedSale = product.sale?.isMixedSale ?? false;
 
-    if (minQty <= quantity + 1) {
+    if (!isMixedSale && minQty <= quantity + 1) {
       context.read<ReorderBloc>().add(
             ReorderEvent.increaseListQuantityOfProduct(
               context: context,
@@ -204,10 +206,11 @@ class ReorderScreenWidget extends StatelessWidget {
     final product = state.previousOrderProductsList[index];
     final quantity = state.productStockList[1][index].quantity;
     final minQty = int.tryParse(product.sale?.saleMinQuantity ?? '0') ?? 0;
+    final isMixedSale = product.sale?.isMixedSale ?? false;
 
     if (quantity == 0) return;
 
-    if (minQty <= quantity - 1) {
+    if (!isMixedSale && minQty <= quantity - 1) {
       context.read<ReorderBloc>().add(
             ReorderEvent.decreaseListQuantityOfProduct(
               context: context,
@@ -315,7 +318,12 @@ class ReorderScreenWidget extends StatelessWidget {
               onQuantityIncreaseTap: () => _increaseQuantity(context: context, state: state, index: index),
               onQuantityDecreaseTap: () => _decreaseQuantity(context: context, state: state, index: index),
               onButtonTap: () {
-                showProductDetails(context: context, productId: product.id ?? '', productStock: product.productStock.toString(), productListIndex: 1, isSaleOn: state.isSaleOn);
+                showProductDetails(
+                    context: context,
+                    productId: product.id ?? '',
+                    productStock: product.productStock.toString(),
+                    productListIndex: 1,
+                    isSaleOn: state.isSaleOn);
               });
         });
   }
@@ -341,13 +349,15 @@ class ReorderScreenWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
       child: Column(mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.center, children: [
         Center(
-          child: Image.network("${AppUrlEndPoints.baseFileUrl}$productImage", height: 70, fit: BoxFit.fitHeight, loadingBuilder: (context, child, loadingProgress) {
+          child: Image.network("${AppUrlEndPoints.baseFileUrl}$productImage", height: 70, fit: BoxFit.fitHeight,
+              loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
               return CommonShimmerWidget(
                 child: Container(
                   height: 70,
                   width: 70,
-                  decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                  decoration:
+                      BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
                 ),
               );
             }
@@ -377,9 +387,10 @@ class ReorderScreenWidget extends StatelessWidget {
         5.height,
         Center(
           child: CommonProductButtonWidget(
-            title: "${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(
-                AppConstants.amountFrLength,
-              )}",
+            title:
+                "${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(
+                    AppConstants.amountFrLength,
+                  )}",
             onPressed: onPressed,
             textColor: AppColors.whiteColor,
             bgColor: AppColors.mainColor,
@@ -451,7 +462,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         searchName: state.searchList[index].name,
                         searchImage: state.searchList[index].image,
                         searchType: state.searchList[index].searchType,
-                        isMoreResults: state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
+                        isMoreResults:
+                            state.searchList.where((search) => search.searchType == state.searchList[index].searchType).toList().isNotEmpty,
                         isLastItem: state.searchList.length - 1 == index,
                         quantity: state.productStockList[0][index].quantity,
                         isSale: state.searchList[index].isSale,
@@ -468,7 +480,8 @@ class ReorderScreenWidget extends StatelessWidget {
                               ));
                         },
                         onQuantityIncreaseTap: () {
-                          if (int.parse(state.searchList[index].saleMinQuantity ?? '0') <= state.productStockList[0][index].quantity + 1) {
+                          if (!(state.searchList[index].isMixedSale ?? false) &&
+                              int.parse(state.searchList[index].saleMinQuantity ?? '0') <= state.productStockList[0][index].quantity + 1) {
                             context.read<ReorderBloc>().add(ReorderEvent.increaseListQuantityOfProduct(
                                   context: context,
                                   productListIndex: 0,
@@ -499,7 +512,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         },
                         onQuantityDecreaseTap: () {
                           if (state.productStockList[0][index].quantity != 0) {
-                            if (int.parse(state.searchList[index].saleMinQuantity ?? '0') <= state.productStockList[0][index].quantity - 1) {
+                            if (!(state.searchList[index].isMixedSale ?? false) &&
+                                int.parse(state.searchList[index].saleMinQuantity ?? '0') <= state.productStockList[0][index].quantity - 1) {
                               context.read<ReorderBloc>().add(ReorderEvent.decreaseListQuantityOfProduct(
                                     context: context,
                                     productListIndex: 0,
@@ -564,9 +578,11 @@ class ReorderScreenWidget extends StatelessWidget {
                             state.searchList[index].searchType == SearchTypes.company
                                 ? Navigator.pushNamed(context, RouteDefine.companyScreen.name, arguments: {AppStrings.searchString: state.search})
                                 : state.searchList[index].searchType == SearchTypes.supplier
-                                    ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name, arguments: {AppStrings.searchString: state.search})
+                                    ? Navigator.pushNamed(context, RouteDefine.supplierScreen.name,
+                                        arguments: {AppStrings.searchString: state.search})
                                     : state.searchList[index].searchType == SearchTypes.sale
-                                        ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name, arguments: {AppStrings.searchString: state.search})
+                                        ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name,
+                                            arguments: {AppStrings.searchString: state.search})
                                         : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
                                             AppStrings.searchString: state.search,
                                             AppStrings.searchType: SearchTypes.product.toString(),
@@ -619,7 +635,8 @@ class ReorderScreenWidget extends StatelessWidget {
           scanMode: ScanMode.BARCODE,
         );
         if (scanResult != '-1') {
-          showProductDetails(context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
+          showProductDetails(
+              context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
         }
       });
 
@@ -657,7 +674,8 @@ class ReorderScreenWidget extends StatelessWidget {
                     child: BlocBuilder<ReorderBloc, ReorderState>(builder: (blocContext, state) {
                       return Container(
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
                           color: AppColors.whiteColor,
                         ),
                         clipBehavior: Clip.hardEdge,
@@ -674,11 +692,18 @@ class ReorderScreenWidget extends StatelessWidget {
                                         productDetails: state.productDetails,
                                         isSubUserAddToBasket: state.isSubUserAddToBasket,
                                         bottleTax: state.bottleDeposit,
-                                        totalBottleDeposit: (state.bottleDeposit * (state.productDetails.first.numberOfUnit ?? 1).toDouble() * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
+                                        totalBottleDeposit: (state.bottleDeposit *
+                                            (state.productDetails.first.numberOfUnit ?? 1).toDouble() *
+                                            state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity),
                                         isBottle: (state.productDetails.first.isBottle ?? false),
                                         addToOrderTap: () {
-                                          if (int.parse(state.productDetails.first.sale!.saleMinQuantity!) <= state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
-                                            context.read<ReorderBloc>().add(ReorderEvent.addToCartProductEvent(context: context1, productId: productId));
+                                          final isMixedSale = state.productDetails.first.sale?.isMixedSale ?? false;
+                                          if (!isMixedSale &&
+                                              int.parse(state.productDetails.first.sale!.saleMinQuantity!) <=
+                                                  state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
+                                            context
+                                                .read<ReorderBloc>()
+                                                .add(ReorderEvent.addToCartProductEvent(context: context1, productId: productId));
                                           } else {
                                             showMinQtyConfirmDialog(
                                               context,
@@ -705,7 +730,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                                         Navigator.pop(dialogContext);
                                                       },
                                                       child: PhotoView(
-                                                        imageProvider: NetworkImage('${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}'),
+                                                        imageProvider: NetworkImage(
+                                                            '${AppUrlEndPoints.baseFileUrl}${state.productDetails[state.imageIndex].mainImage}'),
                                                       ),
                                                     ),
                                                   ),
@@ -713,16 +739,26 @@ class ReorderScreenWidget extends StatelessWidget {
                                                       onTap: () {
                                                         Navigator.pop(dialogContext);
                                                       },
-                                                      child: Padding(padding: const EdgeInsets.only(top: AppConstants.padding_10), child: Icon(Icons.close, color: AppColors.whiteColor))),
+                                                      child: Padding(
+                                                          padding: const EdgeInsets.only(top: AppConstants.padding_10),
+                                                          child: Icon(Icons.close, color: AppColors.whiteColor))),
                                                 ]);
                                               });
                                         },
                                         context: context,
                                         productImages: [state.productDetails.first.mainImage ?? ''],
-                                        productUnitPrice: double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
+                                        productUnitPrice:
+                                            double.parse(state.productDetails.first.supplierSales?.first.productPrice.toString() ?? '0'),
                                         scaleType: state.productDetails.first.scaleType,
-                                        productPrice: (state.productDetails.first.sale?.isSale ?? false) ? double.parse(state.productDetails.first.sale?.salePrice ?? '') * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1) : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice * state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity * (state.productDetails.first.numberOfUnit ?? 1),
-                                        productStock: (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
+                                        productPrice: (state.productDetails.first.sale?.isSale ?? false)
+                                            ? double.parse(state.productDetails.first.sale?.salePrice ?? '') *
+                                                state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity *
+                                                (state.productDetails.first.numberOfUnit ?? 1)
+                                            : state.productStockList[state.productListIndex][state.productStockUpdateIndex].totalPrice *
+                                                state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity *
+                                                (state.productDetails.first.numberOfUnit ?? 1),
+                                        productStock:
+                                            (state.productStockList[state.productListIndex][state.productStockUpdateIndex].stock.toString()),
                                         scrollController: scrollController,
                                         productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                         isMixedSale: state.productDetails.first.sale!.isMixedSale,
@@ -732,7 +768,9 @@ class ReorderScreenWidget extends StatelessWidget {
                                                 : state.productDetails.first.recommendedRetailPrice
                                             : '',
                                         onQuantityChanged: (quantity) {
-                                          context.read<ReorderBloc>().add(ReorderEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
+                                          context
+                                              .read<ReorderBloc>()
+                                              .add(ReorderEvent.updateQuantityOfProduct(context: context1, quantity: quantity));
                                         },
                                         onQuantityIncreaseTap: () {
                                           context.read<ReorderBloc>().add(ReorderEvent.increaseQuantityOfProduct(context: context1));
@@ -801,7 +839,9 @@ class ReorderScreenWidget extends StatelessWidget {
                 productStock: relatedProductList.elementAt(i).productStock.toString(),
                 lowStock: relatedProductList.elementAt(i).lowStock ?? '',
                 isPesach: relatedProductList.elementAt(i).isPesach,
-                quantity: productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity,
+                quantity: productStockList[2]
+                    .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+                    .quantity,
                 minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
                 maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
                 isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
@@ -810,18 +850,28 @@ class ReorderScreenWidget extends StatelessWidget {
                 onQuantityChanged: () {
                   context.read<ReorderBloc>().add(ReorderEvent.updateListQuantityOfProduct(
                         context: context,
-                        quantity: productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity.toString(),
+                        quantity: productStockList[2]
+                            .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+                            .quantity
+                            .toString(),
                         productListIndex: 2,
-                        productStockUpdateIndex: productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                        productStockUpdateIndex: productStockList[2]
+                            .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                         productSupplierIds: relatedProductList[i].supplierId.toString(),
                       ));
                 },
                 onQuantityIncreaseTap: () {
-                  if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity + 1) {
+                  if (!(relatedProductList[i].sale?.isMixedSale ?? false) &&
+                      int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <=
+                          productStockList[2]
+                                  .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+                                  .quantity +
+                              1) {
                     context.read<ReorderBloc>().add(ReorderEvent.increaseListQuantityOfProduct(
                           context: context,
                           productListIndex: 2,
-                          productStockUpdateIndex: productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                          productStockUpdateIndex: productStockList[2]
+                              .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                           productSupplierIds: relatedProductList[i].supplierId.toString(),
                         ));
 
@@ -829,7 +879,8 @@ class ReorderScreenWidget extends StatelessWidget {
                           context: context,
                           productId: relatedProductList[i].id.toString(),
                           productListIndex: 2,
-                          productStockUpdateIndex: productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                          productStockUpdateIndex: productStockList[2]
+                              .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                           productSupplierIds: relatedProductList[i].supplierId.toString(),
                         ));
                   } else {
@@ -837,7 +888,8 @@ class ReorderScreenWidget extends StatelessWidget {
                       context: context,
                       productId: relatedProductList[i].id.toString(),
                       minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                      index: productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                      index: productStockList[2]
+                          .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                       supplierId: relatedProductList[i].supplierId.toString(),
                       productListIndex: 2,
                       isIncrease: true,
@@ -847,12 +899,21 @@ class ReorderScreenWidget extends StatelessWidget {
                   }
                 },
                 onQuantityDecreaseTap: () {
-                  if (productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity != 0) {
-                    if (int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <= productStockList[2].firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id).quantity - 1) {
+                  if (productStockList[2]
+                          .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+                          .quantity !=
+                      0) {
+                    if (!(relatedProductList[i].sale?.isMixedSale ?? false) &&
+                        int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <=
+                            productStockList[2]
+                                    .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+                                    .quantity -
+                                1) {
                       context.read<ReorderBloc>().add(ReorderEvent.decreaseListQuantityOfProduct(
                             context: context,
                             productListIndex: 2,
-                            productStockUpdateIndex: productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                            productStockUpdateIndex: productStockList[2]
+                                .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                             productSupplierIds: relatedProductList[i].supplierId.toString(),
                           ));
 
@@ -860,7 +921,8 @@ class ReorderScreenWidget extends StatelessWidget {
                             context: context,
                             productId: relatedProductList[i].id.toString(),
                             productListIndex: 2,
-                            productStockUpdateIndex: productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                            productStockUpdateIndex: productStockList[2]
+                                .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                             productSupplierIds: relatedProductList[i].supplierId.toString(),
                           ));
                     } else {
@@ -868,7 +930,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         context: context,
                         productId: relatedProductList[i].id.toString(),
                         minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                        index: productStockList[2].indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+                        index: productStockList[2]
+                            .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
                         supplierId: relatedProductList[i].supplierId.toString(),
                         productListIndex: 2,
                         isIncrease: false,
@@ -916,7 +979,8 @@ class ReorderScreenWidget extends StatelessWidget {
                         ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                             Text(
                               AppLocalizations.of(context)!.suppliers,
-                              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor, fontWeight: FontWeight.w500),
+                              style:
+                                  AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor, fontWeight: FontWeight.w500),
                             ),
                             Icon(Icons.arrow_drop_down, size: 26, color: AppColors.blackColor)
                           ])
@@ -934,7 +998,8 @@ class ReorderScreenWidget extends StatelessWidget {
                           height: 60,
                           width: getScreenWidth(context),
                           alignment: Alignment.center,
-                          child: Text(AppLocalizations.of(context)!.select_supplier, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+                          child: Text(AppLocalizations.of(context)!.select_supplier,
+                              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
                         ))
                     : ListView.builder(
                         itemCount: state.productSupplierList.where((supplier) => supplier.selectedIndex != -1).isNotEmpty ? 1 : 0,
@@ -953,7 +1018,8 @@ class ReorderScreenWidget extends StatelessWidget {
                             child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
                               Text(
                                 state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex != -1).companyName,
-                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500),
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500),
                               ),
                               Expanded(
                                 child: Container(
@@ -972,25 +1038,36 @@ class ReorderScreenWidget extends StatelessWidget {
                                               )
                                               .selectedIndex ==
                                           -2
-                                      ? Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.max, children: [
-                                          Text(
-                                            '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(
-                                                  AppConstants.amountFrLength,
-                                                )}',
-                                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-                                          ),
-                                        ])
-                                      : Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.max, children: [
-                                          Text(
-                                            state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleName,
-                                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.saleRedColor),
-                                          ),
-                                          2.height,
-                                          Text(
-                                            '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
-                                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-                                          ),
-                                        ]),
+                                      ? Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                              Text(
+                                                '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex == -2).basePrice.toStringAsFixed(
+                                                      AppConstants.amountFrLength,
+                                                    )}',
+                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                                              ),
+                                            ])
+                                      : Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                              Text(
+                                                state.productSupplierList
+                                                    .firstWhere((supplier) => supplier.selectedIndex >= 0)
+                                                    .supplierSales[index]
+                                                    .saleName,
+                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.saleRedColor),
+                                              ),
+                                              2.height,
+                                              Text(
+                                                '${AppLocalizations.of(context)!.price}:${AppLocalizations.of(context)!.currency}${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList.firstWhere((supplier) => supplier.selectedIndex >= 0).supplierSales[index].saleDiscount.toStringAsFixed(0)}%)',
+                                                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
+                                              ),
+                                            ]),
                                 ),
                               ),
                             ]),
@@ -1020,7 +1097,8 @@ class ReorderScreenWidget extends StatelessWidget {
                             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                               Text(
                                 AppLocalizations.of(context)!.suppliers,
-                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor, fontWeight: FontWeight.w500),
+                                style: AppStyles.rkRegularTextStyle(
+                                    size: AppConstants.smallFont, color: AppColors.mainColor, fontWeight: FontWeight.w500),
                               ),
                               Icon(Icons.remove, size: 26, color: AppColors.blackColor)
                             ]),
@@ -1050,7 +1128,8 @@ class ReorderScreenWidget extends StatelessWidget {
                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
                                     Text(
                                       state.productSupplierList[index].companyName,
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500),
+                                      style: AppStyles.rkRegularTextStyle(
+                                          size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500),
                                     ),
                                     Expanded(
                                       child: ListView.builder(
@@ -1075,21 +1154,29 @@ class ReorderScreenWidget extends StatelessWidget {
                                                         color: AppColors.whiteColor,
                                                         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                                                         border: Border.all(
-                                                          color: state.productSupplierList[index].selectedIndex == -2 ? AppColors.mainColor.withValues(alpha: 0.8) : Colors.transparent,
+                                                          color: state.productSupplierList[index].selectedIndex == -2
+                                                              ? AppColors.mainColor.withValues(alpha: 0.8)
+                                                              : Colors.transparent,
                                                           width: 1.5,
                                                         ),
                                                       ),
-                                                      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_5),
-                                                      margin: const EdgeInsets.only(top: AppConstants.padding_5, left: AppConstants.padding_5, right: AppConstants.padding_5),
+                                                      padding: const EdgeInsets.symmetric(
+                                                          vertical: AppConstants.padding_3, horizontal: AppConstants.padding_5),
+                                                      margin: const EdgeInsets.only(
+                                                          top: AppConstants.padding_5, left: AppConstants.padding_5, right: AppConstants.padding_5),
                                                       alignment: Alignment.center,
-                                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                                                        Text(
-                                                          '${AppLocalizations.of(context)!.price} : ${AppLocalizations.of(context)!.currency}${state.productSupplierList[index].basePrice.toStringAsFixed(
-                                                            AppConstants.amountFrLength,
-                                                          )}',
-                                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-                                                        ),
-                                                      ]),
+                                                      child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            Text(
+                                                              '${AppLocalizations.of(context)!.price} : ${AppLocalizations.of(context)!.currency}${state.productSupplierList[index].basePrice.toStringAsFixed(
+                                                                AppConstants.amountFrLength,
+                                                              )}',
+                                                              style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants.font_14, color: AppColors.blackColor),
+                                                            ),
+                                                          ]),
                                                     ),
                                                   )
                                                 : InkWell(
@@ -1108,35 +1195,46 @@ class ReorderScreenWidget extends StatelessWidget {
                                                           color: AppColors.whiteColor,
                                                           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
                                                           border: Border.all(
-                                                            color: state.productSupplierList[index].selectedIndex == subIndex ? AppColors.mainColor.withValues(alpha: 0.8) : Colors.transparent,
+                                                            color: state.productSupplierList[index].selectedIndex == subIndex
+                                                                ? AppColors.mainColor.withValues(alpha: 0.8)
+                                                                : Colors.transparent,
                                                             width: 1.5,
                                                           )),
-                                                      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_5),
-                                                      margin: const EdgeInsets.only(top: AppConstants.padding_5, left: AppConstants.padding_5, right: AppConstants.padding_5),
+                                                      padding: const EdgeInsets.symmetric(
+                                                          vertical: AppConstants.padding_3, horizontal: AppConstants.padding_5),
+                                                      margin: const EdgeInsets.only(
+                                                          top: AppConstants.padding_5, left: AppConstants.padding_5, right: AppConstants.padding_5),
                                                       alignment: Alignment.center,
-                                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                                                        Text(
-                                                          state.productSupplierList[index].supplierSales[subIndex].saleName,
-                                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.saleRedColor),
-                                                        ),
-                                                        2.height,
-                                                        Text(
-                                                          '${AppLocalizations.of(context)!.price} : ${AppLocalizations.of(context)!.currency}${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
-                                                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-                                                        ),
-                                                        2.height,
-                                                        GestureDetector(
-                                                            onTap: () {
-                                                              showConditionDialog(
-                                                                context: context,
-                                                                saleCondition: state.productSupplierList[index].supplierSales[subIndex].saleDescription,
-                                                              );
-                                                            },
-                                                            child: Text(
-                                                              AppLocalizations.of(context)!.read_condition,
-                                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.blueColor),
-                                                            )),
-                                                      ]),
+                                                      child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            Text(
+                                                              state.productSupplierList[index].supplierSales[subIndex].saleName,
+                                                              style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants.font_12, color: AppColors.saleRedColor),
+                                                            ),
+                                                            2.height,
+                                                            Text(
+                                                              '${AppLocalizations.of(context)!.price} : ${AppLocalizations.of(context)!.currency}${state.productSupplierList[index].supplierSales[subIndex].salePrice.toStringAsFixed(AppConstants.amountFrLength)}(${state.productSupplierList[index].supplierSales[subIndex].saleDiscount.toStringAsFixed(0)}%)',
+                                                              style: AppStyles.rkRegularTextStyle(
+                                                                  size: AppConstants.font_14, color: AppColors.blackColor),
+                                                            ),
+                                                            2.height,
+                                                            GestureDetector(
+                                                                onTap: () {
+                                                                  showConditionDialog(
+                                                                    context: context,
+                                                                    saleCondition:
+                                                                        state.productSupplierList[index].supplierSales[subIndex].saleDescription,
+                                                                  );
+                                                                },
+                                                                child: Text(
+                                                                  AppLocalizations.of(context)!.read_condition,
+                                                                  style: AppStyles.rkRegularTextStyle(
+                                                                      size: AppConstants.font_10, color: AppColors.blueColor),
+                                                                )),
+                                                          ]),
                                                     ),
                                                   );
                                           }),
@@ -1166,36 +1264,7 @@ class ReorderScreenWidget extends StatelessWidget {
   }
 
   showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale, List? sameSaleProducts) {
-    ReorderBloc bloc = context.read<ReorderBloc>();
-    showDialog(
-      context: context,
-      builder: (dialogContext) => BlocProvider.value(
-        value: context.read<ReorderBloc>(),
-        child: BlocBuilder<ReorderBloc, ReorderState>(builder: (context1, state) {
-          String mixedSale = '';
-          if (isMixedSale!) {
-            mixedSale = AppStrings.minSaleText(context, minBox);
-          } else {
-            mixedSale = AppStrings.otherSaleText(context, minBox);
-          }
-          return CustomDialog(
-              directionality: state.language,
-              title: mixedSale,
-              content: isMixedSale ? sameSaleProducts! : [],
-              isMixedSale: isMixedSale,
-              positiveTitle: AppLocalizations.of(context)!.closeText,
-              negativeTitle: AppLocalizations.of(context)!.addText,
-              negativeOnTap: () async {
-                Navigator.pop(dialogContext);
-                bloc.add(ReorderEvent.addToCartProductEvent(context: context, productId: productId));
-              },
-              positiveOnTap: () async {
-                Navigator.pop(context);
-                bloc.add(ReorderEvent.getCartCountNoEvent(context: context));
-              });
-        }),
-      ),
-    );
+    _openSalePromotionSheet(context, productId);
   }
 
   void showMinMaxQtyConfirmDialog({
@@ -1209,55 +1278,18 @@ class ReorderScreenWidget extends StatelessWidget {
     bool? isMixedSale,
     List? sameSaleProducts,
   }) {
+    _openSalePromotionSheet(context, productId);
+  }
+
+  Future<void> _openSalePromotionSheet(BuildContext context, String productId) async {
     final ReorderBloc bloc = context.read<ReorderBloc>();
-    final bool mixedSaleFlag = isMixedSale ?? false;
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => BlocProvider.value(
-        value: bloc,
-        child: BlocBuilder<ReorderBloc, ReorderState>(builder: (context1, state) {
-          final String mixedSale = mixedSaleFlag ? AppStrings.minSaleText(context, minBox) : AppStrings.otherSaleText(context, minBox);
-
-          return CustomDialog(
-              directionality: state.language,
-              title: mixedSale,
-              content: mixedSaleFlag ? (sameSaleProducts ?? []) : [],
-              isMixedSale: mixedSaleFlag,
-              positiveTitle: AppLocalizations.of(context)!.closeText,
-              negativeTitle: AppLocalizations.of(context)!.addText,
-              negativeOnTap: () {
-                Navigator.pop(dialogContext);
-
-                if (isIncrease) {
-                  bloc.add(ReorderEvent.increaseListQuantityOfProduct(
-                    context: context,
-                    productListIndex: productListIndex,
-                    productStockUpdateIndex: index,
-                    productSupplierIds: supplierId,
-                  ));
-                } else {
-                  bloc.add(ReorderEvent.decreaseListQuantityOfProduct(
-                    context: context,
-                    productListIndex: productListIndex,
-                    productStockUpdateIndex: index,
-                    productSupplierIds: supplierId,
-                  ));
-                }
-                bloc.add(ReorderEvent.addToCartListProductEvent(
-                  context: context,
-                  productId: productId,
-                  productListIndex: productListIndex,
-                  productStockUpdateIndex: index,
-                  productSupplierIds: supplierId,
-                ));
-              },
-              positiveOnTap: () {
-                Navigator.pop(dialogContext);
-              });
-        }),
-      ),
-    );
+    final l10n = AppLocalizations.of(context)!;
+    final bool changed = await showSalePromotionSheet(context: context, productId: productId, l10n: l10n);
+    if (!changed || !context.mounted) return;
+    final cartMap = await fetchCartQuantities(context);
+    if (!context.mounted) return;
+    bloc.add(ReorderEvent.applyCartQuantitiesEvent(cartQuantities: cartMap));
+    bloc.add(ReorderEvent.getCartCountNoEvent(context: context));
   }
 
   Widget floatingButtonWidget(BuildContext context, ReorderState state) => FloatingActionButton(
@@ -1293,7 +1325,8 @@ class ReorderScreenWidget extends StatelessWidget {
             width: 25,
             child: Visibility(
               visible: state.duringCelebration,
-              child: IgnorePointer(child: Confetti(isStopped: !state.duringCelebration, snippingCount: 10, snipSize: 3.0, colors: [AppColors.mainColor])),
+              child: IgnorePointer(
+                  child: Confetti(isStopped: !state.duringCelebration, snippingCount: 10, snipSize: 3.0, colors: [AppColors.mainColor])),
             ),
           ),
         ]),

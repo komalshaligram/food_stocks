@@ -50,7 +50,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         if (current.isAccountPermissionShimmering) {}
         if (current.isAppOnMaintenance && !current.isDialogOpen) {
           appUnderMaintenanceDialog(context: context, state: current);
-          BlocProvider.of<ProfileMenuBloc>(context).add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
+          BlocProvider.of<ProfileMenuBloc>(context)
+              .add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
         }
         if (previous.isHebrewLanguage != current.isHebrewLanguage) {
           return true;
@@ -59,16 +60,22 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         }
       },
       listener: (context, state) async {
-        context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 0, context: context));
+        context
+            .read<BottomNavBloc>()
+            .add(BottomNavEvent.changePage(index: 0, context: context));
       },
-      child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(builder: (context, state) {
+      child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
+          builder: (context, state) {
         return FocusDetector(
           onFocusGained: () {
             bloc.add(ProfileMenuEvent.userApproveEvent(context: context));
             bloc.add(ProfileMenuEvent.getPermissionList(context: context));
             bloc.add(const ProfileMenuEvent.getPreferenceDataEvent());
             bloc.add(const ProfileMenuEvent.getAppLanguage());
-            bloc.add(ProfileMenuEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
+            bloc.add(ProfileMenuEvent.generalSettings(
+                context: context,
+                dialogContext: context,
+                isRetryLoading: false));
             bloc.add(ProfileMenuEvent.getProfileDetailsEvent(context: context));
           },
           child: Scaffold(
@@ -85,8 +92,10 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                         child: Column(
                             children: AnimationConfiguration.toStaggeredList(
                                 duration: const Duration(milliseconds: 400),
-                                childAnimationBuilder: (widget) => SlideAnimation(
-                                      duration: const Duration(milliseconds: 400),
+                                childAnimationBuilder: (widget) =>
+                                    SlideAnimation(
+                                      duration:
+                                          const Duration(milliseconds: 400),
                                       verticalOffset: 24,
                                       child: FadeInAnimation(child: widget),
                                     ),
@@ -95,7 +104,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     ),
                     state.isLoading
                         ? Positioned.fill(
-                            child: Center(child: SizedBox(height: 120, width: 120, child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20))),
+                            child: Center(
+                                child: SizedBox(
+                                    height: 120,
+                                    width: 120,
+                                    child: CupertinoActivityIndicator(
+                                        color: AppColors.mainColor,
+                                        radius: AppConstants.radius_20))),
                           )
                         : 0.width
                   ]),
@@ -103,7 +118,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 10.height,
                 Text(
                   '${AppLocalizations.of(context)!.application_version}${' '}${state.applicationVersion} (${state.buildNumber})',
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor.withValues(alpha: 0.45)),
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.smallFont,
+                      color: AppColors.blackColor.withValues(alpha: 0.45)),
                 ),
                 10.height,
               ]),
@@ -143,31 +160,40 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             child: Container(
               height: 48,
               width: 48,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.whiteColor),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: AppColors.whiteColor),
               clipBehavior: Clip.hardEdge,
               child: state.userImageUrl.isNotEmpty
                   ? CachedNetworkImage(
-                      imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
+                      imageUrl:
+                          '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => const CupertinoActivityIndicator(),
-                      errorWidget: (context, url, error) => SvgPicture.asset(AppImagePath.placeholderProfile, fit: BoxFit.cover),
+                      placeholder: (context, url) =>
+                          const CupertinoActivityIndicator(),
+                      errorWidget: (context, url, error) => SvgPicture.asset(
+                          AppImagePath.placeholderProfile,
+                          fit: BoxFit.cover),
                     )
-                  : SvgPicture.asset(AppImagePath.placeholderProfile, fit: BoxFit.scaleDown),
+                  : SvgPicture.asset(AppImagePath.placeholderProfile,
+                      fit: BoxFit.scaleDown),
             ),
           ),
           const SizedBox(width: 14),
           Expanded(
             child: Text(
               state.userName,
-              style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.blackColor),
+              style: AppStyles.rkBoldTextStyle(
+                  size: AppConstants.font_17, color: AppColors.blackColor),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(width: 8),
           state.clubAgentId == AppStrings.clubAgentIdText
-              ? Image.asset(AppImagePath.clubAgentBlueLogo, fit: BoxFit.contain, width: 48, height: 48)
-              : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.contain, width: 48, height: 48),
+              ? Image.asset(AppImagePath.clubAgentBlueLogo,
+                  fit: BoxFit.contain, width: 48, height: 48)
+              : SvgPicture.asset(AppImagePath.splashLogo,
+                  fit: BoxFit.contain, width: 48, height: 48),
         ],
       ),
     );
@@ -179,72 +205,108 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     final settingsTiles = <Widget>[];
     final otherTiles = <Widget>[];
 
-    void addTile(List<Widget> group, {required String title, required VoidCallback onTap, required IconData icon, bool isDestructive = false}) {
-      group.add(profileMenuTile(title: title, onTap: onTap, icon: icon, isDestructive: isDestructive));
+    void addTile(List<Widget> group,
+        {required String title,
+        required VoidCallback onTap,
+        required IconData icon,
+        bool isDestructive = false}) {
+      group.add(profileMenuTile(
+          title: title,
+          onTap: onTap,
+          icon: icon,
+          isDestructive: isDestructive));
     }
 
     if (state.isCanScanDocuments) {
-      addTile(activityTiles, title: l10n.certificate_scanning, icon: Icons.document_scanner_outlined, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.certificateScanningScreen.name);
+      addTile(activityTiles,
+          title: l10n.certificate_scanning,
+          icon: Icons.document_scanner_outlined, onTap: () {
+        Navigator.pushNamed(
+            context, RouteDefine.certificateScanningScreen.name);
       });
     }
     if (state.isSubUserSeeOrder) {
-      addTile(activityTiles, title: l10n.my_orders, icon: Icons.receipt_long_outlined, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+      addTile(activityTiles,
+          title: l10n.my_orders, icon: Icons.receipt_long_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.orderScreen.name,
+            arguments: {AppStrings.pushNavigationString: 'profileScreen'});
       });
     }
     if (state.isCanSeeInvoices) {
-      addTile(activityTiles, title: l10n.my_accounting_card, icon: Icons.account_balance_wallet_outlined, onTap: () {
+      addTile(activityTiles,
+          title: l10n.my_accounting_card,
+          icon: Icons.account_balance_wallet_outlined, onTap: () {
         Navigator.pushNamed(context, RouteDefine.myAccountingCardScreen.name);
       });
     }
     if (state.isSubUserSeeReturns) {
-      addTile(activityTiles, title: l10n.returns, icon: Icons.assignment_return_outlined, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+      addTile(activityTiles,
+          title: l10n.returns,
+          icon: Icons.assignment_return_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.returnListScreen.name,
+            arguments: {AppStrings.pushNavigationString: 'profileScreen'});
       });
     }
 
     if (state.isSubUserUpdateBusinessInfo) {
-      addTile(settingsTiles, title: l10n.business_details, icon: Icons.person_outline_rounded, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.profileScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+      addTile(settingsTiles,
+          title: l10n.business_details,
+          icon: Icons.person_outline_rounded, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.profileScreen.name,
+            arguments: {AppStrings.isUpdateParamString: true});
       });
     }
     if (state.isSubUserUpdateAdditionalInfo) {
-      addTile(settingsTiles, title: l10n.more_details, icon: Icons.storefront_outlined, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.moreDetailsScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+      addTile(settingsTiles,
+          title: l10n.more_details, icon: Icons.storefront_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.moreDetailsScreen.name,
+            arguments: {AppStrings.isUpdateParamString: true});
       });
     }
     if (state.isSubUserUpdateTimeInfo) {
-      addTile(settingsTiles, title: l10n.activity_time, icon: Icons.schedule_outlined, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.activityTimeScreen.name, arguments: {AppStrings.isUpdateParamString: true});
+      addTile(settingsTiles,
+          title: l10n.activity_time, icon: Icons.schedule_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.activityTimeScreen.name,
+            arguments: {AppStrings.isUpdateParamString: true});
       });
     }
     if (state.isSubUserSeeFormsFiles) {
-      addTile(settingsTiles, title: l10n.files, icon: Icons.folder_open_outlined, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name, arguments: {
-          AppStrings.isUpdateParamString: true,
-          AppStrings.isRegisterFileString: false,
-        });
+      addTile(settingsTiles,
+          title: l10n.files, icon: Icons.folder_open_outlined, onTap: () {
+        Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name,
+            arguments: {
+              AppStrings.isUpdateParamString: true,
+              AppStrings.isRegisterFileString: false,
+            });
       });
     }
     if (state.isSubUserCanManageSubUser) {
-      addTile(settingsTiles, title: l10n.sub_user, icon: Icons.people_outline_rounded, onTap: () {
+      addTile(settingsTiles,
+          title: l10n.sub_user, icon: Icons.people_outline_rounded, onTap: () {
         Navigator.pushNamed(context, RouteDefine.subUsersScreen.name);
       });
-      addTile(settingsTiles, title: l10n.manage_credit_card, icon: Icons.credit_card_outlined, onTap: () {
+      addTile(settingsTiles,
+          title: l10n.manage_credit_card,
+          icon: Icons.credit_card_outlined, onTap: () {
         Navigator.pushNamed(context, RouteDefine.manageCreditCardScreen.name);
       });
     }
 
-    addTile(otherTiles, title: l10n.bank_transfer_information, icon: Icons.account_balance_outlined, onTap: () {
+    addTile(otherTiles,
+        title: l10n.bank_transfer_information,
+        icon: Icons.account_balance_outlined, onTap: () {
       Navigator.pushNamed(context, RouteDefine.bankTransferScreen.name);
     });
     if (state.isAgent!) {
-      addTile(otherTiles, title: l10n.my_clients, icon: Icons.groups_outlined, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.myClientsScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+      addTile(otherTiles, title: l10n.my_clients, icon: Icons.groups_outlined,
+          onTap: () {
+        Navigator.pushNamed(context, RouteDefine.myClientsScreen.name,
+            arguments: {AppStrings.pushNavigationString: 'profileScreen'});
       });
     }
-    addTile(otherTiles, title: l10n.customer_service, icon: Icons.headset_mic_outlined, onTap: () {
+    addTile(otherTiles,
+        title: l10n.customer_service,
+        icon: Icons.headset_mic_outlined, onTap: () {
       showCustomerServiceBottomSheet(
         context: context,
         customerServicePhone: state.customerServicePhone,
@@ -252,9 +314,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       );
     });
     if (state.isAgentSwitchToAssignedStore!) {
-      addTile(otherTiles, title: l10n.switch_back_to_agent_view, icon: Icons.swap_horiz_rounded, onTap: () {
+      addTile(otherTiles,
+          title: l10n.switch_back_to_agent_view,
+          icon: Icons.swap_horiz_rounded, onTap: () {
         if (state.isLoading) return;
-        context.read<ProfileMenuBloc>().add(ProfileMenuEvent.switchAccountEvent(context: context));
+        context
+            .read<ProfileMenuBloc>()
+            .add(ProfileMenuEvent.switchAccountEvent(context: context));
       });
     }
 
@@ -267,7 +333,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         title: l10n.app_language,
         isHebrewLang: state.isHebrewLanguage,
         onChanged: (bool value) {
-          context.read<ProfileMenuBloc>().add(ProfileMenuEvent.changeAppLanguageEvent(context: context));
+          context
+              .read<ProfileMenuBloc>()
+              .add(ProfileMenuEvent.changeAppLanguageEvent(context: context));
         },
       ),
       profileMenuGroup(
@@ -277,7 +345,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             icon: Icons.logout_rounded,
             isDestructive: true,
             onTap: () {
-              if (!state.isLogOutProcess) logOutDialog(context: context, directionality: state.language);
+              if (!state.isLogOutProcess)
+                logOutDialog(context: context, directionality: state.language);
             },
           ),
         ],
@@ -291,7 +360,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
   Widget profileMenuGroup({required List<Widget> children}) {
     if (children.isEmpty) return 0.width;
     return Container(
-      margin: const EdgeInsets.fromLTRB(_menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
+      margin: const EdgeInsets.fromLTRB(
+          _menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(_menuGroupRadius),
@@ -304,7 +374,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         ],
       ),
       clipBehavior: Clip.antiAlias,
-      child: Column(mainAxisSize: MainAxisSize.min, children: _intersperseDividers(children)),
+      child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: _intersperseDividers(children)),
     );
   }
 
@@ -314,14 +386,23 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     for (var i = 0; i < children.length; i++) {
       result.add(children[i]);
       if (i < children.length - 1) {
-        result.add(Divider(height: 1, thickness: 1, indent: 68, color: AppColors.lightBorderColor.withValues(alpha: 0.6)));
+        result.add(Divider(
+            height: 1,
+            thickness: 1,
+            indent: 68,
+            color: AppColors.lightBorderColor.withValues(alpha: 0.6)));
       }
     }
     return result;
   }
 
-  Widget profileMenuTile({required String title, required VoidCallback onTap, required IconData icon, bool isDestructive = false}) {
-    final accentColor = isDestructive ? AppColors.redColor : AppColors.mainColor;
+  Widget profileMenuTile(
+      {required String title,
+      required VoidCallback onTap,
+      required IconData icon,
+      bool isDestructive = false}) {
+    final accentColor =
+        isDestructive ? AppColors.redColor : AppColors.mainColor;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -334,7 +415,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 height: 40,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: accentColor.withValues(alpha: isDestructive ? 0.1 : 0.12),
+                  color:
+                      accentColor.withValues(alpha: isDestructive ? 0.1 : 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, size: 21, color: accentColor),
@@ -345,7 +427,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                   title,
                   style: AppStyles.rkRegularTextStyle(
                     size: AppConstants.font_15,
-                    color: isDestructive ? AppColors.redColor : AppColors.blackColor.withValues(alpha: 0.88),
+                    color: isDestructive
+                        ? AppColors.redColor
+                        : AppColors.blackColor.withValues(alpha: 0.88),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -353,7 +437,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               Icon(
                 Icons.chevron_right,
                 size: 22,
-                color: isDestructive ? AppColors.redColor.withValues(alpha: 0.5) : AppColors.blackColor.withValues(alpha: 0.25),
+                color: isDestructive
+                    ? AppColors.redColor.withValues(alpha: 0.5)
+                    : AppColors.blackColor.withValues(alpha: 0.25),
               ),
             ],
           ),
@@ -362,7 +448,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget profileMenuTiles({required title, required void Function() onTap, bool isDelete = false}) {
+  Widget profileMenuTiles(
+      {required title, required void Function() onTap, bool isDelete = false}) {
     return profileMenuTile(
       title: title,
       onTap: onTap,
@@ -371,9 +458,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget menuSwitchTile({required String title, required bool isHebrewLang, required void Function(bool)? onChanged}) {
+  Widget menuSwitchTile(
+      {required String title,
+      required bool isHebrewLang,
+      required void Function(bool)? onChanged}) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(_menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
+      margin: const EdgeInsets.fromLTRB(
+          _menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(_menuGroupRadius),
@@ -403,7 +494,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                     color: AppColors.mainColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(Icons.language_rounded, size: 21, color: AppColors.mainColor),
+                  child: Icon(Icons.language_rounded,
+                      size: 21, color: AppColors.mainColor),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -434,12 +526,14 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  void logOutDialog({required BuildContext context, required String directionality}) {
+  void logOutDialog(
+      {required BuildContext context, required String directionality}) {
     showDialog(
       context: context,
       builder: (context1) => BlocProvider.value(
         value: context.read<ProfileMenuBloc>(),
-        child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(builder: (context, state) {
+        child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
+            builder: (context, state) {
           ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
           return CommonAlertDialog(
               isLogOutProcess: state.isLogOutProcess,
@@ -459,14 +553,16 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  appUnderMaintenanceDialog({required BuildContext context, required ProfileMenuState state}) {
+  appUnderMaintenanceDialog(
+      {required BuildContext context, required ProfileMenuState state}) {
     if (!state.isDialogOpen) {
       showDialog(
         barrierDismissible: false,
         context: context,
         builder: (context1) => BlocProvider.value(
           value: context.read<ProfileMenuBloc>(),
-          child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(builder: (context, state) {
+          child: BlocBuilder<ProfileMenuBloc, ProfileMenuState>(
+              builder: (context, state) {
             ProfileMenuBloc bloc = context.read<ProfileMenuBloc>();
             return CustomOneButtonDialog(
                 isLoading: state.retryLoading,
@@ -474,13 +570,18 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.under_maintenance,
                 positiveTitle: AppLocalizations.of(context)!.retry,
                 positiveOnTap: () async {
-                  bloc.add(ProfileMenuEvent.generalSettings(context: context, dialogContext: context1, isRetryLoading: true));
+                  bloc.add(ProfileMenuEvent.generalSettings(
+                      context: context,
+                      dialogContext: context1,
+                      isRetryLoading: true));
                 });
           }),
         ),
       );
     } else {
-      context.read<ProfileMenuBloc>().add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
+      context
+          .read<ProfileMenuBloc>()
+          .add(ProfileMenuEvent.updateMaintenanceEvent(context: context));
     }
   }
 }

@@ -22,40 +22,40 @@ class HomeEvent with _$HomeEvent {
 
   const factory HomeEvent.generalSettings(
       {required BuildContext context,
-      required BuildContext dialogContext,
-      required bool isRetryLoading}) = _generalSettings;
+        required BuildContext dialogContext,
+        required bool isRetryLoading}) = _generalSettings;
 
   const factory HomeEvent.decreaseQuantityOfProduct(
       {required BuildContext context}) = _decreaseQuantityOfProduct;
 
   const factory HomeEvent.updateQuantityOfProduct(
       {required BuildContext context,
-      required String quantity}) = _updateQuantityOfProduct;
+        required String quantity}) = _updateQuantityOfProduct;
 
   const factory HomeEvent.supplierSelectionEvent(
       {required int supplierIndex,
-      required BuildContext context,
-      required int supplierSaleIndex}) = _supplierSelectionEvent;
+        required BuildContext context,
+        required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory HomeEvent.addToCartProductEvent(
       {required BuildContext context,
-      required String productId}) = _addToCartProductEvent;
+        required String productId}) = _addToCartProductEvent;
 
   const factory HomeEvent.setCartCountEvent() = _setCartCountEvent;
 
   const factory HomeEvent.getOrderCountEvent({required BuildContext context}) =
-      _getOrderCountEvent;
+  _getOrderCountEvent;
 
   const factory HomeEvent.getMessageListEvent({required BuildContext context}) =
-      _getMessageListEvent;
+  _getMessageListEvent;
 
   const factory HomeEvent.getCartCountEvent({required BuildContext context}) =
-      _getCartCountEvent;
+  _getCartCountEvent;
 
   const factory HomeEvent.removeOrUpdateMessageEvent(
       {required String messageId,
-      required bool isRead,
-      required bool isDelete}) = _removeOrUpdateMessageEvent;
+        required bool isRead,
+        required bool isDelete}) = _removeOrUpdateMessageEvent;
 
   const factory HomeEvent.updateMessageListEvent(
       {required List<String> messageIdList}) = _updateMessageListEvent;
@@ -77,30 +77,30 @@ class HomeEvent with _$HomeEvent {
 
 
   const factory HomeEvent.changeCategoryExpansion({bool? isOpened}) =
-      _changeCategoryExpansion;
+  _changeCategoryExpansion;
 
   const factory HomeEvent.globalSearchEvent({required BuildContext context}) =
-      _globalSearchEvent;
+  _globalSearchEvent;
 
   const factory HomeEvent.updateGlobalSearchEvent(
       {required String search,
-      required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
+        required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
   const factory HomeEvent.checkVersionOfAppEvent(
       {required BuildContext context}) = _checkVersionOfAppEvent;
 
   const factory HomeEvent.relatedProductsEvent(
       {required BuildContext context,
-      required String productId}) = _relatedProductsEvent;
+        required String productId}) = _relatedProductsEvent;
 
   const factory HomeEvent.removeRelatedProductEvent() =
-      _removeRelatedProductEvent;
+  _removeRelatedProductEvent;
 
   const factory HomeEvent.getPermissionList({required BuildContext context}) =
-      _getPermissionList;
+  _getPermissionList;
 
   const factory HomeEvent.userApproveEvent({required BuildContext context}) =
-      _userApproveEvent;
+  _userApproveEvent;
 
   const factory HomeEvent.updateMaintenanceEvent(
       {required BuildContext context}) = _updateMaintenanceEvent;
@@ -142,5 +142,12 @@ class HomeEvent with _$HomeEvent {
   }) = _addToCartListProductEvent;
 
   const factory HomeEvent.clearNoMinimumDialogTriggerEvent() =
-      _clearNoMinimumDialogTriggerEvent;
+  _clearNoMinimumDialogTriggerEvent;
+
+  /// Re-applies fresh cart quantities (productId → quantity) onto the on-screen
+  /// product lists without a network reload, after the promotion sheet changes
+  /// the cart.
+  const factory HomeEvent.applyCartQuantitiesEvent({
+    required Map<String, int> cartQuantities,
+  }) = _applyCartQuantitiesEvent;
 }

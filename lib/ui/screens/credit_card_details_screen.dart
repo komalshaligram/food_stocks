@@ -24,24 +24,34 @@ class CreditCardDetailsScreen extends StatelessWidget {
   const CreditCardDetailsScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     final MyCardInvoice? invoiceData = args?[AppStrings.invoiceData];
-    final bool isFromInvoicePayment = args?[AppStrings.isFromInvoicePayment] ?? false;
+    final bool isFromInvoicePayment =
+        args?[AppStrings.isFromInvoicePayment] ?? false;
     return BlocProvider(
       create: (context) => CreditCardDetailsBloc()
         ..add(CreditCardDetailsEvent.getArgumentEvent(
           isFromRegFlow: args?[AppStrings.isFromRegFlow] ?? false,
-          termsReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
+          termsReqModel: args?[AppStrings.termsConditionParamString] ??
+              const TermsConditionReqModel(),
           isPaymentFail: args?[AppStrings.isPaymentFail] ?? false,
           invoiceData: invoiceData,
         )),
-      child: CreditCardDetailsScreenWidget(isPaymentToNext: args?[AppStrings.isPaymentToNext], invoiceData: invoiceData!, isFromInvoicePayment: isFromInvoicePayment),
+      child: CreditCardDetailsScreenWidget(
+          isPaymentToNext: args?[AppStrings.isPaymentToNext],
+          invoiceData: invoiceData!,
+          isFromInvoicePayment: isFromInvoicePayment),
     );
   }
 }
 
 class CreditCardDetailsScreenWidget extends StatelessWidget {
-  CreditCardDetailsScreenWidget({super.key, required this.isPaymentToNext, required this.invoiceData, required this.isFromInvoicePayment});
+  CreditCardDetailsScreenWidget(
+      {super.key,
+      required this.isPaymentToNext,
+      required this.invoiceData,
+      required this.isFromInvoicePayment});
 
   final bool isPaymentToNext;
   final MyCardInvoice invoiceData;
@@ -55,7 +65,8 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return BlocBuilder<CreditCardDetailsBloc, CreditCardDetailsState>(builder: (context, state) {
+    return BlocBuilder<CreditCardDetailsBloc, CreditCardDetailsState>(
+        builder: (context, state) {
       return PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {
@@ -87,7 +98,8 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 100),
+              padding: const EdgeInsets.fromLTRB(
+                  _horizontalPadding, 8, _horizontalPadding, 100),
               child: Form(
                 key: _formKey,
                 child: _buildFormCard(
@@ -100,7 +112,8 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
           ),
           bottomNavigationBar: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 16),
+              padding: const EdgeInsets.fromLTRB(
+                  _horizontalPadding, 8, _horizontalPadding, 16),
               child: CustomButtonWidget(
                 buttonText: l10n.next.toUpperCase(),
                 bGColor: AppColors.mainColor,
@@ -108,14 +121,22 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                 radius: 14,
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
-                    if (validateMonth(state.selectedMonth, state.validityController.text)) {
-                      context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.addCreditCardEvent(
+                    if (validateMonth(
+                        state.selectedMonth, state.validityController.text)) {
+                      context
+                          .read<CreditCardDetailsBloc>()
+                          .add(CreditCardDetailsEvent.addCreditCardEvent(
                             context: context,
                             isPaymentToNext: isPaymentToNext,
-                            invoiceData: invoiceData.orderId != null ? invoiceData : const MyCardInvoice(),
+                            invoiceData: invoiceData.orderId != null
+                                ? invoiceData
+                                : const MyCardInvoice(),
                           ));
                     } else {
-                      CustomSnackBar.showSnackBar(context: context, title: l10n.select_valid_month, type: SnackBarType.failure);
+                      CustomSnackBar.showSnackBar(
+                          context: context,
+                          title: l10n.select_valid_month,
+                          type: SnackBarType.failure);
                     }
                   }
                 },
@@ -136,11 +157,15 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
         color: AppColors.mainColor.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Icon(Icons.credit_card_outlined, size: 21, color: AppColors.mainColor),
+      child: Icon(Icons.credit_card_outlined,
+          size: 21, color: AppColors.mainColor),
     );
   }
 
-  Widget _buildFormCard({required BuildContext context, required CreditCardDetailsState state, required AppLocalizations l10n}) {
+  Widget _buildFormCard(
+      {required BuildContext context,
+      required CreditCardDetailsState state,
+      required AppLocalizations l10n}) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
@@ -159,7 +184,10 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
         children: [
           _buildFieldLabel(l10n.credit_card_number),
           CustomFormField(
-            inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+            inputFormat: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(16)
+            ],
             context: context,
             controller: state.creditCardNumberController,
             keyboardType: TextInputType.number,
@@ -180,7 +208,10 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                   children: [
                     _buildFieldLabel(l10n.year),
                     CustomFormField(
-                      inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
+                      inputFormat: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(2)
+                      ],
                       context: context,
                       controller: state.validityController,
                       keyboardType: TextInputType.number,
@@ -202,13 +233,20 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
                     _buildFieldLabel(l10n.month),
                     CommonDropDownButton(
                       items: state.monthList.map((value) {
-                        return DropdownMenuItem<String>(value: value, child: Text(value.toString()));
+                        return DropdownMenuItem<String>(
+                            value: value, child: Text(value.toString()));
                       }).toList(),
                       onChanged: (month) {
-                        if (validateMonth(month.toString(), state.validityController.text.toString())) {
-                          context.read<CreditCardDetailsBloc>().add(CreditCardDetailsEvent.selectMonthEvent(month: month ?? ''));
+                        if (validateMonth(month.toString(),
+                            state.validityController.text.toString())) {
+                          context.read<CreditCardDetailsBloc>().add(
+                              CreditCardDetailsEvent.selectMonthEvent(
+                                  month: month ?? ''));
                         } else {
-                          CustomSnackBar.showSnackBar(context: context, title: l10n.select_valid_month, type: SnackBarType.failure);
+                          CustomSnackBar.showSnackBar(
+                              context: context,
+                              title: l10n.select_valid_month,
+                              type: SnackBarType.failure);
                         }
                       },
                       value: state.selectedMonth,
@@ -242,7 +280,8 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
 
   bool validateMonth(String month, String year) {
     if (DateTime.now().year.toString().substring(2, 4) == year) {
-      if (int.parse(month.toString()) < int.parse((DateTime.now().month - 1).toString())) {
+      if (int.parse(month.toString()) <
+          int.parse((DateTime.now().month - 1).toString())) {
         return false;
       } else {
         return true;

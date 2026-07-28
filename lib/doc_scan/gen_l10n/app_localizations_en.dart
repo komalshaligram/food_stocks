@@ -45,7 +45,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteDocumentTitle => 'Delete document';
 
   @override
-  String get deleteDocumentConfirm => 'Are you sure you want to delete this document?';
+  String get deleteDocumentConfirm =>
+      'Are you sure you want to delete this document?';
 
   @override
   String get documentDeletedSuccess => 'Document deleted successfully';
@@ -131,7 +132,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportToExcel => 'Export to Excel';
 
   @override
-  String get exportExcelFailed => 'Could not export to Excel. Check that the document data is valid.';
+  String get exportExcelFailed =>
+      'Could not export to Excel. Check that the document data is valid.';
 
   @override
   String get save => 'Save';
@@ -144,6 +146,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentType => 'Document type';
+
+  @override
+  String get discountPercentLabel => 'Discount %';
 
   @override
   String get companyName => 'Company name';
@@ -282,6 +287,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusCompleted => 'Saved – not sent to cash register';
+
+  @override
+  String get statusSentInBackground =>
+      'Saved – sent to cash register (in background)';
+
+  @override
+  String get statusIntakeFailedRetry => 'Intake failed – try again';
 
   @override
   String get statusDeleted => 'Deleted';
@@ -441,13 +453,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmRetrieveDataAgainTitle => 'Confirm';
 
   @override
-  String get confirmRetrieveDataAgainMessage => 'Are you sure you want to retrieve the document data again?\nThis may take some time...';
+  String get confirmRetrieveDataAgainMessage =>
+      'Are you sure you want to retrieve the document data again?\nThis may take some time...';
 
   @override
   String get confirmSendToCashTitle => 'Confirm';
 
   @override
-  String get confirmSendToCashMessage => 'Are you sure you want to send the document for updating your cash register?';
+  String get confirmSendToCashMessage =>
+      'Are you sure you want to send the document for updating your cash register?';
 
   @override
   String get imageExportFailureTitle => 'Image export error';
@@ -462,7 +476,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueButton => 'Continue';
 
   @override
-  String get imageExportDebugIntro => 'We couldn\'t export images from the scan. We won\'t send the PDF to the API.';
+  String get imageExportDebugIntro =>
+      'We couldn\'t export images from the scan. We won\'t send the PDF to the API.';
 
   @override
   String imageExportErrorLine(Object error) {
@@ -488,7 +503,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get imageExportFailedNull => 'Failed to export images (null)';
 
   @override
-  String get imageExportReturnedEmpty => 'Image export returned an empty list (no valid images)';
+  String get imageExportReturnedEmpty =>
+      'Image export returned an empty list (no valid images)';
 
   @override
   String imageExportPathExamples(Object paths) {
@@ -575,22 +591,27 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get parseErrorScanJobEmptyResponse => 'Error creating scan job: empty response';
+  String get parseErrorScanJobEmptyResponse =>
+      'Error creating scan job: empty response';
 
   @override
-  String get parseErrorScanJobMissingJobId => 'Error creating scan job: missing jobId';
+  String get parseErrorScanJobMissingJobId =>
+      'Error creating scan job: missing jobId';
 
   @override
-  String get parseErrorDocumentProcessingEmptyResponse => 'Error processing document: empty response';
+  String get parseErrorDocumentProcessingEmptyResponse =>
+      'Error processing document: empty response';
 
   @override
-  String get parseErrorUnauthenticated => 'Please sign in before sending documents';
+  String get parseErrorUnauthenticated =>
+      'Please sign in before sending documents';
 
   @override
   String get parseErrorInvalidArgument => 'Invalid file';
 
   @override
-  String get parseErrorResourceExhausted => 'Too many requests. Please try again in a minute';
+  String get parseErrorResourceExhausted =>
+      'Too many requests. Please try again in a minute';
 
   @override
   String get parseErrorInternal => 'Error processing document';
@@ -654,7 +675,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get docutainInitLicenseKeyMissing => 'Docutain license key is not configured. Add it in app_config.dart (defaultValue) or run with: --dart-define=DOCUTAIN_LICENSE_KEY=YOUR_KEY';
+  String get docutainInitLicenseKeyMissing =>
+      'Docutain license key is not configured. Add it in app_config.dart (defaultValue) or run with: --dart-define=DOCUTAIN_LICENSE_KEY=YOUR_KEY';
 
   @override
   String docutainInitFailedWithSdkError(Object sdkError) {
@@ -662,7 +684,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get docutainInitFailedWithoutSdkError => 'Docutain initialization failed. The license is tied to the application\'s applicationId. In this app: scanner.tavili.com. Get a trial license with this ID: https://sdk.docutain.com/TrialLicense';
+  String get docutainInitFailedWithoutSdkError =>
+      'Docutain initialization failed. The license is tied to the application\'s applicationId. In this app: scanner.tavili.com. Get a trial license with this ID: https://sdk.docutain.com/TrialLicense';
 
   @override
   String get scanSourceTitle => 'How would you like to capture the document?';
@@ -752,6 +775,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentDueDate => 'Payment due date';
 
   @override
+  String get warehouseField => 'Destination warehouse';
+
+  @override
+  String get warehouseLoading => 'Loading warehouses…';
+
+  @override
+  String get warehousesEmpty => 'No warehouses found';
+
+  @override
+  String get warehouseCodePrefix => 'Code';
+
+  @override
   String get colDiscountPercent => 'Discount %';
 
   @override
@@ -779,7 +814,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncConfirmTitle => 'Run Comax sync';
 
   @override
-  String get syncConfirmMessage => 'The sync connects to your Comax and pulls all the data again (suppliers, products, prices and promotions).\n\nFor it to succeed you must be logged out of your Comax user — Comax allows only a single session. Log out of Comax first, then continue.';
+  String get syncConfirmMessage =>
+      'The sync connects to your Comax and pulls all the data again (suppliers, products, prices and promotions).\n\nFor it to succeed you must be logged out of your Comax user — Comax allows only a single session. Log out of Comax first, then continue.';
 
   @override
   String get syncConfirmContinue => 'I\'m logged out — run sync';
@@ -791,16 +827,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncDone => 'Synced successfully';
 
   @override
-  String get syncDoneMessage => 'Supplier and product data were updated from Comax.';
+  String get syncDoneMessage =>
+      'Supplier and product data were updated from Comax.';
 
   @override
   String get syncErrorTitle => 'Sync error';
 
   @override
-  String get syncSessionInUse => 'A user is logged into Comax. Log out of Comax, wait ~3 minutes, and try again.';
+  String get syncSessionInUse =>
+      'A user is logged into Comax. Log out of Comax, wait ~3 minutes, and try again.';
 
   @override
-  String get syncBadCredentials => 'Permissions need updating in the admin system.';
+  String get syncBadCredentials =>
+      'Permissions need updating in the admin system.';
 
   @override
   String get syncFailed => 'Sync failed, try again later.';
@@ -809,10 +848,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncRateLimited => 'Try again in a minute.';
 
   @override
-  String get syncNoPermission => 'The API key lacks permission to trigger a fetch.';
+  String get syncNoPermission =>
+      'The API key lacks permission to trigger a fetch.';
 
   @override
-  String get syncTimeout => 'Sync is taking longer than expected, check again later.';
+  String get syncTimeout =>
+      'Sync is taking longer than expected, check again later.';
 
   @override
   String get rotateScreen => 'Rotate screen';
@@ -824,10 +865,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get barcodeLabel => 'Barcode';
 
   @override
+  String get scanBarcodeTooltip => 'Scan barcode';
+
+  @override
   String get barcodeInCatalog => 'In catalog';
 
   @override
-  String get barcodeNotInCatalog => 'Not in catalog — this may be an alternative barcode; choose the product\'s primary barcode';
+  String get barcodeNotInCatalog =>
+      'Not in catalog — this may be an alternative barcode; choose the product\'s primary barcode';
 
   @override
   String get searchByProductName => 'Search product by name';
@@ -845,7 +890,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get barcodeIssuesTitle => 'Barcodes not in catalog';
 
   @override
-  String get barcodeIssuesMessage => 'Some items have a barcode that is not in the catalog. It may be an alternative barcode — choose the product\'s primary barcode. You cannot send to the cash register until fixed.';
+  String get barcodeIssuesMessage =>
+      'Some items have a barcode that is not in the catalog. It may be an alternative barcode — choose the product\'s primary barcode. You cannot send to the cash register until fixed.';
 
   @override
   String get jumpToFirstIssue => 'Jump to first issue';
@@ -857,7 +903,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validationSuccessTitle => 'Data is valid';
 
   @override
-  String get validationSuccessMessage => 'The data is valid and ready to be posted to the cash register.';
+  String get validationSuccessMessage =>
+      'The data is valid and ready to be posted to the cash register.';
 
   @override
   String get validationErrorsTitle => 'Issues to fix';
@@ -869,16 +916,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validationNetworkErrorTitle => 'Connection problem';
 
   @override
-  String get validationNetworkErrorMessage => 'Could not reach the server. Check your connection and try again.';
+  String get validationNetworkErrorMessage =>
+      'Could not reach the server. Check your connection and try again.';
 
   @override
-  String get validationConfigError => 'System configuration error. Contact support (scope/customer code).';
+  String get validationConfigError =>
+      'System configuration error. Contact support (scope/customer code).';
 
   @override
-  String get validationRateLimited => 'Too many requests. Try again in a moment.';
+  String get validationRateLimited =>
+      'Too many requests. Try again in a moment.';
 
   @override
-  String get validationGenericError => 'Validation failed, please try again later.';
+  String get validationGenericError =>
+      'Validation failed, please try again later.';
 
   @override
   String get lineLabel => 'Line';
@@ -899,19 +950,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submitSuccessTitle => 'Received successfully';
 
   @override
-  String get submitSuccessMessage => 'The invoice was received into Comax successfully.';
+  String get submitSuccessMessage =>
+      'The invoice was received into Comax successfully.';
 
   @override
   String get submitErrorTitle => 'Send to register failed';
 
   @override
-  String get submitNetworkError => 'Connection problem while sending to the register. Try again.';
+  String get submitNetworkError =>
+      'Connection problem while sending to the register. Try again.';
 
   @override
   String get submitGenericError => 'Send to register failed, try again.';
 
   @override
-  String get submitTimeout => 'Receiving is taking a while. Check later whether the invoice was received.';
+  String get submitTimeout =>
+      'Receiving is taking a while. Check later whether the invoice was received.';
 
   @override
   String get submitAlreadyReceivedTitle => 'Invoice already received';
@@ -1004,22 +1058,121 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHintGeneric => 'Search…';
 
   @override
-  String get npSectionItem => 'Item details';
+  String get npSectionItem => 'Item identification';
 
   @override
-  String get npSectionClassification => 'Classification';
-
-  @override
-  String get npSectionSupplier => 'Supplier';
+  String get npSectionClassification => 'Assignment';
 
   @override
   String get npSectionPricing => 'Pricing';
 
   @override
-  String get npSectionMore => 'Additional settings';
+  String get npSectionPackaging => 'Packaging & conversions';
 
   @override
-  String get scannerUnknownFailure => 'Could not open the scanner. Please try again.';
+  String get npSectionDeposit => 'Deposit & attributes';
+
+  @override
+  String get npSectionRegisterClub => 'Register & club';
+
+  @override
+  String get npUnit => 'Unit';
+
+  @override
+  String get npWeighable => 'Weighable';
+
+  @override
+  String get npNoSupplierDiscount => 'No supplier discount';
+
+  @override
+  String get npConversionQty => 'Conversion';
+
+  @override
+  String get npConversionUnit => 'Conversion unit';
+
+  @override
+  String get npPackageWeight => 'Package weight';
+
+  @override
+  String get npCalcQty => 'Calculation quantity';
+
+  @override
+  String get npDelicatessen => 'Delicatessen';
+
+  @override
+  String get npClubCode => 'Club code';
+
+  @override
+  String get npRegisterDiscount => 'Register discount';
+
+  @override
+  String get npPromotion => 'Promotion';
+
+  @override
+  String get npSalePriceEstimate =>
+      'Estimate — the final value is set during validation';
+
+  @override
+  String get npRequiredField => 'Required field';
+
+  @override
+  String get npDigitsOnly => 'Digits only';
+
+  @override
+  String get npInvalidBarcode => 'Invalid barcode';
+
+  @override
+  String get npProfitTooHigh => 'Profit % must be less than 100';
+
+  @override
+  String get npDiscountRange => 'Discount % must be between 0 and 100';
+
+  @override
+  String get npOptionsError => 'Could not load the option lists';
+
+  @override
+  String get npOptionsNoData =>
+      'No cash-register data has been fetched for this customer yet';
+
+  @override
+  String get npNone => 'None';
+
+  @override
+  String get npSave => 'Save item';
+
+  @override
+  String get npDelete => 'Delete new item';
+
+  @override
+  String get npDeleteConfirm => 'Delete the new item from this line?';
+
+  @override
+  String get npBadge => 'New item';
+
+  @override
+  String get npConfirmTitle => 'Confirm creating new items';
+
+  @override
+  String get npConfirmIrreversible =>
+      'Creating an item in Comax is irreversible — an item cannot be deleted, only archived.';
+
+  @override
+  String npConfirmCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new items will be created in the cash register:',
+      one: 'One new item will be created in the cash register:',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get npConfirmAction => 'Confirm and send';
+
+  @override
+  String get scannerUnknownFailure =>
+      'Could not open the scanner. Please try again.';
 
   @override
   String get suggestedMatches => 'Suggested matches';
@@ -1031,7 +1184,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoFilledBarcodesTitle => 'Auto-filled rows';
 
   @override
-  String get autoFilledBarcodesSubtitle => 'The barcode was reconstructed from the catalog by name and price. Please verify the rows marked in orange before sending to the cash register.';
+  String get autoFilledBarcodesSubtitle =>
+      'The barcode was reconstructed from the catalog by name and price. Please verify the rows marked in orange before sending to the cash register.';
 
   @override
   String get duplicateFoundTitle => 'This invoice already exists in Comax';
@@ -1040,7 +1194,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duplicateSimilarTitle => 'A similar invoice was found in Comax';
 
   @override
-  String get duplicateReversedTitle => 'This document existed in Comax but was reversed — you can send it again';
+  String get duplicateReversedTitle =>
+      'This document existed in Comax but was reversed — you can send it again';
 
   @override
   String get comaxDocumentLabel => 'Document';
@@ -1058,10 +1213,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get consistencyBlockTitle => 'Invoice figures don\'t add up';
 
   @override
-  String get consistencyBlockSubtitle => 'Cannot send to the cash register until the figures are corrected. The OCR likely misread some rows:';
+  String get consistencyBlockSubtitle =>
+      'Cannot send to the cash register until the figures are corrected. The OCR likely misread some rows:';
 
   @override
-  String get consistencyBannerSubtitle => 'The line totals don\'t match the invoice total. Check the flagged rows before sending.';
+  String get consistencyBannerSubtitle =>
+      'The line totals don\'t match the invoice total. Check the flagged rows before sending.';
 
   @override
   String get consistencyWarnTitle => 'Invoice total differs from calculation';

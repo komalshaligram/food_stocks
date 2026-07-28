@@ -21,10 +21,9 @@ class AccountPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => AccountPermissionBloc()
-        ..add(AccountPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
-      child: const AccountPermissionScreenWidget(),
-    );
+        create: (context) => AccountPermissionBloc()
+          ..add(AccountPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
+        child: const AccountPermissionScreenWidget());
   }
 }
 
@@ -42,12 +41,11 @@ class AccountPermissionScreenWidget extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: l10n.account_permission,
-            iconData: Icons.arrow_back_ios_new_rounded,
-            trailingWidget: PermissionScreenWidgets.appBarIcon(Icons.admin_panel_settings_outlined),
-            onTap: () => Navigator.pop(context),
-          ),
+              bgColor: AppColors.pageColor,
+              title: l10n.account_permission,
+              iconData: Icons.arrow_back_ios_new_rounded,
+              trailingWidget: PermissionScreenWidgets.appBarIcon(Icons.admin_panel_settings_outlined),
+              onTap: () => Navigator.pop(context)),
         ),
         body: SafeArea(
           child: state.isShimmering
@@ -55,43 +53,30 @@ class AccountPermissionScreenWidget extends StatelessWidget {
               : state.permissionList.isEmpty
                   ? Center(child: noDataWidget(l10n.no_data))
                   : SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(
-                        PermissionScreenWidgets.horizontalPadding,
-                        8,
-                        PermissionScreenWidgets.horizontalPadding,
-                        32,
-                      ),
+                      padding: const EdgeInsets.fromLTRB(PermissionScreenWidgets.horizontalPadding, 8, PermissionScreenWidgets.horizontalPadding, 32),
                       physics: const ClampingScrollPhysics(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          PermissionScreenWidgets.formCard(
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                        PermissionScreenWidgets.formCard(
                             child: Column(
-                              children: PermissionScreenWidgets.intersperseDividers(
-                                List.generate(state.permissionList.length, (index) {
-                                  final item = state.permissionList[index];
-                                  return PermissionScreenWidgets.switchTile(
-                                    title: item.title,
-                                    value: item.isEnable,
-                                    onChanged: (_) {
-                                      bloc.add(AccountPermissionEvent.switchButtonEvent(context: context, index: index));
-                                    },
-                                  );
-                                }),
-                              ),
-                            ),
-                          ),
-                          24.height,
-                          PermissionScreenWidgets.saveButton(
+                                children: PermissionScreenWidgets.intersperseDividers(
+                          List.generate(state.permissionList.length, (index) {
+                            final item = state.permissionList[index];
+                            return PermissionScreenWidgets.switchTile(
+                                title: item.title,
+                                value: item.isEnable,
+                                onChanged: (_) {
+                                  bloc.add(AccountPermissionEvent.switchButtonEvent(context: context, index: index));
+                                });
+                          }),
+                        ))),
+                        24.height,
+                        PermissionScreenWidgets.saveButton(
                             text: l10n.save.toUpperCase(),
                             isLoading: state.isUpdateProcess,
                             onPressed: () {
                               bloc.add(AccountPermissionEvent.updateAccountPermissionEvent(context: context));
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                            })
+                      ])),
         ),
       );
     });

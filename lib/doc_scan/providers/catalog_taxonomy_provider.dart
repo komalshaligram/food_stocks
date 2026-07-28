@@ -72,9 +72,11 @@ class CatalogTaxonomyNotifier extends StateNotifier<CatalogTaxonomyState> {
         _loadedCustomerCode == _ref.read(customerCodeProvider)) return;
     state = state.copyWith(loading: true, clearError: true);
     try {
-      final res = await _service.fetchTaxonomy(
-        customerCode: _ref.read(customerCodeProvider),
-      );
+      final customerCode = _ref.read(customerCodeProvider);
+      final res = await _service.fetchTaxonomy(customerCode: customerCode);
+      // בלי ההצבה הזו התנאי למעלה לעולם אינו מתקיים (null != code) והרשימות
+      // נמשכות מחדש בכל פתיחה של הטופס.
+      _loadedCustomerCode = customerCode;
       state = CatalogTaxonomyState(
         departments: res.departments,
         groups: res.groups,

@@ -77,8 +77,7 @@ class BankTransferWidget extends StatelessWidget {
                           style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.blackColor),
                         ),
                       ),
-                      if (!state.isLoading && state.bankTransferDetails.isNotEmpty)
-                        _buildCopyButton(context, state.bankTransferDetails, l10n),
+                      if (!state.isLoading && state.bankTransferDetails.isNotEmpty) _buildCopyButton(context, state.bankTransferDetails, l10n),
                     ],
                   ),
                   16.height,

@@ -139,6 +139,7 @@ class AppUrlEndPoints {
   // static const String getCompanyProductsUrl = '/v2/store/getBrandProducts';
   // static const String getSubCategoryProductsUrl = '/v2/store/getsubCategoryProducts';
   static const String existingUserLoginUrl = '/v2/auth/verifyContactAndSendOTP';
+  static const String sendOtpByWhatsappUrl = '/v2/auth/sendOtpByWhatsapp';
   //static const String getSaleProductsUrl = '/v1/store/SaleProducts';
   //static const String getPlanogramProductsUrl = '/v1/store/getPalnogramProducts';
 
@@ -154,6 +155,8 @@ class AppUrlEndPoints {
   static const String getPreviousOrderProductsUrl =
       '/v3/recommendation/getPrevoiusOrderproducts';
   static const String relatedProductsUrl = '/v3/products/getRelatedProducts';
+  static const String getSaleParticipatingProductsUrl =
+      '/v3/products/getSaleParticipatingProducts';
   static const String getSubCategoryProductsUrl =
       '/v3/store/getsubCategoryProducts';
   static const String getPlanogramAllProductForSearchUrl =

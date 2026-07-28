@@ -91,7 +91,11 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           SettingResModel response = SettingResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(isRegistrationSuccess: response.data?.registrationSuccessPageSettings?.showRegistrationSuccessPage! ?? false));
+            emit(state.copyWith(
+              isRegistrationSuccess: response.data?.registrationSuccessPageSettings?.showRegistrationSuccessPage! ?? false,
+              customerServicePhone: response.data?.customerServicePhone ?? '',
+              customerServiceWhatsApp: response.data?.customerServiceWhatsApp ?? '',
+            ));
             return;
           }
         } catch (_) {}

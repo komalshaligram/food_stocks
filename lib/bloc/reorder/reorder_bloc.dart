@@ -220,82 +220,82 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
                 add(ReorderEvent.relatedProductsEvent(context: event.context, productId: response.product?.first.id ?? ''));
               }
               supplierList.addAll(response.product?.first.supplierSales?.map((supplier) {
-                    return ProductSupplierModel(
-                      supplierId: supplier.supplierId ?? '',
-                      companyName: supplier.supplierCompanyName ?? '',
-                      basePrice: double.parse(supplier.productPrice ?? ''),
+                return ProductSupplierModel(
+                  supplierId: supplier.supplierId ?? '',
+                  companyName: supplier.supplierCompanyName ?? '',
+                  basePrice: double.parse(supplier.productPrice ?? ''),
+                  quantity: _productQuantity,
+                  stock: supplier.productStock.toString(),
+                  maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
+                  selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
+                      ? !supplier.saleProduct!.contains(
+                    supplier.saleProduct?.firstWhere(
+                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
+                      orElse: () => const SaleProduct(
+                        isSale: false,
+                        saleDescription: '',
+                        saleFromDate: '',
+                        saleMaxQuantity: '0',
+                        salePrice: '0',
+                        saleUntilDate: '',
+                      ),
+                    ) ??
+                        const SaleProduct(
+                          isSale: false,
+                          saleDescription: '',
+                          saleFromDate: '',
+                          saleMaxQuantity: '0',
+                          salePrice: '0',
+                          saleUntilDate: '',
+                        ),
+                  )
+                      ? -2
+                      : supplier.saleProduct?.indexOf(
+                    supplier.saleProduct?.firstWhere(
+                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
+                      orElse: () => const SaleProduct(
+                        isSale: false,
+                        saleDescription: '',
+                        saleFromDate: '',
+                        saleMaxQuantity: '0',
+                        salePrice: '0',
+                        saleUntilDate: '',
+                      ),
+                    ) ??
+                        const SaleProduct(
+                          isSale: false,
+                          saleDescription: '',
+                          saleFromDate: '',
+                          saleMaxQuantity: '0',
+                          salePrice: '0',
+                          saleUntilDate: '',
+                        ),
+                  ) ??
+                      -1
+                      : -1,
+                  supplierSales: supplier.saleProduct
+                      ?.map((sale) => SupplierSaleModel(
+                      productStock: sale.productStock ?? 0,
                       quantity: _productQuantity,
-                      stock: supplier.productStock.toString(),
-                      maxQty: (response.product?.first.sale?.isSale ?? false) ? int.parse(response.product?.first.sale?.saleMaxQuantity.toString() ?? '0') : 0,
-                      selectedIndex: (supplier.supplierId) == state.productStockList[productListIndex][productStockUpdateIndex].productSupplierIds
-                          ? !supplier.saleProduct!.contains(
-                              supplier.saleProduct?.firstWhere(
-                                    (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
-                                    orElse: () => const SaleProduct(
-                                      isSale: false,
-                                      saleDescription: '',
-                                      saleFromDate: '',
-                                      saleMaxQuantity: '0',
-                                      salePrice: '0',
-                                      saleUntilDate: '',
-                                    ),
-                                  ) ??
-                                  const SaleProduct(
-                                    isSale: false,
-                                    saleDescription: '',
-                                    saleFromDate: '',
-                                    saleMaxQuantity: '0',
-                                    salePrice: '0',
-                                    saleUntilDate: '',
-                                  ),
-                            )
-                              ? -2
-                              : supplier.saleProduct?.indexOf(
-                                    supplier.saleProduct?.firstWhere(
-                                          (sale) => sale.saleId == state.productStockList[productListIndex][productStockUpdateIndex].productSaleId,
-                                          orElse: () => const SaleProduct(
-                                            isSale: false,
-                                            saleDescription: '',
-                                            saleFromDate: '',
-                                            saleMaxQuantity: '0',
-                                            salePrice: '0',
-                                            saleUntilDate: '',
-                                          ),
-                                        ) ??
-                                        const SaleProduct(
-                                          isSale: false,
-                                          saleDescription: '',
-                                          saleFromDate: '',
-                                          saleMaxQuantity: '0',
-                                          salePrice: '0',
-                                          saleUntilDate: '',
-                                        ),
-                                  ) ??
-                                  -1
-                          : -1,
-                      supplierSales: supplier.saleProduct
-                              ?.map((sale) => SupplierSaleModel(
-                                  productStock: sale.productStock ?? 0,
-                                  quantity: _productQuantity,
-                                  saleId: sale.saleId ?? '',
-                                  saleName: sale.saleName ?? '',
-                                  maxQty: sale.saleMaxQuantity,
-                                  saleDescription: parse(sale.salesDescription ?? '').body?.text ?? '',
-                                  salePrice: double.parse(sale.discountedPrice ?? '0.0'),
-                                  saleDiscount: double.parse(
-                                    sale.discountPercentage ?? '0.0',
-                                  )))
-                              .toList() ??
-                          [],
-                    );
-                  }).toList() ??
+                      saleId: sale.saleId ?? '',
+                      saleName: sale.saleName ?? '',
+                      maxQty: sale.saleMaxQuantity,
+                      saleDescription: parse(sale.salesDescription ?? '').body?.text ?? '',
+                      salePrice: double.parse(sale.discountedPrice ?? '0.0'),
+                      saleDiscount: double.parse(
+                        sale.discountPercentage ?? '0.0',
+                      )))
+                      .toList() ??
+                      [],
+                );
+              }).toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == '0');
               String note = productStockList.isEmpty
                   ? ''
                   : productStockList.indexOf(state.productStockList.last) == productListIndex
-                      ? ''
-                      : productStockList[productListIndex][0].note;
+                  ? ''
+                  : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(
                 productDetails: response.product ?? [],
@@ -561,6 +561,20 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _getCartCountEvent) {
         emit(state.copyWith(cartCount: preferences.getCartCount(), isSubUserAddToBasket: preferences.getCanAddToBasket()));
+      } else if (event is _applyCartQuantitiesEvent) {
+        final cartMap = event.cartQuantities;
+        final productStockList = state.productStockList
+            .map((sub) => sub.map((item) {
+          final pid = item.productId;
+          if (pid.isEmpty) return item;
+          return item.copyWith(
+            quantity: cartMap[pid] ?? 0,
+            cartProductId: '',
+            totalPrice: 0.0,
+          );
+        }).toList())
+            .toList();
+        emit(state.copyWith(productStockList: productStockList));
       } else if (event is _getGridListView) {
         preferences.setReorderProductGridListView(isReorderProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));
@@ -607,11 +621,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           if (state.searchController.text == '') {
             List<SearchModel> searchList = [];
             searchList.addAll(state.productCategoryList.map((category) => SearchModel(
-                  searchId: category.id ?? '',
-                  name: category.categoryName ?? '',
-                  searchType: SearchTypes.category,
-                  image: category.categoryImage ?? '',
-                )));
+              searchId: category.id ?? '',
+              name: category.categoryName ?? '',
+              searchType: SearchTypes.category,
+              image: category.categoryImage ?? '',
+            )));
             emit(state.copyWith(searchList: searchList, isSearching: false));
             return;
           }
@@ -619,29 +633,29 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
             List<SearchModel> searchList = [];
 
             searchList.addAll(response.data
-                    ?.map((supplier) => SearchModel(
-                          searchId: supplier.id ?? '',
-                          name: supplier.productName ?? '',
-                          searchType: SearchTypes.product,
-                          image: supplier.mainImage ?? '',
-                          productStock: supplier.productStock.toString(),
-                          numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
-                          scaleType: supplier.scaleType!,
-                          priceOfBox: double.parse(supplier.productPrice.toString()),
-                          lowStock: supplier.lowStock.toString(),
-                          isPesach: supplier.isPesach ?? false,
-                          salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
-                          salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
-                          supplierId: supplier.supplierId,
-                          isSale: supplier.sale?.isSale,
-                          saleMinQuantity: supplier.sale?.saleMinQuantity,
-                          saleMaxQuantity: supplier.sale?.saleMaxQuantity,
-                          isMixedSale: supplier.sale?.isMixedSale,
-                          sameSaleProducts: supplier.sale?.sameSaleProducts,
-                          recommendedConsumerOffer: supplier.recommendedConsumerOffer,
-                          recommendedRetailPrice: supplier.recommendedRetailPrice,
-                        ))
-                    .toList() ??
+                ?.map((supplier) => SearchModel(
+              searchId: supplier.id ?? '',
+              name: supplier.productName ?? '',
+              searchType: SearchTypes.product,
+              image: supplier.mainImage ?? '',
+              productStock: supplier.productStock.toString(),
+              numberOfUnits: int.parse(supplier.numberOfUnit.toString()),
+              scaleType: supplier.scaleType!,
+              priceOfBox: double.parse(supplier.productPrice.toString()),
+              lowStock: supplier.lowStock.toString(),
+              isPesach: supplier.isPesach ?? false,
+              salePrice: double.parse(supplier.sale?.salePrice.toString() ?? '0'),
+              salesDesc: parse(supplier.sale?.saleDescription ?? '').body?.text ?? '',
+              supplierId: supplier.supplierId,
+              isSale: supplier.sale?.isSale,
+              saleMinQuantity: supplier.sale?.saleMinQuantity,
+              saleMaxQuantity: supplier.sale?.saleMaxQuantity,
+              isMixedSale: supplier.sale?.isMixedSale,
+              sameSaleProducts: supplier.sale?.sameSaleProducts,
+              recommendedConsumerOffer: supplier.recommendedConsumerOffer,
+              recommendedRetailPrice: supplier.recommendedRetailPrice,
+            ))
+                .toList() ??
                 []);
 
             final cartMap = await fetchCartQuantities(event.context);
@@ -678,11 +692,11 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           if (response.status == AppConstants.code_200) {
             List<SearchModel> searchList = [];
             searchList.addAll(response.data?.categories?.map((category) => SearchModel(
-                      searchId: category.id ?? '',
-                      name: category.categoryName ?? '',
-                      searchType: SearchTypes.category,
-                      image: category.categoryImage ?? '',
-                    )) ??
+              searchId: category.id ?? '',
+              name: category.categoryName ?? '',
+              searchType: SearchTypes.category,
+              image: category.categoryImage ?? '',
+            )) ??
                 []);
             bool productVisible = response.data?.categories?.any((element) => element.isHomePreference == true) ?? true;
             emit(state.copyWith(isCatVisible: productVisible, productCategoryList: response.data?.categories ?? [], searchList: searchList, isShimmering: false));
@@ -707,8 +721,8 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           final cartMap = await fetchCartQuantities(event.context);
           List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
           final newRelatedList = response.data?.map((product) {
-                return ProductStockModel(productId: product.id ?? '', stock: product.productStock.toString(), quantity: cartMap[product.id] ?? 0);
-              }).toList() ??
+            return ProductStockModel(productId: product.id ?? '', stock: product.productStock.toString(), quantity: cartMap[product.id] ?? 0);
+          }).toList() ??
               [];
           productStockList[2] = productStockList[2].map((product) {
             return product.copyWith(
@@ -832,9 +846,9 @@ class ReorderBloc extends Bloc<ReorderEvent, ReorderState> {
           } else {
             productStockList[event.productListIndex][event.productStockUpdateIndex] = productStockList[event.productListIndex][event.productStockUpdateIndex].copyWith(
                 quantity: int.tryParse(quantityString.substring(
-                      0,
-                      quantityString.length - 1,
-                    )) ??
+                  0,
+                  quantityString.length - 1,
+                )) ??
                     0);
             CustomSnackBar.showSnackBar(
               context: event.context,

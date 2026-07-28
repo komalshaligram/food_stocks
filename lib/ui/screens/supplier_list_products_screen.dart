@@ -33,10 +33,10 @@ import '../widget/common_product_details_widget.dart';
 import '../widget/common_sale_listview.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/confetti.dart';
-import '../widget/custom_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/product_details_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
+import '../widget/sale_promotion_sheet.dart';
 import '../widget/search_item_widget.dart';
 import '../widget/store_category_screen_subcategory_shimmer_widget.dart';
 import '../widget/build_list_title.dart';
@@ -554,8 +554,9 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
     if (index >= state.productStockList[1].length) return;
     final quantity = state.productStockList[1][index].quantity;
     final minQty = getMinQty(state, index);
+    final isMixedSale = state.productList[index].sale?.isMixedSale ?? false;
 
-    if (minQty <= quantity + 1) {
+    if (!isMixedSale && minQty <= quantity + 1) {
       context
           .read<SupplierListProductsBloc>()
           .add(SupplierListProductsEvent.increaseListQuantityOfProduct(
@@ -599,10 +600,11 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
 
     final quantity = state.productStockList[1][index].quantity;
     final minQty = getMinQty(state, index);
+    final isMixedSale = state.productList[index].sale?.isMixedSale ?? false;
 
     if (quantity == 0) return;
 
-    if (minQty <= quantity - 1) {
+    if (!isMixedSale && minQty <= quantity - 1) {
       context
           .read<SupplierListProductsBloc>()
           .add(SupplierListProductsEvent.decreaseListQuantityOfProduct(
@@ -1050,7 +1052,8 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
                           ));
                     },
                     onQuantityIncreaseTap: () {
-                      if (int.parse(
+                      if (!(state.searchList[index].isMixedSale ?? false) &&
+                          int.parse(
                           state.searchList[index].saleMinQuantity ??
                               '0') <=
                           state.productStockList[0][index].quantity +
@@ -1100,7 +1103,8 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
                     onQuantityDecreaseTap: () {
                       if (state.productStockList[0][index].quantity !=
                           0) {
-                        if (int.parse(state.searchList[index]
+                        if (!(state.searchList[index].isMixedSale ?? false) &&
+                            int.parse(state.searchList[index]
                             .saleMinQuantity ??
                             '0') <=
                             state.productStockList[0][index].quantity -
@@ -1415,7 +1419,8 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
                                     (state.productDetails.first.isBottle ??
                                         false),
                                     addToOrderTap: () {
-                                      if (int.parse(state
+                                      final isMixedSale = state.productDetails.first.sale?.isMixedSale ?? false;
+                                      if (!isMixedSale && int.parse(state
                                           .productDetails
                                           .first
                                           .sale!
@@ -1686,7 +1691,8 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
                     },
                     onQuantityIncreaseTap: () {
                       if (!hasRelatedStock || relatedStockIdx == -1) return;
-                      if (int.parse(
+                      if (!(relatedProduct.sale?.isMixedSale ?? false) &&
+                          int.parse(
                           relatedProduct.sale?.saleMinQuantity ?? '0') <=
                           productStockList[2][relatedStockIdx].quantity + 1) {
                         context.read<SupplierListProductsBloc>().add(
@@ -1729,7 +1735,8 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
                     onQuantityDecreaseTap: () {
                       if (!hasRelatedStock || relatedStockIdx == -1) return;
                       if (productStockList[2][relatedStockIdx].quantity != 0) {
-                        if (int.parse(
+                        if (!(relatedProduct.sale?.isMixedSale ?? false) &&
+                            int.parse(
                             relatedProduct.sale?.saleMinQuantity ?? '0') <=
                             productStockList[2][relatedStockIdx].quantity - 1) {
                           context.read<SupplierListProductsBloc>().add(
@@ -1790,39 +1797,7 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
 
   showMinQtyConfirmDialog(BuildContext context, String productId, String minBox,
       bool? isMixedSale, List? sameSaleProducts) {
-    SupplierListProductsBloc bloc = context.read<SupplierListProductsBloc>();
-    showDialog(
-      context: context,
-      builder: (dialogContext) => BlocProvider.value(
-        value: context.read<SupplierListProductsBloc>(),
-        child: BlocBuilder<SupplierListProductsBloc, SupplierListProductsState>(
-            builder: (context1, state) {
-              String mixedSale = '';
-              if (isMixedSale!) {
-                mixedSale = AppStrings.minSaleText(context, minBox);
-              } else {
-                mixedSale = AppStrings.otherSaleText(context, minBox);
-              }
-              return CustomDialog(
-                  directionality: state.language,
-                  title: mixedSale,
-                  content: isMixedSale ? sameSaleProducts! : [],
-                  isMixedSale: isMixedSale,
-                  positiveTitle: AppLocalizations.of(context)!.closeText,
-                  negativeTitle: AppLocalizations.of(context)!.addText,
-                  negativeOnTap: () async {
-                    Navigator.pop(dialogContext);
-                    bloc.add(SupplierListProductsEvent.addToCartProductEvent(
-                        context: context, productId: productId));
-                  },
-                  positiveOnTap: () async {
-                    Navigator.pop(context);
-                    bloc.add(SupplierListProductsEvent.getCartCountNoEvent(
-                        context: context));
-                  });
-            }),
-      ),
-    );
+    _openSalePromotionSheet(context, productId);
   }
 
   void showMinMaxQtyConfirmDialog({
@@ -1836,66 +1811,26 @@ class SupplierListProductsScreenWidget extends StatelessWidget {
     bool? isMixedSale,
     List? sameSaleProducts,
   }) {
+    _openSalePromotionSheet(context, productId);
+  }
+
+  Future<void> _openSalePromotionSheet(
+      BuildContext context, String productId) async {
     final SupplierListProductsBloc bloc =
     context.read<SupplierListProductsBloc>();
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => BlocProvider.value(
-        value: bloc,
-        child: BlocBuilder<SupplierListProductsBloc, SupplierListProductsState>(
-            builder: (context1, state) {
-              final bool mixedSaleFlag = isMixedSale ?? false;
-              final String mixedSale = mixedSaleFlag
-                  ? AppStrings.minSaleText(context, minBox)
-                  : AppStrings.otherSaleText(context, minBox);
-
-              return CustomDialog(
-                  directionality: state.language,
-                  title: mixedSale,
-                  content: mixedSaleFlag ? (sameSaleProducts ?? []) : [],
-                  isMixedSale: mixedSaleFlag,
-                  positiveTitle: AppLocalizations.of(context)!.closeText,
-                  negativeTitle: AppLocalizations.of(context)!.addText,
-                  negativeOnTap: () {
-                    Navigator.pop(dialogContext);
-
-                    if (state.isGuestUser) {
-                      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
-                      return;
-                    }
-
-                    if (isIncrease) {
-                      bloc.add(
-                          SupplierListProductsEvent.increaseListQuantityOfProduct(
-                            context: context,
-                            productListIndex: productListIndex,
-                            productStockUpdateIndex: index,
-                            productSupplierIds: supplierId,
-                          ));
-                    } else {
-                      bloc.add(
-                          SupplierListProductsEvent.decreaseListQuantityOfProduct(
-                            context: context,
-                            productListIndex: productListIndex,
-                            productStockUpdateIndex: index,
-                            productSupplierIds: supplierId,
-                          ));
-                    }
-                    bloc.add(SupplierListProductsEvent.addToCartListProductEvent(
-                      context: context,
-                      productId: productId,
-                      productListIndex: productListIndex,
-                      productStockUpdateIndex: index,
-                      productSupplierIds: supplierId,
-                    ));
-                  },
-                  positiveOnTap: () {
-                    Navigator.pop(dialogContext);
-                  });
-            }),
-      ),
-    );
+    if (bloc.state.isGuestUser) {
+      Navigator.pushNamed(context, RouteDefine.connectScreen.name);
+      return;
+    }
+    final l10n = AppLocalizations.of(context)!;
+    final bool changed = await showSalePromotionSheet(
+        context: context, productId: productId, l10n: l10n);
+    if (!changed || !context.mounted) return;
+    final cartMap = await fetchCartQuantities(context);
+    if (!context.mounted) return;
+    bloc.add(SupplierListProductsEvent.applyListCartQuantitiesEvent(
+        cartQuantities: cartMap));
+    bloc.add(SupplierListProductsEvent.getCartCountNoEvent(context: context));
   }
 
   Widget floatingButtonWidget(

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/services/client_scanned_certificate_sync_service.dart';
 import '../core/storage/documents_storage.dart';
 import '../models/invoice_document.dart';
+import '../models/invoice_item.dart';
 
 /// מזהה המסמך הנוכחי (נצפה/נערך) – לשימוש עתידי.
 final currentDocumentProvider = StateProvider<String?>((ref) => null);
@@ -119,7 +120,41 @@ class DocumentsNotifier extends StateNotifier<List<InvoiceDocument>> {
       imageUrls:
           remoteImageUrls.isNotEmpty ? remoteImageUrls : localImageUrls,
       jobId: remote.jobId ?? local.jobId,
+      items: _mergeItems(local.items, remote.items),
     );
+  }
+
+  /// ממזג את שורות המסמך, ומשחזר מהעותק המקומי שדות שהמרוחק **איבד**.
+  ///
+  /// 🔴 הרקע: המסמך המרוחק גובר על `items`, ולכן כל שדה ששרת הסנכרון לא שומר
+  /// לא רק חסר בשרת — הוא **נמחק מהמכשיר** בהפעלה הבאה של האפליקציה. בדיוק זה
+  /// קרה ל-`newProduct` ול-`barcodeConfidence`, ששניהם לא היו בסכמת Mongoose
+  /// (strict mode זורק מפתחות לא מוכרים בשקט): המשתמש יצר "פריט חדש", שמר, יצא,
+  /// חזר — והשורה שוב נחשבה ברקוד לא מזוהה.
+  ///
+  /// הסכמה בשרת תוקנה, אבל השחזור כאן נשאר כרשת ביטחון: הוא מייתר תלות בין
+  /// גרסת האפליקציה לגרסת השרת, ומגן על טיוטה שנוצרה **מול שרת ישן**.
+  /// ההצלבה היא לפי `lineNumber`, לא לפי מיקום — סדר השורות אינו מובטח.
+  static List<InvoiceItem> _mergeItems(
+    List<InvoiceItem> local,
+    List<InvoiceItem> remote,
+  ) {
+    if (remote.isEmpty) return local;
+    final localByLine = {for (final it in local) it.lineNumber: it};
+
+    return [
+      for (final remoteItem in remote)
+        () {
+          final localItem = localByLine[remoteItem.lineNumber];
+          if (localItem == null) return remoteItem;
+          // רק שדות שהמרוחק לא הביא — ערך שכן חזר מהשרת נחשב מקור האמת.
+          return remoteItem.copyWith(
+            newProduct: remoteItem.newProduct ?? localItem.newProduct,
+            barcodeConfidence:
+                remoteItem.barcodeConfidence ?? localItem.barcodeConfidence,
+          );
+        }(),
+    ];
   }
 
   /// הוספת מסמך חדש.

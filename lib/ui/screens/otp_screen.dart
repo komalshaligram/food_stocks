@@ -6,6 +6,8 @@ import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
+import '../../ui/utils/constants/app_img_path.dart';
+import '../../ui/widget/otp_whatsapp_sent_dialog.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../utils/constants/app_strings.dart';
@@ -21,7 +23,9 @@ class OTPScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final temp = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     return BlocProvider(
-      create: (context) => OtpBloc()..add(const OtpEvent.setOtpTimer()),
+      create: (context) => OtpBloc()
+        ..add(OtpEvent.setOtpTimer(contact: temp[AppStrings.contactString] ?? ''))
+        ..add(OtpEvent.loadWhatsappOtpSettingEvent(context: context)),
       child: OTPScreenWidget(isRegister: temp[AppStrings.isRegisterString], contact: temp[AppStrings.contactString]),
     );
   }
@@ -236,8 +240,12 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
           ),
           26.height,
           _buildPrimaryButton(context, isLoading: state.isLoading, onPressed: () => _onSubmitPressed(context, bloc)),
-          20.height,
+          22.height,
           _buildResend(context, bloc, state),
+          if (state.showWhatsappOtpOption) ...[
+            18.height,
+            _buildWhatsappFallback(context, bloc, state),
+          ],
         ],
       ),
     );
@@ -281,26 +289,129 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
   }
 
   Widget _buildResend(BuildContext context, OtpBloc bloc, OtpState state) {
-    if (state.otpTimer != 0) {
-      return Center(
-        child: Text(
-          '${AppLocalizations.of(context)!.resend_code_in} ${state.otpTimer} ${AppLocalizations.of(context)!.seconds_short}',
-          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.greyColor),
-        ),
-      );
-    }
-    return Center(
-      child: TextButton(
-        onPressed: () {
-          bloc.add(OtpEvent.logInApiDataEvent(context: context, isRegister: widget.isRegister, contactNumber: widget.contact));
-          bloc.add(const OtpEvent.setOtpTimer());
-        },
-        child: Text(
-          AppLocalizations.of(context)!.resend_code,
-          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14 + 1, color: AppColors.mainColor, fontWeight: FontWeight.w600),
+    final bool isCoolingDown = state.otpTimer != 0;
+    final String label = isCoolingDown
+        ? '${AppLocalizations.of(context)!.resend_code_in} ${_formatCountdown(context, state.otpTimer)}'
+        : AppLocalizations.of(context)!.resend_code;
+    final Color contentColor = isCoolingDown ? AppColors.greyColor : AppColors.whiteColor;
+
+    return Container(
+      width: double.maxFinite,
+      height: AppConstants.buttonHeight,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        color: isCoolingDown ? AppColors.iconBGColor : AppColors.blueColor,
+        borderRadius: BorderRadius.circular(AppConstants.radius_10),
+        border: isCoolingDown ? Border.all(color: AppColors.borderColor, width: 1.2) : null,
+        boxShadow: isCoolingDown
+            ? null
+            : [BoxShadow(color: AppColors.blueColor.withOpacity(0.28), blurRadius: 12, offset: const Offset(0, 5))],
+      ),
+      child: MaterialButton(
+        onPressed: isCoolingDown
+            ? null
+            : () => bloc.add(OtpEvent.logInApiDataEvent(context: context, isRegister: widget.isRegister, contactNumber: widget.contact)),
+        padding: EdgeInsets.zero,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(isCoolingDown ? Icons.timer_outlined : Icons.sms_outlined, size: 20, color: contentColor),
+            10.width,
+            Flexible(
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: AppStyles.rkBoldTextStyle(size: 16, color: contentColor, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Widget _buildWhatsappFallback(BuildContext context, OtpBloc bloc, OtpState state) {
+    final bool isCoolingDown = state.otpTimer != 0;
+    final bool isDisabled = isCoolingDown || state.isWhatsappSending;
+    final Color contentColor = isDisabled ? AppColors.greyColor : kWhatsappDarkGreen;
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(child: Divider(color: AppColors.borderColor, thickness: 1)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                AppLocalizations.of(context)!.did_not_get_sms,
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.greyColor),
+              ),
+            ),
+            Expanded(child: Divider(color: AppColors.borderColor, thickness: 1)),
+          ],
+        ),
+        14.height,
+        Opacity(
+          opacity: isDisabled ? 0.5 : 1,
+          child: Container(
+            width: double.maxFinite,
+            height: AppConstants.buttonHeight,
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              borderRadius: BorderRadius.circular(AppConstants.radius_10),
+              border: Border.all(color: isDisabled ? AppColors.borderColor : kWhatsappGreen, width: 1.2),
+            ),
+            child: MaterialButton(
+              onPressed: isDisabled
+                  ? null
+                  : () {
+                FocusScope.of(context).unfocus();
+                bloc.add(OtpEvent.sendOtpViaWhatsappEvent(context: context, contactNumber: widget.contact));
+              },
+              padding: EdgeInsets.zero,
+              child: state.isWhatsappSending
+                  ? SizedBox(
+                height: 22,
+                width: 22,
+                child: CircularProgressIndicator(strokeWidth: 2, color: kWhatsappDarkGreen),
+              )
+                  : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    AppImagePath.whatsapp,
+                    height: 22,
+                    width: 22,
+                    color: isDisabled ? AppColors.greyColor : null,
+                  ),
+                  10.width,
+                  Flexible(
+                    child: Text(
+                      AppLocalizations.of(context)!.send_code_via_whatsapp,
+                      textAlign: TextAlign.center,
+                      style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_14 + 1,
+                        color: contentColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatCountdown(BuildContext context, int seconds) {
+    if (seconds < 60) {
+      return '$seconds ${AppLocalizations.of(context)!.seconds_short}';
+    }
+    final String secs = (seconds % 60).toString().padLeft(2, '0');
+    return '${seconds ~/ 60}:$secs';
   }
 
   Widget _decorCircle(double size, Color color) {

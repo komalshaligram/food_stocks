@@ -24,13 +24,16 @@ class SubUserProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
       create: (context) => SubUsersProfileBloc()
         ..add(SubUsersProfileEvent.getSubUserByIdEvent(
           context: context,
-          isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false ? true : false,
+          isUpdate: args?.containsKey(AppStrings.isUpdateParamString) ?? false
+              ? true
+              : false,
           subUserId: args?[AppStrings.subUserIdString] ?? '',
         ))
         ..add(SubUsersProfileEvent.getAppLanguageEvent(context: context)),
@@ -43,10 +46,12 @@ class SubUserProfileScreenWidget extends StatefulWidget {
   const SubUserProfileScreenWidget({super.key});
 
   @override
-  State<SubUserProfileScreenWidget> createState() => _SubUserProfileScreenWidgetState();
+  State<SubUserProfileScreenWidget> createState() =>
+      _SubUserProfileScreenWidgetState();
 }
 
-class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget> {
+class _SubUserProfileScreenWidgetState
+    extends State<SubUserProfileScreenWidget> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
 
@@ -73,11 +78,16 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
           ),
           body: state.isShimmering && state.isUpdate
               ? const Padding(
-                  padding: EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
+                  padding: EdgeInsets.fromLTRB(
+                      _horizontalPadding, 8, _horizontalPadding, 32),
                   child: ProfileScreenShimmerWidget(isProfileImage: false),
                 )
               : SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, state.isUpdate || state.isEnable ? 32 : 100),
+                  padding: EdgeInsets.fromLTRB(
+                      _horizontalPadding,
+                      8,
+                      _horizontalPadding,
+                      state.isUpdate || state.isEnable ? 32 : 100),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -105,14 +115,18 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
                                 textInputAction: TextInputAction.next,
                               ),
                               14.height,
-                              _buildFieldLabel(context, l10n.email, required: false),
+                              _buildFieldLabel(context, l10n.email,
+                                  required: false),
                               _buildTextField(
                                 context: context,
                                 controller: state.emailController,
                                 keyboardType: TextInputType.emailAddress,
-                                validator: _email.isEmpty ? '' : AppStrings.emailValString,
+                                validator: _email.isEmpty
+                                    ? ''
+                                    : AppStrings.emailValString,
                                 textInputAction: TextInputAction.next,
-                                onChangeValue: (value) => setState(() => _email = value),
+                                onChangeValue: (value) =>
+                                    setState(() => _email = value),
                               ),
                               14.height,
                               _buildFieldLabel(context, l10n.israel_id),
@@ -143,7 +157,8 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
           bottomNavigationBar: !state.isUpdate && !state.isEnable
               ? SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 16),
+                    padding: const EdgeInsets.fromLTRB(
+                        _horizontalPadding, 8, _horizontalPadding, 16),
                     child: _buildSaveButton(context, bloc, state),
                   ),
                 )
@@ -179,17 +194,22 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
         color: AppColors.mainColor.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Icon(Icons.person_outline_rounded, size: 21, color: AppColors.mainColor),
+      child: Icon(Icons.person_outline_rounded,
+          size: 21, color: AppColors.mainColor),
     );
   }
 
-  Widget _buildFieldLabel(BuildContext context, String label, {bool required = true}) {
+  Widget _buildFieldLabel(BuildContext context, String label,
+      {bool required = true}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (required) Text('* ', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.redColor)),
+          if (required)
+            Text('* ',
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.font_13, color: AppColors.redColor)),
           Expanded(
             child: Text(
               label,
@@ -227,7 +247,8 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
     );
   }
 
-  Widget _buildSaveButton(BuildContext context, SubUsersProfileBloc bloc, SubUsersProfileState state) {
+  Widget _buildSaveButton(BuildContext context, SubUsersProfileBloc bloc,
+      SubUsersProfileState state) {
     return CustomButtonWidget(
       buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
       bGColor: AppColors.mainColor,
@@ -238,9 +259,13 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
     );
   }
 
-  void _onSavePressed(BuildContext context, SubUsersProfileBloc bloc, SubUsersProfileState state) {
+  void _onSavePressed(BuildContext context, SubUsersProfileBloc bloc,
+      SubUsersProfileState state) {
     if (!isValidIsraeliID(state.israelIdController.text.toString().trim())) {
-      CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.please_enter_valid_israel_id, type: SnackBarType.failure);
+      CustomSnackBar.showSnackBar(
+          context: context,
+          title: AppLocalizations.of(context)!.please_enter_valid_israel_id,
+          type: SnackBarType.failure);
       return;
     }
     if (!_formKey.currentState!.validate()) return;
@@ -252,28 +277,33 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
     }
   }
 
-  Widget _buildPermissionsGroup(BuildContext context, SubUsersProfileState state) {
+  Widget _buildPermissionsGroup(
+      BuildContext context, SubUsersProfileState state) {
     final l10n = AppLocalizations.of(context)!;
     final tiles = <Widget>[
       _permissionTile(
         title: l10n.account_permission.toCapitalized(),
         icon: Icons.admin_panel_settings_outlined,
-        onTap: () => _openPermission(context, state, RouteDefine.accountPermissionScreen.name),
+        onTap: () => _openPermission(
+            context, state, RouteDefine.accountPermissionScreen.name),
       ),
       _permissionTile(
         title: l10n.categories_permissions.toCapitalized(),
         icon: Icons.category_outlined,
-        onTap: () => _openPermission(context, state, RouteDefine.categoriesPermissionScreen.name),
+        onTap: () => _openPermission(
+            context, state, RouteDefine.categoriesPermissionScreen.name),
       ),
       _permissionTile(
         title: l10n.brand_permissions.toCapitalized(),
         icon: Icons.branding_watermark_outlined,
-        onTap: () => _openPermission(context, state, RouteDefine.brandPermissionScreen.name),
+        onTap: () => _openPermission(
+            context, state, RouteDefine.brandPermissionScreen.name),
       ),
       _permissionTile(
         title: l10n.supplier_permissions.toCapitalized(),
         icon: Icons.local_shipping_outlined,
-        onTap: () => _openPermission(context, state, RouteDefine.supplierPermissionScreen.name),
+        onTap: () => _openPermission(
+            context, state, RouteDefine.supplierPermissionScreen.name),
       ),
     ];
 
@@ -284,9 +314,11 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
     );
   }
 
-  void _openPermission(BuildContext context, SubUsersProfileState state, String routeName) {
+  void _openPermission(
+      BuildContext context, SubUsersProfileState state, String routeName) {
     if (state.isUpdate || state.isEnable) {
-      Navigator.pushNamed(context, routeName, arguments: {AppStrings.subUserIdString: state.subUserId});
+      Navigator.pushNamed(context, routeName,
+          arguments: {AppStrings.subUserIdString: state.subUserId});
     }
   }
 
@@ -296,13 +328,20 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
     for (var i = 0; i < children.length; i++) {
       result.add(children[i]);
       if (i < children.length - 1) {
-        result.add(Divider(height: 1, thickness: 1, indent: 68, color: AppColors.lightBorderColor.withValues(alpha: 0.6)));
+        result.add(Divider(
+            height: 1,
+            thickness: 1,
+            indent: 68,
+            color: AppColors.lightBorderColor.withValues(alpha: 0.6)));
       }
     }
     return result;
   }
 
-  Widget _permissionTile({required String title, required IconData icon, required VoidCallback onTap}) {
+  Widget _permissionTile(
+      {required String title,
+      required IconData icon,
+      required VoidCallback onTap}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -331,7 +370,9 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
                   ),
                 ),
               ),
-              Icon(Icons.chevron_right, size: 22, color: AppColors.blackColor.withValues(alpha: 0.25)),
+              Icon(Icons.chevron_right,
+                  size: 22,
+                  color: AppColors.blackColor.withValues(alpha: 0.25)),
             ],
           ),
         ),
@@ -339,11 +380,16 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
     );
   }
 
-  Widget _buildDeleteButton(BuildContext context, SubUsersProfileBloc bloc, SubUsersProfileState state) {
+  Widget _buildDeleteButton(BuildContext context, SubUsersProfileBloc bloc,
+      SubUsersProfileState state) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => deleteConfirmDialog(bloc: bloc, context: context, directionality: state.language, isDeleteProcess: state.isDeleteProcess),
+        onTap: () => deleteConfirmDialog(
+            bloc: bloc,
+            context: context,
+            directionality: state.language,
+            isDeleteProcess: state.isDeleteProcess),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           height: 44,
@@ -351,7 +397,8 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
           decoration: BoxDecoration(
             color: AppColors.whiteColor,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.redColor.withValues(alpha: 0.3)),
+            border:
+                Border.all(color: AppColors.redColor.withValues(alpha: 0.3)),
           ),
           child: Text(
             AppLocalizations.of(context)!.delete_sub_user_account,
@@ -366,7 +413,11 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
     );
   }
 
-  void deleteConfirmDialog({required SubUsersProfileBloc bloc, required BuildContext context, required String directionality, required bool isDeleteProcess}) {
+  void deleteConfirmDialog(
+      {required SubUsersProfileBloc bloc,
+      required BuildContext context,
+      required String directionality,
+      required bool isDeleteProcess}) {
     showDialog(
       context: context,
       builder: (context1) {
@@ -383,7 +434,8 @@ class _SubUserProfileScreenWidgetState extends State<SubUserProfileScreenWidget>
                 negativeTitle: AppLocalizations.of(context)!.no,
                 negativeOnTap: () => Navigator.pop(context),
                 positiveOnTap: () async {
-                  bloc.add(SubUsersProfileEvent.deleteAccountEvent(context: context, dialogContext: context1));
+                  bloc.add(SubUsersProfileEvent.deleteAccountEvent(
+                      context: context, dialogContext: context1));
                 },
               );
             },

@@ -114,6 +114,18 @@ class FormFieldValidation {
     return null;
   }
 
+  String? contactPersonNameField(String value, BuildContext context) {
+    RegExp regex = RegExp(r"^(?=.*?[0-9.!#$%&'*₹+-/=?^_`{|}~]).*$");
+    if (value.isEmpty) {
+      return AppLocalizations.of(context)!.please_enter_contact_name;
+    } else if (regex.hasMatch(value)) {
+      return AppLocalizations.of(context)!.please_enter_alphabets_only;
+    } else if (!value.contains(' ')) {
+      return AppLocalizations.of(context)!.please_enter_contact_person_name;
+    }
+    return null;
+  }
+
   String? addressNameField(String value, BuildContext context) {
     RegExp regex = RegExp(r"^(?=.*?[!#$%&'*@<>:)(;₹+=?^_`{|}~]).*$");
     RegExp regex1 = RegExp(r"^(?=.*?[a-zA-zא-ת]).*$");

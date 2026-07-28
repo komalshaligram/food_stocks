@@ -13,39 +13,45 @@ import '../../data/error/exceptions.dart';
 import '../../data/model/req_model/login_req_model/login_req_model.dart';
 import '../../data/model/req_model/otp_req_model/otp_req_model.dart';
 import '../../data/model/res_model/login_res_model/login_res_model.dart';
+import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
+import '../../ui/widget/otp_whatsapp_sent_dialog.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
 part 'otp_event.dart';
-
 part 'otp_state.dart';
-
 part 'otp_bloc.freezed.dart';
 
 class OtpBloc extends Bloc<OtpEvent, OtpState> {
-  late StreamSubscription _periodicOtpTimerSubscription;
+  StreamSubscription? _periodicOtpTimerSubscription;
 
   OtpBloc() : super(OtpState.initial()) {
     on<OtpEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _setOtpTimerEvent) {
-        if (state.otpTimer == 0) {
-          emit(state.copyWith(otpTimer: 30));
+
+        final int remaining = preferences.getOtpCooldownRemaining(event.contact);
+        emit(state.copyWith(
+          otpTimer: remaining,
+          sendCount: preferences.getOtpSendCount(event.contact),
+        ));
+        _periodicOtpTimerSubscription?.cancel();
+        if (remaining > 0) {
           _periodicOtpTimerSubscription = Stream.periodic(const Duration(seconds: 1), (x) => x).listen(
-            (_) => add(const _UpdateTimerEvent()),
+                (_) => add(const _UpdateTimerEvent()),
             onError: (error) => printData("otp timer error = $error"),
           );
         }
       } else if (event is _UpdateTimerEvent) {
         if (state.otpTimer == 0) {
-          _periodicOtpTimerSubscription.cancel();
+          _periodicOtpTimerSubscription?.cancel();
         } else {
           emit(state.copyWith(otpTimer: state.otpTimer - 1));
         }
       } else if (event is _cancelTimerscriptionEvent) {
-        _periodicOtpTimerSubscription.cancel();
+        _periodicOtpTimerSubscription?.cancel();
       }
 
       if (event is _otpApiEvent) {
@@ -59,7 +65,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             final res = await DioClient(event.context).post(AppUrlEndPoints.loginOTPUrl, data: reqMap);
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
-              _periodicOtpTimerSubscription.cancel();
+              _periodicOtpTimerSubscription?.cancel();
+              preferences.clearOtpCooldown();
               preferences.setCartId(cartId: response.data?.cartId ?? '');
               preferences.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
               preferences.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
@@ -77,7 +84,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferences.setClubAgentId(clubAgentId: response.data?.agentId ?? '');
               preferences.setIsAgent(isAgent: response.data?.isAgent ?? false);
               preferences.setIsAgentSwitchToAssignedStore(isAgentSwitchToAssignedStore: response.data?.isAgentSwitchToAssignedStore ?? false);
-
               if (response.data?.adminType == AppStrings.subUserString) {
                 var res = response.data?.subUserPermissions;
                 preferences.setSubUserId(id: response.data?.user?.id ?? '');
@@ -94,8 +100,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
                 preferences.setCanScanDocuments(isCanScanDocuments: res?.canScanDocuments ?? false);
               }
               emit(state.copyWith(isLoading: false));
-              // A PENDING client hasn't finished registration — send them back
-              // into the registration flow (fields pre-fill) instead of home.
               final bool isRegistrationComplete = (res['data'] is Map) ? (res['data']['isRegistrationComplete'] ?? true) : true;
               preferences.setRegistrationIncomplete(isIncomplete: !isRegistrationComplete);
               if (isRegistrationComplete) {
@@ -148,7 +152,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             final res = await DioClient(event.context).post(AppUrlEndPoints.otpVerifyUrl, data: reqMap);
             LoginOtpResModel response = LoginOtpResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
-              _periodicOtpTimerSubscription.cancel();
+              _periodicOtpTimerSubscription?.cancel();
+              preferences.clearOtpCooldown();
               preferences.setCartId(cartId: response.data?.cartId ?? '');
               preferences.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
               preferences.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
@@ -191,7 +196,15 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.otp_resend_success, type: SnackBarType.success);
             preferences.setUserId(id: response.user?.id ?? '');
             preferences.setPhoneNumber(userPhoneNumber: event.contactNumber);
+
+            final int nextCount = preferences.getOtpSendCount(event.contactNumber) + 1;
+            await preferences.setOtpCooldown(
+              contact: event.contactNumber,
+              seconds: otpCooldownSeconds(nextCount),
+              sendCount: nextCount,
+            );
             emit(state.copyWith(isLoading: false));
+            add(OtpEvent.setOtpTimer(contact: event.contactNumber));
           } else if (response.status == AppConstants.code_403) {
             CustomSnackBar.showSnackBar(context: event.context, title: response.message ?? '', type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
@@ -207,6 +220,64 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           emit(state.copyWith(isLoading: false));
         } catch (e) {
           emit(state.copyWith(isLoading: false));
+        }
+      }
+
+      if (event is _sendOtpViaWhatsappEvent) {
+        if (state.isWhatsappSending) {
+          return;
+        }
+        emit(state.copyWith(isWhatsappSending: true));
+        try {
+
+          final res = await DioClient(event.context).post(
+            AppUrlEndPoints.sendOtpByWhatsappUrl,
+            data: {
+              AppStrings.contactString: event.contactNumber,
+              'applicationName': AppStrings.appName,
+              'forceNewOtp': preferences.getOtpSendCount(event.contactNumber) >= 2,
+            },
+          );
+
+          final int? status = res[AppStrings.statusString] as int?;
+          final String message = (res[AppStrings.messageString] ?? '').toString();
+          if (status == AppConstants.code_200) {
+            final int nextCount = preferences.getOtpSendCount(event.contactNumber) + 1;
+            printData('whatsapp otp sent, restarting cooldown (send #$nextCount)');
+            await preferences.setOtpCooldown(
+              contact: event.contactNumber,
+              seconds: otpCooldownSeconds(nextCount),
+              sendCount: nextCount,
+            );
+            emit(state.copyWith(isWhatsappSending: false));
+            add(OtpEvent.setOtpTimer(contact: event.contactNumber));
+            if (event.context.mounted) {
+              showOtpSentViaWhatsappDialog(context: event.context, contact: event.contactNumber);
+            }
+          } else {
+            emit(state.copyWith(isWhatsappSending: false));
+            CustomSnackBar.showSnackBar(
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(message.toLocalization(), event.context),
+              type: SnackBarType.failure,
+            );
+          }
+        } on ServerException {
+          emit(state.copyWith(isWhatsappSending: false));
+        } catch (e) {
+          emit(state.copyWith(isWhatsappSending: false));
+        }
+      } else if (event is _loadWhatsappOtpSettingEvent) {
+
+        try {
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
+          SettingResModel response = SettingResModel.fromJson(res);
+          if (response.status == AppConstants.code_200) {
+            emit(state.copyWith(showWhatsappOtpOption: response.data?.showWhatsappOtpOption ?? false));
+          }
+        } on ServerException {
+        } catch (e) {
+          printData('whatsapp otp setting fetch failed = $e');
         }
       }
     });

@@ -120,6 +120,7 @@ class AppStrings {
   static const ownerName2ValString = 'ownerName2Val';
   static const idValString = 'idVal';
   static const contactNameValString = 'contactNameVal';
+  static const contactPersonNameValString = 'contactPersonNameVal';
   static const addressValString = 'addressVal';
   static const zipValString = 'zipVal';
   static const streetNameValString = 'streetNameVal';
@@ -244,6 +245,14 @@ class AppStrings {
 
   static String getLocalizedStrings(String key, BuildContext context) {
     switch (key) {
+      case 'whatsappotpsent':
+        return AppLocalizations.of(context)!.whatsappotpsent;
+      case 'whatsappotpsendfailed':
+        return AppLocalizations.of(context)!.whatsappotpsendfailed;
+      case 'whatsappnotconfigured':
+        return AppLocalizations.of(context)!.whatsappnotconfigured;
+      case 'whatsappotptoosoon':
+        return AppLocalizations.of(context)!.whatsappotptoosoon;
       case 'errmessage':
         return AppLocalizations.of(context)!.err_message;
       case 'successmessage':

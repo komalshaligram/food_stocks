@@ -98,4 +98,8 @@ class ReorderEvent with _$ReorderEvent {
   }) = _addToCartListProductEvent;
 
   const factory ReorderEvent.getCartCountNoEvent({required BuildContext context}) = _getCartCountNoEvent;
+
+  const factory ReorderEvent.applyCartQuantitiesEvent({
+    required Map<String, int> cartQuantities,
+  }) = _applyCartQuantitiesEvent;
 }

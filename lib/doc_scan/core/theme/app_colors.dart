@@ -32,6 +32,17 @@ class AppColors {
   static const Color textSecondary = Color(0xFF64748B);
   static const Color divider = Color(0xFFE2E8F0);
 
+  /// רקע עמוד טופס — האפור הבהיר של שאר האפליקציה (`AppColors.pageColor`),
+  /// כדי שכרטיסי הטופס הלבנים ייקראו כמו במסך "פרופיל אישי".
+  static const Color pageBackground = Color(0xFFF8F9FA);
+
+  /// מילוי שדה קלט על גבי כרטיס לבן. אותו אפור — השדה "נחתך" מהכרטיס במקום
+  /// להיות מוקף במסגרת, וזו ההבחנה הוויזואלית של הטפסים באפליקציה.
+  static const Color fieldFill = Color(0xFFF8F9FA);
+
+  /// צל רך לכרטיסים (נצרך תמיד עם אלפא נמוך).
+  static const Color shadow = Color(0xFF000000);
+
   // אדום לשגיאות/אזהרות (למשל ברקוד שאינו קיים בקטלוג).
   static const Color error = Color(0xFFD32F2F);
 

@@ -86,4 +86,8 @@ class SupplierProductsEvent with _$SupplierProductsEvent {
   }) = _addToCartListProductEvent;
 
   const factory SupplierProductsEvent.getCartCountEvent({required BuildContext context}) = _getCartCountEvent;
+
+  const factory SupplierProductsEvent.applyCartQuantitiesEvent({
+    required Map<String, int> cartQuantities,
+  }) = _applyCartQuantitiesEvent;
 }

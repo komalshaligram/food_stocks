@@ -27,7 +27,8 @@ class Owner2FormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => Owner2FormBloc()..add(Owner2FormEvent.getArgumentEvent(reqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
+      create: (context) => Owner2FormBloc()
+        ..add(Owner2FormEvent.getArgumentEvent(reqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
       child: Owner2FormScreenWidget(),
     );
   }
@@ -43,12 +44,7 @@ class Owner2FormScreenWidget extends StatelessWidget {
     return BlocBuilder<Owner2FormBloc, Owner2FormState>(builder: (context, state) {
       return WillPopScope(
         onWillPop: () async {
-          SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-          if (!preferences.getUserLoggedIn()) {
-            return Future.value(true);
-          } else {
-            return Future.value(false);
-          }
+          return Future.value(Navigator.canPop(context));
         },
         child: Scaffold(
           backgroundColor: AppColors.whiteColor,
@@ -56,15 +52,15 @@ class Owner2FormScreenWidget extends StatelessWidget {
             surfaceTintColor: AppColors.whiteColor,
             leading: GestureDetector(
                 onTap: () async {
-                  SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-                  if (!preferences.getUserLoggedIn()) {
+                  if (Navigator.canPop(context)) {
                     Navigator.pop(context);
                   }
                 },
                 child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
             title: Align(
               alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.data_for_form, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+              child: Text(AppLocalizations.of(context)!.data_for_form,
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
             ),
             backgroundColor: AppColors.whiteColor,
             titleSpacing: 0,
@@ -126,7 +122,9 @@ class Owner2FormScreenWidget extends StatelessWidget {
                     ),
                     7.height,
                     CustomContainerWidget(
-                      name: state.language == AppStrings.hebrewString ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}' : AppLocalizations.of(context)!.guarantee_2_address,
+                      name: state.language == AppStrings.hebrewString
+                          ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}'
+                          : AppLocalizations.of(context)!.guarantee_2_address,
                     ),
                     CustomFormField(
                       context: context,

@@ -294,6 +294,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seconds_short => 'sec';
 
   @override
+  String get did_not_get_sms => 'Didn\'t get the code by SMS?';
+
+  @override
+  String get send_code_via_whatsapp => 'Send the code via WhatsApp';
+
+  @override
+  String get otp_sent_via_whatsapp_title => 'Code sent on WhatsApp';
+
+  @override
+  String get otp_sent_via_whatsapp_message => 'We sent your verification code in a WhatsApp message to';
+
+  @override
+  String get otp_sent_via_whatsapp_action => 'Got it';
+
+  @override
+  String get whatsappotpsent => 'The code was sent on WhatsApp';
+
+  @override
+  String get whatsappotpsendfailed => 'Sending the code on WhatsApp failed, please try again';
+
+  @override
+  String get whatsappnotconfigured => 'WhatsApp delivery is not available right now';
+
+  @override
+  String get whatsappotptoosoon => 'A WhatsApp code was just sent to you, please wait a moment';
+
+  @override
   String get log_out => 'Log Out';
 
   @override
@@ -601,6 +628,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_enter_contact_name => 'Please enter contact name';
+
+  @override
+  String get please_enter_contact_person_name => 'Please add full name, first name and last name';
 
   @override
   String get please_enter_address => 'Please enter address';
@@ -2278,6 +2308,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verify_form_subtitle => 'Please review and update your details before continuing';
 
   @override
+  String get validation_errors_title => 'Almost there!';
+
+  @override
+  String get validation_errors_message => 'A few fields need to be completed or corrected before we continue with your order.';
+
+  @override
+  String get show_errors => 'Show errors';
+
+  @override
   String get business_details_section => 'Business details';
 
   @override
@@ -2326,6 +2365,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customer_service => 'Customer Service';
 
   @override
+  String get agent_code_help_message => 'Don\'t know your agent code or who your agent is? No problem — our customer service team is here to help.';
+
+  @override
+  String get agent_code_contact_support => 'Contact customer service';
+
+  @override
   String get whatsapp_optin_title => 'Let\'s stay in touch on WhatsApp';
 
   @override
@@ -2360,4 +2405,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_upload_delivery_location_photo => 'Please add your Image of your location';
+
+  @override
+  String get promo_sheet_reach_min_title => 'Complete the quantity for the sale price';
+
+  @override
+  String get promo_sheet_min_reached => 'Great! You\'ve reached the sale price';
+
+  @override
+  String get promo_sheet_add_to_cart => 'Add to cart';
+
+  @override
+  String get promo_sheet_empty => 'No products found for this sale';
+
+  @override
+  String promo_sheet_remaining(int count) {
+    return '$count more packages for the sale price';
+  }
+
+  @override
+  String promo_sheet_of_packages(int selected, int min) {
+    return '$selected of $min packages';
+  }
 }

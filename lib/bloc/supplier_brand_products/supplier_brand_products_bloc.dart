@@ -618,6 +618,20 @@ class SupplierBrandProductsBloc extends Bloc<SupplierBrandProductsEvent, Supplie
         emit(state.copyWith(imageIndex: event.index));
       } else if (event is _getCartCountEvent) {
         emit(state.copyWith(cartCount: preferences.getCartCount(), isSubUserAddToBasket: preferences.getCanAddToBasket()));
+      } else if (event is _applyCartQuantitiesEvent) {
+        final cartMap = event.cartQuantities;
+        final productStockList = state.productStockList
+            .map((sub) => sub.map((item) {
+          final pid = item.productId;
+          if (pid.isEmpty) return item;
+          return item.copyWith(
+            quantity: cartMap[pid] ?? 0,
+            cartProductId: '',
+            totalPrice: 0.0,
+          );
+        }).toList())
+            .toList();
+        emit(state.copyWith(productStockList: productStockList));
       } else if (event is _getGridListView) {
         preferences.setBrandGridListView(isBrandProductGrid: !state.isBrandProductGrid);
         emit(state.copyWith(isBrandProductGrid: !state.isBrandProductGrid));

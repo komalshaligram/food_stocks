@@ -62,6 +62,10 @@ class InvoiceDiagnosis {
       missingItems.isEmpty &&
       lineDiffs.isEmpty;
 
+  /// נוח לקוראים שמחזיקים את ה-diagnosis כ-Map גולמי על המסמך (nullable).
+  static InvoiceDiagnosis? fromJsonOrNull(Map<String, dynamic>? j) =>
+      j == null ? null : InvoiceDiagnosis.fromJson(j);
+
   factory InvoiceDiagnosis.fromJson(Map<String, dynamic> j) => InvoiceDiagnosis(
         expectedCount: (j['expectedCount'] as num?)?.toInt(),
         importedCount: (j['importedCount'] as num?)?.toInt(),
@@ -88,6 +92,7 @@ class ComaxDocumentStatus {
     this.comaxDocNumber,
     this.receivedAt,
     this.receiveError,
+    this.receiveErrorMessage,
     this.diagnosis,
     this.updatedAt,
   });
@@ -108,6 +113,11 @@ class ComaxDocumentStatus {
   /// transient | invoice_already_received | טקסט חופשי
   final String? receiveError;
 
+  /// אותו כישלון **בעברית, מוכן להצגה**. ⚠️ זה השדה שמוצג למשתמש —
+  /// [receiveError] הוא קוד מכונה (`total_mismatch`, `session_in_use`, ...)
+  /// ואסור להציגו כטקסט. תיעוד: `foodstockComaxCrawler/docs/API.md` §5ג.
+  final String? receiveErrorMessage;
+
   final InvoiceDiagnosis? diagnosis;
   final String? updatedAt;
 
@@ -123,6 +133,7 @@ class ComaxDocumentStatus {
       comaxDocNumber: j['comaxDocNumber']?.toString(),
       receivedAt: j['receivedAt']?.toString(),
       receiveError: j['receiveError']?.toString(),
+      receiveErrorMessage: j['receiveErrorMessage']?.toString(),
       diagnosis: rawDiagnosis is Map
           ? InvoiceDiagnosis.fromJson(Map<String, dynamic>.from(rawDiagnosis))
           : null,

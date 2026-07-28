@@ -3,7 +3,7 @@ part of 'recommendation_products_bloc.dart';
 @freezed
 class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.getPreferencesDataEvent() =
-      _getPreferencesDataEvent;
+  _getPreferencesDataEvent;
 
   const factory RecommendationProductsEvent.getRecommendationProductsEvent(
       {required BuildContext context}) = _getRecommendationProductsEvent;
@@ -23,7 +23,7 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.updateQuantityOfProduct(
       {required BuildContext context,
-      required String quantity}) = _updateQuantityOfProduct;
+        required String quantity}) = _updateQuantityOfProduct;
 
   const factory RecommendationProductsEvent.changeNoteOfProduct(
       {required String newNote}) = _changeNoteOfProduct;
@@ -33,30 +33,30 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.supplierSelectionEvent(
       {required int supplierIndex,
-      required BuildContext context,
-      required int supplierSaleIndex}) = _supplierSelectionEvent;
+        required BuildContext context,
+        required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory RecommendationProductsEvent.addToCartProductEvent(
       {required BuildContext context,
-      required String productId}) = _addToCartProductEvent;
+        required String productId}) = _addToCartProductEvent;
 
   const factory RecommendationProductsEvent.setCartCountEvent() =
-      _setCartCountEvent;
+  _setCartCountEvent;
 
   const factory RecommendationProductsEvent.updateImageIndexEvent(
       {required int index}) = _updateImageIndexEvent;
 
   const factory RecommendationProductsEvent.toggleNoteEvent() =
-      _toggleNoteEvent;
+  _toggleNoteEvent;
 
   const factory RecommendationProductsEvent.refreshListEvent(
       {required BuildContext context}) = _refreshListEvent;
 
   const factory RecommendationProductsEvent.getCartCountEvent() =
-      _getCartCountEvent;
+  _getCartCountEvent;
 
   const factory RecommendationProductsEvent.getGridListView() =
-      _getGridListView;
+  _getGridListView;
 
   const factory RecommendationProductsEvent.changeCategoryExpansion(
       {bool? isOpened}) = _changeCategoryExpansion;
@@ -66,17 +66,17 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.updateGlobalSearchEvent(
       {required String search,
-      required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
+        required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
   const factory RecommendationProductsEvent.getProductCategoriesListEvent(
       {required BuildContext context}) = _getProductCategoriesListEvent;
 
   const factory RecommendationProductsEvent.relatedProductsEvent(
       {required BuildContext context,
-      required String productId}) = _relatedProductsEvent;
+        required String productId}) = _relatedProductsEvent;
 
   const factory RecommendationProductsEvent.removeRelatedProductEvent() =
-      _removeRelatedProductEvent;
+  _removeRelatedProductEvent;
 
   const factory RecommendationProductsEvent.getPermissionList(
       {required BuildContext context}) = _getPermissionList;
@@ -116,4 +116,8 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
 
   const factory RecommendationProductsEvent.getCartCountNoEvent(
       {required BuildContext context}) = _getCartCountNoEvent;
+
+  const factory RecommendationProductsEvent.applyCartQuantitiesEvent({
+    required Map<String, int> cartQuantities,
+  }) = _applyCartQuantitiesEvent;
 }

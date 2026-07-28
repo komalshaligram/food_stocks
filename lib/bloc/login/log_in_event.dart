@@ -7,4 +7,6 @@ class LogInEvent with _$LogInEvent {
   factory LogInEvent.changeAuthEvent({required bool isRegister}) = _changeAuthEvent;
 
   const factory LogInEvent.checkVersionOfAppEvent({required BuildContext context}) = _checkVersionOfAppEvent;
+
+  const factory LogInEvent.syncCooldown({required String contactNumber}) = _syncCooldownEvent;
 }

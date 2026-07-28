@@ -110,12 +110,18 @@ class DocStatusResponse {
     required this.comaxStatus,
     this.comaxDocNumber,
     this.receiveError,
+    this.receiveErrorMessage,
   });
 
   /// pending → queued → receiving → received / failed.
   final String comaxStatus;
   final String? comaxDocNumber;
+
+  /// ⚠️ **קוד מכונה** (`total_mismatch`, `session_in_use`, ...) — לא להצגה.
   final String? receiveError;
+
+  /// אותו כישלון **בעברית, מוכן להצגה**. זה מה שמראים למשתמש.
+  final String? receiveErrorMessage;
 
   bool get isReceived => comaxStatus == 'received';
   bool get isFailed => comaxStatus == 'failed';
@@ -232,6 +238,7 @@ class InvoiceApiClient {
       comaxStatus: (data['comaxStatus'] ?? 'unknown').toString(),
       comaxDocNumber: data['comaxDocNumber']?.toString(),
       receiveError: data['receiveError']?.toString(),
+      receiveErrorMessage: data['receiveErrorMessage']?.toString(),
     );
   }
 

@@ -83,6 +83,15 @@
   "resend_code_in": "Resend code in",
   "resend_code": "Resend code",
   "seconds_short": "sec",
+  "did_not_get_sms": "Didn't get the code by SMS?",
+  "send_code_via_whatsapp": "Send the code via WhatsApp",
+  "otp_sent_via_whatsapp_title": "Code sent on WhatsApp",
+  "otp_sent_via_whatsapp_message": "We sent your verification code in a WhatsApp message to",
+  "otp_sent_via_whatsapp_action": "Got it",
+  "whatsappotpsent": "The code was sent on WhatsApp",
+  "whatsappotpsendfailed": "Sending the code on WhatsApp failed, please try again",
+  "whatsappnotconfigured": "WhatsApp delivery is not available right now",
+  "whatsappotptoosoon": "A WhatsApp code was just sent to you, please wait a moment",
   "skip": "Skip",
   "files": "Files",
   "remove": "Remove",
@@ -203,6 +212,7 @@
   "please_enter_israel_id": "Please enter israel ID",
   "please_enter_valid_israel_id": "Please enter valid israel ID",
   "please_enter_contact_name": "Please enter contact name",
+  "please_enter_contact_person_name": "Please add full name, first name and last name",
   "please_enter_address": "Please enter address",
   "please_enter_fax_number": "Please enter fax number",
   "please_enter_valid_fax_number": "Please enter valid fax number",
@@ -777,6 +787,9 @@
   },
   "verify_data_correct": "Verify that the data is correct",
   "verify_form_subtitle": "Please review and update your details before continuing",
+  "validation_errors_title": "Almost there!",
+  "validation_errors_message": "A few fields need to be completed or corrected before we continue with your order.",
+  "show_errors": "Show errors",
   "business_details_section": "Business details",
   "address_section": "Business address",
   "delivery_section": "Delivery details",
@@ -793,6 +806,8 @@
   "customer_service_whatsapp_unavailable": "Customer service WhatsApp number is not configured",
   "customer_service_phone_unavailable": "Customer service phone number is not configured",
   "customer_service": "Customer Service",
+  "agent_code_help_message": "Don't know your agent code or who your agent is? No problem — our customer service team is here to help.",
+  "agent_code_contact_support": "Contact customer service",
   "whatsapp_optin_title": "Let's stay in touch on WhatsApp",
   "whatsapp_optin_body": "I agree to receive WhatsApp messages from Tavili including updates, perks, promotions and service notices. I can withdraw this consent at any time.",
   "whatsapp_optin_approve": "I agree",
@@ -804,5 +819,28 @@
   "sort_price_high_low": "Price: high to low",
   "show_only_sales": "Show only sales",
   "please_set_waze_location": "Please add your Waze location",
-  "please_upload_delivery_location_photo": "Please add your Image of your location"
+  "please_upload_delivery_location_photo": "Please add your Image of your location",
+  "promo_sheet_reach_min_title": "Complete the quantity for the sale price",
+  "promo_sheet_min_reached": "Great! You've reached the sale price",
+  "promo_sheet_add_to_cart": "Add to cart",
+  "promo_sheet_empty": "No products found for this sale",
+  "promo_sheet_remaining": "{count} more packages for the sale price",
+  "@promo_sheet_remaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "promo_sheet_of_packages": "{selected} of {min} packages",
+  "@promo_sheet_of_packages": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  }
 }

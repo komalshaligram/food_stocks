@@ -28,7 +28,8 @@ class MyClientsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MyClientsBloc()..add(MyClientsEvent.getAgentClientsListEvent(context: context)),
+      create: (context) => MyClientsBloc()
+        ..add(MyClientsEvent.getAgentClientsListEvent(context: context)),
       child: const MyClientsScreenWidget(),
     );
   }
@@ -43,7 +44,8 @@ class MyClientsScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<MyClientsBloc, MyClientsState>(
       listener: (context, state) {},
-      child: BlocBuilder<MyClientsBloc, MyClientsState>(builder: (context, state) {
+      child:
+          BlocBuilder<MyClientsBloc, MyClientsState>(builder: (context, state) {
         return Scaffold(
           backgroundColor: AppColors.pageColor,
           resizeToAvoidBottomInset: true,
@@ -75,8 +77,11 @@ class MyClientsScreenWidget extends StatelessWidget {
                 },
               ),
               enablePullUp: !state.isBottomOfProducts,
-              onRefresh: () => context.read<MyClientsBloc>().add(MyClientsEvent.refreshListEvent(context: context)),
-              onLoading: () => context.read<MyClientsBloc>().add(MyClientsEvent.getAgentClientsListEvent(context: context)),
+              onRefresh: () => context
+                  .read<MyClientsBloc>()
+                  .add(MyClientsEvent.refreshListEvent(context: context)),
+              onLoading: () => context.read<MyClientsBloc>().add(
+                  MyClientsEvent.getAgentClientsListEvent(context: context)),
               child: Stack(
                 children: [
                   state.isShimmering
@@ -94,7 +99,10 @@ class MyClientsScreenWidget extends StatelessWidget {
                     Positioned.fill(
                       child: ColoredBox(
                         color: Colors.black.withValues(alpha: 0.04),
-                        child: Center(child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20)),
+                        child: Center(
+                            child: CupertinoActivityIndicator(
+                                color: AppColors.mainColor,
+                                radius: AppConstants.radius_20)),
                       ),
                     ),
                 ],
@@ -120,7 +128,8 @@ class MyClientsScreenWidget extends StatelessWidget {
 
   Widget _buildSearchField(BuildContext context, MyClientsState state) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 12),
+      padding: const EdgeInsets.fromLTRB(
+          _horizontalPadding, 8, _horizontalPadding, 12),
       child: Container(
         height: 48,
         decoration: BoxDecoration(
@@ -137,27 +146,42 @@ class MyClientsScreenWidget extends StatelessWidget {
         child: TextField(
           controller: state.searchController,
           decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.mainColor.withValues(alpha: 0.4))),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                    color: AppColors.mainColor.withValues(alpha: 0.4))),
             filled: true,
             fillColor: AppColors.whiteColor,
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(vertical: 12),
             hintText: AppLocalizations.of(context)!.search,
-            hintStyle: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor.withValues(alpha: 0.4)),
-            prefixIcon: Icon(Icons.search_rounded, color: AppColors.blackColor.withValues(alpha: 0.35)),
+            hintStyle: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_14,
+                color: AppColors.blackColor.withValues(alpha: 0.4)),
+            prefixIcon: Icon(Icons.search_rounded,
+                color: AppColors.blackColor.withValues(alpha: 0.35)),
             suffixIcon: state.searchQuery.isNotEmpty
                 ? IconButton(
                     onPressed: () {
                       state.searchController.clear();
-                      context.read<MyClientsBloc>().add(const MyClientsEvent.searchClients(query: ''));
+                      context
+                          .read<MyClientsBloc>()
+                          .add(const MyClientsEvent.searchClients(query: ''));
                     },
-                    icon: Icon(Icons.close_rounded, color: AppColors.blackColor.withValues(alpha: 0.4)),
+                    icon: Icon(Icons.close_rounded,
+                        color: AppColors.blackColor.withValues(alpha: 0.4)),
                   )
                 : null,
           ),
-          onChanged: (val) => context.read<MyClientsBloc>().add(MyClientsEvent.searchClients(query: val)),
+          onChanged: (val) => context
+              .read<MyClientsBloc>()
+              .add(MyClientsEvent.searchClients(query: val)),
           onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
         ),
       ),
@@ -176,12 +200,15 @@ class MyClientsScreenWidget extends StatelessWidget {
               color: AppColors.mainColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(Icons.groups_outlined, size: 28, color: AppColors.mainColor),
+            child: Icon(Icons.groups_outlined,
+                size: 28, color: AppColors.mainColor),
           ),
           16.height,
           Text(
             AppLocalizations.of(context)!.no_data,
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.blackColor.withValues(alpha: 0.55)),
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_15,
+                color: AppColors.blackColor.withValues(alpha: 0.55)),
           ),
         ],
       ),
@@ -193,7 +220,8 @@ class MyClientsScreenWidget extends StatelessWidget {
     return Expanded(
       child: AnimationLimiter(
         child: ListView.separated(
-          padding: const EdgeInsets.fromLTRB(_horizontalPadding, 0, _horizontalPadding, 16),
+          padding: const EdgeInsets.fromLTRB(
+              _horizontalPadding, 0, _horizontalPadding, 16),
           itemCount: clientsList.length,
           separatorBuilder: (_, __) => 12.height,
           physics: const ClampingScrollPhysics(),
@@ -212,7 +240,8 @@ class MyClientsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildClientCard(BuildContext context, MyClientsState state, AgentStore client) {
+  Widget _buildClientCard(
+      BuildContext context, MyClientsState state, AgentStore client) {
     final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
@@ -237,7 +266,8 @@ class MyClientsScreenWidget extends StatelessWidget {
               color: AppColors.mainColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(Icons.storefront_outlined, size: 22, color: AppColors.mainColor),
+            child: Icon(Icons.storefront_outlined,
+                size: 22, color: AppColors.mainColor),
           ),
           14.width,
           Expanded(
@@ -246,7 +276,8 @@ class MyClientsScreenWidget extends StatelessWidget {
               children: [
                 Text(
                   client.storeName ?? '',
-                  style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.blackColor),
+                  style: AppStyles.rkBoldTextStyle(
+                      size: AppConstants.font_15, color: AppColors.blackColor),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -254,7 +285,9 @@ class MyClientsScreenWidget extends StatelessWidget {
                   4.height,
                   Text(
                     client.storeRepresentativeName ?? '',
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.blackColor.withValues(alpha: 0.7)),
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_13,
+                        color: AppColors.blackColor.withValues(alpha: 0.7)),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -263,7 +296,9 @@ class MyClientsScreenWidget extends StatelessWidget {
                   4.height,
                   Text(
                     client.address ?? '',
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.blackColor.withValues(alpha: 0.45)),
+                    style: AppStyles.rkRegularTextStyle(
+                        size: AppConstants.font_12,
+                        color: AppColors.blackColor.withValues(alpha: 0.45)),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -278,7 +313,9 @@ class MyClientsScreenWidget extends StatelessWidget {
                 label: l10n.clients_switch,
                 isPrimary: true,
                 onTap: () {
-                  context.read<MyClientsBloc>().add(MyClientsEvent.switchAccountEvent(
+                  context
+                      .read<MyClientsBloc>()
+                      .add(MyClientsEvent.switchAccountEvent(
                         context: context,
                         clientsId: client.id!,
                         clientName: client.storeName ?? '',
@@ -290,7 +327,8 @@ class MyClientsScreenWidget extends StatelessWidget {
               _buildActionChip(
                 label: l10n.clients_set_minimum,
                 isPrimary: false,
-                onTap: () => supplierListDialog(context: context, state: state, client: client),
+                onTap: () => supplierListDialog(
+                    context: context, state: state, client: client),
               ),
             ],
           ),
@@ -299,7 +337,10 @@ class MyClientsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildActionChip({required String label, required bool isPrimary, required VoidCallback onTap}) {
+  Widget _buildActionChip(
+      {required String label,
+      required bool isPrimary,
+      required VoidCallback onTap}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -317,7 +358,10 @@ class MyClientsScreenWidget extends StatelessWidget {
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w500),
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.font_12,
+                color: AppColors.whiteColor,
+                fontWeight: FontWeight.w500),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -326,7 +370,10 @@ class MyClientsScreenWidget extends StatelessWidget {
     );
   }
 
-  void supplierListDialog({required BuildContext context, required MyClientsState state, required AgentStore client}) {
+  void supplierListDialog(
+      {required BuildContext context,
+      required MyClientsState state,
+      required AgentStore client}) {
     final supplierCount = client.suppliers?.length ?? 0;
     final sheetSize = getSheetSize(supplierCount);
 
@@ -349,21 +396,28 @@ class MyClientsScreenWidget extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
                   color: AppColors.pageColor,
                 ),
                 child: client.suppliers == null || client.suppliers!.isEmpty
-                    ? noDataWidget(AppLocalizations.of(context)!.no_suppliers_found)
+                    ? noDataWidget(
+                        AppLocalizations.of(context)!.no_suppliers_found)
                     : Column(
                         children: [
                           Row(
                             children: [
-                              IconButton(onPressed: () => Navigator.of(sheetContext).pop(), icon: const Icon(Icons.close_rounded)),
+                              IconButton(
+                                  onPressed: () =>
+                                      Navigator.of(sheetContext).pop(),
+                                  icon: const Icon(Icons.close_rounded)),
                               Expanded(
                                 child: Text(
                                   AppLocalizations.of(context)!.select_supplier,
                                   textAlign: TextAlign.center,
-                                  style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.blackColor),
+                                  style: AppStyles.rkBoldTextStyle(
+                                      size: AppConstants.font_17,
+                                      color: AppColors.blackColor),
                                 ),
                               ),
                               const SizedBox(width: 48),
@@ -376,8 +430,10 @@ class MyClientsScreenWidget extends StatelessWidget {
                               physics: const ClampingScrollPhysics(),
                               itemCount: client.suppliers!.length,
                               separatorBuilder: (_, __) => 10.height,
-                              itemBuilder: (supplierListContext, suppliersIndex) {
-                                final supplier = client.suppliers![suppliersIndex];
+                              itemBuilder:
+                                  (supplierListContext, suppliersIndex) {
+                                final supplier =
+                                    client.suppliers![suppliersIndex];
                                 return Material(
                                   color: Colors.transparent,
                                   child: InkWell(
@@ -395,7 +451,8 @@ class MyClientsScreenWidget extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(14),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: AppColors.shadowColor.withValues(alpha: 0.06),
+                                            color: AppColors.shadowColor
+                                                .withValues(alpha: 0.06),
                                             blurRadius: 12,
                                             offset: const Offset(0, 2),
                                           ),
@@ -405,27 +462,45 @@ class MyClientsScreenWidget extends StatelessWidget {
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              border: Border.all(color: AppColors.lightBorderColor),
-                                              borderRadius: BorderRadius.circular(12),
+                                              border: Border.all(
+                                                  color: AppColors
+                                                      .lightBorderColor),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             padding: const EdgeInsets.all(4),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(8),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                               child: Image.network(
                                                 "${AppUrlEndPoints.baseFileUrl}${supplier.logo}",
                                                 height: 40,
                                                 width: 40,
                                                 fit: BoxFit.contain,
-                                                loadingBuilder: (context, child, loadingProgress) {
-                                                  if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
+                                                loadingBuilder: (context, child,
+                                                    loadingProgress) {
+                                                  if (loadingProgress
+                                                          ?.cumulativeBytesLoaded !=
+                                                      loadingProgress
+                                                          ?.expectedTotalBytes) {
                                                     return CommonShimmerWidget(
-                                                      child: Container(height: 40, width: 40, color: AppColors.pageColor),
+                                                      child: Container(
+                                                          height: 40,
+                                                          width: 40,
+                                                          color: AppColors
+                                                              .pageColor),
                                                     );
                                                   }
                                                   return child;
                                                 },
-                                                errorBuilder: (context, error, stackTrace) {
-                                                  return Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, height: 40, width: 40);
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Image.asset(
+                                                      AppImagePath
+                                                          .imageNotAvailable5,
+                                                      fit: BoxFit.cover,
+                                                      height: 40,
+                                                      width: 40);
                                                 },
                                               ),
                                             ),
@@ -434,33 +509,54 @@ class MyClientsScreenWidget extends StatelessWidget {
                                           Expanded(
                                             child: Text(
                                               supplier.supplierName!,
-                                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500),
+                                              style:
+                                                  AppStyles.rkRegularTextStyle(
+                                                      size:
+                                                          AppConstants.font_14,
+                                                      color:
+                                                          AppColors.blackColor,
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           8.width,
                                           Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 4),
                                             decoration: BoxDecoration(
-                                              color: supplier.isNoMinimum! == true
-                                                  ? AppColors.notificationColor.withValues(alpha: 0.15)
-                                                  : AppColors.clubAgentBGColor.withValues(alpha: 0.15),
-                                              borderRadius: BorderRadius.circular(8),
+                                              color: supplier.isNoMinimum! ==
+                                                      true
+                                                  ? AppColors.notificationColor
+                                                      .withValues(alpha: 0.15)
+                                                  : AppColors.clubAgentBGColor
+                                                      .withValues(alpha: 0.15),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
                                             child: Text(
                                               supplier.isNoMinimum! == true
-                                                  ? AppLocalizations.of(context)!.clients_no_minimum
+                                                  ? AppLocalizations.of(
+                                                          context)!
+                                                      .clients_no_minimum
                                                   : '${AppLocalizations.of(context)!.clients_minimum_order} ${supplier.minOrderAmount} ₪',
-                                              style: AppStyles.rkRegularTextStyle(
+                                              style:
+                                                  AppStyles.rkRegularTextStyle(
                                                 size: AppConstants.font_12,
-                                                color: supplier.isNoMinimum! == true ? AppColors.statusOpenColor : AppColors.clubAgentBGColor,
+                                                color: supplier.isNoMinimum! ==
+                                                        true
+                                                    ? AppColors.statusOpenColor
+                                                    : AppColors
+                                                        .clubAgentBGColor,
                                               ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                          Icon(Icons.chevron_left_rounded, color: AppColors.blackColor.withValues(alpha: 0.35)),
+                                          Icon(Icons.chevron_left_rounded,
+                                              color: AppColors.blackColor
+                                                  .withValues(alpha: 0.35)),
                                         ],
                                       ),
                                     ),
@@ -502,9 +598,15 @@ class MyClientsScreenWidget extends StatelessWidget {
     return 0.5;
   }
 
-  void confirmationDialog({required BuildContext context, required String clientId, required String supplierId, required bool isMinimum}) {
+  void confirmationDialog(
+      {required BuildContext context,
+      required String clientId,
+      required String supplierId,
+      required bool isMinimum}) {
     final language = context.read<MyClientsBloc>().state.language;
-    final message = isMinimum ? AppLocalizations.of(context)!.confirmation_minimum : AppLocalizations.of(context)!.confirmation_no_minimum;
+    final message = isMinimum
+        ? AppLocalizations.of(context)!.confirmation_minimum
+        : AppLocalizations.of(context)!.confirmation_no_minimum;
 
     showDialog(
       context: context,
@@ -515,7 +617,8 @@ class MyClientsScreenWidget extends StatelessWidget {
           backgroundColor: Colors.transparent,
           insetPadding: const EdgeInsets.symmetric(horizontal: 28),
           child: Directionality(
-            textDirection: language == 'en' ? TextDirection.ltr : TextDirection.rtl,
+            textDirection:
+                language == 'en' ? TextDirection.ltr : TextDirection.rtl,
             child: Container(
               padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
               decoration: BoxDecoration(
@@ -540,14 +643,17 @@ class MyClientsScreenWidget extends StatelessWidget {
                     ),
                     child: Directionality(
                       textDirection: TextDirection.ltr,
-                      child: Icon(Icons.help_outline_rounded, color: AppColors.mainColor, size: 30),
+                      child: Icon(Icons.help_outline_rounded,
+                          color: AppColors.mainColor, size: 30),
                     ),
                   ),
                   16.height,
                   Text(
                     AppLocalizations.of(context)!.are_you_sure,
                     textAlign: TextAlign.center,
-                    style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.blackColor),
+                    style: AppStyles.rkBoldTextStyle(
+                        size: AppConstants.font_17,
+                        color: AppColors.blackColor),
                   ),
                   12.height,
                   Text(
@@ -590,7 +696,8 @@ class MyClientsScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget _dialogButton(String title, VoidCallback onTap, {bool outlined = false}) {
+  Widget _dialogButton(String title, VoidCallback onTap,
+      {bool outlined = false}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -604,13 +711,16 @@ class MyClientsScreenWidget extends StatelessWidget {
             gradient: outlined ? null : AppColors.appMainGradientColor,
             color: outlined ? AppColors.pageColor : null,
             borderRadius: BorderRadius.circular(14),
-            border: outlined ? Border.all(color: AppColors.lightBorderColor) : null,
+            border:
+                outlined ? Border.all(color: AppColors.lightBorderColor) : null,
           ),
           child: Text(
             title,
             style: AppStyles.rkRegularTextStyle(
               size: AppConstants.font_15,
-              color: outlined ? AppColors.blackColor.withValues(alpha: 0.7) : AppColors.whiteColor,
+              color: outlined
+                  ? AppColors.blackColor.withValues(alpha: 0.7)
+                  : AppColors.whiteColor,
               fontWeight: FontWeight.w600,
             ),
           ),

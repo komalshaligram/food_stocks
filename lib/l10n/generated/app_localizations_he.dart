@@ -294,6 +294,33 @@ class AppLocalizationsHe extends AppLocalizations {
   String get seconds_short => 'שנ׳';
 
   @override
+  String get did_not_get_sms => 'לא קיבלת את הקוד ב-SMS?';
+
+  @override
+  String get send_code_via_whatsapp => 'שליחת הקוד ב-WhatsApp';
+
+  @override
+  String get otp_sent_via_whatsapp_title => 'הקוד נשלח ב-WhatsApp';
+
+  @override
+  String get otp_sent_via_whatsapp_message => 'שלחנו לך את קוד האימות בהודעת WhatsApp למספר';
+
+  @override
+  String get otp_sent_via_whatsapp_action => 'מעולה, הבנתי';
+
+  @override
+  String get whatsappotpsent => 'הקוד נשלח ב-WhatsApp';
+
+  @override
+  String get whatsappotpsendfailed => 'שליחת הקוד ב-WhatsApp נכשלה, נסו שוב';
+
+  @override
+  String get whatsappnotconfigured => 'שליחה ב-WhatsApp אינה זמינה כרגע';
+
+  @override
+  String get whatsappotptoosoon => 'נשלח לך קוד ב-WhatsApp ממש עכשיו, אנא המתן מעט';
+
+  @override
   String get log_out => 'התנתק';
 
   @override
@@ -601,6 +628,9 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get please_enter_contact_name => 'אנא הזם שם איש קשר';
+
+  @override
+  String get please_enter_contact_person_name => 'אנא הזן שם מלא, שם פרטי ושם משפחה';
 
   @override
   String get please_enter_address => 'אנא הזן כתובת';
@@ -2278,6 +2308,15 @@ class AppLocalizationsHe extends AppLocalizations {
   String get verify_form_subtitle => 'אנא בדוק ועדכן את הפרטים לפני המשך ההזמנה';
 
   @override
+  String get validation_errors_title => 'כמעט סיימנו!';
+
+  @override
+  String get validation_errors_message => 'יש כמה שדות בטופס שצריך להשלים או לתקן לפני שממשיכים בהזמנה.';
+
+  @override
+  String get show_errors => 'הצג שגיאות';
+
+  @override
   String get business_details_section => 'פרטי העסק';
 
   @override
@@ -2326,6 +2365,12 @@ class AppLocalizationsHe extends AppLocalizations {
   String get customer_service => 'שירות לקוחות';
 
   @override
+  String get agent_code_help_message => 'לא יודעים מה קוד הסוכן או מי הסוכן שלכם? אין בעיה — צוות שירות הלקוחות שלנו כאן כדי לעזור לכם.';
+
+  @override
+  String get agent_code_contact_support => 'פנייה לשירות לקוחות';
+
+  @override
   String get whatsapp_optin_title => 'נשמח להישאר בקשר בוואטסאפ';
 
   @override
@@ -2360,4 +2405,26 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get please_upload_delivery_location_photo => 'אנא הוסף תמונה של מיקום הורדת סחורה';
+
+  @override
+  String get promo_sheet_reach_min_title => 'השלימו את הכמות למחיר המבצע';
+
+  @override
+  String get promo_sheet_min_reached => 'מעולה! הגעתם למחיר המבצע';
+
+  @override
+  String get promo_sheet_add_to_cart => 'הוסף לעגלה';
+
+  @override
+  String get promo_sheet_empty => 'לא נמצאו מוצרים למבצע זה';
+
+  @override
+  String promo_sheet_remaining(int count) {
+    return 'עוד $count מארזים למחיר המבצע';
+  }
+
+  @override
+  String promo_sheet_of_packages(int selected, int min) {
+    return '$selected מתוך $min מארזים';
+  }
 }

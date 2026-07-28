@@ -6,7 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart'
+    show ScanMode;
 
+import '../core/services/comax_diagnosis_text.dart';
 import '../bootstrap/doc_scan_bootstrap.dart';
 import '../core/constants/app_constants.dart';
 import '../core/services/invoice_api_client.dart';
@@ -19,12 +22,15 @@ import '../core/utils/date_utils.dart';
 import '../core/utils/number_utils.dart';
 import '../models/invoice_document.dart';
 import '../models/invoice_item.dart';
+import '../models/new_product_draft.dart';
 import '../models/resolved_item.dart';
+import 'new_product_form_screen.dart';
 import '../models/comax_document_status.dart';
 import '../core/services/invoice_items_resolver_service.dart';
 import '../core/services/invoice_consistency.dart';
 import '../models/product.dart';
 import '../models/supplier.dart';
+import '../models/warehouse.dart';
 import '../providers/customer_code_provider.dart';
 import '../providers/documents_provider.dart';
 import '../providers/embedded_ui_provider.dart';
@@ -32,6 +38,7 @@ import '../providers/model_provider.dart';
 import '../providers/products_provider.dart';
 import '../providers/supplier_code_cache_provider.dart';
 import '../providers/suppliers_provider.dart';
+import '../providers/warehouses_provider.dart';
 import '../router/app_router.dart';
 import '../utils/document_media_resolver.dart';
 import '../utils/embedded_app_bar.dart';
@@ -156,12 +163,21 @@ class _DocumentDetailsScreenState
   /// קוד הספק שנבחר מהרשימה — נשלח ב-header.supplierCode (גובר על ח.פ; מזהה ספק
   /// מדויק גם כשלאותה ישות יש כמה רשומות, רשת מול "לעסקים"). null עד שהמשתמש בוחר.
   String? _supplierCode;
+
+  /// מחסן היעד לקליטה ל-Comax (§5c). null = טרם נבחר → מוצג ונשלח מחסן ברירת
+  /// המחדל (הראשון ברשימה, ראו [_effectiveWarehouse]). המשתמש יכול לשנות.
+  String? _warehouseCode;
+  String? _warehouseName;
   late String _companyId;
   late String _documentNumber;
   late String _documentDate;
   late String _subtotal;
   late String _vatAmount;
   late String _totalAmount;
+
+  /// אחוז הנחה על המסמך (טקסט, מספר בלבד). ריק = אין הנחה. מומר לסכום הנחה
+  /// ב-[_documentDiscount] שדרכו מנגנון החישוב הקיים מעדכן מע"מ וסה"כ.
+  late String _discountPercent;
 
   /// הנחה ברמת המסמך כפי שנקראה מה-OCR — נשמרת בין עריכות שורה כדי שלא
   /// "תיעלם" מהסכום ביניים. 0 כשאין הנחה כללית.
@@ -234,6 +250,8 @@ class _DocumentDetailsScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       ref.read(productsProvider.notifier).load();
+      // §5c: טעינת רשימת מחסני היעד (לבחירת מחסן קליטה ל-Comax).
+      ref.read(warehousesProvider.notifier).load();
       // §13: חשבונית ללא ברקודים — שחזור מהקטלוג בצד השרת.
       _maybeResolveMissingBarcodes();
       // §14: האם החשבונית הזו כבר נקלטה ל-Comax (כולל הקלדה ידנית)?
@@ -352,9 +370,16 @@ class _DocumentDetailsScreenState
       // באמת מתחלף (מעבר למסמך אחר).
       final sameDocument = oldWidget.document?.id == widget.document?.id;
       final pickedSupplierCode = sameDocument ? _supplierCode : null;
+      // אותה הגנה למחסן: רענון רקע לא ידרוס מחסן שהמשתמש בחר לפני שמירה.
+      final pickedWarehouseCode = sameDocument ? _warehouseCode : null;
+      final pickedWarehouseName = sameDocument ? _warehouseName : null;
       _initFromDocument();
       if (pickedSupplierCode != null && pickedSupplierCode.isNotEmpty) {
         _supplierCode = pickedSupplierCode;
+      }
+      if (pickedWarehouseCode != null && pickedWarehouseCode.isNotEmpty) {
+        _warehouseCode = pickedWarehouseCode;
+        _warehouseName = pickedWarehouseName;
       }
       // במסמך שזה עתה נסרק, `initState` רץ בזמן ש-`status == processing` ומספר
       // החשבונית עדיין ריק — בדיוק המצב שבו שתי הבדיקות למטה יוצאות מוקדם.
@@ -374,6 +399,13 @@ class _DocumentDetailsScreenState
     // שוב. חשוב לספקים ללא ח.פ בקומקס (רגבים) שבהם codesForTaxId ריק.
     final codeFromName = ref.read(suppliersProvider).codeForName(_companyName);
     _supplierCode = codeFromName.isEmpty ? null : codeFromName;
+    // מחסן שנשמר על המסמך (אם כבר נבחר). אם ריק — ברירת המחדל תיקבע כשהרשימה
+    // תיטען ב-[_ensureDefaultWarehouse]. מסמך שמור עם מחסן = בחירת המשתמש.
+    final savedWarehouseCode = (doc.warehouseCode ?? '').trim();
+    _warehouseCode = savedWarehouseCode.isEmpty ? null : savedWarehouseCode;
+    _warehouseName = (doc.warehouseName ?? '').trim().isEmpty
+        ? null
+        : doc.warehouseName!.trim();
     _companyId = doc.companyId ?? '';
     _documentNumber = doc.documentNumber ?? '';
     _documentDate = doc.documentDate ?? '';
@@ -386,10 +418,16 @@ class _DocumentDetailsScreenState
     _parsedJson = doc.parsedJson;
     _items = List<InvoiceItem>.from(doc.items);
     _documentDiscount = doc.discount ?? 0;
+    _discountPercent = (doc.discountPercent != null && doc.discountPercent! > 0)
+        ? _formatPercent(doc.discountPercent!)
+        : '';
     _vatRate = _deriveVatRate(doc);
     _ocrSubtotal = doc.subtotal;
     _ocrTotal = doc.totalAmount;
     _applyComputedTotals();
+    // _applyComputedTotals מחשב מהשורות **בלי** הנחת מסמך. אם נשמר אחוז הנחה,
+    // מיישמים אותו מחדש כדי שהסכומים המוצגים בטעינה יהיו המוזלים (כמו שנשמרו).
+    if (_discountPercent.trim().isNotEmpty) _recalculateDocumentTotals();
   }
 
   /// כשהשורות עקביות (אין ממצא חוסם) — **מציג את הסיכומים לפי החישוב מהשורות**,
@@ -536,7 +574,16 @@ class _DocumentDetailsScreenState
                         ),
                       ),
                       const SizedBox(height: 8),
-                      StatusBadge(status: doc.status),
+                      StatusBadge(
+                      status: doc.status,
+                      comaxStatus: doc.comaxStatus,
+                      failureReason: describeIntakeFailure(
+                        receiveErrorMessage: doc.comaxReceiveErrorMessage,
+                        receiveError: doc.comaxReceiveError,
+                        diagnosis: InvoiceDiagnosis.fromJsonOrNull(
+                            doc.comaxDiagnosis),
+                      ),
+                    ),
                     ],
                   ),
                 ),
@@ -929,11 +976,40 @@ class _DocumentDetailsScreenState
                   onTap: isReadOnly ? null : _pickSupplierForCompanyName,
                 ),
                 const SizedBox(height: 10),
-                EditableField(
-                  label: l10n.documentType,
-                  value: _documentType.isEmpty ? AppConstants.emptyFieldPlaceholder : _documentType,
-                  icon: CupertinoIcons.doc_text,
-                  onTap: isReadOnly ? null : _showDocumentTypeSheet,
+                // סוג מסמך (חצי רוחב) + אחוז הנחה על המסמך לצידו.
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: EditableField(
+                        label: l10n.documentType,
+                        value: _documentType.isEmpty
+                            ? AppConstants.emptyFieldPlaceholder
+                            : _documentType,
+                        icon: CupertinoIcons.doc_text,
+                        maxLines: 1,
+                        onTap: isReadOnly ? null : _showDocumentTypeSheet,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: EditableField(
+                        label: l10n.discountPercentLabel,
+                        value: _discountPercent.isEmpty
+                            ? AppConstants.emptyFieldPlaceholder
+                            : _discountPercent,
+                        icon: CupertinoIcons.percent,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        onChanged: isReadOnly
+                            ? null
+                            : (v) => setState(() {
+                                  _discountPercent = v.trim();
+                                  _applyDiscountPercent();
+                                }),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1052,6 +1128,25 @@ class _DocumentDetailsScreenState
                 ),
               ],
             ),
+            const SizedBox(height: 12),
+            // §5c: מחסן יעד לקליטה ל-Comax — כברירת מחדל המחסן הראשון ברשימה;
+            // לחיצה פותחת את שאר האפשרויות. אם המשתמש לא בוחר, נשלח ברירת המחדל.
+            Builder(builder: (context) {
+              final whState = ref.watch(warehousesProvider);
+              final eff = _effectiveWarehouse(whState);
+              final whValue = eff != null && eff.name.trim().isNotEmpty
+                  ? eff.name
+                  : (whState.loading
+                      ? l10n.warehouseLoading
+                      : AppConstants.emptyFieldPlaceholder);
+              return EditableField(
+                label: l10n.warehouseField,
+                value: whValue,
+                icon: CupertinoIcons.cube_box,
+                maxLines: 1,
+                onTap: isReadOnly ? null : _pickWarehouse,
+              );
+            }),
           ],
         ),
       ),
@@ -1669,6 +1764,12 @@ class _DocumentDetailsScreenState
   void _recalculateDocumentTotals({bool allowEmpty = false}) {
     if (_items.isEmpty && !allowEmpty) return;
     final lineSum = _items.fold<double>(0, (sum, it) => sum + it.totalPrice);
+    // כשהוזן אחוז הנחה — סכום ההנחה נגזר תמיד מחדש מהאחוז על סכום השורות העדכני,
+    // כך שגם עריכת שורות אחרי קביעת ההנחה שומרת על האחוז.
+    if (_discountPercent.trim().isNotEmpty) {
+      final pct = double.tryParse(_discountPercent.trim()) ?? 0;
+      _documentDiscount = double.parse((lineSum * pct / 100).toStringAsFixed(2));
+    }
     // מחיקת שורות עלולה להוריד את סכום השורות מתחת להנחה — אין סכום ביניים שלילי.
     final subtotal =
         (lineSum - _documentDiscount).clamp(0.0, double.infinity).toDouble();
@@ -1677,6 +1778,26 @@ class _DocumentDetailsScreenState
     _subtotal = formatCurrency(double.parse(subtotal.toStringAsFixed(2)));
     _vatAmount = formatCurrency(double.parse(vat.toStringAsFixed(2)));
     _totalAmount = formatCurrency(double.parse(total.toStringAsFixed(2)));
+  }
+
+  /// ממיר את אחוז ההנחה שהוזן ל**סכום הנחה** (`_documentDiscount`) על סכום השורות,
+  /// ואז מחשב מחדש את הסה"כ־ללא־מע"מ / מע"מ / סה"כ־לתשלום דרך המנגנון הקיים.
+  /// דוגמה: שורות=1267.35, הנחה 5% → 63.37; אחרי הנחה 1203.98; מע"מ 216.72; סה"כ 1420.70.
+  void _applyDiscountPercent() {
+    final pct = double.tryParse(_discountPercent.trim()) ?? 0;
+    final lineSum = _items.fold<double>(0, (s, it) => s + it.totalPrice);
+    _documentDiscount =
+        double.parse((lineSum * pct / 100).toStringAsFixed(2));
+    _recalculateDocumentTotals();
+  }
+
+  /// מציג אחוז נקי: `5` ולא `5.00`, `5.5` ולא `5.50`.
+  String _formatPercent(double v) {
+    if (v == v.roundToDouble()) return v.toStringAsFixed(0);
+    return v
+        .toStringAsFixed(2)
+        .replaceFirst(RegExp(r'0+$'), '')
+        .replaceFirst(RegExp(r'\.$'), '');
   }
 
   /// עדכון פריט בודד ברשימה + חישוב מחדש של סכומי המסמך, בתוך setState אחד.
@@ -2317,6 +2438,174 @@ class _DocumentDetailsScreenState
     );
   }
 
+  /// בלוק "פריט חדש" בגיליון עריכת הברקוד.
+  ///
+  /// כשהברקוד אינו בקטלוג זו הדרך היחידה לקלוט את השורה: בלי טיוטה השורה תיפסל
+  /// באימות כ-`line_item_not_found`. כשכבר יש טיוטה — מציג סיכום + עריכה + מחיקה.
+  Widget _newProductBlock(
+    ThemeData theme,
+    AppLocalizations l10n,
+    int index, {
+    required String barcode,
+    required VoidCallback onChanged,
+  }) {
+    final draft = _items[index].newProduct;
+
+    if (draft == null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12),
+        child: SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.primary),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+            icon: const Icon(CupertinoIcons.add_circled, size: 20),
+            label: Text(l10n.createNewProductButton),
+            onPressed: () => _openNewProductForm(l10n, index, barcode: barcode)
+                .then((_) => onChanged()),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: AppColors.accentGreen.withOpacity(0.10),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.accentGreen.withOpacity(0.4)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const Icon(CupertinoIcons.plus_circle_fill,
+                    size: 16, color: AppColors.accentGreen),
+                const SizedBox(width: 6),
+                Text(l10n.npBadge,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.accentGreen)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(draft.name,
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w700)),
+            Text(
+              [
+                draft.barcode,
+                if ((draft.departmentName ?? '').isNotEmpty) draft.departmentName!,
+                if ((draft.supplierName ?? '').isNotEmpty) draft.supplierName!,
+              ].join('  ·  '),
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    icon: const Icon(CupertinoIcons.pencil, size: 16),
+                    label: Text(l10n.editNewProductButton),
+                    onPressed: () =>
+                        _openNewProductForm(l10n, index, barcode: barcode)
+                            .then((_) => onChanged()),
+                  ),
+                ),
+                Expanded(
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(
+                        foregroundColor: AppColors.error),
+                    icon: const Icon(CupertinoIcons.delete, size: 16),
+                    label: Text(l10n.npDelete),
+                    onPressed: () async {
+                      final ok = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          content: Text(l10n.npDeleteConfirm),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.of(ctx).pop(false),
+                                child: Text(l10n.cancel)),
+                            TextButton(
+                                style: TextButton.styleFrom(
+                                    foregroundColor: AppColors.error),
+                                onPressed: () => Navigator.of(ctx).pop(true),
+                                child: Text(l10n.npDelete)),
+                          ],
+                        ),
+                      );
+                      if (ok != true) return;
+                      setState(() {
+                        // copyWith משתמש ב-sentinel, אז null מפורש אכן מוחק.
+                        _items[index] =
+                            _items[index].copyWith(newProduct: null);
+                        _validationErrorLines = {};
+                      });
+                      onChanged();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// פותח את טופס "פריט חדש" ושומר את הטיוטה על השורה.
+  ///
+  /// הברקוד של השורה מסונכרן לזה שבטיוטה — הטיוטה נשלחת *בתוך* השורה, ושורה
+  /// בלי ברקוד תואם תיראה לשרת כשורה אחרת לגמרי.
+  Future<void> _openNewProductForm(
+    AppLocalizations l10n,
+    int index, {
+    required String barcode,
+  }) async {
+    final item = _items[index];
+    final suppliersState = ref.read(suppliersProvider);
+    final supplierCode = _effectiveSupplierCode;
+    final supplierName = supplierCode == null || supplierCode.isEmpty
+        ? null
+        : suppliersState.suppliers
+            .where((s) => s.code == supplierCode)
+            .map((s) => s.name)
+            .firstOrNull;
+
+    final draft = await Navigator.of(context).push<NewProductDraft>(
+      MaterialPageRoute(
+        builder: (_) => NewProductFormScreen(
+          initialDraft: item.newProduct,
+          defaultBarcode: barcode.trim().isNotEmpty
+              ? barcode.trim()
+              : (item.itemNumber ?? '').trim(),
+          defaultName: item.description.trim(),
+          defaultSupplierCode: supplierCode,
+          defaultSupplierName: supplierName,
+          defaultSupplierPrice: item.finalUnitPrice,
+        ),
+      ),
+    );
+    if (draft == null || !mounted) return;
+    setState(() {
+      _items[index] = _items[index].copyWith(
+        itemNumber: draft.barcode,
+        newProduct: draft,
+        // המשתמש הכריע — השורה כבר לא "מולאה אוטומטית", ולכן לא כתומה.
+        barcodeConfidence: null,
+      );
+      _validationErrorLines = {};
+    });
+  }
+
   /// עורך תא הברקוד: עריכה ידנית + חיפוש מוצר לפי שם (רק מוצרי ספק החשבונית).
   void _editBarcodeCell(
     BuildContext context,
@@ -2458,10 +2747,58 @@ class _DocumentDetailsScreenState
                           focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: AppColors.accentGreen),
                           ),
+                          suffixIconConstraints: const BoxConstraints(
+                            minWidth: 56,
+                            minHeight: 56,
+                          ),
+                          // סריקת ברקוד ישירות אל השדה — פותח את מצלמת הסורק,
+                          // וממלא את הברקoד שנקרא (מריץ מחדש את חישוב ההתאמה).
+                          suffixIcon: IconButton(
+                            tooltip: l10n.scanBarcodeTooltip,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(
+                              minWidth: 52,
+                              minHeight: 52,
+                            ),
+                            splashRadius: 26,
+                            icon: const Icon(
+                              CupertinoIcons.barcode_viewfinder,
+                              color: AppColors.accentGreen,
+                              size: 36,
+                            ),
+                            onPressed: () async {
+                              final code = await scanBarcodeOrQRCode(
+                                context: context,
+                                cancelText: l10n.cancel,
+                                scanMode: ScanMode.BARCODE,
+                              );
+                              if (!context.mounted) return;
+                              if (code.isEmpty || code == '-1') return;
+                              barcodeController.text = code;
+                              barcodeController.selection =
+                                  TextSelection.collapsed(
+                                      offset: barcodeController.text.length);
+                              setSheet(() {});
+                            },
+                          ),
                         ),
                         onChanged: (_) => setSheet(() {}),
                       ),
                       statusLine(),
+                      // "צור פריט חדש" — הדרך היחידה לקלוט שורה שהברקוד שלה אינו
+                      // בקטלוג. מוצג כשהברקוד לא נמצא, או תמיד כשכבר יש טיוטה
+                      // (כדי שאפשר יהיה לערוך/למחוק אותה).
+                      if (_items[index].newProduct != null ||
+                          (barcode.isNotEmpty &&
+                              products.hasCatalog &&
+                              !known))
+                        _newProductBlock(
+                          theme,
+                          l10n,
+                          index,
+                          barcode: barcode,
+                          onChanged: () => setSheet(() {}),
+                        ),
                       _suggestionsBlock(
                         theme,
                         l10n,
@@ -2622,6 +2959,54 @@ class _DocumentDetailsScreenState
         cache[taxId] = _supplierCode!;
         ref.read(supplierCodeCacheProvider.notifier).state = cache;
       }
+    }
+  }
+
+  /// המחסן האפקטיבי לתצוגה/שליחה: הבחירה של המשתמש אם קיימת, אחרת מחסן ברירת
+  /// המחדל (הראשון ברשימה). כשנבחר קוד שכבר לא ברשימה — נשמר כפי שהוא.
+  Warehouse? _effectiveWarehouse(WarehousesState st) {
+    if (_warehouseCode != null && _warehouseCode!.isNotEmpty) {
+      return st.byCode(_warehouseCode) ??
+          Warehouse(code: _warehouseCode!, name: _warehouseName ?? '');
+    }
+    return st.defaultWarehouse;
+  }
+
+  /// בחירת מחסן היעד (§5c). ברירת המחדל מוצגת כבר בשדה; לחיצה פותחת את השאר.
+  Future<void> _pickWarehouse() async {
+    final l10n = AppLocalizations.of(context);
+    var st = ref.read(warehousesProvider);
+    if (!st.loaded) {
+      await ref.read(warehousesProvider.notifier).load();
+      if (!mounted) return;
+      st = ref.read(warehousesProvider);
+    }
+    final warehouses = st.warehouses;
+    if (warehouses.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.warehousesEmpty)),
+      );
+      return;
+    }
+    final picked = await showSearchablePicker<Warehouse>(
+      context: context,
+      title: l10n.warehouseField,
+      searchHint: l10n.searchHintGeneric,
+      items: warehouses,
+      labelOf: (w) => w.name,
+      // תת-כותרת: הסניף אם קיים, אחרת קוד המחסן — גם שדה חיפוש.
+      sublabelOf: (w) => w.branchName.isNotEmpty
+          ? w.branchName
+          : (w.code.isEmpty ? '' : '${l10n.warehouseCodePrefix} ${w.code}'),
+      searchExtra: (w) => w.code,
+    );
+    if (picked != null && mounted) {
+      setState(() {
+        _warehouseCode =
+            picked.code.trim().isEmpty ? null : picked.code.trim();
+        _warehouseName = picked.name;
+      });
     }
   }
 
@@ -2915,6 +3300,8 @@ class _DocumentDetailsScreenState
   /// ×ž×¦×‘ ×ž×¡×ž×š ×ž×”×©×“×•×ª ×‘Ö¾UI (×œ×¤× ×™ ×©×™× ×•×™ ×¡×˜×˜×•×¡) â€” ×œ×©×ž×™×¨×”, ×©×œ×™×—×” ×œ×§×•×¤×” ×•×™×™×¦×•× ××§×¡×œ.
   InvoiceDocument _documentSnapshotForPersist() {
     final original = widget.document!;
+    // המחסן האפקטיבי (בחירת המשתמש או ברירת המחדל) — נשמר על המסמך ונשלח לקופה.
+    final eff = _effectiveWarehouse(ref.read(warehousesProvider));
     return InvoiceDocument(
       id: original.id,
       createdAt: original.createdAt,
@@ -2936,6 +3323,13 @@ class _DocumentDetailsScreenState
       paymentDueDate:
           _paymentDueDate.isEmpty ? original.paymentDueDate : _paymentDueDate,
       discount: _documentDiscount,
+      discountPercent: double.tryParse(_discountPercent.trim()) ?? 0,
+      warehouseCode: (eff?.code.trim().isNotEmpty ?? false)
+          ? eff!.code.trim()
+          : null,
+      warehouseName: (eff?.name.trim().isNotEmpty ?? false)
+          ? eff!.name.trim()
+          : null,
       subtotal: _parseAmount(_subtotal, fallback: original.subtotal),
       vatAmount: _parseAmount(_vatAmount, fallback: original.vatAmount),
       totalAmount: _parseAmount(_totalAmount, fallback: original.totalAmount),
@@ -2954,6 +3348,7 @@ class _DocumentDetailsScreenState
       comaxDocNumber: original.comaxDocNumber,
       comaxStatus: original.comaxStatus,
       comaxReceiveError: original.comaxReceiveError,
+      comaxReceiveErrorMessage: original.comaxReceiveErrorMessage,
       comaxDiagnosis: original.comaxDiagnosis,
     );
   }
@@ -3155,6 +3550,10 @@ class _DocumentDetailsScreenState
       snapshot,
       supplierCode: effectiveCode,
       documentType: docTypeForApi,
+      // §5c: מחסן היעד (אם נבחר/ברירת מחדל) — נשלח ב-header; snapshot כבר מכיל
+      // את הערך האפקטיבי מ-_documentSnapshotForPersist.
+      warehouseCode: snapshot.warehouseCode,
+      warehouseName: snapshot.warehouseName,
       barcodeOf: (item) =>
           productsState
               .productForBarcode(item.itemNumber, supplierCode: effectiveCode)
@@ -3187,6 +3586,7 @@ class _DocumentDetailsScreenState
     final r = res!;
     if (r.valid) {
       _validatedDocumentId = r.documentId;
+      _applyComputedSalePrices(r);
       _showValidationSuccessDialog(l10n, r);
       return;
     }
@@ -3203,6 +3603,42 @@ class _DocumentDetailsScreenState
       _generalErrorMessage(l10n, r.generalErrorCode),
       isError: true,
     );
+  }
+
+  /// אינדקסי השורות שיש עליהן טיוטת "פריט חדש", לפי סדר השורות במסמך.
+  ///
+  /// הסדר זהה לסדר `lines` ב-payload (שניהם נגזרים מ-`_items`), ולכן הוא גם
+  /// המפתח להצלבה מול `resolved.lines[i]`.
+  List<int> get _newProductLineIndices => [
+        for (var i = 0; i < _items.length; i++)
+          if (_items[i].newProduct != null) i
+      ];
+
+  /// מעדכן את מחיר המכירה של כל טיוטה לערך ש-Comax באמת יחשב.
+  ///
+  /// הטופס מציג **הערכה** מקומית בזמן ההקלדה, אבל הערך המחייב הוא
+  /// `resolved.lines[i].newProduct.computedSalePrice` שחוזר מהאימות — הוא נמדד
+  /// מול הטופס החי, וזה מה שמוצג במסך האישור לפני שליחה בלתי-הפיכה.
+  void _applyComputedSalePrices(ValidationResponse r) {
+    final lines = (r.resolved ?? const {})['lines'];
+    if (lines is! List) return;
+
+    var changed = false;
+    final updated = List<InvoiceItem>.from(_items);
+    for (var i = 0; i < lines.length && i < updated.length; i++) {
+      final draft = updated[i].newProduct;
+      if (draft == null) continue;
+      final line = lines[i];
+      if (line is! Map) continue;
+      final np = line['newProduct'];
+      if (np is! Map) continue;
+      final computed = (np['computedSalePrice'] as num?)?.toDouble();
+      if (computed == null || computed == draft.salePrice) continue;
+      updated[i] =
+          updated[i].copyWith(newProduct: draft.copyWith(salePrice: computed));
+      changed = true;
+    }
+    if (changed && mounted) setState(() => _items = updated);
   }
 
   /// המשתמש בחר ספק מההצעות: שומר את הקוד לח.פ זה (לסשן) ושולח שוב עם supplierCode.
@@ -3287,6 +3723,10 @@ class _DocumentDetailsScreenState
       comaxStatus: 'processing',
     );
     ref.read(documentsProvider.notifier).upsert(updated);
+    // מתחילים תשאול רקע של סטטוס הקליטה מול הקרולר (getDocumentStatus). לא
+    // ממתינים לו — רץ עצמאית וממשיך גם אחרי החזרה למסך הבית, מעדכן את המסמך
+    // ב-documentsProvider כשמגיע received/failed (ואז מסך הבית יורה התראה).
+    _pollComaxStatus(documentId, updated.id);
     HapticFeedback.mediumImpact();
     showDialog<void>(
       context: context,
@@ -3305,6 +3745,50 @@ class _DocumentDetailsScreenState
         ],
       ),
     );
+  }
+
+  /// תשאול רקע אחרי 202: מתשאל את הקרולר (`getDocumentStatus`) עד מצב סופי
+  /// (`received`/`failed`) או timeout של 8 דק', ומעדכן את המסמך ב-documentsProvider.
+  /// שינוי ה-comaxStatus מזוהה ע"י מסך הבית שיורה התראה "נקלט/נכשל בקופה".
+  /// לוכד את ה-notifier וה-customerCode מראש כדי שהלולאה תמשיך גם אחרי שהמסך יורד.
+  Future<void> _pollComaxStatus(String comaxDocumentId, String mobileDocId) async {
+    final apiClient = _apiClient;
+    final docsNotifier = ref.read(documentsProvider.notifier);
+    final customerCode = ref.read(customerCodeProvider);
+    const backoff = [3, 5, 8, 13, 21];
+    const maxIntervalSeconds = 30;
+    final deadline = DateTime.now().add(const Duration(minutes: 8));
+    var attempt = 0;
+
+    while (DateTime.now().isBefore(deadline)) {
+      await Future<void>.delayed(Duration(
+          seconds:
+              attempt < backoff.length ? backoff[attempt] : maxIntervalSeconds));
+      attempt++;
+      try {
+        final res = await apiClient.getDocumentStatus(comaxDocumentId,
+            customerCode: customerCode);
+        final cs = res.comaxStatus;
+        final current = docsNotifier.getDocument(mobileDocId);
+        if (current == null) return; // המסמך נמחק — אין טעם להמשיך.
+        if (cs.isEmpty || cs == 'unknown' || cs == current.comaxStatus) continue;
+
+        final isReceived = cs == 'received';
+        final isFailed = cs == 'failed';
+        docsNotifier.upsert(current.copyWith(
+          comaxStatus: cs,
+          comaxDocNumber: res.comaxDocNumber ?? current.comaxDocNumber,
+          comaxReceiveError: res.receiveError,
+          comaxReceiveErrorMessage: res.receiveErrorMessage,
+          status: isReceived
+              ? DocumentStatus.sentToCashRegister
+              : current.status,
+        ));
+        if (isReceived || isFailed) return; // מצב סופי — סיימנו.
+      } catch (_) {
+        // כשל רשת/notifier שהתפנה — לא עוצרים בגללו; ה-deadline חוסם לולאה אינסופית.
+      }
+    }
   }
 
   /// קליטה הצליחה מיד — לסמן נשלחה (מונע שליחה כפולה) ולהציג הצלחה.
@@ -3443,50 +3927,152 @@ class _DocumentDetailsScreenState
         supplier is Map ? (supplier['code']?.toString() ?? '') : '';
     final linesCount = lines is List ? lines.length : 0;
 
+    // 🔴 יצירת פריט ב-Comax היא בלתי-הפיכה — אי אפשר למחוק פריט, רק להעביר
+    // לארכיון. לכן כשיש פריטים חדשים הדיאלוג הזה מפרט אותם במפורש ודורש אישור,
+    // ולחיצה שנייה נחסמת (כפילות שנוצרה בקופה אי אפשר לנקות).
+    final newProductIndices = _newProductLineIndices;
+    final hasNewProducts = newProductIndices.isNotEmpty;
+
     showDialog<void>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Row(
-          children: [
-            const Icon(CupertinoIcons.check_mark_circled_solid,
-                color: AppColors.accentGreen),
-            const SizedBox(width: 8),
-            Expanded(child: Text(l10n.validationSuccessTitle)),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(r.message ?? l10n.validationSuccessMessage),
-              const SizedBox(height: 12),
-              if (supplierName.isNotEmpty)
-                _kvRow(
-                    theme,
-                    l10n.supplierNameLabel,
-                    supplierCode.isEmpty
-                        ? supplierName
-                        : '$supplierName ($supplierCode)'),
-              _kvRow(theme, l10n.items, '$linesCount'),
+      // מסך אישור לפעולה בלתי-הפיכה — לא נסגר בהקשה בחוץ.
+      barrierDismissible: !hasNewProducts,
+      builder: (ctx) {
+        var submitted = false;
+        return StatefulBuilder(
+          builder: (ctx, setDialog) => AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  hasNewProducts
+                      ? CupertinoIcons.exclamationmark_triangle_fill
+                      : CupertinoIcons.check_mark_circled_solid,
+                  color: hasNewProducts
+                      ? AppColors.warning
+                      : AppColors.accentGreen,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                    child: Text(hasNewProducts
+                        ? l10n.npConfirmTitle
+                        : l10n.validationSuccessTitle)),
+              ],
+            ),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(r.message ?? l10n.validationSuccessMessage),
+                    const SizedBox(height: 12),
+                    if (supplierName.isNotEmpty)
+                      _kvRow(
+                          theme,
+                          l10n.supplierNameLabel,
+                          supplierCode.isEmpty
+                              ? supplierName
+                              : '$supplierName ($supplierCode)'),
+                    _kvRow(theme, l10n.items, '$linesCount'),
+                    if (hasNewProducts)
+                      _newProductsConfirmBlock(theme, l10n, newProductIndices),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: submitted ? null : () => Navigator.of(ctx).pop(),
+                child: Text(l10n.cancel),
+              ),
+              if (_validatedDocumentId != null)
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.accentGreen),
+                  // ננעל מיד בלחיצה הראשונה: לחיצה כפולה תיצור פריטים כפולים
+                  // בקופה שאי אפשר לנקות.
+                  onPressed: submitted
+                      ? null
+                      : () {
+                          setDialog(() => submitted = true);
+                          Navigator.of(ctx).pop();
+                          _startSubmit(_validatedDocumentId!);
+                        },
+                  child: Text(hasNewProducts
+                      ? l10n.npConfirmAction
+                      : l10n.updateInCash),
+                ),
             ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(l10n.cancel),
+        );
+      },
+    );
+  }
+
+  /// פירוט הפריטים החדשים שייווצרו בקופה + אזהרת אי-הפיכות.
+  Widget _newProductsConfirmBlock(
+      ThemeData theme, AppLocalizations l10n, List<int> indices) {
+    return Container(
+      margin: const EdgeInsets.only(top: 14),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.warning.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.warning.withOpacity(0.45)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.npConfirmIrreversible,
+            style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w700, color: AppColors.textPrimary),
           ),
-          if (_validatedDocumentId != null)
-            FilledButton(
-              style:
-                  FilledButton.styleFrom(backgroundColor: AppColors.accentGreen),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                _startSubmit(_validatedDocumentId!);
-              },
-              child: Text(l10n.updateInCash),
-            ),
+          const SizedBox(height: 10),
+          Text(
+            l10n.npConfirmCount(indices.length),
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 6),
+          for (final i in indices)
+            Builder(builder: (_) {
+              final d = _items[i].newProduct!;
+              final details = [
+                d.barcode,
+                if ((d.departmentName ?? '').isNotEmpty) d.departmentName!,
+                if (d.salePrice != null) formatCurrency(d.salePrice!),
+              ].join('  ·  ');
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 3),
+                      child: Icon(CupertinoIcons.plus_circle,
+                          size: 14, color: AppColors.warning),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(d.name,
+                              style: theme.textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w700)),
+                          Text(details,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 11)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
         ],
       ),
     );

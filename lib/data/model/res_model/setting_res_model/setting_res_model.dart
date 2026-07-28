@@ -33,6 +33,7 @@ class Data with _$Data {
     bool? showWhatsappOptinPopup,
     String? whatsappOptinPopupTitle,
     String? whatsappOptinPopupText,
+    bool? showWhatsappOtpOption,
   }) = _Data;
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

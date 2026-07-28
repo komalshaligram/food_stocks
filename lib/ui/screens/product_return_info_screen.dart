@@ -27,9 +27,12 @@ class ProductReturnInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => ProductReturnInfoBloc()..add(ProductReturnInfoEvent.getArgumentEvent(arguments: args ?? {}, context: context)),
+      create: (context) => ProductReturnInfoBloc()
+        ..add(ProductReturnInfoEvent.getArgumentEvent(
+            arguments: args ?? {}, context: context)),
       child: const ReturnListWidget(),
     );
   }
@@ -40,7 +43,8 @@ class ReturnListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductReturnInfoBloc, ProductReturnInfoState>(builder: (context, state) {
+    return BlocBuilder<ProductReturnInfoBloc, ProductReturnInfoState>(
+        builder: (context, state) {
       return Scaffold(
         backgroundColor: AppColors.pageColor,
         appBar: PreferredSize(
@@ -50,7 +54,9 @@ class ReturnListWidget extends StatelessWidget {
             title: AppLocalizations.of(context)!.product_return_info,
             iconData: Icons.arrow_back_ios_sharp,
             onTap: () => Navigator.pop(context),
-            trailingWidget: state.mainIndex != -1 ? _deleteButton(context, state) : const SizedBox(),
+            trailingWidget: state.mainIndex != -1
+                ? _deleteButton(context, state)
+                : const SizedBox(),
           ),
         ),
         body: SafeArea(
@@ -59,20 +65,22 @@ class ReturnListWidget extends StatelessWidget {
             child: state.isShimmer
                 ? const ProductReturnShimmerWidget()
                 : SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      _productCard(state),
-                      10.height,
-                      _quantitySection(context, state),
-                      15.height,
-                      _radioSection(state),
-                      15.height,
-                      _imageSection(context, state),
-                      15.height,
-                      _noteField(context, state),
-                      20.height,
-                      _saveButton(context),
-                    ]),
+                    physics: const ClampingScrollPhysics(),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _productCard(state),
+                          10.height,
+                          _quantitySection(context, state),
+                          15.height,
+                          _radioSection(state),
+                          15.height,
+                          _imageSection(context, state),
+                          15.height,
+                          _noteField(context, state),
+                          20.height,
+                          _saveButton(context),
+                        ]),
                   ),
           ),
         ),
@@ -83,22 +91,31 @@ class ReturnListWidget extends StatelessWidget {
   Widget _deleteButton(BuildContext context, ProductReturnInfoState state) {
     return InkWell(
       onTap: () {
-        deleteProductDialog(context: context, returnProductId: state.returnProductId);
+        deleteProductDialog(
+            context: context, returnProductId: state.returnProductId);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
-        decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
-        child: Text(AppLocalizations.of(context)!.delete, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
+        padding: const EdgeInsets.symmetric(
+            vertical: AppConstants.padding_3,
+            horizontal: AppConstants.padding_8),
+        decoration: BoxDecoration(
+            color: AppColors.redColor,
+            borderRadius: BorderRadius.circular(AppConstants.radius_5)),
+        child: Text(AppLocalizations.of(context)!.delete,
+            style: AppStyles.rkRegularTextStyle(
+                size: AppConstants.smallFont, color: AppColors.whiteColor)),
       ),
     );
   }
 
-  void deleteProductDialog({required BuildContext context, required String returnProductId}) {
+  void deleteProductDialog(
+      {required BuildContext context, required String returnProductId}) {
     showDialog(
       context: context,
       builder: (context1) => BlocProvider.value(
         value: context.read<ProductReturnInfoBloc>(),
-        child: BlocBuilder<ProductReturnInfoBloc, ProductReturnInfoState>(builder: (c, state) {
+        child: BlocBuilder<ProductReturnInfoBloc, ProductReturnInfoState>(
+            builder: (c, state) {
           ProductReturnInfoBloc bloc = context.read<ProductReturnInfoBloc>();
           return CommonAlertDialog(
               directionality: state.language,
@@ -111,9 +128,11 @@ class ReturnListWidget extends StatelessWidget {
               },
               positiveOnTap: () async {
                 if (state.returnProductList.length > 1) {
-                  bloc.add(ProductReturnInfoEvent.removeProductEvent(context: context, returnProductId: returnProductId));
+                  bloc.add(ProductReturnInfoEvent.removeProductEvent(
+                      context: context, returnProductId: returnProductId));
                 } else {
-                  bloc.add(ProductReturnInfoEvent.deleteEvent(context: context));
+                  bloc.add(
+                      ProductReturnInfoEvent.deleteEvent(context: context));
                   Navigator.pop(c);
                   Navigator.pop(context);
                 }
@@ -131,7 +150,12 @@ class ReturnListWidget extends StatelessWidget {
         child: Row(children: [
           _productImage(state.productImg),
           10.width,
-          Expanded(child: Text(state.productName, maxLines: 4, overflow: TextOverflow.ellipsis, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont))),
+          Expanded(
+              child: Text(state.productName,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.mediumFont))),
         ]),
       ),
     );
@@ -139,25 +163,30 @@ class ReturnListWidget extends StatelessWidget {
 
   Widget _productImage(String url) {
     if (url.isEmpty) {
-      return Image.asset(AppImagePath.imageNotAvailable5, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80, fit: BoxFit.cover);
+      return Image.asset(AppImagePath.imageNotAvailable5,
+          width: AppConstants.containerHeight_80,
+          height: AppConstants.containerHeight_80,
+          fit: BoxFit.cover);
     }
     return Image.network(
       url,
       width: AppConstants.containerHeight_80,
       height: AppConstants.containerHeight_80,
       fit: BoxFit.contain,
-      errorBuilder: (_, __, ___) => Image.asset(AppImagePath.imageNotAvailable5, width: AppConstants.containerHeight_80, height: AppConstants.containerHeight_80),
+      errorBuilder: (_, __, ___) => Image.asset(AppImagePath.imageNotAvailable5,
+          width: AppConstants.containerHeight_80,
+          height: AppConstants.containerHeight_80),
     );
   }
 
   Widget _quantitySection(BuildContext context, ProductReturnInfoState state) {
-
-    printData("check here state.scaleType ${state.scaleType}");
-
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-     state.scaleType == 'מארזים' ?
-     Text(AppLocalizations.of(context)!.no_of_unit_for_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)):
-    Text(AppLocalizations.of(context)!.no_of_kg_for_return, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
+      state.scaleType == 'מארזים'
+          ? Text(AppLocalizations.of(context)!.no_of_unit_for_return,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont))
+          : Text(AppLocalizations.of(context)!.no_of_kg_for_return,
+              style:
+                  AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
       5.height,
       Row(children: [
         Card(
@@ -167,14 +196,21 @@ class ReturnListWidget extends StatelessWidget {
             child: Row(children: [
               _qtyButton(
                 icon: Icons.add,
-                onTap: () => context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productIncrementEvent(productQuantity: state.productQty, context: context)),
+                onTap: () => context.read<ProductReturnInfoBloc>().add(
+                    ProductReturnInfoEvent.productIncrementEvent(
+                        productQuantity: state.productQty, context: context)),
               ),
               15.width,
-              Text(state.productQty.toString(), style: AppStyles.rkBoldTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont)),
+              Text(state.productQty.toString(),
+                  style: AppStyles.rkBoldTextStyle(
+                      color: AppColors.blackColor,
+                      size: AppConstants.smallFont)),
               15.width,
               _qtyButton(
                 icon: Icons.remove,
-                onTap: () => context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.productDecrementEvent(productQuantity: state.productQty, context: context)),
+                onTap: () => context.read<ProductReturnInfoBloc>().add(
+                    ProductReturnInfoEvent.productDecrementEvent(
+                        productQuantity: state.productQty, context: context)),
               )
             ]),
           ),
@@ -189,7 +225,10 @@ class ReturnListWidget extends StatelessWidget {
       child: Container(
         width: 30,
         height: 30,
-        decoration: BoxDecoration(border: Border.all(color: AppColors.mainColor), borderRadius: BorderRadius.circular(4), gradient: AppColors.appMainGradientColor),
+        decoration: BoxDecoration(
+            border: Border.all(color: AppColors.mainColor),
+            borderRadius: BorderRadius.circular(4),
+            gradient: AppColors.appMainGradientColor),
         child: Icon(icon, color: AppColors.whiteColor, size: 18),
       ),
     );
@@ -205,19 +244,28 @@ class ReturnListWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           final item = state.radioList[index];
           return Container(
-            decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
-            margin: const EdgeInsets.only(top: AppConstants.padding_10, bottom: AppConstants.padding_5),
+            decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: const BorderRadius.all(
+                    Radius.circular(AppConstants.radius_10))),
+            margin: const EdgeInsets.only(
+                top: AppConstants.padding_10, bottom: AppConstants.padding_5),
             child: Row(children: [
               Radio(
                 value: item.id,
-                fillColor: WidgetStateColor.resolveWith((states) => AppColors.mainColor),
+                fillColor: WidgetStateColor.resolveWith(
+                    (states) => AppColors.mainColor),
                 groupValue: state.selectedRadioTile,
                 onChanged: (val) {
-                  context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.radioButtonEvent(selectRadioTile: val!, reason: item.text));
+                  context.read<ProductReturnInfoBloc>().add(
+                      ProductReturnInfoEvent.radioButtonEvent(
+                          selectRadioTile: val!, reason: item.text));
                 },
               ),
               5.width,
-              Text(item.text, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
+              Text(item.text,
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_14, color: AppColors.blackColor)),
             ]),
           );
         });
@@ -225,7 +273,8 @@ class ReturnListWidget extends StatelessWidget {
 
   Widget _imageSection(BuildContext context, ProductReturnInfoState state) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(AppLocalizations.of(context)!.add_proof_img, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
+      Text(AppLocalizations.of(context)!.add_proof_img,
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
       10.height,
       Row(children: [
         _imageTile(context, state.proofFile, 1, state),
@@ -237,14 +286,19 @@ class ReturnListWidget extends StatelessWidget {
     ]);
   }
 
-  Widget _imageTile(BuildContext context, File file, int index, ProductReturnInfoState state) {
+  Widget _imageTile(BuildContext context, File file, int index,
+      ProductReturnInfoState state) {
     final isNetwork = file.path.contains("http");
     final exists = file.existsSync();
 
     return InkWell(
       onTap: () {
         if (exists || isNetwork) {
-          uploadProofBottomSheet(context: context, file: file, index: index, language: state.language);
+          uploadProofBottomSheet(
+              context: context,
+              file: file,
+              index: index,
+              language: state.language);
         } else {
           cameraEvent(context: context, index: index);
         }
@@ -261,20 +315,31 @@ class ReturnListWidget extends StatelessWidget {
     );
   }
 
-  uploadProofBottomSheet({required BuildContext context, required File file, required int index, required String language}) {
+  uploadProofBottomSheet(
+      {required BuildContext context,
+      required File file,
+      required int index,
+      required String language}) {
     return showModalBottomSheet(
         context: context,
         builder: (context1) => Container(
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
-                borderRadius: const BorderRadius.only(topRight: Radius.circular(AppConstants.radius_20), topLeft: Radius.circular(AppConstants.radius_20)),
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(AppConstants.radius_20),
+                    topLeft: Radius.circular(AppConstants.radius_20)),
               ),
               clipBehavior: Clip.hardEdge,
-              padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_30, vertical: AppConstants.padding_20),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.padding_30,
+                  vertical: AppConstants.padding_20),
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Text(
                   AppLocalizations.of(context)!.upload_photo,
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+                  style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.normalFont,
+                      color: AppColors.blackColor,
+                      fontWeight: FontWeight.w600),
                 ),
                 30.height,
                 FileSelectionOptionWidget(
@@ -296,14 +361,17 @@ class ReturnListWidget extends StatelessWidget {
                         builder: (context2) => CommonAlertDialog(
                             directionality: language,
                             title: AppLocalizations.of(context)!.remove,
-                            subTitle: AppLocalizations.of(context)!.are_you_sure,
+                            subTitle:
+                                AppLocalizations.of(context)!.are_you_sure,
                             positiveTitle: AppLocalizations.of(context)!.yes,
                             negativeTitle: AppLocalizations.of(context)!.no,
                             negativeOnTap: () {
                               Navigator.pop(context2);
                             },
                             positiveOnTap: () async {
-                              context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.deleteFileEvent(context: context, index: index));
+                              context.read<ProductReturnInfoBloc>().add(
+                                  ProductReturnInfoEvent.deleteFileEvent(
+                                      context: context, index: index));
                               Navigator.pop(context2);
                             }),
                       );
@@ -315,7 +383,8 @@ class ReturnListWidget extends StatelessWidget {
 
   Widget _noteField(BuildContext context, ProductReturnInfoState state) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(AppLocalizations.of(context)!.add_notes, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
+      Text(AppLocalizations.of(context)!.add_notes,
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont)),
       5.height,
       CustomFormField(
         context: context,
@@ -337,19 +406,26 @@ class ReturnListWidget extends StatelessWidget {
     return CustomButtonWidget(
         buttonText: AppLocalizations.of(context)!.save,
         onPressed: () {
-          context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.navigateReturnEvent(context: context));
+          context.read<ProductReturnInfoBloc>().add(
+              ProductReturnInfoEvent.navigateReturnEvent(context: context));
         });
   }
 
   cameraEvent({required BuildContext context, required int index}) async {
-    Map<Permission, PermissionStatus> statuses = await [Permission.camera].request();
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.camera].request();
     if (Platform.isAndroid) {
       if (!statuses[Permission.camera]!.isGranted) {
         Navigator.pop(context);
-        CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.camera_permission, type: SnackBarType.failure);
+        CustomSnackBar.showSnackBar(
+            context: context,
+            title: AppLocalizations.of(context)!.camera_permission,
+            type: SnackBarType.failure);
         return;
       }
     } else if (Platform.isIOS) {}
-    context.read<ProductReturnInfoBloc>().add(ProductReturnInfoEvent.pickDocumentEvent(context: context, isFromCamera: true, value: index));
+    context.read<ProductReturnInfoBloc>().add(
+        ProductReturnInfoEvent.pickDocumentEvent(
+            context: context, isFromCamera: true, value: index));
   }
 }

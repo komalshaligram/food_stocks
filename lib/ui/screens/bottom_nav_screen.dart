@@ -25,19 +25,14 @@ class BottomNavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>?;
+    final args = ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>?;
 
     final basketScreen = args?[AppStrings.isBasketScreenString] ?? '';
     final pushNavigation = args?[AppStrings.pushNavigationString] ?? '';
 
     return BlocProvider(
       create: (context) => BottomNavBloc()
-        ..add(BottomNavEvent.started(
-            context: context,
-            basketScreen: basketScreen,
-            storeScreen: pushNavigation,
-            profileScreen: pushNavigation)),
+        ..add(BottomNavEvent.started(context: context, basketScreen: basketScreen, storeScreen: pushNavigation, profileScreen: pushNavigation)),
       child: const BottomNavScreenWidget(),
     );
   }
@@ -74,12 +69,8 @@ class BottomNavScreenWidget extends StatelessWidget {
                   resizeToAvoidBottomInset: false,
                   backgroundColor: AppColors.pageColor,
                   bottomNavigationBar: Container(
-                    decoration:
-                        BoxDecoration(color: Colors.transparent, boxShadow: [
-                      BoxShadow(
-                          color: AppColors.shadowColor.withValues(alpha: 0.1),
-                          blurRadius: 10)
-                    ]),
+                    decoration: BoxDecoration(
+                        color: Colors.transparent, boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: 10)]),
                     child: CurvedNavigationBar(
                       index: state.selectedNavIndex,
                       height: 65.0,
@@ -90,20 +81,15 @@ class BottomNavScreenWidget extends StatelessWidget {
                       animationCurve: Curves.decelerate,
                       animationDuration: const Duration(milliseconds: 600),
                       onTap: (navIndex) {
-                        // Guest / permission rules are handled inside BottomNavBloc.
-                        bloc.add(BottomNavEvent.changePage(
-                            index: navPages[navIndex], context: context));
+                        bloc.add(BottomNavEvent.changePage(index: navPages[navIndex], context: context));
                       },
                       letIndexChange: (_) => true,
                     ),
                   ),
                   body: FocusDetector(
                     onFocusGained: () {
-                      // Badge + wallet visibility stay in BottomNavBloc only.
-                      bloc.add(BottomNavEvent.updateCartCountEvent(
-                          context: context));
-                      bloc.add(BottomNavEvent.getPreferencesDataEvent(
-                          context: context));
+                      bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
+                      bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
                     },
                     child: SafeArea(child: _PageContainers(state: state)),
                   ),
@@ -119,10 +105,7 @@ class BottomNavScreenWidget extends StatelessWidget {
     final selected = state.index;
 
     final items = <Widget>[
-      BottomNavTabItem(
-          imagePath: AppImagePath.home,
-          isSelected: selected == 0,
-          isRtl: isRtl),
+      BottomNavTabItem(imagePath: AppImagePath.home, isSelected: selected == 0, isRtl: isRtl),
       BottomNavTabItem(
         imagePath: AppImagePath.cart,
         isSelected: selected == 2,
@@ -136,19 +119,10 @@ class BottomNavScreenWidget extends StatelessWidget {
     ];
 
     if (state.isSubUserSeeWallet) {
-      items.add(BottomNavTabItem(
-          imagePath: AppImagePath.wallet,
-          isSelected: selected == 3,
-          isRtl: isRtl));
-      items.add(BottomNavTabItem(
-          imagePath: AppImagePath.profile,
-          isSelected: selected == 4,
-          isRtl: isRtl));
+      items.add(BottomNavTabItem(imagePath: AppImagePath.wallet, isSelected: selected == 3, isRtl: isRtl));
+      items.add(BottomNavTabItem(imagePath: AppImagePath.profile, isSelected: selected == 4, isRtl: isRtl));
     } else {
-      items.add(BottomNavTabItem(
-          imagePath: AppImagePath.profile,
-          isSelected: selected == 3,
-          isRtl: isRtl));
+      items.add(BottomNavTabItem(imagePath: AppImagePath.profile, isSelected: selected == 3, isRtl: isRtl));
     }
     return items;
   }
@@ -167,19 +141,8 @@ class _PageContainers extends StatelessWidget {
       child: FadeIndexedStack(
           index: state.index,
           children: state.isSubUserSeeWallet
-              ? const [
-                  HomeScreen(isSubCategory: 'false'),
-                  StoreScreen(),
-                  BasketScreen(),
-                  WalletScreen(),
-                  ProfileMenuScreen()
-                ]
-              : const [
-                  HomeScreen(isSubCategory: 'false'),
-                  StoreScreen(),
-                  BasketScreen(),
-                  ProfileMenuScreen()
-                ]),
+              ? const [HomeScreen(isSubCategory: 'false'), StoreScreen(), BasketScreen(), WalletScreen(), ProfileMenuScreen()]
+              : const [HomeScreen(isSubCategory: 'false'), StoreScreen(), BasketScreen(), ProfileMenuScreen()]),
     );
   }
 }

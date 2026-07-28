@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+import '../models/comax_document_status.dart';
+import '../core/services/comax_diagnosis_text.dart';
 import '../core/constants/app_constants.dart';
 import '../core/theme/app_colors.dart';
 import '../gen_l10n/app_localizations.dart';
@@ -85,7 +87,16 @@ class _DocumentCardState extends State<DocumentCard> {
                         color: AppColors.textSecondary,
                       ),
                     ),
-                    StatusBadge(status: doc.status),
+                    StatusBadge(
+                      status: doc.status,
+                      comaxStatus: doc.comaxStatus,
+                      failureReason: describeIntakeFailure(
+                        receiveErrorMessage: doc.comaxReceiveErrorMessage,
+                        receiveError: doc.comaxReceiveError,
+                        diagnosis: InvoiceDiagnosis.fromJsonOrNull(
+                            doc.comaxDiagnosis),
+                      ),
+                    ),
                   ],
                 ),
                 if (showDetails || showProcessingMeta) ...[

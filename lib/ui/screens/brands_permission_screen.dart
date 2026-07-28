@@ -21,8 +21,8 @@ class BrandsPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => BrandsPermissionBloc()
-        ..add(BrandsPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
+      create: (context) =>
+          BrandsPermissionBloc()..add(BrandsPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
       child: const BrandsPermissionScreenWidget(),
     );
   }

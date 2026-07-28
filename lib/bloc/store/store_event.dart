@@ -87,4 +87,11 @@ class StoreEvent with _$StoreEvent {
   }) = _addToCartListProductEvent;
 
   const factory StoreEvent.getCartCountEvent({required BuildContext context}) = _getCartCountEvent;
+
+  /// Re-applies fresh cart quantities (productId → quantity) onto the on-screen
+  /// product lists without a network reload. Used after the promotion sheet
+  /// changes the cart so the visible cards reflect the new quantities.
+  const factory StoreEvent.applyCartQuantitiesEvent({
+    required Map<String, int> cartQuantities,
+  }) = _applyCartQuantitiesEvent;
 }
