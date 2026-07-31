@@ -138,7 +138,9 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             }
             emit(state.copyWith(isLoading: false, returnId: resModel.data![0].id.toString()));
             Navigator.pushReplacementNamed(event.context, RouteDefine.returnListScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
-            await showDialog(context: event.context, builder: (_) => CallWaitingForNewOrderSuccessMsgDialog(language: state.language));
+            // if(resModel.data![0].returnStatusName == 'RETURNSTATUS_5') {
+              await showDialog(context: event.context, builder: (_) => CallWaitingForNewOrderSuccessMsgDialog(language: state.language));
+            // }
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,

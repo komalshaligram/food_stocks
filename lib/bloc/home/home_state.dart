@@ -74,11 +74,11 @@ class HomeState with _$HomeState {
     required List<SupplierListData> suppliersDataList,
     required String customerServicePhone,
     required String customerServiceWhatsApp,
-    required bool showWhatsappOptinPopup,
-    required bool whatsappOptIn,
-    required bool isWhatsappOptinProcessing,
-    required String whatsappOptinPopupTitle,
-    required String whatsappOptinPopupText,
+    required bool showWhatsappOptionPopup,
+    required bool whatsappOption,
+    required bool isWhatsappOptionProcessing,
+    required String whatsappOptionPopupTitle,
+    required String whatsappOptionPopupText,
   }) = _HomeState;
 
   factory HomeState.initial() => HomeState(
@@ -159,10 +159,10 @@ class HomeState with _$HomeState {
     suppliersDataList: [],
     customerServicePhone: '',
     customerServiceWhatsApp: '',
-    showWhatsappOptinPopup: false,
-    whatsappOptIn: false,
-    isWhatsappOptinProcessing: false,
-    whatsappOptinPopupTitle: '',
-    whatsappOptinPopupText: '',
+    showWhatsappOptionPopup: false,
+    whatsappOption: false,
+    isWhatsappOptionProcessing: false,
+    whatsappOptionPopupTitle: '',
+    whatsappOptionPopupText: '',
   );
 }

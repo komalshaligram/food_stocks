@@ -21,8 +21,8 @@ import '../../utils/constants/app_styles.dart';
 import '../../utils/constants/app_urls.dart';
 import '../../widget/basket_screen_shimmer_widget.dart';
 import '../../widget/sized_box_widget.dart';
-import '../../widget/common_dialog_with_one_button.dart';
-import '../../widget/custom_dialog.dart';
+import '../../widget/dialogs/common_dialog_with_one_button.dart';
+import '../../widget/dialogs/custom_dialog.dart';
 import 'basket_app_bar_widget.dart';
 import 'basket_product_detail.dart';
 import 'basket_total_widget.dart';
@@ -74,13 +74,12 @@ class BasketScreenWidget extends StatelessWidget {
                             context,
                             PageRouteBuilder(
                                 pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
-                                      statusList: statusList,
-                                      orderNumber: response.data?.orderData?[0].orderNumber.toString() ?? '',
-                                      orderId: response.data?.orderData?[0].id ?? '',
-                                      isNavigateToProductDetailString: false,
-                                      productData: response.data!.ordersBySupplier![0],
-                                      orderData: response.data!.orderData![0],
-                                    ),
+                                    statusList: statusList,
+                                    orderNumber: response.data?.orderData?[0].orderNumber.toString() ?? '',
+                                    orderId: response.data?.orderData?[0].id ?? '',
+                                    isNavigateToProductDetailString: false,
+                                    productData: response.data!.ordersBySupplier![0],
+                                    orderData: response.data!.orderData![0]),
                                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                   const begin = Offset(0.0, 1.0);
                                   const end = Offset.zero;
@@ -137,13 +136,12 @@ class BasketScreenWidget extends StatelessWidget {
                                         verticalOffset: 44.0,
                                         child: FadeInAnimation(
                                             child: basketListItem(
-                                          isPesach: state.basketProductList[index].isPesach ?? false,
-                                          index: index,
-                                          context: context,
-                                          isSaleOn: true,
-                                          lowStock: state.basketProductList[index].lowStock.toString(),
-                                          productStock: state.basketProductList[index].productStock ?? 0,
-                                        )),
+                                                isPesach: state.basketProductList[index].isPesach ?? false,
+                                                index: index,
+                                                context: context,
+                                                isSaleOn: true,
+                                                lowStock: state.basketProductList[index].lowStock.toString(),
+                                                productStock: state.basketProductList[index].productStock ?? 0)),
                                       ),
                                     ),
                                   ),
@@ -168,11 +166,7 @@ class BasketScreenWidget extends StatelessWidget {
       return Image.asset(AppImagePath.imageNotAvailable5, width: 100, height: 100, fit: BoxFit.fitWidth);
     } else {
       return Image.network('${AppUrlEndPoints.baseFileUrl}${state.basketProductList[index].mainImage ?? ''}',
-          width: 100, height: 100, fit: BoxFit.contain, loadingBuilder: (
-        context,
-        child,
-        loadingProgress,
-      ) {
+          width: 100, height: 100, fit: BoxFit.contain, loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) {
           return child;
         } else {
@@ -184,23 +178,18 @@ class BasketScreenWidget extends StatelessWidget {
     }
   }
 
-  Widget _productNameWidget(BasketState state, int index) => Text(
-        state.basketProductList[index].productName ?? '',
-        style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.bold),
-      );
+  Widget _productNameWidget(BasketState state, int index) => Text(state.basketProductList[index].productName ?? '',
+      style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.bold));
 
   Widget _numberOfUnitWidget(BasketState state, int index, BuildContext context) {
     if (state.basketProductList[index].numberOfUnits != '0') {
       if (state.basketProductList[index].scaleType == 'מארזים') {
-        return Text(
-          '${state.basketProductList[index].numberOfUnits.toString()} ${AppLocalizations.of(context)!.unit_in_box}',
-          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-        );
+        return Text('${state.basketProductList[index].numberOfUnits.toString()} ${AppLocalizations.of(context)!.unit_in_box}',
+            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400));
       } else {
         return Text(
-          '${AppLocalizations.of(context)!.approx}${' '}${state.basketProductList[index].numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.kgBox}',
-          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400),
-        );
+            '${AppLocalizations.of(context)!.approx}${' '}${state.basketProductList[index].numberOfUnits.toString()}${' '}${AppLocalizations.of(context)!.kgBox}',
+            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w400));
       }
     } else {
       return 0.width;
@@ -212,10 +201,8 @@ class BasketScreenWidget extends StatelessWidget {
 
   Widget _outOfStockProductWidget(BasketState state, int index, double productStock, String lowStock, BuildContext context) {
     if (productStock == 0 || productStock == 0.0) {
-      return Text(
-        AppLocalizations.of(context)!.product_no_longer_in_stock,
-        style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400),
-      );
+      return Text(AppLocalizations.of(context)!.product_no_longer_in_stock,
+          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.redColor, fontWeight: FontWeight.w400));
     } else if ((lowStock.isNotEmpty) && double.parse(productStock.toString()) > 0) {
       return Text(lowStock, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.orangeColor, fontWeight: FontWeight.w400));
     } else {
@@ -231,127 +218,116 @@ class BasketScreenWidget extends StatelessWidget {
         padding: const EdgeInsets.all(AppConstants.padding_5),
         decoration: BoxDecoration(color: AppColors.saleBGColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_7))),
         child: Center(
-          child: Text(state.basketProductList[index].saleDesc, style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_12)),
-        ),
+            child: Text(state.basketProductList[index].saleDesc, style: TextStyle(color: AppColors.whiteColor, fontSize: AppConstants.font_12))),
       );
     } else {
       return 0.width;
     }
   }
 
-  Widget _totalAmountWidget(BasketState state, int index) => Text(
-        formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal),
-        style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w700),
-      );
+  Widget _totalAmountWidget(BasketState state, int index) =>
+      Text(formatNumber(value: state.basketProductList[index].totalPayment?.toStringAsFixed(2) ?? "0", local: AppStrings.hebrewLocal),
+          style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont, fontWeight: FontWeight.w700));
 
   Widget _increaseTapWidget(BasketState state, int index, BuildContext context, BasketBloc bloc) => GestureDetector(
-      onTap: () {
-        if (!state.isLoading) {
-          if (state.cartItemList.data?.data?[index].sale?.saleMaxQuantity == 0) {
-            if ((state.cartItemList.data?.data?[index].productStock ?? 0.0) >= state.basketProductList[index].totalQuantity! + 1) {
-              bloc.add(BasketEvent.productUpdateEvent(
-                listIndex: index,
-                productWeight: state.basketProductList[index].totalQuantity! + 1,
-                context: context,
-                productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '',
-                supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '',
-                cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '',
-                totalPayment: state.totalPayment,
-                saleId: state.cartItemList.data?.data?[index].id ?? '',
-              ));
+        onTap: () {
+          if (!state.isLoading) {
+            if (state.cartItemList.data?.data?[index].sale?.saleMaxQuantity == 0) {
+              if ((state.cartItemList.data?.data?[index].productStock ?? 0.0) >= state.basketProductList[index].totalQuantity! + 1) {
+                bloc.add(BasketEvent.productUpdateEvent(
+                    listIndex: index,
+                    productWeight: state.basketProductList[index].totalQuantity! + 1,
+                    context: context,
+                    productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '',
+                    supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '',
+                    cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '',
+                    totalPayment: state.totalPayment,
+                    saleId: state.cartItemList.data?.data?[index].id ?? ''));
+              } else {
+                CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.out_of_stock, type: SnackBarType.failure);
+              }
+            } else if (state.cartItemList.data?.data?[index].sale?.saleMaxQuantity == state.basketProductList[index].totalQuantity!) {
+              CustomSnackBar.showSnackBar(
+                  context: context, title: AppLocalizations.of(context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
             } else {
-              CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.out_of_stock, type: SnackBarType.failure);
+              bloc.add(BasketEvent.productUpdateEvent(
+                  listIndex: index,
+                  productWeight: state.basketProductList[index].totalQuantity! + 1,
+                  context: context,
+                  productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '',
+                  supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '',
+                  cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '',
+                  totalPayment: state.totalPayment,
+                  saleId: state.cartItemList.data?.data?[index].id ?? ''));
             }
-          } else if (state.cartItemList.data?.data?[index].sale?.saleMaxQuantity == state.basketProductList[index].totalQuantity!) {
-            CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.not_add_more_than_max_qty, type: SnackBarType.failure);
-          } else {
-            bloc.add(BasketEvent.productUpdateEvent(
-              listIndex: index,
-              productWeight: state.basketProductList[index].totalQuantity! + 1,
-              context: context,
-              productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '',
-              supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '',
-              cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '',
-              totalPayment: state.totalPayment,
-              saleId: state.cartItemList.data?.data?[index].id ?? '',
-            ));
           }
-        }
-      },
-      child: Container(
-        width: AppConstants.containerSize_35,
-        height: AppConstants.containerSize_35,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppConstants.radius_4),
-          border: Border.all(color: AppColors.navSelectedColor),
-          color: AppColors.pageColor,
-        ),
-        child: Icon(Icons.add, size: AppConstants.font_20, color: AppColors.blackColor),
-      ));
-
-  Widget _quantityWidget(BasketState state, int index) => Text(
-        '${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
-        style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont),
+        },
+        child: Container(
+            width: AppConstants.containerSize_35,
+            height: AppConstants.containerSize_35,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppConstants.radius_4),
+                border: Border.all(color: AppColors.navSelectedColor),
+                color: AppColors.pageColor),
+            child: Icon(Icons.add, size: AppConstants.font_20, color: AppColors.blackColor)),
       );
 
+  Widget _quantityWidget(BasketState state, int index) =>
+      Text('${state.basketProductList[index].totalQuantity}${' '}${state.basketProductList[index].scales}',
+          style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.smallFont));
+
   Widget _decreaseTapWidget(BasketState state, int index, BuildContext context, BasketBloc bloc) => GestureDetector(
-      onTap: () {
-        if (!state.isLoading) {
-          if (state.basketProductList[index].totalQuantity! > 1) {
-            bloc.add(BasketEvent.productUpdateEvent(
-              listIndex: index,
-              productWeight: state.basketProductList[index].totalQuantity! - 1,
-              context: context,
-              productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '',
-              supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '',
-              cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '',
-              totalPayment: state.totalPayment,
-              saleId: state.cartItemList.data?.data?[index].id ?? '',
-            ));
-          } else {
-            deleteDialog(
-              context: context,
-              updateClearString: '',
-              cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '',
-              listIndex: index,
-              totalAmount: state.totalPayment,
-            );
+        onTap: () {
+          if (!state.isLoading) {
+            if (state.basketProductList[index].totalQuantity! > 1) {
+              bloc.add(BasketEvent.productUpdateEvent(
+                  listIndex: index,
+                  productWeight: state.basketProductList[index].totalQuantity! - 1,
+                  context: context,
+                  productId: state.cartItemList.data?.data?[index].productDetails?.id ?? '',
+                  supplierId: state.cartItemList.data?.data?[index].suppliers?.first.id ?? '',
+                  cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '',
+                  totalPayment: state.totalPayment,
+                  saleId: state.cartItemList.data?.data?[index].id ?? ''));
+            } else {
+              deleteDialog(
+                  context: context,
+                  updateClearString: '',
+                  cartProductId: state.cartItemList.data?.data?[index].cartProductId ?? '',
+                  listIndex: index,
+                  totalAmount: state.totalPayment);
+            }
           }
-        }
-      },
-      child: Container(
-        width: AppConstants.containerSize_35,
-        height: AppConstants.containerSize_35,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppConstants.radius_4),
-          border: Border.all(color: AppColors.navSelectedColor),
-          color: AppColors.pageColor,
-        ),
-        child: Icon(Icons.remove, size: AppConstants.font_20, color: AppColors.blackColor),
-      ));
+        },
+        child: Container(
+            width: AppConstants.containerSize_35,
+            height: AppConstants.containerSize_35,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppConstants.radius_4),
+                border: Border.all(color: AppColors.navSelectedColor),
+                color: AppColors.pageColor),
+            child: Icon(Icons.remove, size: AppConstants.font_20, color: AppColors.blackColor)),
+      );
 
   Widget _deleteTapWidget(BasketState state, int index, BuildContext context) => GestureDetector(
         onTap: () {
           deleteDialog(
-            context: context,
-            cartProductId: state.basketProductList[index].cartProductId,
-            listIndex: index,
-            updateClearString: '',
-            totalAmount: state.basketProductList[index].totalPayment!,
-          );
+              context: context,
+              cartProductId: state.basketProductList[index].cartProductId,
+              listIndex: index,
+              updateClearString: '',
+              totalAmount: state.basketProductList[index].totalPayment!);
         },
         child: Container(
-          width: AppConstants.containerSize_35,
-          height: AppConstants.containerSize_35,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppConstants.radius_4),
-            border: Border.all(color: AppColors.redColor),
-            color: AppColors.pageColor,
-          ),
-          child: SvgPicture.asset(AppImagePath.delete, colorFilter: ColorFilter.mode(AppColors.redColor, BlendMode.srcIn)),
-        ),
+            width: AppConstants.containerSize_35,
+            height: AppConstants.containerSize_35,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppConstants.radius_4),
+                border: Border.all(color: AppColors.redColor),
+                color: AppColors.pageColor),
+            child: SvgPicture.asset(AppImagePath.delete, colorFilter: ColorFilter.mode(AppColors.redColor, BlendMode.srcIn))),
       );
 
   Widget basketListItem(
@@ -373,18 +349,16 @@ class BasketScreenWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(AppConstants.padding_11),
             child: GestureDetector(
-              onTap: () {
-                deleteDialog(
-                  context: context,
-                  cartProductId: state.basketProductList[index].cartProductId,
-                  listIndex: index,
-                  updateClearString: '',
-                  totalAmount: state.basketProductList[index].totalPayment!,
-                );
-              },
-              child:
-                  SvgPicture.asset(AppImagePath.delete, colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn), height: 30, width: 30),
-            ),
+                onTap: () {
+                  deleteDialog(
+                      context: context,
+                      cartProductId: state.basketProductList[index].cartProductId,
+                      listIndex: index,
+                      updateClearString: '',
+                      totalAmount: state.basketProductList[index].totalPayment!);
+                },
+                child: SvgPicture.asset(AppImagePath.delete,
+                    colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn), height: 30, width: 30)),
           ),
         ),
         confirmDismiss: (DismissDirection direction) async {
@@ -407,13 +381,12 @@ class BasketScreenWidget extends StatelessWidget {
                             negativeTitle: AppLocalizations.of(context)!.no,
                             positiveOnTap: () {
                               bloc.add(BasketEvent.removeCartProductEvent(
-                                isFromDelete: false,
-                                context: context,
-                                cartProductId: state.basketProductList[index].cartProductId,
-                                listIndex: index,
-                                dialogContext: context,
-                                totalAmount: state.basketProductList[index].totalPayment!,
-                              ));
+                                  isFromDelete: false,
+                                  context: context,
+                                  cartProductId: state.basketProductList[index].cartProductId,
+                                  listIndex: index,
+                                  dialogContext: context,
+                                  totalAmount: state.basketProductList[index].totalPayment!));
                             },
                             negativeOnTap: () {
                               Navigator.pop(context1);
@@ -430,28 +403,22 @@ class BasketScreenWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
             decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-            ),
+                color: AppColors.whiteColor,
+                boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
             child: GestureDetector(
               onTap: () {
                 showProductDetails(
-                  isSaleOn: state.isSaleOn,
-                  context: context,
-                  cartProductId: state.cartItemList.data?.data?[index].id ?? '',
-                  productListIndex: 0,
-                  productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0',
-                  clubAgentId: state.clubAgentId!,
-                );
+                    isSaleOn: state.isSaleOn,
+                    context: context,
+                    cartProductId: state.cartItemList.data?.data?[index].id ?? '',
+                    productListIndex: 0,
+                    productStock: state.cartItemList.data?.data?[index].productStock.toString() ?? '0',
+                    clubAgentId: state.clubAgentId!);
               },
               child: Column(children: [
                 state.basketProductList[index].isProcess == true
-                    ? LinearProgressIndicator(
-                        color: AppColors.mainColor,
-                        minHeight: 3,
-                        backgroundColor: AppColors.mainColor.withValues(alpha: 0.5),
-                      )
+                    ? LinearProgressIndicator(color: AppColors.mainColor, minHeight: 3, backgroundColor: AppColors.mainColor.withValues(alpha: 0.5))
                     : 3.height,
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
@@ -478,7 +445,7 @@ class BasketScreenWidget extends StatelessWidget {
                           10.width,
                           _decreaseTapWidget(state, index, context, bloc),
                           const Spacer(),
-                          _deleteTapWidget(state, index, context),
+                          _deleteTapWidget(state, index, context)
                         ]),
                       ]),
                     ),

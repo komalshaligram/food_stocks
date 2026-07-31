@@ -69,7 +69,9 @@ class CatalogTaxonomyNotifier extends StateNotifier<CatalogTaxonomyState> {
   Future<void> _doLoad({bool force = false}) async {
     await _ref.read(customerCodeProvider.notifier).ready;
     if (state.loaded && !force &&
-        _loadedCustomerCode == _ref.read(customerCodeProvider)) return;
+        _loadedCustomerCode == _ref.read(customerCodeProvider)) {
+      return;
+    }
     state = state.copyWith(loading: true, clearError: true);
     try {
       final customerCode = _ref.read(customerCodeProvider);

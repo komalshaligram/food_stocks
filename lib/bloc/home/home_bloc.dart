@@ -637,7 +637,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             preferences.setEmailId(userEmailId: clientData?.email ?? '');
             emit(state.copyWith(
                 showClientDataOnApp: clientData?.clientDetail?.showClientDataOnApp ?? false,
-                whatsappOptIn: clientData?.clientDetail?.whatsappOptIn ?? false));
+                whatsappOption: clientData?.clientDetail?.whatsappOptIn ?? false));
             if (!preferences.getSubUser()) {
               preferences.setUserImageUrl(imageUrl: clientData?.profileImage ?? '');
               emit(state.copyWith(userImageUrl: clientData?.profileImage ?? '', context: event.context));
@@ -883,11 +883,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(state.copyWith(relatedProductList: []));
       } else if (event is _updateMaintenanceEvent) {
         emit(state.copyWith(isDialogOpen: true));
-      } else if (event is _sendWhatsappOptinEvent) {
+      } else if (event is _sendWhatsappOptionEvent) {
         try {
-          emit(state.copyWith(isWhatsappOptinProcessing: true));
+          emit(state.copyWith(isWhatsappOptionProcessing: true));
           final res = await DioClient(event.context).post(
-            '${AppUrlEndPoints.whatsappOptinUrl}/${preferences.getUserId()}',
+            '${AppUrlEndPoints.whatsappOptionUrl}/${preferences.getUserId()}',
             data: {
               'whatsappOptInSource': event.source,
               'whatsappOptInText': event.consentText,
@@ -899,12 +899,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if (res != null && res['status'] == AppConstants.code_200) {
             // Phone is recorded server-side from the account; just mark opted-in
             // locally so the popup does not reappear this session.
-            emit(state.copyWith(whatsappOptIn: true, isWhatsappOptinProcessing: false));
+            emit(state.copyWith(whatsappOption: true, isWhatsappOptionProcessing: false));
           } else {
-            emit(state.copyWith(isWhatsappOptinProcessing: false));
+            emit(state.copyWith(isWhatsappOptionProcessing: false));
           }
         } catch (_) {
-          emit(state.copyWith(isWhatsappOptinProcessing: false));
+          emit(state.copyWith(isWhatsappOptionProcessing: false));
         }
       } else if (event is _generalSettings) {
         try {
@@ -942,9 +942,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               buttonHebrewText: response.data?.dataWebViewSettings?.buttonHebrewText ?? state.buttonHebrewText ?? '',
               customerServicePhone: response.data?.customerServicePhone ?? '',
               customerServiceWhatsApp: response.data?.customerServiceWhatsApp ?? '',
-              showWhatsappOptinPopup: response.data?.showWhatsappOptinPopup ?? false,
-              whatsappOptinPopupTitle: response.data?.whatsappOptinPopupTitle ?? '',
-              whatsappOptinPopupText: response.data?.whatsappOptinPopupText ?? '',
+              showWhatsappOptionPopup: response.data?.showWhatsappOptinPopup ?? false,
+              whatsappOptionPopupTitle: response.data?.whatsappOptinPopupTitle ?? '',
+              whatsappOptionPopupText: response.data?.whatsappOptinPopupText ?? '',
             ));
           } else {
             emit(state.copyWith(pesachBannerShimmering: false, retryLoading: false));

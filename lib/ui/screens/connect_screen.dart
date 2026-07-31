@@ -12,7 +12,6 @@ import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/login/log_in_bloc.dart';
 import '../utils/app_utils.dart';
-import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_img_path.dart';
 import '../widget/custom_form_field_widget.dart';
 
@@ -26,17 +25,12 @@ class ConnectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => ConnectBloc()), BlocProvider(create: (context) => LogInBloc())],
-      child: const ConnectScreenWidget(),
-    );
+        providers: [BlocProvider(create: (_) => ConnectBloc()), BlocProvider(create: (context) => LogInBloc())], child: const ConnectScreenWidget());
   }
 }
 
-const Gradient _brandGradient = LinearGradient(
-  begin: Alignment.centerLeft,
-  end: Alignment.centerRight,
-  colors: [Color(0xff1D5499), Color(0xff8BC53F)],
-);
+const Gradient _brandGradient =
+    LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [Color(0xff1D5499), Color(0xff8BC53F)]);
 
 class ConnectScreenWidget extends StatefulWidget {
   const ConnectScreenWidget({super.key});
@@ -93,9 +87,7 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
             physics: const ClampingScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: screenHeight),
-              child: IntrinsicHeight(
-                child: Column(children: [_buildHero(context), Expanded(child: _buildCard(context))]),
-              ),
+              child: IntrinsicHeight(child: Column(children: [_buildHero(context), Expanded(child: _buildCard(context))])),
             ),
           ),
         ),
@@ -106,18 +98,18 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
   Widget _buildHero(BuildContext context) {
     final double topPadding = MediaQuery.of(context).padding.top;
     return Stack(children: [
-      Positioned(top: -40, left: -50, child: _decorCircle(160, Colors.white.withOpacity(0.08))),
-      Positioned(top: 70, right: -60, child: _decorCircle(140, Colors.white.withOpacity(0.06))),
+      Positioned(top: -40, left: -50, child: _decorCircle(160, Colors.white.withValues(alpha: 0.08))),
+      Positioned(top: 70, right: -60, child: _decorCircle(140, Colors.white.withValues(alpha: 0.06))),
       Padding(
         padding: EdgeInsets.only(top: topPadding + 34, left: 28, right: 28, bottom: 26),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 26),
-            decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: BorderRadius.circular(28), boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 20, offset: const Offset(0, 8)),
-            ]),
-            child: SvgPicture.asset(AppImagePath.splashLogo, height: 110, fit: BoxFit.contain),
-          ),
+              padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 26),
+              decoration: BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.circular(28),
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.12), blurRadius: 20, offset: const Offset(0, 8))]),
+              child: SvgPicture.asset(AppImagePath.splashLogo, height: 110, fit: BoxFit.contain)),
           22.height,
           Text(AppLocalizations.of(context)!.welcome_title,
               textAlign: TextAlign.center, style: AppStyles.rkBoldTextStyle(size: 24, color: AppColors.whiteColor, fontWeight: FontWeight.w700)),
@@ -125,10 +117,8 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
           Text(AppLocalizations.of(context)!.app_slogan,
               textAlign: TextAlign.center,
               style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.smallFont,
-                color: AppColors.whiteColor.withOpacity(0.92),
-                fontWeight: FontWeight.w400,
-              ).copyWith(height: 1.5)),
+                      size: AppConstants.smallFont, color: AppColors.whiteColor.withValues(alpha: 0.92), fontWeight: FontWeight.w400)
+                  .copyWith(height: 1.5)),
         ]),
       ),
     ]);
@@ -142,21 +132,13 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
         decoration: BoxDecoration(
             color: AppColors.whiteColor,
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34)),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.10), blurRadius: 24, offset: const Offset(0, -6)),
-            ]),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.10), blurRadius: 24, offset: const Offset(0, -6))]),
         child: Form(
           key: _formKey,
           child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
             Center(
-              child: Container(
-                width: 46,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: AppColors.borderColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+              child:
+                  Container(width: 46, height: 5, decoration: BoxDecoration(color: AppColors.borderColor, borderRadius: BorderRadius.circular(10))),
             ),
             22.height,
             Text(AppLocalizations.of(context)!.login,
@@ -165,14 +147,8 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
             Text(AppLocalizations.of(context)!.login_subtitle,
                 style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.greyColor, fontWeight: FontWeight.w400)),
             24.height,
-            Text(
-              AppLocalizations.of(context)!.enter_your_phone,
-              style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.font_14,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            Text(AppLocalizations.of(context)!.enter_your_phone,
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500)),
             10.height,
             CustomFormField(
               inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
@@ -233,31 +209,23 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
           color: isCoolingDown ? AppColors.iconBGColor : null,
           border: isCoolingDown ? Border.all(color: AppColors.borderColor, width: 1.2) : null,
           borderRadius: BorderRadius.circular(AppConstants.radius_10),
-          boxShadow: isCoolingDown
-              ? null
-              : [
-                  BoxShadow(color: AppColors.blueColor.withOpacity(0.30), blurRadius: 14, offset: const Offset(0, 6)),
-                ]),
+          boxShadow:
+              isCoolingDown ? null : [BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.30), blurRadius: 14, offset: const Offset(0, 6))]),
       child: MaterialButton(
         onPressed: (isLoading || isCoolingDown) ? null : () => _submitPhone(context),
         padding: EdgeInsets.zero,
         child: isLoading
             ? const Center(child: SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)))
             : isCoolingDown
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.timer_outlined, size: 20, color: AppColors.greyColor),
-                      10.width,
-                      Flexible(
-                        child: Text(
-                          '${AppLocalizations.of(context)!.resend_code_in} ${_formatCountdown(context, otpCooldown)}',
+                ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Icon(Icons.timer_outlined, size: 20, color: AppColors.greyColor),
+                    10.width,
+                    Flexible(
+                      child: Text('${AppLocalizations.of(context)!.resend_code_in} ${_formatCountdown(context, otpCooldown)}',
                           textAlign: TextAlign.center,
-                          style: AppStyles.rkBoldTextStyle(size: 16, color: AppColors.greyColor, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ],
-                  )
+                          style: AppStyles.rkBoldTextStyle(size: 16, color: AppColors.greyColor, fontWeight: FontWeight.w600)),
+                    ),
+                  ])
                 : Stack(alignment: Alignment.center, children: [
                     Center(
                       child: Text(AppLocalizations.of(context)!.next,
@@ -281,7 +249,7 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
         child:
             Text(AppLocalizations.of(context)!.or, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.lightGreyColor)),
       ),
-      Expanded(child: Divider(color: AppColors.borderColor, thickness: 1)),
+      Expanded(child: Divider(color: AppColors.borderColor, thickness: 1))
     ]);
   }
 

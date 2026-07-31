@@ -35,15 +35,15 @@ import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
 import '../utils/constants/app_urls.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
-import '../widget/common_dialog_with_one_button.dart';
+import '../widget/dialogs/common_dialog_with_one_button.dart';
 import '../widget/customer_service_contact_widget.dart';
-import '../widget/whatsapp_optin_dialog.dart';
+import '../widget/dialogs/whatsapp_option_dialog.dart';
 import '../widget/common_marquee_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_search_widget.dart';
 import '../../ui/utils/push_notification_service.dart';
 import '../widget/common_shimmer_widget.dart';
-import '../widget/multi_supplier_countdown_dialog.dart';
+import '../widget/dialogs/multi_supplier_countdown_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';
 import '../widget/pesach_banner_shimmer.dart';
 import '../widget/related_product_title.dart';
@@ -61,30 +61,28 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) {
-        final bloc = HomeBloc();
-        bloc.add(const HomeEvent.getPreferencesDataEvent());
-        bloc.add(HomeEvent.getSuppliersDataListEvent(context: context));
-        bloc.add(HomeEvent.getProductCategoriesListEvent(context: context));
-        bloc.add(HomeEvent.getCompaniesListEvent(context: context));
-        bloc.add(HomeEvent.getProductSalesListEvent(context: context));
-        bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
-        bloc.add(HomeEvent.getPreviousOrderProductsListEvent(context: context));
-        bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
-        bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
-        return bloc;
-      },
-      child: HomeScreenWidget(isNavigation: isSubCategory),
-    );
+        create: (context) {
+          final bloc = HomeBloc();
+          bloc.add(const HomeEvent.getPreferencesDataEvent());
+          bloc.add(HomeEvent.getSuppliersDataListEvent(context: context));
+          bloc.add(HomeEvent.getProductCategoriesListEvent(context: context));
+          bloc.add(HomeEvent.getCompaniesListEvent(context: context));
+          bloc.add(HomeEvent.getProductSalesListEvent(context: context));
+          bloc.add(HomeEvent.getRecommendationProductsListEvent(context: context));
+          bloc.add(HomeEvent.getPreviousOrderProductsListEvent(context: context));
+          bloc.add(HomeEvent.getProfileDetailsEvent(context: context));
+          bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
+          return bloc;
+        },
+        child: HomeScreenWidget(isNavigation: isSubCategory));
   }
 }
 
 class HomeScreenWidget extends StatelessWidget {
   final String isNavigation;
   static bool _noMinimumDialogShownInSession = false;
-  static bool _whatsappOptinDialogShownInSession = false;
-  // Source tag recorded with the WhatsApp consent (per app).
-  static const String _whatsappOptinSource = 'tavili_app_popup';
+  static bool _whatsappOptionDialogShownInSession = false;
+  static const String _whatsappOptionSource = 'tavili_app_popup';
   static final Set<String> _handledBackgroundNavigations = {};
   const HomeScreenWidget({super.key, this.isNavigation = ''});
 
@@ -98,8 +96,8 @@ class HomeScreenWidget extends StatelessWidget {
           previous.messageCount != current.messageCount ||
           previous.isAccountPermissionShimmering != current.isAccountPermissionShimmering ||
           previous.noMinimumDialogEventKey != current.noMinimumDialogEventKey ||
-          previous.showWhatsappOptinPopup != current.showWhatsappOptinPopup ||
-          previous.whatsappOptIn != current.whatsappOptIn,
+          previous.showWhatsappOptionPopup != current.showWhatsappOptionPopup ||
+          previous.whatsappOption != current.whatsappOption,
       listener: (context, state) async {
         if (state.isCartCountChange) {
           BlocProvider.of<BottomNavBloc>(context).add(BottomNavEvent.updateCartCountEvent(context: context));
@@ -111,16 +109,13 @@ class HomeScreenWidget extends StatelessWidget {
           appUnderMaintenanceDialog(context: context, state: state);
           BlocProvider.of<HomeBloc>(context).add(HomeEvent.updateMaintenanceEvent(context: context));
         }
-        // WhatsApp marketing opt-in: show once per session while the global
-        // setting is on and the client hasn't approved yet. Dismissing it
-        // ("not now") lets it reappear on the next app launch.
-        if (!_whatsappOptinDialogShownInSession &&
-            state.showWhatsappOptinPopup &&
-            !state.whatsappOptIn &&
+        if (!_whatsappOptionDialogShownInSession &&
+            state.showWhatsappOptionPopup &&
+            !state.whatsappOption &&
             !state.isGuestUser &&
             !state.isAppOnMaintenance) {
-          _whatsappOptinDialogShownInSession = true;
-          whatsappOptinDialog(context: context, state: state);
+          _whatsappOptionDialogShownInSession = true;
+          whatsappOptionDialog(context: context, state: state);
         }
         final isHomeTabActive = context.read<BottomNavBloc>().state.index == 0;
         if (!isHomeTabActive) {
@@ -177,13 +172,12 @@ class HomeScreenWidget extends StatelessWidget {
                       padding: const EdgeInsets.only(top: AppConstants.padding_5, left: AppConstants.padding_10, right: AppConstants.padding_10),
                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                         CustomerServiceContactButton(
-                          customerServicePhone: state.customerServicePhone,
-                          customerServiceWhatsApp: state.customerServiceWhatsApp,
-                          isGuestUser: state.isGuestUser,
-                          onGuestLoginRequired: () => Navigator.pushNamed(context, RouteDefine.connectScreen.name),
-                        ),
+                            customerServicePhone: state.customerServicePhone,
+                            customerServiceWhatsApp: state.customerServiceWhatsApp,
+                            isGuestUser: state.isGuestUser,
+                            onGuestLoginRequired: () => Navigator.pushNamed(context, RouteDefine.connectScreen.name)),
                         appLogoWidget(state),
-                        messageWidget(context, bloc, state),
+                        messageWidget(context, bloc, state)
                       ]),
                     ),
                     Expanded(
@@ -233,11 +227,11 @@ class HomeScreenWidget extends StatelessWidget {
                               // bottomButtonWidget(context, state),
                               // 30.height,
                               // messageListWidget(context, state),
-                              AppConstants.bottomNavSpace.height,
+                              AppConstants.bottomNavSpace.height
                             ]),
                           ),
                         ),
-                        searchWidget(context, bloc, state),
+                        searchWidget(context, bloc, state)
                       ]),
                     ),
                   ]),
@@ -257,12 +251,7 @@ class HomeScreenWidget extends StatelessWidget {
   }
 
   Widget appLogoWidget(HomeState state) => state.clubAgentId == AppStrings.clubAgentIdText
-      ? Image.asset(
-          AppImagePath.clubAgentBlueLogo,
-          fit: BoxFit.fill,
-          width: 150,
-          height: 80,
-        )
+      ? Image.asset(AppImagePath.clubAgentBlueLogo, fit: BoxFit.fill, width: 150, height: 80)
       : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.cover, width: 100, height: 100);
 
   Widget dataAnalyticsButtonWidget(BuildContext context, HomeState state) {
@@ -271,12 +260,11 @@ class HomeScreenWidget extends StatelessWidget {
       return 0.width;
     }
     return CustomTextIconButtonWidget(
-      width: double.maxFinite,
-      title: buttonText,
-      onPressed: () {
-        Navigator.pushNamed(context, RouteDefine.webViewScreen.name);
-      },
-    );
+        width: double.maxFinite,
+        title: buttonText,
+        onPressed: () {
+          Navigator.pushNamed(context, RouteDefine.webViewScreen.name);
+        });
   }
 
   Widget pesachBannerWidget(BuildContext context, HomeState state) => state.pesachBannerShimmering && state.pesachBannerURL.isEmpty
@@ -294,7 +282,8 @@ class HomeScreenWidget extends StatelessWidget {
                     errorWidget: (context, url, error) {
                       return Container(color: AppColors.whiteColor);
                     }),
-              ))
+              ),
+            )
           : 0.width;
 
   Widget supplierDataListWidget(BuildContext context, HomeBloc bloc, HomeState state) {
@@ -330,7 +319,7 @@ class HomeScreenWidget extends StatelessWidget {
                     Navigator.pushNamed(context, RouteDefine.supplierListProductsScreen.name, arguments: {
                       AppStrings.supplierIdString: state.suppliersDataList[index].id ?? '',
                       AppStrings.supplierNameString: state.suppliersDataList[index].supplierDetail?.displayName,
-                      AppStrings.minimumOrderText: state.suppliersDataList[index].supplierDetail?.minOrderAmount,
+                      AppStrings.minimumOrderText: state.suppliersDataList[index].supplierDetail?.minOrderAmount
                     });
                   });
             }),
@@ -347,11 +336,8 @@ class HomeScreenWidget extends StatelessWidget {
                 title: AppLocalizations.of(context)!.categories,
                 subTitle: AppLocalizations.of(context)!.all_categories,
                 onTap: () async {
-                  dynamic searchResult = await Navigator.pushNamed(
-                    context,
-                    RouteDefine.productCategoryScreen.name,
-                    arguments: {AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList},
-                  );
+                  dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name,
+                      arguments: {AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
                   if (searchResult != null) {
                     bloc.add(HomeEvent.updateGlobalSearchEvent(
                         search: searchResult[AppStrings.searchString], searchList: searchResult[AppStrings.searchResultString]));
@@ -377,15 +363,14 @@ class HomeScreenWidget extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_10),
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-                          color: AppColors.whiteColor,
-                          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-                        ),
+                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                            color: AppColors.whiteColor,
+                            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)]),
                         child: InkWell(
                           onTap: () async {
                             dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
                               AppStrings.categoryIdString: state.productCategoryList[index].id,
-                              AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
+                              AppStrings.categoryNameString: state.productCategoryList[index].categoryName
                             });
                             if (searchResult != null) {
                               bloc.add(HomeEvent.updateGlobalSearchEvent(
@@ -394,23 +379,22 @@ class HomeScreenWidget extends StatelessWidget {
                           },
                           child: Stack(children: [
                             ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.padding_10)),
-                              child: (state.productCategoryList[index].categoryImage ?? '').isNotEmpty
-                                  ? CachedNetworkImage(
-                                      imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.productCategoryList[index].categoryImage}",
-                                      fit: BoxFit.cover,
-                                      height: 140,
-                                      width: 105,
-                                      alignment: Alignment.center,
-                                      placeholder: (context, url) {
-                                        return CommonShimmerWidget(
-                                            child: Container(height: 140, width: 105, decoration: BoxDecoration(color: AppColors.whiteColor)));
-                                      },
-                                      errorWidget: (context, error, stackTrace) {
-                                        return Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 140, height: 110);
-                                      })
-                                  : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 140, height: 110),
-                            ),
+                                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.padding_10)),
+                                child: (state.productCategoryList[index].categoryImage ?? '').isNotEmpty
+                                    ? CachedNetworkImage(
+                                        imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.productCategoryList[index].categoryImage}",
+                                        fit: BoxFit.cover,
+                                        height: 140,
+                                        width: 105,
+                                        alignment: Alignment.center,
+                                        placeholder: (context, url) {
+                                          return CommonShimmerWidget(
+                                              child: Container(height: 140, width: 105, decoration: BoxDecoration(color: AppColors.whiteColor)));
+                                        },
+                                        errorWidget: (context, error, stackTrace) {
+                                          return Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 140, height: 110);
+                                        })
+                                    : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 140, height: 110)),
                             Positioned(
                               bottom: 0,
                               left: 0,
@@ -426,12 +410,10 @@ class HomeScreenWidget extends StatelessWidget {
                                 clipBehavior: Clip.hardEdge,
                                 child: CommonMarqueeWidget(
                                   direction: Axis.horizontal,
-                                  child: Text(
-                                    state.productCategoryList[index].categoryName ?? '',
-                                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                                    maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  child: Text(state.productCategoryList[index].categoryName ?? '',
+                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+                                      maxLines: 2,
+                                      textAlign: TextAlign.center),
                                 ),
                               ),
                             )
@@ -474,7 +456,7 @@ class HomeScreenWidget extends StatelessWidget {
                       Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
                         AppStrings.companyIdString: state.companiesList[index].id ?? '',
                         AppStrings.companyLogo: state.companiesList[index].brandLogo ?? '',
-                        AppStrings.companyName: state.companiesList[index].brandName ?? '',
+                        AppStrings.companyName: state.companiesList[index].brandName ?? ''
                       });
                     });
               }),
@@ -492,31 +474,29 @@ class HomeScreenWidget extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-              color: AppColors.whiteColor,
-              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-            ),
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+                color: AppColors.whiteColor,
+                boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)]),
             child: InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
               onTap: onTap,
               child: Stack(children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
-                  child: companyLogo.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: "${AppUrlEndPoints.baseFileUrl}$companyLogo",
-                          fit: BoxFit.scaleDown,
-                          height: 110,
-                          width: 105,
-                          placeholder: (context, url) {
-                            return CommonShimmerWidget(
-                                child: Container(height: 110, width: 105, decoration: BoxDecoration(color: AppColors.whiteColor)));
-                          },
-                          errorWidget: (context, error, stackTrace) {
-                            return Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105);
-                          })
-                      : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105),
-                ),
+                    padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
+                    child: companyLogo.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: "${AppUrlEndPoints.baseFileUrl}$companyLogo",
+                            fit: BoxFit.scaleDown,
+                            height: 110,
+                            width: 105,
+                            placeholder: (context, url) {
+                              return CommonShimmerWidget(
+                                  child: Container(height: 110, width: 105, decoration: BoxDecoration(color: AppColors.whiteColor)));
+                            },
+                            errorWidget: (context, error, stackTrace) {
+                              return Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105);
+                            })
+                        : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105)),
                 Positioned(
                   bottom: 0,
                   left: 0,
@@ -532,13 +512,11 @@ class HomeScreenWidget extends StatelessWidget {
                     ),
                     child: CommonMarqueeWidget(
                       direction: Axis.horizontal,
-                      child: Text(
-                        companyName,
-                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                      ),
+                      child: Text(companyName,
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center),
                     ),
                   ),
                 )
@@ -554,30 +532,28 @@ class HomeScreenWidget extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        color: AppColors.whiteColor,
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-      ),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          color: AppColors.whiteColor,
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)]),
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
         child: Stack(children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
-            child: supplierLogo.isNotEmpty
-                ? CachedNetworkImage(
-                    imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo",
-                    fit: BoxFit.scaleDown,
-                    height: 110,
-                    width: 105,
-                    placeholder: (context, url) {
-                      return CommonShimmerWidget(child: Container(height: 110, width: 105, decoration: BoxDecoration(color: AppColors.whiteColor)));
-                    },
-                    errorWidget: (context, error, stackTrace) {
-                      return Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105);
-                    })
-                : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105),
-          ),
+              padding: const EdgeInsets.only(bottom: AppConstants.padding_20),
+              child: supplierLogo.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: "${AppUrlEndPoints.baseFileUrl}$supplierLogo",
+                      fit: BoxFit.scaleDown,
+                      height: 110,
+                      width: 105,
+                      placeholder: (context, url) {
+                        return CommonShimmerWidget(child: Container(height: 110, width: 105, decoration: BoxDecoration(color: AppColors.whiteColor)));
+                      },
+                      errorWidget: (context, error, stackTrace) {
+                        return Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105);
+                      })
+                  : Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover, width: 110, height: 105)),
           Positioned(
             bottom: 0,
             left: 0,
@@ -593,13 +569,11 @@ class HomeScreenWidget extends StatelessWidget {
               ),
               child: CommonMarqueeWidget(
                 direction: Axis.horizontal,
-                child: Text(
-                  supplierContactName,
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
+                child: Text(supplierContactName,
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center),
               ),
             ),
           )
@@ -657,65 +631,17 @@ class HomeScreenWidget extends StatelessWidget {
                             scaleType: productSaleData.scaleType,
                             onQuantityChanged: () {
                               context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
-                                    context: context,
-                                    quantity: productStockData.quantity.toString(),
-                                    productListIndex: 3,
-                                    productStockUpdateIndex: index,
-                                    productSupplierIds: productSaleData.supplierId.toString(),
-                                  ));
+                                  context: context,
+                                  quantity: productStockData.quantity.toString(),
+                                  productListIndex: 3,
+                                  productStockUpdateIndex: index,
+                                  productSupplierIds: productSaleData.supplierId.toString()));
                             },
                             onQuantityIncreaseTap: () {
                               final minQty = int.parse(productSaleData.sale?.saleMinQuantity ?? '0');
                               final isMixed = productSaleData.sale?.isMixedSale ?? false;
                               if (isMixed || minQty > productStockData.quantity + 1) {
                                 showMinMaxQtyConfirmDialog(
-                                  context: context,
-                                  productId: productSaleData.id.toString(),
-                                  minBox: productSaleData.sale?.saleMinQuantity.toString() ?? '0',
-                                  index: index,
-                                  supplierId: productSaleData.supplierId.toString(),
-                                  productListIndex: 3,
-                                  isMixedSale: productSaleData.sale?.isMixedSale ?? false,
-                                  sameSaleProducts: productSaleData.sale?.sameSaleProducts,
-                                  isIncrease: true,
-                                );
-                              } else {
-                                bloc.add(HomeEvent.increaseListQuantityOfProduct(
-                                  context: context,
-                                  productListIndex: 3,
-                                  productStockUpdateIndex: index,
-                                  productSupplierIds: productSaleData.supplierId.toString(),
-                                ));
-
-                                bloc.add(HomeEvent.addToCartListProductEvent(
-                                  context: context,
-                                  productId: productSaleData.id.toString(),
-                                  productListIndex: 3,
-                                  productStockUpdateIndex: index,
-                                  productSupplierIds: productSaleData.supplierId.toString(),
-                                ));
-                              }
-                            },
-                            onQuantityDecreaseTap: () {
-                              if (productStockData.quantity != 0) {
-                                if (!(productSaleData.sale?.isMixedSale ?? false) &&
-                                    int.parse(productSaleData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
-                                  bloc.add(HomeEvent.decreaseListQuantityOfProduct(
-                                    context: context,
-                                    productListIndex: 3,
-                                    productStockUpdateIndex: index,
-                                    productSupplierIds: productSaleData.supplierId.toString(),
-                                  ));
-
-                                  bloc.add(HomeEvent.addToCartListProductEvent(
-                                    context: context,
-                                    productId: productSaleData.id.toString(),
-                                    productListIndex: 3,
-                                    productStockUpdateIndex: index,
-                                    productSupplierIds: productSaleData.supplierId.toString(),
-                                  ));
-                                } else {
-                                  showMinMaxQtyConfirmDialog(
                                     context: context,
                                     productId: productSaleData.id.toString(),
                                     minBox: productSaleData.sale?.saleMinQuantity.toString() ?? '0',
@@ -724,20 +650,60 @@ class HomeScreenWidget extends StatelessWidget {
                                     productListIndex: 3,
                                     isMixedSale: productSaleData.sale?.isMixedSale ?? false,
                                     sameSaleProducts: productSaleData.sale?.sameSaleProducts,
-                                    isIncrease: false,
-                                  );
+                                    isIncrease: true);
+                              } else {
+                                bloc.add(HomeEvent.increaseListQuantityOfProduct(
+                                    context: context,
+                                    productListIndex: 3,
+                                    productStockUpdateIndex: index,
+                                    productSupplierIds: productSaleData.supplierId.toString()));
+
+                                bloc.add(HomeEvent.addToCartListProductEvent(
+                                    context: context,
+                                    productId: productSaleData.id.toString(),
+                                    productListIndex: 3,
+                                    productStockUpdateIndex: index,
+                                    productSupplierIds: productSaleData.supplierId.toString()));
+                              }
+                            },
+                            onQuantityDecreaseTap: () {
+                              if (productStockData.quantity != 0) {
+                                if (!(productSaleData.sale?.isMixedSale ?? false) &&
+                                    int.parse(productSaleData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
+                                  bloc.add(HomeEvent.decreaseListQuantityOfProduct(
+                                      context: context,
+                                      productListIndex: 3,
+                                      productStockUpdateIndex: index,
+                                      productSupplierIds: productSaleData.supplierId.toString()));
+
+                                  bloc.add(HomeEvent.addToCartListProductEvent(
+                                      context: context,
+                                      productId: productSaleData.id.toString(),
+                                      productListIndex: 3,
+                                      productStockUpdateIndex: index,
+                                      productSupplierIds: productSaleData.supplierId.toString()));
+                                } else {
+                                  showMinMaxQtyConfirmDialog(
+                                      context: context,
+                                      productId: productSaleData.id.toString(),
+                                      minBox: productSaleData.sale?.saleMinQuantity.toString() ?? '0',
+                                      index: index,
+                                      supplierId: productSaleData.supplierId.toString(),
+                                      productListIndex: 3,
+                                      isMixedSale: productSaleData.sale?.isMixedSale ?? false,
+                                      sameSaleProducts: productSaleData.sale?.sameSaleProducts,
+                                      isIncrease: false);
                                 }
                               }
                             },
                             onButtonTap: () {
                               if (!state.isGuestUser) {
                                 showProductDetails(
-                                  isSaleOn: state.isSaleOn,
-                                  productListIndex: 3,
-                                  context: context,
-                                  productId: productSaleData.id ?? '',
-                                  productStock: productSaleData.productStock.toString(),
-                                );
+                                    isSaleOn: state.isSaleOn,
+                                    productListIndex: 3,
+                                    context: context,
+                                    productId: productSaleData.id ?? '',
+                                    productStock: productSaleData.productStock.toString());
                               } else {
                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                               }
@@ -796,64 +762,29 @@ class HomeScreenWidget extends StatelessWidget {
                         scaleType: productRecommendedData.scaleType,
                         onQuantityChanged: () {
                           context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
-                                context: context,
-                                quantity: productStockData.quantity.toString(),
-                                productListIndex: 1,
-                                productStockUpdateIndex: index,
-                                productSupplierIds: productRecommendedData.supplierId.toString(),
-                              ));
+                              context: context,
+                              quantity: productStockData.quantity.toString(),
+                              productListIndex: 1,
+                              productStockUpdateIndex: index,
+                              productSupplierIds: productRecommendedData.supplierId.toString()));
                         },
                         onQuantityIncreaseTap: () {
                           if (!(productRecommendedData.sale?.isMixedSale ?? false) &&
                               int.parse(productRecommendedData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity + 1) {
                             context.read<HomeBloc>().add(HomeEvent.increaseListQuantityOfProduct(
-                                  context: context,
-                                  productListIndex: 1,
-                                  productStockUpdateIndex: index,
-                                  productSupplierIds: productRecommendedData.supplierId.toString(),
-                                ));
+                                context: context,
+                                productListIndex: 1,
+                                productStockUpdateIndex: index,
+                                productSupplierIds: productRecommendedData.supplierId.toString()));
 
                             context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                  context: context,
-                                  productId: productRecommendedData.id.toString(),
-                                  productListIndex: 1,
-                                  productStockUpdateIndex: index,
-                                  productSupplierIds: productRecommendedData.supplierId.toString(),
-                                ));
+                                context: context,
+                                productId: productRecommendedData.id.toString(),
+                                productListIndex: 1,
+                                productStockUpdateIndex: index,
+                                productSupplierIds: productRecommendedData.supplierId.toString()));
                           } else {
                             showMinMaxQtyConfirmDialog(
-                              context: context,
-                              productId: productRecommendedData.id.toString(),
-                              minBox: productRecommendedData.sale?.saleMinQuantity.toString() ?? '0',
-                              index: index,
-                              supplierId: productRecommendedData.supplierId.toString(),
-                              productListIndex: 1,
-                              isMixedSale: productRecommendedData.sale?.isMixedSale ?? false,
-                              sameSaleProducts: productRecommendedData.sale?.sameSaleProducts,
-                              isIncrease: true,
-                            );
-                          }
-                        },
-                        onQuantityDecreaseTap: () {
-                          if (productStockData.quantity != 0) {
-                            if (!(productRecommendedData.sale?.isMixedSale ?? false) &&
-                                int.parse(productRecommendedData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
-                              context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
-                                    context: context,
-                                    productListIndex: 1,
-                                    productStockUpdateIndex: index,
-                                    productSupplierIds: productRecommendedData.supplierId.toString(),
-                                  ));
-
-                              context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                    context: context,
-                                    productId: productRecommendedData.id.toString(),
-                                    productListIndex: 1,
-                                    productStockUpdateIndex: index,
-                                    productSupplierIds: productRecommendedData.supplierId.toString(),
-                                  ));
-                            } else {
-                              showMinMaxQtyConfirmDialog(
                                 context: context,
                                 productId: productRecommendedData.id.toString(),
                                 minBox: productRecommendedData.sale?.saleMinQuantity.toString() ?? '0',
@@ -862,20 +793,47 @@ class HomeScreenWidget extends StatelessWidget {
                                 productListIndex: 1,
                                 isMixedSale: productRecommendedData.sale?.isMixedSale ?? false,
                                 sameSaleProducts: productRecommendedData.sale?.sameSaleProducts,
-                                isIncrease: false,
-                              );
+                                isIncrease: true);
+                          }
+                        },
+                        onQuantityDecreaseTap: () {
+                          if (productStockData.quantity != 0) {
+                            if (!(productRecommendedData.sale?.isMixedSale ?? false) &&
+                                int.parse(productRecommendedData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
+                              context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
+                                  context: context,
+                                  productListIndex: 1,
+                                  productStockUpdateIndex: index,
+                                  productSupplierIds: productRecommendedData.supplierId.toString()));
+
+                              context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
+                                  context: context,
+                                  productId: productRecommendedData.id.toString(),
+                                  productListIndex: 1,
+                                  productStockUpdateIndex: index,
+                                  productSupplierIds: productRecommendedData.supplierId.toString()));
+                            } else {
+                              showMinMaxQtyConfirmDialog(
+                                  context: context,
+                                  productId: productRecommendedData.id.toString(),
+                                  minBox: productRecommendedData.sale?.saleMinQuantity.toString() ?? '0',
+                                  index: index,
+                                  supplierId: productRecommendedData.supplierId.toString(),
+                                  productListIndex: 1,
+                                  isMixedSale: productRecommendedData.sale?.isMixedSale ?? false,
+                                  sameSaleProducts: productRecommendedData.sale?.sameSaleProducts,
+                                  isIncrease: false);
                             }
                           }
                         },
                         onButtonTap: () {
                           if (!state.isGuestUser) {
                             showProductDetails(
-                              isSaleOn: state.isSaleOn,
-                              context: context,
-                              productId: productRecommendedData.id ?? '',
-                              productStock: (productRecommendedData.productStock.toString()),
-                              productListIndex: 1,
-                            );
+                                isSaleOn: state.isSaleOn,
+                                context: context,
+                                productId: productRecommendedData.id ?? '',
+                                productStock: (productRecommendedData.productStock.toString()),
+                                productListIndex: 1);
                           } else {
                             Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                           }
@@ -934,64 +892,29 @@ class HomeScreenWidget extends StatelessWidget {
                             scaleType: previousOrderData.scaleType,
                             onQuantityChanged: () {
                               context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
-                                    context: context,
-                                    quantity: productStockData.quantity.toString(),
-                                    productListIndex: 4,
-                                    productStockUpdateIndex: index,
-                                    productSupplierIds: previousOrderData.supplierId.toString(),
-                                  ));
+                                  context: context,
+                                  quantity: productStockData.quantity.toString(),
+                                  productListIndex: 4,
+                                  productStockUpdateIndex: index,
+                                  productSupplierIds: previousOrderData.supplierId.toString()));
                             },
                             onQuantityIncreaseTap: () {
                               if (!(previousOrderData.sale?.isMixedSale ?? false) &&
                                   int.parse(previousOrderData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity + 1) {
                                 bloc.add(HomeEvent.increaseListQuantityOfProduct(
-                                  context: context,
-                                  productListIndex: 4,
-                                  productStockUpdateIndex: index,
-                                  productSupplierIds: previousOrderData.supplierId.toString(),
-                                ));
-
-                                bloc.add(HomeEvent.addToCartListProductEvent(
-                                  context: context,
-                                  productId: previousOrderData.id.toString(),
-                                  productListIndex: 4,
-                                  productStockUpdateIndex: index,
-                                  productSupplierIds: previousOrderData.supplierId.toString(),
-                                ));
-                              } else {
-                                showMinMaxQtyConfirmDialog(
-                                  context: context,
-                                  productId: previousOrderData.id.toString(),
-                                  minBox: previousOrderData.sale?.saleMinQuantity.toString() ?? '0',
-                                  index: index,
-                                  supplierId: previousOrderData.supplierId.toString(),
-                                  productListIndex: 4,
-                                  isMixedSale: previousOrderData.sale?.isMixedSale ?? false,
-                                  sameSaleProducts: previousOrderData.sale?.sameSaleProducts,
-                                  isIncrease: true,
-                                );
-                              }
-                            },
-                            onQuantityDecreaseTap: () {
-                              if (productStockData.quantity != 0) {
-                                if (!(previousOrderData.sale?.isMixedSale ?? false) &&
-                                    int.parse(previousOrderData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
-                                  bloc.add(HomeEvent.decreaseListQuantityOfProduct(
                                     context: context,
                                     productListIndex: 4,
                                     productStockUpdateIndex: index,
-                                    productSupplierIds: previousOrderData.supplierId.toString(),
-                                  ));
+                                    productSupplierIds: previousOrderData.supplierId.toString()));
 
-                                  bloc.add(HomeEvent.addToCartListProductEvent(
+                                bloc.add(HomeEvent.addToCartListProductEvent(
                                     context: context,
                                     productId: previousOrderData.id.toString(),
                                     productListIndex: 4,
                                     productStockUpdateIndex: index,
-                                    productSupplierIds: previousOrderData.supplierId.toString(),
-                                  ));
-                                } else {
-                                  showMinMaxQtyConfirmDialog(
+                                    productSupplierIds: previousOrderData.supplierId.toString()));
+                              } else {
+                                showMinMaxQtyConfirmDialog(
                                     context: context,
                                     productId: previousOrderData.id.toString(),
                                     minBox: previousOrderData.sale?.saleMinQuantity.toString() ?? '0',
@@ -1000,20 +923,47 @@ class HomeScreenWidget extends StatelessWidget {
                                     productListIndex: 4,
                                     isMixedSale: previousOrderData.sale?.isMixedSale ?? false,
                                     sameSaleProducts: previousOrderData.sale?.sameSaleProducts,
-                                    isIncrease: false,
-                                  );
+                                    isIncrease: true);
+                              }
+                            },
+                            onQuantityDecreaseTap: () {
+                              if (productStockData.quantity != 0) {
+                                if (!(previousOrderData.sale?.isMixedSale ?? false) &&
+                                    int.parse(previousOrderData.sale?.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
+                                  bloc.add(HomeEvent.decreaseListQuantityOfProduct(
+                                      context: context,
+                                      productListIndex: 4,
+                                      productStockUpdateIndex: index,
+                                      productSupplierIds: previousOrderData.supplierId.toString()));
+
+                                  bloc.add(HomeEvent.addToCartListProductEvent(
+                                      context: context,
+                                      productId: previousOrderData.id.toString(),
+                                      productListIndex: 4,
+                                      productStockUpdateIndex: index,
+                                      productSupplierIds: previousOrderData.supplierId.toString()));
+                                } else {
+                                  showMinMaxQtyConfirmDialog(
+                                      context: context,
+                                      productId: previousOrderData.id.toString(),
+                                      minBox: previousOrderData.sale?.saleMinQuantity.toString() ?? '0',
+                                      index: index,
+                                      supplierId: previousOrderData.supplierId.toString(),
+                                      productListIndex: 4,
+                                      isMixedSale: previousOrderData.sale?.isMixedSale ?? false,
+                                      sameSaleProducts: previousOrderData.sale?.sameSaleProducts,
+                                      isIncrease: false);
                                 }
                               }
                             },
                             onButtonTap: () {
                               if (!state.isGuestUser) {
                                 showProductDetails(
-                                  isSaleOn: state.isSaleOn,
-                                  context: context,
-                                  productId: previousOrderData.id ?? '',
-                                  productStock: previousOrderData.productStock.toString(),
-                                  productListIndex: 4,
-                                );
+                                    isSaleOn: state.isSaleOn,
+                                    context: context,
+                                    productId: previousOrderData.id ?? '',
+                                    productStock: previousOrderData.productStock.toString(),
+                                    productListIndex: 4);
                               } else {
                                 Navigator.pushNamed(context, RouteDefine.connectScreen.name);
                               }
@@ -1044,18 +994,14 @@ class HomeScreenWidget extends StatelessWidget {
         }
       },
       onSearch: (String search) {
-        printData("check here 1");
         if (search.length > 1) {
-          printData("check here 2");
           bloc.add(const HomeEvent.changeCategoryExpansion(isOpened: true));
           bloc.add(HomeEvent.globalSearchEvent(context: context));
         }
       },
       onSearchSubmit: (String search) {
-        Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
-          AppStrings.searchString: state.search,
-          AppStrings.searchType: SearchTypes.product.toString(),
-        });
+        Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name,
+            arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()});
       },
       onOutSideTap: () {
         state.searchController.clear();
@@ -1100,64 +1046,29 @@ class HomeScreenWidget extends StatelessWidget {
                         isMixedSale: productSearchData.isMixedSale,
                         onQuantityChanged: () {
                           context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
-                                context: context,
-                                quantity: productStockData.quantity.toString(),
-                                productListIndex: 0,
-                                productStockUpdateIndex: index,
-                                productSupplierIds: productSearchData.supplierId.toString(),
-                              ));
+                              context: context,
+                              quantity: productStockData.quantity.toString(),
+                              productListIndex: 0,
+                              productStockUpdateIndex: index,
+                              productSupplierIds: productSearchData.supplierId.toString()));
                         },
                         onQuantityIncreaseTap: () {
                           if (!(productSearchData.isMixedSale ?? false) &&
                               int.parse(productSearchData.saleMinQuantity ?? '0') <= productStockData.quantity + 1) {
                             context.read<HomeBloc>().add(HomeEvent.increaseListQuantityOfProduct(
-                                  context: context,
-                                  productListIndex: 0,
-                                  productStockUpdateIndex: index,
-                                  productSupplierIds: productSearchData.supplierId.toString(),
-                                ));
+                                context: context,
+                                productListIndex: 0,
+                                productStockUpdateIndex: index,
+                                productSupplierIds: productSearchData.supplierId.toString()));
 
                             context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                  context: context,
-                                  productId: productSearchData.searchId,
-                                  productListIndex: 0,
-                                  productStockUpdateIndex: index,
-                                  productSupplierIds: productSearchData.supplierId.toString(),
-                                ));
+                                context: context,
+                                productId: productSearchData.searchId,
+                                productListIndex: 0,
+                                productStockUpdateIndex: index,
+                                productSupplierIds: productSearchData.supplierId.toString()));
                           } else {
                             showMinMaxQtyConfirmDialog(
-                              context: context,
-                              productId: productSearchData.searchId,
-                              minBox: productSearchData.saleMinQuantity.toString(),
-                              index: index,
-                              supplierId: productSearchData.supplierId.toString(),
-                              productListIndex: 0,
-                              isMixedSale: productSearchData.isMixedSale ?? false,
-                              sameSaleProducts: productSearchData.sameSaleProducts,
-                              isIncrease: true,
-                            );
-                          }
-                        },
-                        onQuantityDecreaseTap: () {
-                          if (productStockData.quantity != 0) {
-                            if (!(productSearchData.isMixedSale ?? false) &&
-                                int.parse(productSearchData.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
-                              context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
-                                    context: context,
-                                    productListIndex: 0,
-                                    productStockUpdateIndex: index,
-                                    productSupplierIds: productSearchData.supplierId.toString(),
-                                  ));
-
-                              context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                    context: context,
-                                    productId: productSearchData.searchId,
-                                    productListIndex: 0,
-                                    productStockUpdateIndex: index,
-                                    productSupplierIds: productSearchData.supplierId.toString(),
-                                  ));
-                            } else {
-                              showMinMaxQtyConfirmDialog(
                                 context: context,
                                 productId: productSearchData.searchId,
                                 minBox: productSearchData.saleMinQuantity.toString(),
@@ -1166,8 +1077,36 @@ class HomeScreenWidget extends StatelessWidget {
                                 productListIndex: 0,
                                 isMixedSale: productSearchData.isMixedSale ?? false,
                                 sameSaleProducts: productSearchData.sameSaleProducts,
-                                isIncrease: false,
-                              );
+                                isIncrease: true);
+                          }
+                        },
+                        onQuantityDecreaseTap: () {
+                          if (productStockData.quantity != 0) {
+                            if (!(productSearchData.isMixedSale ?? false) &&
+                                int.parse(productSearchData.saleMinQuantity ?? '0') <= productStockData.quantity - 1) {
+                              context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
+                                  context: context,
+                                  productListIndex: 0,
+                                  productStockUpdateIndex: index,
+                                  productSupplierIds: productSearchData.supplierId.toString()));
+
+                              context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
+                                  context: context,
+                                  productId: productSearchData.searchId,
+                                  productListIndex: 0,
+                                  productStockUpdateIndex: index,
+                                  productSupplierIds: productSearchData.supplierId.toString()));
+                            } else {
+                              showMinMaxQtyConfirmDialog(
+                                  context: context,
+                                  productId: productSearchData.searchId,
+                                  minBox: productSearchData.saleMinQuantity.toString(),
+                                  index: index,
+                                  supplierId: productSearchData.supplierId.toString(),
+                                  productListIndex: 0,
+                                  isMixedSale: productSearchData.isMixedSale ?? false,
+                                  sameSaleProducts: productSearchData.sameSaleProducts,
+                                  isIncrease: false);
                             }
                           }
                         },
@@ -1181,7 +1120,7 @@ class HomeScreenWidget extends StatelessWidget {
                             dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.productCategoryScreen.name, arguments: {
                               AppStrings.searchString: state.search,
                               AppStrings.reqSearchString: state.search,
-                              AppStrings.searchResultString: state.searchList,
+                              AppStrings.searchResultString: state.searchList
                             });
                             if (searchResult != null) {
                               bloc.add(HomeEvent.updateGlobalSearchEvent(
@@ -1192,7 +1131,7 @@ class HomeScreenWidget extends StatelessWidget {
                               AppStrings.categoryIdString: productSearchData.categoryId,
                               AppStrings.categoryNameString: productSearchData.categoryName,
                               AppStrings.searchString: state.search,
-                              AppStrings.searchResultString: state.searchList,
+                              AppStrings.searchResultString: state.searchList
                             });
                             if (searchResult != null) {
                               bloc.add(HomeEvent.updateGlobalSearchEvent(
@@ -1207,11 +1146,10 @@ class HomeScreenWidget extends StatelessWidget {
                                     : productSearchData.searchType == SearchTypes.sale
                                         ? Navigator.pushNamed(context, RouteDefine.productSaleScreen.name,
                                             arguments: {AppStrings.searchString: state.search})
-                                        : Navigator.pushNamed(
-                                            context,
-                                            RouteDefine.supplierProductsScreen.name,
-                                            arguments: {AppStrings.searchString: state.search, AppStrings.searchType: SearchTypes.product.toString()},
-                                          );
+                                        : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
+                                            AppStrings.searchString: state.search,
+                                            AppStrings.searchType: SearchTypes.product.toString()
+                                          });
                           }
                         },
                         onTap: () async {
@@ -1221,19 +1159,18 @@ class HomeScreenWidget extends StatelessWidget {
                           }
                           if (productSearchData.searchType == SearchTypes.sale || productSearchData.searchType == SearchTypes.product) {
                             showProductDetails(
-                              context: Platform.isIOS ? (state.context ?? context) : context,
-                              productId: productSearchData.searchId,
-                              isBarcode: true,
-                              productListIndex: 0,
-                              isSaleOn: state.isSaleOn,
-                              productStock: (productSearchData.productStock.toString()),
-                            );
+                                context: Platform.isIOS ? (state.context ?? context) : context,
+                                productId: productSearchData.searchId,
+                                isBarcode: true,
+                                productListIndex: 0,
+                                isSaleOn: state.isSaleOn,
+                                productStock: (productSearchData.productStock.toString()));
                           } else if (productSearchData.searchType == SearchTypes.category) {
                             dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
                               AppStrings.categoryIdString: productSearchData.searchId,
                               AppStrings.categoryNameString: productSearchData.name,
                               AppStrings.searchString: state.searchController.text,
-                              AppStrings.searchResultString: state.searchList,
+                              AppStrings.searchResultString: state.searchList
                             });
                             if (searchResult != null) {
                               bloc.add(HomeEvent.updateGlobalSearchEvent(
@@ -1243,9 +1180,8 @@ class HomeScreenWidget extends StatelessWidget {
                             productSearchData.searchType == SearchTypes.company
                                 ? Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name,
                                     arguments: {AppStrings.companyIdString: productSearchData.searchId})
-                                : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name, arguments: {
-                                    AppStrings.supplierIdString: productSearchData.searchId,
-                                  });
+                                : Navigator.pushNamed(context, RouteDefine.supplierProductsScreen.name,
+                                    arguments: {AppStrings.supplierIdString: productSearchData.searchId});
                           }
                           bloc.add(const HomeEvent.changeCategoryExpansion());
                         });
@@ -1254,24 +1190,17 @@ class HomeScreenWidget extends StatelessWidget {
         String scanResult = await scanBarcodeOrQRCode(context: context, cancelText: AppLocalizations.of(context)!.cancel, scanMode: ScanMode.BARCODE);
         if (scanResult != '-1') {
           showProductDetails(
-            context: context,
-            productId: scanResult,
-            isBarcode: true,
-            productStock: '1',
-            productListIndex: 0,
-            isSaleOn: state.isSaleOn,
-          );
+              context: context, productId: scanResult, isBarcode: true, productStock: '1', productListIndex: 0, isSaleOn: state.isSaleOn);
         }
       });
 
-  void showProductDetails({
-    required BuildContext context,
-    required String productId,
-    bool isBarcode = false,
-    String productStock = '0',
-    int productListIndex = 0,
-    required bool isSaleOn,
-  }) async {
+  void showProductDetails(
+      {required BuildContext context,
+      required String productId,
+      bool isBarcode = false,
+      String productStock = '0',
+      int productListIndex = 0,
+      required bool isSaleOn}) async {
     context
         .read<HomeBloc>()
         .add(HomeEvent.getProductDetailsEvent(context: context, productId: productId, isBarcode: isBarcode, productListIndex: productListIndex));
@@ -1295,15 +1224,12 @@ class HomeScreenWidget extends StatelessWidget {
                   return BlocProvider.value(
                     value: context.read<HomeBloc>(),
                     child: BlocBuilder<HomeBloc, HomeState>(builder: (blocContext, state) {
-                      // var productDetailsData = state.productDetails.first;
-                      // var productStockData = state.productStockList[state.productListIndex][state.productStockUpdateIndex];
                       return Container(
                         height: getScreenHeight(blocContext),
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
-                          color: AppColors.whiteColor,
-                        ),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
+                            color: AppColors.whiteColor),
                         child: state.isProductLoading
                             ? const ProductDetailsShimmerWidget()
                             : state.productDetails.isEmpty
@@ -1328,13 +1254,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                     state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity) {
                                               context.read<HomeBloc>().add(HomeEvent.addToCartProductEvent(context: context1, productId: productId));
                                             } else {
-                                              showMinQtyConfirmDialog(
-                                                context,
-                                                productId,
-                                                state.productDetails.first.sale!.saleMinQuantity.toString(),
-                                                state.productDetails.first.sale!.isMixedSale,
-                                                state.productDetails.first.sale!.sameSaleProducts,
-                                              );
+                                              showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString(),
+                                                  state.productDetails.first.sale!.isMixedSale, state.productDetails.first.sale!.sameSaleProducts);
                                             }
                                           },
                                           isLoading: state.isLoading,
@@ -1363,9 +1284,8 @@ class HomeScreenWidget extends StatelessWidget {
                                                         Navigator.pop(dialogContext);
                                                       },
                                                       child: Padding(
-                                                        padding: const EdgeInsets.only(top: AppConstants.padding_10),
-                                                        child: Icon(Icons.close, color: AppColors.whiteColor),
-                                                      ),
+                                                          padding: const EdgeInsets.only(top: AppConstants.padding_10),
+                                                          child: Icon(Icons.close, color: AppColors.whiteColor)),
                                                     ),
                                                   ]);
                                                 });
@@ -1424,7 +1344,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           ? const RelatedProductShimmerWidget()
                                           : state.relatedProductList.isEmpty
                                               ? 0.height
-                                              : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn),
+                                              : relatedProductWidget(context1, state.relatedProductList, context, isSaleOn)
                                     ]),
                                   ),
                       );
@@ -1481,15 +1401,14 @@ class HomeScreenWidget extends StatelessWidget {
                           scaleType: relatedProductData.scaleType,
                           onQuantityChanged: () {
                             context.read<HomeBloc>().add(HomeEvent.updateListQuantityOfProduct(
-                                  context: context,
-                                  quantity: productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id)
-                                      .quantity
-                                      .toString(),
-                                  productListIndex: 2,
-                                  productStockUpdateIndex:
-                                      productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
-                                  productSupplierIds: relatedProductList[i].supplierId.toString(),
-                                ));
+                                context: context,
+                                quantity: productStockData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id)
+                                    .quantity
+                                    .toString(),
+                                productListIndex: 2,
+                                productStockUpdateIndex:
+                                    productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                productSupplierIds: relatedProductList[i].supplierId.toString()));
                           },
                           onQuantityIncreaseTap: () {
                             if (!(relatedProductList[i].sale?.isMixedSale ?? false) &&
@@ -1498,21 +1417,19 @@ class HomeScreenWidget extends StatelessWidget {
                                             .quantity +
                                         1) {
                               context.read<HomeBloc>().add(HomeEvent.increaseListQuantityOfProduct(
-                                    context: context,
-                                    productListIndex: 2,
-                                    productStockUpdateIndex: productStockIndexData(
-                                        (relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
-                                    productSupplierIds: relatedProductList[i].supplierId.toString(),
-                                  ));
+                                  context: context,
+                                  productListIndex: 2,
+                                  productStockUpdateIndex:
+                                      productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                  productSupplierIds: relatedProductList[i].supplierId.toString()));
 
                               context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                    context: context,
-                                    productId: relatedProductList[i].id.toString(),
-                                    productListIndex: 2,
-                                    productStockUpdateIndex: productStockIndexData(
-                                        (relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
-                                    productSupplierIds: relatedProductList[i].supplierId.toString(),
-                                  ));
+                                  context: context,
+                                  productId: relatedProductList[i].id.toString(),
+                                  productListIndex: 2,
+                                  productStockUpdateIndex:
+                                      productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                  productSupplierIds: relatedProductList[i].supplierId.toString()));
                             } else {
                               showMinMaxQtyConfirmDialog(
                                 context: context,
@@ -1536,47 +1453,43 @@ class HomeScreenWidget extends StatelessWidget {
                                               .quantity -
                                           1) {
                                 context.read<HomeBloc>().add(HomeEvent.decreaseListQuantityOfProduct(
-                                      context: context,
-                                      productListIndex: 2,
-                                      productStockUpdateIndex: productStockIndexData(
-                                          (relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
-                                      productSupplierIds: relatedProductList[i].supplierId.toString(),
-                                    ));
+                                    context: context,
+                                    productListIndex: 2,
+                                    productStockUpdateIndex: productStockIndexData(
+                                        (relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                    productSupplierIds: relatedProductList[i].supplierId.toString()));
 
                                 context.read<HomeBloc>().add(HomeEvent.addToCartListProductEvent(
-                                      context: context,
-                                      productId: relatedProductList[i].id.toString(),
-                                      productListIndex: 2,
-                                      productStockUpdateIndex: productStockIndexData(
-                                          (relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
-                                      productSupplierIds: relatedProductList[i].supplierId.toString(),
-                                    ));
+                                    context: context,
+                                    productId: relatedProductList[i].id.toString(),
+                                    productListIndex: 2,
+                                    productStockUpdateIndex: productStockIndexData(
+                                        (relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                    productSupplierIds: relatedProductList[i].supplierId.toString()));
                               } else {
                                 showMinMaxQtyConfirmDialog(
-                                  context: context,
-                                  productId: relatedProductList[i].id.toString(),
-                                  minBox: relatedProductData.sale?.saleMinQuantity.toString() ?? '0',
-                                  index:
-                                      productStockIndexData((relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
-                                  supplierId: relatedProductList[i].supplierId.toString(),
-                                  productListIndex: 2,
-                                  isMixedSale: relatedProductList[i].sale?.isMixedSale ?? false,
-                                  sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts,
-                                  isIncrease: false,
-                                );
+                                    context: context,
+                                    productId: relatedProductList[i].id.toString(),
+                                    minBox: relatedProductData.sale?.saleMinQuantity.toString() ?? '0',
+                                    index: productStockIndexData(
+                                        (relatedProductStockList) => relatedProductStockList.productId == relatedProductData.id),
+                                    supplierId: relatedProductList[i].supplierId.toString(),
+                                    productListIndex: 2,
+                                    isMixedSale: relatedProductList[i].sale?.isMixedSale ?? false,
+                                    sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts,
+                                    isIncrease: false);
                               }
                             }
                           },
                           onButtonTap: () {
                             Navigator.pop(prevContext);
                             showProductDetails(
-                              isSaleOn: isSaleOn,
-                              context: context,
-                              productId: relatedProductList[i].id ?? '',
-                              isBarcode: false,
-                              productListIndex: 2,
-                              productStock: (relatedProductList[i].productStock.toString()),
-                            );
+                                isSaleOn: isSaleOn,
+                                context: context,
+                                productId: relatedProductList[i].id ?? '',
+                                isBarcode: false,
+                                productListIndex: 2,
+                                productStock: (relatedProductList[i].productStock.toString()));
                           });
                     },
                     itemCount: relatedProductList.length,
@@ -1586,24 +1499,20 @@ class HomeScreenWidget extends StatelessWidget {
         }));
   }
 
-  // Min-quantity promotions now open the rich promotion bottom sheet (steppers
-  // per participating product + a cumulative progress bar). Legacy params are
-  // kept so the many call sites stay unchanged; only [productId] is used.
   showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale, List? sameSaleProducts) {
     _openSalePromotionSheet(context, productId);
   }
 
-  void showMinMaxQtyConfirmDialog({
-    required BuildContext context,
-    required String productId,
-    required String minBox,
-    required int index,
-    required dynamic supplierId,
-    required int productListIndex,
-    required bool isMixedSale,
-    required bool isIncrease,
-    List? sameSaleProducts,
-  }) {
+  void showMinMaxQtyConfirmDialog(
+      {required BuildContext context,
+      required String productId,
+      required String minBox,
+      required int index,
+      required dynamic supplierId,
+      required int productListIndex,
+      required bool isMixedSale,
+      required bool isIncrease,
+      List? sameSaleProducts}) {
     _openSalePromotionSheet(context, productId);
   }
 
@@ -1629,8 +1538,7 @@ class HomeScreenWidget extends StatelessWidget {
           onPressed: () {
             context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 1, context: context));
           },
-          svgImage: AppImagePath.add,
-        )
+          svgImage: AppImagePath.add)
       : CustomTextIconButtonWidget(
           width: double.maxFinite,
           title: AppLocalizations.of(context)!.my_basket,
@@ -1638,8 +1546,7 @@ class HomeScreenWidget extends StatelessWidget {
             context.read<BottomNavBloc>().add(BottomNavEvent.changePage(index: 2, context: context));
           },
           svgImage: AppImagePath.cart,
-          cartCount: state.cartCount,
-        );
+          cartCount: state.cartCount);
 
   Widget messageListWidget(BuildContext context, HomeState state) => state.messageList.isEmpty
       ? 0.width
@@ -1667,14 +1574,13 @@ class HomeScreenWidget extends StatelessWidget {
                       dynamic messageNewData = await Navigator.pushNamed(context, RouteDefine.messageContentScreen.name, arguments: {
                         AppStrings.messageDataString: messageData,
                         AppStrings.messageIdString: messageData.id,
-                        AppStrings.isReadMoreString: true,
+                        AppStrings.isReadMoreString: true
                       });
                       if (messageNewData != null) {
                         context.read<HomeBloc>().add(HomeEvent.removeOrUpdateMessageEvent(
-                              messageId: messageNewData[AppStrings.messageIdString],
-                              isRead: messageNewData[AppStrings.messageReadString],
-                              isDelete: messageNewData[AppStrings.messageDeleteString],
-                            ));
+                            messageId: messageNewData[AppStrings.messageIdString],
+                            isRead: messageNewData[AppStrings.messageReadString],
+                            isDelete: messageNewData[AppStrings.messageDeleteString]));
                       }
                     });
               }),
@@ -1684,10 +1590,9 @@ class HomeScreenWidget extends StatelessWidget {
         height: 60,
         padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_3),
         decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.blur_10)],
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-        ),
+            color: AppColors.whiteColor,
+            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.blur_10)],
+            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
         clipBehavior: Clip.hardEdge,
         alignment: Alignment.center,
         child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -1710,10 +1615,9 @@ class HomeScreenWidget extends StatelessWidget {
               },
               child: Stack(fit: StackFit.expand, children: [
                 Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                  child: SvgPicture.asset(AppImagePath.message, height: 26, width: 24, fit: BoxFit.scaleDown),
-                ),
+                    alignment: Alignment.center,
+                    transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                    child: SvgPicture.asset(AppImagePath.message, height: 26, width: 24, fit: BoxFit.scaleDown)),
                 state.messageCount <= 0
                     ? 0.width
                     : Positioned(
@@ -1728,10 +1632,8 @@ class HomeScreenWidget extends StatelessWidget {
                               border: Border.all(color: AppColors.whiteColor, width: 1),
                               shape: BoxShape.circle),
                           alignment: Alignment.center,
-                          child: Text(
-                            '${state.messageCount <= 99 ? state.messageCount : '99+'}',
-                            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor),
-                          ),
+                          child: Text('${state.messageCount <= 99 ? state.messageCount : '99+'}',
+                              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_8, color: AppColors.whiteColor)),
                         ))
               ]),
             ),
@@ -1748,12 +1650,11 @@ class HomeScreenWidget extends StatelessWidget {
             if (data != null) {
               FlutterAppBadger.removeBadge();
               PushNotificationService().showNotification(
-                notiId: message.notification.hashCode,
-                data: data,
-                imageUrl: Platform.isAndroid ? message.notification?.android?.imageUrl ?? '' : message.notification?.apple?.imageUrl ?? '',
-                title: message.notification?.title ?? '',
-                body: message.notification?.body ?? '',
-              );
+                  notiId: message.notification.hashCode,
+                  data: data,
+                  imageUrl: Platform.isAndroid ? message.notification?.android?.imageUrl ?? '' : message.notification?.apple?.imageUrl ?? '',
+                  title: message.notification?.title ?? '',
+                  body: message.notification?.body ?? '');
             }
           }
         }
@@ -1834,10 +1735,9 @@ class HomeScreenWidget extends StatelessWidget {
     storage.writeState(context, true, identifier: 'no_min_dialog');
 
     await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => MultiSupplierCountdownDialog(suppliers: validSupplier, title: state.supplierCustomerDetails[0].text ?? ''),
-    );
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => MultiSupplierCountdownDialog(suppliers: validSupplier, title: state.supplierCustomerDetails[0].text ?? ''));
   }
 
   appUnderMaintenanceDialog({required BuildContext context, required HomeState state}) {
@@ -1864,47 +1764,39 @@ class HomeScreenWidget extends StatelessWidget {
     }
   }
 
-  /// WhatsApp marketing consent popup. "Approve" records consent on the server
-  /// (the dialog auto-closes once the opt-in succeeds); "Not now" just dismisses.
-  whatsappOptinDialog({required BuildContext context, required HomeState state}) {
-    // Tapping outside the popup is treated like "Not now" — it just closes and
-    // reappears on the next app open (no opt-out recorded).
+  whatsappOptionDialog({required BuildContext context, required HomeState state}) {
     showDialog(
         barrierDismissible: true,
         context: context,
         builder: (dialogContext) => BlocProvider.value(
               value: context.read<HomeBloc>(),
               child: BlocConsumer<HomeBloc, HomeState>(
-                listenWhen: (previous, current) => previous.whatsappOptIn != current.whatsappOptIn,
-                listener: (context, state) {
-                  if (state.whatsappOptIn) {
-                    Navigator.of(dialogContext).pop();
-                  }
-                },
-                builder: (context, state) {
-                  // Title/text come from the admin settings; fall back to the
-                  // bundled localized defaults when the settings value is empty.
-                  final String title =
-                      state.whatsappOptinPopupTitle.isNotEmpty ? state.whatsappOptinPopupTitle : AppLocalizations.of(context)!.whatsapp_optin_title;
-                  final String body =
-                      state.whatsappOptinPopupText.isNotEmpty ? state.whatsappOptinPopupText : AppLocalizations.of(context)!.whatsapp_optin_body;
-                  return WhatsappOptinDialog(
-                    directionality: state.language,
-                    title: title,
-                    body: body,
-                    approveTitle: AppLocalizations.of(context)!.whatsapp_optin_approve,
-                    notNowTitle: AppLocalizations.of(context)!.whatsapp_optin_not_now,
-                    isProcessing: state.isWhatsappOptinProcessing,
-                    onApprove: () {
-                      // Record the exact text shown to the client as the consent.
-                      context
-                          .read<HomeBloc>()
-                          .add(HomeEvent.sendWhatsappOptinEvent(context: context, source: _whatsappOptinSource, consentText: body));
-                    },
-                    onNotNow: () => Navigator.of(dialogContext).pop(),
-                  );
-                },
-              ),
+                  listenWhen: (previous, current) => previous.whatsappOption != current.whatsappOption,
+                  listener: (context, state) {
+                    if (state.whatsappOption) {
+                      Navigator.of(dialogContext).pop();
+                    }
+                  },
+                  builder: (context, state) {
+                    final String title = state.whatsappOptionPopupTitle.isNotEmpty
+                        ? state.whatsappOptionPopupTitle
+                        : AppLocalizations.of(context)!.whatsapp_option_title;
+                    final String body =
+                        state.whatsappOptionPopupText.isNotEmpty ? state.whatsappOptionPopupText : AppLocalizations.of(context)!.whatsapp_option_body;
+                    return WhatsappOptionDialog(
+                        directionality: state.language,
+                        title: title,
+                        body: body,
+                        approveTitle: AppLocalizations.of(context)!.whatsapp_option_approve,
+                        notNowTitle: AppLocalizations.of(context)!.whatsapp_option_not_now,
+                        isProcessing: state.isWhatsappOptionProcessing,
+                        onApprove: () {
+                          context
+                              .read<HomeBloc>()
+                              .add(HomeEvent.sendWhatsappOptionEvent(context: context, source: _whatsappOptionSource, consentText: body));
+                        },
+                        onNotNow: () => Navigator.of(dialogContext).pop());
+                  }),
             ));
   }
 }

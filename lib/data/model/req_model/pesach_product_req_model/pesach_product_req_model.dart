@@ -5,9 +5,9 @@ part 'pesach_product_req_model.freezed.dart';
 
 part 'pesach_product_req_model.g.dart';
 
-PesachProductReqModel PesachProductReqModelFromJson(String str) => PesachProductReqModel.fromJson(json.decode(str));
+PesachProductReqModel pesachProductReqModelFromJson(String str) => PesachProductReqModel.fromJson(json.decode(str));
 
-String PesachProductReqModelToJson(PesachProductReqModel data) => json.encode(data.toJson());
+String pesachProductReqModelToJson(PesachProductReqModel data) => json.encode(data.toJson());
 
 @freezed
 class PesachProductReqModel with _$PesachProductReqModel {

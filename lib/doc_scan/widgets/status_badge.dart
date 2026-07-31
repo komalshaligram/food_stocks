@@ -80,7 +80,7 @@ class _StatusBadgeState extends State<StatusBadge>
         final badge = Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: color.withOpacity(opacity),
+            color: color.withValues(alpha: opacity),
             borderRadius: BorderRadius.circular(20),
           ),
           // mainAxisSize.min + FlexFit.loose: כשאין רוחב סופי (Row חיצוני בלי Expanded),

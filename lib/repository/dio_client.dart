@@ -13,24 +13,19 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
-import '../../ui/widget/no_internet_dialog.dart';
+import '../ui/widget/dialogs/no_internet_dialog.dart';
 import '../data/model/res_model/refresh_token/refresh_token_model.dart';
 import '../data/services/locale_provider.dart';
 import '../ui/utils/constants/app_urls.dart';
 
 bool _isLoggingOut = false;
 
-Future<void> forceLogoutToConnect({
-  String? snackbarMessage,
-  SnackBarType snackbarType = SnackBarType.failure,
-}) async {
+Future<void> forceLogoutToConnect({String? snackbarMessage, SnackBarType snackbarType = SnackBarType.failure}) async {
   if (_isLoggingOut) return;
   _isLoggingOut = true;
 
   try {
-    final preferences = SharedPreferencesHelper(
-      prefs: await SharedPreferences.getInstance(),
-    );
+    final preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
     await preferences.setUserLoggedIn();
 
     final navContext = navigatorKey.currentContext;
@@ -42,19 +37,12 @@ Future<void> forceLogoutToConnect({
       final nav = navigatorKey.currentState;
       if (nav == null) return;
 
-      nav.pushNamedAndRemoveUntil(
-        RouteDefine.connectScreen.name,
-        (_) => false,
-      );
+      nav.pushNamedAndRemoveUntil(RouteDefine.connectScreen.name, (_) => false);
 
       if (snackbarMessage != null) {
         final context = navigatorKey.currentContext;
         if (context != null && context.mounted) {
-          CustomSnackBar.showSnackBar(
-            context: context,
-            title: snackbarMessage,
-            type: snackbarType,
-          );
+          CustomSnackBar.showSnackBar(context: context, title: snackbarMessage, type: snackbarType);
         }
       }
     });
@@ -97,22 +85,14 @@ class DioClient {
             return handler.next(e);
           }));
 
-  /// Content filters on "kosher" phones run as a local VPN, so the active transport
-  /// reports as `vpn` — which connectivity_plus checks *before* `mobile`. Gating on an
-  /// allow-list of transports therefore blocked those users on cellular data before any
-  /// request was sent. Block only when there is no transport at all.
   Future<bool> _hasNetwork() async => await Connectivity().checkConnectivity() != ConnectivityResult.none;
 
   Future post(String path, {Object? data, Map<String, dynamic>? queryParameters, Options? options}) async {
     SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-    // final connectivityResult = await (Connectivity().checkConnectivity());
     preferences.setApiUrl(apiUrl: path);
     printData('URL = ${AppUrlEndPoints.baseUrl}$path');
     printData('token = ${preferences.getAuthToken()}');
     printData('req:${data.toString()}');
-    // if (connectivityResult == ConnectivityResult.mobile ||
-    //     connectivityResult == ConnectivityResult.wifi ||
-    //     connectivityResult == ConnectivityResult.ethernet) {
     if (await _hasNetwork()) {
       try {
         Options requestOptions = options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'});
@@ -132,17 +112,15 @@ class DioClient {
       }
     } else {
       showDialog(
-        context: _context,
-        builder: (context) => NoInternetDialog(positiveOnTap: () {
-          Navigator.pop(context);
-        }),
-      );
+          context: _context,
+          builder: (context) => NoInternetDialog(positiveOnTap: () {
+                Navigator.pop(context);
+              }));
       throw Exception('Network Error');
     }
   }
 
   tokenExpirationWork(String path, Object? data, SharedPreferencesHelper preferencesHelper, String type, Map<String, dynamic> queryParams) async {
-    ///save data of expire api
     preferencesHelper.setApiUrl(apiUrl: path);
     preferencesHelper.setReqPram(reqPram: jsonEncode(data));
 
@@ -191,10 +169,7 @@ class DioClient {
       printData('Token Expired = ${response.data}');
       final navContext = navigatorKey.currentContext ?? _context;
       final message = navContext.mounted ? AppLocalizations.of(navContext)!.logged_out_successfully : '';
-      await forceLogoutToConnect(
-        snackbarMessage: message.isNotEmpty ? message : null,
-        snackbarType: SnackBarType.success,
-      );
+      await forceLogoutToConnect(snackbarMessage: message.isNotEmpty ? message : null, snackbarType: SnackBarType.success);
     }
   }
 
@@ -206,10 +181,6 @@ class DioClient {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
       printData('URL = ${AppUrlEndPoints.baseUrl}$path');
       printData('token = ${preferences.getAuthToken()}');
-      // final connectivityResult = await (Connectivity().checkConnectivity());
-      // if (connectivityResult == ConnectivityResult.mobile ||
-      //     connectivityResult == ConnectivityResult.wifi ||
-      //     connectivityResult == ConnectivityResult.ethernet) {
       if (await _hasNetwork()) {
         try {
           final response = await _dio.get(path,
@@ -229,11 +200,10 @@ class DioClient {
         }
       } else {
         showDialog(
-          context: _context,
-          builder: (context) => NoInternetDialog(positiveOnTap: () {
-            Navigator.pop(context);
-          }),
-        );
+            context: _context,
+            builder: (context) => NoInternetDialog(positiveOnTap: () {
+                  Navigator.pop(context);
+                }));
         throw Exception("Network Error");
       }
     } on DioException catch (e) {
@@ -254,12 +224,7 @@ class DioClient {
   // PUT
   Future put({required String path, Map<String, dynamic>? data, Map<String, dynamic>? query, Options? options}) async {
     try {
-      // final connectivityResult = await (Connectivity().checkConnectivity());
-      // if (connectivityResult == ConnectivityResult.mobile ||
-      //     connectivityResult == ConnectivityResult.wifi ||
-      //     connectivityResult == ConnectivityResult.ethernet) {
       if (await _hasNetwork()) {
-
         SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         try {
           printData('URL = ${AppUrlEndPoints.baseUrl}$path');
@@ -268,10 +233,7 @@ class DioClient {
           final response = await _dio.put(path,
               data: data,
               queryParameters: query,
-              options: options ??
-                  Options(
-                    headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
-                  ));
+              options: options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
           printData('$path: res:${response.data.toString()}');
           return response.data;
         } on DioException catch (e) {
@@ -286,11 +248,10 @@ class DioClient {
       } else {
         printData('error');
         showDialog(
-          context: _context,
-          builder: (context) => NoInternetDialog(positiveOnTap: () {
-            Navigator.pop(context);
-          }),
-        );
+            context: _context,
+            builder: (context) => NoInternetDialog(positiveOnTap: () {
+                  Navigator.pop(context);
+                }));
         throw Exception("Network Error");
       }
     } on DioException catch (e) {
@@ -301,10 +262,6 @@ class DioClient {
   //delete
   Future delete({required String path, Map<String, dynamic>? data, Map<String, dynamic>? query, Options? options}) async {
     try {
-      // final connectivityResult = await (Connectivity().checkConnectivity());
-      // if (connectivityResult == ConnectivityResult.mobile ||
-      //     connectivityResult == ConnectivityResult.wifi ||
-      //     connectivityResult == ConnectivityResult.ethernet) {
       if (await _hasNetwork()) {
         SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         try {
@@ -312,11 +269,7 @@ class DioClient {
           printData('token = ${preferences.getAuthToken()}');
           printData('req:${data.toString()}');
           final response = await _dio.delete(path,
-              data: data,
-              options: options ??
-                  Options(
-                    headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
-                  ));
+              data: data, options: options ?? Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
           return response.data;
         } on DioException catch (e) {
           if (e.response?.statusCode == AppConstants.code_401 && path != AppUrlEndPoints.refreshTokenUrl) {
@@ -330,11 +283,10 @@ class DioClient {
       } else {
         printData('error');
         showDialog(
-          context: _context,
-          builder: (context) => NoInternetDialog(positiveOnTap: () {
-            Navigator.pop(context);
-          }),
-        );
+            context: _context,
+            builder: (context) => NoInternetDialog(positiveOnTap: () {
+                  Navigator.pop(context);
+                }));
         throw Exception("Network Error");
       }
     } on DioException catch (e) {
@@ -387,9 +339,7 @@ ErrorEntity _createErrorEntity(DioException error, {BuildContext? context}) {
           return ErrorEntity(code: 500, message: AppLocalizations.of(context)!.server_internal_error);
 
         case 501:
-          forceLogoutToConnect(
-            snackbarMessage: AppLocalizations.of(context!)!.account_not_approve,
-          );
+          forceLogoutToConnect(snackbarMessage: AppLocalizations.of(context!)!.account_not_approve);
           return ErrorEntity(code: 501, message: AppLocalizations.of(context)!.account_not_approve);
       }
       CustomSnackBar.showSnackBar(context: context!, title: AppLocalizations.of(context)!.server_bad_response, type: SnackBarType.failure);

@@ -10,7 +10,7 @@ import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
-import '../widget/common_alert_dialog.dart';
+import '../widget/dialogs/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/custom_form_field_widget.dart';

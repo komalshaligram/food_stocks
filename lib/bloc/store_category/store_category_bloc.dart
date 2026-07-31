@@ -21,7 +21,7 @@ import '../../data/model/product_supplier_model/product_supplier_model.dart';
 import '../../data/model/req_model/get_sub_categories_product/get_sub_categories_product_req_model.dart';
 import '../../data/model/req_model/global_search_req_model/global_search_req_model.dart';
 import '../../data/model/req_model/insert_cart_req_model/insert_cart_req_model.dart'
-as InsertCartModel;
+as insert_cart_model;
 import '../../data/model/req_model/product_details_req_model/product_details_req_model.dart';
 import '../../data/model/req_model/update_cart/update_cart_req_model.dart';
 import '../../data/model/res_model/account_permission/account_permission_res_model.dart';
@@ -944,9 +944,9 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         } else {
           try {
             emit(state.copyWith(isLoading: true));
-            InsertCartModel.InsertCartReqModel insertCartReqModel =
-            InsertCartModel.InsertCartReqModel(products: [
-              InsertCartModel.Product(
+            insert_cart_model.InsertCartReqModel insertCartReqModel =
+            insert_cart_model.InsertCartReqModel(products: [
+              insert_cart_model.Product(
                 productId: state
                     .productStockList[state.planoGramUpdateIndex]
                 [state.productStockUpdateIndex]
@@ -1716,10 +1716,10 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             } catch (_) {}
           } else {
             try {
-              InsertCartModel.InsertCartReqModel insertCartReqModel =
-              InsertCartModel.InsertCartReqModel(
+              insert_cart_model.InsertCartReqModel insertCartReqModel =
+              insert_cart_model.InsertCartReqModel(
                 products: [
-                  InsertCartModel.Product(
+                  insert_cart_model.Product(
                     productId: state
                         .productStockList[event.productListIndex]
                     [event.productStockUpdateIndex]

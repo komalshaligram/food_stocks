@@ -54,17 +54,17 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
               width: 200,
               height: 280,
               decoration: BoxDecoration(
-                color: AppColors.accentGreen.withOpacity(0.08),
+                color: AppColors.accentGreen.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: AppColors.accentGreen.withOpacity(0.3),
+                  color: AppColors.accentGreen.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
               child: Icon(
                 Icons.document_scanner,
                 size: 80,
-                color: AppColors.accentGreen.withOpacity(0.5),
+                color: AppColors.accentGreen.withValues(alpha: 0.5),
               ),
             ),
             const SizedBox(height: 24),
@@ -147,7 +147,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

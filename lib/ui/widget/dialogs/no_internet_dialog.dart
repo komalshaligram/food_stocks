@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+import '../../utils/constants/app_colors.dart';
+import '../../utils/constants/app_constants.dart';
+import 'package:food_stock/l10n/generated/app_localizations.dart';
+import '../../utils/constants/app_styles.dart';
+
+class NoInternetDialog extends StatelessWidget {
+  final void Function()? positiveOnTap;
+  const NoInternetDialog({super.key, this.positiveOnTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        backgroundColor: AppColors.pageColor,
+        surfaceTintColor: AppColors.whiteColor,
+        contentPadding: const EdgeInsets.all(AppConstants.padding_20),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        title: Icon(Icons.wifi_off, size: 40, color: AppColors.mainColor),
+        content: Padding(
+          padding: const EdgeInsets.only(bottom: AppConstants.padding_5),
+          child: Text(AppLocalizations.of(context)!.no_internet_connection,
+              textAlign: TextAlign.center,
+              style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont, fontWeight: FontWeight.w500)),
+        ),
+        actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_20, left: AppConstants.padding_20),
+        actions: [
+          InkWell(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            onTap: positiveOnTap,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(AppConstants.padding_10),
+                alignment: Alignment.center,
+                width: AppConstants.containerHeight_80,
+                decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha: 0.9), borderRadius: BorderRadius.circular(8.0)),
+                child: Text(AppLocalizations.of(context)!.ok,
+                    style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont)),
+              ),
+            ),
+          )
+        ]);
+  }
+}

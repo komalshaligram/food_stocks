@@ -120,7 +120,7 @@ String getLocalizedReason({required String apiReason, required BuildContext cont
     'Expiration date issue': l10n.expiration_date_issue,
     'בעיית תאריך תפוגה': l10n.expiration_date_issue,
     'Wrong product received': l10n.wrong_product_received,
-    'התקבל מוצר שגוי': l10n.wrong_product_received,
+    'התקבל מוצר שגוי': l10n.wrong_product_received
   };
   return map[apiReason.trim()] ?? apiReason;
 }
@@ -162,10 +162,9 @@ Widget isPesachLabelShow(bool isPesach, BuildContext context) {
     return Container(
         padding: const EdgeInsets.only(left: 5, right: 5),
         decoration: BoxDecoration(
-          color: AppColors.pesachBGColor,
-          border: Border.all(color: AppColors.pesachBGColor),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
+            color: AppColors.pesachBGColor,
+            border: Border.all(color: AppColors.pesachBGColor),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Text(AppLocalizations.of(context)!.pesach, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13)));
   } else {
     return 0.height;
@@ -179,8 +178,6 @@ class CustomSnackBar {
   static void showSnackBar({required BuildContext context, required String title, required SnackBarType type}) {
     if (!context.mounted) return;
 
-    // Defer so we never push a Flushbar route while Navigator is locked
-    // (e.g. another Flushbar/dialog is popping) — avoids Crashlytics asserts.
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!context.mounted) return;
       try {
@@ -192,21 +189,14 @@ class CustomSnackBar {
 
       if (!context.mounted) return;
       final flushbar = Flushbar(
-        backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withValues(alpha: 0.85) : AppColors.redColor.withValues(alpha: 0.85),
-        messageText: Text(
-          title,
-          style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.smallFont,
-            color: AppColors.whiteColor,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.all(20),
-        borderRadius: BorderRadius.circular(15),
-        duration: const Duration(seconds: 3),
-        flushbarPosition: FlushbarPosition.TOP,
-      );
+          backgroundColor: type == SnackBarType.success ? AppColors.mainColor.withValues(alpha: 0.85) : AppColors.redColor.withValues(alpha: 0.85),
+          messageText: Text(title,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
+          padding: const EdgeInsets.all(AppConstants.padding_10),
+          margin: const EdgeInsets.all(AppConstants.padding_20),
+          borderRadius: BorderRadius.circular(AppConstants.radius_15),
+          duration: const Duration(seconds: 3),
+          flushbarPosition: FlushbarPosition.TOP);
       _activeFlushbar = flushbar;
       try {
         await flushbar.show(context);
@@ -231,9 +221,6 @@ int otpCooldownSeconds(int sendCount) {
   return 180;
 }
 
-/// True when [storeVersion] is strictly newer than [currentVersion].
-/// Trims / strips non-numeric noise so StoreVersionChecker false negatives
-/// (hidden chars, parse failures) do not block the update dialog.
 bool isStoreVersionNewer(String currentVersion, String storeVersion) {
   List<int> parse(String raw) {
     final cleaned = raw.trim().replaceAll(RegExp(r'[^0-9.]'), '');
@@ -288,7 +275,6 @@ Future<void> _waitForUpdateCheckSlot() async {
   }
 }
 
-/// Runs the update check once at app startup (splash / login / before home).
 Future<void> scheduleAppUpdateCheckIfNeeded() async {
   final preferences = SharedPreferencesHelper(
     prefs: await SharedPreferences.getInstance(),
@@ -302,17 +288,10 @@ Future<void> scheduleAppUpdateCheckIfNeeded() async {
   );
 }
 
-/// Waits for the route transition/layout to finish, then checks for updates.
-/// Use on login and home screens so the dialog is not delayed until user input.
 Future<void> scheduleScreenUpdateCheck(BuildContext? context) async {
   await _waitForNavigatorReady();
-  final preferences = SharedPreferencesHelper(
-    prefs: await SharedPreferences.getInstance(),
-  );
-  await checkAndShowAppUpdateIfNeeded(
-    context: _resolveUpdateDialogContext(context),
-    language: preferences.getAppLanguage(),
-  );
+  final preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+  await checkAndShowAppUpdateIfNeeded(context: _resolveUpdateDialogContext(context), language: preferences.getAppLanguage());
   await _flushPendingUpdateDialog();
 }
 
@@ -331,29 +310,17 @@ Future<void> _flushPendingUpdateDialog() async {
     return;
   }
 
-  final shown = await _presentUpdateDialog(
-    context: null,
-    directionality: language,
-    storeUrl: storeUrl,
-  );
+  final shown = await _presentUpdateDialog(context: null, directionality: language, storeUrl: storeUrl);
   if (shown) {
     _pendingUpdateLanguage = null;
     _pendingUpdateStoreUrl = null;
   }
 }
 
-void _showUpdateDialogOrQueue({
-  required BuildContext? context,
-  required String language,
-  required String storeUrl,
-}) {
+void _showUpdateDialogOrQueue({required BuildContext? context, required String language, required String storeUrl}) {
   if (_updateDialogShownInSession) return;
   _queuePendingUpdateDialog(language, storeUrl);
-  unawaited(_presentUpdateDialog(
-    context: context,
-    directionality: language,
-    storeUrl: storeUrl,
-  ).then((shown) {
+  unawaited(_presentUpdateDialog(context: context, directionality: language, storeUrl: storeUrl).then((shown) {
     if (shown) {
       _pendingUpdateLanguage = null;
       _pendingUpdateStoreUrl = null;
@@ -361,14 +328,7 @@ void _showUpdateDialogOrQueue({
   }));
 }
 
-/// Shows the force-update dialog safely after the current frame so it does
-/// not race Flushbar / other Navigator pops (`_debugLocked` asserts).
-/// Only one dialog is shown per app session.
-Future<bool> _presentUpdateDialog({
-  required BuildContext? context,
-  required String directionality,
-  required String storeUrl,
-}) async {
+Future<bool> _presentUpdateDialog({required BuildContext? context, required String directionality, required String storeUrl}) async {
   if (_updateDialogShownInSession) return true;
   if (_updateDialogShowing) return false;
 
@@ -388,50 +348,35 @@ Future<bool> _presentUpdateDialog({
     try {
       _updateDialogShowing = true;
       showDialog<void>(
-        barrierDismissible: false,
-        context: dialogContext,
-        useRootNavigator: true,
-        builder: (dialogContext) {
-          return PopScope(
-            canPop: false,
-            child: AlertDialog(
-              title: Text(
-                AppLocalizations.of(dialogContext)!.new_version_app_update,
-                style: AppStyles.rkRegularTextStyle(
-                  color: AppColors.blackColor,
-                  size: AppConstants.mediumFont,
-                ),
-              ),
-              actions: [
-                Align(
-                  alignment: Alignment.center,
-                  child: GestureDetector(
-                    onTap: () {
-                      _launchUrl(storeUrl);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+          barrierDismissible: false,
+          context: dialogContext,
+          useRootNavigator: true,
+          builder: (dialogContext) {
+            return PopScope(
+              canPop: false,
+              child: AlertDialog(
+                  title: Text(AppLocalizations.of(dialogContext)!.new_version_app_update,
+                      style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.mediumFont)),
+                  actions: [
+                    Align(
                       alignment: Alignment.center,
-                      width: AppConstants.containerHeight_80,
-                      decoration: BoxDecoration(
-                        gradient: AppColors.appMainGradientColor,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Text(
-                        AppLocalizations.of(dialogContext)!.update,
-                        style: AppStyles.rkRegularTextStyle(
-                          color: AppColors.whiteColor,
-                          size: AppConstants.font_14,
+                      child: GestureDetector(
+                        onTap: () {
+                          _launchUrl(storeUrl);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                          alignment: Alignment.center,
+                          width: AppConstants.containerHeight_80,
+                          decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(8.0)),
+                          child: Text(AppLocalizations.of(dialogContext)!.update,
+                              style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.font_14)),
                         ),
                       ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
-      ).whenComplete(() {
+                    )
+                  ]),
+            );
+          }).whenComplete(() {
         _updateDialogShowing = false;
       });
       _updateDialogShownInSession = true;
@@ -447,24 +392,17 @@ Future<bool> _presentUpdateDialog({
 }
 
 void customShowUpdateDialog(BuildContext context, String directionality, String storeUrl) {
-  _showUpdateDialogOrQueue(
-    context: context,
-    language: directionality,
-    storeUrl: storeUrl,
-  );
+  _showUpdateDialogOrQueue(context: context, language: directionality, storeUrl: storeUrl);
 }
 
-/// Uses store versions from [StoreVersionChecker] but ignores its flaky
-/// [canUpdate] flag; opens the dialog when store > installed.
-void showUpdateDialogIfStoreNewer({
-  required BuildContext? context,
-  required String language,
-  required String currentVersion,
-  required String? newVersion,
-  required String? appUrl,
-  required String androidFallbackUrl,
-  required String iosFallbackUrl,
-}) {
+void showUpdateDialogIfStoreNewer(
+    {required BuildContext? context,
+    required String language,
+    required String currentVersion,
+    required String? newVersion,
+    required String? appUrl,
+    required String androidFallbackUrl,
+    required String iosFallbackUrl}) {
   final storeVersion = newVersion?.trim();
   if (storeVersion == null || storeVersion.isEmpty) {
     printData('Update dialog skipped: empty store version');
@@ -477,17 +415,9 @@ void showUpdateDialogIfStoreNewer({
   if (!shouldUpdate) return;
 
   if (Platform.isAndroid) {
-    _showUpdateDialogOrQueue(
-      context: context,
-      language: language,
-      storeUrl: appUrl ?? androidFallbackUrl,
-    );
+    _showUpdateDialogOrQueue(context: context, language: language, storeUrl: appUrl ?? androidFallbackUrl);
   } else if (Platform.isIOS) {
-    _showUpdateDialogOrQueue(
-      context: context,
-      language: language,
-      storeUrl: appUrl ?? iosFallbackUrl,
-    );
+    _showUpdateDialogOrQueue(context: context, language: language, storeUrl: appUrl ?? iosFallbackUrl);
   }
 }
 
@@ -495,30 +425,20 @@ const String kAndroidPlayStorePackageId = 'com.foodstock.dev';
 const String kAndroidPlayStoreUrl = 'https://play.google.com/store/apps/details?id=$kAndroidPlayStorePackageId';
 const String kIosAppStoreUrl = 'https://apps.apple.com/ua/app/tavili/id6468264054';
 
-/// Scrapes the public Play Store page when [StoreVersionChecker] returns no
-/// version (common on production devices / HTML changes).
 Future<String?> fetchPlayStoreVersionName(String packageId) async {
   const locales = ['en-US', 'en-GB', 'he-IL'];
   final patterns = [
     RegExp(r'\[\[\["([0-9]+\.[0-9]+(?:\.[0-9]+)?)"\]\]'),
-    RegExp(
-      r'Current Version</div>.*?>([0-9]+\.[0-9]+(?:\.[0-9]+)?)<',
-      dotAll: true,
-    ),
-    RegExp(r'"softwareVersion"\s*:\s*"([0-9]+\.[0-9]+(?:\.[0-9]+)?)"'),
+    RegExp(r'Current Version</div>.*?>([0-9]+\.[0-9]+(?:\.[0-9]+)?)<', dotAll: true),
+    RegExp(r'"softwareVersion"\s*:\s*"([0-9]+\.[0-9]+(?:\.[0-9]+)?)"')
   ];
 
   for (final locale in locales) {
     try {
-      final uri = Uri.parse(
-        'https://play.google.com/store/apps/details?id=$packageId&hl=$locale',
-      );
-      final response = await http.get(
-        uri,
-        headers: const {
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
-        },
-      ).timeout(const Duration(seconds: 12));
+      final uri = Uri.parse('https://play.google.com/store/apps/details?id=$packageId&hl=$locale');
+      final response = await http.get(uri, headers: const {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36'
+      }).timeout(const Duration(seconds: 12));
       if (response.statusCode != 200) continue;
 
       for (final pattern in patterns) {
@@ -535,12 +455,7 @@ Future<String?> fetchPlayStoreVersionName(String packageId) async {
   return null;
 }
 
-/// Android: Play In-App Update API first (Play installs only), then store
-/// checker + scrape fallback. iOS: [StoreVersionChecker] with custom compare.
-Future<void> checkAndShowAppUpdateIfNeeded({
-  BuildContext? context,
-  required String language,
-}) async {
+Future<void> checkAndShowAppUpdateIfNeeded({BuildContext? context, required String language}) async {
   if (_updateDialogShownInSession) {
     printData('Update check skipped: dialog already shown');
     return;
@@ -558,8 +473,6 @@ Future<void> checkAndShowAppUpdateIfNeeded({
     if (Platform.isAndroid) {
       final packageInfo = await PackageInfo.fromPlatform();
       final installedVersion = packageInfo.version;
-      // Play Core In-App Update only works for Play Store installs.
-      // Skip it for Drive / sideloaded APKs to avoid native failures.
       final installer = packageInfo.installerStore?.toLowerCase() ?? '';
       final fromPlayStore = installer.contains('vending') || installer.contains('google') || installer == 'com.android.vending';
 
@@ -568,11 +481,7 @@ Future<void> checkAndShowAppUpdateIfNeeded({
           final updateInfo = await InAppUpdate.checkForUpdate();
           printData('InAppUpdate availability: ${updateInfo.updateAvailability}');
           if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-            _showUpdateDialogOrQueue(
-              context: context,
-              language: language,
-              storeUrl: kAndroidPlayStoreUrl,
-            );
+            _showUpdateDialogOrQueue(context: context, language: language, storeUrl: kAndroidPlayStoreUrl);
             return;
           }
         } catch (e) {
@@ -594,27 +503,25 @@ Future<void> checkAndShowAppUpdateIfNeeded({
         }
 
         showUpdateDialogIfStoreNewer(
-          context: context,
-          language: language,
-          currentVersion: value.currentVersion.isNotEmpty ? value.currentVersion : installedVersion,
-          newVersion: storeVersion,
-          appUrl: value.appURL,
-          androidFallbackUrl: kAndroidPlayStoreUrl,
-          iosFallbackUrl: kIosAppStoreUrl,
-        );
+            context: context,
+            language: language,
+            currentVersion: value.currentVersion.isNotEmpty ? value.currentVersion : installedVersion,
+            newVersion: storeVersion,
+            appUrl: value.appURL,
+            androidFallbackUrl: kAndroidPlayStoreUrl,
+            iosFallbackUrl: kIosAppStoreUrl);
       } catch (e) {
         printData('Android store version check failed: $e');
         final scraped = await fetchPlayStoreVersionName(kAndroidPlayStorePackageId);
         if (scraped == null) return;
         showUpdateDialogIfStoreNewer(
-          context: context,
-          language: language,
-          currentVersion: installedVersion,
-          newVersion: scraped,
-          appUrl: kAndroidPlayStoreUrl,
-          androidFallbackUrl: kAndroidPlayStoreUrl,
-          iosFallbackUrl: kIosAppStoreUrl,
-        );
+            context: context,
+            language: language,
+            currentVersion: installedVersion,
+            newVersion: scraped,
+            appUrl: kAndroidPlayStoreUrl,
+            androidFallbackUrl: kAndroidPlayStoreUrl,
+            iosFallbackUrl: kIosAppStoreUrl);
       }
       return;
     }
@@ -623,14 +530,13 @@ Future<void> checkAndShowAppUpdateIfNeeded({
       final checker = StoreVersionChecker();
       final value = await checker.checkUpdate();
       showUpdateDialogIfStoreNewer(
-        context: context,
-        language: language,
-        currentVersion: value.currentVersion,
-        newVersion: value.newVersion,
-        appUrl: value.appURL,
-        androidFallbackUrl: kAndroidPlayStoreUrl,
-        iosFallbackUrl: kIosAppStoreUrl,
-      );
+          context: context,
+          language: language,
+          currentVersion: value.currentVersion,
+          newVersion: value.newVersion,
+          appUrl: value.appURL,
+          androidFallbackUrl: kAndroidPlayStoreUrl,
+          iosFallbackUrl: kIosAppStoreUrl);
     }
   } catch (e) {
     printData('checkAndShowAppUpdateIfNeeded failed: $e');
@@ -711,11 +617,8 @@ bool isValidIsraeliID(String id) {
 
 Future<CroppedFile?> cropImage(
     {required String path, CropStyle shape = CropStyle.rectangle, int quality = 100, bool lockAspectRatio = true, bool? isLogoCrop = false}) async {
-  return await ImageCropper().cropImage(
-    sourcePath: path,
-    compressQuality: quality,
-    uiSettings: [
-      AndroidUiSettings(
+  return await ImageCropper().cropImage(sourcePath: path, compressQuality: quality, uiSettings: [
+    AndroidUiSettings(
         activeControlsWidgetColor: AppColors.mainColor,
         cropFrameColor: AppColors.greyColor,
         initAspectRatio: isLogoCrop ?? false ? CropAspectRatioPreset.ratio16x9 : CropAspectRatioPreset.square,
@@ -724,9 +627,8 @@ Future<CroppedFile?> cropImage(
         lockAspectRatio: false,
         toolbarColor: AppColors.blackColor,
         toolbarTitle: AppStrings.cropImageString,
-        toolbarWidgetColor: AppColors.whiteColor,
-      ),
-      IOSUiSettings(
+        toolbarWidgetColor: AppColors.whiteColor),
+    IOSUiSettings(
         title: AppStrings.cropImageString,
         aspectRatioLockEnabled: lockAspectRatio,
         hidesNavigationBar: true,
@@ -736,10 +638,8 @@ Future<CroppedFile?> cropImage(
         aspectRatioPickerButtonHidden: false,
         aspectRatioLockDimensionSwapEnabled: true,
         cancelButtonTitle: AppStrings.cancelString,
-        doneButtonTitle: AppStrings.doneString,
-      ),
-    ],
-  );
+        doneButtonTitle: AppStrings.doneString)
+  ]);
 }
 
 String getFileSizeString({required int bytes, int decimals = 0}) {
@@ -784,8 +684,6 @@ Future<XFile?> openImagePicker(ImageSource source) async {
 }
 
 Future<bool> ensureBarcodeScannerCameraPermission(BuildContext context) async {
-  // iOS: let the barcode scanner plugin request camera via AVCaptureDevice.requestAccess,
-  // which shows the native permission dialog (permission_handler may not prompt on iOS).
   if (Platform.isIOS) {
     return true;
   }
@@ -921,12 +819,10 @@ double bottleDepositCalculationWithVat({required double deposit, required double
   return result;
 }
 
-/// Sum of product [totalVatAmount] from cart API.
 double sumProductTotalVatAmounts(Iterable<double?> productTotalVatAmounts) {
   return productTotalVatAmounts.fold<double>(0, (sum, amount) => sum + (amount ?? 0));
 }
 
-/// Grand total: sum(totalVatAmount) + bottle deposit + 18% on deposit when [bottleQuantities] > 0.
 double calculateBasketGrandTotal(
     {required double productsTotalWithVat, required double bottleTax, required double vatPercentage, required int bottleQuantities}) {
   if (bottleQuantities <= 0) {
@@ -935,23 +831,6 @@ double calculateBasketGrandTotal(
 
   return productsTotalWithVat + bottleDepositCalculationWithVat(deposit: bottleTax, qty: bottleQuantities.toDouble(), vatPercentage: vatPercentage);
 }
-
-// double bottleDepositCalculationWithVatRefund({required double deposit, required double qty, double vatPercentage = 1, double? refund}) {
-//   double depositWithVat = (qty * deposit) + ((qty * deposit * vatPercentage) / 100);
-//
-//   if (refund != null) {
-//     if (depositWithVat <= -refund) {
-//       return 0;
-//     } else {
-//       if (depositWithVat <= -refund) {
-//         return depositWithVat + refund;
-//       } else {
-//         return depositWithVat + refund;
-//       }
-//     }
-//   }
-//   return depositWithVat;
-// }
 
 String formatInvoiceDate(String date) {
   if (date.isEmpty) return '';
@@ -964,50 +843,42 @@ String formatInvoiceDate(String date) {
 Widget getPaymentStatusWidget(String status, BuildContext context) => Container(
       padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppConstants.radius_50),
-        color: status == AppStrings.openText
-            ? AppColors.statusOpenColor
-            : status == AppStrings.closedText
-                ? AppColors.statusCloseColor
-                : status == AppStrings.inProgressText
-                    ? AppColors.statusInProgressColor
-                    : AppColors.statusPartiallyClosedColor,
-      ),
+          borderRadius: BorderRadius.circular(AppConstants.radius_50),
+          color: status == AppStrings.openText
+              ? AppColors.statusOpenColor
+              : status == AppStrings.closedText
+                  ? AppColors.statusCloseColor
+                  : status == AppStrings.inProgressText
+                      ? AppColors.statusInProgressColor
+                      : AppColors.statusPartiallyClosedColor),
       child: Text(
-        status == AppStrings.openText
-            ? AppLocalizations.of(context)!.invoice_open
-            : status == AppStrings.closedText
-                ? AppLocalizations.of(context)!.invoice_close
-                : status == AppStrings.inProgressText
-                    ? AppLocalizations.of(context)!.in_progress_text
-                    : AppLocalizations.of(context)!.partially_closed_text,
-        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
-      ),
+          status == AppStrings.openText
+              ? AppLocalizations.of(context)!.invoice_open
+              : status == AppStrings.closedText
+                  ? AppLocalizations.of(context)!.invoice_close
+                  : status == AppStrings.inProgressText
+                      ? AppLocalizations.of(context)!.in_progress_text
+                      : AppLocalizations.of(context)!.partially_closed_text,
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.whiteColor, fontWeight: FontWeight.w400)),
     );
 
-Widget titleText(BuildContext context, String title) => Text(
-      title,
-      style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
+Widget titleText(BuildContext context, String title) => Text(title,
+    style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold),
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis);
 
-Widget subTitleValueText(BuildContext context, String subTitle) => Text(
-      subTitle,
-      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.normal),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-    );
+Widget subTitleValueText(BuildContext context, String subTitle) => Text(subTitle,
+    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.normal),
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis);
 
 Widget titleGreenText(BuildContext context, String title, ltr) => Directionality(
       textDirection: ltr,
-      child: Text(
-        title,
-        textAlign: TextAlign.center,
-        style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.bold),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
+      child: Text(title,
+          textAlign: TextAlign.center,
+          style: AppStyles.rkBoldTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.bold),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis),
     );
 
 Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
@@ -1019,9 +890,7 @@ Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
 
       if (cartResponse.status == AppConstants.code_200) {
         final items = cartResponse.data?.data ?? [];
-        return {
-          for (var item in items) item.id ?? '': item.totalQuantity ?? 0,
-        };
+        return {for (var item in items) item.id ?? '': item.totalQuantity ?? 0};
       }
     }
   } catch (_) {}
@@ -1029,15 +898,10 @@ Future<Map<String, int>> fetchCartQuantities(BuildContext context) async {
 }
 
 Widget noDataWidget(String title) => Center(
-      child: Text(title, textAlign: TextAlign.center, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
-    );
+    child: Text(title, textAlign: TextAlign.center, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)));
 
-Widget noDataWithEmpty(String title, BuildContext context) => Container(
-      height: getScreenHeight(context) - 80,
-      width: getScreenWidth(context),
-      alignment: Alignment.center,
-      child: noDataWidget(title),
-    );
+Widget noDataWithEmpty(String title, BuildContext context) =>
+    Container(height: getScreenHeight(context) - 80, width: getScreenWidth(context), alignment: Alignment.center, child: noDataWidget(title));
 
 Widget cartImageWidget() => Container(
       height: 50,
@@ -1048,67 +912,46 @@ Widget cartImageWidget() => Container(
           gradient: AppColors.appMainGradientColor,
           borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
       child: Center(
-        child: SvgPicture.asset(
-          AppImagePath.cart,
-          height: 26,
-          width: 26,
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn),
-        ),
+        child: SvgPicture.asset(AppImagePath.cart,
+            height: 26, width: 26, fit: BoxFit.cover, colorFilter: ColorFilter.mode(AppColors.whiteColor, BlendMode.srcIn)),
       ),
     );
 
-void inProgressSnackBarWidget(BuildContext context) => CustomSnackBar.showSnackBar(
-      context: context,
-      title: AppStrings.getLocalizedStrings('Oops! in progress', context),
-      type: SnackBarType.success,
-    );
+void inProgressSnackBarWidget(BuildContext context) =>
+    CustomSnackBar.showSnackBar(context: context, title: AppStrings.getLocalizedStrings('Oops! in progress', context), type: SnackBarType.success);
 
 Widget smartRefreshCustomHeaderWidget() => CustomHeader(
     refreshStyle: RefreshStyle.Behind,
     builder: (c, m) {
       return Container(
-        height: 30,
-        width: 30,
-        margin: const EdgeInsets.only(top: 90, bottom: AppConstants.padding_30),
-        decoration: BoxDecoration(
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
-          color: AppColors.whiteColor,
-          shape: BoxShape.circle,
-        ),
-        child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_10),
-      );
+          height: 30,
+          width: 30,
+          margin: const EdgeInsets.only(top: 90, bottom: AppConstants.padding_30),
+          decoration: BoxDecoration(
+              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: AppConstants.blur_10)],
+              color: AppColors.whiteColor,
+              shape: BoxShape.circle),
+          child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_10));
     });
 
 Widget imageNotAvailableWidget(double size) => Container(
-      width: size,
-      height: size,
-      color: AppColors.whiteColor,
-      alignment: Alignment.center,
-      child: Image.asset(AppImagePath.imageNotAvailable5),
-    );
+    width: size, height: size, color: AppColors.whiteColor, alignment: Alignment.center, child: Image.asset(AppImagePath.imageNotAvailable5));
 
-Widget loaderWidget(double size) => Center(
-      child: SizedBox(width: size, height: size, child: CupertinoActivityIndicator(color: AppColors.blackColor)),
-    );
+Widget loaderWidget(double size) =>
+    Center(child: SizedBox(width: size, height: size, child: CupertinoActivityIndicator(color: AppColors.blackColor)));
 
 Widget invoiceOrderNumberWidget(String title) => Stack(alignment: Alignment.bottomLeft, children: [
-      Text(
-        title,
-        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
+      Text(title,
+          style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.notificationColor, fontWeight: FontWeight.w400),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis),
       Positioned(
-        bottom: 0,
-        left: 0,
-        right: 0,
-        child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3)),
-      ),
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(height: 1, color: AppColors.notificationColor, margin: const EdgeInsets.only(top: AppConstants.padding_3))),
     ]);
 
-/// Maps API weekday codes to app labels.
-/// Supports 0=Sunday..6=Saturday and ISO 1=Monday..7=Sunday.
 int normalizeWeekdayIndex(int day) {
   if (day < 0) {
     return -1;
@@ -1122,11 +965,7 @@ int normalizeWeekdayIndex(int day) {
   return -1;
 }
 
-String weekdayLabel(
-  BuildContext context,
-  int day, {
-  AppLocalizations? l10n,
-}) {
+String weekdayLabel(BuildContext context, int day, {AppLocalizations? l10n}) {
   final localizations = l10n ?? AppLocalizations.of(context);
   if (localizations == null) {
     return '';

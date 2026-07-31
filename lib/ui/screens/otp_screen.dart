@@ -7,7 +7,7 @@ import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_styles.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_img_path.dart';
-import '../../ui/widget/otp_whatsapp_sent_dialog.dart';
+import '../widget/dialogs/otp_whatsapp_sent_dialog.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../utils/constants/app_strings.dart';
@@ -119,8 +119,8 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
     final double topPadding = MediaQuery.of(context).padding.top;
     return Stack(
       children: [
-        Positioned(top: -40, left: -50, child: _decorCircle(160, Colors.white.withOpacity(0.08))),
-        Positioned(top: 60, right: -55, child: _decorCircle(130, Colors.white.withOpacity(0.06))),
+        Positioned(top: -40, left: -50, child: _decorCircle(160, Colors.white.withValues(alpha:0.08))),
+        Positioned(top: 60, right: -55, child: _decorCircle(130, Colors.white.withValues(alpha: 0.06))),
         Padding(
           padding: EdgeInsets.only(top: topPadding + 12, left: 24, right: 24, bottom: 26),
           child: Column(
@@ -137,7 +137,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                   child: Container(
                     width: 40,
                     height: 40,
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.18), shape: BoxShape.circle),
+                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), shape: BoxShape.circle),
                     child: const Directionality(
                       textDirection: TextDirection.ltr,
                       child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 18),
@@ -150,7 +150,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                 width: 66,
                 height: 66,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.18),
+                  color: Colors.white.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(Icons.smartphone_rounded, color: Colors.white, size: 32),
@@ -165,7 +165,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
               Text(
                 AppLocalizations.of(context)!.otp_sent_subtitle,
                 textAlign: TextAlign.center,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor.withOpacity(0.9)),
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor.withValues(alpha: 0.9)),
               ),
               6.height,
               Directionality(
@@ -189,7 +189,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: const BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34)),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.10), blurRadius: 24, offset: const Offset(0, -6))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.10), blurRadius: 24, offset: const Offset(0, -6))],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -259,7 +259,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
       decoration: BoxDecoration(
         gradient: AppColors.appMainGradientColor,
         borderRadius: BorderRadius.circular(AppConstants.radius_10),
-        boxShadow: [BoxShadow(color: AppColors.blueColor.withOpacity(0.30), blurRadius: 14, offset: const Offset(0, 6))],
+        boxShadow: [BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.30), blurRadius: 14, offset: const Offset(0, 6))],
       ),
       child: MaterialButton(
         onPressed: isLoading ? null : onPressed,
@@ -305,7 +305,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
         border: isCoolingDown ? Border.all(color: AppColors.borderColor, width: 1.2) : null,
         boxShadow: isCoolingDown
             ? null
-            : [BoxShadow(color: AppColors.blueColor.withOpacity(0.28), blurRadius: 12, offset: const Offset(0, 5))],
+            : [BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.28), blurRadius: 12, offset: const Offset(0, 5))],
       ),
       child: MaterialButton(
         onPressed: isCoolingDown
@@ -371,7 +371,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
               },
               padding: EdgeInsets.zero,
               child: state.isWhatsappSending
-                  ? SizedBox(
+                  ? const SizedBox(
                 height: 22,
                 width: 22,
                 child: CircularProgressIndicator(strokeWidth: 2, color: kWhatsappDarkGreen),

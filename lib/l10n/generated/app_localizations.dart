@@ -4811,29 +4811,29 @@ abstract class AppLocalizations {
   /// **'פנייה לשירות לקוחות'**
   String get agent_code_contact_support;
 
-  /// No description provided for @whatsapp_optin_title.
+  /// No description provided for @whatsapp_option_title.
   ///
   /// In he, this message translates to:
   /// **'נשמח להישאר בקשר בוואטסאפ'**
-  String get whatsapp_optin_title;
+  String get whatsapp_option_title;
 
-  /// No description provided for @whatsapp_optin_body.
+  /// No description provided for @whatsapp_option_body.
   ///
   /// In he, this message translates to:
   /// **'אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.'**
-  String get whatsapp_optin_body;
+  String get whatsapp_option_body;
 
-  /// No description provided for @whatsapp_optin_approve.
+  /// No description provided for @whatsapp_option_approve.
   ///
   /// In he, this message translates to:
   /// **'אני מאשר/ת'**
-  String get whatsapp_optin_approve;
+  String get whatsapp_option_approve;
 
-  /// No description provided for @whatsapp_optin_not_now.
+  /// No description provided for @whatsapp_option_not_now.
   ///
   /// In he, this message translates to:
   /// **'לא עכשיו'**
-  String get whatsapp_optin_not_now;
+  String get whatsapp_option_not_now;
 
   /// No description provided for @sort_products.
   ///

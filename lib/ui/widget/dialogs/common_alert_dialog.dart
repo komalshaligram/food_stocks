@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../ui/utils/constants/app_colors.dart';
-import '../../ui/utils/constants/app_constants.dart';
-import '../../ui/utils/constants/app_styles.dart';
+import '../../utils/constants/app_colors.dart';
+import '../../utils/constants/app_constants.dart';
+import '../../utils/constants/app_styles.dart';
 
 class CommonAlertDialog extends StatelessWidget {
   final String title;
@@ -14,17 +14,16 @@ class CommonAlertDialog extends StatelessWidget {
   final String directionality;
   final bool isLogOutProcess;
 
-  const CommonAlertDialog({
-    super.key,
-    required this.title,
-    this.subTitle = '',
-    this.positiveOnTap,
-    this.negativeOnTap,
-    this.positiveTitle,
-    this.negativeTitle,
-    required this.directionality,
-    this.isLogOutProcess = false,
-  });
+  const CommonAlertDialog(
+      {super.key,
+      required this.title,
+      this.subTitle = '',
+      this.positiveOnTap,
+      this.negativeOnTap,
+      this.positiveTitle,
+      this.negativeTitle,
+      required this.directionality,
+      this.isLogOutProcess = false});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +32,9 @@ class CommonAlertDialog extends StatelessWidget {
       child: AlertDialog(
           contentPadding: const EdgeInsets.all(AppConstants.padding_20),
           surfaceTintColor: AppColors.whiteColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppConstants.radius_20),
-          ),
-          title: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor, fontWeight: FontWeight.bold)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
+          title: Text(title,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor, fontWeight: FontWeight.bold)),
           content: Text(subTitle, style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.font_14)),
           actionsPadding: const EdgeInsets.only(right: AppConstants.padding_20, bottom: AppConstants.padding_20, left: AppConstants.padding_20),
           actions: [
@@ -54,10 +52,9 @@ class CommonAlertDialog extends StatelessWidget {
                           ? CupertinoActivityIndicator(color: AppColors.mainColor)
                           : Text(positiveTitle ?? '',
                               style: AppStyles.rkRegularTextStyle(
-                                color: AppColors.mainColor.withValues(alpha: 0.9),
-                                size: AppConstants.smallFont,
-                                fontWeight: isLogOutProcess ? FontWeight.bold : FontWeight.normal,
-                              )),
+                                  color: AppColors.mainColor.withValues(alpha: 0.9),
+                                  size: AppConstants.smallFont,
+                                  fontWeight: isLogOutProcess ? FontWeight.bold : FontWeight.normal)),
                     ),
                   )
                 : Container(),
@@ -71,10 +68,8 @@ class CommonAlertDialog extends StatelessWidget {
                       alignment: Alignment.center,
                       width: 80,
                       decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_7)),
-                      child: Text(
-                        negativeTitle ?? '',
-                        style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont),
-                      ),
+                      child:
+                          Text(negativeTitle ?? '', style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont)),
                     ),
                   )
                 : Container(),

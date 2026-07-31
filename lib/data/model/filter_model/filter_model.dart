@@ -1,32 +1,26 @@
-
-class FilterModel{
+class FilterModel {
   BrandModel? brandModel;
   FilterModel({
-     this.brandModel,
+    this.brandModel,
   });
 }
 
 class BrandModel {
   String filterFieldName;
-  List<FilterProductModel>FilterFieldProductList;
+  List<FilterProductModel> filterFieldProductList;
 
   BrandModel({
-    required this.FilterFieldProductList,
+    required this.filterFieldProductList,
     required this.filterFieldName,
-});
+  });
 }
 
 class FilterProductModel {
   bool isSelected;
   bool isExpansion;
   String name;
-  List<SubcategoriesFilterModel>subCategoriesList;
-  FilterProductModel({
-    this.isSelected = false,
-    required this.name,
-    this.subCategoriesList = const [],
-    this.isExpansion = false
-});
+  List<SubcategoriesFilterModel> subCategoriesList;
+  FilterProductModel({this.isSelected = false, required this.name, this.subCategoriesList = const [], this.isExpansion = false});
 }
 
 class SubcategoriesFilterModel {
@@ -35,8 +29,5 @@ class SubcategoriesFilterModel {
   SubcategoriesFilterModel({
     this.isSelected = false,
     required this.name,
-});
+  });
 }
-
-
-

@@ -26,8 +26,8 @@ class GradientButton extends StatelessWidget {
     final isIos = theme.platform == TargetPlatform.iOS;
     final buttonColors = colors ??
         (isSecondary
-            ? [AppColors.secondary, AppColors.secondary.withOpacity(0.85)]
-            : [AppColors.primary, AppColors.primary.withOpacity(0.85)]);
+            ? [AppColors.secondary, AppColors.secondary.withValues(alpha: 0.85)]
+            : [AppColors.primary, AppColors.primary.withValues(alpha: 0.85)]);
 
     if (isIos) {
       return DecoratedBox(
@@ -70,7 +70,7 @@ class GradientButton extends StatelessWidget {
     return Material(
       borderRadius: BorderRadius.circular(12),
       elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.15),
+      shadowColor: Colors.black.withValues(alpha: 0.15),
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(12),

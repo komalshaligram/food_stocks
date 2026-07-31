@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import '../../models/comax_document_status.dart';
 import '../../models/invoice_document.dart';
 import 'client_scanned_certificate_sync_service.dart';
 

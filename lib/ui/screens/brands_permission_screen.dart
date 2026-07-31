@@ -21,10 +21,9 @@ class BrandsPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) =>
-          BrandsPermissionBloc()..add(BrandsPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
-      child: const BrandsPermissionScreenWidget(),
-    );
+        create: (context) => BrandsPermissionBloc()
+          ..add(BrandsPermissionEvent.getPermissionList(context: context, subUserId: args?[AppStrings.subUserIdString] ?? '')),
+        child: const BrandsPermissionScreenWidget());
   }
 }
 
@@ -42,12 +41,11 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: l10n.brand_permissions,
-            iconData: Icons.arrow_back_ios_new_rounded,
-            trailingWidget: PermissionScreenWidgets.appBarIcon(Icons.branding_watermark_outlined),
-            onTap: () => Navigator.pop(context),
-          ),
+              bgColor: AppColors.pageColor,
+              title: l10n.brand_permissions,
+              iconData: Icons.arrow_back_ios_new_rounded,
+              trailingWidget: PermissionScreenWidgets.appBarIcon(Icons.branding_watermark_outlined),
+              onTap: () => Navigator.pop(context)),
         ),
         body: SafeArea(
           child: state.isShimmering
@@ -55,38 +53,27 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
               : state.brandPermissionList.isEmpty
                   ? Center(child: noDataWidget(l10n.no_data))
                   : SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(
-                        PermissionScreenWidgets.horizontalPadding,
-                        8,
-                        PermissionScreenWidgets.horizontalPadding,
-                        100,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          PermissionScreenWidgets.selectAllButton(
+                      padding:
+                          const EdgeInsets.fromLTRB(PermissionScreenWidgets.horizontalPadding, 8, PermissionScreenWidgets.horizontalPadding, 100),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                        PermissionScreenWidgets.selectAllButton(
                             text: !state.isSelectAll ? l10n.select_all.toUpperCase() : l10n.select_none.toUpperCase(),
-                            onPressed: () => bloc.add(BrandsPermissionEvent.switchButtonEvent(context: context, index: -1)),
-                          ),
-                          16.height,
-                          PermissionScreenWidgets.formCard(
+                            onPressed: () => bloc.add(BrandsPermissionEvent.switchButtonEvent(context: context, index: -1))),
+                        16.height,
+                        PermissionScreenWidgets.formCard(
                             child: Column(
-                              children: PermissionScreenWidgets.intersperseDividers(
-                                List.generate(state.brandPermissionList.length, (index) {
-                                  final item = state.brandPermissionList[index];
-                                  return PermissionScreenWidgets.switchTile(
-                                    title: item.title,
-                                    value: item.isEnable,
-                                    onChanged: (_) {
-                                      bloc.add(BrandsPermissionEvent.switchButtonEvent(context: context, index: index));
-                                    },
-                                  );
-                                }),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                                children: PermissionScreenWidgets.intersperseDividers(
+                          List.generate(state.brandPermissionList.length, (index) {
+                            final item = state.brandPermissionList[index];
+                            return PermissionScreenWidgets.switchTile(
+                                title: item.title,
+                                value: item.isEnable,
+                                onChanged: (_) {
+                                  bloc.add(BrandsPermissionEvent.switchButtonEvent(context: context, index: index));
+                                });
+                          }),
+                        )))
+                      ]),
                     ),
         ),
         bottomNavigationBar: state.isShimmering || state.brandPermissionList.isEmpty
@@ -94,8 +81,7 @@ class BrandsPermissionScreenWidget extends StatelessWidget {
             : PermissionScreenWidgets.bottomSaveBar(
                 text: l10n.save.toUpperCase(),
                 isLoading: state.isUpdateProcess,
-                onPressed: () => bloc.add(BrandsPermissionEvent.updateBrandPermissionEvent(context: context)),
-              ),
+                onPressed: () => bloc.add(BrandsPermissionEvent.updateBrandPermissionEvent(context: context))),
       );
     });
   }

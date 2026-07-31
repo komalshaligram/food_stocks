@@ -238,10 +238,11 @@ class AppStrings {
   static const isFromInvoicePayment = "isFromInvoicePayment";
   static const isFromBasketScreen = "isFromBasketScreen";
 
+  static String minSaleText(BuildContext context, String minBox) =>
+      '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
 
-  static String minSaleText(BuildContext context, String minBox) => '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
-
-  static String otherSaleText(BuildContext context, String minBox) => '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
+  static String otherSaleText(BuildContext context, String minBox) =>
+      '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
 
   static String getLocalizedStrings(String key, BuildContext context) {
     switch (key) {

@@ -92,7 +92,7 @@ class DirectImageCaptureService {
     if (!await _ensureGalleryPermission(context, l10n)) return null;
     if (!context.mounted) return null;
 
-    final remaining = AppConstants.maxScanPages;
+    const remaining = AppConstants.maxScanPages;
     final picked = await _picker.pickMultiImage(
       imageQuality: _imageQuality,
       limit: remaining,

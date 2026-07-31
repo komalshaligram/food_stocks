@@ -24,9 +24,8 @@ class LogInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => LogInBloc()..add(LogInEvent.changeAuthEvent(isRegister: args?[AppStrings.isRegisterString] ?? false)),
-      child: const LogInScreenWidget(),
-    );
+        create: (context) => LogInBloc()..add(LogInEvent.changeAuthEvent(isRegister: args?[AppStrings.isRegisterString] ?? false)),
+        child: const LogInScreenWidget());
   }
 }
 
@@ -105,25 +104,23 @@ class _LogInScreenWidgetState extends State<LogInScreenWidget> {
                       style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
                   30.height,
                   CustomFormField(
-                    inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
-                    context: context,
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    hint: AppStrings.hintNumberString,
-                    fillColor: AppColors.whiteColor,
-                    textInputAction: TextInputAction.done,
-                    validator: AppStrings.mobileValString,
-                  ),
+                      inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
+                      context: context,
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      hint: AppStrings.hintNumberString,
+                      fillColor: AppColors.whiteColor,
+                      textInputAction: TextInputAction.done,
+                      validator: AppStrings.mobileValString),
                   30.height,
                   CustomButtonWidget(
-                    buttonText: state.otpCooldown > 0
-                        ? '${AppLocalizations.of(context)!.resend_code_in} ${_formatCountdown(context, state.otpCooldown)}'
-                        : AppLocalizations.of(context)!.next,
-                    bGColor: state.otpCooldown > 0 ? AppColors.lightGreyColor : AppColors.mainColor,
-                    isLoading: state.isLoading,
-                    onPressed: (state.isLoading || state.otpCooldown > 0) ? null : _onSubmitPressed,
-                    fontColors: AppColors.whiteColor,
-                  ),
+                      buttonText: state.otpCooldown > 0
+                          ? '${AppLocalizations.of(context)!.resend_code_in} ${_formatCountdown(context, state.otpCooldown)}'
+                          : AppLocalizations.of(context)!.next,
+                      bGColor: state.otpCooldown > 0 ? AppColors.lightGreyColor : AppColors.mainColor,
+                      isLoading: state.isLoading,
+                      onPressed: (state.isLoading || state.otpCooldown > 0) ? null : _onSubmitPressed,
+                      fontColors: AppColors.whiteColor),
                 ]),
               ),
             ),

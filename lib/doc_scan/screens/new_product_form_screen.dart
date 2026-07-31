@@ -802,7 +802,7 @@ class _NewProductFormScreenState extends ConsumerState<NewProductFormScreen> {
               color: AppColors.surface,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.shadow.withOpacity(0.06),
+                  color: AppColors.shadow.withValues(alpha: 0.06),
                   blurRadius: 16,
                   offset: const Offset(0, -2),
                 ),
@@ -856,7 +856,7 @@ class _NewProductFormScreenState extends ConsumerState<NewProductFormScreen> {
   Widget _optionsBanner(ThemeData theme, AppLocalizations l10n, bool isNoData) {
     return Container(
       width: double.infinity,
-      color: AppColors.warning.withOpacity(0.15),
+      color: AppColors.warning.withValues(alpha: 0.15),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         children: [
@@ -938,7 +938,7 @@ class _NewProductFormScreenState extends ConsumerState<NewProductFormScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow.withOpacity(0.06),
+            color: AppColors.shadow.withValues(alpha: 0.06),
             blurRadius: 16,
             offset: const Offset(0, 2),
           ),
@@ -1010,7 +1010,7 @@ class _NewProductFormScreenState extends ConsumerState<NewProductFormScreen> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: AppColors.textPrimary.withOpacity(0.55),
+                color: AppColors.textPrimary.withValues(alpha: 0.55),
               ),
             ),
           ),
@@ -1157,7 +1157,7 @@ class _NewProductFormScreenState extends ConsumerState<NewProductFormScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.06),
+        color: AppColors.primary.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(_fieldRadius),
       ),
       child: Column(

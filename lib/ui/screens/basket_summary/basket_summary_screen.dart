@@ -24,7 +24,7 @@ import '../../utils/constants/app_strings.dart';
 import '../../utils/constants/app_styles.dart';
 import '../../utils/constants/app_urls.dart';
 import '../../widget/common_app_bar.dart';
-import '../../widget/common_dialog_with_one_button.dart';
+import '../../widget/dialogs/common_dialog_with_one_button.dart';
 import '../../widget/common_order_content_widget.dart';
 import '../../widget/order_summary_screen_shimmer_widget.dart';
 
@@ -41,12 +41,11 @@ class BasketSummaryScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => BasketSummaryBloc()
         ..add(BasketSummaryEvent.getDataEvent(
-          context: context,
-          cartItemList: args?[AppStrings.getCartListString],
-          orderBySupplierId: args?[AppStrings.orderBySupplierId] ?? '',
-          isSupplierSingle: args?[AppStrings.isSupplierSingle],
-          totalSupplier: args?[AppStrings.totalSupplier],
-        )),
+            context: context,
+            cartItemList: args?[AppStrings.getCartListString],
+            orderBySupplierId: args?[AppStrings.orderBySupplierId] ?? '',
+            isSupplierSingle: args?[AppStrings.isSupplierSingle],
+            totalSupplier: args?[AppStrings.totalSupplier])),
       child: const BasketSummaryScreenWidget(),
     );
   }
@@ -88,14 +87,13 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                             context,
                             PageRouteBuilder(
                                 pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(
-                                      statusList: statusList,
-                                      orderNumber: response.data?.orderData?[0].orderNumber.toString() ?? '',
-                                      orderId: response.data?.orderData?[0].id ?? '',
-                                      isNavigateToProductDetailString: false,
-                                      productData: response.data!.ordersBySupplier![0],
-                                      orderData: response.data!.orderData![0],
-                                      isFromBasket: true,
-                                    ),
+                                    statusList: statusList,
+                                    orderNumber: response.data?.orderData?[0].orderNumber.toString() ?? '',
+                                    orderId: response.data?.orderData?[0].id ?? '',
+                                    isNavigateToProductDetailString: false,
+                                    productData: response.data!.ordersBySupplier![0],
+                                    orderData: response.data!.orderData![0],
+                                    isFromBasket: true),
                                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                   const begin = Offset(0.0, 1.0);
                                   const end = Offset.zero;
@@ -134,55 +132,55 @@ class BasketSummaryScreenWidget extends StatelessWidget {
               context: context,
               builder: (context1) {
                 return CustomOneButtonDialog(
-                  width: MediaQuery.of(context).size.width,
-                  title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
-                  directionality: state.language,
-                  positiveTitle:
-                      state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
-                  positiveOnTap: () {
-                    Navigator.pop(context);
-                    bool c = state.paymentTypesList.any((e) => e == AppStrings.creditCard);
-                    if (c) {
-                      bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
-                    } else {
-                      Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {
-                        AppStrings.isPaymentFail: state.isPaymentFail,
-                        AppStrings.isPaymentToNext: false,
-                        AppStrings.invoiceData: const MyCardInvoice(),
-                      });
-                    }
-                  },
-                  positiveOnTap1: () {
-                    Navigator.pop(context);
-                    bool c = state.paymentTypesList.any((e) => e == AppStrings.wallet);
-                    if (c) {
-                      bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.wallet));
-                    } else {
-                      Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name,
-                          arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
-                    }
-                  },
-                  positiveOnTap2: () {
-                    Navigator.pop(context);
-                    bankTransferDialog(
-                        context: context1,
-                        language: state.language,
-                        text: state.bankTransferInfo,
-                        function: () {
-                          bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: false));
+                    width: MediaQuery.of(context).size.width,
+                    title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
+                    directionality: state.language,
+                    positiveTitle:
+                        state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
+                    positiveOnTap: () {
+                      Navigator.pop(context);
+                      bool c = state.paymentTypesList.any((e) => e == AppStrings.creditCard);
+                      if (c) {
+                        bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
+                      } else {
+                        Navigator.pushNamed(context1, RouteDefine.creditCardDetailsScreen.name, arguments: {
+                          AppStrings.isPaymentFail: state.isPaymentFail,
+                          AppStrings.isPaymentToNext: false,
+                          AppStrings.invoiceData: const MyCardInvoice()
                         });
-                  },
-                  positiveOnTap3: () {
-                    Navigator.pop(context);
-                    bloc.add(
-                        BasketSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
-                  },
-                  positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.pay_with_wallet : null,
-                  positiveTitle3:
-                      state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
-                  positiveTitle2:
-                      state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
-                );
+                      }
+                    },
+                    positiveOnTap1: () {
+                      Navigator.pop(context);
+                      bool c = state.paymentTypesList.any((e) => e == AppStrings.wallet);
+                      if (c) {
+                        bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.wallet));
+                      } else {
+                        Navigator.pushNamed(context1, RouteDefine.bankInfoScreen.name,
+                            arguments: {AppStrings.isPaymentFail: state.isPaymentFail, AppStrings.updateString: true});
+                      }
+                    },
+                    positiveOnTap2: () {
+                      Navigator.pop(context);
+                      bankTransferDialog(
+                          context: context1,
+                          language: state.language,
+                          text: state.bankTransferInfo,
+                          function: () {
+                            bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: false));
+                          });
+                    },
+                    positiveOnTap3: () {
+                      Navigator.pop(context);
+                      bloc.add(
+                          BasketSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
+                    },
+                    positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.pay_with_wallet : null,
+                    positiveTitle3:
+                        state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
+                    positiveTitle2: state.paymentTypesList.any((e) => e == AppStrings.bankTransfer)
+                        ? AppLocalizations.of(context)!.pay_with_bank_transfer
+                        : null);
               }).then((value) {
             context.read<BasketSummaryBloc>().add(const BasketSummaryEvent.refreshEvent());
           });
@@ -215,10 +213,9 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                             scrollDirection: Axis.vertical,
                             padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
                             itemBuilder: (context, index) => AnimationConfiguration.staggeredList(
-                              duration: const Duration(seconds: 1),
-                              position: index,
-                              child: SlideAnimation(child: FadeInAnimation(child: orderListItem(index: index, context: context, bloc: bloc))),
-                            ),
+                                duration: const Duration(seconds: 1),
+                                position: index,
+                                child: SlideAnimation(child: FadeInAnimation(child: orderListItem(index: index, context: context, bloc: bloc)))),
                           ),
                         ),
                       ),
@@ -236,10 +233,9 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                           padding: const EdgeInsets.all(AppConstants.padding_5),
                           width: 200,
                           decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.circular(AppConstants.radius_7),
-                            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: AppConstants.radius_10, offset: Offset(0, 4))],
-                          ),
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(AppConstants.radius_7),
+                              boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: AppConstants.radius_10, offset: Offset(0, 4))]),
                           child: Column(mainAxisSize: MainAxisSize.min, children: [
                             SizedBox(
                                 height: 80,
@@ -253,7 +249,7 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                             4.height,
                             Text(AppLocalizations.of(context)!.please_wait_text,
                                 style: TextStyle(fontSize: AppConstants.font_14, color: AppColors.greyColor)),
-                            8.height,
+                            8.height
                           ]),
                         ),
                       ),
@@ -286,32 +282,31 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                 });
           } else {
             return CustomOneButtonDialog(
-              width: MediaQuery.of(context).size.width,
-              title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
-              directionality: state.language,
-              positiveTitle:
-                  state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
-              positiveOnTap: () {
-                Navigator.of(context1, rootNavigator: true).pop();
-                Future.delayed(const Duration(milliseconds: 200), () {
-                  bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
-                });
-              },
-              positiveOnTap1: () {
-                Navigator.of(context1, rootNavigator: true).pop();
-                Future.delayed(const Duration(milliseconds: 200), () {
-                  bankTransferDialog(
-                      context: context,
-                      language: state.language,
-                      text: state.bankTransferInfo,
-                      function: () {
-                        bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
-                      });
-                });
-              },
-              positiveTitle1:
-                  state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
-            );
+                width: MediaQuery.of(context).size.width,
+                title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
+                directionality: state.language,
+                positiveTitle:
+                    state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
+                positiveOnTap: () {
+                  Navigator.of(context1, rootNavigator: true).pop();
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
+                  });
+                },
+                positiveOnTap1: () {
+                  Navigator.of(context1, rootNavigator: true).pop();
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    bankTransferDialog(
+                        context: context,
+                        language: state.language,
+                        text: state.bankTransferInfo,
+                        function: () {
+                          bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
+                        });
+                  });
+                },
+                positiveTitle1:
+                    state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null);
           }
         });
   }
@@ -323,6 +318,74 @@ class BasketSummaryScreenWidget extends StatelessWidget {
           bool c = state.paymentTypesList.any((e) => e == AppStrings.wallet);
           if (c) {
             return CustomOneButtonDialog(
+                width: MediaQuery.of(context).size.width,
+                title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
+                directionality: state.language,
+                positiveTitle:
+                    state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
+                positiveOnTap: () {
+                  Navigator.of(context1, rootNavigator: true).pop();
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
+                  });
+                },
+                positiveOnTap1: () {
+                  Navigator.of(context1, rootNavigator: true).pop();
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.wallet));
+                  });
+                },
+                positiveOnTap2: () {
+                  Navigator.of(context1, rootNavigator: true).pop();
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    bankTransferDialog(
+                        context: context,
+                        language: state.language,
+                        text: state.bankTransferInfo,
+                        function: () {
+                          bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
+                        });
+                  });
+                },
+                positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.pay_with_wallet : null,
+                positiveTitle2:
+                    state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null);
+          } else {
+            return CustomOneButtonDialog(
+                width: MediaQuery.of(context).size.width,
+                title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
+                directionality: state.language,
+                positiveTitle:
+                    state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
+                positiveOnTap: () {
+                  Navigator.of(context1, rootNavigator: true).pop();
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
+                  });
+                },
+                positiveOnTap1: () {
+                  Navigator.of(context1, rootNavigator: true).pop();
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    bankTransferDialog(
+                        context: context1,
+                        language: state.language,
+                        text: state.bankTransferInfo,
+                        function: () {
+                          bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
+                        });
+                  });
+                },
+                positiveTitle1:
+                    state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null);
+          }
+        });
+  }
+
+  void paymentOptionPopupThree(BasketSummaryState state, BuildContext context, BasketSummaryBloc bloc, {bool isFromRemovePopUp = false}) {
+    showDialog(
+        context: context,
+        builder: (context1) {
+          return CustomOneButtonDialog(
               width: MediaQuery.of(context).size.width,
               title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
               directionality: state.language,
@@ -352,86 +415,18 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                       });
                 });
               },
+              positiveOnTap3: () {
+                Navigator.of(context1, rootNavigator: true).pop();
+                Future.delayed(const Duration(milliseconds: 200), () {
+                  bloc.add(
+                      BasketSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
+                });
+              },
               positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.pay_with_wallet : null,
               positiveTitle2:
                   state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
-            );
-          } else {
-            return CustomOneButtonDialog(
-              width: MediaQuery.of(context).size.width,
-              title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
-              directionality: state.language,
-              positiveTitle:
-                  state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
-              positiveOnTap: () {
-                Navigator.of(context1, rootNavigator: true).pop();
-                Future.delayed(const Duration(milliseconds: 200), () {
-                  bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
-                });
-              },
-              positiveOnTap1: () {
-                Navigator.of(context1, rootNavigator: true).pop();
-                Future.delayed(const Duration(milliseconds: 200), () {
-                  bankTransferDialog(
-                      context: context1,
-                      language: state.language,
-                      text: state.bankTransferInfo,
-                      function: () {
-                        bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
-                      });
-                });
-              },
-              positiveTitle1:
-                  state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
-            );
-          }
-        });
-  }
-
-  void paymentOptionPopupThree(BasketSummaryState state, BuildContext context, BasketSummaryBloc bloc, {bool isFromRemovePopUp = false}) {
-    showDialog(
-        context: context,
-        builder: (context1) {
-          return CustomOneButtonDialog(
-            width: MediaQuery.of(context).size.width,
-            title: AppLocalizations.of(context)!.how_do_you_want_to_pay,
-            directionality: state.language,
-            positiveTitle: state.paymentTypesList.any((e) => e == AppStrings.creditCard) ? AppLocalizations.of(context)!.pay_with_credit_card : null,
-            positiveOnTap: () {
-              Navigator.of(context1, rootNavigator: true).pop();
-              Future.delayed(const Duration(milliseconds: 200), () {
-                bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.creditCard));
-              });
-            },
-            positiveOnTap1: () {
-              Navigator.of(context1, rootNavigator: true).pop();
-              Future.delayed(const Duration(milliseconds: 200), () {
-                bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: false, paymentMethod: AppStrings.wallet));
-              });
-            },
-            positiveOnTap2: () {
-              Navigator.of(context1, rootNavigator: true).pop();
-              Future.delayed(const Duration(milliseconds: 200), () {
-                bankTransferDialog(
-                    context: context,
-                    language: state.language,
-                    text: state.bankTransferInfo,
-                    function: () {
-                      bloc.add(BasketSummaryEvent.payWithBankTransferEvent(context: context, isFromRemovePopUp: isFromRemovePopUp));
-                    });
-              });
-            },
-            positiveOnTap3: () {
-              Navigator.of(context1, rootNavigator: true).pop();
-              Future.delayed(const Duration(milliseconds: 200), () {
-                bloc.add(BasketSummaryEvent.orderSendEvent(context: context, failPayment: state.isPaymentFail, paymentMethod: AppStrings.bankCheck));
-              });
-            },
-            positiveTitle1: state.paymentTypesList.any((e) => e == AppStrings.wallet) ? AppLocalizations.of(context)!.pay_with_wallet : null,
-            positiveTitle2:
-                state.paymentTypesList.any((e) => e == AppStrings.bankTransfer) ? AppLocalizations.of(context)!.pay_with_bank_transfer : null,
-            positiveTitle3: state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null,
-          );
+              positiveTitle3:
+                  state.paymentTypesList.any((e) => e == AppStrings.bankCheck) ? AppLocalizations.of(context)!.pay_with_bank_check : null);
         });
   }
 
@@ -445,54 +440,48 @@ class BasketSummaryScreenWidget extends StatelessWidget {
           margin: const EdgeInsets.all(AppConstants.padding_10),
           padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
           decoration: BoxDecoration(
-            color: AppColors.whiteColor,
-            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-          ),
+              color: AppColors.whiteColor,
+              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
-                state.tempList[index].suppliers?.contactName! ?? '',
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-              ),
+              Text(state.tempList[index].suppliers?.contactName! ?? '',
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
             ]),
             10.height,
             Row(children: [
               CommonOrderContentWidget(
-                backGroundColor: AppColors.iconBGColor,
-                borderCoder: AppColors.lightBorderColor,
-                flexValue: 3,
-                title: AppLocalizations.of(context)!.products,
-                value: state.tempList[index].totalQuantity?.toString() ?? '',
-                titleColor: AppColors.mainColor,
-                valueColor: AppColors.blackColor,
-                valueTextWeight: FontWeight.w700,
-                valueTextSize: AppConstants.smallFont,
-              ),
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 3,
+                  title: AppLocalizations.of(context)!.products,
+                  value: state.tempList[index].totalQuantity?.toString() ?? '',
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextWeight: FontWeight.w700,
+                  valueTextSize: AppConstants.smallFont),
               5.width,
               CommonOrderContentWidget(
-                backGroundColor: AppColors.iconBGColor,
-                borderCoder: AppColors.lightBorderColor,
-                flexValue: 5,
-                title: AppLocalizations.of(context)!.savings_for_sales,
-                value: savingsSalesValue,
-                titleColor: AppColors.orangeColor,
-                valueColor: AppColors.blackColor,
-                valueTextWeight: FontWeight.w700,
-                valueTextSize: AppConstants.smallFont,
-              ),
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 5,
+                  title: AppLocalizations.of(context)!.savings_for_sales,
+                  value: savingsSalesValue,
+                  titleColor: AppColors.orangeColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextWeight: FontWeight.w700,
+                  valueTextSize: AppConstants.smallFont),
               5.width,
               CommonOrderContentWidget(
-                backGroundColor: AppColors.iconBGColor,
-                borderCoder: AppColors.lightBorderColor,
-                flexValue: 7,
-                title: AppLocalizations.of(context)!.total_order,
-                value: double.parse(state.tempList[index].totalAmount!.toString()).toStringAsFixed(2),
-                titleColor: AppColors.mainColor,
-                valueColor: AppColors.blackColor,
-                valueTextWeight: FontWeight.w500,
-                valueTextSize: AppConstants.smallFont,
-              ),
+                  backGroundColor: AppColors.iconBGColor,
+                  borderCoder: AppColors.lightBorderColor,
+                  flexValue: 7,
+                  title: AppLocalizations.of(context)!.total_order,
+                  value: double.parse(state.tempList[index].totalAmount!.toString()).toStringAsFixed(2),
+                  titleColor: AppColors.mainColor,
+                  valueColor: AppColors.blackColor,
+                  valueTextWeight: FontWeight.w500,
+                  valueTextSize: AppConstants.smallFont),
             ]),
           ]),
         ),
@@ -501,20 +490,14 @@ class BasketSummaryScreenWidget extends StatelessWidget {
           margin: const EdgeInsets.only(left: AppConstants.padding_10),
           padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
           decoration: BoxDecoration(color: AppColors.pesachBGColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_50))),
-          child: Text(
-            '${AppLocalizations.of(context)!.minimum_order} ${state.tempList[index].minOrderAmount} ₪',
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-          ),
+          child: Text('${AppLocalizations.of(context)!.minimum_order} ${state.tempList[index].minOrderAmount} ₪',
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
         ),
         Container(
-          margin: const EdgeInsets.only(left: AppConstants.padding_15),
-          child: state.tempList[index].notMinimumOrder == false
-              ? Text(
-                  AppLocalizations.of(context)!.you_can_send_the_order,
-                  style: TextStyle(color: AppColors.notificationColor),
-                )
-              : Text(AppLocalizations.of(context)!.you_cant_send_the_order, style: TextStyle(color: AppColors.redColor)),
-        ),
+            margin: const EdgeInsets.only(left: AppConstants.padding_15),
+            child: state.tempList[index].notMinimumOrder == false
+                ? Text(AppLocalizations.of(context)!.you_can_send_the_order, style: TextStyle(color: AppColors.notificationColor))
+                : Text(AppLocalizations.of(context)!.you_cant_send_the_order, style: TextStyle(color: AppColors.redColor))),
         5.height,
         totalAmountCard(state, context, index)
       ]);

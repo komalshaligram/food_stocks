@@ -29,7 +29,7 @@ import '../../bloc/store/store_bloc.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_strings.dart';
 import '../widget/bottomsheet_related_product_shimmer_widget.dart';
-import '../widget/common_dialog_with_one_button.dart';
+import '../widget/dialogs/common_dialog_with_one_button.dart';
 import '../widget/common_search_widget.dart';
 import '../widget/common_product_details_widget.dart';
 import '../widget/custom_text_icon_button_widget.dart';

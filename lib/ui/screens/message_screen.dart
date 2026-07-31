@@ -14,7 +14,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../routes/app_routes.dart';
 import '../utils/constants/app_img_path.dart';
 import '../utils/constants/app_strings.dart';
-import '../widget/custom_dialog.dart';
+import '../widget/dialogs/custom_dialog.dart';
 import '../widget/question_and_answer_screen_shimmer_widget.dart';
 import '../widget/refresh_widget.dart';
 

@@ -11,8 +11,11 @@ String creditCardReqModelToJson(CreditCardReqModel data) => json.encode(data.toJ
 @freezed
 class CreditCardReqModel with _$CreditCardReqModel {
   const factory CreditCardReqModel({
-    String? expDate_YY,
-    String? expDate_MM,
+    @JsonKey(name: 'expDate_YY')
+    String? expDateYy,
+
+    @JsonKey(name: 'expDate_MM')
+    String? expDateMm,
     String? cardNum,
   }) = _CreditCardReqModel;
 

@@ -21,9 +21,8 @@ class BankTransferScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BankTransferBloc()..add(BankTransferEvent.getBankTransferInfoEvent(context: context)),
-      child: const BankTransferWidget(),
-    );
+        create: (context) => BankTransferBloc()..add(BankTransferEvent.getBankTransferInfoEvent(context: context)),
+        child: const BankTransferWidget());
   }
 }
 
@@ -42,71 +41,44 @@ class BankTransferWidget extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: l10n.bank_transfer_information,
-            iconData: Icons.arrow_back_ios_new_rounded,
-            trailingWidget: _buildAppBarIcon(),
-            onTap: () => Navigator.pop(context),
-          ),
+              bgColor: AppColors.pageColor,
+              title: l10n.bank_transfer_information,
+              iconData: Icons.arrow_back_ios_new_rounded,
+              trailingWidget: _buildAppBarIcon(),
+              onTap: () => Navigator.pop(context)),
         ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 24),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.shadowColor.withValues(alpha: 0.06),
-                    blurRadius: 16,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 2))]),
               padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.bank_transfer,
-                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.blackColor),
-                        ),
-                      ),
-                      if (!state.isLoading && state.bankTransferDetails.isNotEmpty) _buildCopyButton(context, state.bankTransferDetails, l10n),
-                    ],
-                  ),
-                  16.height,
-                  if (state.isLoading)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 48),
-                      child: Center(child: CupertinoActivityIndicator(color: AppColors.mainColor)),
-                    )
-                  else if (state.bankTransferDetails.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 32),
-                      child: Center(
-                        child: Text(
-                          l10n.no_data,
-                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.blackColor.withValues(alpha: 0.45)),
-                        ),
-                      ),
-                    )
-                  else
-                    SelectableText(
-                      state.bankTransferDetails,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_15,
-                        color: AppColors.blackColor.withValues(alpha: 0.85),
-                        fontWeight: FontWeight.w400,
-                      ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
+                Row(children: [
+                  Expanded(
+                      child: Text(l10n.bank_transfer, style: AppStyles.rkBoldTextStyle(size: AppConstants.font_15, color: AppColors.blackColor))),
+                  if (!state.isLoading && state.bankTransferDetails.isNotEmpty) _buildCopyButton(context, state.bankTransferDetails, l10n)
+                ]),
+                16.height,
+                if (state.isLoading)
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 48), child: Center(child: CupertinoActivityIndicator(color: AppColors.mainColor)))
+                else if (state.bankTransferDetails.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 32),
+                    child: Center(
+                      child: Text(l10n.no_data,
+                          style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.blackColor.withValues(alpha: 0.45))),
                     ),
-                ],
-              ),
+                  )
+                else
+                  SelectableText(state.bankTransferDetails,
+                      style: AppStyles.rkRegularTextStyle(
+                          size: AppConstants.font_15, color: AppColors.blackColor.withValues(alpha: 0.85), fontWeight: FontWeight.w400)),
+              ]),
             ),
           ),
         ),
@@ -116,14 +88,10 @@ class BankTransferWidget extends StatelessWidget {
 
   Widget _buildAppBarIcon() {
     return Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        color: AppColors.mainColor.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Icon(Icons.account_balance_outlined, size: 21, color: AppColors.mainColor),
-    );
+        height: 40,
+        width: 40,
+        decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
+        child: Icon(Icons.account_balance_outlined, size: 21, color: AppColors.mainColor));
   }
 
   Widget _buildCopyButton(BuildContext context, String details, AppLocalizations l10n) {
@@ -140,21 +108,12 @@ class BankTransferWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppColors.mainColor.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.copy_rounded, size: 16, color: AppColors.mainColor),
-              const SizedBox(width: 4),
-              Text(
-                l10n.copy,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.mainColor, fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
+          decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Icon(Icons.copy_rounded, size: 16, color: AppColors.mainColor),
+            const SizedBox(width: 4),
+            Text(l10n.copy, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.mainColor, fontWeight: FontWeight.w500)),
+          ]),
         ),
       ),
     );

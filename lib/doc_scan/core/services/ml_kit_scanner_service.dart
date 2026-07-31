@@ -52,7 +52,7 @@ class MlKitDocumentScannerService implements ScannerService {
     try {
       final result = await scanner.scanDocument();
       _cachedPdfPath = result.pdf?.uri;
-      _cachedImagePaths = result.images ?? const [];
+      _cachedImagePaths = result.images;
 
       if ((_cachedPdfPath == null || _cachedPdfPath!.isEmpty) &&
           _cachedImagePaths.isEmpty) {

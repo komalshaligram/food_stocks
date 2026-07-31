@@ -2145,7 +2145,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get send_any_way => 'Send any way';
 
   @override
-  String get waiting_for_new_order_success_msg => 'The, return has been successfully recorded. For convenience, your return will be sent on the day you place your next order. Until then, you can add more returns.';
+  String get waiting_for_new_order_success_msg => 'The return has been successfully recorded. For convenience, your return will be sent on the day you place your next order. Until then, you can add more returns.';
 
   @override
   String get issue_text => 'issue: ';
@@ -2371,16 +2371,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get agent_code_contact_support => 'Contact customer service';
 
   @override
-  String get whatsapp_optin_title => 'Let\'s stay in touch on WhatsApp';
+  String get whatsapp_option_title => 'Let\'s stay in touch on WhatsApp';
 
   @override
-  String get whatsapp_optin_body => 'I agree to receive WhatsApp messages from Tavili including updates, perks, promotions and service notices. I can withdraw this consent at any time.';
+  String get whatsapp_option_body => 'I agree to receive WhatsApp messages from Tavili including updates, perks, promotions and service notices. I can withdraw this consent at any time.';
 
   @override
-  String get whatsapp_optin_approve => 'I agree';
+  String get whatsapp_option_approve => 'I agree';
 
   @override
-  String get whatsapp_optin_not_now => 'Not now';
+  String get whatsapp_option_not_now => 'Not now';
 
   @override
   String get sort_products => 'Sort products';

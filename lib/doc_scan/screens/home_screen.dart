@@ -996,8 +996,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final f = from != null ? _dateOnly(from) : null;
     final t = to != null ? _dateOnly(to) : null;
     if (f == null && t == null) return l10n.rangeNoneLabel;
-    if (f != null && t != null)
+    if (f != null && t != null) {
       return '${formatDisplayDate(f)} - ${formatDisplayDate(t)}';
+    }
     if (f != null) return '${formatDisplayDate(f)} +';
     return formatDisplayDate(t!);
   }
@@ -1341,9 +1342,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.accentGreen.withOpacity(0.10),
+        color: AppColors.accentGreen.withValues(alpha:0.10),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.accentGreen.withOpacity(0.35)),
+        border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.35)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1733,7 +1734,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
+                        color: Colors.black.withValues(alpha: 0.15),
                         blurRadius: 24,
                         offset: const Offset(0, 10),
                       ),
@@ -1764,7 +1765,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               width: 36,
                               height: 36,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.18),
+                                color: Colors.white.withValues(alpha: 0.18),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -1813,13 +1814,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               value: isOn,
                               // activeThumbColor: AppColors.accentGreen,
                               activeTrackColor:
-                                  AppColors.accentGreen.withOpacity(0.35),
+                                  AppColors.accentGreen.withValues(alpha: 0.35),
                               trackOutlineColor: WidgetStateProperty.all(
-                                Colors.grey.shade300.withOpacity(0.9),
+                                Colors.grey.shade300.withValues(alpha: 0.9),
                               ),
                               inactiveThumbColor: Colors.grey.shade300,
                               inactiveTrackColor:
-                                  Colors.grey.shade300.withOpacity(0.35),
+                                  Colors.grey.shade300.withValues(alpha: 0.35),
                               onChanged: (v) {
                                 setModalState(() {
                                   if (v) {
@@ -1900,7 +1901,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
+                        color: Colors.black.withValues(alpha: 0.15),
                         blurRadius: 24,
                         offset: const Offset(0, 10),
                       ),
@@ -1930,7 +1931,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               width: 36,
                               height: 36,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.18),
+                                color: Colors.white.withValues(alpha: 0.18),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -1975,13 +1976,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               value: isOn,
                               // activeThumbColor: AppColors.accentGreen,
                               activeTrackColor:
-                                  AppColors.accentGreen.withOpacity(0.35),
+                                  AppColors.accentGreen.withValues(alpha: 0.35),
                               trackOutlineColor: WidgetStateProperty.all(
-                                Colors.grey.shade300.withOpacity(0.9),
+                                Colors.grey.shade300.withValues(alpha: 0.9),
                               ),
                               inactiveThumbColor: Colors.grey.shade300,
                               inactiveTrackColor:
-                                  Colors.grey.shade300.withOpacity(0.35),
+                                  Colors.grey.shade300.withValues(alpha: 0.35),
                               onChanged: (v) {
                                 setModalState(() {
                                   if (v) {
@@ -2071,7 +2072,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
+                        color: Colors.black.withValues(alpha: 0.15),
                         blurRadius: 24,
                         offset: const Offset(0, 10),
                       ),
@@ -2102,7 +2103,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               width: 36,
                               height: 36,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.18),
+                                color: Colors.white.withValues(alpha: 0.18),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -2224,15 +2225,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         value: isOn,
                                         // activeThumbColor: AppColors.accentGreen,
                                         activeTrackColor: AppColors.accentGreen
-                                            .withOpacity(0.35),
+                                            .withValues(alpha: 0.35),
                                         trackOutlineColor:
                                             WidgetStateProperty.all(
-                                          Colors.grey.shade300.withOpacity(0.9),
+                                          Colors.grey.shade300.withValues(alpha: 0.9),
                                         ),
                                         inactiveThumbColor:
                                             Colors.grey.shade300,
                                         inactiveTrackColor: Colors.grey.shade300
-                                            .withOpacity(0.35),
+                                            .withValues(alpha: 0.35),
                                         onChanged: (v) {
                                           setModalState(() {
                                             if (v) {
@@ -2302,13 +2303,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: AppColors.accentGreen.withOpacity(0.08),
+                color: AppColors.accentGreen.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 CupertinoIcons.doc_text_viewfinder,
                 size: 64,
-                color: AppColors.accentGreen.withOpacity(0.6),
+                color: AppColors.accentGreen.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: 24),
@@ -2433,7 +2434,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.headerGradientStart.withOpacity(0.45),
+            color: AppColors.headerGradientStart.withValues(alpha: 0.45),
             blurRadius: 14,
             offset: const Offset(0, 5),
           ),

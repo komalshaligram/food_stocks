@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
-import '../../ui/utils/constants/app_colors.dart';
-import '../../ui/utils/constants/app_constants.dart';
-import '../../ui/utils/constants/app_styles.dart';
+import '../../utils/constants/app_colors.dart';
+import '../../utils/constants/app_constants.dart';
+import '../../utils/constants/app_styles.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-import '../utils/constants/app_strings.dart';
+import '../../utils/constants/app_strings.dart';
 
 class CustomDialog extends StatelessWidget {
   final String title;
@@ -19,19 +19,18 @@ class CustomDialog extends StatelessWidget {
   final List content;
   final bool isMixedSale;
 
-  const CustomDialog({
-    super.key,
-    required this.title,
-    this.subTitle = '',
-    this.positiveOnTap,
-    this.negativeOnTap,
-    this.positiveTitle,
-    this.negativeTitle,
-    required this.directionality,
-    this.isProcessing = false,
-    required this.content,
-    required this.isMixedSale,
-  });
+  const CustomDialog(
+      {super.key,
+      required this.title,
+      this.subTitle = '',
+      this.positiveOnTap,
+      this.negativeOnTap,
+      this.positiveTitle,
+      this.negativeTitle,
+      required this.directionality,
+      this.isProcessing = false,
+      required this.content,
+      required this.isMixedSale});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,8 @@ class CustomDialog extends StatelessWidget {
           contentPadding: const EdgeInsets.all(AppConstants.padding_20),
           surfaceTintColor: AppColors.whiteColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
-          title: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w400)),
+          title: Text(title,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w400)),
           content: content.isEmpty
               ? const SizedBox.shrink()
               : Padding(
@@ -51,10 +51,8 @@ class CustomDialog extends StatelessWidget {
                     width: double.maxFinite,
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       if (isMixedSale == true)
-                        Text(
-                          AppLocalizations.of(context)?.productParticipatingSale ?? '',
-                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14, color: AppColors.blackColor),
-                        ),
+                        Text(AppLocalizations.of(context)?.productParticipatingSale ?? '',
+                            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
                       2.height,
                       Expanded(
                         child: ListView.builder(
@@ -64,16 +62,14 @@ class CustomDialog extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_2),
                                 child: Row(children: [
                                   Container(
-                                    height: 5,
-                                    width: 5,
-                                    decoration: BoxDecoration(color: AppColors.blackColor, borderRadius: BorderRadius.circular(AppConstants.radius_50)),
-                                  ),
+                                      height: 5,
+                                      width: 5,
+                                      decoration:
+                                          BoxDecoration(color: AppColors.blackColor, borderRadius: BorderRadius.circular(AppConstants.radius_50))),
                                   8.width,
                                   Expanded(
-                                    child: Text(
-                                      content[index],
-                                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-                                    ),
+                                    child: Text(content[index],
+                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
                                   ),
                                 ]),
                               );
@@ -95,10 +91,9 @@ class CustomDialog extends StatelessWidget {
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_7)),
                       width: 80,
                       child: isProcessing
-                          ? CupertinoActivityIndicator(
-                              color: AppColors.mainColor,
-                            )
-                          : Text(positiveTitle ?? '', style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withValues(alpha: 0.9), size: AppConstants.smallFont)),
+                          ? CupertinoActivityIndicator(color: AppColors.mainColor)
+                          : Text(positiveTitle ?? '',
+                              style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withValues(alpha: 0.9), size: AppConstants.smallFont)),
                     ),
                   )
                 : Container(),
@@ -112,10 +107,11 @@ class CustomDialog extends StatelessWidget {
                       alignment: Alignment.center,
                       width: 80,
                       decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_7)),
-                      child: Text(negativeTitle ?? '', style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont)),
+                      child:
+                          Text(negativeTitle ?? '', style: AppStyles.rkRegularTextStyle(color: AppColors.whiteColor, size: AppConstants.smallFont)),
                     ),
                   )
-                : Container(),
+                : Container()
           ]),
     );
   }

@@ -16,7 +16,7 @@ import '../../data/model/res_model/login_res_model/login_res_model.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
-import '../../ui/widget/otp_whatsapp_sent_dialog.dart';
+import '../../ui/widget/dialogs/otp_whatsapp_sent_dialog.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
 part 'otp_event.dart';
@@ -275,8 +275,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(showWhatsappOtpOption: response.data?.showWhatsappOtpOption ?? false));
           }
-        } on ServerException {
-        } catch (e) {
+        }  catch (e) {
           printData('whatsapp otp setting fetch failed = $e');
         }
       }

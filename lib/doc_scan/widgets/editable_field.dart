@@ -54,7 +54,7 @@ class EditableField extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.accentGreen.withOpacity(0.05),
+          color: AppColors.accentGreen.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppColors.divider),
         ),

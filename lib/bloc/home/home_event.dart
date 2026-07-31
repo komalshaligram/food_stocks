@@ -105,11 +105,11 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.updateMaintenanceEvent(
       {required BuildContext context}) = _updateMaintenanceEvent;
 
-  const factory HomeEvent.sendWhatsappOptinEvent({
+  const factory HomeEvent.sendWhatsappOptionEvent({
     required BuildContext context,
     required String source,
     required String consentText,
-  }) = _sendWhatsappOptinEvent;
+  }) = _sendWhatsappOptionEvent;
 
   const factory HomeEvent.updateListQuantityOfProduct({
     required BuildContext context,

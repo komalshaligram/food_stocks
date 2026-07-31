@@ -4,7 +4,7 @@ import '../../../bloc/basket/basket_bloc.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../screens/basket/basket_total_widget.dart';
 import '../../utils/basket_navigation_helper.dart';
-import '../custom_dialog.dart';
+import 'custom_dialog.dart';
 import 'call_agent_dialog.dart';
 
 void removeOutOfStockProductDialog({required BuildContext context}) {
@@ -12,14 +12,12 @@ void removeOutOfStockProductDialog({required BuildContext context}) {
   showDialog(
       context: context,
       builder: (context1) => BlocProvider.value(
-        value: context.read<BasketBloc>(),
-        child: BlocBuilder<BasketBloc, BasketState>(
-            builder: (context, state) {
+            value: context.read<BasketBloc>(),
+            child: BlocBuilder<BasketBloc, BasketState>(builder: (context, state) {
               return AbsorbPointer(
                 absorbing: state.isRemoveProcess ? true : false,
                 child: CustomDialog(
-                    title: AppLocalizations.of(context)!
-                        .some_products_out_of_stock_Do_you_want_submit_order,
+                    title: AppLocalizations.of(context)!.some_products_out_of_stock_Do_you_want_submit_order,
                     content: const [],
                     isMixedSale: false,
                     directionality: state.language,
@@ -27,24 +25,14 @@ void removeOutOfStockProductDialog({required BuildContext context}) {
                     isProcessing: state.isRemoveProcess,
                     negativeTitle: AppLocalizations.of(context)!.no,
                     positiveOnTap: () async {
-                      if (!state.isRemoveProcess &&
-                          !state.isLoading &&
-                          !state.isShimmering) {
+                      if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
                         Navigator.pop(context1);
                         if (state.draftReturnExists) {
                           await showDialog(
                               context: context,
-                              builder: (_) => CallAgentDialog(
-                                  language: state.language,
-                                  state: state,
-                                  context1: context,
-                                  bloc: bloc));
+                              builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc));
                         } else {
-                          await navigateFromBasketContinue(
-                            context: context,
-                            state: state,
-                            formattedTotal: formattedBasketGrandTotal(state),
-                          );
+                          await navigateFromBasketContinue(context: context, state: state, formattedTotal: formattedBasketGrandTotal(state));
                         }
                       }
                     },
@@ -53,5 +41,5 @@ void removeOutOfStockProductDialog({required BuildContext context}) {
                     }),
               );
             }),
-      ));
+          ));
 }

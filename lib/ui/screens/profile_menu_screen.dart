@@ -16,8 +16,8 @@ import '../../ui/widget/sized_box_widget.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../utils/constants/app_img_path.dart';
 import '../utils/constants/app_urls.dart';
-import '../widget/common_alert_dialog.dart';
-import '../widget/common_dialog_with_one_button.dart';
+import '../widget/dialogs/common_alert_dialog.dart';
+import '../widget/dialogs/common_dialog_with_one_button.dart';
 import '../widget/customer_service_contact_widget.dart';
 
 class ProfileMenuRoute {
@@ -345,8 +345,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
             icon: Icons.logout_rounded,
             isDestructive: true,
             onTap: () {
-              if (!state.isLogOutProcess)
+              if (!state.isLogOutProcess) {
                 logOutDialog(context: context, directionality: state.language);
+              }
             },
           ),
         ],

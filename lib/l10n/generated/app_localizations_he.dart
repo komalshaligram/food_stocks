@@ -2371,16 +2371,16 @@ class AppLocalizationsHe extends AppLocalizations {
   String get agent_code_contact_support => 'פנייה לשירות לקוחות';
 
   @override
-  String get whatsapp_optin_title => 'נשמח להישאר בקשר בוואטסאפ';
+  String get whatsapp_option_title => 'נשמח להישאר בקשר בוואטסאפ';
 
   @override
-  String get whatsapp_optin_body => 'אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.';
+  String get whatsapp_option_body => 'אני מאשר/ת לקבל מ-Tavili הודעות WhatsApp הכוללות עדכונים, הטבות, מבצעים והודעות שירות. ניתן להסיר את ההסכמה בכל עת.';
 
   @override
-  String get whatsapp_optin_approve => 'אני מאשר/ת';
+  String get whatsapp_option_approve => 'אני מאשר/ת';
 
   @override
-  String get whatsapp_optin_not_now => 'לא עכשיו';
+  String get whatsapp_option_not_now => 'לא עכשיו';
 
   @override
   String get sort_products => 'מיון מוצרים';

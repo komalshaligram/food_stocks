@@ -11,7 +11,7 @@ import '../../ui/widget/profile_screen_shimmer_widget.dart';
 import '../../ui/widget/sized_box_widget.dart';
 import '../../bloc/profile/profile_bloc.dart';
 import '../../routes/app_routes.dart';
-import '../widget/common_alert_dialog.dart';
+import '../widget/dialogs/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/common_drop_down_button.dart';
 import '../widget/custom_button_widget.dart';

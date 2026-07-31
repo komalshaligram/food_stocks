@@ -761,7 +761,7 @@ class _DocumentDetailsScreenState
                                 ),
                                 decoration: BoxDecoration(
                                   color:
-                                      AppColors.accentGreen.withOpacity(0.08),
+                                      AppColors.accentGreen.withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: AppColors.accentGreen,
@@ -830,7 +830,7 @@ class _DocumentDetailsScreenState
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 0),
-      color: Colors.red.withOpacity(0.06),
+      color: Colors.red.withValues(alpha: 0.06),
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(
@@ -920,10 +920,10 @@ class _DocumentDetailsScreenState
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: AppColors.accentGreen.withOpacity(0.06),
+                color: AppColors.accentGreen.withValues(alpha: 0.06),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: AppColors.accentGreen.withOpacity(0.45),
+                  color: AppColors.accentGreen.withValues(alpha: 0.45),
                 ),
               ),
               child: Center(
@@ -962,7 +962,7 @@ class _DocumentDetailsScreenState
             Divider(
               height: 16,
               thickness: 1,
-              color: AppColors.divider.withOpacity(0.9),
+              color: AppColors.divider.withValues(alpha: 0.9),
             ),
             const SizedBox(height: 12),
             // ××–×•×¨ ×¨××©×•×Ÿ: ×©× ×—×‘×¨×” + ×¡×•×’ ×ž×¡×ž×š
@@ -1245,7 +1245,7 @@ class _DocumentDetailsScreenState
                 ),
                 child: DataTable(
                   headingRowColor: WidgetStateProperty.all(
-                    AppColors.accentGreen.withOpacity(0.08),
+                    AppColors.accentGreen.withValues(alpha: 0.08),
                   ),
                   headingTextStyle: theme.textTheme.bodyMedium?.copyWith(
                     color: AppColors.accentGreen,
@@ -1347,11 +1347,11 @@ class _DocumentDetailsScreenState
                         // ×¤×¡ ×¢×“×™×Ÿ ×œ×”×¤×¨×“×ª ×©×•×¨×•×ª (×ž×•×“×¨× ×™ ×™×•×ª×¨).
                         if (_validationErrorLines.contains(globalIndex) ||
                             inconsistentLines.contains(globalIndex)) {
-                          return AppColors.error.withOpacity(0.10);
+                          return AppColors.error.withValues(alpha: 0.10);
                         }
                         final isEven = entry.key % 2 == 0;
                         return isEven
-                            ? AppColors.accentGreen.withOpacity(0.035)
+                            ? AppColors.accentGreen.withValues(alpha: 0.035)
                             : null;
                       }),
                       cells: [
@@ -1374,13 +1374,13 @@ class _DocumentDetailsScreenState
                                 // אותו מקור אמת כמו הבאנר האדום וחסימת השליחה:
                                 // ברקוד חסר, או ברקוד שאינו בקטלוג.
                                 background: item.newProduct != null
-                                    ? AppColors.accentGreen.withOpacity(0.15)
+                                    ? AppColors.accentGreen.withValues(alpha: 0.15)
                                     : badIndexSet.contains(globalIndex)
-                                        ? AppColors.error.withOpacity(0.18)
+                                        ? AppColors.error.withValues(alpha: 0.18)
                                         // מולא אוטומטית ממידע חלקי — כתום, לאימות.
                                         : item.barcodeConfidence ==
                                                 BarcodeConfidence.medium
-                                            ? AppColors.warning.withOpacity(0.22)
+                                            ? AppColors.warning.withValues(alpha: 0.22)
                                             : null,
                                 cellKey: globalIndex == firstBadIndex
                                     ? _firstBadCellKey
@@ -1941,9 +1941,9 @@ class _DocumentDetailsScreenState
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: accent.withOpacity(0.10),
+        color: accent.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: accent.withOpacity(0.55)),
+        border: Border.all(color: accent.withValues(alpha: 0.55)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2135,9 +2135,9 @@ class _DocumentDetailsScreenState
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.06),
+        color: AppColors.primary.withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.35)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.35)),
       ),
       child: Row(
         children: [
@@ -2172,9 +2172,9 @@ class _DocumentDetailsScreenState
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.10),
+        color: AppColors.warning.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.warning.withOpacity(0.55)),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.55)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2214,9 +2214,9 @@ class _DocumentDetailsScreenState
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.10),
+        color: AppColors.warning.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.warning.withOpacity(0.55)),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.55)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2253,9 +2253,9 @@ class _DocumentDetailsScreenState
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.error.withOpacity(0.08),
+        color: AppColors.error.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.error.withOpacity(0.5)),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.5)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2288,9 +2288,9 @@ class _DocumentDetailsScreenState
       margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.error.withOpacity(0.08),
+        color: AppColors.error.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.error.withOpacity(0.5)),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2398,7 +2398,7 @@ class _DocumentDetailsScreenState
                   ),
                   borderRadius: BorderRadius.circular(10),
                   color: c.barcode == selected
-                      ? AppColors.accentGreen.withOpacity(0.08)
+                      ? AppColors.accentGreen.withValues(alpha: 0.08)
                       : null,
                 ),
                 child: Row(
@@ -2476,9 +2476,9 @@ class _DocumentDetailsScreenState
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: AppColors.accentGreen.withOpacity(0.10),
+          color: AppColors.accentGreen.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.accentGreen.withOpacity(0.4)),
+          border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.4)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2698,10 +2698,10 @@ class _DocumentDetailsScreenState
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 10),
                             decoration: BoxDecoration(
-                              color: AppColors.accentGreen.withOpacity(0.08),
+                              color: AppColors.accentGreen.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                  color: AppColors.accentGreen.withOpacity(0.25)),
+                                  color: AppColors.accentGreen.withValues(alpha: 0.25)),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -4017,9 +4017,9 @@ class _DocumentDetailsScreenState
       margin: const EdgeInsets.only(top: 14),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.10),
+        color: AppColors.warning.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.warning.withOpacity(0.45)),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.45)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

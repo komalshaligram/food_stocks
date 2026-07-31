@@ -34,3 +34,4 @@ analyzer:
       sort_pub_dependencies: ignore
       public_member_api_docs: ignore
       always_use_package_imports: ignore
+      invalid_annotation_target: ignore

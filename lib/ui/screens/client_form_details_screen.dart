@@ -33,17 +33,15 @@ class ClientFormDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => ClientFormDetailsBloc()
-        ..add(ClientFormDetailsEvent.getProfileDetailsEvent(context: context))
-        ..add(ClientFormDetailsEvent.getBusinessTypeEvent(context: context))
-        ..add(ClientFormDetailsEvent.getBankNameEvent(context: context))
-        ..add(ClientFormDetailsEvent.getPdfDataEvent(
-          context: context,
-          pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
-          termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel(),
-        )),
-      child: const ClientFormDetailsScreenWidget(),
-    );
+        create: (context) => ClientFormDetailsBloc()
+          ..add(ClientFormDetailsEvent.getProfileDetailsEvent(context: context))
+          ..add(ClientFormDetailsEvent.getBusinessTypeEvent(context: context))
+          ..add(ClientFormDetailsEvent.getBankNameEvent(context: context))
+          ..add(ClientFormDetailsEvent.getPdfDataEvent(
+              context: context,
+              pdfData: args?[AppStrings.privacyPolicyPdfString] ?? '',
+              termsConditionReqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
+        child: const ClientFormDetailsScreenWidget());
   }
 }
 
@@ -73,21 +71,20 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
         child: Scaffold(
           backgroundColor: AppColors.whiteColor,
           appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
-            leading: GestureDetector(
-                onTap: () async {
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
-            title: Align(
-              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.client_info,
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-            ),
-            backgroundColor: AppColors.whiteColor,
-            titleSpacing: 0,
-            elevation: 0,
-          ),
+              surfaceTintColor: AppColors.whiteColor,
+              leading: GestureDetector(
+                  onTap: () async {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
+              title: Align(
+                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+                child: Text(AppLocalizations.of(context)!.client_info,
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+              ),
+              backgroundColor: AppColors.whiteColor,
+              titleSpacing: 0,
+              elevation: 0),
           body: SafeArea(
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
@@ -101,16 +98,15 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                           10.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.my_agent_code, star: ''),
                           CustomFormField(
-                            inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
-                            context: context,
-                            controller: state.agentCodeController,
-                            keyboardType: TextInputType.number,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            maxLimits: 6,
-                            validator: AppStrings.agentCodeString,
-                          ),
+                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
+                              context: context,
+                              controller: state.agentCodeController,
+                              keyboardType: TextInputType.number,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              maxLimits: 6,
+                              validator: AppStrings.agentCodeString),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.type_of_business, star: ''),
                           CommonDropDownButton(
@@ -124,77 +120,71 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.name_of_bank, star: ''),
                           CommonDropDownButton(
-                            items: state.bankList.map((element) {
-                              return DropdownMenuItem<String>(value: element.bankName ?? '', child: Text(element.bankName ?? ''));
-                            }).toList(),
-                            onChanged: (newBankName) {
-                              final selectedBank = state.bankList.firstWhere((bank) => bank.bankName == newBankName);
-                              bloc.add(ClientFormDetailsEvent.selectBankEvent(bankName: selectedBank.bankName ?? '', bankId: selectedBank.id ?? ''));
-                            },
-                            value: state.bankName,
-                          ),
+                              items: state.bankList.map((element) {
+                                return DropdownMenuItem<String>(value: element.bankName ?? '', child: Text(element.bankName ?? ''));
+                              }).toList(),
+                              onChanged: (newBankName) {
+                                final selectedBank = state.bankList.firstWhere((bank) => bank.bankName == newBankName);
+                                bloc.add(
+                                    ClientFormDetailsEvent.selectBankEvent(bankName: selectedBank.bankName ?? '', bankId: selectedBank.id ?? ''));
+                              },
+                              value: state.bankName),
                           CustomContainerWidget(name: AppLocalizations.of(context)!.branch_number, star: ''),
                           CustomFormField(
-                            inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
-                            context: context,
-                            controller: state.branchController,
-                            keyboardType: TextInputType.number,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: AppStrings.branchValString,
-                          ),
+                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                              context: context,
+                              controller: state.branchController,
+                              keyboardType: TextInputType.number,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: AppStrings.branchValString),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.account_number, star: ''),
                           CustomFormField(
-                            context: context,
-                            inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
-                            controller: state.accountNumberController,
-                            keyboardType: TextInputType.number,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.done,
-                            validator: '',
-                          ),
+                              context: context,
+                              inputFormat: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(16)],
+                              controller: state.accountNumberController,
+                              keyboardType: TextInputType.number,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.done,
+                              validator: ''),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.owner1_full_name, star: ''),
                           CustomFormField(
-                            context: context,
-                            controller: state.owner1NameController,
-                            keyboardType: TextInputType.text,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: '',
-                          ),
+                              context: context,
+                              controller: state.owner1NameController,
+                              keyboardType: TextInputType.text,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: ''),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.owner_1_israel_id, star: ''),
                           CustomFormField(
-                            context: context,
-                            controller: state.owner1israelIdController,
-                            keyboardType: TextInputType.number,
-                            inputFormat: [FilteringTextInputFormatter.digitsOnly],
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: '',
-                          ),
+                              context: context,
+                              controller: state.owner1israelIdController,
+                              keyboardType: TextInputType.number,
+                              inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: ''),
                           7.height,
-                          Column(
-                            children: [
-                              CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_full_name, star: ''),
-                              CustomFormField(
+                          Column(children: [
+                            CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_full_name, star: ''),
+                            CustomFormField(
                                 context: context,
                                 controller: state.guarantee1NameController,
                                 keyboardType: TextInputType.text,
                                 hint: "",
                                 fillColor: Colors.transparent,
                                 textInputAction: TextInputAction.next,
-                                validator: '',
-                              ),
-                              7.height,
-                              CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_israel_id, star: ''),
-                              CustomFormField(
+                                validator: ''),
+                            7.height,
+                            CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_israel_id, star: ''),
+                            CustomFormField(
                                 context: context,
                                 controller: state.guarantee1idController,
                                 inputFormat: [FilteringTextInputFormatter.digitsOnly],
@@ -202,27 +192,24 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                 hint: "",
                                 fillColor: Colors.transparent,
                                 textInputAction: TextInputAction.next,
-                                validator: '',
-                              ),
-                              7.height,
-                              CustomContainerWidget(
+                                validator: ''),
+                            7.height,
+                            CustomContainerWidget(
                                 name: state.language == AppStrings.hebrewString
                                     ? '${AppLocalizations.of(context)!.guarantee_1_address}${1}'
                                     : AppLocalizations.of(context)!.guarantee_1_address,
-                                star: '',
-                              ),
-                              CustomFormField(
+                                star: ''),
+                            CustomFormField(
                                 context: context,
                                 controller: state.guarantee1addressController,
                                 keyboardType: TextInputType.text,
                                 hint: "",
                                 fillColor: Colors.transparent,
                                 textInputAction: TextInputAction.next,
-                                validator: '',
-                              ),
-                              7.height,
-                              CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_phone_number, star: ''),
-                              CustomFormField(
+                                validator: ''),
+                            7.height,
+                            CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_1_phone_number, star: ''),
+                            CustomFormField(
                                 inputFormat: [LengthLimitingTextInputFormatter(10)],
                                 context: context,
                                 controller: state.guarantee1PhoneController,
@@ -230,58 +217,52 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                 hint: "",
                                 fillColor: Colors.transparent,
                                 textInputAction: TextInputAction.next,
-                                validator: '',
-                              ),
-                            ],
-                          ),
+                                validator: ''),
+                          ]),
                           CustomContainerWidget(name: AppLocalizations.of(context)!.owner2_full_name, star: ''),
                           CustomFormField(
-                            context: context,
-                            controller: state.owner2NameController,
-                            keyboardType: TextInputType.text,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: '',
-                            onChangeValue: (t) {
-                              ownerName = t;
-                            },
-                          ),
+                              context: context,
+                              controller: state.owner2NameController,
+                              keyboardType: TextInputType.text,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: '',
+                              onChangeValue: (t) {
+                                ownerName = t;
+                              }),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.owner_2_israel_id, star: ''),
                           CustomFormField(
-                            context: context,
-                            controller: state.owner2israelIdController,
-                            keyboardType: TextInputType.number,
-                            inputFormat: [FilteringTextInputFormatter.digitsOnly],
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: '',
-                          ),
+                              context: context,
+                              controller: state.owner2israelIdController,
+                              keyboardType: TextInputType.number,
+                              inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: ''),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_2_full_name, star: ''),
                           CustomFormField(
-                            context: context,
-                            controller: state.guarantee2NameController,
-                            keyboardType: TextInputType.text,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: '',
-                          ),
+                              context: context,
+                              controller: state.guarantee2NameController,
+                              keyboardType: TextInputType.text,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: ''),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_2_israel_id, star: ''),
                           CustomFormField(
-                            context: context,
-                            controller: state.guarantee2idController,
-                            keyboardType: TextInputType.number,
-                            inputFormat: [FilteringTextInputFormatter.digitsOnly],
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: '',
-                          ),
+                              context: context,
+                              controller: state.guarantee2idController,
+                              keyboardType: TextInputType.number,
+                              inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: ''),
                           7.height,
                           CustomContainerWidget(
                               name: state.language == AppStrings.hebrewString
@@ -289,26 +270,24 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                   : AppLocalizations.of(context)!.guarantee_2_address,
                               star: ''),
                           CustomFormField(
-                            context: context,
-                            controller: state.guarantee2addressController,
-                            keyboardType: TextInputType.text,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.next,
-                            validator: '',
-                          ),
+                              context: context,
+                              controller: state.guarantee2addressController,
+                              keyboardType: TextInputType.text,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.next,
+                              validator: ''),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_2_phone_number, star: ''),
                           CustomFormField(
-                            inputFormat: [LengthLimitingTextInputFormatter(10)],
-                            context: context,
-                            controller: state.guarantee2PhoneController,
-                            keyboardType: TextInputType.number,
-                            hint: "",
-                            fillColor: Colors.transparent,
-                            textInputAction: TextInputAction.done,
-                            validator: '',
-                          ),
+                              inputFormat: [LengthLimitingTextInputFormatter(10)],
+                              context: context,
+                              controller: state.guarantee2PhoneController,
+                              keyboardType: TextInputType.number,
+                              hint: "",
+                              fillColor: Colors.transparent,
+                              textInputAction: TextInputAction.done,
+                              validator: ''),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.owner1_sign, star: ''),
                           Row(children: [
@@ -327,9 +306,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                 height: 120,
                                                 width: 120,
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(AppConstants.radius_8),
-                                                  border: Border.all(color: AppColors.borderColor),
-                                                ),
+                                                    borderRadius: BorderRadius.circular(AppConstants.radius_8),
+                                                    border: Border.all(color: AppColors.borderColor)),
                                                 child: CachedNetworkImage(
                                                     height: 100,
                                                     width: 100,
@@ -340,11 +318,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                         Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
                                                     errorWidget: (context, url, error) {
                                                       return Center(
-                                                        child: Text(
-                                                          AppStrings.failedToLoadString,
-                                                          style:
-                                                              AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                                        ),
+                                                        child: Text(AppStrings.failedToLoadString,
+                                                            style: AppStyles.rkRegularTextStyle(
+                                                                size: AppConstants.smallFont, color: AppColors.textColor)),
                                                       );
                                                     }),
                                               )),
@@ -352,30 +328,27 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                       top: -10,
                                       right: -10,
                                       child: GestureDetector(
-                                        onTap: () {
-                                          bloc.add(
-                                              ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.owner1SignatureString));
-                                        },
-                                        child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24),
-                                      ),
+                                          onTap: () {
+                                            bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                                context: context, fieldName: AppStrings.owner1SignatureString));
+                                          },
+                                          child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24)),
                                     ),
                                   ]),
                             7.width,
                             CustomButtonWidget(
-                              fontSize: AppConstants.font_13,
-                              buttonText: AppLocalizations.of(context)!.owner1_sign.toCapitalized(),
-                              height: 45,
-                              bGColor: AppColors.whiteColor,
-                              width: getScreenWidth(context) / 2.2,
-                              onPressed: () {
-                                bloc.add(ClientFormDetailsEvent.signatureEvent(
-                                  context: context,
-                                  fieldName: AppStrings.owner1SignatureString,
-                                  fieldNameForSign: AppLocalizations.of(context)!.owner1_sign,
-                                ));
-                              },
-                              fontColors: AppColors.whiteColor,
-                            ),
+                                fontSize: AppConstants.font_13,
+                                buttonText: AppLocalizations.of(context)!.owner1_sign.toCapitalized(),
+                                height: 45,
+                                bGColor: AppColors.whiteColor,
+                                width: getScreenWidth(context) / 2.2,
+                                onPressed: () {
+                                  bloc.add(ClientFormDetailsEvent.signatureEvent(
+                                      context: context,
+                                      fieldName: AppStrings.owner1SignatureString,
+                                      fieldNameForSign: AppLocalizations.of(context)!.owner1_sign));
+                                },
+                                fontColors: AppColors.whiteColor),
                           ]),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.owner2_sign, star: ''),
@@ -384,66 +357,61 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                 ? const IgnorePointer()
                                 : Stack(clipBehavior: Clip.none, children: [
                                     Container(
-                                        height: 120,
-                                        width: 120,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(AppConstants.radius_8),
-                                            border: Border.all(color: AppColors.borderColor)),
-                                        child: state.owner2SignatureLocal.isNotEmpty
-                                            ? Image.file(File(state.owner2SignatureLocal))
-                                            : Container(
-                                                height: 120,
-                                                width: 120,
-                                                decoration: BoxDecoration(
+                                      height: 120,
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(AppConstants.radius_8),
+                                          border: Border.all(color: AppColors.borderColor)),
+                                      child: state.owner2SignatureLocal.isNotEmpty
+                                          ? Image.file(File(state.owner2SignatureLocal))
+                                          : Container(
+                                              height: 120,
+                                              width: 120,
+                                              decoration: BoxDecoration(
                                                   borderRadius: BorderRadius.circular(AppConstants.radius_8),
-                                                  border: Border.all(color: AppColors.borderColor),
-                                                ),
-                                                child: CachedNetworkImage(
-                                                    height: 100,
-                                                    width: 100,
-                                                    imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.owner2Signature}",
-                                                    fit: BoxFit.scaleDown,
-                                                    alignment: Alignment.center,
-                                                    placeholder: (context, url) =>
-                                                        Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
-                                                    errorWidget: (context, url, error) {
-                                                      return Center(
-                                                        child: Text(
-                                                          AppStrings.failedToLoadString,
+                                                  border: Border.all(color: AppColors.borderColor)),
+                                              child: CachedNetworkImage(
+                                                  height: 100,
+                                                  width: 100,
+                                                  imageUrl: "${AppUrlEndPoints.baseFileUrl}${state.owner2Signature}",
+                                                  fit: BoxFit.scaleDown,
+                                                  alignment: Alignment.center,
+                                                  placeholder: (context, url) =>
+                                                      Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
+                                                  errorWidget: (context, url, error) {
+                                                    return Center(
+                                                      child: Text(AppStrings.failedToLoadString,
                                                           style:
-                                                              AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                                        ),
-                                                      );
-                                                    }),
-                                              )),
+                                                              AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
+                                                    );
+                                                  }),
+                                            ),
+                                    ),
                                     Positioned(
                                       top: -10,
                                       right: -10,
                                       child: GestureDetector(
-                                        onTap: () {
-                                          bloc.add(
-                                              ClientFormDetailsEvent.deleteFileEvent(context: context, fieldName: AppStrings.owner2SignatureString));
-                                        },
-                                        child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24),
-                                      ),
+                                          onTap: () {
+                                            bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                                context: context, fieldName: AppStrings.owner2SignatureString));
+                                          },
+                                          child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24)),
                                     ),
                                   ]),
                             7.width,
                             CustomButtonWidget(
-                              fontSize: AppConstants.font_13,
-                              buttonText: AppLocalizations.of(context)!.owner2_sign.toCapitalized(),
-                              height: 45,
-                              bGColor: AppColors.whiteColor,
-                              width: getScreenWidth(context) / 2.2,
-                              onPressed: () {
-                                bloc.add(ClientFormDetailsEvent.signatureEvent(
-                                  context: context,
-                                  fieldName: AppStrings.owner2SignatureString,
-                                  fieldNameForSign: AppLocalizations.of(context)!.owner2_sign,
-                                ));
-                              },
-                              fontColors: AppColors.whiteColor,
-                            ),
+                                fontSize: AppConstants.font_13,
+                                buttonText: AppLocalizations.of(context)!.owner2_sign.toCapitalized(),
+                                height: 45,
+                                bGColor: AppColors.whiteColor,
+                                width: getScreenWidth(context) / 2.2,
+                                onPressed: () {
+                                  bloc.add(ClientFormDetailsEvent.signatureEvent(
+                                      context: context,
+                                      fieldName: AppStrings.owner2SignatureString,
+                                      fieldNameForSign: AppLocalizations.of(context)!.owner2_sign));
+                                },
+                                fontColors: AppColors.whiteColor),
                           ]),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee1_sign, star: ''),
@@ -463,9 +431,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                               height: 120,
                                               width: 120,
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(AppConstants.radius_8),
-                                                border: Border.all(color: AppColors.borderColor),
-                                              ),
+                                                  borderRadius: BorderRadius.circular(AppConstants.radius_8),
+                                                  border: Border.all(color: AppColors.borderColor)),
                                               child: CachedNetworkImage(
                                                   height: 100,
                                                   width: 100,
@@ -476,10 +443,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                       Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
                                                   errorWidget: (context, url, error) {
                                                     return Center(
-                                                      child: Text(
-                                                        AppStrings.failedToLoadString,
-                                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                                      ),
+                                                      child: Text(AppStrings.failedToLoadString,
+                                                          style:
+                                                              AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
                                                     );
                                                   }),
                                             ),
@@ -488,30 +454,27 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                       top: -10,
                                       right: -10,
                                       child: GestureDetector(
-                                        onTap: () {
-                                          bloc.add(ClientFormDetailsEvent.deleteFileEvent(
-                                              context: context, fieldName: AppStrings.guarantee1SignatureString));
-                                        },
-                                        child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24),
-                                      ),
+                                          onTap: () {
+                                            bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                                context: context, fieldName: AppStrings.guarantee1SignatureString));
+                                          },
+                                          child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24)),
                                     ),
                                   ]),
                             7.width,
                             CustomButtonWidget(
-                              fontSize: AppConstants.font_13,
-                              buttonText: AppLocalizations.of(context)!.guarantee1_sign.toCapitalized(),
-                              height: 45,
-                              bGColor: AppColors.whiteColor,
-                              width: getScreenWidth(context) / 2.2,
-                              onPressed: () {
-                                bloc.add(ClientFormDetailsEvent.signatureEvent(
-                                  context: context,
-                                  fieldName: AppStrings.guarantee1SignatureString,
-                                  fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign,
-                                ));
-                              },
-                              fontColors: AppColors.whiteColor,
-                            ),
+                                fontSize: AppConstants.font_13,
+                                buttonText: AppLocalizations.of(context)!.guarantee1_sign.toCapitalized(),
+                                height: 45,
+                                bGColor: AppColors.whiteColor,
+                                width: getScreenWidth(context) / 2.2,
+                                onPressed: () {
+                                  bloc.add(ClientFormDetailsEvent.signatureEvent(
+                                      context: context,
+                                      fieldName: AppStrings.guarantee1SignatureString,
+                                      fieldNameForSign: AppLocalizations.of(context)!.guarantee1_sign));
+                                },
+                                fontColors: AppColors.whiteColor),
                           ]),
                           7.height,
                           CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee2_sign, star: ''),
@@ -531,9 +494,8 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                               height: 120,
                                               width: 120,
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(AppConstants.radius_8),
-                                                border: Border.all(color: AppColors.borderColor),
-                                              ),
+                                                  borderRadius: BorderRadius.circular(AppConstants.radius_8),
+                                                  border: Border.all(color: AppColors.borderColor)),
                                               child: CachedNetworkImage(
                                                   height: 100,
                                                   width: 100,
@@ -544,10 +506,9 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                                       Center(child: CupertinoActivityIndicator(color: AppColors.blackColor)),
                                                   errorWidget: (context, url, error) {
                                                     return Center(
-                                                      child: Text(
-                                                        AppStrings.failedToLoadString,
-                                                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor),
-                                                      ),
+                                                      child: Text(AppStrings.failedToLoadString,
+                                                          style:
+                                                              AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
                                                     );
                                                   }),
                                             ),
@@ -556,50 +517,46 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
                                       top: -10,
                                       right: -10,
                                       child: GestureDetector(
-                                        onTap: () {
-                                          bloc.add(ClientFormDetailsEvent.deleteFileEvent(
-                                              context: context, fieldName: AppStrings.guarantee2SignatureString));
-                                        },
-                                        child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24),
-                                      ),
+                                          onTap: () {
+                                            bloc.add(ClientFormDetailsEvent.deleteFileEvent(
+                                                context: context, fieldName: AppStrings.guarantee2SignatureString));
+                                          },
+                                          child: Icon(Icons.highlight_remove, color: AppColors.redColor, size: 24)),
                                     ),
                                   ]),
                             7.width,
                             CustomButtonWidget(
-                              fontSize: AppConstants.font_13,
-                              buttonText: AppLocalizations.of(context)!.guarantee2_sign.toCapitalized(),
-                              height: 45,
-                              bGColor: AppColors.whiteColor,
-                              width: getScreenWidth(context) / 2.2,
-                              onPressed: () {
-                                bloc.add(ClientFormDetailsEvent.signatureEvent(
-                                  context: context,
-                                  fieldName: AppStrings.guarantee2SignatureString,
-                                  fieldNameForSign: AppLocalizations.of(context)!.guarantee2_sign,
-                                ));
-                              },
-                              fontColors: AppColors.whiteColor,
-                            ),
+                                fontSize: AppConstants.font_13,
+                                buttonText: AppLocalizations.of(context)!.guarantee2_sign.toCapitalized(),
+                                height: 45,
+                                bGColor: AppColors.whiteColor,
+                                width: getScreenWidth(context) / 2.2,
+                                onPressed: () {
+                                  bloc.add(ClientFormDetailsEvent.signatureEvent(
+                                      context: context,
+                                      fieldName: AppStrings.guarantee2SignatureString,
+                                      fieldNameForSign: AppLocalizations.of(context)!.guarantee2_sign));
+                                },
+                                fontColors: AppColors.whiteColor),
                           ]),
                           40.height,
                           CustomButtonWidget(
-                            buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
-                            bGColor: AppColors.mainColor,
-                            isLoading: state.isLoading,
-                            onPressed: () {
-                              if (state.business != AppLocalizations.of(context)!.type_of_business) {
-                                bool success = validation(state, context);
-                                if (success) {
-                                  bloc.add(ClientFormDetailsEvent.updateClientDataEvent(context: context));
+                              buttonText: AppLocalizations.of(context)!.save.toUpperCase(),
+                              bGColor: AppColors.mainColor,
+                              isLoading: state.isLoading,
+                              onPressed: () {
+                                if (state.business != AppLocalizations.of(context)!.type_of_business) {
+                                  bool success = validation(state, context);
+                                  if (success) {
+                                    bloc.add(ClientFormDetailsEvent.updateClientDataEvent(context: context));
+                                  }
+                                } else {
+                                  CustomSnackBar.showSnackBar(
+                                      context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
                                 }
-                              } else {
-                                CustomSnackBar.showSnackBar(
-                                    context: context, title: AppLocalizations.of(context)!.select_business_type, type: SnackBarType.failure);
-                              }
-                            },
-                            fontColors: AppColors.whiteColor,
-                          ),
-                          20.height,
+                              },
+                              fontColors: AppColors.whiteColor),
+                          20.height
                         ]),
                       ),
                     ),

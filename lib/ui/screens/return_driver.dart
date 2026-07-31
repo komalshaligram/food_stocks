@@ -16,7 +16,7 @@ import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_img_path.dart';
 import '../utils/constants/app_strings.dart';
 import '../utils/constants/app_styles.dart';
-import '../widget/common_alert_dialog.dart';
+import '../widget/dialogs/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import '../widget/custom_button_widget.dart';
 import '../widget/file_selection_option_widget.dart';

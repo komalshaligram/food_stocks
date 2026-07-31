@@ -30,7 +30,6 @@ part 'sub_users_profile_bloc.freezed.dart';
 
 class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileState> {
   SubUsersProfileBloc() : super(SubUsersProfileState.initial()) {
-    String imgUrl = '';
     on<SubUsersProfileEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
@@ -57,7 +56,6 @@ class SubUsersProfileBloc extends Bloc<SubUsersProfileEvent, SubUsersProfileStat
             );
             FileUploadModel profileImageModel = FileUploadModel.fromJson(response);
             if (profileImageModel.filepath != '') {
-              imgUrl = profileImageModel.filepath ?? '';
               emit(state.copyWith(isUploadingProcess: false, image: File(croppedImage?.path ?? pickedFile.path), subUserProfileImage: profileImageModel.filepath ?? ''));
             }
           } on ServerException {

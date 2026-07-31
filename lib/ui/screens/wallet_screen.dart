@@ -20,7 +20,7 @@ import '../utils/constants/app_img_path.dart';
 import '../utils/constants/app_styles.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../widget/balance_indicator.dart';
-import '../widget/common_dialog_with_one_button.dart';
+import '../widget/dialogs/common_dialog_with_one_button.dart';
 import '../widget/dashboard_stats_widget.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
 

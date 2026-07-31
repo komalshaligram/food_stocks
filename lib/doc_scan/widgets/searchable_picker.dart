@@ -165,10 +165,10 @@ class _SearchablePickerSheetState<T> extends State<_SearchablePickerSheet<T>> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: AppColors.accentGreen.withOpacity(0.08),
+                      color: AppColors.accentGreen.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                          color: AppColors.accentGreen.withOpacity(0.25)),
+                          color: AppColors.accentGreen.withValues(alpha: 0.25)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,

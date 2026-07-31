@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../ui/utils/constants/app_colors.dart';
-import '../../ui/utils/constants/app_constants.dart';
-import '../../ui/utils/constants/app_styles.dart';
+import '../../utils/constants/app_colors.dart';
+import '../../utils/constants/app_constants.dart';
+import '../../utils/constants/app_styles.dart';
 
 class CommonSaleDescriptionDialog extends StatelessWidget {
   final String title;
@@ -17,11 +17,7 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
         surfaceTintColor: AppColors.whiteColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_10)),
         title: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
-        actionsPadding: const EdgeInsets.only(
-          right: AppConstants.padding_15,
-          bottom: AppConstants.padding_15,
-          left: AppConstants.padding_15,
-        ),
+        actionsPadding: const EdgeInsets.only(right: AppConstants.padding_15, bottom: AppConstants.padding_15, left: AppConstants.padding_15),
         actions: [
           InkWell(
             highlightColor: Colors.transparent,
@@ -34,7 +30,8 @@ class CommonSaleDescriptionDialog extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppConstants.radius_7)),
               width: 80,
-              child: Text(buttonTitle, style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withValues(alpha: 0.9), size: AppConstants.smallFont)),
+              child: Text(buttonTitle,
+                  style: AppStyles.rkRegularTextStyle(color: AppColors.mainColor.withValues(alpha: 0.9), size: AppConstants.smallFont)),
             ),
           )
         ]);

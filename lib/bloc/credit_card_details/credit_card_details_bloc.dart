@@ -36,8 +36,8 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
         try {
           CreditCardReqModel reqMap = CreditCardReqModel(
             cardNum: state.creditCardNumberController.text.trim(),
-            expDate_YY: state.validityController.text.trim(),
-            expDate_MM: state.selectedMonth,
+            expDateYy: state.validityController.text.trim(),
+            expDateMm: state.selectedMonth,
           );
           final res = await DioClient(event.context).post(AppUrlEndPoints.updateCreditCardUrl + preferences.getUserId(), data: reqMap);
           if (res[AppStrings.statusString] == AppConstants.code_200) {

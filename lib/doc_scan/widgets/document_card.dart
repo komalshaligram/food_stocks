@@ -44,7 +44,7 @@ class _DocumentCardState extends State<DocumentCard> {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      color: AppColors.accentGreen.withOpacity(0.06),
+      color: AppColors.accentGreen.withValues(alpha: 0.06),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onHighlightChanged: (v) {

@@ -34,7 +34,7 @@ class InvoicePaymentBloc extends Bloc<InvoicePaymentEvent, InvoicePaymentState> 
             "supplierId": event.supplierId,
             "invoiceNumber": event.invoiceNumber,
             "documentType": event.documentType,
-            if ((event.orderId ?? '').trim().isNotEmpty && event.orderId != 'null') "orderId": event.orderId,
+            if ((event.orderId).trim().isNotEmpty && event.orderId != 'null') "orderId": event.orderId,
           };
           // PayInvoiceCreditCardRequestModel reqMap = PayInvoiceCreditCardRequestModel(orderId: event.orderId == null ? , invoiceNumber: event.invoiceNumber);
           final res = await DioClient(event.context).post(AppUrlEndPoints.payInvoiceByCreditCard, data: payInvoiceCreditCardRequest);

@@ -46,13 +46,12 @@ class CompanyScreenWidget extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: AppLocalizations.of(context)?.brands ?? '',
-            iconData: Icons.arrow_back_ios_sharp,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+              bgColor: AppColors.pageColor,
+              title: AppLocalizations.of(context)?.brands ?? '',
+              iconData: Icons.arrow_back_ios_sharp,
+              onTap: () {
+                Navigator.pop(context);
+              }),
         ),
         body: SafeArea(
           child: SmartRefresher(
@@ -90,7 +89,7 @@ class CompanyScreenWidget extends StatelessWidget {
                                   Navigator.pushNamed(context, RouteDefine.companyProductsScreen.name, arguments: {
                                     AppStrings.companyIdString: state.companiesList[index].id ?? '',
                                     AppStrings.companyName: state.companiesList[index].brandName ?? '',
-                                    AppStrings.companyLogo: state.companiesList[index].brandLogo ?? '',
+                                    AppStrings.companyLogo: state.companiesList[index].brandLogo ?? ''
                                   });
                                 })),
               ]),
@@ -109,10 +108,9 @@ class CompanyScreenWidget extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        color: AppColors.whiteColor,
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-      ),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          color: AppColors.whiteColor,
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)]),
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
@@ -136,18 +134,16 @@ class CompanyScreenWidget extends StatelessWidget {
                         ),
                     errorWidget: (context, url, error) {
                       return Container(
-                        height: getScreenHeight(context),
-                        width: getScreenWidth(context),
-                        color: AppColors.whiteColor,
-                        child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
-                      );
+                          height: getScreenHeight(context),
+                          width: getScreenWidth(context),
+                          color: AppColors.whiteColor,
+                          child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover));
                     })
                 : Container(
                     height: getScreenHeight(context),
                     width: getScreenWidth(context),
                     color: AppColors.whiteColor,
-                    child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
-                  ),
+                    child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover)),
           ),
           Container(
             alignment: Alignment.center,
@@ -157,13 +153,11 @@ class CompanyScreenWidget extends StatelessWidget {
               borderRadius:
                   const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
             ),
-            child: Text(
-              companyName,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
+            child: Text(companyName,
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center),
           ),
         ]),
       ),

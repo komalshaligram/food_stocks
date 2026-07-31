@@ -31,10 +31,9 @@ class BottomNavScreen extends StatelessWidget {
     final pushNavigation = args?[AppStrings.pushNavigationString] ?? '';
 
     return BlocProvider(
-      create: (context) => BottomNavBloc()
-        ..add(BottomNavEvent.started(context: context, basketScreen: basketScreen, storeScreen: pushNavigation, profileScreen: pushNavigation)),
-      child: const BottomNavScreenWidget(),
-    );
+        create: (context) => BottomNavBloc()
+          ..add(BottomNavEvent.started(context: context, basketScreen: basketScreen, storeScreen: pushNavigation, profileScreen: pushNavigation)),
+        child: const BottomNavScreenWidget());
   }
 }
 
@@ -72,27 +71,25 @@ class BottomNavScreenWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: Colors.transparent, boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.1), blurRadius: 10)]),
                     child: CurvedNavigationBar(
-                      index: state.selectedNavIndex,
-                      height: 65.0,
-                      items: _buildNavItems(context, state),
-                      color: AppColors.whiteColor,
-                      buttonBackgroundColor: AppColors.whiteColor,
-                      backgroundColor: Colors.transparent,
-                      animationCurve: Curves.decelerate,
-                      animationDuration: const Duration(milliseconds: 600),
-                      onTap: (navIndex) {
-                        bloc.add(BottomNavEvent.changePage(index: navPages[navIndex], context: context));
-                      },
-                      letIndexChange: (_) => true,
-                    ),
+                        index: state.selectedNavIndex,
+                        height: 65.0,
+                        items: _buildNavItems(context, state),
+                        color: AppColors.whiteColor,
+                        buttonBackgroundColor: AppColors.whiteColor,
+                        backgroundColor: Colors.transparent,
+                        animationCurve: Curves.decelerate,
+                        animationDuration: const Duration(milliseconds: 600),
+                        onTap: (navIndex) {
+                          bloc.add(BottomNavEvent.changePage(index: navPages[navIndex], context: context));
+                        },
+                        letIndexChange: (_) => true),
                   ),
                   body: FocusDetector(
-                    onFocusGained: () {
-                      bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
-                      bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
-                    },
-                    child: SafeArea(child: _PageContainers(state: state)),
-                  ),
+                      onFocusGained: () {
+                        bloc.add(BottomNavEvent.updateCartCountEvent(context: context));
+                        bloc.add(BottomNavEvent.getPreferencesDataEvent(context: context));
+                      },
+                      child: SafeArea(child: _PageContainers(state: state))),
                 ),
               ),
             ),
@@ -107,15 +104,14 @@ class BottomNavScreenWidget extends StatelessWidget {
     final items = <Widget>[
       BottomNavTabItem(imagePath: AppImagePath.home, isSelected: selected == 0, isRtl: isRtl),
       BottomNavTabItem(
-        imagePath: AppImagePath.cart,
-        isSelected: selected == 2,
-        isRtl: isRtl,
-        isCart: true,
-        cartCount: state.cartCount,
-        showCartBadge: state.showCartBadge,
-        showCartAnimation: state.isAnimation,
-        showCelebration: state.duringCelebration,
-      )
+          imagePath: AppImagePath.cart,
+          isSelected: selected == 2,
+          isRtl: isRtl,
+          isCart: true,
+          cartCount: state.cartCount,
+          showCartBadge: state.showCartBadge,
+          showCartAnimation: state.isAnimation,
+          showCelebration: state.duringCelebration)
     ];
 
     if (state.isSubUserSeeWallet) {

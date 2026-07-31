@@ -7,9 +7,9 @@ import '../../data/model/req_model/profile_details_req_model/profile_details_req
     as req;
 import '../../data/model/res_model/business_type_model/business_type_model.dart';
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart'
-    as resGet;
+    as res_get;
 import '../../data/model/res_model/profile_details_update_res_model/profile_details_update_res_model.dart'
-    as reqUpdate;
+    as req_update;
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
@@ -119,7 +119,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 isUploadingProcess: false,
                 isFileUploading: false,
                 image: File(croppedImage?.path ?? pickedFile.path),
-                UserImageUrl: profileImageModel.filepath ?? '',
+                userImageUrl: profileImageModel.filepath ?? '',
               ));
             }
           } on ServerException {
@@ -198,7 +198,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             businessName: state.businessNameController.text.trim());
         profileModel = ProfileModel(
           phoneNumber: mobileNo.trim(),
-          profileImage: state.UserImageUrl,
+          profileImage: state.userImageUrl,
           clientDetail: ClientDetail(
             ownerName:
                 '${state.ownerFirstNameController.text.toString()} ${state.ownerLastNameController.text.toString()}',
@@ -233,8 +233,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 AppUrlEndPoints.getProfileDetailsUrl,
                 data: req.ProfileDetailsReqModel(id: preferences.getUserId())
                     .toJson());
-            resGet.ProfileDetailsResModel response =
-                resGet.ProfileDetailsResModel.fromJson(res);
+            res_get.ProfileDetailsResModel response =
+                res_get.ProfileDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
 
               preferences.setPaymentMethodCount(
@@ -263,7 +263,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   isShimmering: false,
                   userId: response.data?.clients?.first.id ?? '',
                   isUpdating: false,
-                  UserImageUrl:
+                  userImageUrl:
                       response.data?.clients?.first.profileImage ?? '',
                   businessNameController: TextEditingController(
                       text: response
@@ -304,7 +304,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _updateProfileDetailsEvent) {
         ProfileModel updatedProfileModel = ProfileModel(
-          profileImage: state.image.path != '' ? imgUrl : state.UserImageUrl,
+          profileImage: state.image.path != '' ? imgUrl : state.userImageUrl,
           contactName: state.contactController.text,
           clientDetail: ClientDetail(
             clientTypeId: state.businessTypeList
@@ -338,11 +338,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
               data: req);
 
-          reqUpdate.ProfileDetailsUpdateResModel response =
-              reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
+          req_update.ProfileDetailsUpdateResModel response =
+              req_update.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
-                UserImageUrl:
+                userImageUrl:
                     response.data?.client?.profileImage.toString() ?? ''));
 
             if (!preferences.getSubUser()) {
@@ -353,7 +353,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                   imageUrl:
                       response.data?.client?.profileImage.toString() ?? '');
               emit(state.copyWith(
-                  UserImageUrl:
+                  userImageUrl:
                       response.data?.client?.profileImage.toString() ?? ''));
             }
 
@@ -387,10 +387,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       } else if (event is _deleteFileEvent) {
         try {
-          if (state.UserImageUrl.isEmpty) {
+          if (state.userImageUrl.isEmpty) {
             return;
-          } else if (state.UserImageUrl.contains(AppStrings.tempString)) {
-            emit(state.copyWith(UserImageUrl: '', image: File('')));
+          } else if (state.userImageUrl.contains(AppStrings.tempString)) {
+            emit(state.copyWith(userImageUrl: '', image: File('')));
             await preferences.removeProfileImage();
             CustomSnackBar.showSnackBar(
                 context: event.context,
@@ -416,12 +416,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           final res = await DioClient(event.context).post(
               "${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}",
               data: req);
-          reqUpdate.ProfileDetailsUpdateResModel response =
-              reqUpdate.ProfileDetailsUpdateResModel.fromJson(res);
+          req_update.ProfileDetailsUpdateResModel response =
+              req_update.ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             await preferences.removeProfileImage();
             emit(state.copyWith(isFileUploading: false));
-            emit(state.copyWith(UserImageUrl: '', image: File('')));
+            emit(state.copyWith(userImageUrl: '', image: File('')));
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppLocalizations.of(event.context)!.removed_successfully,

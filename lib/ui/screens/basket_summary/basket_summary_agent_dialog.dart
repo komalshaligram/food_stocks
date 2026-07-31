@@ -13,13 +13,7 @@ class BasketSummaryCallAgentDialog extends StatelessWidget {
   final int index;
   final BasketSummaryBloc bloc;
 
-  const BasketSummaryCallAgentDialog(
-      {Key? key,
-      required this.language,
-      required this.id,
-      required this.index,
-      required this.bloc})
-      : super(key: key);
+  const BasketSummaryCallAgentDialog({Key? key, required this.language, required this.id, required this.index, required this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,60 +22,40 @@ class BasketSummaryCallAgentDialog extends StatelessWidget {
       child: AlertDialog(
           contentPadding: const EdgeInsets.all(AppConstants.padding_20),
           surfaceTintColor: AppColors.whiteColor,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppConstants.radius_20)),
-          content: Text(
-            AppLocalizations.of(context)!.return_draft_not_sent,
-            style: AppStyles.rkRegularTextStyle(
-                color: AppColors.blackColor, size: AppConstants.smallFont),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
+          content: Text(AppLocalizations.of(context)!.return_draft_not_sent,
+              style: AppStyles.rkRegularTextStyle(color: AppColors.blackColor, size: AppConstants.smallFont)),
           actions: [
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      Navigator.of(context).pop();
-                      Navigator.pushNamed(
-                          context, RouteDefine.returnListScreen.name,
-                          arguments: {AppStrings.isbackString: 'orderSummary'});
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(AppConstants.padding_8),
-                      decoration: BoxDecoration(
-                          gradient: AppColors.appMainGradientColor,
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radius_5)),
-                      child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        Text(AppLocalizations.of(context)!.view_return,
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.smallFont,
-                                color: AppColors.whiteColor)),
-                      ]),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      Navigator.of(context).pop();
-                      bloc.add(BasketSummaryEvent.getSupplierPaymentTypeEvent(
-                          context: context, id: id, index: index));
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(AppConstants.padding_8),
-                      decoration: BoxDecoration(
-                          gradient: AppColors.appMainGradientColor,
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radius_5)),
-                      child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        Text(AppLocalizations.of(context)!.send_any_way,
-                            style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.smallFont,
-                                color: AppColors.whiteColor)),
-                      ]),
-                    ),
-                  ),
-                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: [
+              InkWell(
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, RouteDefine.returnListScreen.name, arguments: {AppStrings.isbackString: 'orderSummary'});
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(AppConstants.padding_8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Text(AppLocalizations.of(context)!.view_return,
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
+                  ]),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  bloc.add(BasketSummaryEvent.getSupplierPaymentTypeEvent(context: context, id: id, index: index));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(AppConstants.padding_8),
+                  decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Text(AppLocalizations.of(context)!.send_any_way,
+                        style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
+                  ]),
+                ),
+              ),
+            ]),
           ]),
     );
   }

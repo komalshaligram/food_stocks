@@ -17,7 +17,7 @@ import '../../routes/app_routes.dart';
 import '../utils/constants/app_colors.dart';
 import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_styles.dart';
-import '../widget/common_alert_dialog.dart';
+import '../widget/dialogs/common_alert_dialog.dart';
 import '../widget/common_app_bar.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../widget/custom_button_widget.dart';
