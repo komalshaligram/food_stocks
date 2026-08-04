@@ -54,6 +54,7 @@ class SupplierListProductsState with _$SupplierListProductsState {
     required bool isDeliveryScheduleLoading,
     required List<SupplierCityDeliveryDay> deliveryScheduleDays,
     String? deliveryScheduleCityName,
+    String? supplierAppInfo,
     required ProductSortOption sortOption,
   }) = _SupplierListProductsState;
 
@@ -113,6 +114,7 @@ class SupplierListProductsState with _$SupplierListProductsState {
     isDeliveryScheduleLoading: false,
     deliveryScheduleDays: [],
     deliveryScheduleCityName: null,
+    supplierAppInfo: null,
     sortOption: ProductSortOption.none,
   );
 }

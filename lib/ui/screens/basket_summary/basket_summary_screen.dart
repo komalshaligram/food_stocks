@@ -1,3 +1,4 @@
+import '../../../ui/utils/club_agent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -21,12 +22,12 @@ import '../../utils/app_utils.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/constants/app_constants.dart';
 import '../../utils/constants/app_strings.dart';
-import '../../utils/constants/app_styles.dart';
 import '../../utils/constants/app_urls.dart';
 import '../../widget/common_app_bar.dart';
 import '../../widget/dialogs/common_dialog_with_one_button.dart';
-import '../../widget/common_order_content_widget.dart';
+import '../../widget/order_summary_card_widgets.dart';
 import '../../widget/order_summary_screen_shimmer_widget.dart';
+import '../../widget/supplier_delivery_schedule_widget.dart';
 
 class BasketSummaryRoute {
   static Widget get route => const BasketSummaryScreen();
@@ -39,15 +40,14 @@ class BasketSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => BasketSummaryBloc()
-        ..add(BasketSummaryEvent.getDataEvent(
-            context: context,
-            cartItemList: args?[AppStrings.getCartListString],
-            orderBySupplierId: args?[AppStrings.orderBySupplierId] ?? '',
-            isSupplierSingle: args?[AppStrings.isSupplierSingle],
-            totalSupplier: args?[AppStrings.totalSupplier])),
-      child: const BasketSummaryScreenWidget(),
-    );
+        create: (context) => BasketSummaryBloc()
+          ..add(BasketSummaryEvent.getDataEvent(
+              context: context,
+              cartItemList: args?[AppStrings.getCartListString],
+              orderBySupplierId: args?[AppStrings.orderBySupplierId] ?? '',
+              isSupplierSingle: args?[AppStrings.isSupplierSingle],
+              totalSupplier: args?[AppStrings.totalSupplier])),
+        child: const BasketSummaryScreenWidget());
   }
 }
 
@@ -61,9 +61,9 @@ class BasketSummaryScreenWidget extends StatelessWidget {
       listenWhen: (previous, current) => previous.showPopUp != current.showPopUp && current.showPopUp == true,
       listener: (context, state) {
         if (state.showPopUp) {
-          if (state.clubAgentId == AppStrings.clubAgentIdText && state.isAvailableAllPayments == false) {
+          if (ClubAgent.isClubClient(state.clubAgentId) && state.isAvailableAllPayments == false) {
             paymentOptionPopupOne(state, context, bloc);
-          } else if (state.clubAgentId == AppStrings.clubAgentIdText && state.isAvailableAllPayments == true) {
+          } else if (ClubAgent.isClubClient(state.clubAgentId) && state.isAvailableAllPayments == true) {
             paymentOptionPopupTwo(state, context, bloc);
           } else {
             paymentOptionPopupThree(state, context, bloc);
@@ -242,10 +242,8 @@ class BasketSummaryScreenWidget extends StatelessWidget {
                                 width: 130,
                                 child: Lottie.asset('assets/images/super_market.json', width: 50, height: 50, fit: BoxFit.fill)),
                             10.height,
-                            Text(
-                              AppLocalizations.of(context)!.basket_loader_text,
-                              style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.bold),
-                            ),
+                            Text(AppLocalizations.of(context)!.basket_loader_text,
+                                style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_14, fontWeight: FontWeight.bold)),
                             4.height,
                             Text(AppLocalizations.of(context)!.please_wait_text,
                                 style: TextStyle(fontSize: AppConstants.font_14, color: AppColors.greyColor)),
@@ -432,74 +430,50 @@ class BasketSummaryScreenWidget extends StatelessWidget {
 
   Widget orderListItem({required int index, required BuildContext context, required BasketSummaryBloc bloc}) {
     return BlocBuilder<BasketSummaryBloc, BasketSummaryState>(builder: (context, state) {
-      final totalSavingsValue = double.tryParse(state.tempList[index].totalSavings.toString()) ?? 0.0;
-      final savingsSalesValue =
-          totalSavingsValue < 0 ? '\u200E-${totalSavingsValue.abs().toStringAsFixed(2)}₪' : '\u200E${totalSavingsValue.toStringAsFixed(2)}₪';
-      return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-          margin: const EdgeInsets.all(AppConstants.padding_10),
-          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
-          decoration: BoxDecoration(
-              color: AppColors.whiteColor,
-              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(state.tempList[index].suppliers?.contactName! ?? '',
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
-            ]),
-            10.height,
-            Row(children: [
-              CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 3,
-                  title: AppLocalizations.of(context)!.products,
-                  value: state.tempList[index].totalQuantity?.toString() ?? '',
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextWeight: FontWeight.w700,
-                  valueTextSize: AppConstants.smallFont),
-              5.width,
-              CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 5,
-                  title: AppLocalizations.of(context)!.savings_for_sales,
-                  value: savingsSalesValue,
-                  titleColor: AppColors.orangeColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextWeight: FontWeight.w700,
-                  valueTextSize: AppConstants.smallFont),
-              5.width,
-              CommonOrderContentWidget(
-                  backGroundColor: AppColors.iconBGColor,
-                  borderCoder: AppColors.lightBorderColor,
-                  flexValue: 7,
-                  title: AppLocalizations.of(context)!.total_order,
-                  value: double.parse(state.tempList[index].totalAmount!.toString()).toStringAsFixed(2),
-                  titleColor: AppColors.mainColor,
-                  valueColor: AppColors.blackColor,
-                  valueTextWeight: FontWeight.w500,
-                  valueTextSize: AppConstants.smallFont),
-            ]),
-          ]),
-        ),
-        5.height,
-        Container(
-          margin: const EdgeInsets.only(left: AppConstants.padding_10),
-          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-          decoration: BoxDecoration(color: AppColors.pesachBGColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_50))),
-          child: Text('${AppLocalizations.of(context)!.minimum_order} ${state.tempList[index].minOrderAmount} ₪',
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
-        ),
-        Container(
-            margin: const EdgeInsets.only(left: AppConstants.padding_15),
-            child: state.tempList[index].notMinimumOrder == false
-                ? Text(AppLocalizations.of(context)!.you_can_send_the_order, style: TextStyle(color: AppColors.notificationColor))
-                : Text(AppLocalizations.of(context)!.you_cant_send_the_order, style: TextStyle(color: AppColors.redColor))),
-        5.height,
-        totalAmountCard(state, context, index)
+      final l10n = AppLocalizations.of(context)!;
+      final supplier = state.tempList[index];
+      final supplierId = supplier.suppliers?.id ?? supplier.id ?? '';
+      final deliverySchedule = state.deliverySchedules[supplierId];
+      final totalSavingsValue = double.tryParse(supplier.totalSavings.toString()) ?? 0.0;
+      final totalAmount = double.tryParse(supplier.totalAmount.toString()) ?? 0.0;
+      final minOrderAmount = supplier.minOrderAmount ?? 0;
+      final isMinimumReached = supplier.notMinimumOrder == false;
+      final hasDeliverySchedule = deliverySchedule?.cityName?.isNotEmpty == true && (deliverySchedule?.deliveryDays ?? []).isNotEmpty;
+
+      return SummaryCard(children: [
+        SummarySupplierHeader(
+            supplierName: supplier.suppliers?.contactName ?? '',
+            totalLabel: l10n.total_order,
+            totalAmount: totalAmount,
+            productsLabel: l10n.products,
+            productsCount: supplier.totalQuantity?.toString() ?? '0',
+            savings: totalSavingsValue,
+            supplierLogo: supplier.suppliers?.logo),
+        const SummaryHairline(),
+        MinimumOrderProgress(
+            minimumAmount: minOrderAmount,
+            currentAmount: totalAmount,
+            isReached: isMinimumReached,
+            minimumLabel: l10n.minimum_order_title,
+            reachedText: l10n.you_can_send_the_order,
+            missingText: minOrderAmount <= 0
+                ? l10n.you_cant_send_the_order
+                : l10n.amount_missing_for_minimum(summaryMoney((minOrderAmount - totalAmount).clamp(0, double.infinity)))),
+        if (state.isDeliveryScheduleLoading || hasDeliverySchedule) ...[
+          const SummaryHairline(),
+          SummaryActionTile(
+              icon: Icons.local_shipping_outlined,
+              flipIcon: true,
+              accent: AppColors.blueColor,
+              label: l10n.supplier_delivery_schedule_button,
+              subLabel: deliverySchedule?.cityName,
+              isLoading: state.isDeliveryScheduleLoading,
+              onTap: !hasDeliverySchedule
+                  ? null
+                  : () => SupplierDeliveryScheduleWidget.showSheet(context,
+                      cityName: deliverySchedule?.cityName ?? '', deliveryDays: deliverySchedule?.deliveryDays ?? []))
+        ],
+        ...totalAmountCardWidget(state, context, index)
       ]);
     });
   }

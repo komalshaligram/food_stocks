@@ -4649,6 +4649,24 @@ abstract class AppLocalizations {
   /// **'ימי אספקה — {city}'**
   String supplier_delivery_schedule_title(String city);
 
+  /// No description provided for @supplier_info_button.
+  ///
+  /// In he, this message translates to:
+  /// **'מידע נוסף'**
+  String get supplier_info_button;
+
+  /// No description provided for @supplier_info_subtitle.
+  ///
+  /// In he, this message translates to:
+  /// **'אודות הספק'**
+  String get supplier_info_subtitle;
+
+  /// No description provided for @supplier_info_title.
+  ///
+  /// In he, this message translates to:
+  /// **'מידע אודות הספק'**
+  String get supplier_info_title;
+
   /// No description provided for @supplier_delivery_schedule_button.
   ///
   /// In he, this message translates to:
@@ -4918,6 +4936,24 @@ abstract class AppLocalizations {
   /// In he, this message translates to:
   /// **'{selected} מתוך {min} מארזים'**
   String promo_sheet_of_packages(int selected, int min);
+
+  /// No description provided for @minimum_order_title.
+  ///
+  /// In he, this message translates to:
+  /// **'מינימום הזמנה'**
+  String get minimum_order_title;
+
+  /// No description provided for @amount_missing_for_minimum.
+  ///
+  /// In he, this message translates to:
+  /// **'חסרים {amount} להשלמת המינימום'**
+  String amount_missing_for_minimum(String amount);
+
+  /// No description provided for @payment_details_title.
+  ///
+  /// In he, this message translates to:
+  /// **'פירוט תשלום'**
+  String get payment_details_title;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

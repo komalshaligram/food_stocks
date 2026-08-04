@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/res_model/cart_product_supplier/cart_products_supplier_res_model.dart';
 import '../../data/model/res_model/get_all_cart_res_model/get_all_cart_res_model.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
+import '../../data/model/res_model/supplier_city_delivery_schedule_res_model/supplier_city_delivery_schedule_res_model.dart';
+import '../../data/services/supplier_delivery_schedule_service.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
@@ -23,7 +25,8 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getDataEvent) {
-        emit(state.copyWith(cartItemList: event.cartItemList, language: preferences.getAppLanguage(), total: event.totalAmount, backString: event.backString));
+        emit(state.copyWith(
+            cartItemList: event.cartItemList, language: preferences.getAppLanguage(), total: event.totalAmount, backString: event.backString));
         try {
           final results = await Future.wait([
             DioClient(event.context).post('${AppUrlEndPoints.listingCartProductsSupplierUrl}${preferences.getCartId()}'),
@@ -32,10 +35,22 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(results[0]);
           if (response.status == AppConstants.code_200) {
             final settingsResponse = SettingResModel.fromJson(results[1]);
+            final supplierList = response.data?.data ?? [];
+            final supplierIds = supplierList.map((supplier) => supplier.suppliers?.id ?? supplier.id ?? '').toList();
             emit(state.copyWith(
               orderSummaryList: response,
-              tempList: response.data?.data ?? [],
+              tempList: supplierList,
               firstSupplierOrderMessageTemplate: settingsResponse.data?.firstSupplierOrderMessageTemplate ?? '',
+              isDeliveryScheduleLoading: supplierIds.any((id) => id.isNotEmpty),
+            ));
+            if (!event.context.mounted) return;
+            final schedules = await SupplierDeliveryScheduleService.loadForSuppliers(
+              context: event.context,
+              supplierIds: supplierIds,
+            );
+            emit(state.copyWith(
+              deliverySchedules: schedules,
+              isDeliveryScheduleLoading: false,
             ));
           } else {
             CustomSnackBar.showSnackBar(

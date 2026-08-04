@@ -4,7 +4,6 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../main.dart';
 import '../../routes/app_routes.dart';
 
-/// Single place for routing users to the main app entry after launch / deep link.
 class StartupNavigation {
   StartupNavigation._();
 
@@ -19,8 +18,6 @@ class StartupNavigation {
         : RouteDefine.connectScreen.name;
   }
 
-  /// Replaces the entire stack — used from splash and warm deep links.
-  /// Serialized so splash + deep link cannot navigate at the same time.
   static Future<void> replaceWithStartupRoute({
     BuildContext? context,
     Map<String, dynamic>? arguments,

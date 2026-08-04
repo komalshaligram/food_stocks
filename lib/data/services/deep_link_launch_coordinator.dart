@@ -1,6 +1,5 @@
 import '../../routes/app_routes.dart';
 
-/// Coordinates deep-link handling between splash (cold start) and the app shell.
 class DeepLinkLaunchCoordinator {
   DeepLinkLaunchCoordinator._();
 

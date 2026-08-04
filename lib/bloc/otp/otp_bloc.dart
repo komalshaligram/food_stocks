@@ -1,3 +1,4 @@
+import '../../ui/utils/club_agent.dart';
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,8 @@ import '../../repository/dio_client.dart';
 import '../../ui/widget/dialogs/otp_whatsapp_sent_dialog.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
+import 'dart:io';
+
 part 'otp_event.dart';
 part 'otp_state.dart';
 part 'otp_bloc.freezed.dart';
@@ -82,6 +85,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferences.setIsSubUser(isSubUser: (response.data?.adminType == AppStrings.subUserString) ? true : false);
               preferences.setEmailId(userEmailId: response.data?.user?.email ?? '');
               preferences.setClubAgentId(clubAgentId: response.data?.agentId ?? '');
+              await preferences.setVeahavtaAgentId(veahavtaAgentId: readVeahavtaAgentId(res));
               preferences.setIsAgent(isAgent: response.data?.isAgent ?? false);
               preferences.setIsAgentSwitchToAssignedStore(isAgentSwitchToAssignedStore: response.data?.isAgentSwitchToAssignedStore ?? false);
               if (response.data?.adminType == AppStrings.subUserString) {

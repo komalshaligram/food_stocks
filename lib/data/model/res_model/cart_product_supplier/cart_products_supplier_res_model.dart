@@ -12,8 +12,8 @@ class CartProductsSupplierResModel with _$CartProductsSupplierResModel {
   }) = _CartProductsSupplierResModel;
 
   factory CartProductsSupplierResModel.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+      Map<String, dynamic> json,
+      ) =>
       _$CartProductsSupplierResModelFromJson(json);
 }
 
@@ -67,8 +67,8 @@ class CartProductDataResModel with _$CartProductDataResModel {
   }) = _CartProductDataResModel;
 
   factory CartProductDataResModel.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+      Map<String, dynamic> json,
+      ) =>
       _$CartProductDataResModelFromJson(json);
 }
 
@@ -112,6 +112,7 @@ class Suppliers with _$Suppliers {
   const factory Suppliers({
     @JsonKey(name: "_id") String? id,
     @JsonKey(name: "contactName") String? contactName,
+    @JsonKey(name: "logo") String? logo,
   }) = _Suppliers;
 
   factory Suppliers.fromJson(Map<String, dynamic> json) => _$SuppliersFromJson(json);

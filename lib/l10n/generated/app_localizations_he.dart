@@ -2288,6 +2288,15 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
+  String get supplier_info_button => 'מידע נוסף';
+
+  @override
+  String get supplier_info_subtitle => 'אודות הספק';
+
+  @override
+  String get supplier_info_title => 'מידע אודות הספק';
+
+  @override
   String get supplier_delivery_schedule_button => 'ימי אספקה';
 
   @override
@@ -2427,4 +2436,15 @@ class AppLocalizationsHe extends AppLocalizations {
   String promo_sheet_of_packages(int selected, int min) {
     return '$selected מתוך $min מארזים';
   }
+
+  @override
+  String get minimum_order_title => 'מינימום הזמנה';
+
+  @override
+  String amount_missing_for_minimum(String amount) {
+    return 'חסרים $amount להשלמת המינימום';
+  }
+
+  @override
+  String get payment_details_title => 'פירוט תשלום';
 }

@@ -1,3 +1,4 @@
+import '../../ui/utils/club_agent.dart';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -1194,7 +1195,7 @@ class StoreScreenWidget extends StatelessWidget {
                                           scrollController: scrollController,
                                           productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                           isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                          recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
+                                          recommendedRetailConsumerPricerOffer: ClubAgent.isClubClient(state.clubAgentId)
                                               ? state.productDetails.first.sale?.isSale == true
                                                   ? state.productDetails.first.recommendedConsumerOffer
                                                   : state.productDetails.first.recommendedRetailPrice

@@ -769,6 +769,9 @@
       }
     }
   },
+  "supplier_info_button": "מידע נוסף",
+  "supplier_info_subtitle": "אודות הספק",
+  "supplier_info_title": "מידע אודות הספק",
   "supplier_delivery_schedule_button": "ימי אספקה",
   "supplier_delivery_schedule_delivery_on": "אספקה",
   "supplier_delivery_schedule_order_until": "הזמנה עד",
@@ -837,5 +840,15 @@
         "type": "int"
       }
     }
-  }
+  },
+  "minimum_order_title": "מינימום הזמנה",
+  "amount_missing_for_minimum": "חסרים {amount} להשלמת המינימום",
+  "@amount_missing_for_minimum": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payment_details_title": "פירוט תשלום"
 }

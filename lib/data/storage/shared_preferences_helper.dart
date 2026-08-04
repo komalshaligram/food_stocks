@@ -1,3 +1,4 @@
+import '../../ui/utils/club_agent.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +12,7 @@ class SharedPreferencesHelper {
   static const String userName = "userName";
   static const String userImage = "userImage";
   static const String clubAgentIdKey = "clubAgentId";
+  static const String veahavtaAgentIdKey = "veahavtaAgentId";
   static const String isAgentKey = "isAgent";
   static const String isAgentSwitchToAssignedStoreKey = "isAgentSwitchToAssignedStore";
   static const String userCompanyLogo = "companyLogo";
@@ -151,7 +153,6 @@ class SharedPreferencesHelper {
     await prefs.setBool(userLoggedIn, isLoggedIn);
   }
 
-  // true = the logged-in client is still PENDING and must resume registration.
   Future<void> setRegistrationIncomplete({bool isIncomplete = false}) async {
     await prefs.setBool(registrationIncomplete, isIncomplete);
   }
@@ -232,6 +233,17 @@ class SharedPreferencesHelper {
     await prefs.setString(userImage, imageUrl);
   }
 
+  Future<void> setVeahavtaAgentId({required String? veahavtaAgentId}) async {
+    final value = veahavtaAgentId?.trim() ?? '';
+    if (value.isEmpty) {
+      return;
+    }
+    ClubAgent.update(value);
+    await prefs.setString(veahavtaAgentIdKey, value);
+  }
+
+  String getVeahavtaAgentId() => prefs.getString(veahavtaAgentIdKey) ?? '';
+
   Future<void> setClubAgentId({required String clubAgentId}) async {
     await prefs.setString(clubAgentIdKey, clubAgentId);
   }
@@ -268,9 +280,6 @@ class SharedPreferencesHelper {
     await prefs.setString(phoneNumber, userPhoneNumber);
   }
 
-  /// Records that a code was just sent to [contact], starting a cooldown of
-  /// [seconds]. [sendCount] is how many codes have gone out for this number,
-  /// which drives the escalating wait (30s / 60s / 3min).
   Future<void> setOtpCooldown({
     required String contact,
     required int seconds,
@@ -281,8 +290,6 @@ class SharedPreferencesHelper {
     await prefs.setInt(otpSendCount, sendCount);
   }
 
-  /// Seconds still left on the cooldown for [contact], or 0 if none is running
-  /// (or it belongs to a different number). Never negative.
   int getOtpCooldownRemaining(String contact) {
     if (prefs.getString(otpCooldownPhone) != contact) {
       return 0;
@@ -517,7 +524,6 @@ class SharedPreferencesHelper {
     return prefs.getBool(documentScanOnApp) ?? false;
   }
 
-  /// Client-level flag plus sub-user permission (main user only needs client flag).
   bool getDocumentScanMenuVisible() {
     if (!getDocumentScanOnApp()) return false;
     if (getSubUser()) return getCanScanDocuments();

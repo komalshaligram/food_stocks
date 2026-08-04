@@ -106,5 +106,7 @@ class SupplierListProductsEvent with _$SupplierListProductsEvent {
 
   const factory SupplierListProductsEvent.getSupplierDeliveryScheduleEvent({required BuildContext context}) = _getSupplierDeliveryScheduleEvent;
 
+  const factory SupplierListProductsEvent.getSupplierAppInfoEvent({required BuildContext context}) = _getSupplierAppInfoEvent;
+
   const factory SupplierListProductsEvent.applySortOptionEvent({required BuildContext context, required ProductSortOption option}) = _applySortOptionEvent;
 }

@@ -2288,6 +2288,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get supplier_info_button => 'More info';
+
+  @override
+  String get supplier_info_subtitle => 'About the supplier';
+
+  @override
+  String get supplier_info_title => 'About the supplier';
+
+  @override
   String get supplier_delivery_schedule_button => 'Delivery days';
 
   @override
@@ -2427,4 +2436,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String promo_sheet_of_packages(int selected, int min) {
     return '$selected of $min packages';
   }
+
+  @override
+  String get minimum_order_title => 'Minimum order';
+
+  @override
+  String amount_missing_for_minimum(String amount) {
+    return '$amount left to reach the minimum';
+  }
+
+  @override
+  String get payment_details_title => 'Payment details';
 }

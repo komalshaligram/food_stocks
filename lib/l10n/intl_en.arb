@@ -774,6 +774,9 @@
       }
     }
   },
+  "supplier_info_button": "More info",
+  "supplier_info_subtitle": "About the supplier",
+  "supplier_info_title": "About the supplier",
   "supplier_delivery_schedule_button": "Delivery days",
   "supplier_delivery_schedule_delivery_on": "Delivery",
   "supplier_delivery_schedule_order_until": "Order by",
@@ -842,5 +845,15 @@
         "type": "int"
       }
     }
-  }
+  },
+  "minimum_order_title": "Minimum order",
+  "amount_missing_for_minimum": "{amount} left to reach the minimum",
+  "@amount_missing_for_minimum": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payment_details_title": "Payment details"
 }

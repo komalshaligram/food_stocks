@@ -10,6 +10,7 @@ import '../../data/model/res_model/profile_details_update_res_model/profile_deta
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/club_agent.dart';
 import '../../ui/utils/constants/app_urls.dart';
 part 'my_app_state.dart';
 part 'my_app_event.dart';
@@ -49,6 +50,9 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
         try {
           final res = await DioClient(event.context).post("${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}", data: req);
           if (res != null) {
+            // This runs on every return-from-background, so it is also what keeps the cached
+            // club-agent id in step with the management-system setting.
+            await preferences.setVeahavtaAgentId(veahavtaAgentId: readVeahavtaAgentId(res));
             ProfileDetailsUpdateResModel response = ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {}
           }

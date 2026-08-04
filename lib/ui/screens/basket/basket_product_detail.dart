@@ -1,3 +1,4 @@
+import '../../../ui/utils/club_agent.dart';
 import 'dart:io';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';
@@ -134,7 +135,7 @@ void showProductDetails({
                                           scrollController: scrollController,
                                           productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                           isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                          recommendedRetailConsumerPricerOffer: clubAgentId == AppStrings.clubAgentIdText
+                                          recommendedRetailConsumerPricerOffer: ClubAgent.isClubClient(clubAgentId)
                                               ? state.productDetails.first.sale?.isSale == true
                                                   ? state.productDetails.first.recommendedConsumerOffer
                                                   : state.productDetails.first.recommendedRetailPrice

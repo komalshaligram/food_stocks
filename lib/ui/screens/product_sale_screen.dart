@@ -1,3 +1,4 @@
+import '../../ui/utils/club_agent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
@@ -429,7 +430,7 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                       scrollController: scrollController,
                                       productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                       isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                      recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
+                                      recommendedRetailConsumerPricerOffer: ClubAgent.isClubClient(state.clubAgentId)
                                           ? state.productDetails.first.sale?.isSale == true
                                               ? state.productDetails.first.recommendedConsumerOffer
                                               : state.productDetails.first.recommendedRetailPrice

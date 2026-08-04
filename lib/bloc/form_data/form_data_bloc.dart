@@ -1,3 +1,4 @@
+import '../../ui/utils/club_agent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
@@ -110,10 +111,12 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
             emit(state.copyWith(isShimmering: false));
             final clubAgentId = response.data?.agentId;
             preferences.setClubAgentId(clubAgentId: clubAgentId ?? '');
-            final agentCode = state.agentCodeController.text.trim();
-            if (state.isRegistrationSuccess && agentCode == AppStrings.clubAgentCodeText) {
+            // Which agent the entered code belongs to is the server's answer, matched against the
+            // configured club agent — the typed code used to be compared to a hard-coded "998616".
+            final isClubAgent = ClubAgent.isClubClient(clubAgentId);
+            if (state.isRegistrationSuccess && isClubAgent) {
               Navigator.pushNamed(event.context, RouteDefine.registrationSuccessScreen.name);
-            } else if (!state.isRegistrationSuccess && agentCode == AppStrings.clubAgentCodeText) {
+            } else if (!state.isRegistrationSuccess && isClubAgent) {
               preferences.setUserLoggedIn(isLoggedIn: true);
               Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name);
             } else {

@@ -6,7 +6,9 @@ import '../../data/model/req_model/profile_details_req_model/profile_details_req
 import '../../data/model/res_model/profile_details_res_model/profile_details_res_model.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
+import '../../data/model/res_model/supplier_city_delivery_schedule_res_model/supplier_city_delivery_schedule_res_model.dart';
 import '../../data/model/res_model/supplier_payment_type_res_model/supplier_payment_type_res_model.dart';
+import '../../data/services/supplier_delivery_schedule_service.dart';
 import '../../ui/screens/product_details_screen.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -74,6 +76,8 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
                 isShimmering: false,
               ));
             }
+            add(BasketSummaryEvent.getSupplierDeliveryScheduleEvent(
+                context: event.context));
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
@@ -416,6 +420,23 @@ class BasketSummaryBloc extends Bloc<BasketSummaryEvent, BasketSummaryState> {
             ));
           }
         } catch (_) {}
+      } else if (event is _getSupplierDeliveryScheduleEvent) {
+        final supplierIds = state.tempList
+            .map((supplier) => supplier.suppliers?.id ?? supplier.id ?? '')
+            .toList();
+        if (supplierIds.every((id) => id.isEmpty)) {
+          return;
+        }
+        emit(state.copyWith(isDeliveryScheduleLoading: true));
+        final schedules =
+        await SupplierDeliveryScheduleService.loadForSuppliers(
+          context: event.context,
+          supplierIds: supplierIds,
+        );
+        emit(state.copyWith(
+          deliverySchedules: schedules,
+          isDeliveryScheduleLoading: false,
+        ));
       }
     });
   }

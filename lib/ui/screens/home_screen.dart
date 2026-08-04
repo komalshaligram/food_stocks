@@ -1,3 +1,4 @@
+import '../../ui/utils/club_agent.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -204,6 +205,7 @@ class HomeScreenWidget extends StatelessWidget {
                             bloc.add(HomeEvent.getProductSalesListEvent(context: context));
                             bloc.add(HomeEvent.getPreviousOrderProductsListEvent(context: context));
                             handleMessageOnBackground();
+                            bloc.add(HomeEvent.checkVersionOfAppEvent(context: context));
                             if (!state.isAppOnMaintenance) {
                               bloc.add(HomeEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false));
                             }
@@ -250,7 +252,7 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget appLogoWidget(HomeState state) => state.clubAgentId == AppStrings.clubAgentIdText
+  Widget appLogoWidget(HomeState state) => ClubAgent.isClubClient(state.clubAgentId)
       ? Image.asset(AppImagePath.clubAgentBlueLogo, fit: BoxFit.fill, width: 150, height: 80)
       : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.cover, width: 100, height: 100);
 
@@ -1307,7 +1309,7 @@ class HomeScreenWidget extends StatelessWidget {
                                           scrollController: scrollController,
                                           productQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                           isMixedSale: state.productDetails.first.sale!.isMixedSale,
-                                          recommendedRetailConsumerPricerOffer: state.clubAgentId == AppStrings.clubAgentIdText
+                                          recommendedRetailConsumerPricerOffer: ClubAgent.isClubClient(state.clubAgentId)
                                               ? state.productDetails.first.sale?.isSale == true
                                                   ? state.productDetails.first.recommendedConsumerOffer
                                                   : state.productDetails.first.recommendedRetailPrice

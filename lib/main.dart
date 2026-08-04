@@ -9,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../ui/screens/my_app_screen.dart';
 import '../../ui/utils/app_utils.dart';
+import '../../ui/utils/club_agent.dart';
 import '../../ui/utils/push_notification_service.dart';
 import 'app_config.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -34,13 +35,11 @@ void main() async {
     await AppConfig.initializeAppConfig();
 
     if (Platform.isAndroid) {
-      FirebaseMessaging.onBackgroundMessage(
-          _firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     }
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    SharedPreferencesHelper preferencesHelper =
-        SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+    ClubAgent.update(preferencesHelper.getVeahavtaAgentId());
     if (!preferencesHelper.getUserLoggedIn()) {
       await Permission.notification.isDenied.then((isPermissionDenied) async {
         if (isPermissionDenied) {
@@ -49,8 +48,5 @@ void main() async {
       });
     }
     runApp(const MyApp());
-  },
-      (error, stack) =>
-          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }
-
