@@ -13,6 +13,7 @@ class CreateReturnState with _$CreateReturnState {
     required bool isLoading,
     required String language,
     required TextEditingController barCodeController,
+    required bool isPendingCreatedFromDraft,
   }) = _CreateReturnState;
 
   factory CreateReturnState.initial() => CreateReturnState(
@@ -26,5 +27,6 @@ class CreateReturnState with _$CreateReturnState {
         returnProductList: [],
         barCodeController: TextEditingController(),
         returnId: '',
+        isPendingCreatedFromDraft: false,
       );
 }

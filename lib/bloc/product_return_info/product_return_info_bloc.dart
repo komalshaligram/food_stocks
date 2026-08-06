@@ -202,6 +202,9 @@ class ProductReturnInfoBloc
                 returnList.removeAt(0);
                 returnList.add(products);
                 emit(state.copyWith(returnProductList: returnList));
+
+                printData("check here ${state.returnProductList}");
+
                 if (state.returnProductList.length == 1) {
                   add(ProductReturnInfoEvent.createReturnEvent(
                       context: event.context, supplierId: state.supplierId));
@@ -427,6 +430,7 @@ class ProductReturnInfoBloc
         try {
           List<req.ReturnProduct> list = [];
           for (int i = 0; i < state.returnProductList.length; i++) {
+            printData("check here id ${state.returnProductList[i].returnId}");
             list.add(
               req.ReturnProduct(
                 totalRefund: state.returnProductList[i].totalRefund,
@@ -443,6 +447,7 @@ class ProductReturnInfoBloc
               ),
             );
           }
+          printData("check here response ${state.returnProductList.first.returnId}");
           req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
             applicationName: AppStrings.appName,
             supplierId: '',

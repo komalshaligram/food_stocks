@@ -31,12 +31,11 @@ class ProfileMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileMenuBloc()
-        ..add(const ProfileMenuEvent.getAppLanguage())
-        ..add(const ProfileMenuEvent.getPreferenceDataEvent())
-        ..add(ProfileMenuEvent.getStatusInfoEvent(context: context)),
-      child: const ProfileMenuScreenWidget(),
-    );
+        create: (context) => ProfileMenuBloc()
+          ..add(const ProfileMenuEvent.getAppLanguage())
+          ..add(const ProfileMenuEvent.getPreferenceDataEvent())
+          ..add(ProfileMenuEvent.getStatusInfoEvent(context: context)),
+        child: const ProfileMenuScreenWidget());
   }
 }
 
@@ -87,29 +86,25 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                             children: AnimationConfiguration.toStaggeredList(
                                 duration: const Duration(milliseconds: 400),
                                 childAnimationBuilder: (widget) => SlideAnimation(
-                                      duration: const Duration(milliseconds: 400),
-                                      verticalOffset: 24,
-                                      child: FadeInAnimation(child: widget),
-                                    ),
+                                    duration: const Duration(milliseconds: 400), verticalOffset: 24, child: FadeInAnimation(child: widget)),
                                 children: _buildMenuContent(context, state))),
                       ),
                     ),
                     state.isLoading
                         ? Positioned.fill(
                             child: Center(
-                                child: SizedBox(
-                                    height: 120,
-                                    width: 120,
-                                    child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20))),
+                              child: SizedBox(
+                                  height: 120,
+                                  width: 120,
+                                  child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20)),
+                            ),
                           )
                         : 0.width
                   ]),
                 ),
                 10.height,
-                Text(
-                  '${AppLocalizations.of(context)!.application_version}${' '}${state.applicationVersion} (${state.buildNumber})',
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor.withValues(alpha: 0.45)),
-                ),
+                Text('${AppLocalizations.of(context)!.application_version}${' '}${state.applicationVersion} (${state.buildNumber})',
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor.withValues(alpha: 0.45))),
                 10.height,
               ]),
             ),
@@ -127,25 +122,14 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: _menuHorizontalMargin),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(2.5),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: AppColors.appMainGradientColor,
-            ),
-            child: Container(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.08), blurRadius: 20, offset: const Offset(0, 4))]),
+      child: Row(children: [
+        Container(
+          padding: const EdgeInsets.all(2.5),
+          decoration: BoxDecoration(shape: BoxShape.circle, gradient: AppColors.appMainGradientColor),
+          child: Container(
               height: 48,
               width: 48,
               decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.whiteColor),
@@ -155,26 +139,21 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                       imageUrl: '${AppUrlEndPoints.baseFileUrl}${state.userImageUrl}',
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const CupertinoActivityIndicator(),
-                      errorWidget: (context, url, error) => SvgPicture.asset(AppImagePath.placeholderProfile, fit: BoxFit.cover),
-                    )
-                  : SvgPicture.asset(AppImagePath.placeholderProfile, fit: BoxFit.scaleDown),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              state.userName,
+                      errorWidget: (context, url, error) => SvgPicture.asset(AppImagePath.placeholderProfile, fit: BoxFit.cover))
+                  : SvgPicture.asset(AppImagePath.placeholderProfile, fit: BoxFit.scaleDown)),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Text(state.userName,
               style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.blackColor),
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: 8),
-          state.clubAgentId == AppStrings.clubAgentIdText
-              ? Image.asset(AppImagePath.clubAgentBlueLogo, fit: BoxFit.contain, width: 48, height: 48)
-              : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.contain, width: 48, height: 48),
-        ],
-      ),
+              overflow: TextOverflow.ellipsis),
+        ),
+        const SizedBox(width: 8),
+        ClubAgent.isClubClient(state.clubAgentId)
+            ? Image.asset(AppImagePath.clubAgentBlueLogo, fit: BoxFit.contain, width: 48, height: 48)
+            : SvgPicture.asset(AppImagePath.splashLogo, fit: BoxFit.contain, width: 48, height: 48)
+      ]),
     );
   }
 
@@ -226,10 +205,8 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     }
     if (state.isSubUserSeeFormsFiles) {
       addTile(settingsTiles, title: l10n.files, icon: Icons.folder_open_outlined, onTap: () {
-        Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name, arguments: {
-          AppStrings.isUpdateParamString: true,
-          AppStrings.isRegisterFileString: false,
-        });
+        Navigator.pushNamed(context, RouteDefine.fileUploadScreen.name,
+            arguments: {AppStrings.isUpdateParamString: true, AppStrings.isRegisterFileString: false});
       });
     }
     if (state.isSubUserCanManageSubUser) {
@@ -251,10 +228,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     }
     addTile(otherTiles, title: l10n.customer_service, icon: Icons.headset_mic_outlined, onTap: () {
       showCustomerServiceBottomSheet(
-        context: context,
-        customerServicePhone: state.customerServicePhone,
-        customerServiceWhatsApp: state.customerServiceWhatsApp,
-      );
+          context: context, customerServicePhone: state.customerServicePhone, customerServiceWhatsApp: state.customerServiceWhatsApp);
     });
     if (state.isAgentSwitchToAssignedStore!) {
       addTile(otherTiles, title: l10n.switch_back_to_agent_view, icon: Icons.swap_horiz_rounded, onTap: () {
@@ -269,15 +243,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
       if (settingsTiles.isNotEmpty) profileMenuGroup(children: settingsTiles),
       if (otherTiles.isNotEmpty) profileMenuGroup(children: otherTiles),
       menuSwitchTile(
-        title: l10n.app_language,
-        isHebrewLang: state.isHebrewLanguage,
-        onChanged: (bool value) {
-          context.read<ProfileMenuBloc>().add(ProfileMenuEvent.changeAppLanguageEvent(context: context));
-        },
-      ),
-      profileMenuGroup(
-        children: [
-          profileMenuTile(
+          title: l10n.app_language,
+          isHebrewLang: state.isHebrewLanguage,
+          onChanged: (bool value) {
+            context.read<ProfileMenuBloc>().add(ProfileMenuEvent.changeAppLanguageEvent(context: context));
+          }),
+      profileMenuGroup(children: [
+        profileMenuTile(
             title: l10n.log_out,
             icon: Icons.logout_rounded,
             isDestructive: true,
@@ -285,11 +257,9 @@ class ProfileMenuScreenWidget extends StatelessWidget {
               if (!state.isLogOutProcess) {
                 logOutDialog(context: context, directionality: state.language);
               }
-            },
-          ),
-        ],
-      ),
-      AppConstants.bottomNavSpace.height,
+            })
+      ]),
+      AppConstants.bottomNavSpace.height
     ];
 
     return sections;
@@ -298,21 +268,13 @@ class ProfileMenuScreenWidget extends StatelessWidget {
   Widget profileMenuGroup({required List<Widget> children}) {
     if (children.isEmpty) return 0.width;
     return Container(
-      margin: const EdgeInsets.fromLTRB(_menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(_menuGroupRadius),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(mainAxisSize: MainAxisSize.min, children: _intersperseDividers(children)),
-    );
+        margin: const EdgeInsets.fromLTRB(_menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
+        decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius: BorderRadius.circular(_menuGroupRadius),
+            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 2))]),
+        clipBehavior: Clip.antiAlias,
+        child: Column(mainAxisSize: MainAxisSize.min, children: _intersperseDividers(children)));
   }
 
   List<Widget> _intersperseDividers(List<Widget> children) {
@@ -335,63 +297,39 @@ class ProfileMenuScreenWidget extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-          child: Row(
-            children: [
-              Container(
+          child: Row(children: [
+            Container(
                 height: 40,
                 width: 40,
-                decoration: BoxDecoration(
-                  color: accentColor.withValues(alpha: isDestructive ? 0.1 : 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, size: 21, color: accentColor),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Text(
-                  title,
+                decoration: BoxDecoration(color: accentColor.withValues(alpha: isDestructive ? 0.1 : 0.12), borderRadius: BorderRadius.circular(12)),
+                child: Icon(icon, size: 21, color: accentColor)),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(title,
                   style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_15,
-                    color: isDestructive ? AppColors.redColor : AppColors.blackColor.withValues(alpha: 0.88),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                size: 22,
-                color: isDestructive ? AppColors.redColor.withValues(alpha: 0.5) : AppColors.blackColor.withValues(alpha: 0.25),
-              ),
-            ],
-          ),
+                      size: AppConstants.font_15,
+                      color: isDestructive ? AppColors.redColor : AppColors.blackColor.withValues(alpha: 0.88),
+                      fontWeight: FontWeight.w500)),
+            ),
+            Icon(Icons.chevron_right,
+                size: 22, color: isDestructive ? AppColors.redColor.withValues(alpha: 0.5) : AppColors.blackColor.withValues(alpha: 0.25))
+          ]),
         ),
       ),
     );
   }
 
   Widget profileMenuTiles({required title, required void Function() onTap, bool isDelete = false}) {
-    return profileMenuTile(
-      title: title,
-      onTap: onTap,
-      icon: isDelete ? Icons.delete_outline : Icons.chevron_right,
-      isDestructive: isDelete,
-    );
+    return profileMenuTile(title: title, onTap: onTap, icon: isDelete ? Icons.delete_outline : Icons.chevron_right, isDestructive: isDelete);
   }
 
   Widget menuSwitchTile({required String title, required bool isHebrewLang, required void Function(bool)? onChanged}) {
     return Container(
       margin: const EdgeInsets.fromLTRB(_menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
       decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(_menuGroupRadius),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(_menuGroupRadius),
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 2))]),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -401,40 +339,28 @@ class ProfileMenuScreenWidget extends StatelessWidget {
           onTap: () => onChanged?.call(true),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            child: Row(
-              children: [
-                Container(
+            child: Row(children: [
+              Container(
                   height: 40,
                   width: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.mainColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(Icons.language_rounded, size: 21, color: AppColors.mainColor),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    title,
+                  decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
+                  child: Icon(Icons.language_rounded, size: 21, color: AppColors.mainColor)),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(title,
                     style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_15,
-                      color: AppColors.blackColor.withValues(alpha: 0.88),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Transform.scale(
-                  scale: 0.88,
-                  child: CupertinoSwitch(
+                        size: AppConstants.font_15, color: AppColors.blackColor.withValues(alpha: 0.88), fontWeight: FontWeight.w500)),
+              ),
+              Transform.scale(
+                scale: 0.88,
+                child: CupertinoSwitch(
                     value: isHebrewLang,
                     onChanged: onChanged,
                     activeTrackColor: AppColors.mainColor,
                     thumbColor: AppColors.whiteColor,
-                    inactiveTrackColor: AppColors.lightBorderColor,
-                  ),
-                ),
-              ],
-            ),
+                    inactiveTrackColor: AppColors.lightBorderColor),
+              ),
+            ]),
           ),
         ),
       ),
@@ -491,3 +417,5 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     }
   }
 }
+
+

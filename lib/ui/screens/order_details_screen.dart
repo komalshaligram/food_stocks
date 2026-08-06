@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
-import '../../ui/screens/product_details_screen.dart';
+import 'product_details_screen.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/widget/sized_box_widget.dart';

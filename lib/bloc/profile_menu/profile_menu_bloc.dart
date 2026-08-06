@@ -74,7 +74,6 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                 path: AppUrlEndPoints.logOutUrl,
                 data: {"userId": preferences.getUserId()});
             if (response[AppStrings.statusString] == AppConstants.code_200) {
-              // נקה את מטמון המסמכים הסרוקים של הלקוח הנוכחי לפני יציאה (פרטיות + מניעת דליפה).
               await DocumentsStorage.clearForCurrentClient();
               await preferences.setUserLoggedIn();
               await Provider.of<LocaleProvider>(event.context, listen: false)
@@ -98,7 +97,7 @@ class ProfileMenuBloc extends Bloc<ProfileMenuEvent, ProfileMenuState> {
                         .toString()
                         .toLocalization(),
                     event.context),
-                type: SnackBarType.success,
+                type: SnackBarType.failure,
               );
               emit(state.copyWith(isLogOutProcess: false));
             }

@@ -12,6 +12,7 @@ import '../widget/common_shimmer_widget.dart';
 import '../widget/order_summary_card_widgets.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
 import '../widget/supplier_delivery_schedule_widget.dart';
+import '../utils/app_utils.dart';
 import '../utils/first_supplier_order_helper.dart';
 
 class OrderSummaryRoute {
@@ -121,7 +122,13 @@ class OrderSummaryScreenWidget extends StatelessWidget {
       final totalSavingsValue = double.tryParse(supplier.totalSavings.toString()) ?? 0.0;
       final totalAmount = double.tryParse(supplier.totalAmount.toString()) ?? 0.0;
       final minOrderAmount = supplier.minOrderAmount ?? 0;
-      final isMinimumReached = supplier.notMinimumOrder == false;
+      final progressAmount = minimumOrderProgressAmount(
+        bottleTax: supplier.bottleTax ?? 0,
+        bottleQuantities: (supplier.bottleQuantities ?? 0).toDouble(),
+        amountSubjectToVat: supplier.totalAmountSubjectToVat ?? 0,
+        amountNotSubjectToVat: supplier.totalAmountNotSubjectToVat ?? 0,
+      );
+      final isMinimumReached = minOrderAmount <= 0 || progressAmount >= minOrderAmount;
       final hasDeliverySchedule = deliverySchedule?.cityName?.isNotEmpty == true && (deliverySchedule?.deliveryDays ?? []).isNotEmpty;
 
       return SummaryCard(children: [
@@ -136,13 +143,13 @@ class OrderSummaryScreenWidget extends StatelessWidget {
         const SummaryHairline(),
         MinimumOrderProgress(
             minimumAmount: minOrderAmount,
-            currentAmount: totalAmount,
+            currentAmount: progressAmount,
             isReached: isMinimumReached,
             minimumLabel: l10n.minimum_order_title,
             reachedText: l10n.you_can_send_the_order,
             missingText: minOrderAmount <= 0
                 ? l10n.you_cant_send_the_order
-                : l10n.amount_missing_for_minimum(summaryMoney((minOrderAmount - totalAmount).clamp(0, double.infinity)))),
+                : l10n.amount_missing_for_minimum(summaryMoney((minOrderAmount - progressAmount).clamp(0, double.infinity)))),
         if (state.isDeliveryScheduleLoading || hasDeliverySchedule) ...[
           const SummaryHairline(),
           SummaryActionTile(

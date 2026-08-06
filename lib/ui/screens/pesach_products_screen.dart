@@ -743,6 +743,7 @@ class PesachProductsScreenWidget extends StatelessWidget {
                                                 state.productDetails.first.sale!.saleMinQuantity.toString(),
                                                 state.productDetails.first.sale!.isMixedSale,
                                                 state.productDetails.first.sale!.sameSaleProducts,
+                                                initialQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
                                               );
                                             }
                                           },
@@ -994,8 +995,8 @@ class PesachProductsScreenWidget extends StatelessWidget {
     ]);
   }
 
-  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale, List? sameSaleProducts) {
-    _openSalePromotionSheet(context, productId);
+  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale, List? sameSaleProducts, {int? initialQuantity}) {
+    _openSalePromotionSheet(context, productId, initialQuantity: initialQuantity, closeParentBeforeOpen: true);
   }
 
   void showMinMaxQtyConfirmDialog({
@@ -1008,18 +1009,36 @@ class PesachProductsScreenWidget extends StatelessWidget {
     required bool isIncrease,
     bool? isMixedSale,
     List? sameSaleProducts,
+    int? initialQuantity,
   }) {
-    _openSalePromotionSheet(context, productId);
+    final stockState = context.read<PesachProductsBloc>().state;
+    int? qty = initialQuantity;
+    try {
+      final current = stockState.productStockList[productListIndex][index].quantity;
+      qty ??= isIncrease ? current + 1 : (current > 0 ? current - 1 : 0);
+    } catch (_) {}
+    _openSalePromotionSheet(context, productId, initialQuantity: qty);
   }
 
-  Future<void> _openSalePromotionSheet(BuildContext context, String productId) async {
+  Future<void> _openSalePromotionSheet(BuildContext context, String productId, {int? initialQuantity, bool closeParentBeforeOpen = false}) async {
     final PesachProductsBloc bloc = context.read<PesachProductsBloc>();
     if (bloc.state.isGuestUser) {
       Navigator.pushNamed(context, RouteDefine.connectScreen.name);
       return;
     }
     final l10n = AppLocalizations.of(context)!;
-    final bool changed = await showSalePromotionSheet(context: context, productId: productId, l10n: l10n);
+    // Close product-detail sheet first, then open sale/mixed-sale sheet.
+    if (closeParentBeforeOpen && context.mounted && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    }
+    if (!context.mounted) return;
+    final bool changed = await showSalePromotionSheet(
+      context: context,
+      productId: productId,
+      l10n: l10n,
+      initialQuantity: initialQuantity,
+    );
     if (!changed || !context.mounted) return;
     final cartMap = await fetchCartQuantities(context);
     if (!context.mounted) return;

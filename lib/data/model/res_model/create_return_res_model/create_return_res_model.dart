@@ -15,6 +15,7 @@ class CreateReturnResModel with _$CreateReturnResModel {
     @JsonKey(name: "message") String? message,
     @JsonKey(name: "agentPhoneNumber") String? agentPhoneNumber,
     @JsonKey(name: "data") List<Datum>? data,
+    @JsonKey(name: "isPendingCreatedFromDraft") bool? isPendingCreatedFromDraft,
   }) = _CreateReturnResModel;
 
   factory CreateReturnResModel.fromJson(Map<String, dynamic> json) => _$CreateReturnResModelFromJson(json);

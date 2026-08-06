@@ -9,9 +9,9 @@ import 'package:food_stock/data/model/res_model/get_return_by_id_res_model/get_r
 import 'package:permission_handler/permission_handler.dart';
 import '../../data/model/res_model/invoices_res/invoices_res_model.dart';
 import '../../data/model/res_model/status_info_res_model/status_info_res_model.dart';
-import '../../ui/utils/app_utils.dart';
-import '../../ui/utils/constants/app_urls.dart';
-import '../../ui/widget/sized_box_widget.dart';
+import '../utils/app_utils.dart';
+import '../utils/constants/app_urls.dart';
+import '../widget/sized_box_widget.dart';
 import '../../bloc/product_details/product_details_bloc.dart';
 import '../../data/model/res_model/get_order_by_id/get_order_by_id_model.dart';
 import '../../routes/app_routes.dart';

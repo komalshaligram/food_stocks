@@ -58,6 +58,7 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
               supplierId: res.data?.supplierId ?? '',
               language: preferences.getAppLanguage(),
               isFromPending: map['status'],
+              isPendingCreatedFromDraft: res.isPendingCreatedFromDraft == true,
             ));
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -128,6 +129,8 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             returnProducts: list,
             subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
           );
+
+          printData("check here data ${state.returnProductList.first.returnId ?? state.returnId}");
           final res = await DioClient(event.context).post('${AppUrlEndPoints.updateReturnUrl}${state.returnProductList.first.returnId ?? state.returnId}', data: reqModel.toJson());
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
@@ -136,11 +139,24 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
             if (resModel.data![0].returnproducts!.isNotEmpty) {
               list.addAll(resModel.data![0].returnproducts as List<ReturnProduct>);
             }
+            // Use update API flag (not getReturnById state). Show dialog only when false.
+            final isPendingCreatedFromDraft =
+                resModel.isPendingCreatedFromDraft == true ||
+                (res is Map && res['isPendingCreatedFromDraft'] == true);
+            final language = state.language;
             emit(state.copyWith(isLoading: false, returnId: resModel.data![0].id.toString()));
-            Navigator.pushReplacementNamed(event.context, RouteDefine.returnListScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
-            // if(resModel.data![0].returnStatusName == 'RETURNSTATUS_5') {
-              await showDialog(context: event.context, builder: (_) => CallWaitingForNewOrderSuccessMsgDialog(language: state.language));
-            // }
+            Navigator.pushReplacementNamed(
+              event.context,
+              RouteDefine.returnListScreen.name,
+              arguments: {AppStrings.pushNavigationString: 'profileScreen'},
+            );
+
+            if (!isPendingCreatedFromDraft && event.context.mounted) {
+              await showDialog(
+                context: event.context,
+                builder: (_) => CallWaitingForNewOrderSuccessMsgDialog(language: language),
+              );
+            }
           } else {
             CustomSnackBar.showSnackBar(
               context: event.context,
@@ -151,14 +167,11 @@ class CreateReturnBloc extends Bloc<CreateReturnEvent, CreateReturnState> {
           }
         } catch (_) {}
       } else if (event is _detailReturnEvent) {
-        printData("check here data ${state.returnProductList}");
         final result = await Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {
           'list': state.returnProductList,
           'index': event.index,
           'status': state.isFromPending,
         });
-
-
 
         if (result != null) {
           emit(state.copyWith(returnProductList: []));

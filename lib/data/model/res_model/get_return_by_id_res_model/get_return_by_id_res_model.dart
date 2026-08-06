@@ -14,6 +14,7 @@ class GetReturnByIdResModel with _$GetReturnByIdResModel {
     @JsonKey(name: "status") int? status,
     @JsonKey(name: "message") String? message,
     @JsonKey(name: "data") Data? data,
+    @JsonKey(name: "isPendingCreatedFromDraft") bool? isPendingCreatedFromDraft,
   }) = _GetReturnByIdResModel;
 
   factory GetReturnByIdResModel.fromJson(Map<String, dynamic> json) => _$GetReturnByIdResModelFromJson(json);

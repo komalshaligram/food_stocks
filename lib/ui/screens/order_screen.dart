@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../bloc/order/order_bloc.dart';
 import '../../data/model/res_model/get_all_order_res_model/get_all_order_res_model.dart';
-import '../../ui/screens/product_details_screen.dart';
+import 'product_details_screen.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_colors.dart';
 import '../../ui/widget/common_order_content_widget.dart';

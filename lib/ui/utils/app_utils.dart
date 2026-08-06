@@ -819,6 +819,16 @@ double bottleDepositCalculationWithVat({required double deposit, required double
   return result;
 }
 
+/// Minimum-order progress excludes VAT: bottle deposit + subject to VAT + not subject to VAT.
+double minimumOrderProgressAmount({
+  double bottleTax = 0,
+  double bottleQuantities = 0,
+  double amountSubjectToVat = 0,
+  double amountNotSubjectToVat = 0,
+}) {
+  return bottleDepositCalculation(deposit: bottleTax, qty: bottleQuantities) + amountSubjectToVat + amountNotSubjectToVat;
+}
+
 double sumProductTotalVatAmounts(Iterable<double?> productTotalVatAmounts) {
   return productTotalVatAmounts.fold<double>(0, (sum, amount) => sum + (amount ?? 0));
 }

@@ -25,19 +25,28 @@ import 'sized_box_widget.dart';
 /// progress bar tracks the cumulative minimum, and commits everything to the
 /// cart in one go.
 ///
-/// Returns `true` when the cart was changed, so the caller can refresh its
-/// on-screen quantities and the cart badge.
+/// [initialQuantity] — quantity chosen on the product-detail sheet (or list
+/// stepper) before this sheet opened. Applied to the current product so the
+/// second sheet starts with the updated amount instead of only the cart qty.
+///
+/// Returns `true` when the cart was changed (or already matched the desired
+/// qty), so the caller can refresh on-screen quantities / close parent sheets.
 Future<bool> showSalePromotionSheet({
   required BuildContext context,
   required String productId,
   required AppLocalizations l10n,
+  int? initialQuantity,
 }) async {
   final bool? changed = await showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     barrierColor: AppColors.blackColor.withValues(alpha: 0.45),
-    builder: (sheetContext) => SalePromotionSheet(productId: productId, l10n: l10n),
+    builder: (sheetContext) => SalePromotionSheet(
+      productId: productId,
+      l10n: l10n,
+      initialQuantity: initialQuantity,
+    ),
   );
   return changed ?? false;
 }
@@ -83,10 +92,12 @@ class SalePromotionSheet extends StatefulWidget {
     super.key,
     required this.productId,
     required this.l10n,
+    this.initialQuantity,
   });
 
   final String productId;
   final AppLocalizations l10n;
+  final int? initialQuantity;
 
   @override
   State<SalePromotionSheet> createState() => _SalePromotionSheetState();
@@ -134,6 +145,9 @@ class _SalePromotionSheetState extends State<SalePromotionSheet> {
 
   _PromoItem _toItem(SaleParticipatingProduct p) {
     final int cartQty = (p.cartQuantity ?? 0).round();
+    final bool isCurrent = p.isCurrent ?? (p.id == widget.productId);
+    // Prefer the quantity the user already set on the product-detail / list UI.
+    final int desiredQty = (isCurrent && widget.initialQuantity != null) ? widget.initialQuantity! : cartQty;
     return _PromoItem(
       id: p.id ?? '',
       name: p.name ?? '',
@@ -144,8 +158,8 @@ class _SalePromotionSheetState extends State<SalePromotionSheet> {
       supplierId: p.supplierId ?? '',
       cartProductId: p.cartProductId ?? '',
       originalQty: cartQty,
-      desiredQty: cartQty,
-      isCurrent: p.isCurrent ?? false,
+      desiredQty: desiredQty,
+      isCurrent: isCurrent,
     );
   }
 
@@ -169,7 +183,8 @@ class _SalePromotionSheetState extends State<SalePromotionSheet> {
   Future<void> _commit() async {
     if (_committing) return;
     if (!_hasChanges) {
-      Navigator.pop(context, false);
+      // Already matches desired qty — still treat as success so parent sheets can close.
+      Navigator.pop(context, true);
       return;
     }
     setState(() => _committing = true);
