@@ -22,17 +22,17 @@ class QuestionAndAnswerScreenShimmerWidget extends StatelessWidget {
               child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
                 CommonShimmerWidget(
                   child: Container(
-                    height: 18,
-                    width: getScreenWidth(context) * 0.3,
-                    decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-                  ),
+                      height: 18,
+                      width: getScreenWidth(context) * 0.3,
+                      decoration:
+                          BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)))),
                 ),
                 CommonShimmerWidget(
                   child: Container(
-                    height: 18,
-                    width: getScreenWidth(context) * 0.5,
-                    decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-                  ),
+                      height: 18,
+                      width: getScreenWidth(context) * 0.5,
+                      decoration:
+                          BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)))),
                 ),
               ]));
         });

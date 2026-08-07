@@ -27,11 +27,16 @@ class DashBoardStatsWidget extends StatelessWidget {
         Row(children: [
           Transform(alignment: Alignment.center, transform: Matrix4.rotationY(context.rtl ? pi : 0), child: SvgPicture.asset(image)),
           5.width,
-          Expanded(child: Text(title, style: AppStyles.rkRegularTextStyle(size: fontSize, color: AppColors.mainColor), maxLines: 2, overflow: TextOverflow.visible)),
+          Expanded(
+            child: Text(title,
+                style: AppStyles.rkRegularTextStyle(size: fontSize, color: AppColors.mainColor), maxLines: 2, overflow: TextOverflow.visible),
+          ),
         ]),
         10.height,
         Expanded(
-          child: Text(value, maxLines: 2, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, fontWeight: FontWeight.bold, color: AppColors.blackColor)),
+          child: Text(value,
+              maxLines: 2,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, fontWeight: FontWeight.bold, color: AppColors.blackColor)),
         ),
       ]),
     );

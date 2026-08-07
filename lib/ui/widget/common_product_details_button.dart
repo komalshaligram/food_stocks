@@ -12,30 +12,28 @@ class CommonProductDetailsButton extends StatelessWidget {
   final String productStock;
   final void Function()? onAddToOrderPressed;
 
-  const CommonProductDetailsButton({super.key, required this.isLoading, required this.isSupplierAvailable, required this.productStock, this.onAddToOrderPressed});
+  const CommonProductDetailsButton(
+      {super.key, required this.isLoading, required this.isSupplierAvailable, required this.productStock, this.onAddToOrderPressed});
 
   @override
   Widget build(BuildContext context) {
-    return
-      !isSupplierAvailable || productStock == '0' || productStock == '0.0'
+    return !isSupplierAvailable || productStock == '0' || productStock == '0.0'
         ? 0.height
-        :
-    Container(
+        : Container(
             height: 70,
             margin: EdgeInsets.zero,
             width: getScreenWidth(context),
             padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_20, vertical: AppConstants.padding_10),
             child: CommonProductButtonWidget(
-              title: AppLocalizations.of(context)!.add_to_order,
-              isLoading: isLoading,
-              onPressed: onAddToOrderPressed,
-              width: double.maxFinite,
-              height: AppConstants.buttonHeight,
-              borderRadius: AppConstants.radius_5,
-              textSize: AppConstants.normalFont,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-            ),
+                title: AppLocalizations.of(context)!.add_to_order,
+                isLoading: isLoading,
+                onPressed: onAddToOrderPressed,
+                width: double.maxFinite,
+                height: AppConstants.buttonHeight,
+                borderRadius: AppConstants.radius_5,
+                textSize: AppConstants.normalFont,
+                textColor: AppColors.whiteColor,
+                bgColor: AppColors.mainColor),
           );
   }
 }

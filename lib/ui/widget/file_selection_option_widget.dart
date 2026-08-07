@@ -13,7 +13,8 @@ class FileSelectionOptionWidget extends StatelessWidget {
   final Color iconColor;
   final void Function() onTap;
 
-  const FileSelectionOptionWidget({super.key, required this.title, required this.icon, this.lastItem = false, this.iconColor = const Color(0xff000000), required this.onTap});
+  const FileSelectionOptionWidget(
+      {super.key, required this.title, required this.icon, this.lastItem = false, this.iconColor = const Color(0xff000000), required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +24,14 @@ class FileSelectionOptionWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_15, horizontal: AppConstants.padding_10),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: iconColor == AppColors.redColor ? AppColors.redColor : AppColors.blackColor)),
-            Transform(alignment: Alignment.center, transform: Matrix4.rotationY(context.rtl ? pi : 0), child: Icon(icon, color: iconColor)),
+            Text(title,
+                style: AppStyles.rkRegularTextStyle(
+                    size: AppConstants.mediumFont, color: iconColor == AppColors.redColor ? AppColors.redColor : AppColors.blackColor)),
+            Transform(alignment: Alignment.center, transform: Matrix4.rotationY(context.rtl ? pi : 0), child: Icon(icon, color: iconColor))
           ]),
         ),
       ),
-      lastItem ? 0.width : Container(height: 1, width: getScreenWidth(context), color: AppColors.borderColor.withValues(alpha: 0.5)),
+      lastItem ? 0.width : Container(height: 1, width: getScreenWidth(context), color: AppColors.borderColor.withValues(alpha: 0.5))
     ]);
   }
 }

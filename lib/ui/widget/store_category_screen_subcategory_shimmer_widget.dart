@@ -10,24 +10,22 @@ class StoreCategoryScreenSubcategoryShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: itemCount,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return buildSubCategoryItem();
-      },
-    );
+        itemCount: itemCount,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return buildSubCategoryItem();
+        });
   }
 
   Widget buildSubCategoryItem() {
     return CommonShimmerWidget(
       child: Container(
-        height: AppConstants.buttonHeight,
-        width: double.maxFinite,
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.radius_10),
-      ),
+          height: AppConstants.buttonHeight,
+          width: double.maxFinite,
+          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+          margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10, vertical: AppConstants.radius_10)),
     );
   }
 }

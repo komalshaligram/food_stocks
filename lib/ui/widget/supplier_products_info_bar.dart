@@ -29,7 +29,6 @@ class SupplierProductsInfoBar extends StatelessWidget {
   final String? supplierName;
 
   bool get _showDeliverySection => isDeliveryScheduleLoading || (deliveryCityName?.isNotEmpty == true && deliveryDays.isNotEmpty);
-
   bool get _showInfoSection => supplierInfo?.trim().isNotEmpty == true;
 
   @override
@@ -70,7 +69,7 @@ class SupplierProductsInfoBar extends StatelessWidget {
             _SupplierInfoSection(
                 label: l10n.supplier_info_button,
                 subLabel: l10n.supplier_info_subtitle,
-                onTap: () => SupplierInfoWidget.showSheet(context, infoText: supplierInfo!.trim(), supplierName: supplierName)),
+                onTap: () => SupplierInfoWidget.showSheet(context, infoText: supplierInfo!.trim(), supplierName: supplierName))
           ]
         ]),
       ),
@@ -91,12 +90,11 @@ class _MinimumOrderSection extends StatelessWidget {
       color: AppColors.mainColor.withValues(alpha: 0.06),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, shape: BoxShape.circle),
-          alignment: Alignment.center,
-          child: Icon(Icons.shopping_cart_outlined, color: AppColors.whiteColor, size: 20),
-        ),
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, shape: BoxShape.circle),
+            alignment: Alignment.center,
+            child: Icon(Icons.shopping_cart_outlined, color: AppColors.whiteColor, size: 20)),
         10.width,
         Flexible(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
@@ -105,7 +103,7 @@ class _MinimumOrderSection extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.greyColor)),
             2.height,
-            Text('${amount ?? 0} ₪', style: AppStyles.rkBoldTextStyle(size: AppConstants.mediumFont, color: AppColors.blueColor)),
+            Text('${amount ?? 0} ₪', style: AppStyles.rkBoldTextStyle(size: AppConstants.mediumFont, color: AppColors.blueColor))
           ]),
         ),
       ]),
@@ -146,7 +144,7 @@ class _SupplierInfoSection extends StatelessWidget {
                 Text(subLabel,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.greyColor)),
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.greyColor))
               ]),
             ),
             4.width,
@@ -203,7 +201,7 @@ class _DeliveryScheduleSection extends StatelessWidget {
                   Text(cityName!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.greyColor)),
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.greyColor))
                 ]
               ]),
             ),

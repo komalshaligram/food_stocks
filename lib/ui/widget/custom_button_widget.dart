@@ -22,24 +22,23 @@ class CustomButtonWidget extends StatelessWidget {
   final bool isDeleteButton;
   final Widget? iconWidget;
 
-  const CustomButtonWidget({
-    super.key,
-    required this.buttonText,
-    this.onPressed,
-    this.enable = true,
-    this.isLoading = false,
-    this.bGColor = Colors.white,
-    this.fontColors = Colors.white,
-    this.isFromConnectScreen = false,
-    this.height,
-    this.radius,
-    this.borderColor = Colors.white,
-    this.loadingColor = Colors.white,
-    this.width = double.maxFinite,
-    this.fontSize = 18,
-    this.isDeleteButton = false,
-    this.iconWidget,
-  });
+  const CustomButtonWidget(
+      {super.key,
+      required this.buttonText,
+      this.onPressed,
+      this.enable = true,
+      this.isLoading = false,
+      this.bGColor = Colors.white,
+      this.fontColors = Colors.white,
+      this.isFromConnectScreen = false,
+      this.height,
+      this.radius,
+      this.borderColor = Colors.white,
+      this.loadingColor = Colors.white,
+      this.width = double.maxFinite,
+      this.fontSize = 18,
+      this.isDeleteButton = false,
+      this.iconWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +59,16 @@ class CustomButtonWidget extends StatelessWidget {
           border: Border.all(color: borderColor),
           borderRadius: BorderRadius.all(Radius.circular(radius ?? AppConstants.radius_10))),
       child: MaterialButton(
-        onPressed: enable ? onPressed : null,
-        child: isLoading
-            ? CupertinoActivityIndicator(color: loadingColor)
-            : iconWidget != null
-                ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    iconWidget!,
-                    5.width,
-                    Text(buttonText.toUpperCase(), style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors)),
-                  ])
-                : Text(buttonText.toUpperCase(), style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors)),
-      ),
+          onPressed: enable ? onPressed : null,
+          child: isLoading
+              ? CupertinoActivityIndicator(color: loadingColor)
+              : iconWidget != null
+                  ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      iconWidget!,
+                      5.width,
+                      Text(buttonText.toUpperCase(), style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors))
+                    ])
+                  : Text(buttonText.toUpperCase(), style: AppStyles.rkRegularTextStyle(size: fontSize, color: fontColors))),
     );
   }
 }

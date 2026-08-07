@@ -64,7 +64,7 @@ class _ConfettiState extends State<Confetti> with SingleTickerProviderStateMixin
     return CustomPaint(
       painter: ConfettiPainter(snippingCount: widget.snippingCount, colors: widget.colors, animation: _controller, snipSize: widget.snipSize),
       willChange: true,
-      child: const SizedBox(),
+      child: const SizedBox()
     );
   }
 
@@ -130,7 +130,9 @@ class _PaperSnipping {
       paint.color = backColor;
     }
 
-    final path = Path()..addPolygon(List.generate(4, (index) => Offset(position.x + corners[index].x * snipSize, position.y + corners[index].y * snipSize * cosA)), true);
+    final path = Path()
+      ..addPolygon(
+          List.generate(4, (index) => Offset(position.x + corners[index].x * snipSize, position.y + corners[index].y * snipSize * cosA)), true);
     canvas.drawPath(path, paint);
   }
 

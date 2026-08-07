@@ -24,31 +24,24 @@ class BalanceIndicator extends StatelessWidget {
             showTicks: false,
             startAngle: 270,
             endAngle: 270,
-            axisLineStyle: AxisLineStyle(
-              thicknessUnit: GaugeSizeUnit.factor,
-              thickness: 0.2,
-              color: AppColors.borderColor,
-            ),
+            axisLineStyle: AxisLineStyle(thicknessUnit: GaugeSizeUnit.factor, thickness: 0.2, color: AppColors.borderColor),
             annotations: [
               GaugeAnnotation(
                 angle: 180,
-                widget: Text(
-                  '${expense.toString()}%',
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+                widget: Text('${expense.toString()}%',
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center),
+              )
             ],
             pointers: [
               RangePointer(
-                color: AppColors.mainColor,
-                enableAnimation: true,
-                animationDuration: 300,
-                animationType: AnimationType.ease,
-                cornerStyle: CornerStyle.bothCurve,
-                value: expense.toDouble(),
-                width: 8,
-              ),
+                  color: AppColors.mainColor,
+                  enableAnimation: true,
+                  animationDuration: 300,
+                  animationType: AnimationType.ease,
+                  cornerStyle: CornerStyle.bothCurve,
+                  value: expense.toDouble(),
+                  width: 8),
             ]),
       ]),
     );

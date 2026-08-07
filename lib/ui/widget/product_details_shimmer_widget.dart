@@ -20,11 +20,10 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
           Expanded(flex: 4, child: Center(child: buildTextTitle(width: getScreenWidth(context) - 100))),
           Expanded(
             child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.close, size: 36, color: AppColors.blackColor),
-            ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.close, size: 36, color: AppColors.blackColor)),
           ),
         ]),
         buildTextTitle(width: 100),
@@ -34,29 +33,27 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
           Center(
             child: CommonShimmerWidget(
               child: Container(
-                height: getItemHeight(context, false) == 350.0
-                    ? 220
-                    : getItemHeight(context, false) == 260.0
-                    ? 200
-                    : 150,
-                width: getItemHeight(context, false) == 350.0
-                    ? 220
-                    : getItemHeight(context, false) == 260.0
-                    ? 200
-                    : 150,
-
-                margin: const EdgeInsets.all(AppConstants.padding_10),
-                decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
-              ),
+                  height: getItemHeight(context, false) == 350.0
+                      ? 220
+                      : getItemHeight(context, false) == 260.0
+                          ? 200
+                          : 150,
+                  width: getItemHeight(context, false) == 350.0
+                      ? 220
+                      : getItemHeight(context, false) == 260.0
+                          ? 200
+                          : 150,
+                  margin: const EdgeInsets.all(AppConstants.padding_10),
+                  decoration:
+                      BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)))),
             ),
           ),
           buildTextTitle(width: 80),
           Container(
             decoration: BoxDecoration(
               border: Border(
-                top: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.5), width: 1),
-                bottom: BorderSide(width: 1, color: AppColors.borderColor.withValues(alpha: 0.5)),
-              ),
+                  top: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.5), width: 1),
+                  bottom: BorderSide(width: 1, color: AppColors.borderColor.withValues(alpha: 0.5))),
             ),
             padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_20),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -69,21 +66,20 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
-                        bottomLeft: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
-                        bottomRight: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
-                        topRight: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
-                      ),
+                          topLeft: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
+                          bottomLeft: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
+                          bottomRight: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
+                          topRight: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5)),
                     ),
                   ),
                 ),
                 5.width,
                 CommonShimmerWidget(
                   child: Container(
-                    width: 80,
-                    height: 50,
-                    decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-                  ),
+                      width: 80,
+                      height: 50,
+                      decoration:
+                          BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)))),
                 ),
                 5.width,
                 CommonShimmerWidget(
@@ -93,11 +89,10 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: AppColors.whiteColor,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
-                        bottomLeft: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
-                        bottomRight: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
-                        topRight: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
-                      ),
+                          topLeft: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
+                          bottomLeft: Radius.circular(context.rtl ? AppConstants.radius_50 : AppConstants.radius_5),
+                          bottomRight: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50),
+                          topRight: Radius.circular(context.rtl ? AppConstants.radius_5 : AppConstants.radius_50)),
                     ),
                   ),
                 ),
@@ -109,10 +104,10 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: CommonShimmerWidget(
               child: Container(
-                width: double.maxFinite - 50,
-                height: 50,
-                decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-              ),
+                  width: double.maxFinite - 50,
+                  height: 50,
+                  decoration:
+                      BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)))),
             ),
           ),
         ]),
@@ -125,11 +120,10 @@ class ProductDetailsShimmerWidget extends StatelessWidget {
   Widget buildTextTitle({double width = 140, double? height}) {
     return CommonShimmerWidget(
       child: Container(
-        height: height ?? AppConstants.shimmerTextHeight,
-        width: width,
-        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
-      ),
+          height: height ?? AppConstants.shimmerTextHeight,
+          width: width,
+          margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5),
+          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)))),
     );
   }
 }

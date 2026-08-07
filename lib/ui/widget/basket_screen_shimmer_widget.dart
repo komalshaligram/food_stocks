@@ -10,27 +10,24 @@ class BasketScreenShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
-        itemCount: 10,
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, index) {
-          return CommonShimmerWidget(
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_10),
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+          itemCount: 10,
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, index) {
+            return CommonShimmerWidget(
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
+                padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_10),
+                decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+                    borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [Container(width: AppConstants.containerSize_50, height: AppConstants.containerSize_50, color: AppColors.whiteColor)]),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Container(width: AppConstants.containerSize_50, height: AppConstants.containerSize_50, color: AppColors.whiteColor)],
-              ),
-            ),
-          );
-        }
-      ),
+            );
+          }),
     );
   }
 }

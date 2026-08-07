@@ -10,17 +10,16 @@ class CommonCheckBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Checkbox(
-      value: value,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3)),
-      side: WidgetStateBorderSide.resolveWith((states) => BorderSide(width: 1.0, color: AppColors.greyColor)),
-      activeColor: AppColors.mainColor,
-      fillColor: WidgetStateColor.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) {
-          return AppColors.mainColor;
-        }
-        return AppColors.whiteColor;
-      }),
-      onChanged: onChanged,
-    );
+        value: value,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_3)),
+        side: WidgetStateBorderSide.resolveWith((states) => BorderSide(width: 1.0, color: AppColors.greyColor)),
+        activeColor: AppColors.mainColor,
+        fillColor: WidgetStateColor.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.mainColor;
+          }
+          return AppColors.whiteColor;
+        }),
+        onChanged: onChanged);
   }
 }

@@ -18,21 +18,20 @@ class CommonProductButtonWidget extends StatelessWidget {
   final bool isLoading;
   final Color borderColor;
 
-  const CommonProductButtonWidget({
-    super.key,
-    required this.title,
-    this.onPressed,
-    this.isLoading = false,
-    this.horizontalPadding = 0.0,
-    this.verticalPadding = 0.0,
-    this.textSize = AppConstants.smallFont,
-    this.bgColor = Colors.black,
-    this.textColor = Colors.white,
-    this.height,
-    this.width,
-    this.borderRadius,
-    this.borderColor = Colors.white,
-  });
+  const CommonProductButtonWidget(
+      {super.key,
+      required this.title,
+      this.onPressed,
+      this.isLoading = false,
+      this.horizontalPadding = 0.0,
+      this.verticalPadding = 0.0,
+      this.textSize = AppConstants.smallFont,
+      this.bgColor = Colors.black,
+      this.textColor = Colors.white,
+      this.height,
+      this.width,
+      this.borderRadius,
+      this.borderColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +43,9 @@ class CommonProductButtonWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
       decoration: BoxDecoration(
-        gradient: AppColors.appMainGradientColor,
-        border: Border.all(color: borderColor),
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_7)),
-      ),
+          gradient: AppColors.appMainGradientColor,
+          border: Border.all(color: borderColor),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_7))),
       child: GestureDetector(
         onDoubleTap: onPressed,
         onTap: () {
@@ -64,10 +62,7 @@ class CommonProductButtonWidget extends StatelessWidget {
             onPressed: null,
             child: isLoading
                 ? CupertinoActivityIndicator(color: AppColors.whiteColor)
-                : Text(
-                    title,
-                    style: AppStyles.rkRegularTextStyle(size: textSize, color: textColor, fontWeight: FontWeight.w600),
-                  )),
+                : Text(title, style: AppStyles.rkRegularTextStyle(size: textSize, color: textColor, fontWeight: FontWeight.w600))),
       ),
     );
   }

@@ -12,13 +12,12 @@ class SupplierProductsScreenShimmerWidget extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         child: GridView.builder(
-          shrinkWrap: true,
-          itemCount: itemCount,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
-          itemBuilder: (context, index) => buildSupplierProductsListItem(context: context),
-        ),
+            shrinkWrap: true,
+            itemCount: itemCount,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.9),
+            itemBuilder: (context, index) => buildSupplierProductsListItem(context: context)),
       ),
     );
   }
@@ -28,10 +27,9 @@ class SupplierProductsScreenShimmerWidget extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(AppConstants.padding_10),
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          color: AppColors.whiteColor,
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-        ),
+            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+            color: AppColors.whiteColor,
+            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)]),
       ),
     );
   }

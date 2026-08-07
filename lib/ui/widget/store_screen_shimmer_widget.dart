@@ -29,7 +29,7 @@ class StoreScreenShimmerWidget extends StatelessWidget {
           buildListItems(context, height: 120),
           buildListTitles(),
           buildListItems(context, height: 120),
-          90.height,
+          90.height
         ]),
       ),
     );
@@ -38,49 +38,46 @@ class StoreScreenShimmerWidget extends StatelessWidget {
   CommonShimmerWidget buildListItems(BuildContext context, {double? height}) {
     return CommonShimmerWidget(
       child: Container(
-        width: getScreenWidth(context),
-        height: height ?? 110,
-        margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-        decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)), color: AppColors.whiteColor),
-      ),
+          width: getScreenWidth(context),
+          height: height ?? 110,
+          margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+          decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)), color: AppColors.whiteColor)),
     );
   }
 
   Widget buildListTitles() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [buildTextFieldTitle(), buildTextFieldTitle()]),
-    );
+        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [buildTextFieldTitle(), buildTextFieldTitle()]));
   }
 
   Widget buildCategoryListItem() {
     return CommonShimmerWidget(
-        child: Container(
-      height: 90,
-      width: 90,
-      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
-    ));
+      child: Container(
+          height: 90,
+          width: 90,
+          margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)))),
+    );
   }
 
   Widget buildProductSaleListItem() {
     return CommonShimmerWidget(
-        child: Container(
-      height: 170,
-      width: 140,
-      margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
-    ));
+      child: Container(
+          height: 170,
+          width: 140,
+          margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)))),
+    );
   }
 
   Widget buildTextFieldTitle() {
     return CommonShimmerWidget(
       child: Container(
-        height: AppConstants.shimmerTextHeight,
-        width: 100,
-        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
-      ),
+          height: AppConstants.shimmerTextHeight,
+          width: 100,
+          margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)))),
     );
   }
 }

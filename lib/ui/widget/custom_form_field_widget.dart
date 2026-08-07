@@ -125,37 +125,34 @@ class CustomFormField extends StatelessWidget {
         textAlign: textDirection == TextDirection.ltr ? TextAlign.end : TextAlign.start,
         validator: (value) => AuthFormValidation().formValidation(value!, _validator, availableQtyVal!, context),
         decoration: InputDecoration(
-            labelStyle: TextStyle(color: AppColors.textColor, overflow: TextOverflow.visible),
-            suffixIcon: postIconBtn,
-            prefixIcon: prefixIcon,
-            suffix: suffixIcon,
-            hintText: _hint,
-            hintTextDirection: textDirection == TextDirection.ltr ? TextDirection.ltr : null,
-            filled: true,
-            fillColor: _fillColor,
-            hintStyle: TextStyle(color: AppColors.textColor),
-            errorMaxLines: 2,
-            errorStyle: TextStyle(color: AppColors.redColor, height: height, overflow: TextOverflow.visible, fontWeight: FontWeight.w400),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(border),
-                borderSide: isBorderVisible ? BorderSide(color: AppColors.mainColor, width: 1) : BorderSide.none),
-            contentPadding: EdgeInsets.fromLTRB(AppConstants.padding_10, contentPaddingTop, AppConstants.padding_10, contentPaddingBottom),
-            disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(border),
-                borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(border),
-                borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none),
-            errorBorder: OutlineInputBorder(
+          labelStyle: TextStyle(color: AppColors.textColor, overflow: TextOverflow.visible),
+          suffixIcon: postIconBtn,
+          prefixIcon: prefixIcon,
+          suffix: suffixIcon,
+          hintText: _hint,
+          hintTextDirection: textDirection == TextDirection.ltr ? TextDirection.ltr : null,
+          filled: true,
+          fillColor: _fillColor,
+          hintStyle: TextStyle(color: AppColors.textColor),
+          errorMaxLines: 2,
+          errorStyle: TextStyle(color: AppColors.redColor, height: height, overflow: TextOverflow.visible, fontWeight: FontWeight.w400),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(border),
+              borderSide: isBorderVisible ? BorderSide(color: AppColors.mainColor, width: 1) : BorderSide.none),
+          contentPadding: EdgeInsets.fromLTRB(AppConstants.padding_10, contentPaddingTop, AppConstants.padding_10, contentPaddingBottom),
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(border), borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(border), borderSide: isBorderVisible ? BorderSide(color: AppColors.borderColor) : BorderSide.none),
+          errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(border),
               borderSide: showErrorBorder
                   ? BorderSide(color: AppColors.redColor, width: 1.4)
-                  : (isBorderVisible ? BorderSide(color: AppColors.borderColor, width: 1) : BorderSide.none),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
+                  : (isBorderVisible ? BorderSide(color: AppColors.borderColor, width: 1) : BorderSide.none)),
+          focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(border),
-              borderSide: showErrorBorder || isBorderVisible ? BorderSide(color: AppColors.redColor, width: 1.4) : BorderSide.none,
-            )),
+              borderSide: showErrorBorder || isBorderVisible ? BorderSide(color: AppColors.redColor, width: 1.4) : BorderSide.none),
+        ),
       ),
     );
   }

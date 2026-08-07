@@ -9,9 +9,11 @@ Padding buildListTitles({required BuildContext context, required String title, r
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       GestureDetector(
         onTap: onTap,
-        child: Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold)),
+        child:
+        Text(title, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.bold)),
       ),
-      GestureDetector(onTap: onTap, child: Text(subTitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor))),
+      GestureDetector(
+          onTap: onTap, child: Text(subTitle, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor)))
     ]),
   );
 }

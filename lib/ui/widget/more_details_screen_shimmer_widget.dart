@@ -13,81 +13,59 @@ class MoreDetailsScreenShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildTextFieldTitle(width: 60),
-                buildTextField(),
-                14.height,
-                buildTextFieldTitle(width: 90),
-                buildTextField(),
-                14.height,
-                buildTextFieldTitle(width: 80),
-                buildTextField(),
-                14.height,
-                buildTextFieldTitle(width: 70),
-                buildTextField(),
-                14.height,
-                buildTextFieldTitle(width: 60),
-                buildTextField(),
-                16.height,
-                buildTextField(height: 44),
-              ],
-            ),
-          ),
-          24.height,
-          buildTextField(height: AppConstants.buttonHeight),
-        ],
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        _buildCard(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            buildTextFieldTitle(width: 60),
+            buildTextField(),
+            14.height,
+            buildTextFieldTitle(width: 90),
+            buildTextField(),
+            14.height,
+            buildTextFieldTitle(width: 80),
+            buildTextField(),
+            14.height,
+            buildTextFieldTitle(width: 70),
+            buildTextField(),
+            14.height,
+            buildTextFieldTitle(width: 60),
+            buildTextField(),
+            16.height,
+            buildTextField(height: 44)
+          ]),
+        ),
+        24.height,
+        buildTextField(height: AppConstants.buttonHeight)
+      ]),
     );
   }
 
   Widget _buildCard({required Widget child}) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(16),
-      child: child,
-    );
+        decoration: BoxDecoration(
+            color: AppColors.whiteColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 2))]),
+        padding: const EdgeInsets.all(16),
+        child: child);
   }
 
   Widget buildTextField({double? height}) {
     return CommonShimmerWidget(
       child: Container(
-        height: height ?? AppConstants.textFormFieldHeight,
-        width: double.maxFinite,
-        decoration: BoxDecoration(
-          color: AppColors.pageColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
+          height: height ?? AppConstants.textFormFieldHeight,
+          width: double.maxFinite,
+          decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: BorderRadius.circular(12))),
     );
   }
 
   Widget buildTextFieldTitle({double width = 140}) {
     return CommonShimmerWidget(
       child: Container(
-        height: AppConstants.shimmerTextHeight,
-        width: width,
-        margin: const EdgeInsets.only(bottom: 6),
-        decoration: BoxDecoration(
-          color: AppColors.pageColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
+          height: AppConstants.shimmerTextHeight,
+          width: width,
+          margin: const EdgeInsets.only(bottom: 6),
+          decoration: BoxDecoration(color: AppColors.pageColor, borderRadius: BorderRadius.circular(8))),
     );
   }
 }

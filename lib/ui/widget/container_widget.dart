@@ -12,9 +12,9 @@ class ContainerWidget extends StatelessWidget {
       height: AppConstants.containerHeight,
       width: MediaQuery.of(context).size.width,
       child: Padding(
-        padding: const EdgeInsets.only(top: AppConstants.padding_10, bottom: AppConstants.padding_10),
-        child: Text(name, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, fontWeight: FontWeight.w400, color: AppColors.textColor)),
-      ),
+          padding: const EdgeInsets.only(top: AppConstants.padding_10, bottom: AppConstants.padding_10),
+          child:
+              Text(name, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, fontWeight: FontWeight.w400, color: AppColors.textColor))),
     );
   }
 }

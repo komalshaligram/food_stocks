@@ -16,7 +16,7 @@ class CustomContainerWidget extends StatelessWidget {
         padding: const EdgeInsets.only(top: AppConstants.padding_10, bottom: AppConstants.padding_10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(star, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.redColor)),
-          Text(name, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor)),
+          Text(name, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.textColor))
         ]),
       ),
     );

@@ -16,10 +16,9 @@ class WalletScreenShimmerWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
         padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_10),
         decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-        ),
+            color: AppColors.whiteColor,
+            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
+            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
       ),
     );
   }

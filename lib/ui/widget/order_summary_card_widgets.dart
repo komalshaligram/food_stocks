@@ -67,11 +67,10 @@ class SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: margin ?? const EdgeInsets.fromLTRB(12, 6, 12, 6),
-      decoration: SummaryStyle.cardDecoration,
-      clipBehavior: Clip.antiAlias,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: children),
-    );
+        margin: margin ?? const EdgeInsets.fromLTRB(12, 6, 12, 6),
+        decoration: SummaryStyle.cardDecoration,
+        clipBehavior: Clip.antiAlias,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: children));
   }
 }
 
@@ -119,7 +118,7 @@ class SummarySupplierHeader extends StatelessWidget {
             Wrap(spacing: 6, runSpacing: 4, children: [
               _MetaChip(icon: Icons.inventory_2_outlined, text: '$productsCount $productsLabel', color: AppColors.blueColor),
               if (savings.abs() > 0)
-                _MetaChip(icon: Icons.sell_outlined, text: summaryMoney(savings.abs()), color: AppColors.orangeColor, isAmount: true),
+                _MetaChip(icon: Icons.sell_outlined, text: summaryMoney(savings.abs()), color: AppColors.orangeColor, isAmount: true)
             ]),
           ]),
         ),
@@ -406,7 +405,7 @@ class SummaryNote extends StatelessWidget {
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Icon(Icons.info_outline_rounded, size: 14, color: tint),
       6.width,
-      Expanded(child: Text(text, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: tint))),
+      Expanded(child: Text(text, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: tint)))
     ]);
   }
 }
@@ -456,9 +455,10 @@ class SummaryTotalPill extends StatelessWidget {
       widthFactor: 1,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_100), boxShadow: [
-          BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.25), blurRadius: 10, offset: const Offset(0, 4)),
-        ]),
+        decoration: BoxDecoration(
+            gradient: AppColors.appMainGradientColor,
+            borderRadius: BorderRadius.circular(AppConstants.radius_100),
+            boxShadow: [BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.25), blurRadius: 10, offset: const Offset(0, 4))]),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Text(label, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor.withValues(alpha: 0.85))),
           5.width,

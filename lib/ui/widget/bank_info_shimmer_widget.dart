@@ -24,7 +24,7 @@ class BankInfoScreenShimmerWidget extends StatelessWidget {
             7.height,
             buildTextFieldTitle(),
             buildTextField(),
-            7.height,
+            7.height
           ]),
         ),
       ),
@@ -34,21 +34,19 @@ class BankInfoScreenShimmerWidget extends StatelessWidget {
   Widget buildTextField() {
     return CommonShimmerWidget(
       child: Container(
-        height: AppConstants.textFormFieldHeight,
-        width: double.maxFinite,
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5))),
-      ),
+          height: AppConstants.textFormFieldHeight,
+          width: double.maxFinite,
+          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)))),
     );
   }
 
   Widget buildTextFieldTitle() {
     return CommonShimmerWidget(
       child: Container(
-        height: AppConstants.shimmerTextHeight,
-        width: 140,
-        margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
-        decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3))),
-      ),
+          height: AppConstants.shimmerTextHeight,
+          width: 140,
+          margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10),
+          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_3)))),
     );
   }
 }

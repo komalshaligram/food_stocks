@@ -7,17 +7,16 @@ import '../utils/constants/app_styles.dart';
 import 'confetti.dart';
 
 class BottomNavTabItem extends StatelessWidget {
-  const BottomNavTabItem({
-    super.key,
-    required this.imagePath,
-    required this.isSelected,
-    required this.isRtl,
-    this.isCart = false,
-    this.cartCount = 0,
-    this.showCartBadge = false,
-    this.showCartAnimation = false,
-    this.showCelebration = false,
-  });
+  const BottomNavTabItem(
+      {super.key,
+      required this.imagePath,
+      required this.isSelected,
+      required this.isRtl,
+      this.isCart = false,
+      this.cartCount = 0,
+      this.showCartBadge = false,
+      this.showCartAnimation = false,
+      this.showCelebration = false});
 
   final String imagePath;
   final bool isSelected;
@@ -36,28 +35,17 @@ class BottomNavTabItem extends StatelessWidget {
         width: 50,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          gradient: isSelected
-              ? AppColors.appMainGradientColor
-              : LinearGradient(
-                  colors: [AppColors.whiteColor, AppColors.whiteColor]),
-          borderRadius:
-              const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-        ),
+            gradient: isSelected ? AppColors.appMainGradientColor : LinearGradient(colors: [AppColors.whiteColor, AppColors.whiteColor]),
+            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100))),
         child: Center(
           child: Transform(
             alignment: Alignment.center,
             transform: Matrix4.rotationY(isRtl ? pi : 0),
-            child: SvgPicture.asset(
-              imagePath,
-              height: 26,
-              width: 26,
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                  isSelected
-                      ? AppColors.whiteColor
-                      : AppColors.navSelectedColor,
-                  BlendMode.srcIn),
-            ),
+            child: SvgPicture.asset(imagePath,
+                height: 26,
+                width: 26,
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(isSelected ? AppColors.whiteColor : AppColors.navSelectedColor, BlendMode.srcIn)),
           ),
         ),
       ),
@@ -71,23 +59,11 @@ class BottomNavTabItem extends StatelessWidget {
             width: 24,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              gradient: isSelected
-                  ? LinearGradient(
-                      colors: [AppColors.whiteColor, AppColors.whiteColor])
-                  : AppColors.appMainGradientColor,
-              borderRadius: const BorderRadius.all(
-                  Radius.circular(AppConstants.radius_100)),
-              border: Border.all(
-                  color:
-                      isSelected ? AppColors.mainColor : AppColors.whiteColor,
-                  width: 1),
-            ),
+                gradient: isSelected ? LinearGradient(colors: [AppColors.whiteColor, AppColors.whiteColor]) : AppColors.appMainGradientColor,
+                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                border: Border.all(color: isSelected ? AppColors.mainColor : AppColors.whiteColor, width: 1)),
             child: Text('$cartCount',
-                style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_10,
-                    color: isSelected
-                        ? AppColors.mainColor
-                        : AppColors.whiteColor)),
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: isSelected ? AppColors.mainColor : AppColors.whiteColor)),
           ),
         ),
       if (isCart && showCartAnimation && !isSelected)
@@ -98,15 +74,8 @@ class BottomNavTabItem extends StatelessWidget {
             height: 50,
             width: 25,
             child: Visibility(
-              visible: showCelebration,
-              child: IgnorePointer(
-                child: Confetti(
-                    isStopped: !showCelebration,
-                    snippingCount: 10,
-                    snipSize: 3.0,
-                    colors: [AppColors.mainColor]),
-              ),
-            ),
+                visible: showCelebration,
+                child: IgnorePointer(child: Confetti(isStopped: !showCelebration, snippingCount: 10, snipSize: 3.0, colors: [AppColors.mainColor]))),
           ),
         ),
     ]);

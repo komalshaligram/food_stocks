@@ -5,14 +5,14 @@ class CommonMarqueeWidget extends StatefulWidget {
   final Axis direction;
   final Duration animationDuration, backDuration, pauseDuration;
 
-  const CommonMarqueeWidget({
-    Key? key,
-    required this.child,
-    this.direction = Axis.horizontal,
-    this.animationDuration = const Duration(milliseconds: 6000),
-    this.backDuration = const Duration(milliseconds: 800),
-    this.pauseDuration = const Duration(milliseconds: 800),
-  }) : super(key: key);
+  const CommonMarqueeWidget(
+      {Key? key,
+      required this.child,
+      this.direction = Axis.horizontal,
+      this.animationDuration = const Duration(milliseconds: 6000),
+      this.backDuration = const Duration(milliseconds: 800),
+      this.pauseDuration = const Duration(milliseconds: 800)})
+      : super(key: key);
 
   @override
   MarqueeWidgetState createState() => MarqueeWidgetState();
@@ -36,7 +36,8 @@ class MarqueeWidgetState extends State<CommonMarqueeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(physics: const NeverScrollableScrollPhysics(), scrollDirection: widget.direction, controller: scrollController, child: widget.child);
+    return SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(), scrollDirection: widget.direction, controller: scrollController, child: widget.child);
   }
 
   void scroll(_) async {

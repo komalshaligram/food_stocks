@@ -13,23 +13,21 @@ class CommonPdfViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-        child: CommonAppBar(
-          title: AppLocalizations.of(context)!.refund_invoice,
-          trailingWidget: InkWell(
-              onTap: () async {
-                await Share.share(url);
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+          child: CommonAppBar(
+              title: AppLocalizations.of(context)!.refund_invoice,
+              trailingWidget: InkWell(
+                  onTap: () async {
+                    await Share.share(url);
+                  },
+                  child: Icon(Icons.share, color: AppColors.mainColor)),
+              iconData: Icons.arrow_back_ios_sharp,
+              onTap: () {
+                Navigator.pop(context);
               },
-              child: Icon(Icons.share, color: AppColors.mainColor)),
-          iconData: Icons.arrow_back_ios_sharp,
-          onTap: () {
-            Navigator.pop(context);
-          },
-          bgColor: Colors.transparent,
+              bgColor: Colors.transparent),
         ),
-      ),
-      body: SizedBox(height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width, child: SfPdfViewer.network(url)),
-    );
+        body: SizedBox(height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width, child: SfPdfViewer.network(url)));
   }
 }

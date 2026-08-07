@@ -27,24 +27,23 @@ class CommonSearchWidget extends StatelessWidget {
   final TextEditingController controller;
   final bool isFilterTap;
 
-  const CommonSearchWidget({
-    super.key,
-    required this.isCategoryExpand,
-    required this.isSearching,
-    required this.searchResultWidget,
-    this.isBackButton = false,
-    required this.controller,
-    required this.onScanTap,
-    required this.onFilterTap,
-    required this.onSearchTap,
-    required this.onOutSideTap,
-    required this.onSearch,
-    required this.onSearchSubmit,
-    required this.onSearchItemTap,
-    required this.searchList,
-    this.isFilterTap = false,
-    required this.onCloseTap,
-  });
+  const CommonSearchWidget(
+      {super.key,
+      required this.isCategoryExpand,
+      required this.isSearching,
+      required this.searchResultWidget,
+      this.isBackButton = false,
+      required this.controller,
+      required this.onScanTap,
+      required this.onFilterTap,
+      required this.onSearchTap,
+      required this.onOutSideTap,
+      required this.onSearch,
+      required this.onSearchSubmit,
+      required this.onSearchItemTap,
+      required this.searchList,
+      this.isFilterTap = false,
+      required this.onCloseTap});
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +51,10 @@ class CommonSearchWidget extends StatelessWidget {
       GestureDetector(
         onTap: onOutSideTap,
         child: Container(
-          height: getScreenHeight(context),
-          width: getScreenWidth(context),
-          padding: const EdgeInsets.only(top: AppConstants.padding_10),
-          color: isCategoryExpand ? const Color.fromARGB(65, 0, 0, 0) : null,
-        ),
+            height: getScreenHeight(context),
+            width: getScreenWidth(context),
+            padding: const EdgeInsets.only(top: AppConstants.padding_10),
+            color: isCategoryExpand ? const Color.fromARGB(65, 0, 0, 0) : null),
       ),
       Positioned(
         top: AppConstants.padding_10,
@@ -69,10 +67,9 @@ class CommonSearchWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_30)),
-            color: AppColors.whiteColor,
-            boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.radius_10)],
-          ),
+              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_30)),
+              color: AppColors.whiteColor,
+              boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: AppConstants.radius_10)]),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Container(
               width: getScreenWidth(context),
@@ -80,11 +77,10 @@ class CommonSearchWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                color: AppColors.whiteColor,
-                border: Border.all(color: AppColors.borderColor.withValues(alpha: 0.5)),
-                boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: isCategoryExpand ? 0 : 10)],
-              ),
+                  borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                  color: AppColors.whiteColor,
+                  border: Border.all(color: AppColors.borderColor.withValues(alpha: 0.5)),
+                  boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.3), blurRadius: isCategoryExpand ? 0 : 10)]),
               child: Row(children: [
                 isFilterTap
                     ? 0.width
@@ -100,60 +96,55 @@ class CommonSearchWidget extends StatelessWidget {
                               : Transform(
                                   alignment: Alignment.center,
                                   transform: Matrix4.rotationY(context.rtl ? 0 : pi),
-                                  child: SvgPicture.asset(AppImagePath.filter, colorFilter: ColorFilter.mode(AppColors.greyColor, BlendMode.srcIn)),
-                                ),
+                                  child: SvgPicture.asset(AppImagePath.filter, colorFilter: ColorFilter.mode(AppColors.greyColor, BlendMode.srcIn))),
                         ),
                       ),
                 Expanded(
                   child: TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                      border: AppStyles.searchFieldStyle(),
-                      enabledBorder: AppStyles.searchFieldStyle(),
-                      focusedBorder: AppStyles.searchFieldStyle(),
-                      errorBorder: AppStyles.searchFieldStyle(),
-                      focusedErrorBorder: AppStyles.searchFieldStyle(),
-                      disabledBorder: AppStyles.searchFieldStyle(),
-                      filled: true,
-                      hintText: AppLocalizations.of(context)!.search,
-                      constraints: const BoxConstraints(maxHeight: 40),
-                      fillColor: AppColors.pageColor,
-                      contentPadding: const EdgeInsets.only(top: AppConstants.padding_3),
-                      prefixIcon: Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                        child: Icon(Icons.search, color: AppColors.greyColor),
+                      controller: controller,
+                      decoration: InputDecoration(
+                        border: AppStyles.searchFieldStyle(),
+                        enabledBorder: AppStyles.searchFieldStyle(),
+                        focusedBorder: AppStyles.searchFieldStyle(),
+                        errorBorder: AppStyles.searchFieldStyle(),
+                        focusedErrorBorder: AppStyles.searchFieldStyle(),
+                        disabledBorder: AppStyles.searchFieldStyle(),
+                        filled: true,
+                        hintText: AppLocalizations.of(context)!.search,
+                        constraints: const BoxConstraints(maxHeight: 40),
+                        fillColor: AppColors.pageColor,
+                        contentPadding: const EdgeInsets.only(top: AppConstants.padding_3),
+                        prefixIcon: Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                            child: Icon(Icons.search, color: AppColors.greyColor)),
+                        suffixIcon: controller.text.isNotEmpty
+                            ? GestureDetector(
+                                onTap: () {
+                                  onCloseTap();
+                                  controller.clear();
+                                },
+                                child: Transform(
+                                    alignment: Alignment.center,
+                                    transform: Matrix4.rotationY(context.rtl ? pi : 0),
+                                    child: Icon(Icons.close, color: AppColors.greyColor)),
+                              )
+                            : const SizedBox(),
                       ),
-                      suffixIcon: controller.text.isNotEmpty
-                          ? GestureDetector(
-                              onTap: () {
-                                onCloseTap();
-                                controller.clear();
-                              },
-                              child: Transform(
-                                alignment: Alignment.center,
-                                transform: Matrix4.rotationY(context.rtl ? pi : 0),
-                                child: Icon(Icons.close, color: AppColors.greyColor),
-                              ),
-                            )
-                          : const SizedBox(),
-                    ),
-                    onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.search,
-                    onTap: onSearchTap,
-                    onChanged: onSearch,
-                    onSubmitted: onSearchSubmit,
-                  ),
+                      onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.search,
+                      onTap: onSearchTap,
+                      onChanged: onSearch,
+                      onSubmitted: onSearchSubmit),
                 ),
                 InkWell(
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   onTap: onScanTap,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
-                    child: SvgPicture.asset(AppImagePath.scan, colorFilter: ColorFilter.mode(AppColors.greyColor, BlendMode.srcIn)),
-                  ),
+                      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_10),
+                      child: SvgPicture.asset(AppImagePath.scan, colorFilter: ColorFilter.mode(AppColors.greyColor, BlendMode.srcIn))),
                 ),
               ]),
             ),
@@ -161,9 +152,12 @@ class CommonSearchWidget extends StatelessWidget {
               child: !isCategoryExpand
                   ? 0.height
                   : Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      isSearching ? LinearProgressIndicator(color: AppColors.mainColor, minHeight: 3, backgroundColor: AppColors.mainColor.withValues(alpha: 0.5)) : 3.height,
+                      isSearching
+                          ? LinearProgressIndicator(
+                              color: AppColors.mainColor, minHeight: 3, backgroundColor: AppColors.mainColor.withValues(alpha: 0.5))
+                          : 3.height,
                       Expanded(child: searchResultWidget),
-                      10.height,
+                      10.height
                     ]),
             ),
           ]),

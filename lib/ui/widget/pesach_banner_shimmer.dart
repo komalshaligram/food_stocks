@@ -11,11 +11,10 @@ class PesachBannerShimmerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CommonShimmerWidget(
       child: Container(
-        height: 70,
-        width: getScreenWidth(context),
-        padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
-        decoration: BoxDecoration(color: AppColors.whiteColor),
-      ),
+          height: 70,
+          width: getScreenWidth(context),
+          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_8),
+          decoration: BoxDecoration(color: AppColors.whiteColor)),
     );
   }
 }
