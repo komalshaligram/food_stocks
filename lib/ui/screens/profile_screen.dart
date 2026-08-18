@@ -196,14 +196,13 @@ class ProfileScreenWidget extends StatelessWidget {
       color: AppColors.lightBorderColor,
       borderRadius: _fieldRadius);
 
-  Widget _buildTextField({
-    required BuildContext context,
-    required TextEditingController controller,
-    required TextInputType keyboardType,
-    required String validator,
-    TextInputAction? textInputAction,
-    List<TextInputFormatter>? inputFormat,
-  }) {
+  Widget _buildTextField(
+      {required BuildContext context,
+      required TextEditingController controller,
+      required TextInputType keyboardType,
+      required String validator,
+      TextInputAction? textInputAction,
+      List<TextInputFormatter>? inputFormat}) {
     return CustomFormField(
         context: context,
         controller: controller,

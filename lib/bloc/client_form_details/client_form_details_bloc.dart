@@ -30,7 +30,6 @@ import '../../ui/utils/constants/app_styles.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import 'package:path/path.dart' as p;
-
 part 'client_form_details_event.dart';
 part 'client_form_details_state.dart';
 part 'client_form_details_bloc.freezed.dart';
@@ -44,10 +43,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
   String bankId = '';
   String agentId = '';
   String directory = '';
-  // String owner1Signature = '';
-  // String owner2Signature = '';
-  // String guarantee1Signature = '';
-  // String guarantee2Signature = '';
   bool isSign = false;
 
   TermsConditionReqModel termsConditionReqModel = const TermsConditionReqModel();
@@ -58,7 +53,8 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
 
       if (event is _getProfileDetailsEvent) {
         try {
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
+          final res = await DioClient(event.context)
+              .post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
           ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
@@ -66,10 +62,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
             agentId = response.data?.clients?[0].clientDetail?.agent?.id ?? '';
             businessTypeId = res['data']['clients'][0]['clientDetail']['businessType']['_id'];
             bankId = response.data?.clients?[0].clientDetail?.bank?.id ?? '';
-            // owner1Signature = response.data?.clients?[0].clientDetail?.owner1Signature ?? '';
-            // owner2Signature = response.data?.clients?[0].clientDetail?.owner2Signature ?? '';
-            // guarantee1Signature = response.data?.clients?[0].clientDetail?.guarantee1Signature ?? '';
-            // guarantee2Signature = response.data?.clients?[0].clientDetail?.guarantee2Signature ?? '';
 
             emit(state.copyWith(
                 agentCodeController: TextEditingController(text: response.data?.clients?[0].clientDetail?.agent?.agentCode ?? ''),
@@ -95,17 +87,17 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
                 guarantee2Signature: response.data?.clients?[0].clientDetail?.guarantee2Signature ?? ''));
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } catch (_) {}
       } else if (event is _selectBusinessTypeEvent) {
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
             businessTypeId = element.id.toString();
-            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
+            emit(state.copyWith(
+                business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
           }
         }
       } else if (event is _selectOwnerNoEvent) {
@@ -119,11 +111,10 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
           businessTypeList.addAll(response.data?.businessType?.reversed ?? []);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
-              isShimmering: false,
-              businessTypeList: businessTypeList,
-              business: businessTypeList.first.businessTypeName.toString(),
-              haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false,
-            ));
+                isShimmering: false,
+                businessTypeList: businessTypeList,
+                business: businessTypeList.first.businessTypeName.toString(),
+                haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -141,7 +132,8 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.getBankDetailUrl);
           BankDetailModel response = BankDetailModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(isShimmering: false, bankList: response.data?.bankDetail ?? [], bankName: response.data?.bankDetail?.first.bankName ?? ''));
+            emit(state.copyWith(
+                isShimmering: false, bankList: response.data?.bankDetail ?? [], bankName: response.data?.bankDetail?.first.bankName ?? ''));
           } else {
             emit(state.copyWith(isShimmering: false));
           }
@@ -153,9 +145,8 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
       } else if (event is _getPdfDataEvent) {
         termsConditionReqModel = event.termsConditionReqModel;
         emit(state.copyWith(
-          isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,
-          isGuarantee1Available: (termsConditionReqModel.guarantee1FullName != '') ? true : false,
-        ));
+            isOwner2Available: (termsConditionReqModel.owner2FullName != '') ? true : false,
+            isGuarantee1Available: (termsConditionReqModel.guarantee1FullName != '') ? true : false));
         emit(state.copyWith(pdfPath: base64Decode(event.pdfData)));
       } else if (event is _signatureEvent) {
         showCustomSignaturePadDialog(event.context, event.fieldName, event.fieldNameForSign);
@@ -185,7 +176,7 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
               AppStrings.owner1SignatureString: state.owner1Signature != '' ? state.owner1Signature : '',
               AppStrings.owner2SignatureString: state.owner2Signature != '' ? state.owner2Signature : '',
               AppStrings.guarantee1SignatureString: state.guarantee1Signature != '' ? state.guarantee1Signature : '',
-              AppStrings.guarantee2SignatureString: state.guarantee2Signature != '' ? state.guarantee2Signature : '',
+              AppStrings.guarantee2SignatureString: state.guarantee2Signature != '' ? state.guarantee2Signature : ''
             }
           };
 
@@ -193,7 +184,8 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
           ProfileDetailsUpdateResModel response = ProfileDetailsUpdateResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.updated_successfully, type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+                context: event.context, title: AppLocalizations.of(event.context)!.updated_successfully, type: SnackBarType.success);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
@@ -226,33 +218,29 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
 
     if (fieldName == AppStrings.owner1SignatureString) {
       emit(state.copyWith(owner1SignatureLocal: localPath));
-      final formData = FormData.fromMap({
-        AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType)),
-      });
+      final formData = FormData.fromMap(
+          {AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType))});
       final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
       final response = FileUploadResModel.fromJson(res);
       emit(state.copyWith(owner1Signature: response.filepath.toString()));
     } else if (fieldName == AppStrings.owner2SignatureString) {
       emit(state.copyWith(owner2SignatureLocal: localPath));
-      final formData = FormData.fromMap({
-        AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType)),
-      });
+      final formData = FormData.fromMap(
+          {AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType))});
       final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
       final response = FileUploadResModel.fromJson(res);
       emit(state.copyWith(owner2Signature: response.filepath.toString()));
     } else if (fieldName == AppStrings.guarantee1SignatureString) {
       emit(state.copyWith(guarantee1SignatureLocal: localPath));
-      final formData = FormData.fromMap({
-        AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType)),
-      });
+      final formData = FormData.fromMap(
+          {AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType))});
       final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
       final response = FileUploadResModel.fromJson(res);
       emit(state.copyWith(guarantee1Signature: response.filepath.toString()));
     } else if (fieldName == AppStrings.guarantee2SignatureString) {
       emit(state.copyWith(guarantee2SignatureLocal: localPath));
-      final formData = FormData.fromMap({
-        AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType)),
-      });
+      final formData = FormData.fromMap(
+          {AppStrings.fileString: await MultipartFile.fromFile(localPath, filename: filename, contentType: MediaType(type, contentType))});
       final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
       final response = FileUploadResModel.fromJson(res);
       emit(state.copyWith(guarantee2Signature: response.filepath.toString()));
@@ -261,50 +249,46 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
 
   Future<void> showCustomSignaturePadDialog(BuildContext context, String fieldName, String signaturePadName) async {
     await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            signaturePadName,
-            textAlign: TextAlign.center,
-            style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor),
-          ),
-          titlePadding: const EdgeInsets.all(8),
-          contentPadding: const EdgeInsets.all(12),
-          content: Container(
-            height: 200,
-            width: 300,
-            decoration: BoxDecoration(border: Border.all(color: AppColors.greyColor)),
-            child: SfSignaturePad(
-              key: _signaturePadKey,
-              onDrawStart: () {
-                isSign = true;
-                return false;
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                isSign = false;
-                _signaturePadKey.currentState!.clear();
-              },
-              child: Text(AppLocalizations.of(context)!.remove, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.redColor)),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                if (isSign) {
-                  saveSignature(context, fieldName);
-                  isSign = false;
-                }
-              },
-              child: Text(AppLocalizations.of(context)!.save, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor)),
-            ),
-          ],
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text(signaturePadName,
+                  textAlign: TextAlign.center, style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+              titlePadding: const EdgeInsets.all(8),
+              contentPadding: const EdgeInsets.all(12),
+              content: Container(
+                height: 200,
+                width: 300,
+                decoration: BoxDecoration(border: Border.all(color: AppColors.greyColor)),
+                child: SfSignaturePad(
+                    key: _signaturePadKey,
+                    onDrawStart: () {
+                      isSign = true;
+                      return false;
+                    }),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    isSign = false;
+                    _signaturePadKey.currentState!.clear();
+                  },
+                  child: Text(AppLocalizations.of(context)!.remove,
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.redColor)),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    if (isSign) {
+                      saveSignature(context, fieldName);
+                      isSign = false;
+                    }
+                  },
+                  child: Text(AppLocalizations.of(context)!.save,
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.mainColor)),
+                ),
+              ]);
+        });
   }
 
   Future<void> saveSignature(BuildContext context, String fieldName) async {
@@ -316,22 +300,6 @@ class ClientFormDetailsBloc extends Bloc<ClientFormDetailsEvent, ClientFormDetai
     var path = '$directory/${fieldName}_$timestamp.png';
     imagePath = await File(path).writeAsBytes(imageInUnit8List);
 
-    add(ClientFormDetailsEvent.uploadSignatureFromPadEvent(
-      context: context,
-      fieldName: fieldName,
-      localImagePath: imagePath.path,
-    ));
-
-    // if (state.isOwner2Available) {
-    //   if (state.owner1Signature != '' && owner2Signature != '' && guarantee1Signature != '' && guarantee2Signature != '') {
-    //     emit(state.copyWith(isNextEnable: true));
-    //   }
-    // } else if (state.owner1Signature != '') {
-    //   if (state.isGuarantee1Available && guarantee1Signature == '') {
-    //     emit(state.copyWith(isNextEnable: false));
-    //   } else {
-    //     emit(state.copyWith(isNextEnable: true));
-    //   }
-    // }
+    add(ClientFormDetailsEvent.uploadSignatureFromPadEvent(context: context, fieldName: fieldName, localImagePath: imagePath.path));
   }
 }

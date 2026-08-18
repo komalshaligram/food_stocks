@@ -28,11 +28,10 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
         String version = packageInfo.version;
         update.ProfileModel updatedProfileModel = update.ProfileModel(
           clientDetail: update.ClientDetail(
-            deviceType: Platform.isAndroid ? AppStrings.androidString : AppStrings.iosString,
-            tokenId: preferences.getFCMToken(),
-            lastSeen: DateTime.now(),
-            applicationVersion: version,
-          ),
+              deviceType: Platform.isAndroid ? AppStrings.androidString : AppStrings.iosString,
+              tokenId: preferences.getFCMToken(),
+              lastSeen: DateTime.now(),
+              applicationVersion: version),
         );
         Map<String, dynamic> req = updatedProfileModel.toJson();
         Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
@@ -50,8 +49,6 @@ class MyAppBloc extends Bloc<MyAppEvent, MyAppState> {
         try {
           final res = await DioClient(event.context).post("${AppUrlEndPoints.updateProfileDetailsUrl}/${preferences.getUserId()}", data: req);
           if (res != null) {
-            // This runs on every return-from-background, so it is also what keeps the cached
-            // club-agent id in step with the management-system setting.
             await preferences.setVeahavtaAgentId(veahavtaAgentId: readVeahavtaAgentId(res));
             ProfileDetailsUpdateResModel response = ProfileDetailsUpdateResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {}

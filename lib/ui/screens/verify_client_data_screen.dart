@@ -27,14 +27,10 @@ class VerifyClientDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (_) => VerifyClientDataBloc()
-        ..add(VerifyClientDataEvent.initEvent(
-          context: context,
-          nextRouteName: args?[AppStrings.verifyClientNextRoute],
-          nextRouteArgs: args?[AppStrings.verifyClientNextArgs],
-        )),
-      child: const VerifyClientDataScreenWidget(),
-    );
+        create: (_) => VerifyClientDataBloc()
+          ..add(VerifyClientDataEvent.initEvent(
+              context: context, nextRouteName: args?[AppStrings.verifyClientNextRoute], nextRouteArgs: args?[AppStrings.verifyClientNextArgs])),
+        child: const VerifyClientDataScreenWidget());
   }
 }
 
@@ -75,36 +71,32 @@ class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWid
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: l10n.verify_data_correct,
-            iconData: Icons.arrow_back_ios_sharp,
-            onTap: () => Navigator.pop(context),
-          ),
+              bgColor: AppColors.pageColor,
+              title: l10n.verify_data_correct,
+              iconData: Icons.arrow_back_ios_sharp,
+              onTap: () => Navigator.pop(context)),
         ),
         body: state.isShimmering
             ? Center(child: CircularProgressIndicator(color: AppColors.mainColor))
-            : Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _HeaderBanner(subtitle: l10n.verify_form_subtitle),
-                            20.height,
-                            _FormSectionCard(
-                              icon: Icons.storefront_rounded,
-                              iconColor: AppColors.blueColor,
-                              title: l10n.business_details_section,
-                              children: [
-                                _ModernField(
-                                  label: l10n.business_name,
-                                  required: true,
-                                  child: CustomFormField(
+            : Column(children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                        _HeaderBanner(subtitle: l10n.verify_form_subtitle),
+                        20.height,
+                        _FormSectionCard(
+                            icon: Icons.storefront_rounded,
+                            iconColor: AppColors.blueColor,
+                            title: l10n.business_details_section,
+                            children: [
+                              _ModernField(
+                                label: l10n.business_name,
+                                required: true,
+                                child: CustomFormField(
                                     context: context,
                                     fieldKey: _businessNameKey,
                                     showErrorBorder: true,
@@ -115,14 +107,13 @@ class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWid
                                     textInputAction: TextInputAction.next,
                                     validator: AppStrings.businessNameValString,
                                     isBorderVisible: false,
-                                    border: 12,
-                                  ),
-                                ),
-                                14.height,
-                                _ModernField(
-                                  label: l10n.contact_name,
-                                  required: true,
-                                  child: CustomFormField(
+                                    border: 12),
+                              ),
+                              14.height,
+                              _ModernField(
+                                label: l10n.contact_name,
+                                required: true,
+                                child: CustomFormField(
                                     context: context,
                                     fieldKey: _contactNameKey,
                                     showErrorBorder: true,
@@ -133,105 +124,92 @@ class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWid
                                     textInputAction: TextInputAction.next,
                                     validator: AppStrings.contactPersonNameValString,
                                     isBorderVisible: false,
-                                    border: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            16.height,
-                            _FormSectionCard(
-                              icon: Icons.location_on_rounded,
-                              iconColor: AppColors.mainColor,
-                              title: l10n.address_section,
-                              children: [
-                                _ModernField(
-                                  label: l10n.city,
-                                  required: true,
-                                  child: _SelectField(
-                                    value: state.selectCity,
-                                    hint: l10n.city,
-                                    onTap: () => _showCityPicker(context, bloc, state, _listNotifier),
-                                  ),
-                                ),
-                                14.height,
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: _ModernField(
-                                        label: l10n.street_name,
-                                        required: true,
-                                        child: CustomFormField(
-                                          context: context,
-                                          fieldKey: _streetNameKey,
-                                          showErrorBorder: true,
-                                          controller: state.streetNameController,
-                                          inputFormat: [LengthLimitingTextInputFormatter(50)],
-                                          keyboardType: TextInputType.streetAddress,
-                                          hint: l10n.street_name,
-                                          fillColor: AppColors.iconBGColor,
-                                          textInputAction: TextInputAction.next,
-                                          validator: AppStrings.streetNameValString,
-                                          isBorderVisible: false,
-                                          border: 12,
-                                        ),
-                                      ),
-                                    ),
-                                    10.width,
-                                    Expanded(
-                                      flex: 2,
-                                      child: _ModernField(
-                                        label: l10n.street_number,
-                                        required: true,
-                                        child: CustomFormField(
-                                          context: context,
-                                          fieldKey: _streetNumberKey,
-                                          showErrorBorder: true,
-                                          controller: state.streetNumberController,
-                                          inputFormat: [LengthLimitingTextInputFormatter(50)],
-                                          keyboardType: TextInputType.text,
-                                          hint: l10n.street_number,
-                                          fillColor: AppColors.iconBGColor,
-                                          textInputAction: TextInputAction.next,
-                                          validator: AppStrings.streetNumberValString,
-                                          isBorderVisible: false,
-                                          border: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                14.height,
-                                _ModernField(
-                                  label: l10n.verify_phone_number,
+                                    border: 12),
+                              ),
+                            ]),
+                        16.height,
+                        _FormSectionCard(icon: Icons.location_on_rounded, iconColor: AppColors.mainColor, title: l10n.address_section, children: [
+                          _ModernField(
+                            label: l10n.city,
+                            required: true,
+                            child: _SelectField(
+                                value: state.selectCity, hint: l10n.city, onTap: () => _showCityPicker(context, bloc, state, _listNotifier)),
+                          ),
+                          14.height,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: _ModernField(
+                                  label: l10n.street_name,
                                   required: true,
                                   child: CustomFormField(
-                                    context: context,
-                                    fieldKey: _phoneKey,
-                                    showErrorBorder: true,
-                                    controller: state.phoneController,
-                                    inputFormat: [FilteringTextInputFormatter.digitsOnly],
-                                    keyboardType: TextInputType.phone,
-                                    hint: l10n.verify_phone_number,
-                                    fillColor: AppColors.iconBGColor,
-                                    textInputAction: TextInputAction.next,
-                                    validator: AppStrings.mobileValString,
-                                    isBorderVisible: false,
-                                    border: 12,
-                                  ),
+                                      context: context,
+                                      fieldKey: _streetNameKey,
+                                      showErrorBorder: true,
+                                      controller: state.streetNameController,
+                                      inputFormat: [LengthLimitingTextInputFormatter(50)],
+                                      keyboardType: TextInputType.streetAddress,
+                                      hint: l10n.street_name,
+                                      fillColor: AppColors.iconBGColor,
+                                      textInputAction: TextInputAction.next,
+                                      validator: AppStrings.streetNameValString,
+                                      isBorderVisible: false,
+                                      border: 12),
                                 ),
-                              ],
-                            ),
-                            16.height,
-                            _FormSectionCard(
-                              icon: Icons.local_shipping_rounded,
-                              iconColor: AppColors.orangeColor,
-                              title: l10n.delivery_section,
-                              children: [
-                                _ModernField(
-                                  label: l10n.delivery_location_description,
+                              ),
+                              10.width,
+                              Expanded(
+                                flex: 2,
+                                child: _ModernField(
+                                  label: l10n.street_number,
+                                  required: true,
                                   child: CustomFormField(
+                                      context: context,
+                                      fieldKey: _streetNumberKey,
+                                      showErrorBorder: true,
+                                      controller: state.streetNumberController,
+                                      inputFormat: [LengthLimitingTextInputFormatter(50)],
+                                      keyboardType: TextInputType.text,
+                                      hint: l10n.street_number,
+                                      fillColor: AppColors.iconBGColor,
+                                      textInputAction: TextInputAction.next,
+                                      validator: AppStrings.streetNumberValString,
+                                      isBorderVisible: false,
+                                      border: 12),
+                                ),
+                              ),
+                            ],
+                          ),
+                          14.height,
+                          _ModernField(
+                            label: l10n.verify_phone_number,
+                            required: true,
+                            child: CustomFormField(
+                                context: context,
+                                fieldKey: _phoneKey,
+                                showErrorBorder: true,
+                                controller: state.phoneController,
+                                inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                                keyboardType: TextInputType.phone,
+                                hint: l10n.verify_phone_number,
+                                fillColor: AppColors.iconBGColor,
+                                textInputAction: TextInputAction.next,
+                                validator: AppStrings.mobileValString,
+                                isBorderVisible: false,
+                                border: 12),
+                          ),
+                        ]),
+                        16.height,
+                        _FormSectionCard(
+                            icon: Icons.local_shipping_rounded,
+                            iconColor: AppColors.orangeColor,
+                            title: l10n.delivery_section,
+                            children: [
+                              _ModernField(
+                                label: l10n.delivery_location_description,
+                                child: CustomFormField(
                                     context: context,
                                     controller: state.deliveryDescriptionController,
                                     keyboardType: TextInputType.multiline,
@@ -241,19 +219,17 @@ class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWid
                                     textInputAction: TextInputAction.newline,
                                     validator: '',
                                     isBorderVisible: false,
-                                    border: 12,
-                                  ),
-                                ),
-                                16.height,
-                                _WazeActionCard(
+                                    border: 12),
+                              ),
+                              16.height,
+                              _WazeActionCard(
                                   label: l10n.waze_delivery_location,
                                   buttonText: l10n.open_waze_to_set_location,
                                   savedLabel: l10n.waze_location_saved,
                                   wazeUrl: state.wazeUrl,
-                                  onTap: () => bloc.add(const VerifyClientDataEvent.openWazeEvent()),
-                                ),
-                                16.height,
-                                _PhotoUploadCard(
+                                  onTap: () => bloc.add(const VerifyClientDataEvent.openWazeEvent())),
+                              16.height,
+                              _PhotoUploadCard(
                                   label: l10n.delivery_location_photo,
                                   cameraLabel: l10n.camera,
                                   galleryLabel: l10n.gallery,
@@ -267,32 +243,22 @@ class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWid
                                       : () => bloc.add(VerifyClientDataEvent.pickDeliveryImageEvent(context: context, isFromCamera: true)),
                                   onGallery: state.isImageUploading
                                       ? null
-                                      : () => bloc.add(VerifyClientDataEvent.pickDeliveryImageEvent(context: context, isFromCamera: false)),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                                      : () => bloc.add(VerifyClientDataEvent.pickDeliveryImageEvent(context: context, isFromCamera: false))),
+                            ]),
+                      ]),
                     ),
                   ),
-                  _BottomContinueBar(
+                ),
+                _BottomContinueBar(
                     label: l10n.continues,
                     isLoading: state.isLoading,
-                    onPressed: state.isLoading ? null : () => _onContinuePressed(context, bloc, state, l10n),
-                  ),
-                ],
-              ),
+                    onPressed: state.isLoading ? null : () => _onContinuePressed(context, bloc, state, l10n)),
+              ]),
       );
     });
   }
 
-  void _onContinuePressed(
-    BuildContext context,
-    VerifyClientDataBloc bloc,
-    VerifyClientDataState state,
-    AppLocalizations l10n,
-  ) {
+  void _onContinuePressed(BuildContext context, VerifyClientDataBloc bloc, VerifyClientDataState state, AppLocalizations l10n) {
     final isFormValid = _formKey.currentState?.validate() ?? false;
     if (isFormValid) {
       bloc.add(VerifyClientDataEvent.submitEvent(context: context));
@@ -302,13 +268,7 @@ class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWid
   }
 
   GlobalKey<FormFieldState<String>>? _firstErrorFieldKey() {
-    for (final key in [
-      _businessNameKey,
-      _contactNameKey,
-      _streetNameKey,
-      _streetNumberKey,
-      _phoneKey,
-    ]) {
+    for (final key in [_businessNameKey, _contactNameKey, _streetNameKey, _streetNumberKey, _phoneKey]) {
       if (key.currentState?.hasError ?? false) return key;
     }
     return null;
@@ -317,12 +277,7 @@ class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWid
   Future<void> _scrollToFirstError() async {
     final targetContext = _firstErrorFieldKey()?.currentContext;
     if (targetContext == null || !targetContext.mounted) return;
-    await Scrollable.ensureVisible(
-      targetContext,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-      alignment: 0.15,
-    );
+    await Scrollable.ensureVisible(targetContext, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut, alignment: 0.15);
   }
 
   void _showValidationErrorsDialog(BuildContext context, String language, AppLocalizations l10n) {
@@ -335,227 +290,156 @@ class _VerifyClientDataScreenWidgetState extends State<VerifyClientDataScreenWid
         child: Dialog(
           surfaceTintColor: AppColors.whiteColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstants.radius_20)),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(AppConstants.padding_20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 84,
-                      width: 84,
-                      decoration: BoxDecoration(
-                        color: AppColors.orangeColor.withValues(alpha: 0.12),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.edit_note_rounded, size: 46, color: AppColors.orangeColor),
-                    ),
-                    20.height,
-                    Text(
-                      l10n.validation_errors_title,
-                      textAlign: TextAlign.center,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.mediumFont,
-                        color: AppColors.blackColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    12.height,
-                    Text(
-                      l10n.validation_errors_message,
-                      textAlign: TextAlign.center,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_15,
-                        color: AppColors.greyColor,
-                        fontWeight: FontWeight.w500,
-                      ).copyWith(height: 1.5),
-                    ),
-                    24.height,
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(dialogContext);
-                        _scrollToFirstError();
-                      },
-                      borderRadius: BorderRadius.circular(AppConstants.radius_40),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_11),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          gradient: AppColors.appMainGradientColor,
-                          borderRadius: BorderRadius.circular(AppConstants.radius_40),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.arrow_downward_rounded, color: AppColors.whiteColor, size: 20),
-                            8.width,
-                            Text(
-                              l10n.show_errors,
-                              style: AppStyles.rkRegularTextStyle(
-                                size: AppConstants.mediumFont,
-                                color: AppColors.whiteColor,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+          child: Stack(clipBehavior: Clip.none, children: [
+            Padding(
+              padding: const EdgeInsets.all(AppConstants.padding_20),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(
+                    height: 84,
+                    width: 84,
+                    decoration: BoxDecoration(color: AppColors.orangeColor.withValues(alpha: 0.12), shape: BoxShape.circle),
+                    child: Icon(Icons.edit_note_rounded, size: 46, color: AppColors.orangeColor)),
+                20.height,
+                Text(
+                  l10n.validation_errors_title,
+                  textAlign: TextAlign.center,
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.blackColor, fontWeight: FontWeight.w700),
                 ),
-              ),
-              Positioned(
-                top: AppConstants.padding_8,
-                left: isEnglish ? null : AppConstants.padding_8,
-                right: isEnglish ? AppConstants.padding_8 : null,
-                child: GestureDetector(
-                  onTap: () => Navigator.pop(dialogContext),
-                  child: Icon(Icons.close, size: 26, color: AppColors.blackColor),
+                12.height,
+                Text(l10n.validation_errors_message,
+                    textAlign: TextAlign.center,
+                    style: AppStyles.rkRegularTextStyle(
+                      size: AppConstants.font_15,
+                      color: AppColors.greyColor,
+                      fontWeight: FontWeight.w500,
+                    ).copyWith(height: 1.5)),
+                24.height,
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(dialogContext);
+                    _scrollToFirstError();
+                  },
+                  borderRadius: BorderRadius.circular(AppConstants.radius_40),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_11),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_40)),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Icon(Icons.arrow_downward_rounded, color: AppColors.whiteColor, size: 20),
+                      8.width,
+                      Text(l10n.show_errors,
+                          style:
+                              AppStyles.rkRegularTextStyle(size: AppConstants.mediumFont, color: AppColors.whiteColor, fontWeight: FontWeight.w700)),
+                    ]),
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ]),
+            ),
+            Positioned(
+              top: AppConstants.padding_8,
+              left: isEnglish ? null : AppConstants.padding_8,
+              right: isEnglish ? AppConstants.padding_8 : null,
+              child: GestureDetector(onTap: () => Navigator.pop(dialogContext), child: Icon(Icons.close, size: 26, color: AppColors.blackColor)),
+            ),
+          ]),
         ),
       ),
     );
   }
 
-  void _showCityPicker(
-    BuildContext context,
-    VerifyClientDataBloc bloc,
-    VerifyClientDataState state,
-    ValueNotifier<List<String>> listNotifier,
-  ) {
+  void _showCityPicker(BuildContext context, VerifyClientDataBloc bloc, VerifyClientDataState state, ValueNotifier<List<String>> listNotifier) {
     showModalBottomSheet(
-      backgroundColor: AppColors.whiteColor,
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radius_20)),
-      ),
-      builder: (context1) {
-        return ValueListenableBuilder(
-          valueListenable: listNotifier,
-          builder: (context, content, child) {
-            return Padding(
-              padding: EdgeInsets.only(
-                left: AppConstants.padding_15,
-                right: AppConstants.padding_15,
-                top: AppConstants.padding_15,
-                bottom: MediaQuery.of(context).viewInsets.bottom + AppConstants.padding_15,
-              ),
-              child: SizedBox(
-                height: getScreenHeight(context) * 0.75,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 40,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: AppColors.borderColor,
-                          borderRadius: BorderRadius.circular(AppConstants.radius_20),
-                        ),
+        backgroundColor: AppColors.whiteColor,
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppConstants.radius_20))),
+        builder: (context1) {
+          return ValueListenableBuilder(
+              valueListenable: listNotifier,
+              builder: (context, content, child) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                      left: AppConstants.padding_15,
+                      right: AppConstants.padding_15,
+                      top: AppConstants.padding_15,
+                      bottom: MediaQuery.of(context).viewInsets.bottom + AppConstants.padding_15),
+                  child: SizedBox(
+                    height: getScreenHeight(context) * 0.75,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                      Center(
+                        child: Container(
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(color: AppColors.borderColor, borderRadius: BorderRadius.circular(AppConstants.radius_20))),
                       ),
-                    ),
-                    16.height,
-                    Row(
-                      children: [
+                      16.height,
+                      Row(children: [
                         Expanded(
-                          child: Text(
-                            AppLocalizations.of(context)!.city,
-                            style: AppStyles.rkRegularTextStyle(
-                              size: AppConstants.font_17,
-                              color: AppColors.blackColor,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                          child: Text(AppLocalizations.of(context)!.city,
+                              style:
+                                  AppStyles.rkRegularTextStyle(size: AppConstants.font_17, color: AppColors.blackColor, fontWeight: FontWeight.w700)),
                         ),
-                        IconButton(
-                          onPressed: () => Navigator.pop(context1),
-                          icon: Icon(Icons.close_rounded, color: AppColors.greyColor),
-                        ),
-                      ],
-                    ),
-                    CustomFormField(
-                      context: context,
-                      prefixIcon: Icon(Icons.search_rounded, color: AppColors.lightGreyColor),
-                      onChangeValue: (value) {
-                        bloc.add(VerifyClientDataEvent.citySearchEvent(search: value));
-                        listNotifier.value = state.filterList.where((city) => city.contains(value)).toList();
-                      },
-                      controller: state.citySearchController,
-                      keyboardType: TextInputType.text,
-                      hint: AppLocalizations.of(context)!.city,
-                      fillColor: AppColors.iconBGColor,
-                      textInputAction: TextInputAction.search,
-                      validator: '',
-                      autofocus: true,
-                      cursorColor: AppColors.mainColor,
-                      isBorderVisible: false,
-                      border: 12,
-                    ),
-                    12.height,
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: listNotifier.value.length,
-                        separatorBuilder: (_, __) => 8.height,
-                        itemBuilder: (context, index) {
-                          final city = listNotifier.value[index];
-                          final isSelected = city == state.selectCity;
-                          return Material(
-                            color: isSelected ? AppColors.lightMainColor : AppColors.iconBGColor,
-                            borderRadius: BorderRadius.circular(12),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(12),
-                              onTap: () {
-                                bloc.add(VerifyClientDataEvent.selectCityEvent(city: city));
-                                Navigator.pop(context1);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppConstants.padding_15,
-                                  vertical: AppConstants.padding_15,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_city_rounded,
-                                      size: 20,
-                                      color: isSelected ? AppColors.mainColor : AppColors.lightGreyColor,
-                                    ),
-                                    12.width,
-                                    Expanded(
-                                      child: Text(
-                                        city,
-                                        style: AppStyles.rkRegularTextStyle(
-                                          size: AppConstants.font_15,
-                                          color: AppColors.blackColor,
-                                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                                        ),
+                        IconButton(onPressed: () => Navigator.pop(context1), icon: Icon(Icons.close_rounded, color: AppColors.greyColor))
+                      ]),
+                      CustomFormField(
+                          context: context,
+                          prefixIcon: Icon(Icons.search_rounded, color: AppColors.lightGreyColor),
+                          onChangeValue: (value) {
+                            bloc.add(VerifyClientDataEvent.citySearchEvent(search: value));
+                            listNotifier.value = state.filterList.where((city) => city.contains(value)).toList();
+                          },
+                          controller: state.citySearchController,
+                          keyboardType: TextInputType.text,
+                          hint: AppLocalizations.of(context)!.city,
+                          fillColor: AppColors.iconBGColor,
+                          textInputAction: TextInputAction.search,
+                          validator: '',
+                          autofocus: true,
+                          cursorColor: AppColors.mainColor,
+                          isBorderVisible: false,
+                          border: 12),
+                      12.height,
+                      Expanded(
+                        child: ListView.separated(
+                            itemCount: listNotifier.value.length,
+                            separatorBuilder: (_, __) => 8.height,
+                            itemBuilder: (context, index) {
+                              final city = listNotifier.value[index];
+                              final isSelected = city == state.selectCity;
+                              return Material(
+                                color: isSelected ? AppColors.lightMainColor : AppColors.iconBGColor,
+                                borderRadius: BorderRadius.circular(12),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(12),
+                                  onTap: () {
+                                    bloc.add(VerifyClientDataEvent.selectCityEvent(city: city));
+                                    Navigator.pop(context1);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_15),
+                                    child: Row(children: [
+                                      Icon(Icons.location_city_rounded, size: 20, color: isSelected ? AppColors.mainColor : AppColors.lightGreyColor),
+                                      12.width,
+                                      Expanded(
+                                        child: Text(city,
+                                            style: AppStyles.rkRegularTextStyle(
+                                                size: AppConstants.font_15,
+                                                color: AppColors.blackColor,
+                                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400)),
                                       ),
-                                    ),
-                                    if (isSelected) Icon(Icons.check_circle_rounded, color: AppColors.mainColor, size: 20),
-                                  ],
+                                      if (isSelected) Icon(Icons.check_circle_rounded, color: AppColors.mainColor, size: 20)
+                                    ]),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          );
-                        },
+                              );
+                            }),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+                    ]),
+                  ),
+                );
+              });
+        });
   }
 }
 
@@ -568,40 +452,20 @@ class _HeaderBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppConstants.padding_20),
-      decoration: BoxDecoration(
-        gradient: AppColors.appMainGradientColor,
-        borderRadius: BorderRadius.circular(AppConstants.radius_15),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.blueColor.withValues(alpha: 0.18),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
+      decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_15), boxShadow: [
+        BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.18), blurRadius: 16, offset: const Offset(0, 6)),
+      ]),
+      child: Row(children: [
+        Container(
             padding: const EdgeInsets.all(AppConstants.padding_11),
-            decoration: BoxDecoration(
-              color: AppColors.whiteColor.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.verified_user_rounded, color: AppColors.whiteColor, size: 28),
-          ),
-          16.width,
-          Expanded(
-            child: Text(
-              subtitle,
-              style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.font_14,
-                color: AppColors.whiteColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
+            decoration: BoxDecoration(color: AppColors.whiteColor.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+            child: Icon(Icons.verified_user_rounded, color: AppColors.whiteColor, size: 28)),
+        16.width,
+        Expanded(
+          child: Text(subtitle,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.w500)),
+        ),
+      ]),
     );
   }
 }
@@ -612,58 +476,30 @@ class _FormSectionCard extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const _FormSectionCard({
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.children,
-  });
+  const _FormSectionCard({required this.icon, required this.iconColor, required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppConstants.padding_15),
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(AppConstants.radius_15),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: BorderRadius.circular(AppConstants.radius_15), boxShadow: [
+        BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4)),
+      ]),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          Container(
+              padding: const EdgeInsets.all(AppConstants.padding_8),
+              decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppConstants.radius_10)),
+              child: Icon(icon, color: iconColor, size: 22)),
+          12.width,
+          Expanded(
+            child: Text(title,
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor, fontWeight: FontWeight.w700)),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(AppConstants.padding_8),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppConstants.radius_10),
-                ),
-                child: Icon(icon, color: iconColor, size: 22),
-              ),
-              12.width,
-              Expanded(
-                child: Text(
-                  title,
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.smallFont,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          18.height,
-          ...children,
-        ],
-      ),
+        ]),
+        18.height,
+        ...children
+      ]),
     );
   }
 }
@@ -673,38 +509,18 @@ class _ModernField extends StatelessWidget {
   final bool required;
   final Widget child;
 
-  const _ModernField({
-    required this.label,
-    required this.child,
-    this.required = false,
-  });
+  const _ModernField({required this.label, required this.child, this.required = false});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.font_13,
-                color: AppColors.greyColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            if (required)
-              Text(
-                ' *',
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.redColor),
-              ),
-          ],
-        ),
-        8.height,
-        child,
-      ],
-    );
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Text(label, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.greyColor, fontWeight: FontWeight.w600)),
+        if (required) Text(' *', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.redColor))
+      ]),
+      8.height,
+      child
+    ]);
   }
 }
 
@@ -713,11 +529,7 @@ class _SelectField extends StatelessWidget {
   final String hint;
   final VoidCallback onTap;
 
-  const _SelectField({
-    required this.value,
-    required this.hint,
-    required this.onTap,
-  });
+  const _SelectField({required this.value, required this.hint, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -730,22 +542,15 @@ class _SelectField extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_15),
-          child: Row(
-            children: [
-              Icon(Icons.map_rounded, size: 20, color: hasValue ? AppColors.mainColor : AppColors.lightGreyColor),
-              10.width,
-              Expanded(
-                child: Text(
-                  hasValue ? value : hint,
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_15,
-                    color: hasValue ? AppColors.blackColor : AppColors.lightGreyColor,
-                  ),
-                ),
-              ),
-              Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.lightGreyColor),
-            ],
-          ),
+          child: Row(children: [
+            Icon(Icons.map_rounded, size: 20, color: hasValue ? AppColors.mainColor : AppColors.lightGreyColor),
+            10.width,
+            Expanded(
+              child: Text(hasValue ? value : hint,
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: hasValue ? AppColors.blackColor : AppColors.lightGreyColor)),
+            ),
+            Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.lightGreyColor)
+          ]),
         ),
       ),
     );
@@ -759,116 +564,65 @@ class _WazeActionCard extends StatelessWidget {
   final String wazeUrl;
   final VoidCallback onTap;
 
-  const _WazeActionCard({
-    required this.label,
-    required this.buttonText,
-    required this.savedLabel,
-    required this.wazeUrl,
-    required this.onTap,
-  });
+  const _WazeActionCard({required this.label, required this.buttonText, required this.savedLabel, required this.wazeUrl, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppConstants.padding_15),
-      decoration: BoxDecoration(
-        color: AppColors.iconBGColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.lightBorderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(AppConstants.padding_8),
-                decoration: BoxDecoration(
-                  color: AppColors.blueColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppConstants.radius_10),
-                ),
-                child: Icon(Icons.navigation_rounded, color: AppColors.blueColor, size: 22),
-              ),
-              12.width,
-              Expanded(
-                child: Text(
-                  label,
-                  style: AppStyles.rkRegularTextStyle(
-                    size: AppConstants.font_14,
-                    color: AppColors.blackColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
+      decoration:
+          BoxDecoration(color: AppColors.iconBGColor, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.lightBorderColor)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          Container(
+              padding: const EdgeInsets.all(AppConstants.padding_8),
+              decoration:
+                  BoxDecoration(color: AppColors.blueColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(AppConstants.radius_10)),
+              child: Icon(Icons.navigation_rounded, color: AppColors.blueColor, size: 22)),
+          12.width,
+          Expanded(
+            child: Text(label,
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w600)),
           ),
+        ]),
+        12.height,
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppConstants.radius_40),
+          child: Container(
+            decoration: BoxDecoration(gradient: AppColors.appMainGradientColor, borderRadius: BorderRadius.circular(AppConstants.radius_40)),
+            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_11),
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(Icons.open_in_new_rounded, color: AppColors.whiteColor, size: 18),
+              8.width,
+              Text(buttonText,
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor, fontWeight: FontWeight.w600)),
+            ]),
+          ),
+        ),
+        if (wazeUrl.isNotEmpty) ...[
           12.height,
-          InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(AppConstants.radius_40),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppColors.appMainGradientColor,
-                borderRadius: BorderRadius.circular(AppConstants.radius_40),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_11),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.open_in_new_rounded, color: AppColors.whiteColor, size: 18),
-                  8.width,
-                  Text(
-                    buttonText,
-                    style: AppStyles.rkRegularTextStyle(
-                      size: AppConstants.font_14,
-                      color: AppColors.whiteColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (wazeUrl.isNotEmpty) ...[
-            12.height,
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppConstants.padding_15,
-                vertical: AppConstants.padding_11,
-              ),
-              decoration: BoxDecoration(
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_15, vertical: AppConstants.padding_11),
+            decoration: BoxDecoration(
                 color: AppColors.mainColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.mainColor.withValues(alpha: 0.35)),
+                border: Border.all(color: AppColors.mainColor.withValues(alpha: 0.35))),
+            child: Row(children: [
+              Container(
+                  padding: const EdgeInsets.all(AppConstants.padding_6),
+                  decoration: BoxDecoration(color: AppColors.mainColor.withValues(alpha: 0.2), shape: BoxShape.circle),
+                  child: Icon(Icons.check_circle_rounded, color: AppColors.mainColor, size: 22)),
+              12.width,
+              Expanded(
+                child: Text(savedLabel,
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w700)),
               ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(AppConstants.padding_6),
-                    decoration: BoxDecoration(
-                      color: AppColors.mainColor.withValues(alpha: 0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.check_circle_rounded, color: AppColors.mainColor, size: 22),
-                  ),
-                  12.width,
-                  Expanded(
-                    child: Text(
-                      savedLabel,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.font_14,
-                        color: AppColors.blackColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
+            ]),
+          )
+        ]
+      ]),
     );
   }
 }
@@ -883,94 +637,64 @@ class _PhotoUploadCard extends StatelessWidget {
   final VoidCallback? onCamera;
   final VoidCallback? onGallery;
 
-  const _PhotoUploadCard({
-    required this.label,
-    required this.cameraLabel,
-    required this.galleryLabel,
-    required this.isUploading,
-    this.imageFile,
-    this.imageUrl,
-    this.onCamera,
-    this.onGallery,
-  });
+  const _PhotoUploadCard(
+      {required this.label,
+      required this.cameraLabel,
+      required this.galleryLabel,
+      required this.isUploading,
+      this.imageFile,
+      this.imageUrl,
+      this.onCamera,
+      this.onGallery});
 
   @override
   Widget build(BuildContext context) {
     final hasImage = imageFile != null || (imageUrl != null && imageUrl!.isNotEmpty);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppStyles.rkRegularTextStyle(
-            size: AppConstants.font_13,
-            color: AppColors.greyColor,
-            fontWeight: FontWeight.w600,
-          ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(label, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.greyColor, fontWeight: FontWeight.w600)),
+      8.height,
+      if (hasImage)
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(children: [
+            SizedBox(
+                width: double.infinity,
+                child: imageFile != null
+                    ? Image.file(imageFile!, width: double.infinity, fit: BoxFit.fitWidth)
+                    : CachedNetworkImage(imageUrl: imageUrl!, width: double.infinity, fit: BoxFit.fitWidth)),
+            if (isUploading)
+              Positioned.fill(
+                child: Container(
+                    color: AppColors.blackColor.withValues(alpha: 0.35),
+                    child: Center(child: CircularProgressIndicator(color: AppColors.whiteColor))),
+              ),
+          ]),
+        )
+      else
+        Container(
+          height: 140,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: AppColors.iconBGColor, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.borderColor, width: 1.5)),
+          child: isUploading
+              ? Center(child: CircularProgressIndicator(color: AppColors.mainColor))
+              : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(Icons.add_a_photo_outlined, size: 36, color: AppColors.lightGreyColor),
+                  8.height,
+                  Text(label,
+                      textAlign: TextAlign.center, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.lightGreyColor)),
+                ]),
         ),
-        8.height,
-        if (hasImage)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Stack(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: imageFile != null
-                      ? Image.file(imageFile!, width: double.infinity, fit: BoxFit.fitWidth)
-                      : CachedNetworkImage(imageUrl: imageUrl!, width: double.infinity, fit: BoxFit.fitWidth),
-                ),
-                if (isUploading)
-                  Positioned.fill(
-                    child: Container(
-                      color: AppColors.blackColor.withValues(alpha: 0.35),
-                      child: Center(child: CircularProgressIndicator(color: AppColors.whiteColor)),
-                    ),
-                  ),
-              ],
-            ),
-          )
-        else
-          Container(
-            height: 140,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.iconBGColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.borderColor, width: 1.5),
-            ),
-            child: isUploading
-                ? Center(child: CircularProgressIndicator(color: AppColors.mainColor))
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_a_photo_outlined, size: 36, color: AppColors.lightGreyColor),
-                      8.height,
-                      Text(
-                        label,
-                        textAlign: TextAlign.center,
-                        style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.lightGreyColor),
-                      ),
-                    ],
-                  ),
-          ),
-        if (!isUploading) ...[
-          12.height,
-          Row(
-            children: [
-              Expanded(
-                child: _MediaChip(icon: Icons.photo_camera_rounded, label: cameraLabel, onTap: onCamera),
-              ),
-              10.width,
-              Expanded(
-                child: _MediaChip(icon: Icons.photo_library_rounded, label: galleryLabel, onTap: onGallery),
-              ),
-            ],
-          ),
-        ],
-      ],
-    );
+      if (!isUploading) ...[
+        12.height,
+        Row(children: [
+          Expanded(child: _MediaChip(icon: Icons.photo_camera_rounded, label: cameraLabel, onTap: onCamera)),
+          10.width,
+          Expanded(child: _MediaChip(icon: Icons.photo_library_rounded, label: galleryLabel, onTap: onGallery)),
+        ])
+      ]
+    ]);
   }
 }
 
@@ -991,25 +715,12 @@ class _MediaChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_11),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.lightBorderColor),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 20, color: AppColors.blueColor),
-              8.width,
-              Text(
-                label,
-                style: AppStyles.rkRegularTextStyle(
-                  size: AppConstants.font_14,
-                  color: AppColors.blackColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.lightBorderColor)),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Icon(icon, size: 20, color: AppColors.blueColor),
+            8.width,
+            Text(label, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor, fontWeight: FontWeight.w500))
+          ]),
         ),
       ),
     );
@@ -1021,26 +732,15 @@ class _BottomContinueBar extends StatelessWidget {
   final bool isLoading;
   final VoidCallback? onPressed;
 
-  const _BottomContinueBar({
-    required this.label,
-    required this.isLoading,
-    this.onPressed,
-  });
+  const _BottomContinueBar({required this.label, required this.isLoading, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(16, 12, 16, MediaQuery.of(context).padding.bottom + 12),
       decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
+          color: AppColors.whiteColor,
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, -4))]),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -1048,25 +748,14 @@ class _BottomContinueBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.radius_40),
           child: Ink(
             decoration: BoxDecoration(
-              gradient: onPressed == null ? AppColors.disableGradientColor : AppColors.appMainGradientColor,
-              borderRadius: BorderRadius.circular(AppConstants.radius_40),
-            ),
+                gradient: onPressed == null ? AppColors.disableGradientColor : AppColors.appMainGradientColor,
+                borderRadius: BorderRadius.circular(AppConstants.radius_40)),
             height: 52,
             child: Center(
               child: isLoading
-                  ? SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.whiteColor),
-                    )
-                  : Text(
-                      label,
-                      style: AppStyles.rkRegularTextStyle(
-                        size: AppConstants.smallFont,
-                        color: AppColors.whiteColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                  ? SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.whiteColor))
+                  : Text(label,
+                      style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor, fontWeight: FontWeight.w700)),
             ),
           ),
         ),

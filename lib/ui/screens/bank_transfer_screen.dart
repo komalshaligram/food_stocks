@@ -112,7 +112,7 @@ class BankTransferWidget extends StatelessWidget {
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(Icons.copy_rounded, size: 16, color: AppColors.mainColor),
             const SizedBox(width: 4),
-            Text(l10n.copy, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.mainColor, fontWeight: FontWeight.w500)),
+            Text(l10n.copy, style: AppStyles.rkRegularTextStyle(size: AppConstants.font_13, color: AppColors.mainColor, fontWeight: FontWeight.w500))
           ]),
         ),
       ),

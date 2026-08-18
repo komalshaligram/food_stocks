@@ -15,7 +15,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'message_event.dart';
 
 part 'message_state.dart';
@@ -38,18 +37,16 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(AppUrlEndPoints.getNotificationMessageUrl,
               data: GetMessagesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.messagePageLimit).toJson(),
-              options: Options(
-                headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
-              ));
+              options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
           GetMessagesResModel response = GetMessagesResModel.fromJson(res);
 
           if (response.status == AppConstants.code_200) {
             List<MessageData> messageList = state.messageList.toList(growable: true);
             messageList.addAll(response.data
                     ?.map((message) => MessageData(
-                          id: message.id,
-                          isRead: message.isRead,
-                          message: Message(
+                        id: message.id,
+                        isRead: message.isRead,
+                        message: Message(
                             id: message.message?.id ?? '',
                             title: message.message?.title ?? '',
                             summary: message.message?.summary ?? '',
@@ -57,11 +54,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
                             messageImage: message.message?.messageImage ?? '',
                             subPage: message.message?.subPage ?? '',
                             mainPage: message.message?.mainPage ?? '',
-                            navigationId: message.message?.navigationId ?? '',
-                          ),
-                          createdAt: message.createdAt,
-                          updatedAt: message.updatedAt,
-                        ))
+                            navigationId: message.message?.navigationId ?? ''),
+                        createdAt: message.createdAt,
+                        updatedAt: message.updatedAt))
                     .toList() ??
                 []);
 
@@ -83,10 +78,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         if (event.isRead) {
           if (messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].isRead == false) {
             await preferences.setMessageCount(count: preferences.getMessageCount() - 1);
-            messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))] = messageList[messageList.indexOf(
-              messageList.firstWhere((message) => message.id == event.messageId),
-            )]
-                .copyWith(isRead: true);
+            messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))] =
+                messageList[messageList.indexOf(messageList.firstWhere((message) => message.id == event.messageId))].copyWith(isRead: true);
           }
         }
         if (event.isDelete) {
@@ -108,10 +101,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             Navigator.pop(event.dialogContext);
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.failure);
           }
         } catch (_) {}
       }

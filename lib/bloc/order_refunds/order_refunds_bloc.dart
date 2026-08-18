@@ -13,7 +13,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'order_refunds_state.dart';
 part 'order_refunds_event.dart';
 part 'order_refunds_bloc.freezed.dart';
@@ -36,7 +35,11 @@ class OrderRefundsBloc extends Bloc<OrderRefundsEvent, OrderRefundsState> {
           final args = ModalRoute.of(event.context)?.settings.arguments as Map<String, dynamic>;
           orderId = args[AppStrings.orderIdString] as String;
           orderNumber = args[AppStrings.orderNumberString];
-          emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: state.pageNum == 0 ? true : false, orderNumber: orderNumber));
+          emit(state.copyWith(
+              statusList: statusList,
+              language: preferences.getAppLanguage(),
+              isShimmering: state.pageNum == 0 ? true : false,
+              orderNumber: orderNumber));
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.getAdjustedRefundsInOrder + orderId);
           RefundResModel response = RefundResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -46,10 +49,9 @@ class OrderRefundsBloc extends Bloc<OrderRefundsEvent, OrderRefundsState> {
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));

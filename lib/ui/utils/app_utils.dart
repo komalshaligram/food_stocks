@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -212,7 +213,9 @@ class CustomSnackBar {
 }
 
 printData(String? message) {
-  debugPrint(message ?? '');
+  if (kDebugMode) {
+    debugPrint(message ?? '');
+  }
 }
 
 int otpCooldownSeconds(int sendCount) {
@@ -283,9 +286,7 @@ Future<void> scheduleAppUpdateCheckIfNeeded() async {
     if (_resolveUpdateDialogContext(null) != null) break;
     await Future<void>.delayed(const Duration(milliseconds: 300));
   }
-  await checkAndShowAppUpdateIfNeeded(
-    language: preferences.getAppLanguage(),
-  );
+  await checkAndShowAppUpdateIfNeeded(language: preferences.getAppLanguage());
 }
 
 Future<void> scheduleScreenUpdateCheck(BuildContext? context) async {
@@ -819,13 +820,8 @@ double bottleDepositCalculationWithVat({required double deposit, required double
   return result;
 }
 
-/// Minimum-order progress excludes VAT: bottle deposit + subject to VAT + not subject to VAT.
-double minimumOrderProgressAmount({
-  double bottleTax = 0,
-  double bottleQuantities = 0,
-  double amountSubjectToVat = 0,
-  double amountNotSubjectToVat = 0,
-}) {
+double minimumOrderProgressAmount(
+    {double bottleTax = 0, double bottleQuantities = 0, double amountSubjectToVat = 0, double amountNotSubjectToVat = 0}) {
   return bottleDepositCalculation(deposit: bottleTax, qty: bottleQuantities) + amountSubjectToVat + amountNotSubjectToVat;
 }
 

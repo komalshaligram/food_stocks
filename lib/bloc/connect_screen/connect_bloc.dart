@@ -10,7 +10,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'connect_event.dart';
 part 'connect_state.dart';
 part 'connect_bloc.freezed.dart';
@@ -22,11 +21,9 @@ class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
         if (state.isLoading) return;
         emit(state.copyWith(isLoading: true));
 
-        final preferences = SharedPreferencesHelper(
-            prefs: await SharedPreferences.getInstance());
+        final preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
         try {
-          final res =
-              await DioClient(event.context).post(AppUrlEndPoints.guestLogin);
+          final res = await DioClient(event.context).post(AppUrlEndPoints.guestLogin);
 
           if (res == null || res is! Map<String, dynamic>) {
             throw Exception('Network Error');
@@ -36,27 +33,20 @@ class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
           final response = GuestUserLoginResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             await preferences.setIsGuestUser(isGuestUser: true);
-            await preferences.setAuthToken(
-                accToken: response.data?.tokenData.accessToken ?? '');
-            await preferences.setRefreshToken(
-                refToken: response.data?.tokenData.refreshToken ?? '');
+            await preferences.setAuthToken(accToken: response.data?.tokenData.accessToken ?? '');
+            await preferences.setRefreshToken(refToken: response.data?.tokenData.refreshToken ?? '');
             emit(state.copyWith(isLoading: false));
             if (event.context.mounted) {
-              await Navigator.pushNamed(
-                  event.context, RouteDefine.bottomNavScreen.name,
-                  arguments: {AppStrings.pushNavigationString: 'homeScreen'});
+              await Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.pushNavigationString: 'homeScreen'});
             }
           } else {
             await preferences.setIsGuestUser(isGuestUser: false);
             emit(state.copyWith(isLoading: false));
             if (event.context.mounted) {
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ?? response.message!,
-                    event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           }
         } catch (e) {
@@ -67,10 +57,7 @@ class ConnectBloc extends Bloc<ConnectEvent, ConnectState> {
             return;
           }
           CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppStrings.getLocalizedStrings(e.toString(), event.context),
-            type: SnackBarType.failure,
-          );
+              context: event.context, title: AppStrings.getLocalizedStrings(e.toString(), event.context), type: SnackBarType.failure);
         }
       }
     });

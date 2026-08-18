@@ -43,16 +43,11 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
     });
-
     WidgetsBinding.instance.addObserver(this);
-
     _initDeepLinks();
-
     super.initState();
   }
 
-  /// Sets up handling for incoming App Links / Universal Links
-  /// (https://tiny.tavili.net/openApp).
   Future<void> _initDeepLinks() async {
     try {
       final Uri? initialUri = await _appLinks.getInitialLink();
@@ -63,12 +58,9 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
       FirebaseCrashlytics.instance.recordError(e, s, reason: 'getInitialLink failed');
     }
 
-    _deepLinkSub = _appLinks.uriLinkStream.listen(
-      _scheduleDeepLink,
-      onError: (Object e, StackTrace s) {
-        FirebaseCrashlytics.instance.recordError(e, s, reason: 'uriLinkStream error');
-      },
-    );
+    _deepLinkSub = _appLinks.uriLinkStream.listen(_scheduleDeepLink, onError: (Object e, StackTrace s) {
+      FirebaseCrashlytics.instance.recordError(e, s, reason: 'uriLinkStream error');
+    });
   }
 
   void _scheduleDeepLink(Uri uri) {
@@ -92,9 +84,6 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
     return currentRoute?.settings.name;
   }
 
-  /// Cold start (still on splash): record the link and let splash navigate once.
-  /// Warm start (past splash): navigate immediately.
-  /// When route name is null the stack may be mid-transition — retry.
   Future<void> _handleDeepLink(Uri uri, {int attempt = 0}) async {
     if (!DeepLinkLaunchCoordinator.isOpenAppLink(uri)) {
       return;
@@ -167,35 +156,33 @@ class _MyAppWidgetState extends State<MyAppWidget> with WidgetsBindingObserver {
         create: (context) => LocaleProvider()..setAppLocale(),
         builder: (context, child) {
           return MaterialApp(
-            navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            locale: Provider.of<LocaleProvider>(context).locale,
-            title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
-            initialRoute: RouteDefine.splashScreen.name,
-            supportedLocales: AppLocalizations.supportedLocales,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            localeResolutionCallback: (locale, supportedLocales) {
-              if (locale != null) {
-                for (final supported in supportedLocales) {
-                  if (supported.languageCode == locale.languageCode) {
-                    return supported;
+              navigatorKey: navigatorKey,
+              debugShowCheckedModeBanner: false,
+              locale: Provider.of<LocaleProvider>(context).locale,
+              title: AppConfigManager.appConfig?.appName ?? AppStrings.appName,
+              initialRoute: RouteDefine.splashScreen.name,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              localeResolutionCallback: (locale, supportedLocales) {
+                if (locale != null) {
+                  for (final supported in supportedLocales) {
+                    if (supported.languageCode == locale.languageCode) {
+                      return supported;
+                    }
                   }
                 }
-              }
-              return supportedLocales.first;
-            },
-            theme: ThemeData(
-              textSelectionTheme: TextSelectionThemeData(
-                  cursorColor: AppColors.mainColor, selectionColor: AppColors.mainColor, selectionHandleColor: AppColors.mainColor),
-              primarySwatch: Colors.green,
-              canvasColor: Colors.white,
-              cardColor: AppColors.whiteColor,
-              scaffoldBackgroundColor: AppColors.pageColor,
-              snackBarTheme: SnackBarThemeData(backgroundColor: AppColors.mainColor, actionTextColor: AppColors.textColor),
-            ),
-            scrollBehavior: MyBehavior(),
-            onGenerateRoute: AppRouting.generateRoute,
-          );
+                return supportedLocales.first;
+              },
+              theme: ThemeData(
+                  textSelectionTheme: TextSelectionThemeData(
+                      cursorColor: AppColors.mainColor, selectionColor: AppColors.mainColor, selectionHandleColor: AppColors.mainColor),
+                  primarySwatch: Colors.green,
+                  canvasColor: Colors.white,
+                  cardColor: AppColors.whiteColor,
+                  scaffoldBackgroundColor: AppColors.pageColor,
+                  snackBarTheme: SnackBarThemeData(backgroundColor: AppColors.mainColor, actionTextColor: AppColors.textColor)),
+              scrollBehavior: MyBehavior(),
+              onGenerateRoute: AppRouting.generateRoute);
         });
   }
 }

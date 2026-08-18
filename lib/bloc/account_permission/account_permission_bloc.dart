@@ -67,22 +67,23 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
           emit(state.copyWith(isUpdateProcess: true));
 
           UpdatePermissionModel req = UpdatePermissionModel(
-              accountPermissions: AccountPermissions(
-                  accountAdmin: state.permissionList[0].isEnable,
-                  canSeeWallet: state.permissionList[1].isEnable,
-                  canAddToCart: state.permissionList[2].isEnable,
-                  canCreateOrder: state.permissionList[3].isEnable,
-                  canSeeOrders: state.permissionList[4].isEnable,
-                  canApproveOrders: state.permissionList[5].isEnable,
-                  canDuplicateOrders: state.permissionList[6].isEnable,
-                  canSeeAndUpdateBusinessInfo: state.permissionList[7].isEnable,
-                  canSeeAndUpdateAdditionalInfo: state.permissionList[8].isEnable,
-                  canSeeAndUpdateTimesInfo: state.permissionList[9].isEnable,
-                  canSeeFileAndForms: state.permissionList[10].isEnable,
-                  canManageSubUsers: state.permissionList[11].isEnable,
-                  canSeeInvoices: state.permissionList[12].isEnable,
-                  returns: state.permissionList[13].isEnable,
-                  canScanDocuments: state.permissionList[14].isEnable));
+            accountPermissions: AccountPermissions(
+                accountAdmin: state.permissionList[0].isEnable,
+                canSeeWallet: state.permissionList[1].isEnable,
+                canAddToCart: state.permissionList[2].isEnable,
+                canCreateOrder: state.permissionList[3].isEnable,
+                canSeeOrders: state.permissionList[4].isEnable,
+                canApproveOrders: state.permissionList[5].isEnable,
+                canDuplicateOrders: state.permissionList[6].isEnable,
+                canSeeAndUpdateBusinessInfo: state.permissionList[7].isEnable,
+                canSeeAndUpdateAdditionalInfo: state.permissionList[8].isEnable,
+                canSeeAndUpdateTimesInfo: state.permissionList[9].isEnable,
+                canSeeFileAndForms: state.permissionList[10].isEnable,
+                canManageSubUsers: state.permissionList[11].isEnable,
+                canSeeInvoices: state.permissionList[12].isEnable,
+                returns: state.permissionList[13].isEnable,
+                canScanDocuments: state.permissionList[14].isEnable),
+          );
 
           Map<String, dynamic> updatePermissionReq = req.toJson();
           updatePermissionReq.removeWhere((key, value) {

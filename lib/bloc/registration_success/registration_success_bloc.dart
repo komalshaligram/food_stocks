@@ -10,7 +10,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'registration_success_event.dart';
 part 'registration_success_state.dart';
 part 'registration_success_bloc.freezed.dart';

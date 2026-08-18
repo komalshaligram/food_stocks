@@ -12,7 +12,8 @@ class ProfileEvent with _$ProfileEvent {
 
   factory ProfileEvent.navigateToMoreDetailsScreenEvent({required BuildContext context}) = _navigateToMoreDetailsScreenEvent;
 
-  factory ProfileEvent.getProfileDetailsEvent({required BuildContext context, required bool isUpdate, required String mobileNo}) = _getProfileDetailsEvent;
+  factory ProfileEvent.getProfileDetailsEvent({required BuildContext context, required bool isUpdate, required String mobileNo}) =
+      _getProfileDetailsEvent;
 
   factory ProfileEvent.updateProfileDetailsEvent({required BuildContext context}) = _updateProfileDetailsEvent;
 

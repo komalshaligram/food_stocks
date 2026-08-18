@@ -50,26 +50,25 @@ class CreateProductReturnListWidget extends StatelessWidget {
             child: FocusDetector(
               onFocusGained: () {},
               child: CommonAppBar(
-                bgColor: AppColors.pageColor,
-                title: AppLocalizations.of(context)!.product_return_list,
-                iconData: Icons.arrow_back_ios_sharp,
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, RouteDefine.returnListScreen.name);
-                },
-                trailingWidget: state.returnProductList.isNotEmpty
-                    ? InkWell(
-                        onTap: () {
-                          deleteProductDialog(context: context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
-                          decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
-                          child: Text(AppLocalizations.of(context)!.delete,
-                              style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
-                        ),
-                      )
-                    : 0.height,
-              ),
+                  bgColor: AppColors.pageColor,
+                  title: AppLocalizations.of(context)!.product_return_list,
+                  iconData: Icons.arrow_back_ios_sharp,
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, RouteDefine.returnListScreen.name);
+                  },
+                  trailingWidget: state.returnProductList.isNotEmpty
+                      ? InkWell(
+                          onTap: () {
+                            deleteProductDialog(context: context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_3, horizontal: AppConstants.padding_8),
+                            decoration: BoxDecoration(color: AppColors.redColor, borderRadius: BorderRadius.circular(AppConstants.radius_5)),
+                            child: Text(AppLocalizations.of(context)!.delete,
+                                style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.whiteColor)),
+                          ),
+                        )
+                      : 0.height),
             ),
           ),
           body: SafeArea(
@@ -122,7 +121,7 @@ class CreateProductReturnListWidget extends StatelessWidget {
                                             }
                                           })
                                       : 0.height
-                                  : 0.height,
+                                  : 0.height
                             ]),
                           )
                         ])

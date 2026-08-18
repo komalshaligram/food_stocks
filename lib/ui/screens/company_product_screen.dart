@@ -275,16 +275,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
           productStockUpdateIndex: index,
           productSupplierIds: product.supplierId.toString()));
     } else {
-      showMinMaxQtyConfirmDialog(
-          context: context,
-          productId: item.id ?? '',
-          minBox: minQty.toString(),
-          index: index,
-          supplierId: product.supplierId.toString(),
-          productListIndex: 1,
-          isIncrease: true,
-          isMixedSale: product.sale?.isMixedSale,
-          sameSaleProducts: product.sale?.sameSaleProducts);
+      showMinMaxQtyConfirmDialog(context: context, productId: item.id ?? '', index: index, productListIndex: 1, isIncrease: true);
     }
   }
 
@@ -308,16 +299,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
           productStockUpdateIndex: index,
           productSupplierIds: product.supplierId.toString()));
     } else {
-      showMinMaxQtyConfirmDialog(
-          context: context,
-          productId: item.id ?? '',
-          minBox: minQty.toString(),
-          index: index,
-          supplierId: product.supplierId.toString(),
-          productListIndex: 1,
-          isIncrease: false,
-          isMixedSale: product.sale?.isMixedSale,
-          sameSaleProducts: product.sale?.sameSaleProducts);
+      showMinMaxQtyConfirmDialog(context: context, productId: item.id ?? '', index: index, productListIndex: 1, isIncrease: false);
     }
   }
 
@@ -426,70 +408,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
             });
       });
 
-  Widget buildCompanyProducts(
-      {required BuildContext context,
-      required int index,
-      required String productImage,
-      required String productName,
-      required double productPrice,
-      required int totalSale,
-      required void Function() onPressed,
-      required bool isRTL}) {
-    return Container(
-      decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)]),
-      clipBehavior: Clip.hardEdge,
-      margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
-      padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_10),
-      child: Column(mainAxisSize: MainAxisSize.max, crossAxisAlignment: CrossAxisAlignment.center, children: [
-        Center(
-          child: Image.network("${AppUrlEndPoints.baseFileUrl}$productImage", height: 70, fit: BoxFit.fitHeight,
-              loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress?.cumulativeBytesLoaded != loadingProgress?.expectedTotalBytes) {
-              return CommonShimmerWidget(
-                child: Container(
-                    height: 70,
-                    width: 70,
-                    decoration:
-                        BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)))),
-              );
-            }
-            return child;
-          }, errorBuilder: (context, error, stackTrace) {
-            return Image.asset(AppImagePath.imageNotAvailable5, height: 70, width: double.maxFinite, fit: BoxFit.cover);
-          }),
-        ),
-        5.height,
-        Text(productName,
-            style: AppStyles.rkBoldTextStyle(size: AppConstants.font_12, color: AppColors.blackColor, fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis),
-        5.height,
-        Expanded(
-          child: totalSale == 0
-              ? 0.width
-              : Text("$totalSale ${AppLocalizations.of(context)!.discount}",
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.saleRedColor, fontWeight: FontWeight.w600),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis),
-        ),
-        5.height,
-        Center(
-          child: CommonProductButtonWidget(
-              title:
-                  "${AppLocalizations.of(context)!.currency}${productPrice.toStringAsFixed(AppConstants.amountFrLength) == "0.00" ? '0' : productPrice.toStringAsFixed(AppConstants.amountFrLength)}",
-              onPressed: onPressed,
-              textColor: AppColors.whiteColor,
-              bgColor: AppColors.mainColor,
-              borderRadius: AppConstants.radius_3,
-              textSize: AppConstants.font_12),
-        )
-      ]),
-    );
-  }
-
   Widget searchWidget(BuildContext context, CompanyProductsBloc bloc, CompanyProductsState state) => CommonSearchWidget(
       onCloseTap: () {
         bloc.add(const CompanyProductsEvent.changeCategoryExpansion(isOpened: false));
@@ -581,15 +499,7 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                 productSupplierIds: state.searchList[index].supplierId.toString()));
                           } else {
                             showMinMaxQtyConfirmDialog(
-                                context: context,
-                                productId: state.searchList[index].searchId,
-                                minBox: state.searchList[index].saleMinQuantity.toString(),
-                                index: index,
-                                supplierId: state.searchList[index].supplierId.toString(),
-                                productListIndex: 0,
-                                isIncrease: false,
-                                isMixedSale: state.searchList[index].isMixedSale,
-                                sameSaleProducts: state.searchList[index].sameSaleProducts);
+                                context: context, productId: state.searchList[index].searchId, index: index, productListIndex: 0, isIncrease: false);
                           }
                         },
                         onQuantityDecreaseTap: () {
@@ -612,13 +522,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                               showMinMaxQtyConfirmDialog(
                                   context: context,
                                   productId: state.searchList[index].searchId,
-                                  minBox: state.searchList[index].saleMinQuantity.toString(),
                                   index: index,
-                                  supplierId: state.searchList[index].supplierId.toString(),
                                   productListIndex: 0,
-                                  isIncrease: false,
-                                  isMixedSale: state.searchList[index].isMixedSale,
-                                  sameSaleProducts: state.searchList[index].sameSaleProducts);
+                                  isIncrease: false);
                             }
                           }
                         },
@@ -779,9 +685,9 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                                                   .read<CompanyProductsBloc>()
                                                   .add(CompanyProductsEvent.addToCartProductEvent(context: context1, productId: productId));
                                             } else {
-                                              showMinQtyConfirmDialog(context, productId, state.productDetails.first.sale!.saleMinQuantity.toString(),
-                                                  state.productDetails.first.sale!.isMixedSale, state.productDetails.first.sale!.sameSaleProducts,
-                                                initialQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,);
+                                              showMinQtyConfirmDialog(context, productId,
+                                                  initialQuantity:
+                                                      state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity);
                                             }
                                           },
                                           isLoading: state.isLoading,
@@ -951,14 +857,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                       showMinMaxQtyConfirmDialog(
                           context: context,
                           productId: relatedProductList[i].id.toString(),
-                          minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
                           index: productStockList[2]
                               .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                          supplierId: relatedProductList[i].supplierId.toString(),
                           productListIndex: 2,
-                          isIncrease: true,
-                          isMixedSale: relatedProductList[i].sale?.isMixedSale,
-                          sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts);
+                          isIncrease: true);
                     }
                   },
                   onQuantityDecreaseTap: () {
@@ -991,14 +893,10 @@ class CompanyProductsScreenWidget extends StatelessWidget {
                         showMinMaxQtyConfirmDialog(
                             context: context,
                             productId: relatedProductList[i].id.toString(),
-                            minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
                             index: productStockList[2]
                                 .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                            supplierId: relatedProductList[i].supplierId.toString(),
                             productListIndex: 2,
-                            isIncrease: false,
-                            isMixedSale: relatedProductList[i].sale?.isMixedSale,
-                            sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts);
+                            isIncrease: false);
                       }
                     }
                   },
@@ -1018,20 +916,17 @@ class CompanyProductsScreenWidget extends StatelessWidget {
     ]);
   }
 
-  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale, List? sameSaleProducts, {int? initialQuantity}) {
+  showMinQtyConfirmDialog(BuildContext context, String productId, {int? initialQuantity}) {
     _openSalePromotionSheet(context, productId, initialQuantity: initialQuantity, closeParentBeforeOpen: true);
   }
 
   void showMinMaxQtyConfirmDialog(
       {required BuildContext context,
       required String productId,
-      required String minBox,
       required int index,
-      required dynamic supplierId,
       required int productListIndex,
       required bool isIncrease,
-      bool? isMixedSale,
-      List? sameSaleProducts, int? initialQuantity}) {
+      int? initialQuantity}) {
     final stockState = context.read<CompanyProductsBloc>().state;
     int? qty = initialQuantity;
     try {
@@ -1048,7 +943,6 @@ class CompanyProductsScreenWidget extends StatelessWidget {
       return;
     }
     final l10n = AppLocalizations.of(context)!;
-    // Close product-detail sheet first, then open sale/mixed-sale sheet.
     if (closeParentBeforeOpen && context.mounted && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
       await Future<void>.delayed(const Duration(milliseconds: 100));

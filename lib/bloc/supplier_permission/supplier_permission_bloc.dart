@@ -36,7 +36,8 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
             }
 
             response.data?.forEach((element) {
-              supplierPermissionList.add(PermissionModel(supplierId: element.supplierId, title: element.supplier?.contactName ?? '', isEnable: element.isAllowed ?? false));
+              supplierPermissionList.add(
+                  PermissionModel(supplierId: element.supplierId, title: element.supplier?.contactName ?? '', isEnable: element.isAllowed ?? false));
             });
             emit(state.copyWith(supplierPermissionList: supplierPermissionList));
           } else {
@@ -87,11 +88,13 @@ class SupplierPermissionBloc extends Bloc<SupplierPermissionEvent, SupplierPermi
             }
             return value == null;
           });
-          final response = await DioClient(event.context).put(path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
+          final response =
+              await DioClient(event.context).put(path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+                context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
           } else {
             emit(state.copyWith(isUpdateProcess: false));
           }

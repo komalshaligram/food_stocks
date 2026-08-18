@@ -23,11 +23,10 @@ class OTPScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final temp = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     return BlocProvider(
-      create: (context) => OtpBloc()
-        ..add(OtpEvent.setOtpTimer(contact: temp[AppStrings.contactString] ?? ''))
-        ..add(OtpEvent.loadWhatsappOtpSettingEvent(context: context)),
-      child: OTPScreenWidget(isRegister: temp[AppStrings.isRegisterString], contact: temp[AppStrings.contactString]),
-    );
+        create: (context) => OtpBloc()
+          ..add(OtpEvent.setOtpTimer(contact: temp[AppStrings.contactString] ?? ''))
+          ..add(OtpEvent.loadWhatsappOtpSettingEvent(context: context)),
+        child: OTPScreenWidget(isRegister: temp[AppStrings.isRegisterString], contact: temp[AppStrings.contactString]));
   }
 }
 
@@ -100,12 +99,7 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: screenHeight),
                 child: IntrinsicHeight(
-                  child: Column(
-                    children: [
-                      _buildHero(context, bloc),
-                      Expanded(child: _buildCard(context, bloc, state)),
-                    ],
-                  ),
+                  child: Column(children: [_buildHero(context, bloc), Expanded(child: _buildCard(context, bloc, state))]),
                 ),
               ),
             ),
@@ -117,69 +111,50 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
 
   Widget _buildHero(BuildContext context, OtpBloc bloc) {
     final double topPadding = MediaQuery.of(context).padding.top;
-    return Stack(
-      children: [
-        Positioned(top: -40, left: -50, child: _decorCircle(160, Colors.white.withValues(alpha:0.08))),
-        Positioned(top: 60, right: -55, child: _decorCircle(130, Colors.white.withValues(alpha: 0.06))),
-        Padding(
-          padding: EdgeInsets.only(top: topPadding + 12, left: 24, right: 24, bottom: 26),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(40),
-                  onTap: () {
-                    bloc.add(const OtpEvent.cancelOtpTimerSubscription());
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), shape: BoxShape.circle),
-                    child: const Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 18),
-                    ),
-                  ),
-                ),
+    return Stack(children: [
+      Positioned(top: -40, left: -50, child: _decorCircle(160, Colors.white.withValues(alpha: 0.08))),
+      Positioned(top: 60, right: -55, child: _decorCircle(130, Colors.white.withValues(alpha: 0.06))),
+      Padding(
+        padding: EdgeInsets.only(top: topPadding + 12, left: 24, right: 24, bottom: 26),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(40),
+              onTap: () {
+                bloc.add(const OtpEvent.cancelOtpTimerSubscription());
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), shape: BoxShape.circle),
+                child: const Directionality(
+                    textDirection: TextDirection.ltr, child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 18)),
               ),
-              10.height,
-              Container(
-                width: 66,
-                height: 66,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.18),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Icon(Icons.smartphone_rounded, color: Colors.white, size: 32),
-              ),
-              16.height,
-              Text(
-                AppLocalizations.of(context)!.verify_phone_title,
-                textAlign: TextAlign.center,
-                style: AppStyles.rkBoldTextStyle(size: 23, color: AppColors.whiteColor, fontWeight: FontWeight.w700),
-              ),
-              8.height,
-              Text(
-                AppLocalizations.of(context)!.otp_sent_subtitle,
-                textAlign: TextAlign.center,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor.withValues(alpha: 0.9)),
-              ),
-              6.height,
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Text(
-                  widget.contact,
-                  style: AppStyles.rkBoldTextStyle(size: 18, color: AppColors.whiteColor, fontWeight: FontWeight.w700),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ],
-    );
+          10.height,
+          Container(
+              width: 66,
+              height: 66,
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.18), borderRadius: BorderRadius.circular(20)),
+              child: const Icon(Icons.smartphone_rounded, color: Colors.white, size: 32)),
+          16.height,
+          Text(AppLocalizations.of(context)!.verify_phone_title,
+              textAlign: TextAlign.center, style: AppStyles.rkBoldTextStyle(size: 23, color: AppColors.whiteColor, fontWeight: FontWeight.w700)),
+          8.height,
+          Text(AppLocalizations.of(context)!.otp_sent_subtitle,
+              textAlign: TextAlign.center,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor.withValues(alpha: 0.9))),
+          6.height,
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(widget.contact, style: AppStyles.rkBoldTextStyle(size: 18, color: AppColors.whiteColor, fontWeight: FontWeight.w700)),
+          ),
+        ]),
+      ),
+    ]);
   }
 
   Widget _buildCard(BuildContext context, OtpBloc bloc, OtpState state) {
@@ -187,40 +162,29 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
       width: double.maxFinite,
       padding: EdgeInsets.fromLTRB(28, 20, 28, 30 + MediaQuery.of(context).padding.bottom),
       decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34)),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.10), blurRadius: 24, offset: const Offset(0, -6))],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Center(
-            child: Container(
-              width: 46,
-              height: 5,
-              decoration: BoxDecoration(color: AppColors.borderColor, borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-          22.height,
-          Text(
-            AppLocalizations.of(context)!.enter_verification_code,
-            style: AppStyles.rkBoldTextStyle(size: 18, color: AppColors.blackColor, fontWeight: FontWeight.w600),
-          ),
-          22.height,
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: SizedBox(
-              height: 70,
-              child: PinFieldAutoFill(
+          color: AppColors.whiteColor,
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(34), topRight: Radius.circular(34)),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.10), blurRadius: 24, offset: const Offset(0, -6))]),
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Center(
+            child: Container(width: 46, height: 5, decoration: BoxDecoration(color: AppColors.borderColor, borderRadius: BorderRadius.circular(10)))),
+        22.height,
+        Text(AppLocalizations.of(context)!.enter_verification_code,
+            style: AppStyles.rkBoldTextStyle(size: 18, color: AppColors.blackColor, fontWeight: FontWeight.w600)),
+        22.height,
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: SizedBox(
+            height: 70,
+            child: PinFieldAutoFill(
                 keyboardType: TextInputType.number,
                 decoration: BoxLooseDecoration(
-                  radius: const Radius.circular(12),
-                  strokeWidth: 1.5,
-                  gapSpace: 12,
-                  bgColorBuilder: FixedColorBuilder(AppColors.whiteColor),
-                  textStyle: AppStyles.rkBoldTextStyle(size: AppConstants.font_30, color: AppColors.blackColor, fontWeight: FontWeight.w600),
-                  strokeColorBuilder: FixedColorBuilder(AppColors.mainColor),
-                ),
+                    radius: const Radius.circular(12),
+                    strokeWidth: 1.5,
+                    gapSpace: 12,
+                    bgColorBuilder: FixedColorBuilder(AppColors.whiteColor),
+                    textStyle: AppStyles.rkBoldTextStyle(size: AppConstants.font_30, color: AppColors.blackColor, fontWeight: FontWeight.w600),
+                    strokeColorBuilder: FixedColorBuilder(AppColors.mainColor)),
                 currentCode: _code,
                 autoFocus: true,
                 focusNode: myFocusNode,
@@ -234,20 +198,15 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
                   if (_code.length == 4) {
                     _verifyOtp(context, bloc);
                   }
-                },
-              ),
-            ),
+                }),
           ),
-          26.height,
-          _buildPrimaryButton(context, isLoading: state.isLoading, onPressed: () => _onSubmitPressed(context, bloc)),
-          22.height,
-          _buildResend(context, bloc, state),
-          if (state.showWhatsappOtpOption) ...[
-            18.height,
-            _buildWhatsappFallback(context, bloc, state),
-          ],
-        ],
-      ),
+        ),
+        26.height,
+        _buildPrimaryButton(context, isLoading: state.isLoading, onPressed: () => _onSubmitPressed(context, bloc)),
+        22.height,
+        _buildResend(context, bloc, state),
+        if (state.showWhatsappOtpOption) ...[18.height, _buildWhatsappFallback(context, bloc, state)]
+      ]),
     );
   }
 
@@ -257,33 +216,25 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
       width: double.maxFinite,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        gradient: AppColors.appMainGradientColor,
-        borderRadius: BorderRadius.circular(AppConstants.radius_10),
-        boxShadow: [BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.30), blurRadius: 14, offset: const Offset(0, 6))],
-      ),
+          gradient: AppColors.appMainGradientColor,
+          borderRadius: BorderRadius.circular(AppConstants.radius_10),
+          boxShadow: [BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.30), blurRadius: 14, offset: const Offset(0, 6))]),
       child: MaterialButton(
         onPressed: isLoading ? null : onPressed,
         padding: EdgeInsets.zero,
         child: isLoading
             ? const Center(child: SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)))
-            : Stack(
-          alignment: Alignment.center,
-          children: [
-            Center(
-              child: Text(
-                AppLocalizations.of(context)!.verify_and_login,
-                style: AppStyles.rkBoldTextStyle(size: 17, color: AppColors.whiteColor, fontWeight: FontWeight.w600),
-              ),
-            ),
-            const Positioned(
-              left: 18,
-              child: Directionality(
-                textDirection: TextDirection.ltr,
-                child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 15),
-              ),
-            ),
-          ],
-        ),
+            : Stack(alignment: Alignment.center, children: [
+                Center(
+                  child: Text(AppLocalizations.of(context)!.verify_and_login,
+                      style: AppStyles.rkBoldTextStyle(size: 17, color: AppColors.whiteColor, fontWeight: FontWeight.w600)),
+                ),
+                const Positioned(
+                  left: 18,
+                  child:
+                      Directionality(textDirection: TextDirection.ltr, child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 15)),
+                ),
+              ]),
       ),
     );
   }
@@ -300,32 +251,24 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
       height: AppConstants.buttonHeight,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: isCoolingDown ? AppColors.iconBGColor : AppColors.blueColor,
-        borderRadius: BorderRadius.circular(AppConstants.radius_10),
-        border: isCoolingDown ? Border.all(color: AppColors.borderColor, width: 1.2) : null,
-        boxShadow: isCoolingDown
-            ? null
-            : [BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.28), blurRadius: 12, offset: const Offset(0, 5))],
-      ),
+          color: isCoolingDown ? AppColors.iconBGColor : AppColors.blueColor,
+          borderRadius: BorderRadius.circular(AppConstants.radius_10),
+          border: isCoolingDown ? Border.all(color: AppColors.borderColor, width: 1.2) : null,
+          boxShadow:
+              isCoolingDown ? null : [BoxShadow(color: AppColors.blueColor.withValues(alpha: 0.28), blurRadius: 12, offset: const Offset(0, 5))]),
       child: MaterialButton(
         onPressed: isCoolingDown
             ? null
             : () => bloc.add(OtpEvent.logInApiDataEvent(context: context, isRegister: widget.isRegister, contactNumber: widget.contact)),
         padding: EdgeInsets.zero,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(isCoolingDown ? Icons.timer_outlined : Icons.sms_outlined, size: 20, color: contentColor),
-            10.width,
-            Flexible(
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                style: AppStyles.rkBoldTextStyle(size: 16, color: contentColor, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
-        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(isCoolingDown ? Icons.timer_outlined : Icons.sms_outlined, size: 20, color: contentColor),
+          10.width,
+          Flexible(
+            child: Text(label,
+                textAlign: TextAlign.center, style: AppStyles.rkBoldTextStyle(size: 16, color: contentColor, fontWeight: FontWeight.w600)),
+          ),
+        ]),
       ),
     );
   }
@@ -335,75 +278,50 @@ class _OTPScreenWidgetState extends State<OTPScreenWidget> {
     final bool isDisabled = isCoolingDown || state.isWhatsappSending;
     final Color contentColor = isDisabled ? AppColors.greyColor : kWhatsappDarkGreen;
 
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: Divider(color: AppColors.borderColor, thickness: 1)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                AppLocalizations.of(context)!.did_not_get_sms,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.greyColor),
-              ),
-            ),
-            Expanded(child: Divider(color: AppColors.borderColor, thickness: 1)),
-          ],
+    return Column(children: [
+      Row(children: [
+        Expanded(child: Divider(color: AppColors.borderColor, thickness: 1)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Text(AppLocalizations.of(context)!.did_not_get_sms,
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_12, color: AppColors.greyColor)),
         ),
-        14.height,
-        Opacity(
-          opacity: isDisabled ? 0.5 : 1,
-          child: Container(
-            width: double.maxFinite,
-            height: AppConstants.buttonHeight,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
+        Expanded(child: Divider(color: AppColors.borderColor, thickness: 1))
+      ]),
+      14.height,
+      Opacity(
+        opacity: isDisabled ? 0.5 : 1,
+        child: Container(
+          width: double.maxFinite,
+          height: AppConstants.buttonHeight,
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius: BorderRadius.circular(AppConstants.radius_10),
-              border: Border.all(color: isDisabled ? AppColors.borderColor : kWhatsappGreen, width: 1.2),
-            ),
-            child: MaterialButton(
-              onPressed: isDisabled
-                  ? null
-                  : () {
-                FocusScope.of(context).unfocus();
-                bloc.add(OtpEvent.sendOtpViaWhatsappEvent(context: context, contactNumber: widget.contact));
-              },
-              padding: EdgeInsets.zero,
-              child: state.isWhatsappSending
-                  ? const SizedBox(
-                height: 22,
-                width: 22,
-                child: CircularProgressIndicator(strokeWidth: 2, color: kWhatsappDarkGreen),
-              )
-                  : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    AppImagePath.whatsapp,
-                    height: 22,
-                    width: 22,
-                    color: isDisabled ? AppColors.greyColor : null,
-                  ),
-                  10.width,
-                  Flexible(
-                    child: Text(
-                      AppLocalizations.of(context)!.send_code_via_whatsapp,
-                      textAlign: TextAlign.center,
-                      style: AppStyles.rkBoldTextStyle(
-                        size: AppConstants.font_14 + 1,
-                        color: contentColor,
-                        fontWeight: FontWeight.w600,
-                      ),
+              border: Border.all(color: isDisabled ? AppColors.borderColor : kWhatsappGreen, width: 1.2)),
+          child: MaterialButton(
+            onPressed: isDisabled
+                ? null
+                : () {
+                    FocusScope.of(context).unfocus();
+                    bloc.add(OtpEvent.sendOtpViaWhatsappEvent(context: context, contactNumber: widget.contact));
+                  },
+            padding: EdgeInsets.zero,
+            child: state.isWhatsappSending
+                ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2, color: kWhatsappDarkGreen))
+                : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Image.asset(AppImagePath.whatsapp, height: 22, width: 22, color: isDisabled ? AppColors.greyColor : null),
+                    10.width,
+                    Flexible(
+                      child: Text(AppLocalizations.of(context)!.send_code_via_whatsapp,
+                          textAlign: TextAlign.center,
+                          style: AppStyles.rkBoldTextStyle(size: AppConstants.font_14 + 1, color: contentColor, fontWeight: FontWeight.w600)),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ]),
           ),
         ),
-      ],
-    );
+      ),
+    ]);
   }
 
   String _formatCountdown(BuildContext context, int seconds) {

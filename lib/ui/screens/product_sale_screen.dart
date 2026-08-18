@@ -41,13 +41,12 @@ class ProductSaleScreen extends StatelessWidget {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
-      create: (context) => ProductSaleBloc()
-        ..add(ProductSaleEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
-        ..add(ProductSaleEvent.getProductSalesListEvent(context: context))
-        ..add(ProductSaleEvent.userApproveEvent(context: context))
-        ..add(const ProductSaleEvent.getPreferencesDataEvent()),
-      child: ProductSaleScreenWidget(saleProductId: args?[AppStrings.companyIdString] ?? ''),
-    );
+        create: (context) => ProductSaleBloc()
+          ..add(ProductSaleEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
+          ..add(ProductSaleEvent.getProductSalesListEvent(context: context))
+          ..add(ProductSaleEvent.userApproveEvent(context: context))
+          ..add(const ProductSaleEvent.getPreferencesDataEvent()),
+        child: ProductSaleScreenWidget(saleProductId: args?[AppStrings.companyIdString] ?? ''));
   }
 }
 
@@ -131,22 +130,20 @@ class ProductSaleScreenWidget extends StatelessWidget {
 
   void _updateQuantity({required BuildContext context, required ProductSaleState state, required int index}) {
     context.read<ProductSaleBloc>().add(ProductSaleEvent.updateListQuantityOfProduct(
-          context: context,
-          quantity: state.productStockList[1][index].quantity.toString(),
-          productListIndex: 1,
-          productStockUpdateIndex: index,
-          productSupplierIds: state.productSalesList[index].supplierId.toString(),
-        ));
+        context: context,
+        quantity: state.productStockList[1][index].quantity.toString(),
+        productListIndex: 1,
+        productStockUpdateIndex: index,
+        productSupplierIds: state.productSalesList[index].supplierId.toString()));
   }
 
   void _addToCart({required BuildContext context, required ProductSaleState state, required int index}) {
     context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartListProductEvent(
-          context: context,
-          productId: state.productSalesList[index].id.toString(),
-          productListIndex: 1,
-          productStockUpdateIndex: index,
-          productSupplierIds: state.productSalesList[index].supplierId.toString(),
-        ));
+        context: context,
+        productId: state.productSalesList[index].id.toString(),
+        productListIndex: 1,
+        productStockUpdateIndex: index,
+        productSupplierIds: state.productSalesList[index].supplierId.toString()));
   }
 
   void _increaseQuantity({required BuildContext context, required ProductSaleState state, required int index}) {
@@ -161,24 +158,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
 
     if (!isMixedSale && minQty <= quantity + 1) {
       context.read<ProductSaleBloc>().add(ProductSaleEvent.increaseListQuantityOfProduct(
-            context: context,
-            productListIndex: 1,
-            productStockUpdateIndex: index,
-            productSupplierIds: product.supplierId.toString(),
-          ));
+          context: context, productListIndex: 1, productStockUpdateIndex: index, productSupplierIds: product.supplierId.toString()));
       _addToCart(context: context, state: state, index: index);
     } else {
-      showMinMaxQtyConfirmDialog(
-        context: context,
-        productId: product.id.toString(),
-        minBox: minQty.toString(),
-        index: index,
-        supplierId: product.supplierId.toString(),
-        productListIndex: 1,
-        isIncrease: true,
-        isMixedSale: product.sale?.isMixedSale,
-        sameSaleProducts: product.sale?.sameSaleProducts,
-      );
+      showMinMaxQtyConfirmDialog(context: context, productId: product.id.toString(), index: index, productListIndex: 1, isIncrease: true);
     }
   }
 
@@ -196,24 +179,10 @@ class ProductSaleScreenWidget extends StatelessWidget {
 
     if (!isMixedSale && minQty <= quantity - 1) {
       context.read<ProductSaleBloc>().add(ProductSaleEvent.decreaseListQuantityOfProduct(
-            context: context,
-            productListIndex: 1,
-            productStockUpdateIndex: index,
-            productSupplierIds: product.supplierId.toString(),
-          ));
+          context: context, productListIndex: 1, productStockUpdateIndex: index, productSupplierIds: product.supplierId.toString()));
       _addToCart(context: context, state: state, index: index);
     } else {
-      showMinMaxQtyConfirmDialog(
-        context: context,
-        productId: product.id.toString(),
-        minBox: minQty.toString(),
-        index: index,
-        supplierId: product.supplierId.toString(),
-        productListIndex: 1,
-        isIncrease: false,
-        isMixedSale: product.sale?.isMixedSale,
-        sameSaleProducts: product.sale?.sameSaleProducts,
-      );
+      showMinMaxQtyConfirmDialog(context: context, productId: product.id.toString(), index: index, productListIndex: 1, isIncrease: false);
     }
   }
 
@@ -343,10 +312,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                     builder: (BuildContext context1, ScrollController scrollController) {
                       return Container(
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
-                          color: AppColors.whiteColor,
-                        ),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(AppConstants.radius_30), topRight: Radius.circular(AppConstants.radius_30)),
+                            color: AppColors.whiteColor),
                         clipBehavior: Clip.hardEdge,
                         child: state.isProductLoading
                             ? const ProductDetailsShimmerWidget()
@@ -373,14 +341,9 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                               .read<ProductSaleBloc>()
                                               .add(ProductSaleEvent.addToCartProductEvent(context: context1, productId: productId));
                                         } else {
-                                          showMinQtyConfirmDialog(
-                                            context,
-                                            productId,
-                                            state.productDetails.first.sale!.saleMinQuantity.toString(),
-                                            state.productDetails.first.sale!.isMixedSale,
-                                            state.productDetails.first.sale!.sameSaleProducts,
-                                                initialQuantity: state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity,
-                                          );
+                                          showMinQtyConfirmDialog(context, productId,
+                                              initialQuantity:
+                                                  state.productStockList[state.productListIndex][state.productStockUpdateIndex].quantity);
                                         }
                                       },
                                       imageOnTap: () {
@@ -406,12 +369,13 @@ class ProductSaleScreenWidget extends StatelessWidget {
                                                     ),
                                                   ),
                                                   GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Padding(
-                                                          padding: const EdgeInsets.only(top: AppConstants.padding_10),
-                                                          child: Icon(Icons.close, color: AppColors.whiteColor))),
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Padding(
+                                                        padding: const EdgeInsets.only(top: AppConstants.padding_10),
+                                                        child: Icon(Icons.close, color: AppColors.whiteColor)),
+                                                  ),
                                                 ]),
                                               );
                                             });
@@ -469,12 +433,150 @@ class ProductSaleScreenWidget extends StatelessWidget {
         });
   }
 
-  Widget relatedProductWidget(
-    BuildContext prevContext,
-    List<RelatedProductDatum> relatedProductList,
-    BuildContext context, {
-    required List<List<ProductStockModel>> productStockList,
-  }) {
+  // Widget  relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context,
+  //     {required List<List<ProductStockModel>> productStockList}) {
+  //   return Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       children: [
+  //         relatedProductTitle(context),
+  //         Container(
+  //           height: getItemHeight(context, true),
+  //           padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
+  //           child: ListView.builder(
+  //               physics: const ClampingScrollPhysics(),
+  //               scrollDirection: Axis.horizontal,
+  //               shrinkWrap: true,
+  //               itemBuilder: (context2, i) {
+  //                 return CommonProductSaleItemWidget(
+  //                     isSale: relatedProductList.elementAt(i).sale?.isSale,
+  //                     isGuestUser: context.read<ProductSaleBloc>().state.isGuestUser,
+  //                     onGuestLoginRequired: () => Navigator.pushNamed(context, RouteDefine.connectScreen.name),
+  //                     height: AppConstants.salesProductItemHeight,
+  //                     width: getItemWidth(context),
+  //                     productName: relatedProductList.elementAt(i).productName ?? '',
+  //                     saleImage: relatedProductList.elementAt(i).mainImage ?? '',
+  //                     title: relatedProductList.elementAt(i).name,
+  //                     description: parse(relatedProductList.elementAt(i).sale?.saleDescription).body?.text ?? '',
+  //                     discountedPrice: double.parse(relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
+  //                     originalPrice: relatedProductList.elementAt(i).productPrice,
+  //                     productStock: relatedProductList.elementAt(i).productStock.toString(),
+  //                     lowStock: relatedProductList.elementAt(i).lowStock ?? '',
+  //                     isPesach: relatedProductList.elementAt(i).isPesach,
+  //                     quantity: productStockList[2]
+  //                         .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+  //                         .quantity,
+  //                     minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
+  //                     maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
+  //                     isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
+  //                     numberOfUnits: relatedProductList.elementAt(i).numberOfUnit.toString(),
+  //                     scaleType: relatedProductList.elementAt(i).scaleType,
+  //                     onQuantityChanged: () {
+  //                       context.read<ProductSaleBloc>().add(ProductSaleEvent.updateListQuantityOfProduct(
+  //                           context: context,
+  //                           quantity: productStockList[2]
+  //                               .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+  //                               .quantity
+  //                               .toString(),
+  //                           productListIndex: 2,
+  //                           productStockUpdateIndex: productStockList[2]
+  //                               .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+  //                           productSupplierIds: relatedProductList[i].supplierId.toString()));
+  //                     },
+  //                     onQuantityIncreaseTap: () {
+  //                       if (!(relatedProductList[i].sale?.isMixedSale ?? false) &&
+  //                           int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <=
+  //                               productStockList[2]
+  //                                       .firstWhere(
+  //                                           (relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+  //                                       .quantity +
+  //                                   1) {
+  //                         context.read<ProductSaleBloc>().add(ProductSaleEvent.increaseListQuantityOfProduct(
+  //                             context: context,
+  //                             productListIndex: 2,
+  //                             productStockUpdateIndex: productStockList[2]
+  //                                 .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+  //                             productSupplierIds: relatedProductList[i].supplierId.toString()));
+  //
+  //                         context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartListProductEvent(
+  //                             context: context,
+  //                             productId: relatedProductList[i].id.toString(),
+  //                             productListIndex: 2,
+  //                             productStockUpdateIndex: productStockList[2]
+  //                                 .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+  //                             productSupplierIds: relatedProductList[i].supplierId.toString()));
+  //                       } else {
+  //                         showMinMaxQtyConfirmDialog(
+  //                             context: context,
+  //                             productId: relatedProductList[i].id.toString(),
+  //                             minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
+  //                             index: productStockList[2]
+  //                                 .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+  //                             supplierId: relatedProductList[i].supplierId.toString(),
+  //                             productListIndex: 2,
+  //                             isIncrease: true,
+  //                             isMixedSale: relatedProductList[i].sale?.isMixedSale,
+  //                             sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts);
+  //                       }
+  //                     },
+  //                     onQuantityDecreaseTap: () {
+  //                       if (productStockList[2]
+  //                               .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+  //                               .quantity !=
+  //                           0) {
+  //                         if (!(relatedProductList[i].sale?.isMixedSale ?? false) &&
+  //                             int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <=
+  //                                 productStockList[2]
+  //                                         .firstWhere(
+  //                                             (relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
+  //                                         .quantity -
+  //                                     1) {
+  //                           context.read<ProductSaleBloc>().add(ProductSaleEvent.decreaseListQuantityOfProduct(
+  //                               context: context,
+  //                               productListIndex: 2,
+  //                               productStockUpdateIndex: productStockList[2]
+  //                                   .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+  //                               productSupplierIds: relatedProductList[i].supplierId.toString()));
+  //
+  //                           context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartListProductEvent(
+  //                               context: context,
+  //                               productId: relatedProductList[i].id.toString(),
+  //                               productListIndex: 2,
+  //                               productStockUpdateIndex: productStockList[2]
+  //                                   .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+  //                               productSupplierIds: relatedProductList[i].supplierId.toString()));
+  //                         } else {
+  //                           showMinMaxQtyConfirmDialog(
+  //                               context: context,
+  //                               productId: relatedProductList[i].id.toString(),
+  //                               minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
+  //                               index: productStockList[2]
+  //                                   .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
+  //                               supplierId: relatedProductList[i].supplierId.toString(),
+  //                               productListIndex: 2,
+  //                               isIncrease: false,
+  //                               isMixedSale: relatedProductList[i].sale?.isMixedSale,
+  //                               sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts);
+  //                         }
+  //                       }
+  //                     },
+  //                     onButtonTap: () {
+  //                       Navigator.of(prevContext).pop();
+  //                       showProductDetails(
+  //                           context: context,
+  //                           productId: relatedProductList[i].id ?? '',
+  //                           productStock: relatedProductList.elementAt(i).productStock.toString(),
+  //                           productListIndex: 2);
+  //                     });
+  //               },
+  //               itemCount: relatedProductList.length),
+  //         )
+  //       ]);
+  // }
+
+  Widget relatedProductWidget(BuildContext prevContext, List<RelatedProductDatum> relatedProductList, BuildContext context,
+      {required List<List<ProductStockModel>> productStockList}) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -485,161 +587,111 @@ class ProductSaleScreenWidget extends StatelessWidget {
             height: getItemHeight(context, true),
             padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_10),
             child: ListView.builder(
-              physics: const ClampingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              itemBuilder: (context2, i) {
-                return CommonProductSaleItemWidget(
-                    isSale: relatedProductList.elementAt(i).sale?.isSale,
-                    isGuestUser: context.read<ProductSaleBloc>().state.isGuestUser,
-                    onGuestLoginRequired: () => Navigator.pushNamed(context, RouteDefine.connectScreen.name),
-                    height: AppConstants.salesProductItemHeight,
-                    width: getItemWidth(context),
-                    productName: relatedProductList.elementAt(i).productName ?? '',
-                    saleImage: relatedProductList.elementAt(i).mainImage ?? '',
-                    title: relatedProductList.elementAt(i).name,
-                    description: parse(relatedProductList.elementAt(i).sale?.saleDescription).body?.text ?? '',
-                    discountedPrice: double.parse(relatedProductList.elementAt(i).sale?.salePrice ?? '0'),
-                    originalPrice: relatedProductList.elementAt(i).productPrice,
-                    productStock: relatedProductList.elementAt(i).productStock.toString(),
-                    lowStock: relatedProductList.elementAt(i).lowStock ?? '',
-                    isPesach: relatedProductList.elementAt(i).isPesach,
-                    quantity: productStockList[2]
-                        .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
-                        .quantity,
-                    minQuantity: relatedProductList.elementAt(i).sale?.saleMinQuantity,
-                    maxQuantity: relatedProductList.elementAt(i).sale?.saleMaxQuantity,
-                    isMixedSale: relatedProductList.elementAt(i).sale?.isMixedSale,
-                    numberOfUnits: relatedProductList.elementAt(i).numberOfUnit.toString(),
-                    scaleType: relatedProductList.elementAt(i).scaleType,
-                    onQuantityChanged: () {
-                      context.read<ProductSaleBloc>().add(ProductSaleEvent.updateListQuantityOfProduct(
-                            context: context,
-                            quantity: productStockList[2]
-                                .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
-                                .quantity
-                                .toString(),
-                            productListIndex: 2,
-                            productStockUpdateIndex: productStockList[2]
-                                .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                            productSupplierIds: relatedProductList[i].supplierId.toString(),
-                          ));
-                    },
-                    onQuantityIncreaseTap: () {
-                      if (!(relatedProductList[i].sale?.isMixedSale ?? false) &&
-                          int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <=
-                              productStockList[2]
-                                      .firstWhere(
-                                          (relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
-                                      .quantity +
-                                  1) {
-                        context.read<ProductSaleBloc>().add(ProductSaleEvent.increaseListQuantityOfProduct(
-                              context: context,
-                              productListIndex: 2,
-                              productStockUpdateIndex: productStockList[2]
-                                  .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                              productSupplierIds: relatedProductList[i].supplierId.toString(),
-                            ));
+                physics: const ClampingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemBuilder: (context2, i) {
+                  final relatedProduct = relatedProductList[i];
+                  final stockIndex = productStockList[2].indexWhere((s) => s.productId == relatedProduct.id);
+                  final stockQuantity = stockIndex == -1 ? 0 : productStockList[2][stockIndex].quantity;
 
-                        context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartListProductEvent(
-                              context: context,
-                              productId: relatedProductList[i].id.toString(),
-                              productListIndex: 2,
-                              productStockUpdateIndex: productStockList[2]
-                                  .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                              productSupplierIds: relatedProductList[i].supplierId.toString(),
-                            ));
-                      } else {
-                        showMinMaxQtyConfirmDialog(
-                          context: context,
-                          productId: relatedProductList[i].id.toString(),
-                          minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                          index: productStockList[2]
-                              .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                          supplierId: relatedProductList[i].supplierId.toString(),
-                          productListIndex: 2,
-                          isIncrease: true,
-                          isMixedSale: relatedProductList[i].sale?.isMixedSale,
-                          sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts,
-                        );
-                      }
-                    },
-                    onQuantityDecreaseTap: () {
-                      if (productStockList[2]
-                              .firstWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
-                              .quantity !=
-                          0) {
-                        if (!(relatedProductList[i].sale?.isMixedSale ?? false) &&
-                            int.parse(relatedProductList[i].sale?.saleMinQuantity ?? '0') <=
-                                productStockList[2]
-                                        .firstWhere(
-                                            (relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id)
-                                        .quantity -
-                                    1) {
-                          context.read<ProductSaleBloc>().add(ProductSaleEvent.decreaseListQuantityOfProduct(
-                                context: context,
-                                productListIndex: 2,
-                                productStockUpdateIndex: productStockList[2]
-                                    .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                                productSupplierIds: relatedProductList[i].supplierId.toString(),
-                              ));
-
-                          context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartListProductEvent(
-                                context: context,
-                                productId: relatedProductList[i].id.toString(),
-                                productListIndex: 2,
-                                productStockUpdateIndex: productStockList[2]
-                                    .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                                productSupplierIds: relatedProductList[i].supplierId.toString(),
-                              ));
-                        } else {
-                          showMinMaxQtyConfirmDialog(
+                  return CommonProductSaleItemWidget(
+                      isSale: relatedProduct.sale?.isSale,
+                      isGuestUser: context.read<ProductSaleBloc>().state.isGuestUser,
+                      onGuestLoginRequired: () => Navigator.pushNamed(context, RouteDefine.connectScreen.name),
+                      height: AppConstants.salesProductItemHeight,
+                      width: getItemWidth(context),
+                      productName: relatedProduct.productName ?? '',
+                      saleImage: relatedProduct.mainImage ?? '',
+                      title: relatedProduct.name,
+                      description: parse(relatedProduct.sale?.saleDescription).body?.text ?? '',
+                      discountedPrice: double.parse(relatedProduct.sale?.salePrice ?? '0'),
+                      originalPrice: relatedProduct.productPrice,
+                      productStock: relatedProduct.productStock.toString(),
+                      lowStock: relatedProduct.lowStock ?? '',
+                      isPesach: relatedProduct.isPesach,
+                      quantity: stockQuantity,
+                      minQuantity: relatedProduct.sale?.saleMinQuantity,
+                      maxQuantity: relatedProduct.sale?.saleMaxQuantity,
+                      isMixedSale: relatedProduct.sale?.isMixedSale,
+                      numberOfUnits: relatedProduct.numberOfUnit.toString(),
+                      scaleType: relatedProduct.scaleType,
+                      onQuantityChanged: () {
+                        context.read<ProductSaleBloc>().add(ProductSaleEvent.updateListQuantityOfProduct(
                             context: context,
-                            productId: relatedProductList[i].id.toString(),
-                            minBox: relatedProductList.elementAt(i).sale?.saleMinQuantity.toString() ?? '0',
-                            index: productStockList[2]
-                                .indexWhere((relatedProductStockList) => relatedProductStockList.productId == relatedProductList.elementAt(i).id),
-                            supplierId: relatedProductList[i].supplierId.toString(),
+                            quantity: stockQuantity.toString(),
                             productListIndex: 2,
-                            isIncrease: false,
-                            isMixedSale: relatedProductList[i].sale?.isMixedSale,
-                            sameSaleProducts: relatedProductList[i].sale?.sameSaleProducts,
-                          );
-                        }
-                      }
-                    },
-                    onButtonTap: () {
-                      Navigator.of(prevContext).pop();
-                      showProductDetails(
-                        context: context,
-                        productId: relatedProductList[i].id ?? '',
-                        productStock: relatedProductList.elementAt(i).productStock.toString(),
-                        productListIndex: 2,
-                      );
-                    });
-              },
-              itemCount: relatedProductList.length,
-            ),
+                            productStockUpdateIndex: stockIndex,
+                            productSupplierIds: relatedProduct.supplierId.toString()));
+                      },
+                      onQuantityIncreaseTap: () =>
+                          _increaseRelatedQuantity(context: context, product: relatedProduct, stockIndex: stockIndex, stockQuantity: stockQuantity),
+                      onQuantityDecreaseTap: () =>
+                          _decreaseRelatedQuantity(context: context, product: relatedProduct, stockIndex: stockIndex, stockQuantity: stockQuantity),
+                      onButtonTap: () {
+                        Navigator.of(prevContext).pop();
+                        showProductDetails(
+                            context: context,
+                            productId: relatedProduct.id ?? '',
+                            productStock: relatedProduct.productStock.toString(),
+                            productListIndex: 2);
+                      });
+                },
+                itemCount: relatedProductList.length),
           )
         ]);
   }
 
-  showMinQtyConfirmDialog(BuildContext context, String productId, String minBox, bool? isMixedSale, List? sameSaleProducts, {int? initialQuantity}) {
+  void _increaseRelatedQuantity(
+      {required BuildContext context, required RelatedProductDatum product, required int stockIndex, required int stockQuantity}) {
+    final minQty = int.tryParse(product.sale?.saleMinQuantity ?? '0') ?? 0;
+    final isMixedSale = product.sale?.isMixedSale ?? false;
+
+    if (!isMixedSale && minQty <= stockQuantity + 1) {
+      context.read<ProductSaleBloc>().add(ProductSaleEvent.increaseListQuantityOfProduct(
+          context: context, productListIndex: 2, productStockUpdateIndex: stockIndex, productSupplierIds: product.supplierId.toString()));
+      context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartListProductEvent(
+          context: context,
+          productId: product.id.toString(),
+          productListIndex: 2,
+          productStockUpdateIndex: stockIndex,
+          productSupplierIds: product.supplierId.toString()));
+    } else {
+      showMinMaxQtyConfirmDialog(context: context, productId: product.id.toString(), index: stockIndex, productListIndex: 2, isIncrease: true);
+    }
+  }
+
+  void _decreaseRelatedQuantity(
+      {required BuildContext context, required RelatedProductDatum product, required int stockIndex, required int stockQuantity}) {
+    if (stockQuantity == 0) return;
+    final minQty = int.tryParse(product.sale?.saleMinQuantity ?? '0') ?? 0;
+    final isMixedSale = product.sale?.isMixedSale ?? false;
+
+    if (!isMixedSale && minQty <= stockQuantity - 1) {
+      context.read<ProductSaleBloc>().add(ProductSaleEvent.decreaseListQuantityOfProduct(
+          context: context, productListIndex: 2, productStockUpdateIndex: stockIndex, productSupplierIds: product.supplierId.toString()));
+      context.read<ProductSaleBloc>().add(ProductSaleEvent.addToCartListProductEvent(
+          context: context,
+          productId: product.id.toString(),
+          productListIndex: 2,
+          productStockUpdateIndex: stockIndex,
+          productSupplierIds: product.supplierId.toString()));
+    } else {
+      showMinMaxQtyConfirmDialog(context: context, productId: product.id.toString(), index: stockIndex, productListIndex: 2, isIncrease: false);
+    }
+  }
+
+  showMinQtyConfirmDialog(BuildContext context, String productId, {int? initialQuantity}) {
     _openSalePromotionSheet(context, productId, initialQuantity: initialQuantity, closeParentBeforeOpen: true);
   }
 
-  void showMinMaxQtyConfirmDialog({
-    required BuildContext context,
-    required String productId,
-    required String minBox,
-    required int index,
-    required dynamic supplierId,
-    required int productListIndex,
-    required bool isIncrease,
-    bool? isMixedSale,
-    List? sameSaleProducts,
-    int? initialQuantity,
-  }) {
+  void showMinMaxQtyConfirmDialog(
+      {required BuildContext context,
+      required String productId,
+      required int index,
+      required int productListIndex,
+      required bool isIncrease,
+      int? initialQuantity}) {
     final stockState = context.read<ProductSaleBloc>().state;
     int? qty = initialQuantity;
     try {
@@ -656,18 +708,12 @@ class ProductSaleScreenWidget extends StatelessWidget {
       return;
     }
     final l10n = AppLocalizations.of(context)!;
-    // Close product-detail sheet first, then open sale/mixed-sale sheet.
     if (closeParentBeforeOpen && context.mounted && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
       await Future<void>.delayed(const Duration(milliseconds: 100));
     }
     if (!context.mounted) return;
-    final bool changed = await showSalePromotionSheet(
-      context: context,
-      productId: productId,
-      l10n: l10n,
-      initialQuantity: initialQuantity,
-    );
+    final bool changed = await showSalePromotionSheet(context: context, productId: productId, l10n: l10n, initialQuantity: initialQuantity);
     if (!changed || !context.mounted) return;
     final cartMap = await fetchCartQuantities(context);
     if (!context.mounted) return;

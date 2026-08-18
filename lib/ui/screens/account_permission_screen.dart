@@ -76,7 +76,8 @@ class AccountPermissionScreenWidget extends StatelessWidget {
                             onPressed: () {
                               bloc.add(AccountPermissionEvent.updateAccountPermissionEvent(context: context));
                             })
-                      ])),
+                      ]),
+                    ),
         ),
       );
     });

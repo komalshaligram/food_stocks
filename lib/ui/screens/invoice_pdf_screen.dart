@@ -56,14 +56,12 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
 
   Future<Uint8List> _downloadPdfBytes(String url) async {
     final encodedUrl = Uri.encodeFull(url.trim());
-    final res = await Dio().get<List<int>>(
-      encodedUrl,
-      options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: true,
-          receiveTimeout: const Duration(minutes: 2),
-          sendTimeout: const Duration(minutes: 2)),
-    );
+    final res = await Dio().get<List<int>>(encodedUrl,
+        options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: true,
+            receiveTimeout: const Duration(minutes: 2),
+            sendTimeout: const Duration(minutes: 2)));
     final bytes = Uint8List.fromList(res.data ?? const <int>[]);
     if (bytes.isEmpty) throw Exception('Empty PDF bytes');
     return bytes;
@@ -124,10 +122,7 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
 
       if (mounted) setState(() => _isPreparingShare = false);
 
-      await Share.shareXFiles(
-        [XFile(filePath, mimeType: 'application/pdf')],
-        sharePositionOrigin: sharePositionOrigin,
-      );
+      await Share.shareXFiles([XFile(filePath, mimeType: 'application/pdf')], sharePositionOrigin: sharePositionOrigin);
     } catch (_) {
       if (!context.mounted) return;
       CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.unable_pdf, type: SnackBarType.failure);
@@ -195,22 +190,21 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
                   onTap: () {
                     if (invoice.orderNumber != null) {
                       Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => ProductDetailsScreen(
-                                statusList: state.statusList,
-                                orderNumber: invoice.orderNumber.toString(),
-                                orderId: invoice.orderId.toString(),
-                                isNavigateToProductDetailString: true),
-                            transitionsBuilder: (_, animation, __, child) {
-                              return SlideTransition(
-                                  position: animation.drive(Tween(
-                                    begin: const Offset(0, 1),
-                                    end: Offset.zero,
-                                  ).chain(CurveTween(curve: Curves.easeInOut))),
-                                  child: child);
-                            }),
-                      );
+                          context,
+                          PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => ProductDetailsScreen(
+                                  statusList: state.statusList,
+                                  orderNumber: invoice.orderNumber.toString(),
+                                  orderId: invoice.orderId.toString(),
+                                  isNavigateToProductDetailString: true),
+                              transitionsBuilder: (_, animation, __, child) {
+                                return SlideTransition(
+                                    position: animation.drive(Tween(
+                                      begin: const Offset(0, 1),
+                                      end: Offset.zero,
+                                    ).chain(CurveTween(curve: Curves.easeInOut))),
+                                    child: child);
+                              }));
                     }
                   },
                   child: invoice.orderNumber == null
@@ -293,14 +287,13 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
               SingleChildScrollView(
                 child: Column(children: [
                   Container(
-                    margin: const EdgeInsets.all(AppConstants.padding_8),
-                    padding: const EdgeInsets.all(AppConstants.padding_8),
-                    decoration: BoxDecoration(
-                        color: AppColors.whiteColor,
-                        border: Border.all(color: AppColors.borderColor),
-                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
-                    child: Column(children: [itemOne(), const DividerWidget(height: 20), itemTwo(), const DividerWidget(height: 20), itemThree()]),
-                  ),
+                      margin: const EdgeInsets.all(AppConstants.padding_8),
+                      padding: const EdgeInsets.all(AppConstants.padding_8),
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          border: Border.all(color: AppColors.borderColor),
+                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10))),
+                      child: Column(children: [itemOne(), const DividerWidget(height: 20), itemTwo(), const DividerWidget(height: 20), itemThree()])),
                   15.height
                 ]),
               ),
@@ -320,7 +313,7 @@ class _InvoicePdfScreenWidgetState extends State<InvoicePdfScreenWidget> {
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     CupertinoActivityIndicator(color: AppColors.mainColor),
                     10.height,
-                    Text('${state.downloadProgress}%', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor)),
+                    Text('${state.downloadProgress}%', style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.blackColor))
                   ]),
                 ),
               ),

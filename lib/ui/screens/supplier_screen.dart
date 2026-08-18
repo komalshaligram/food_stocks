@@ -28,11 +28,10 @@ class SupplierScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => SupplierBloc()
-        ..add(SupplierEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
-        ..add(SupplierEvent.getSuppliersListEvent(context: context)),
-      child: const SupplierScreenWidget(),
-    );
+        create: (context) => SupplierBloc()
+          ..add(SupplierEvent.setSearchEvent(search: args?[AppStrings.searchString] ?? ''))
+          ..add(SupplierEvent.getSuppliersListEvent(context: context)),
+        child: const SupplierScreenWidget());
   }
 }
 
@@ -137,18 +136,16 @@ class SupplierScreenWidget extends StatelessWidget {
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(
-                      height: getScreenHeight(context),
-                      width: getScreenWidth(context),
-                      color: AppColors.whiteColor,
-                      child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
-                    ),
+                        height: getScreenHeight(context),
+                        width: getScreenWidth(context),
+                        color: AppColors.whiteColor,
+                        child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover)),
                   )
                 : Container(
                     height: getScreenHeight(context),
                     width: getScreenWidth(context),
                     color: AppColors.whiteColor,
-                    child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
-                  ),
+                    child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover)),
           ),
           Container(
             alignment: Alignment.center,
@@ -158,13 +155,11 @@ class SupplierScreenWidget extends StatelessWidget {
               borderRadius:
                   const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
             ),
-            child: Text(
-              supplierName,
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
+            child: Text(supplierName,
+                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center),
           ),
         ]),
       ),

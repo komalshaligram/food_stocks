@@ -33,25 +33,21 @@ class MyAccountingCardBloc extends Bloc<MyAccountingCardEvent, MyAccountingCardS
           emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: true));
           final fromInvoice = state.invoicesFrom ?? DateTime.now().subtract(const Duration(days: 90));
           final toInvoice = state.invoicesTo ?? DateTime.now();
-          final resInvoice = await DioClient(event.context).get(
-            path: AppUrlEndPoints.getMyAccountingCardClientInvoicesFromRivchit + clientId,
-            query: _dateRange(fromInvoice, toInvoice),
-          );
+          final resInvoice = await DioClient(event.context)
+              .get(path: AppUrlEndPoints.getMyAccountingCardClientInvoicesFromRivchit + clientId, query: _dateRange(fromInvoice, toInvoice));
           MyAccountCardInvoicesResModel responseInvoice = MyAccountCardInvoicesResModel.fromJson(resInvoice);
           if (responseInvoice.status == AppConstants.code_200) {
             emit(state.copyWith(
-              isShimmering: false,
-              totalInvoiceAmount: responseInvoice.data?.totalOpenInvoiceAmount! ?? 0,
-              clientBalance: responseInvoice.data?.clientBalance! ?? 0,
-              invoiceCardList: responseInvoice.data?.invoices! ?? [],
-            ));
+                isShimmering: false,
+                totalInvoiceAmount: responseInvoice.data?.totalOpenInvoiceAmount! ?? 0,
+                clientBalance: responseInvoice.data?.clientBalance! ?? 0,
+                invoiceCardList: responseInvoice.data?.invoices! ?? []));
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(responseInvoice.message?.toLocalization() ?? responseInvoice.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(responseInvoice.message?.toLocalization() ?? responseInvoice.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));
@@ -67,25 +63,21 @@ class MyAccountingCardBloc extends Bloc<MyAccountingCardEvent, MyAccountingCardS
           emit(state.copyWith(statusList: statusList, language: preferences.getAppLanguage(), isShimmering: true));
           final fromRefund = state.refundsFrom ?? DateTime.now().subtract(const Duration(days: 90));
           final toRefund = state.refundsTo ?? DateTime.now();
-          final resRefund = await DioClient(event.context).get(
-            path: AppUrlEndPoints.getMyAccountingCardClientRefundInvoicesFromRivchit + clientId,
-            query: _dateRange(fromRefund, toRefund),
-          );
+          final resRefund = await DioClient(event.context)
+              .get(path: AppUrlEndPoints.getMyAccountingCardClientRefundInvoicesFromRivchit + clientId, query: _dateRange(fromRefund, toRefund));
           MyAccountCardRefundResModel responseRefund = MyAccountCardRefundResModel.fromJson(resRefund);
           if (responseRefund.status == AppConstants.code_200) {
             emit(state.copyWith(
-              isShimmering: false,
-              totalRefundAmount: responseRefund.data?.totalOpenRefundInvoiceAmount ?? 0,
-              clientBalance: responseRefund.data?.clientBalance! ?? 0,
-              refundInvoicesCardList: responseRefund.data?.refundInvoices! ?? [],
-            ));
+                isShimmering: false,
+                totalRefundAmount: responseRefund.data?.totalOpenRefundInvoiceAmount ?? 0,
+                clientBalance: responseRefund.data?.clientBalance! ?? 0,
+                refundInvoicesCardList: responseRefund.data?.refundInvoices! ?? []));
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(responseRefund.message?.toLocalization() ?? responseRefund.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(responseRefund.message?.toLocalization() ?? responseRefund.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false));

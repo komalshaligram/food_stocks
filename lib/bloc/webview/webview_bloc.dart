@@ -10,7 +10,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
-
 part 'webview_event.dart';
 part 'webview_state.dart';
 part 'webview_bloc.freezed.dart';
@@ -32,15 +31,14 @@ class WebviewBloc extends Bloc<WebViewEvent, WebViewState> {
 
       if (response.status == AppConstants.code_200) {
         emit(state.copyWith(
-          isShimmering: false,
-          language: preferences.getAppLanguage(),
-          isAppOnMaintenance: preferences.getAppOnMaintenance(),
-          showClientDataOnApp: preferences.getClientDataOnApp(),
-          screenEnglishTitle: response.data?.dataWebViewSettings?.screenEnglishTitle,
-          screenHebrewTitle: response.data?.dataWebViewSettings?.screenHebrewTitle,
-          userId: preferences.getUserId(),
-          baseUrl: response.data?.dataWebViewSettings?.baseUrl,
-        ));
+            isShimmering: false,
+            language: preferences.getAppLanguage(),
+            isAppOnMaintenance: preferences.getAppOnMaintenance(),
+            showClientDataOnApp: preferences.getClientDataOnApp(),
+            screenEnglishTitle: response.data?.dataWebViewSettings?.screenEnglishTitle,
+            screenHebrewTitle: response.data?.dataWebViewSettings?.screenHebrewTitle,
+            userId: preferences.getUserId(),
+            baseUrl: response.data?.dataWebViewSettings?.baseUrl));
       } else {
         emit(state.copyWith(isShimmering: false));
       }

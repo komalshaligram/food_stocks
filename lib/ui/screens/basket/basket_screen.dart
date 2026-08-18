@@ -138,7 +138,6 @@ class BasketScreenWidget extends StatelessWidget {
                                             child: basketListItem(
                                                 isPesach: state.basketProductList[index].isPesach ?? false,
                                                 index: index,
-                                                context: context,
                                                 isSaleOn: true,
                                                 lowStock: state.basketProductList[index].lowStock.toString(),
                                                 productStock: state.basketProductList[index].productStock ?? 0)),
@@ -332,7 +331,6 @@ class BasketScreenWidget extends StatelessWidget {
 
   Widget basketListItem(
       {required int index,
-      required BuildContext context,
       required String lowStock,
       required double productStock,
       required bool isPesach,

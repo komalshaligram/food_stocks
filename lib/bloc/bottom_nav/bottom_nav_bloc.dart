@@ -14,39 +14,27 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
 
   BottomNavBloc() : super(BottomNavState.initial()) {
     on<BottomNavEvent>((event, emit) async {
-      final preferences =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      final preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _StartedEvent) {
         emit(state.copyWith(
-            isGuestUser: preferences.getGuestUser(),
-            isSubUserSeeWallet: preferences.getCanSeeWallet(),
-            cartCount: preferences.getCartCount()));
+            isGuestUser: preferences.getGuestUser(), isSubUserSeeWallet: preferences.getCanSeeWallet(), cartCount: preferences.getCartCount()));
         add(BottomNavEvent.navigateToStoreScreenEvent(
-            context: event.context,
-            storeScreen: event.storeScreen,
-            profileScreen: event.profileScreen,
-            basketScreen: event.basketScreen));
+            context: event.context, storeScreen: event.storeScreen, profileScreen: event.profileScreen, basketScreen: event.basketScreen));
       } else if (event is _ChangePageEvent) {
         await _handleChangePage(event, preferences, emit);
       } else if (event is _UpdateCartCountEvent) {
         await _handleCartBadgeUpdate(preferences, emit);
-      } else if (event is _seeWalletPermissionUpdateEvent ||
-          event is _getPreferencesDataEvent) {
+      } else if (event is _seeWalletPermissionUpdateEvent || event is _getPreferencesDataEvent) {
         _emitWalletPermission(preferences, emit);
       } else if (event is _NavigateToStoreScreenEvent) {
         _handleInitialNavigation(event, preferences, emit);
-      } else if (event is _SetDialogOpenEvent) {
-        // Kept for API compatibility; dialog open state is owned by feature blocs.
       }
     });
   }
 
-  void _emitWalletPermission(
-      SharedPreferencesHelper preferences, Emitter<BottomNavState> emit) {
-    emit(state.copyWith(
-        isSubUserSeeWallet: preferences.getCanSeeWallet(),
-        isGuestUser: preferences.getGuestUser()));
+  void _emitWalletPermission(SharedPreferencesHelper preferences, Emitter<BottomNavState> emit) {
+    emit(state.copyWith(isSubUserSeeWallet: preferences.getCanSeeWallet(), isGuestUser: preferences.getGuestUser()));
   }
 
   Future<void> _handleChangePage(
@@ -68,30 +56,21 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
     var nextIndex = event.index;
 
     if (!isGuestUser && !preferences.getSubUser()) {
-      if (state.arg != '' &&
-          preferences.getAppLanguage() == AppStrings.hebrewString) {
+      if (state.arg != '' && preferences.getAppLanguage() == AppStrings.hebrewString) {
         nextIndex = state.index;
       }
     } else if (preferences.getSubUser()) {
       if (canSeeWallet != state.isSubUserSeeWallet) {
         nextIndex = 0;
-      } else if (state.arg != '' &&
-          preferences.getAppLanguage() == AppStrings.hebrewString) {
+      } else if (state.arg != '' && preferences.getAppLanguage() == AppStrings.hebrewString) {
         nextIndex = state.index;
       }
     }
 
-    emit(state.copyWith(
-        index: nextIndex,
-        arg: '',
-        isGuestUser: isGuestUser,
-        isSubUserSeeWallet: canSeeWallet));
+    emit(state.copyWith(index: nextIndex, arg: '', isGuestUser: isGuestUser, isSubUserSeeWallet: canSeeWallet));
   }
 
-  Future<void> _handleCartBadgeUpdate(
-    SharedPreferencesHelper preferences,
-    Emitter<BottomNavState> emit
-  ) async {
+  Future<void> _handleCartBadgeUpdate(SharedPreferencesHelper preferences, Emitter<BottomNavState> emit) async {
     final latestCount = preferences.getCartCount();
     final shouldAnimate = state.cartCount < latestCount;
 
@@ -112,8 +91,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
     emit(state.copyWith(duringCelebration: false, isAnimation: false));
   }
 
-  void _handleInitialNavigation(_NavigateToStoreScreenEvent event,
-      SharedPreferencesHelper preferences, Emitter<BottomNavState> emit) {
+  void _handleInitialNavigation(_NavigateToStoreScreenEvent event, SharedPreferencesHelper preferences, Emitter<BottomNavState> emit) {
     final canSeeWallet = preferences.getCanSeeWallet();
     emit(state.copyWith(isSubUserSeeWallet: canSeeWallet));
 
@@ -127,8 +105,7 @@ class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
     } else if (event.storeScreen == 'basketScreen') {
       emit(state.copyWith(index: 2, arg: event.basketScreen));
     } else if (event.storeScreen == 'profileScreen') {
-      emit(state.copyWith(
-          index: canSeeWallet ? 4 : 3, arg: event.profileScreen));
+      emit(state.copyWith(index: canSeeWallet ? 4 : 3, arg: event.profileScreen));
     }
   }
 }

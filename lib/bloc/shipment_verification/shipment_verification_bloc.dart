@@ -13,7 +13,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-
 part 'shipment_verification_event.dart';
 part 'shipment_verification_state.dart';
 part 'shipment_verification_bloc.freezed.dart';
@@ -37,44 +36,45 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
         try {
           if (event.signPath.isNotEmpty) {
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
-              path: AppUrlEndPoints.fileUploadUrl,
-              formData: FormData.fromMap({AppStrings.signatureString: await MultipartFile.fromFile(event.signPath, contentType: MediaType('image', 'png'))}),
-            );
+                path: AppUrlEndPoints.fileUploadUrl,
+                formData: FormData.fromMap(
+                    {AppStrings.signatureString: await MultipartFile.fromFile(event.signPath, contentType: MediaType('image', 'png'))}));
             final signModel = FileUploadModel.fromJson(response);
             signUrl = signModel.filepath ?? '';
           }
 
           if (event.driverSignPath.isNotEmpty) {
             final response = await DioClient(event.context).uploadFileProgressWithFormData(
-              path: AppUrlEndPoints.fileUploadUrl,
-              formData: FormData.fromMap({AppStrings.signatureString: await MultipartFile.fromFile(event.driverSignPath, contentType: MediaType('image', 'png'))}),
-            );
+                path: AppUrlEndPoints.fileUploadUrl,
+                formData: FormData.fromMap(
+                    {AppStrings.signatureString: await MultipartFile.fromFile(event.driverSignPath, contentType: MediaType('image', 'png'))}));
             final driverSignModel = FileUploadModel.fromJson(response);
             driverSignUrl = driverSignModel.filepath ?? '';
           }
 
           if (signUrl.isEmpty) {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.signature_missing, type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+                context: event.context, title: AppLocalizations.of(event.context)!.signature_missing, type: SnackBarType.failure);
             return;
           }
 
           if (driverSignUrl.isEmpty) {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.driver_signature_missing, type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+                context: event.context, title: AppLocalizations.of(event.context)!.driver_signature_missing, type: SnackBarType.failure);
             return;
           }
 
           final deliveryConfirmRequest = DeliveryConfirmReqModel(
-            supplierId: event.supplierId,
-            signature: signUrl,
-            driverSignature: driverSignUrl,
-            returningSurface: int.tryParse(state.surfacesController.text) ?? 0,
-            driverDeliveryDocumentsImages: event.driverDeliveryDocumentsImages,
-            sentReturnData: event.sentReturnData,
-            orderIssueReturnId: event.orderIssueReturnId ?? '',
-            driverName: state.driverNameController.text,
-          );
+              supplierId: event.supplierId,
+              signature: signUrl,
+              driverSignature: driverSignUrl,
+              returningSurface: int.tryParse(state.surfacesController.text) ?? 0,
+              driverDeliveryDocumentsImages: event.driverDeliveryDocumentsImages,
+              sentReturnData: event.sentReturnData,
+              orderIssueReturnId: event.orderIssueReturnId ?? '',
+              driverName: state.driverNameController.text);
 
           final response = await DioClient(event.context).post('${AppUrlEndPoints.deliveryConfirmUrl}${event.orderId}', data: deliveryConfirmRequest);
           final status = response[AppStrings.statusString];
@@ -86,15 +86,13 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
 
             final message = response[AppStrings.messageString]?.toString() ?? '';
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(message.toLocalization(), event.context),
-              type: SnackBarType.success,
-            );
+                context: event.context, title: AppStrings.getLocalizedStrings(message.toLocalization(), event.context), type: SnackBarType.success);
 
             if (event.isFromBasket == true) {
               Navigator.pushReplacementNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
             } else {
-              Navigator.pushReplacementNamed(event.context, RouteDefine.orderScreen.name, arguments: {AppStrings.pushNavigationString: 'profileScreen'});
+              Navigator.pushReplacementNamed(event.context, RouteDefine.orderScreen.name,
+                  arguments: {AppStrings.pushNavigationString: 'profileScreen'});
             }
             return;
           }
@@ -102,18 +100,14 @@ class ShipmentVerificationBloc extends Bloc<ShipmentVerificationEvent, ShipmentV
           emit(state.copyWith(isLoading: false));
           if (!event.context.mounted) return;
           CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-            type: SnackBarType.failure,
-          );
+              context: event.context,
+              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
+              type: SnackBarType.failure);
         } catch (e) {
           emit(state.copyWith(isLoading: false));
           if (!event.context.mounted) return;
           CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.something_is_wrong_try_again,
-            type: SnackBarType.failure,
-          );
+              context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
         }
       }
     });

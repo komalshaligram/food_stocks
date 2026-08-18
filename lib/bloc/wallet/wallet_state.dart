@@ -2,34 +2,33 @@ part of 'wallet_bloc.dart';
 
 @freezed
 class WalletState with _$WalletState {
-  const factory WalletState({
-    required int year,
-    required List<int> yearList,
-    required AllWalletTransactionResModel balanceSheetList,
-    required String language,
-    required double totalCredit,
-    required double thisMonthExpense,
-    required double lastMonthExpense,
-    required int orderThisMonth,
-    required double balance,
-    required List<FlSpot> monthlyExpenseList,
-    required bool isShimmering,
-    required String currentDate,
-    required DateRange? selectedDateRange,
-    required List<Datum> walletTransactionsList,
-    required int pageNum,
-    required bool isLoadMore,
-    required bool isBottomOfProducts,
-    required bool isExportShimmering,
-    required double expensePercentage,
-    required bool isProcess,
-    required List<String> graphDataList,
-    required bool isGraphProcess,
-    required bool isExportComplete,
-    required String userEmail,
-    required DateTime firstDateOfMonth,
-    required bool isAccountPermissionShimmering,
-  }) = _WalletState;
+  const factory WalletState(
+      {required int year,
+      required List<int> yearList,
+      required AllWalletTransactionResModel balanceSheetList,
+      required String language,
+      required double totalCredit,
+      required double thisMonthExpense,
+      required double lastMonthExpense,
+      required int orderThisMonth,
+      required double balance,
+      required List<FlSpot> monthlyExpenseList,
+      required bool isShimmering,
+      required String currentDate,
+      required DateRange? selectedDateRange,
+      required List<Datum> walletTransactionsList,
+      required int pageNum,
+      required bool isLoadMore,
+      required bool isBottomOfProducts,
+      required bool isExportShimmering,
+      required double expensePercentage,
+      required bool isProcess,
+      required List<String> graphDataList,
+      required bool isGraphProcess,
+      required bool isExportComplete,
+      required String userEmail,
+      required DateTime firstDateOfMonth,
+      required bool isAccountPermissionShimmering}) = _WalletState;
 
   factory WalletState.initial() {
     final now = DateTime.now();
@@ -60,7 +59,6 @@ class WalletState with _$WalletState {
         isExportComplete: false,
         userEmail: '',
         isAccountPermissionShimmering: false,
-        firstDateOfMonth: DateTime.utc(now.year, now.month, 1),
-      );
+        firstDateOfMonth: DateTime.utc(now.year, now.month, 1));
   }
 }

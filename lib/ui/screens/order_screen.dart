@@ -180,10 +180,9 @@ class OrderScreenWidget extends StatelessWidget {
                   child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5, vertical: AppConstants.padding_10),
                       decoration: BoxDecoration(
-                        color: AppColors.iconBGColor,
-                        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
-                        border: Border.all(color: AppColors.lightBorderColor),
-                      ),
+                          color: AppColors.iconBGColor,
+                          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_5)),
+                          border: Border.all(color: AppColors.lightBorderColor)),
                       child: Text(local.invoice_charge, style: TextStyle(color: AppColors.blackColor, fontSize: AppConstants.font_10))),
                 )
               : CommonOrderContentWidget(

@@ -9,7 +9,6 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'refund_pdf_state.dart';
 part 'refund_pdf_event.dart';
 part 'refund_pdf_bloc.freezed.dart';
@@ -28,10 +27,7 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
     }
   }
 
-  Future<void> _onGetArgument(
-    _GetArgumentEvent event,
-    Emitter<RefundPdfState> emit,
-  ) async {
+  Future<void> _onGetArgument(_GetArgumentEvent event, Emitter<RefundPdfState> emit) async {
     await _initPrefs();
 
     emit(state.copyWith(invoiceDetailsList: event.invoiceDetailsList, hasValidLink: null));
@@ -53,14 +49,11 @@ class RefundPdfBloc extends Bloc<RefundPdfEvent, RefundPdfState> {
     }
 
     try {
-      final res = await DioClient(event.context).post(
-        AppUrlEndPoints.getRefundInvoiceCopy,
-        data: RefundInvoiceReqModel(
-          clientId: preferencesHelper!.getUserId(),
-          invoiceNumber: int.tryParse(currentInvoice.invoiceNumber ?? '') ?? 0,
-          rivchitApiKey: currentInvoice.rivchitApiKey,
-        ),
-      );
+      final res = await DioClient(event.context).post(AppUrlEndPoints.getRefundInvoiceCopy,
+          data: RefundInvoiceReqModel(
+              clientId: preferencesHelper!.getUserId(),
+              invoiceNumber: int.tryParse(currentInvoice.invoiceNumber ?? '') ?? 0,
+              rivchitApiKey: currentInvoice.rivchitApiKey));
 
       final response = RefundInvoiceResModel.fromJson(res);
       if (response.status == AppConstants.code_200 && isValidLink(response.data)) {

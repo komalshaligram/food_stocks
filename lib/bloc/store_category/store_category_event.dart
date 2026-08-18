@@ -8,31 +8,24 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.getProductCategoriesListEvent({required BuildContext context}) = _getProductCategoriesListEvent;
 
-  const factory StoreCategoryEvent.changeCategoryDetailsEvent({
-    required String categoryId,
-    required String categoryName,
-    required String isSubCategory,
-    required BuildContext context,
-  }) = _changeCategoryDetailsEvent;
+  const factory StoreCategoryEvent.changeCategoryDetailsEvent(
+      {required String categoryId,
+      required String categoryName,
+      required String isSubCategory,
+      required BuildContext context}) = _changeCategoryDetailsEvent;
 
-  const factory StoreCategoryEvent.changeSubCategoryDetailsEvent({
-    required String subCategoryId,
-    required String subCategoryName,
-    required BuildContext context,
-  }) = _changeSubCategoryDetailsEvent;
+  const factory StoreCategoryEvent.changeSubCategoryDetailsEvent(
+      {required String subCategoryId, required String subCategoryName, required BuildContext context}) = _changeSubCategoryDetailsEvent;
 
   const factory StoreCategoryEvent.getSubCategoryListEvent({required BuildContext context}) = _getSubCategoryListEvent;
 
-  const factory StoreCategoryEvent.changeSubCategoryOrPlanogramEvent({required bool isSubCategory, required BuildContext context}) = _changeSubCategoryOrPlanogramEvent;
+  const factory StoreCategoryEvent.changeSubCategoryOrPlanogramEvent({required bool isSubCategory, required BuildContext context}) =
+      _changeSubCategoryOrPlanogramEvent;
 
   const factory StoreCategoryEvent.getPlanoGramProductsEvent({required BuildContext context}) = _getPlanoGramProductsEvent;
 
-  const factory StoreCategoryEvent.getProductDetailsEvent({
-    required BuildContext context,
-    required String productId,
-    required int planoGramIndex,
-    required bool isBarcode,
-  }) = _getProductDetailsEvent;
+  const factory StoreCategoryEvent.getProductDetailsEvent(
+      {required BuildContext context, required String productId, required int planoGramIndex, required bool isBarcode}) = _getProductDetailsEvent;
 
   const factory StoreCategoryEvent.increaseQuantityOfProduct({required BuildContext context}) = _increaseQuantityOfProduct;
 
@@ -44,11 +37,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
-  const factory StoreCategoryEvent.supplierSelectionEvent({
-    required int supplierIndex,
-    required BuildContext context,
-    required int supplierSaleIndex,
-  }) = _supplierSelectionEvent;
+  const factory StoreCategoryEvent.supplierSelectionEvent(
+      {required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
   const factory StoreCategoryEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 
@@ -58,11 +48,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
 
-  const factory StoreCategoryEvent.updateGlobalSearchEvent({
-    required String search,
-    required BuildContext context,
-    required List<SearchModel> searchList,
-  }) = _updateGlobalSearchEvent;
+  const factory StoreCategoryEvent.updateGlobalSearchEvent(
+      {required String search, required BuildContext context, required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
   const factory StoreCategoryEvent.toggleNoteEvent({required bool isBarcode}) = _toggleNoteEvent;
 
@@ -89,39 +76,33 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.userApproveEvent({required BuildContext context}) = _userApproveEvent;
 
-  const factory StoreCategoryEvent.updateListQuantityOfProduct({
-    required BuildContext context,
-    required String quantity,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _updateListQuantityOfProductEvent;
+  const factory StoreCategoryEvent.updateListQuantityOfProduct(
+      {required BuildContext context,
+      required String quantity,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _updateListQuantityOfProductEvent;
 
-  const factory StoreCategoryEvent.increaseListQuantityOfProduct({
-    required BuildContext context,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _increaseListQuantityOfProductEvent;
+  const factory StoreCategoryEvent.increaseListQuantityOfProduct(
+      {required BuildContext context,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _increaseListQuantityOfProductEvent;
 
-  const factory StoreCategoryEvent.decreaseListQuantityOfProduct({
-    required BuildContext context,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _decreaseListQuantityOfProductEvent;
+  const factory StoreCategoryEvent.decreaseListQuantityOfProduct(
+      {required BuildContext context,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _decreaseListQuantityOfProductEvent;
 
-  const factory StoreCategoryEvent.addToCartListProductEvent({
-    required BuildContext context,
-    required String productId,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _addToCartListProductEvent;
+  const factory StoreCategoryEvent.addToCartListProductEvent(
+      {required BuildContext context,
+      required String productId,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _addToCartListProductEvent;
 
   const factory StoreCategoryEvent.getCartCountEvent({BuildContext? context}) = _getCartCountEvent;
 
-  const factory StoreCategoryEvent.applyCartQuantitiesEvent({
-    required Map<String, int> cartQuantities,
-  }) = _applyCartQuantitiesEvent;
+  const factory StoreCategoryEvent.applyCartQuantitiesEvent({required Map<String, int> cartQuantities}) = _applyCartQuantitiesEvent;
 }

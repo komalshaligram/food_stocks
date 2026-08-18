@@ -86,9 +86,8 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 100),
-              child: Form(key: _formKey, child: _buildFormCard(context: context, state: state, l10n: l10n)),
-            ),
+                padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 100),
+                child: Form(key: _formKey, child: _buildFormCard(context: context, state: state, l10n: l10n))),
           ),
           bottomNavigationBar: SafeArea(
             child: Padding(
@@ -128,9 +127,10 @@ class CreditCardDetailsScreenWidget extends StatelessWidget {
 
   Widget _buildFormCard({required BuildContext context, required CreditCardDetailsState state, required AppLocalizations l10n}) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: BorderRadius.circular(16), boxShadow: [
-        BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 2)),
-      ]),
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 2))]),
       padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildFieldLabel(l10n.credit_card_number),

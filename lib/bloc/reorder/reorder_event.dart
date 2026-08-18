@@ -6,12 +6,8 @@ class ReorderEvent with _$ReorderEvent {
 
   const factory ReorderEvent.getPreviousOrderProductsEvent({required BuildContext context}) = _getPreviousOrderProductsEvent;
 
-  const factory ReorderEvent.getProductDetailsEvent({
-    required BuildContext context,
-    required String productId,
-    required bool isBarcode,
-    required int productListIndex,
-  }) = _getProductDetailsEvent;
+  const factory ReorderEvent.getProductDetailsEvent(
+      {required BuildContext context, required String productId, required bool isBarcode, required int productListIndex}) = _getProductDetailsEvent;
 
   const factory ReorderEvent.increaseQuantityOfProduct({required BuildContext context}) = _increaseQuantityOfProduct;
 
@@ -23,7 +19,8 @@ class ReorderEvent with _$ReorderEvent {
 
   const factory ReorderEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
-  const factory ReorderEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
+  const factory ReorderEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) =
+      _supplierSelectionEvent;
 
   const factory ReorderEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 
@@ -53,53 +50,35 @@ class ReorderEvent with _$ReorderEvent {
 
   const factory ReorderEvent.getPermissionList({required BuildContext context}) = _getPermissionList;
 
-  const factory ReorderEvent.filterEvent({required BuildContext context}) = _filterEvent;
-
-  const factory ReorderEvent.sortingEvent({required BuildContext context, required String sortField}) = _sortingEvent;
-
-  const factory ReorderEvent.selectFilterFieldEvent({required BuildContext context, required int mainIndex, required int subIndex, required int subCatIndex}) = _selectFilterFieldEvent;
-
-  const factory ReorderEvent.applyFilterEvent({required BuildContext context}) = _applyFilterEvent;
-
-  const factory ReorderEvent.clearFilterEvent({required BuildContext context}) = _clearFilterEvent;
-
-  const factory ReorderEvent.expansionChangeEvent({required bool isExpansionChanged, required int mainIndex, required int subIndex}) = _expansionChangeEvent;
-
   const factory ReorderEvent.userApproveEvent({required BuildContext context}) = _userApproveEvent;
 
-  const factory ReorderEvent.updateListQuantityOfProduct({
-    required BuildContext context,
-    required String quantity,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _updateListQuantityOfProductEvent;
+  const factory ReorderEvent.updateListQuantityOfProduct(
+      {required BuildContext context,
+      required String quantity,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _updateListQuantityOfProductEvent;
 
-  const factory ReorderEvent.increaseListQuantityOfProduct({
-    required BuildContext context,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _increaseListQuantityOfProductEvent;
+  const factory ReorderEvent.increaseListQuantityOfProduct(
+      {required BuildContext context,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _increaseListQuantityOfProductEvent;
 
-  const factory ReorderEvent.decreaseListQuantityOfProduct({
-    required BuildContext context,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _decreaseListQuantityOfProductEvent;
+  const factory ReorderEvent.decreaseListQuantityOfProduct(
+      {required BuildContext context,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _decreaseListQuantityOfProductEvent;
 
-  const factory ReorderEvent.addToCartListProductEvent({
-    required BuildContext context,
-    required String productId,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _addToCartListProductEvent;
+  const factory ReorderEvent.addToCartListProductEvent(
+      {required BuildContext context,
+      required String productId,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _addToCartListProductEvent;
 
   const factory ReorderEvent.getCartCountNoEvent({required BuildContext context}) = _getCartCountNoEvent;
 
-  const factory ReorderEvent.applyCartQuantitiesEvent({
-    required Map<String, int> cartQuantities,
-  }) = _applyCartQuantitiesEvent;
+  const factory ReorderEvent.applyCartQuantitiesEvent({required Map<String, int> cartQuantities}) = _applyCartQuantitiesEvent;
 }

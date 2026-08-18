@@ -15,18 +15,12 @@ class PreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<dynamic, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map?;
+    Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(args?[AppStrings.clientFormString],
-            style: AppStyles.rkRegularTextStyle(
-                size: AppConstants.normalFont,
-                color: AppColors.blackColor,
-                fontWeight: FontWeight.w500)),
-      ),
-      body: SfPdfViewer.network(
-          '${AppUrlEndPoints.baseFileUrl}${args?[AppStrings.privacyPolicyPdfString]}'),
-    );
+        appBar: AppBar(
+          title: Text(args?[AppStrings.clientFormString],
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.normalFont, color: AppColors.blackColor, fontWeight: FontWeight.w500)),
+        ),
+        body: SfPdfViewer.network('${AppUrlEndPoints.baseFileUrl}${args?[AppStrings.privacyPolicyPdfString]}'));
   }
 }

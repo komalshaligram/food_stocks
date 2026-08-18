@@ -30,14 +30,13 @@ class ProductCategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => ProductCategoryBloc()
-        ..add(ProductCategoryEvent.updateGlobalSearchEvent(
-            search: args?[AppStrings.searchString] ?? '', searchList: args?[AppStrings.searchResultString] ?? []))
-        ..add(ProductCategoryEvent.setSearchNavEvent(
-            reqSearch: args?[AppStrings.reqSearchString] ?? '', isFromStoreCategory: args?[AppStrings.fromStoreCategoryString] ?? false))
-        ..add(ProductCategoryEvent.getProductCategoriesListEvent(context: context)),
-      child: const ProductCategoryScreenWidget(),
-    );
+        create: (context) => ProductCategoryBloc()
+          ..add(ProductCategoryEvent.updateGlobalSearchEvent(
+              search: args?[AppStrings.searchString] ?? '', searchList: args?[AppStrings.searchResultString] ?? []))
+          ..add(ProductCategoryEvent.setSearchNavEvent(
+              reqSearch: args?[AppStrings.reqSearchString] ?? '', isFromStoreCategory: args?[AppStrings.fromStoreCategoryString] ?? false))
+          ..add(ProductCategoryEvent.getProductCategoriesListEvent(context: context)),
+        child: const ProductCategoryScreenWidget());
   }
 }
 
@@ -73,16 +72,15 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                           width: 24,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: AppColors.mainColor,
-                            borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
-                            border: Border.all(color: AppColors.whiteColor, width: 1),
-                          ),
+                              color: AppColors.mainColor,
+                              borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_100)),
+                              border: Border.all(color: AppColors.whiteColor, width: 1)),
                           child: Text('${state.cartCount}',
                               style: AppStyles.rkRegularTextStyle(size: AppConstants.font_10, color: AppColors.whiteColor)),
                         ),
                       ]),
                     )
-                  : 0.width,
+                  : 0.width
             ]),
           ),
           backgroundColor: AppColors.pageColor,
@@ -106,9 +104,7 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                 enablePullDown: true,
                 controller: state.refreshController,
                 header: const RefreshWidget(),
-                footer: CustomFooter(
-                  builder: (context, mode) => const ProductCategoryScreenShimmerWidget(),
-                ),
+                footer: CustomFooter(builder: (context, mode) => const ProductCategoryScreenShimmerWidget()),
                 enablePullUp: !state.isBottomOfCategories,
                 onRefresh: () {
                   context.read<ProductCategoryBloc>().add(ProductCategoryEvent.refreshListEvent(context: context));
@@ -140,24 +136,22 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                                           AppStrings.categoryIdString: state.productCategoryList[index].id,
                                           AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
                                           AppStrings.searchString: state.search,
-                                          AppStrings.searchResultString: state.searchList,
+                                          AppStrings.searchResultString: state.searchList
                                         });
                                       } else {
                                         dynamic searchResult = await Navigator.pushNamed(context, RouteDefine.storeCategoryScreen.name, arguments: {
                                           AppStrings.categoryIdString: state.productCategoryList[index].id,
                                           AppStrings.categoryNameString: state.productCategoryList[index].categoryName,
                                           AppStrings.searchString: state.search,
-                                          AppStrings.searchResultString: state.searchList,
+                                          AppStrings.searchResultString: state.searchList
                                         });
                                         if (searchResult != null) {
                                           context.read<ProductCategoryBloc>().add(ProductCategoryEvent.updateGlobalSearchEvent(
-                                                search: searchResult[AppStrings.searchString],
-                                                searchList: searchResult[AppStrings.searchResultString],
-                                              ));
+                                              search: searchResult[AppStrings.searchString],
+                                              searchList: searchResult[AppStrings.searchResultString]));
                                         }
                                       }
-                                    }),
-                              ),
+                                    })),
                   ]),
                 ),
               ),
@@ -168,23 +162,21 @@ class ProductCategoryScreenWidget extends StatelessWidget {
     });
   }
 
-  Widget buildProductCategoryListItem({
-    required int index,
-    required String categoryImage,
-    required String categoryName,
-    required BuildContext context,
-    required void Function() onTap,
-  }) {
+  Widget buildProductCategoryListItem(
+      {required int index,
+      required String categoryImage,
+      required String categoryName,
+      required BuildContext context,
+      required void Function() onTap}) {
     return Container(
       height: getScreenHeight(context),
       width: getScreenWidth(context),
       clipBehavior: Clip.hardEdge,
       margin: const EdgeInsets.symmetric(vertical: AppConstants.padding_10, horizontal: AppConstants.padding_5),
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
-        color: AppColors.whiteColor,
-        boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)],
-      ),
+          borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
+          color: AppColors.whiteColor,
+          boxShadow: [BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.15), blurRadius: AppConstants.blur_10)]),
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)),
         onTap: onTap,
@@ -211,11 +203,10 @@ class ProductCategoryScreenWidget extends StatelessWidget {
                 return child;
               }, errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  height: getScreenHeight(context),
-                  width: getScreenWidth(context),
-                  color: AppColors.whiteColor,
-                  child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover),
-                );
+                    height: getScreenHeight(context),
+                    width: getScreenWidth(context),
+                    color: AppColors.whiteColor,
+                    child: Image.asset(AppImagePath.imageNotAvailable5, fit: BoxFit.cover));
               }),
             ),
           ),
@@ -223,18 +214,15 @@ class ProductCategoryScreenWidget extends StatelessWidget {
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: AppConstants.padding_5, horizontal: AppConstants.padding_5),
             decoration: BoxDecoration(
-              gradient: AppColors.appMainGradientColor,
-              borderRadius:
-                  const BorderRadius.only(bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10)),
-            ),
+                gradient: AppColors.appMainGradientColor,
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(AppConstants.radius_10), bottomRight: Radius.circular(AppConstants.radius_10))),
             child: CommonMarqueeWidget(
-              child: Text(
-                categoryName,
-                style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
+              child: Text(categoryName,
+                  style: AppStyles.rkRegularTextStyle(size: AppConstants.font_14, color: AppColors.whiteColor),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center),
             ),
           ),
         ]),

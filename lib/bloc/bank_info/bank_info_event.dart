@@ -6,7 +6,8 @@ class BankInfoEvent with _$BankInfoEvent {
 
   factory BankInfoEvent.getBankNameEvent({required BuildContext context}) = _getBankNameEvent;
 
-  factory BankInfoEvent.getTermsConditionModelEvent({required BuildContext context, required TermsConditionReqModel termsConditionReqModel}) = _getTermsConditionModelEvent;
+  factory BankInfoEvent.getTermsConditionModelEvent({required BuildContext context, required TermsConditionReqModel termsConditionReqModel}) =
+      _getTermsConditionModelEvent;
 
   factory BankInfoEvent.termsConditionApiEvent({required BuildContext context}) = _termsConditionApiEvent;
 

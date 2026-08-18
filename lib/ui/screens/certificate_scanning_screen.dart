@@ -52,10 +52,9 @@ class _CertificateScanningScreenState extends State<CertificateScanningScreen> {
 
           if (snapshot.hasError) {
             return Scaffold(
-              backgroundColor: AppColors.pageColor,
-              appBar: _buildAppBar(context),
-              body: Center(child: Padding(padding: const EdgeInsets.all(24), child: Text(snapshot.error.toString(), textAlign: TextAlign.center))),
-            );
+                backgroundColor: AppColors.pageColor,
+                appBar: _buildAppBar(context),
+                body: Center(child: Padding(padding: const EdgeInsets.all(24), child: Text(snapshot.error.toString(), textAlign: TextAlign.center))));
           }
 
           final homeTitle = AppLocalizations.of(context)!.certificate_scanning;

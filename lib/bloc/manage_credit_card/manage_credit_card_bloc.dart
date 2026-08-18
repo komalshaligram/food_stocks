@@ -13,7 +13,6 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'manage_credit_card_event.dart';
 part 'manage_credit_card_state.dart';
 part 'manage_credit_card_bloc.freezed.dart';
@@ -25,7 +24,8 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
       if (event is _getCreditCardInfoEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
+          final res = await DioClient(event.context)
+              .post(AppUrlEndPoints.getProfileDetailsUrl, data: ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
           ProfileDetailsResModel resModel = ProfileDetailsResModel.fromJson(res);
           if (resModel.status == AppConstants.code_200) {
             preferences.setPaymentMethod(method: resModel.data?.clients?.first.clientDetail?.paymentType ?? '');
@@ -33,13 +33,12 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
             preferences.setPaymentMethodTypes(methods: resModel.data?.clients?.first.clientDetail?.availablePaymentTypes ?? []);
             if (resModel.data?.clients?.first.clientDetail?.creditCard?.expireDate != null) {
               emit(state.copyWith(
-                isLoading: false,
-                creditCardNumberController: TextEditingController(
-                  text: maskCreditCardNumber(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.cardNumber ?? ''),
-                ),
-                validityController: TextEditingController(text: formatExpiryDate(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.expireDate ?? '')),
-                isCreditCardExist: true,
-              ));
+                  isLoading: false,
+                  creditCardNumberController: TextEditingController(
+                      text: maskCreditCardNumber(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.cardNumber ?? '')),
+                  validityController:
+                      TextEditingController(text: formatExpiryDate(resModel.data?.clients?.elementAt(0).clientDetail?.creditCard?.expireDate ?? '')),
+                  isCreditCardExist: true));
             } else {
               emit(state.copyWith(isCreditCardExist: false, isLoading: false));
             }
@@ -54,7 +53,7 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
           AppStrings.isPaymentFail: false,
           AppStrings.isFromRegFlow: false,
           AppStrings.isPaymentToNext: false,
-          AppStrings.invoiceData : const MyCardInvoice()
+          AppStrings.invoiceData: const MyCardInvoice()
         });
       } else if (event is _deleteCreditCardEvent) {
         try {
@@ -65,10 +64,9 @@ class ManageCreditCardBloc extends Bloc<ManageCreditCardEvent, ManageCreditCardS
             emit(state.copyWith(isCreditCardExist: false, isDeleteLoading: false));
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res['message'].toLocalization() ?? res['message'] ?? '', event.context),
-              type: SnackBarType.success,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res['message'].toLocalization() ?? res['message'] ?? '', event.context),
+                type: SnackBarType.success);
             emit(state.copyWith(isDeleteLoading: false));
           }
         } catch (_) {}

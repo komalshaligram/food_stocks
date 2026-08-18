@@ -16,7 +16,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-
 part 'form_data_event.dart';
 part 'form_data_state.dart';
 part 'form_data_bloc.freezed.dart';
@@ -38,7 +37,8 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
       } else if (event is _selectBusinessTypeEvent) {
         for (var element in state.businessTypeList) {
           if (element.businessTypeName == event.business) {
-            emit(state.copyWith(business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
+            emit(state.copyWith(
+                business: event.business, haveMultiple: element.haveMultiple ?? false, ownerList: state.ownerList, owner: state.ownerList.first));
           }
         }
       } else if (event is _selectOwnerNoEvent) {
@@ -53,11 +53,10 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
           businessTypeList.addAll(response.data?.businessType?.reversed ?? []);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
-              isShimmering: false,
-              businessTypeList: businessTypeList,
-              business: businessTypeList.first.businessTypeName.toString(),
-              haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false,
-            ));
+                isShimmering: false,
+                businessTypeList: businessTypeList,
+                business: businessTypeList.first.businessTypeName.toString(),
+                haveMultiple: response.data?.businessType?.reversed.first.haveMultiple ?? false));
             add(FormDataEvent.generalSettings(context: event.context));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -69,22 +68,22 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
         }
       } else if (event is _navigateToNextScreenEvent) {
         termsConditionReqModel = TermsConditionReqModel(
-          id: preferences.getUserId(),
-          businessTypeId: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
-          owner1FullName: state.owner1NameController.text.trim(),
-          owner1IsraelId: state.owner1israelIdController.text.trim(),
-          owner2FullName: state.owner2NameController.text.trim(),
-          owner2IsraelId: state.owner2israelIdController.text.trim(),
-          guarantee1FullName: state.guarantee1NameController.text.trim(),
-          guarantee1IsraelId: state.guarantee1idController.text.trim(),
-          guarantee1Address: state.guarantee1addressController.text.trim(),
-          guarantee1PhoneNumber: state.guarantee1PhoneController.text.trim(),
-          guarantee2FullName: state.guarantee2NameController.text.trim(),
-          guarantee2IsraelId: state.guarantee2idController.text.trim(),
-          guarantee2Address: state.guarantee2addressController.text.trim(),
-          guarantee2PhoneNumber: state.guarantee2PhoneController.text.trim(),
-        );
-        Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name, arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
+            id: preferences.getUserId(),
+            businessTypeId: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
+            owner1FullName: state.owner1NameController.text.trim(),
+            owner1IsraelId: state.owner1israelIdController.text.trim(),
+            owner2FullName: state.owner2NameController.text.trim(),
+            owner2IsraelId: state.owner2israelIdController.text.trim(),
+            guarantee1FullName: state.guarantee1NameController.text.trim(),
+            guarantee1IsraelId: state.guarantee1idController.text.trim(),
+            guarantee1Address: state.guarantee1addressController.text.trim(),
+            guarantee1PhoneNumber: state.guarantee1PhoneController.text.trim(),
+            guarantee2FullName: state.guarantee2NameController.text.trim(),
+            guarantee2IsraelId: state.guarantee2idController.text.trim(),
+            guarantee2Address: state.guarantee2addressController.text.trim(),
+            guarantee2PhoneNumber: state.guarantee2PhoneController.text.trim());
+        Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name,
+            arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
       } else if (event is _getAgentEvent) {
       } else if (event is _generalSettings) {
         try {
@@ -93,10 +92,9 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
 
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
-              isRegistrationSuccess: response.data?.registrationSuccessPageSettings?.showRegistrationSuccessPage! ?? false,
-              customerServicePhone: response.data?.customerServicePhone ?? '',
-              customerServiceWhatsApp: response.data?.customerServiceWhatsApp ?? '',
-            ));
+                isRegistrationSuccess: response.data?.registrationSuccessPageSettings?.showRegistrationSuccessPage! ?? false,
+                customerServicePhone: response.data?.customerServicePhone ?? '',
+                customerServiceWhatsApp: response.data?.customerServiceWhatsApp ?? ''));
             return;
           }
         } catch (_) {}
@@ -111,8 +109,6 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
             emit(state.copyWith(isShimmering: false));
             final clubAgentId = response.data?.agentId;
             preferences.setClubAgentId(clubAgentId: clubAgentId ?? '');
-            // Which agent the entered code belongs to is the server's answer, matched against the
-            // configured club agent — the typed code used to be compared to a hard-coded "998616".
             final isClubAgent = ClubAgent.isClubClient(clubAgentId);
             if (state.isRegistrationSuccess && isClubAgent) {
               Navigator.pushNamed(event.context, RouteDefine.registrationSuccessScreen.name);
@@ -120,22 +116,17 @@ class FormDataBloc extends Bloc<FormDataEvent, FormDataState> {
               preferences.setUserLoggedIn(isLoggedIn: true);
               Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name);
             } else {
-              Navigator.pushNamed(
-                event.context,
-                RouteDefine.owner1FormScreen.name,
-                arguments: {
-                  AppStrings.owner: state.owner,
-                  AppStrings.isFreelancer: state.haveMultiple,
-                  AppStrings.businessTypeIdString: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id,
-                },
-              );
+              Navigator.pushNamed(event.context, RouteDefine.owner1FormScreen.name, arguments: {
+                AppStrings.owner: state.owner,
+                AppStrings.isFreelancer: state.haveMultiple,
+                AppStrings.businessTypeIdString: state.businessTypeList.firstWhere((element) => element.businessTypeName == state.business).id
+              });
             }
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res['message'].toString().toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res['message'].toString().toLocalization(), event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isShimmering: false));
           }
         } on ServerException {

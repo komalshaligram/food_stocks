@@ -14,7 +14,6 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'order_summary_event.dart';
 part 'order_summary_state.dart';
 part 'order_summary_bloc.freezed.dart';
@@ -30,7 +29,7 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
         try {
           final results = await Future.wait([
             DioClient(event.context).post('${AppUrlEndPoints.listingCartProductsSupplierUrl}${preferences.getCartId()}'),
-            DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl),
+            DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl)
           ]);
           CartProductsSupplierResModel response = CartProductsSupplierResModel.fromJson(results[0]);
           if (response.status == AppConstants.code_200) {
@@ -38,26 +37,18 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
             final supplierList = response.data?.data ?? [];
             final supplierIds = supplierList.map((supplier) => supplier.suppliers?.id ?? supplier.id ?? '').toList();
             emit(state.copyWith(
-              orderSummaryList: response,
-              tempList: supplierList,
-              firstSupplierOrderMessageTemplate: settingsResponse.data?.firstSupplierOrderMessageTemplate ?? '',
-              isDeliveryScheduleLoading: supplierIds.any((id) => id.isNotEmpty),
-            ));
+                orderSummaryList: response,
+                tempList: supplierList,
+                firstSupplierOrderMessageTemplate: settingsResponse.data?.firstSupplierOrderMessageTemplate ?? '',
+                isDeliveryScheduleLoading: supplierIds.any((id) => id.isNotEmpty)));
             if (!event.context.mounted) return;
-            final schedules = await SupplierDeliveryScheduleService.loadForSuppliers(
-              context: event.context,
-              supplierIds: supplierIds,
-            );
-            emit(state.copyWith(
-              deliverySchedules: schedules,
-              isDeliveryScheduleLoading: false,
-            ));
+            final schedules = await SupplierDeliveryScheduleService.loadForSuppliers(context: event.context, supplierIds: supplierIds);
+            emit(state.copyWith(deliverySchedules: schedules, isDeliveryScheduleLoading: false));
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } catch (_) {}
       }

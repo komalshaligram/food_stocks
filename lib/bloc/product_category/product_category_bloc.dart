@@ -34,10 +34,9 @@ class ProductCategoryBloc extends Bloc<ProductCategoryEvent, ProductCategoryStat
         }
         try {
           emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.getProductCategoriesUrl,
-            data: ProductCategoriesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.productCategoryPageLimit, search: state.reqSearch).toJson(),
-          );
+          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductCategoriesUrl,
+              data: ProductCategoriesReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.productCategoryPageLimit, search: state.reqSearch)
+                  .toJson());
           ProductCategoriesResModel response = ProductCategoriesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             List<Category> productCategoryList = state.productCategoryList.toList(growable: true);
@@ -47,10 +46,9 @@ class ProductCategoryBloc extends Bloc<ProductCategoryEvent, ProductCategoryStat
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.success,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.success);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));

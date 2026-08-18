@@ -29,7 +29,6 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import '../bottom_nav/bottom_nav_bloc.dart';
-
 part 'wallet_event.dart';
 part 'wallet_state.dart';
 part 'wallet_bloc.freezed.dart';
@@ -58,15 +57,12 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             WalletRecordResModel response = WalletRecordResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(
-                thisMonthExpense: response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
-                lastMonthExpense: response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
-                balance: response.data?.balanceAmount?.toDouble() ?? 0,
-                totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
-                expensePercentage: double.tryParse(
-                      response.data?.currentMonth?.expensePercentage ?? '') ??
-                    0,
-                isProcess: false,
-              ));
+                  thisMonthExpense: response.data?.currentMonth?.totalExpenses?.toDouble() ?? 0,
+                  lastMonthExpense: response.data?.previousMonth?.totalExpenses?.toDouble() ?? 0,
+                  balance: response.data?.balanceAmount?.toDouble() ?? 0,
+                  totalCredit: response.data?.totalCredit?.toDouble() ?? 0,
+                  expensePercentage: double.tryParse(response.data?.currentMonth?.expensePercentage ?? '') ?? 0,
+                  isProcess: false));
             } else {
               emit(state.copyWith(isProcess: false));
             }
@@ -94,9 +90,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               response.data?.forEach((element) {
                 final monthIndex = (element.month ?? 1).toInt() - 1;
                 if (monthIndex < 0 || monthIndex >= reverseList.length) return;
-                temp.add(FlSpot(
-                    reverseList[monthIndex].toDouble(),
-                    element.totalExpenses?.toDouble() ?? 0));
+                temp.add(FlSpot(reverseList[monthIndex].toDouble(), element.totalExpenses?.toDouble() ?? 0));
               });
               List<String> graphList = [];
               response.data?.forEach((element) {
@@ -113,10 +107,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             } else {
               emit(state.copyWith(isGraphProcess: false));
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             emit(state.copyWith(isGraphProcess: false));
@@ -133,12 +126,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           try {
             emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
             AllWalletTransactionReqModel reqMap = AllWalletTransactionReqModel(
-              userId: preferences.getUserId(),
-              pageNum: state.pageNum + 1,
-              pageLimit: AppConstants.walletLimit,
-              startDate: event.startDate ?? firstDayCurrentMonth,
-              endDate: event.endDate ?? lastDayCurrentMonth,
-            );
+                userId: preferences.getUserId(),
+                pageNum: state.pageNum + 1,
+                pageLimit: AppConstants.walletLimit,
+                startDate: event.startDate ?? firstDayCurrentMonth,
+                endDate: event.endDate ?? lastDayCurrentMonth);
             final res = await DioClient(event.context).post(AppUrlEndPoints.getAllWalletTransactionUrl, data: reqMap);
             AllWalletTransactionResModel response = AllWalletTransactionResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
@@ -146,12 +138,7 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               if ((response.metaData?.totalFilteredCount ?? 1) > state.walletTransactionsList.length) {
                 temp.addAll(response.data ?? []);
                 emit(state.copyWith(
-                  balanceSheetList: response,
-                  pageNum: state.pageNum + 1,
-                  walletTransactionsList: temp,
-                  isLoadMore: false,
-                  isShimmering: false,
-                ));
+                    balanceSheetList: response, pageNum: state.pageNum + 1, walletTransactionsList: temp, isLoadMore: false, isShimmering: false));
                 emit(state.copyWith(isBottomOfProducts: temp.length == (response.metaData?.totalFilteredCount ?? 1) ? true : false));
               } else {
                 emit(state.copyWith(isShimmering: false, isLoadMore: false));
@@ -169,7 +156,8 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
             emit(state.copyWith(selectedDateRange: event.range, walletTransactionsList: temp, pageNum: 0, isLoadMore: false, isShimmering: false));
             emit(state.copyWith(isBottomOfProducts: temp.length == (state.balanceSheetList.metaData?.totalFilteredCount ?? 1) ? true : false));
           } else {
-            emit(state.copyWith(selectedDateRange: event.range, walletTransactionsList: state.walletTransactionsList, isLoadMore: false, isShimmering: false));
+            emit(state.copyWith(
+                selectedDateRange: event.range, walletTransactionsList: state.walletTransactionsList, isLoadMore: false, isShimmering: false));
           }
         } else if (event is _getDropDownElementEvent) {
           emit(state.copyWith(year: event.year));
@@ -185,27 +173,26 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
               dir = await getApplicationDocumentsDirectory();
             }
             ExportWalletTransactionsReqModel reqMap = ExportWalletTransactionsReqModel(
-              userId: preferences.getUserId(),
-              exportType: AppStrings.pdfString,
-              responseType: AppStrings.jsonString,
-              startDate: event.startDate.toString(),
-              endDate: event.endDate.toString(),
-            );
+                userId: preferences.getUserId(),
+                exportType: AppStrings.pdfString,
+                responseType: AppStrings.jsonString,
+                startDate: event.startDate.toString(),
+                endDate: event.endDate.toString());
             final res = await DioClient(event.context).post(AppUrlEndPoints.exportWalletTransactionUrl, data: reqMap);
             ExportWalletTransactionsResModel response = ExportWalletTransactionsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               emit(state.copyWith(isExportShimmering: false, isExportComplete: true, userEmail: preferences.getEmailId()));
               Uint8List pdf = base64.decode(response.data.toString());
-              filePath = '${dir.path}/${preferences.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.'}${DateTime.now().second}${'.pdf'}';
+              filePath =
+                  '${dir.path}/${preferences.getUserName()}${'.'}${(DateTime.now()).hour}${'.'}${(DateTime.now()).minute}${'.'}${DateTime.now().second}${'.pdf'}';
               file = File(filePath);
               await file.writeAsBytes(pdf.buffer.asUint8List()).then((value) {});
             } else {
               emit(state.copyWith(isExportShimmering: false));
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             emit(state.copyWith(isExportShimmering: false));
@@ -215,12 +202,11 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           }
         } else if (event is _getOrderCountEvent) {
           try {
-            int daysInMonth(DateTime date) => DateTimeRange(start: DateTime(date.year, date.month, 1), end: DateTime(date.year, date.month + 1)).duration.inDays;
+            int daysInMonth(DateTime date) =>
+                DateTimeRange(start: DateTime(date.year, date.month, 1), end: DateTime(date.year, date.month + 1)).duration.inDays;
             var now = DateTime.now();
             GetOrderCountReqModel reqMap = GetOrderCountReqModel(
-              startDate: DateTime(now.year, now.month, 1),
-              endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())),
-            );
+                startDate: DateTime(now.year, now.month, 1), endDate: DateTime(now.year, now.month, daysInMonth(DateTime.now())));
             final res = await DioClient(event.context).post(AppUrlEndPoints.getOrdersCountUrl, data: reqMap);
             GetOrderCountResModel response = GetOrderCountResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
@@ -253,10 +239,9 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
                 emit(state.copyWith(isAccountPermissionShimmering: false));
               } else {
                 CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                  type: SnackBarType.failure,
-                );
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                    type: SnackBarType.failure);
               }
             } catch (e) {
               CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -264,12 +249,15 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
           }
         } else if (event is _userApproveEvent) {
           try {
-            final res = await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
+            final res =
+                await DioClient(event.context).post(AppUrlEndPoints.verifyClientUrl, data: {AppStrings.clientIdString: preferences.getUserId()});
             VerifyClientResModel response = VerifyClientResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               if (!(response.data?.isFilledForms ?? false) || !(response.data?.isRegisterForm ?? false)) {
                 Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
-              } else if (!(response.data?.isUploadedFiles ?? false) && (response.data?.isRegisterForm ?? false) && (response.data?.isFilledForms ?? false)) {
+              } else if (!(response.data?.isUploadedFiles ?? false) &&
+                  (response.data?.isRegisterForm ?? false) &&
+                  (response.data?.isFilledForms ?? false)) {
                 Navigator.pushNamed(event.context, RouteDefine.fileUploadScreen.name);
               }
             }

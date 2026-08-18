@@ -51,16 +51,6 @@ class StoreScreenShimmerWidget extends StatelessWidget {
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [buildTextFieldTitle(), buildTextFieldTitle()]));
   }
 
-  Widget buildCategoryListItem() {
-    return CommonShimmerWidget(
-      child: Container(
-          height: 90,
-          width: 90,
-          margin: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-          decoration: BoxDecoration(color: AppColors.whiteColor, borderRadius: const BorderRadius.all(Radius.circular(AppConstants.radius_10)))),
-    );
-  }
-
   Widget buildProductSaleListItem() {
     return CommonShimmerWidget(
       child: Container(

@@ -23,11 +23,8 @@ class WebViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WebviewBloc()
-        ..add(WebViewEvent.generalSettings(
-            context: context, dialogContext: context, isRetryLoading: false)),
-      child: const WebViewScreenWidget(),
-    );
+        create: (context) => WebviewBloc()..add(WebViewEvent.generalSettings(context: context, dialogContext: context, isRetryLoading: false)),
+        child: const WebViewScreenWidget());
   }
 }
 
@@ -37,28 +34,21 @@ class WebViewScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WebviewBloc, WebViewState>(builder: (context, state) {
-      final bool showShimmer =
-          state.isShimmering || state.baseUrl == null || state.baseUrl!.isEmpty;
+      final bool showShimmer = state.isShimmering || state.baseUrl == null || state.baseUrl!.isEmpty;
 
       return Scaffold(
         backgroundColor: AppColors.pageColor,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: state.language == 'en'
-                ? (state.screenEnglishTitle ?? "")
-                : (state.screenHebrewTitle ?? ""),
-            iconData: Icons.arrow_back_ios,
-            onTap: () => Navigator.pop(context),
-          ),
+              bgColor: AppColors.pageColor,
+              title: state.language == 'en' ? (state.screenEnglishTitle ?? "") : (state.screenHebrewTitle ?? ""),
+              iconData: Icons.arrow_back_ios,
+              onTap: () => Navigator.pop(context)),
         ),
         body: SafeArea(
-          child: Stack(children: [
-            if (!showShimmer)
-              CustomWebView(url: "${state.baseUrl}${state.userId ?? ''}"),
-            if (showShimmer) const WebViewShimmer(),
-          ]),
+          child: Stack(
+              children: [if (!showShimmer) CustomWebView(url: "${state.baseUrl}${state.userId ?? ''}"), if (showShimmer) const WebViewShimmer()]),
         ),
       );
     });
@@ -86,16 +76,9 @@ class WebViewShimmer extends StatelessWidget {
             child: GridView.builder(
                 itemCount: 20,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 2.5),
+                    crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 2.5),
                 itemBuilder: (context, index) {
-                  return Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.circular(AppConstants.radius_15)));
+                  return Container(decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppConstants.radius_15)));
                 }),
           ),
         ]),
@@ -104,11 +87,7 @@ class WebViewShimmer extends StatelessWidget {
   }
 
   Widget _box({required double height, required double width}) {
-    return Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(8)));
+    return Container(height: height, width: width, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)));
   }
 }
 
@@ -123,8 +102,7 @@ class CustomWebView extends StatefulWidget {
 class _CustomWebViewState extends State<CustomWebView> {
   bool isLoading = true;
 
-  Future<void> _saveCsvFile(
-      String base64Data, String? suggestedFilename) async {
+  Future<void> _saveCsvFile(String base64Data, String? suggestedFilename) async {
     const prefix = 'base64,';
     final startIndex = base64Data.indexOf(prefix) + prefix.length;
     if (startIndex < prefix.length) {
@@ -141,11 +119,8 @@ class _CustomWebViewState extends State<CustomWebView> {
         '${now.minute.toString().padLeft(2, '0')}';
 
     String fileName;
-    if (suggestedFilename != null &&
-        suggestedFilename.isNotEmpty &&
-        suggestedFilename.toLowerCase().endsWith('.csv')) {
-      final nameWithoutExt =
-          suggestedFilename.substring(0, suggestedFilename.length - 4);
+    if (suggestedFilename != null && suggestedFilename.isNotEmpty && suggestedFilename.toLowerCase().endsWith('.csv')) {
+      final nameWithoutExt = suggestedFilename.substring(0, suggestedFilename.length - 4);
       fileName = '${nameWithoutExt}_$formattedDate.csv';
     } else {
       fileName = 'export_$formattedDate.csv';
@@ -159,16 +134,14 @@ class _CustomWebViewState extends State<CustomWebView> {
       if (!await targetDir.exists()) {
         await targetDir.create(recursive: true);
       }
-      saveMessage =
-          'CSV downloaded!\nSaved as: $fileName\nCheck your Downloads folder';
+      saveMessage = 'CSV downloaded!\nSaved as: $fileName\nCheck your Downloads folder';
     } else {
       final appDocDir = await getApplicationDocumentsDirectory();
       targetDir = Directory('${appDocDir.path}/Downloads');
       if (!await targetDir.exists()) {
         await targetDir.create(recursive: true);
       }
-      saveMessage =
-          'CSV saved!\n$fileName\nCheck Files app → On My iPhone → ${AppStrings.appName} → Downloads';
+      saveMessage = 'CSV saved!\n$fileName\nCheck Files app → On My iPhone → ${AppStrings.appName} → Downloads';
     }
 
     final filePath = '${targetDir.path}/$fileName';
@@ -176,25 +149,11 @@ class _CustomWebViewState extends State<CustomWebView> {
     await file.writeAsBytes(bytes);
 
     if (!mounted) return;
-    CustomSnackBar.showSnackBar(
-        context: context, title: saveMessage, type: SnackBarType.success);
+    CustomSnackBar.showSnackBar(context: context, title: saveMessage, type: SnackBarType.success);
   }
 
   String _getMonthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[month - 1];
   }
 
@@ -210,9 +169,7 @@ class _CustomWebViewState extends State<CustomWebView> {
                 callback: (args) async {
                   if (args.isNotEmpty) {
                     final String base64 = args[0] as String;
-                    final String filename = args.length > 1
-                        ? args[1] as String
-                        : 'export_${DateTime.now().millisecondsSinceEpoch}.csv';
+                    final String filename = args.length > 1 ? args[1] as String : 'export_${DateTime.now().millisecondsSinceEpoch}.csv';
                     await _saveCsvFile(base64, filename);
                   }
                 });
@@ -264,7 +221,7 @@ class _CustomWebViewState extends State<CustomWebView> {
             ''');
           },
           onLoadStart: (controller, url) => setState(() => isLoading = true)),
-      if (isLoading) const WebViewShimmer(),
+      if (isLoading) const WebViewShimmer()
     ]);
   }
 }

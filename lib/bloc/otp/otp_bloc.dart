@@ -20,8 +20,6 @@ import '../../repository/dio_client.dart';
 import '../../ui/widget/dialogs/otp_whatsapp_sent_dialog.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_strings.dart';
-import 'dart:io';
-
 part 'otp_event.dart';
 part 'otp_state.dart';
 part 'otp_bloc.freezed.dart';
@@ -34,18 +32,12 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _setOtpTimerEvent) {
-
         final int remaining = preferences.getOtpCooldownRemaining(event.contact);
-        emit(state.copyWith(
-          otpTimer: remaining,
-          sendCount: preferences.getOtpSendCount(event.contact),
-        ));
+        emit(state.copyWith(otpTimer: remaining, sendCount: preferences.getOtpSendCount(event.contact)));
         _periodicOtpTimerSubscription?.cancel();
         if (remaining > 0) {
-          _periodicOtpTimerSubscription = Stream.periodic(const Duration(seconds: 1), (x) => x).listen(
-                (_) => add(const _UpdateTimerEvent()),
-            onError: (error) => printData("otp timer error = $error"),
-          );
+          _periodicOtpTimerSubscription = Stream.periodic(const Duration(seconds: 1), (x) => x)
+              .listen((_) => add(const _UpdateTimerEvent()), onError: (error) => printData("otp timer error = $error"));
         }
       } else if (event is _UpdateTimerEvent) {
         if (state.otpTimer == 0) {
@@ -73,7 +65,8 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               preferences.setCartId(cartId: response.data?.cartId ?? '');
               preferences.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
               preferences.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
-              preferences.setUserId(id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
+              preferences.setUserId(
+                  id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
               if (response.data?.adminType == AppStrings.subUserString) {
                 preferences.setUserName(name: response.data?.user?.contactName ?? '');
               } else {
@@ -109,39 +102,33 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               if (isRegistrationComplete) {
                 Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);
               } else {
-                Navigator.pushNamedAndRemoveUntil(
-                  event.context,
-                  RouteDefine.profileScreen.name,
-                      (Route route) => route.isFirst,
-                  arguments: {AppStrings.contactString: event.contact},
-                );
+                Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.profileScreen.name, (Route route) => route.isFirst,
+                    arguments: {AppStrings.contactString: event.contact});
               }
 
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.success,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.success);
             } else if (response.status == AppConstants.code_400) {
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
               emit(state.copyWith(isLoading: false));
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } catch (e) {
             emit(state.copyWith(isLoading: false));
           }
         } else {
-          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_enter_otp, type: SnackBarType.success);
+          CustomSnackBar.showSnackBar(
+              context: event.context, title: AppLocalizations.of(event.context)!.please_enter_otp, type: SnackBarType.success);
         }
       } else if (event is _changeOtpEvent) {
         emit(state.copyWith(otp: event.otp));
@@ -168,24 +155,23 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
               Navigator.pushNamed(event.context, RouteDefine.profileScreen.name, arguments: {AppStrings.contactString: event.contact});
             } else if (response.status == AppConstants.code_400) {
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
               emit(state.copyWith(isLoading: false));
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } catch (e) {
             emit(state.copyWith(isLoading: false));
           }
         } else {
-          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.please_enter_otp, type: SnackBarType.success);
+          CustomSnackBar.showSnackBar(
+              context: event.context, title: AppLocalizations.of(event.context)!.please_enter_otp, type: SnackBarType.success);
         }
       }
 
@@ -197,16 +183,13 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           LoginResModel response = LoginResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             await SmsAutoFill().listenForCode();
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.otp_resend_success, type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+                context: event.context, title: AppLocalizations.of(event.context)!.otp_resend_success, type: SnackBarType.success);
             preferences.setUserId(id: response.user?.id ?? '');
             preferences.setPhoneNumber(userPhoneNumber: event.contactNumber);
 
             final int nextCount = preferences.getOtpSendCount(event.contactNumber) + 1;
-            await preferences.setOtpCooldown(
-              contact: event.contactNumber,
-              seconds: otpCooldownSeconds(nextCount),
-              sendCount: nextCount,
-            );
+            await preferences.setOtpCooldown(contact: event.contactNumber, seconds: otpCooldownSeconds(nextCount), sendCount: nextCount);
             emit(state.copyWith(isLoading: false));
             add(OtpEvent.setOtpTimer(contact: event.contactNumber));
           } else if (response.status == AppConstants.code_403) {
@@ -214,10 +197,9 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
             emit(state.copyWith(isLoading: false));
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
@@ -233,26 +215,17 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
         }
         emit(state.copyWith(isWhatsappSending: true));
         try {
-
-          final res = await DioClient(event.context).post(
-            AppUrlEndPoints.sendOtpByWhatsappUrl,
-            data: {
-              AppStrings.contactString: event.contactNumber,
-              'applicationName': AppStrings.appName,
-              'forceNewOtp': preferences.getOtpSendCount(event.contactNumber) >= 2,
-            },
-          );
+          final res = await DioClient(event.context).post(AppUrlEndPoints.sendOtpByWhatsappUrl, data: {
+            AppStrings.contactString: event.contactNumber,
+            'applicationName': AppStrings.appName,
+            'forceNewOtp': preferences.getOtpSendCount(event.contactNumber) >= 2
+          });
 
           final int? status = res[AppStrings.statusString] as int?;
           final String message = (res[AppStrings.messageString] ?? '').toString();
           if (status == AppConstants.code_200) {
             final int nextCount = preferences.getOtpSendCount(event.contactNumber) + 1;
-            printData('whatsapp otp sent, restarting cooldown (send #$nextCount)');
-            await preferences.setOtpCooldown(
-              contact: event.contactNumber,
-              seconds: otpCooldownSeconds(nextCount),
-              sendCount: nextCount,
-            );
+            await preferences.setOtpCooldown(contact: event.contactNumber, seconds: otpCooldownSeconds(nextCount), sendCount: nextCount);
             emit(state.copyWith(isWhatsappSending: false));
             add(OtpEvent.setOtpTimer(contact: event.contactNumber));
             if (event.context.mounted) {
@@ -261,10 +234,7 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           } else {
             emit(state.copyWith(isWhatsappSending: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(message.toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context, title: AppStrings.getLocalizedStrings(message.toLocalization(), event.context), type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isWhatsappSending: false));
@@ -272,16 +242,13 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           emit(state.copyWith(isWhatsappSending: false));
         }
       } else if (event is _loadWhatsappOtpSettingEvent) {
-
         try {
           final res = await DioClient(event.context).get(path: AppUrlEndPoints.generalSettingUrl);
           SettingResModel response = SettingResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(showWhatsappOtpOption: response.data?.showWhatsappOtpOption ?? false));
           }
-        }  catch (e) {
-          printData('whatsapp otp setting fetch failed = $e');
-        }
+        } catch (_) {}
       }
     });
   }

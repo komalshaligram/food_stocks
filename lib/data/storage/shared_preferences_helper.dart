@@ -173,18 +173,6 @@ class SharedPreferencesHelper {
     await prefs.remove(userImage);
   }
 
-  Future<void> removeClubAgentId() async {
-    await prefs.remove(clubAgentIdKey);
-  }
-
-  Future<void> removeIsAgent() async {
-    await prefs.remove(isAgentKey);
-  }
-
-  Future<void> removeIsAgentSwitchToAssignedStore() async {
-    await prefs.remove(isAgentSwitchToAssignedStoreKey);
-  }
-
   Future<void> setAuthToken({required String accToken}) async {
     await prefs.setString(accessToken, accToken);
   }
@@ -256,16 +244,8 @@ class SharedPreferencesHelper {
     await prefs.setBool(isAgentSwitchToAssignedStoreKey, isAgentSwitchToAssignedStore);
   }
 
-  Future<void> setUserCompanyLogoUrl({required String logoUrl}) async {
-    await prefs.setString(userCompanyLogo, logoUrl);
-  }
-
   Future<void> setCartCount({required int count}) async {
     await prefs.setInt(userCartCount, count);
-  }
-
-  Future<void> setMessage({required String message}) async {
-    await prefs.setString(orderSuccessMessage, message);
   }
 
   Future<void> setMessageCount({required int count}) async {
@@ -338,10 +318,6 @@ class SharedPreferencesHelper {
 
   Future<void> setDocumentScanOnApp({required bool showDocumentScanOnApp}) async {
     await prefs.setBool(documentScanOnApp, showDocumentScanOnApp);
-  }
-
-  Future<void> setIsWalletApproved({required bool walletApproved}) async {
-    await prefs.setBool(isWalletApproved, walletApproved);
   }
 
   Future<void> setOrderId({required String productOrderId}) async {
@@ -424,16 +400,8 @@ class SharedPreferencesHelper {
     await prefs.setString(userStreetNumber, streetNumber);
   }
 
-  Future<void> setFaxNumber({required String faxNumber}) async {
-    await prefs.setString(fax, faxNumber);
-  }
-
   Future<void> setZipCode({required String zipCode}) async {
     await prefs.setString(zip, zipCode);
-  }
-
-  Future<void> setUserLogo({required String logoImage}) async {
-    await prefs.setString(logo, logoImage);
   }
 
   Future<void> setAccountAdmin({required bool isAccountAdmin}) async {
@@ -508,10 +476,6 @@ class SharedPreferencesHelper {
     await prefs.setBool(canScanDocuments, isCanScanDocuments);
   }
 
-  String getReturnList() {
-    return prefs.getString(productReturnList) ?? '';
-  }
-
   String getAppLanguage() {
     return prefs.getString(lang) ?? AppStrings.hebrewString;
   }
@@ -534,10 +498,6 @@ class SharedPreferencesHelper {
     return prefs.getBool(userLoggedIn) ?? false;
   }
 
-  bool getWalletApproved() {
-    return prefs.getBool(isWalletApproved) ?? false;
-  }
-
   String getAuthToken() {
     return prefs.getString(accessToken) ?? '';
   }
@@ -548,10 +508,6 @@ class SharedPreferencesHelper {
 
   String getOrderStatusInfo() {
     return prefs.getString(orderStatusDetail) ?? '';
-  }
-
-  String getStatusInfo() {
-    return prefs.getString(statusDetail) ?? '';
   }
 
   String getPaymentStatusInfo() {
@@ -568,10 +524,6 @@ class SharedPreferencesHelper {
 
   String getUserId() {
     return prefs.getString(userId) ?? '';
-  }
-
-  String getAppVersion() {
-    return prefs.getString(appVersion) ?? '1.0.0';
   }
 
   String getUserName() {
@@ -620,18 +572,6 @@ class SharedPreferencesHelper {
 
   double getBottleTax() {
     return prefs.getDouble(bottleTax) ?? 0.0;
-  }
-
-  String getWalletId() {
-    return prefs.getString(walletId) ?? '';
-  }
-
-  String getApiUrl() {
-    return prefs.getString(reqApiUrl) ?? '';
-  }
-
-  String getRqPram() {
-    return prefs.getString(apiPram) ?? '';
   }
 
   String getOrderId() {
@@ -706,24 +646,12 @@ class SharedPreferencesHelper {
     return prefs.getString(userStreetNumber) ?? '';
   }
 
-  String getFax() {
-    return prefs.getString(fax) ?? '';
-  }
-
   String getZip() {
     return prefs.getString(zip) ?? '';
   }
 
-  String getLogo() {
-    return prefs.getString(logo) ?? '';
-  }
-
   List<String> getPaymentMethodTypes() {
     return prefs.getStringList(paymentMethods) ?? [];
-  }
-
-  bool getCanAccountAdmin() {
-    return prefs.getBool(accountAdmin) ?? true;
   }
 
   bool getCanSeeWallet() {
@@ -740,10 +668,6 @@ class SharedPreferencesHelper {
 
   bool getCanSeeOrder() {
     return prefs.getBool(seeOrder) ?? true;
-  }
-
-  bool getCanApproveOrder() {
-    return prefs.getBool(approveOrder) ?? true;
   }
 
   bool getCanDuplicateOrder() {
@@ -798,15 +722,7 @@ class SharedPreferencesHelper {
     return prefs.getString(paymentMethod) ?? '';
   }
 
-  String getPaymentMethodCount() {
-    return prefs.getString(paymentMethodCount) ?? '1';
-  }
-
   bool getAvailablePayment() {
     return prefs.getBool(availableAllPayment) ?? false;
-  }
-
-  Future<void> clearAll() async {
-    await prefs.clear();
   }
 }

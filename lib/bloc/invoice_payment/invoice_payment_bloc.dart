@@ -11,7 +11,6 @@ import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-
 part 'invoice_payment_state.dart';
 part 'invoice_payment_event.dart';
 part 'invoice_payment_bloc.freezed.dart';
@@ -34,17 +33,18 @@ class InvoicePaymentBloc extends Bloc<InvoicePaymentEvent, InvoicePaymentState> 
             "supplierId": event.supplierId,
             "invoiceNumber": event.invoiceNumber,
             "documentType": event.documentType,
-            if ((event.orderId).trim().isNotEmpty && event.orderId != 'null') "orderId": event.orderId,
+            if ((event.orderId).trim().isNotEmpty && event.orderId != 'null') "orderId": event.orderId
           };
-          // PayInvoiceCreditCardRequestModel reqMap = PayInvoiceCreditCardRequestModel(orderId: event.orderId == null ? , invoiceNumber: event.invoiceNumber);
           final res = await DioClient(event.context).post(AppUrlEndPoints.payInvoiceByCreditCard, data: payInvoiceCreditCardRequest);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));
             Navigator.of(event.context).pop(true);
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.credit_card_payment_success, type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+                context: event.context, title: AppLocalizations.of(event.context)!.credit_card_payment_success, type: SnackBarType.success);
           } else {
             emit(state.copyWith(isLoading: false));
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.credit_card_payment_error, type: SnackBarType.failure);
+            CustomSnackBar.showSnackBar(
+                context: event.context, title: AppLocalizations.of(event.context)!.credit_card_payment_error, type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));

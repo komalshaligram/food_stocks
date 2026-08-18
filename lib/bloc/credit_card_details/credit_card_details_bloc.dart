@@ -16,7 +16,6 @@ import '../../routes/app_routes.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'credit_card_details_state.dart';
 part 'credit_card_details_event.dart';
 part 'credit_card_details_bloc.freezed.dart';
@@ -30,15 +29,13 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
 
       if (event is _getArgumentEvent) {
         termsConditionReqModel = event.termsReqModel;
-        emit(state.copyWith(isPaymentFail: event.isPaymentFail, termsModel: event.termsReqModel, isFromRegFlow: event.isFromRegFlow, invoiceData: event.invoiceData));
+        emit(state.copyWith(
+            isPaymentFail: event.isPaymentFail, termsModel: event.termsReqModel, isFromRegFlow: event.isFromRegFlow, invoiceData: event.invoiceData));
       } else if (event is _addCreditCardEvent) {
         emit(state.copyWith(isLoading: true));
         try {
           CreditCardReqModel reqMap = CreditCardReqModel(
-            cardNum: state.creditCardNumberController.text.trim(),
-            expDateYy: state.validityController.text.trim(),
-            expDateMm: state.selectedMonth,
-          );
+              cardNum: state.creditCardNumberController.text.trim(), expDateYy: state.validityController.text.trim(), expDateMm: state.selectedMonth);
           final res = await DioClient(event.context).post(AppUrlEndPoints.updateCreditCardUrl + preferences.getUserId(), data: reqMap);
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             if (state.isFromRegFlow) {
@@ -53,10 +50,8 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
                 if (isFromInvoicePayment == true) {
                   Navigator.pop(event.context, {AppStrings.creditCardNumberString: updatedCardNumber});
                 } else {
-                  Navigator.pushNamed(event.context, RouteDefine.invoicePaymentScreen.name, arguments: {
-                    AppStrings.invoiceData: state.invoiceData,
-                    AppStrings.creditCardNumberString: updatedCardNumber,
-                  });
+                  Navigator.pushNamed(event.context, RouteDefine.invoicePaymentScreen.name,
+                      arguments: {AppStrings.invoiceData: state.invoiceData, AppStrings.creditCardNumberString: updatedCardNumber});
                 }
               } else {
                 Navigator.pop(event.context);
@@ -67,10 +62,7 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
             CustomSnackBar.showSnackBar(
                 context: event.context,
                 title: AppStrings.messageString.contains('_')
-                    ? AppStrings.getLocalizedStrings(
-                        res[AppStrings.messageString].toLocalization(),
-                        event.context,
-                      )
+                    ? AppStrings.getLocalizedStrings(res[AppStrings.messageString].toLocalization(), event.context)
                     : res[AppStrings.messageString],
                 type: SnackBarType.failure);
           }
@@ -82,25 +74,24 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
       } else if (event is _termsConditionApiEvent) {
         try {
           termsConditionReqModel = TermsConditionReqModel(
-            paymentType: AppStrings.creditCard,
-            id: preferences.getUserId(),
-            accountNumber: state.termsModel.accountNumber,
-            bankId: state.termsModel.bankId,
-            branchNumber: state.termsModel.branchNumber,
-            businessTypeId: state.termsModel.businessTypeId,
-            guarantee1Address: state.termsModel.guarantee1Address,
-            guarantee1FullName: state.termsModel.guarantee1FullName,
-            guarantee1IsraelId: state.termsModel.guarantee1IsraelId,
-            guarantee1PhoneNumber: state.termsModel.guarantee1PhoneNumber,
-            guarantee2Address: state.termsModel.guarantee2Address,
-            guarantee2FullName: state.termsModel.guarantee2FullName,
-            guarantee2IsraelId: state.termsModel.guarantee2IsraelId,
-            guarantee2PhoneNumber: state.termsModel.guarantee2PhoneNumber,
-            owner1FullName: state.termsModel.owner1FullName,
-            owner1IsraelId: state.termsModel.owner1IsraelId,
-            owner2FullName: state.termsModel.owner2FullName,
-            owner2IsraelId: state.termsModel.owner2IsraelId,
-          );
+              paymentType: AppStrings.creditCard,
+              id: preferences.getUserId(),
+              accountNumber: state.termsModel.accountNumber,
+              bankId: state.termsModel.bankId,
+              branchNumber: state.termsModel.branchNumber,
+              businessTypeId: state.termsModel.businessTypeId,
+              guarantee1Address: state.termsModel.guarantee1Address,
+              guarantee1FullName: state.termsModel.guarantee1FullName,
+              guarantee1IsraelId: state.termsModel.guarantee1IsraelId,
+              guarantee1PhoneNumber: state.termsModel.guarantee1PhoneNumber,
+              guarantee2Address: state.termsModel.guarantee2Address,
+              guarantee2FullName: state.termsModel.guarantee2FullName,
+              guarantee2IsraelId: state.termsModel.guarantee2IsraelId,
+              guarantee2PhoneNumber: state.termsModel.guarantee2PhoneNumber,
+              owner1FullName: state.termsModel.owner1FullName,
+              owner1IsraelId: state.termsModel.owner1IsraelId,
+              owner2FullName: state.termsModel.owner2FullName,
+              owner2IsraelId: state.termsModel.owner2IsraelId);
 
           Map<String, dynamic> req = termsConditionReqModel.toJson();
           req.removeWhere((key, value) {
@@ -109,27 +100,25 @@ class CreditCardDetailsBloc extends Bloc<CreditCardDetailsEvent, CreditCardDetai
           });
           final res = await DioClient(event.context).uploadFileProgressWithFormData(
               path: AppUrlEndPoints.termsConditionUrl,
-              formData: FormData.fromMap(
-                {
-                  AppStrings.userIdString: termsConditionReqModel.id,
-                  AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
-                  AppStrings.owner1FullNameString: termsConditionReqModel.owner1FullName,
-                  AppStrings.owner1IsraelIdString: termsConditionReqModel.owner1IsraelId,
-                  AppStrings.owner2FullNameString: termsConditionReqModel.owner2FullName,
-                  AppStrings.owner2IsraelIdString: termsConditionReqModel.owner2IsraelId,
-                  AppStrings.guarantee1FullNameString: termsConditionReqModel.guarantee1FullName,
-                  AppStrings.guarantee1IsraelIdString: termsConditionReqModel.guarantee1IsraelId,
-                  AppStrings.guarantee1AddressString: termsConditionReqModel.guarantee1Address,
-                  AppStrings.guarantee1PhoneNumberString: termsConditionReqModel.guarantee1PhoneNumber,
-                  AppStrings.guarantee2FullNameString: termsConditionReqModel.guarantee2FullName,
-                  AppStrings.guarantee2IsraelIdString: termsConditionReqModel.guarantee2IsraelId,
-                  AppStrings.guarantee2AddressString: termsConditionReqModel.guarantee2Address,
-                  AppStrings.guarantee2PhoneNumberString: termsConditionReqModel.guarantee2PhoneNumber,
-                  AppStrings.branchNumberString: termsConditionReqModel.branchNumber,
-                  AppStrings.accountNumberString: termsConditionReqModel.accountNumber,
-                  AppStrings.paymentType: termsConditionReqModel.paymentType
-                },
-              ));
+              formData: FormData.fromMap({
+                AppStrings.userIdString: termsConditionReqModel.id,
+                AppStrings.businessTypeIdString: termsConditionReqModel.businessTypeId,
+                AppStrings.owner1FullNameString: termsConditionReqModel.owner1FullName,
+                AppStrings.owner1IsraelIdString: termsConditionReqModel.owner1IsraelId,
+                AppStrings.owner2FullNameString: termsConditionReqModel.owner2FullName,
+                AppStrings.owner2IsraelIdString: termsConditionReqModel.owner2IsraelId,
+                AppStrings.guarantee1FullNameString: termsConditionReqModel.guarantee1FullName,
+                AppStrings.guarantee1IsraelIdString: termsConditionReqModel.guarantee1IsraelId,
+                AppStrings.guarantee1AddressString: termsConditionReqModel.guarantee1Address,
+                AppStrings.guarantee1PhoneNumberString: termsConditionReqModel.guarantee1PhoneNumber,
+                AppStrings.guarantee2FullNameString: termsConditionReqModel.guarantee2FullName,
+                AppStrings.guarantee2IsraelIdString: termsConditionReqModel.guarantee2IsraelId,
+                AppStrings.guarantee2AddressString: termsConditionReqModel.guarantee2Address,
+                AppStrings.guarantee2PhoneNumberString: termsConditionReqModel.guarantee2PhoneNumber,
+                AppStrings.branchNumberString: termsConditionReqModel.branchNumber,
+                AppStrings.accountNumberString: termsConditionReqModel.accountNumber,
+                AppStrings.paymentType: termsConditionReqModel.paymentType
+              }));
           TermsConditionResModel response = TermsConditionResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false));

@@ -12,7 +12,6 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'invoice_pdf_state.dart';
 part 'invoice_pdf_event.dart';
 part 'invoice_pdf_bloc.freezed.dart';
@@ -58,14 +57,11 @@ class InvoicePdfBloc extends Bloc<InvoicePdfEvent, InvoicePdfState> {
     }
 
     try {
-      final res = await DioClient(event.context).post(
-        AppUrlEndPoints.getOrderInvoiceCopy,
-        data: RefundInvoiceReqModel(
-          clientId: preferencesHelper!.getUserId(),
-          invoiceNumber: int.parse(state.invoiceDetailsList.invoiceNumber.toString()),
-          rivchitApiKey: state.invoiceDetailsList.rivchitApiKey,
-        ),
-      );
+      final res = await DioClient(event.context).post(AppUrlEndPoints.getOrderInvoiceCopy,
+          data: RefundInvoiceReqModel(
+              clientId: preferencesHelper!.getUserId(),
+              invoiceNumber: int.parse(state.invoiceDetailsList.invoiceNumber.toString()),
+              rivchitApiKey: state.invoiceDetailsList.rivchitApiKey));
       final response = RefundInvoiceResModel.fromJson(res);
       if (response.status == AppConstants.code_200 && isValidLink(response.data)) {
         emit(state.copyWith(hasValidLink: true, invoiceDetailsList: state.invoiceDetailsList.copyWith(invoiceLink: response.data)));

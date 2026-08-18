@@ -12,7 +12,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'order_successful_event.dart';
 part 'order_successful_state.dart';
 part 'order_successful_bloc.freezed.dart';
@@ -55,45 +54,35 @@ class OrderSuccessfulBloc extends Bloc<OrderSuccessfulEvent, OrderSuccessfulStat
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(cartItemList: response));
             emit(state.copyWith(
-              vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0,
-              bottleQty: response.data?.cart?.first.bottleQuantities,
-              bottleTax: response.data?.bottleTax ?? 0,
-              totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0,
-            ));
+                vatPercentage: response.data!.vatPercentage?.toDouble() ?? 0.0,
+                bottleQty: response.data?.cart?.first.bottleQuantities,
+                bottleTax: response.data?.bottleTax ?? 0,
+                totalPayment: response.data?.cart?.first.totalAmount!.toDouble() ?? 0));
           }
         } catch (_) {}
       }
 
       if (event is _goToOrderEvent) {
         if (state.totalSupplier != 1 || state.totalSupplier != 0 || state.totalSupplier != -1) {
-          Navigator.pushReplacementNamed(
-            event.context,
-            RouteDefine.orderSummaryScreen.name,
-            arguments: {
-              AppStrings.getCartListString: state.cartItemList,
-              AppStrings.totalAmountString: state.isIncludedVat
-                  ? formatNumber(
-                      value: (state.totalPayment +
-                              (bottleDepositCalculationWithVat(
-                                deposit: state.bottleTax,
-                                qty: state.bottleQty?.toDouble() ?? 0,
-                                vatPercentage: state.vatPercentage,
-                              )))
-                          .toString(),
-                      local: AppStrings.hebrewLocal,
-                    )
-                  : (formatNumber(
-                      value: vatCalculation(
-                        price: state.totalPayment,
-                        vat: state.vatPercentage,
-                        qty: state.bottleQty?.toDouble() ?? 0,
-                        deposit: state.bottleTax,
-                      ).toStringAsFixed(2),
-                      local: AppStrings.hebrewLocal,
-                    )),
-              AppStrings.isbackString: 'Basket'
-            },
-          );
+          Navigator.pushReplacementNamed(event.context, RouteDefine.orderSummaryScreen.name, arguments: {
+            AppStrings.getCartListString: state.cartItemList,
+            AppStrings.totalAmountString: state.isIncludedVat
+                ? formatNumber(
+                    value: (state.totalPayment +
+                            (bottleDepositCalculationWithVat(
+                                deposit: state.bottleTax, qty: state.bottleQty?.toDouble() ?? 0, vatPercentage: state.vatPercentage)))
+                        .toString(),
+                    local: AppStrings.hebrewLocal)
+                : (formatNumber(
+                    value: vatCalculation(
+                      price: state.totalPayment,
+                      vat: state.vatPercentage,
+                      qty: state.bottleQty?.toDouble() ?? 0,
+                      deposit: state.bottleTax,
+                    ).toStringAsFixed(2),
+                    local: AppStrings.hebrewLocal)),
+            AppStrings.isbackString: 'Basket'
+          });
         } else {
           Navigator.pushReplacementNamed(event.context, RouteDefine.bottomNavScreen.name, arguments: {AppStrings.isBasketScreenString: 'true'});
         }

@@ -29,7 +29,6 @@ import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../product_return_info/product_return_info_bloc.dart';
-
 part 'product_details_event.dart';
 
 part 'product_details_state.dart';
@@ -44,43 +43,38 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       List<String> imgList = [];
 
       if (event is _getOrderByIdEvent) {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             isShimmering: true,
             isLoading: true,
             language: preferences.getAppLanguage(),
             isSubUserCreateDuplicateOrder: preferences.getCanDuplicateOrder(),
-            isIncludedVat: preferences.getIsIncludedVat(),
-          ),
-        );
+            isIncludedVat: preferences.getIsIncludedVat()));
         try {
           final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getOrderById}${preferences.getOrderId()}');
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            emit(
-              state.copyWith(
+            emit(state.copyWith(
                 orderBySupplierProduct: response.data?.ordersBySupplier?.first ?? const OrdersBySupplier(),
                 orderData: response.data?.orderData?.first ?? const OrderDatum(),
                 isShimmering: false,
                 isLoading: false,
                 isRefresh: !state.isRefresh,
                 driverDeliveryProofImagesList: response.data?.orderData!.first.driverDeliveryDocumentsImages ?? [],
-                userId: preferences.getUserId(),
-              ),
-            );
+                userId: preferences.getUserId()));
             emit(state.copyWith(
-              driverDeliveryProofFile: File(state.driverDeliveryProofImagesList.isNotEmpty ? AppUrlEndPoints.baseFileUrl + state.driverDeliveryProofImagesList[0] : ''),
-              driverDeliveryProofFile1: File(state.driverDeliveryProofImagesList.length > 1 ? (AppUrlEndPoints.baseFileUrl + state.driverDeliveryProofImagesList[1]) : ''),
-              driverDeliveryProofFile2: File(state.driverDeliveryProofImagesList.length > 2 ? (AppUrlEndPoints.baseFileUrl + state.driverDeliveryProofImagesList[2]) : ''),
-            ));
+                driverDeliveryProofFile:
+                    File(state.driverDeliveryProofImagesList.isNotEmpty ? AppUrlEndPoints.baseFileUrl + state.driverDeliveryProofImagesList[0] : ''),
+                driverDeliveryProofFile1: File(
+                    state.driverDeliveryProofImagesList.length > 1 ? (AppUrlEndPoints.baseFileUrl + state.driverDeliveryProofImagesList[1]) : ''),
+                driverDeliveryProofFile2: File(
+                    state.driverDeliveryProofImagesList.length > 2 ? (AppUrlEndPoints.baseFileUrl + state.driverDeliveryProofImagesList[2]) : '')));
             add(ProductDetailsEvent.getReturnListEvent(context: event.context));
           } else {
             emit(state.copyWith(isShimmering: false, isLoading: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false, isLoading: false));
@@ -91,15 +85,12 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       }
 
       if (event is _getProductDataEvent) {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             orderBySupplierProduct: event.orderBySupplierProduct,
             orderData: event.orderData,
             language: preferences.getAppLanguage(),
             isSubUserCreateDuplicateOrder: preferences.getCanDuplicateOrder(),
-            statusList: event.statusList,
-          ),
-        );
+            statusList: event.statusList));
       } else if (event is _productProblemEvent) {
         var selectedIndices = List<int>.from(state.productListIndex);
 
@@ -114,11 +105,14 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         emit(state.copyWith(productListIndex: selectedIndices, isAllCheck: isAllSelected));
       } else if (event is _checkAllEvent) {
         final allProducts = state.orderBySupplierProduct.products ?? [];
-        final selectableProducts = allProducts.asMap().entries.where((entry) => !(entry.value.isBottle ?? false) || entry.value.sku == "5321").toList();
+        final selectableProducts =
+            allProducts.asMap().entries.where((entry) => !(entry.value.isBottle ?? false) || entry.value.sku == "5321").toList();
         final totalSelectable = selectableProducts.length;
         List<int> newSelectedIndices;
         if (!state.isAllCheck) {
-          newSelectedIndices = List.generate(allProducts.length, (i) => i).where((index) => !(allProducts[index].isBottle ?? false) || allProducts[index].sku == "5321").toList();
+          newSelectedIndices = List.generate(allProducts.length, (i) => i)
+              .where((index) => !(allProducts[index].isBottle ?? false) || allProducts[index].sku == "5321")
+              .toList();
         } else {
           newSelectedIndices = [];
         }
@@ -126,7 +120,8 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         final isNowAllSelected = newSelectedIndices.length == totalSelectable && totalSelectable > 0;
         emit(state.copyWith(productListIndex: newSelectedIndices, isAllCheck: isNowAllSelected));
       } else if (event is _radioButtonEvent) {
-        emit(state.copyWith(selectedRadioTile: event.selectRadioTile, isRefresh: !state.isRefresh, proofFile: File(''), proofFile1: File(''), proofFile2: File('')));
+        emit(state.copyWith(
+            selectedRadioTile: event.selectRadioTile, isRefresh: !state.isRefresh, proofFile: File(''), proofFile1: File(''), proofFile2: File('')));
       } else if (event is _productIncrementEvent) {
         final currentQty = event.productIssueData[event.radioValue]!['quantity'] ?? event.messingQuantity;
         if (currentQty < event.productQuantity) {
@@ -134,10 +129,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           emit(state.copyWith(isRefresh: !state.isRefresh, productIssueData: event.productIssueData));
         } else {
           CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!.missing_quantity_not_more_than_original,
-            type: SnackBarType.failure,
-          );
+              context: event.context, title: AppLocalizations.of(event.context)!.missing_quantity_not_more_than_original, type: SnackBarType.failure);
         }
       } else if (event is _productDecrementEvent) {
         final currentQty = event.productIssueData[event.radioValue]!['quantity'] ?? event.messingQuantity;
@@ -145,74 +137,9 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           event.productIssueData[event.radioValue]!['quantity'] = currentQty - 1;
           emit(state.copyWith(isRefresh: !state.isRefresh));
         }
-      } else if (event is _createIssueEvent) {
-        emit(state.copyWith(isLoading: true));
-        if (event.issue != '') {
-          create.CreateIssueReqModel reqMap = create.CreateIssueReqModel(
-            supplierId: event.supplierId,
-            products: [create.Product(productId: event.productId, issue: event.issue, missingQuantity: event.missingQuantity)],
-          );
-
-          try {
-            final response = await DioClient(event.context).post('${AppUrlEndPoints.createIssueUrl}${event.orderId}', data: reqMap);
-            if (response[AppStrings.statusString] == AppConstants.code_201) {
-              emit(state.copyWith(isLoading: false));
-              Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: event.issue});
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-                type: SnackBarType.success,
-              );
-            } else {
-              Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: ''});
-              emit(state.copyWith(isLoading: false));
-              CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-                type: SnackBarType.failure,
-              );
-            }
-          } on ServerException {
-            Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: ''});
-          } catch (e) {
-            Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: ''});
-            CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
-          }
-        } else {
-          emit(state.copyWith(isLoading: false));
-          Navigator.pop(event.context);
-          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.select_issue, type: SnackBarType.failure);
-        }
       } else if (event is _getBottomSheetDataEvent) {
         if (event.notes.isNotEmpty) {
           state.addNoteController.text = event.notes;
-        }
-      } else if (event is _removeIssueEvent) {
-        emit(state.copyWith(isRemoveProcess: true));
-        RemoveIssueReqModel reqMap = RemoveIssueReqModel(supplierId: event.supplierId, orderId: event.orderId, products: event.product);
-        try {
-          final response = await DioClient(event.context).post(AppUrlEndPoints.removeIssueUrl, data: reqMap);
-          if (response[AppStrings.statusString] == AppConstants.code_200) {
-            add(ProductDetailsEvent.getOrderByIdEvent(context: event.context, orderId: preferences.getOrderId()));
-            emit(state.copyWith(isRemoveProcess: false));
-            Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: 'issue'});
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.success,
-            );
-          } else {
-            emit(state.copyWith(isRemoveProcess: false));
-            CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
-          }
-        } on ServerException {
-          emit(state.copyWith(isRemoveProcess: false));
-        } catch (e) {
-          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
       } else if (event is _duplicateOrderEvent) {
         emit(state.copyWith(isDuplicateOrderProcess: true));
@@ -229,10 +156,9 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             Navigator.pop(event.dialogContext);
             emit(state.copyWith(isDuplicateOrderProcess: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isDuplicateOrderProcess: false));
@@ -249,21 +175,19 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
             emit(state.copyWith(isDuplicateOrderProcess: false));
             List<ProductStockModel> stockList = [];
             stockList.addAll(response.data?.data?.map((product) => ProductStockModel(
-                      quantity: product.totalQuantity ?? 0,
-                      productId: product.id ?? '',
-                      stock: product.productStock.toString(),
-                      lowStock: product.lowStock.toString(),
-                    )) ??
+                    quantity: product.totalQuantity ?? 0,
+                    productId: product.id ?? '',
+                    stock: product.productStock.toString(),
+                    lowStock: product.lowStock.toString())) ??
                 []);
             await preferences.setCartCount(count: stockList.length);
             emit(state.copyWith(isCartCount: true));
           } else {
             emit(state.copyWith(isDuplicateOrderProcess: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isDuplicateOrderProcess: false));
@@ -290,10 +214,9 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
             } else {
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -302,11 +225,10 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       } else if (event is _getPickDocumentEvent) {
         final images = event.proofImages ?? [];
         emit(state.copyWith(
-          proofFile: images.isNotEmpty ? File(AppUrlEndPoints.baseFileUrl + images[0]) : File(''),
-          proofFile1: images.length > 1 ? File(AppUrlEndPoints.baseFileUrl + images[1]) : File(''),
-          proofFile2: images.length > 2 ? File(AppUrlEndPoints.baseFileUrl + images[2]) : File(''),
-          proofImagesList: event.proofImages!,
-        ));
+            proofFile: images.isNotEmpty ? File(AppUrlEndPoints.baseFileUrl + images[0]) : File(''),
+            proofFile1: images.length > 1 ? File(AppUrlEndPoints.baseFileUrl + images[1]) : File(''),
+            proofFile2: images.length > 2 ? File(AppUrlEndPoints.baseFileUrl + images[2]) : File(''),
+            proofImagesList: event.proofImages!));
       } else if (event is _pickDocumentEvent) {
         XFile? image = await openImagePicker(event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         if (image != null) {
@@ -314,18 +236,18 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
-          String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length());
+          String imageSize =
+              getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length());
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
           imgList.addAll(state.proofImagesList);
           final response = await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrlEndPoints.fileUploadUrl,
-            formData: FormData.fromMap(
-              {AppStrings.returnImagesString: await MultipartFile.fromFile(croppedImage?.path ?? image.path, contentType: MediaType('image', 'png'))},
-            ),
-          );
+              path: AppUrlEndPoints.fileUploadUrl,
+              formData: FormData.fromMap({
+                AppStrings.returnImagesString: await MultipartFile.fromFile(croppedImage?.path ?? image.path, contentType: MediaType('image', 'png'))
+              }));
           FileUploadModel signModel = FileUploadModel.fromJson(response);
           if (signModel.filepath != '') {
             imgUrl = '${signModel.filepath}';
@@ -406,8 +328,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
         emit(state.copyWith(isLoading: true));
         try {
           List<req.ReturnProduct> list = [];
-          list.add(
-            req.ReturnProduct(
+          list.add(req.ReturnProduct(
               totalRefund: event.totalRefund,
               proofImages: event.proofImages,
               notes: event.notes,
@@ -417,54 +338,48 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               totalUnits: event.totalUnits,
               isApproved: event.isApproved,
               reasonToReturn: event.reasonToReturn,
-              supplierId: event.supplierId,
-            ),
-          );
+              supplierId: event.supplierId));
           req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
-            applicationName: AppStrings.appName,
-            clientId: preferences.getUserId(),
-            returnProducts: list,
-            subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
-            supplierId: event.supplierId,
-            isDraft: false,
-            orderId: event.orderId,
-          );
+              applicationName: AppStrings.appName,
+              clientId: preferences.getUserId(),
+              returnProducts: list,
+              subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
+              supplierId: event.supplierId,
+              isDraft: false,
+              orderId: event.orderId);
           final res = await DioClient(event.context).post(AppUrlEndPoints.createReturnUrl, data: reqModel.toJson());
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
             emit(state.copyWith(isLoading: false));
             Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: event.reasonToReturn, 'refresh': true});
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.success,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.success);
           } else {
             Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: '', 'refresh': false});
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.failure);
           }
         } catch (_) {}
       } else if (event is _updateReturnEvent) {
         emit(state.copyWith(isLoading: true));
         try {
           req.ReturnProduct updatedProduct = req.ReturnProduct(
-            returnProductId: event.returnProductId,
-            totalRefund: event.totalRefund,
-            proofImages: event.proofImages,
-            notes: event.notes,
-            productName: event.productName,
-            productImage: event.productImage,
-            barcode: event.barcode,
-            totalUnits: event.totalUnits,
-            isApproved: event.isApproved,
-            reasonToReturn: event.reasonToReturn,
-            supplierId: event.supplierId,
-          );
+              returnProductId: event.returnProductId,
+              totalRefund: event.totalRefund,
+              proofImages: event.proofImages,
+              notes: event.notes,
+              productName: event.productName,
+              productImage: event.productImage,
+              barcode: event.barcode,
+              totalUnits: event.totalUnits,
+              isApproved: event.isApproved,
+              reasonToReturn: event.reasonToReturn,
+              supplierId: event.supplierId);
           List<req.ReturnProduct> list = [];
           if (event.returnProductId != null) {
             bool found = false;
@@ -479,18 +394,17 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
                     }
                   }
                   return req.ReturnProduct(
-                    returnProductId: product.returnProductId,
-                    totalRefund: product.totalRefund,
-                    proofImages: product.proofImages,
-                    notes: product.notes,
-                    productName: product.productName,
-                    productImage: product.productImg,
-                    barcode: product.barcode,
-                    totalUnits: product.totalUnits,
-                    isApproved: product.isApproved,
-                    reasonToReturn: product.reasonToReturn,
-                    supplierId: product.supplierId,
-                  );
+                      returnProductId: product.returnProductId,
+                      totalRefund: product.totalRefund,
+                      proofImages: product.proofImages,
+                      notes: product.notes,
+                      productName: product.productName,
+                      productImage: product.productImg,
+                      barcode: product.barcode,
+                      totalUnits: product.totalUnits,
+                      isApproved: product.isApproved,
+                      reasonToReturn: product.reasonToReturn,
+                      supplierId: product.supplierId);
                 })
                 .toList()
                 .whereType<req.ReturnProduct>()
@@ -502,48 +416,45 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           } else {
             list = [
               ...event.returnProduct.map((product) => req.ReturnProduct(
-                    returnProductId: product.returnProductId,
-                    totalRefund: product.totalRefund,
-                    proofImages: product.proofImages,
-                    notes: product.notes,
-                    productName: product.productName,
-                    productImage: product.productImg,
-                    barcode: product.barcode,
-                    totalUnits: product.totalUnits,
-                    isApproved: product.isApproved,
-                    reasonToReturn: product.reasonToReturn,
-                    supplierId: product.supplierId,
-                  )),
-              updatedProduct,
+                  returnProductId: product.returnProductId,
+                  totalRefund: product.totalRefund,
+                  proofImages: product.proofImages,
+                  notes: product.notes,
+                  productName: product.productName,
+                  productImage: product.productImg,
+                  barcode: product.barcode,
+                  totalUnits: product.totalUnits,
+                  isApproved: product.isApproved,
+                  reasonToReturn: product.reasonToReturn,
+                  supplierId: product.supplierId)),
+              updatedProduct
             ];
           }
           req.CreateReturnReqModel reqModel = req.CreateReturnReqModel(
-            applicationName: AppStrings.appName,
-            clientId: preferences.getUserId(),
-            returnProducts: list,
-            subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
-            supplierId: event.supplierId,
-            isDraft: false,
-            orderId: event.orderId,
-          );
-          final res = await DioClient(event.context).post('${AppUrlEndPoints.updateReturnUrl}${event.returnProduct.first.returnId}', data: reqModel.toJson());
+              applicationName: AppStrings.appName,
+              clientId: preferences.getUserId(),
+              returnProducts: list,
+              subUserId: preferences.getSubUserId().isNotEmpty ? preferences.getSubUserId() : null,
+              supplierId: event.supplierId,
+              isDraft: false,
+              orderId: event.orderId);
+          final res =
+              await DioClient(event.context).post('${AppUrlEndPoints.updateReturnUrl}${event.returnProduct.first.returnId}', data: reqModel.toJson());
           CreateReturnResModel resModel = CreateReturnResModel.fromJson(res);
           if (resModel.status == AppConstants.code_201) {
             emit(state.copyWith(isLoading: false));
             Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: event.reasonToReturn, 'refresh': true});
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.success,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.success);
           } else {
             Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: '', 'refresh': false});
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.failure);
           }
         } catch (e) {
           emit(state.copyWith(isLoading: false));
@@ -562,21 +473,20 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               updatedProductListIndex.remove(deletedProductIndex);
             }
             final isAllCheck = fullProductList.isNotEmpty && fullProductList.length == updatedProductListIndex.length;
-            emit(state.copyWith(isLoading: false, productListIndex: updatedProductListIndex, isAllCheck: isAllCheck, language: preferences.getAppLanguage()));
+            emit(state.copyWith(
+                isLoading: false, productListIndex: updatedProductListIndex, isAllCheck: isAllCheck, language: preferences.getAppLanguage()));
             Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: event.reasonToReturn, 'refresh': true, 'deletedBarcode': event.barcode});
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.success,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.success);
           } else {
             Navigator.pop(event.bottomSheetContext, {AppStrings.issueString: '', 'refresh': false});
             emit(state.copyWith(isLoading: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
+                type: SnackBarType.failure);
           }
         } catch (e) {
           emit(state.copyWith(isLoading: false));
@@ -616,18 +526,18 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
           if (croppedImage?.path.isEmpty ?? true) {
             return;
           }
-          String imageSize = getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length());
+          String imageSize =
+              getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await image.length());
 
           if (int.parse(imageSize.split(' ').first) == 0) {
             return;
           }
           imgList.addAll(state.driverDeliveryProofImagesList);
           final response = await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrlEndPoints.fileUploadUrl,
-            formData: FormData.fromMap(
-              {AppStrings.returnImagesString: await MultipartFile.fromFile(croppedImage?.path ?? image.path, contentType: MediaType('image', 'png'))},
-            ),
-          );
+              path: AppUrlEndPoints.fileUploadUrl,
+              formData: FormData.fromMap({
+                AppStrings.returnImagesString: await MultipartFile.fromFile(croppedImage?.path ?? image.path, contentType: MediaType('image', 'png'))
+              }));
           FileUploadModel signModel = FileUploadModel.fromJson(response);
           if (signModel.filepath != '') {
             imgUrl = '${signModel.filepath}';

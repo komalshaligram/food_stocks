@@ -13,7 +13,6 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'message_content_event.dart';
 
 part 'message_content_state.dart';
@@ -39,7 +38,7 @@ class MessageContentBloc extends Bloc<MessageContentEvent, MessageContentState> 
             Navigator.pop(event.context, {
               AppStrings.messageIdString: event.messageId,
               AppStrings.messageReadString: !(state.message.isRead ?? true),
-              AppStrings.messageDeleteString: true,
+              AppStrings.messageDeleteString: true
             });
           } else {
             emit(state.copyWith(isLoading: false));
@@ -55,9 +54,7 @@ class MessageContentBloc extends Bloc<MessageContentEvent, MessageContentState> 
           final response = await DioClient(event.context).put(
               path: AppUrlEndPoints.updateMessageUrl,
               data: reqMap.toJson(),
-              options: Options(
-                headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'},
-              ));
+              options: Options(headers: {HttpHeaders.authorizationHeader: 'Bearer ${preferences.getAuthToken()}'}));
           if (response[AppStrings.statusString] == AppConstants.code_200) {}
         } catch (_) {}
       } else if (event is _imagePreviewEvent) {

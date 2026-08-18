@@ -16,32 +16,26 @@ class ClientFormDetailsEvent with _$ClientFormDetailsEvent {
 
   factory ClientFormDetailsEvent.selectOwnerNoEvent({required String owner}) = _selectOwnerNoEvent;
 
-  factory ClientFormDetailsEvent.getArgumentEvent({required String owner, required String businessTypeId, required bool isFreelancer}) = _getArgumentEvent;
+  factory ClientFormDetailsEvent.getArgumentEvent({required String owner, required String businessTypeId, required bool isFreelancer}) =
+      _getArgumentEvent;
 
   factory ClientFormDetailsEvent.selectBankEvent({required String bankId, required String bankName}) = _selectBankEvent;
 
   factory ClientFormDetailsEvent.getBankNameEvent({required BuildContext context}) = _getBankNameEvent;
 
-  factory ClientFormDetailsEvent.onFormFieldFocusChangeEvent({
-    required BuildContext context,
-    required PdfFormFieldFocusChangeDetails details,
-  }) = _onFormFieldFocusChangeEvent;
+  factory ClientFormDetailsEvent.onFormFieldFocusChangeEvent({required BuildContext context, required PdfFormFieldFocusChangeDetails details}) =
+      _onFormFieldFocusChangeEvent;
 
   factory ClientFormDetailsEvent.saveSignatureEvent({required BuildContext context, required PdfSignatureFormField formField}) = _saveSignatureEvent;
 
-  factory ClientFormDetailsEvent.getPdfDataEvent({
-    required BuildContext context,
-    required String pdfData,
-    required TermsConditionReqModel termsConditionReqModel,
-  }) = _getPdfDataEvent;
+  factory ClientFormDetailsEvent.getPdfDataEvent(
+      {required BuildContext context, required String pdfData, required TermsConditionReqModel termsConditionReqModel}) = _getPdfDataEvent;
 
-  factory ClientFormDetailsEvent.signatureEvent({required BuildContext context, required String fieldName, required String fieldNameForSign}) = _signatureEvent;
+  factory ClientFormDetailsEvent.signatureEvent({required BuildContext context, required String fieldName, required String fieldNameForSign}) =
+      _signatureEvent;
 
-  factory ClientFormDetailsEvent.uploadSignatureFromPadEvent({
-    required BuildContext context,
-    required String fieldName,
-    required String localImagePath,
-  }) = _uploadSignatureFromPadEvent;
+  factory ClientFormDetailsEvent.uploadSignatureFromPadEvent(
+      {required BuildContext context, required String fieldName, required String localImagePath}) = _uploadSignatureFromPadEvent;
 
   factory ClientFormDetailsEvent.updateClientDataEvent({required BuildContext context}) = _updateClientDataEvent;
 

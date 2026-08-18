@@ -16,7 +16,8 @@ class ProfileMenuEvent with _$ProfileMenuEvent {
 
   const factory ProfileMenuEvent.userApproveEvent({required BuildContext context}) = _userApproveEvent;
 
-  const factory ProfileMenuEvent.generalSettings({required BuildContext context, required BuildContext dialogContext, required bool isRetryLoading}) = _generalSettings;
+  const factory ProfileMenuEvent.generalSettings({required BuildContext context, required BuildContext dialogContext, required bool isRetryLoading}) =
+      _generalSettings;
 
   const factory ProfileMenuEvent.updateMaintenanceEvent({required BuildContext context}) = _updateMaintenanceEvent;
 

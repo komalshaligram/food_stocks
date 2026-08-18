@@ -14,7 +14,6 @@ import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_strings.dart';
-
 part 'log_in_event.dart';
 part 'log_in_state.dart';
 part 'log_in_bloc.freezed.dart';
@@ -66,11 +65,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             }
 
             final int nextCount = preferences.getOtpSendCount(event.contactNumber) + 1;
-            await preferences.setOtpCooldown(
-              contact: event.contactNumber,
-              seconds: otpCooldownSeconds(nextCount),
-              sendCount: nextCount,
-            );
+            await preferences.setOtpCooldown(contact: event.contactNumber, seconds: otpCooldownSeconds(nextCount), sendCount: nextCount);
 
             Navigator.pushNamed(event.context, RouteDefine.otpScreen.name, arguments: {
               AppStrings.contactString: event.contactNumber,
@@ -81,17 +76,15 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
             add(LogInEvent.syncCooldown(contactNumber: event.contactNumber));
           } else if (response.status == AppConstants.code_403) {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {

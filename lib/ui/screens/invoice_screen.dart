@@ -50,44 +50,45 @@ class InvoiceScreenWidget extends StatelessWidget {
               }),
         ),
         body: SafeArea(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
-          child: SmartRefresher(
-            enablePullDown: true,
-            controller: state.refreshController,
-            header: const RefreshWidget(),
-            footer: CustomFooter(builder: (context, mode) => const OrderSummaryScreenShimmerWidget(containerHeight: 140)),
-            enablePullUp: !state.isBottomOfProducts,
-            onRefresh: () {
-              context.read<InvoiceBloc>().add(InvoiceEvent.refreshListEvent(context: context));
-            },
-            onLoading: () {
-              context.read<InvoiceBloc>().add(InvoiceEvent.getInvoicesDataEvent(context: context));
-            },
-            child: state.isShimmering
-                ? const OrderSummaryScreenShimmerWidget(containerHeight: 140)
-                : !state.isShimmering && state.invoiceDetailsList.isEmpty
-                    ? SizedBox(height: getScreenHeight(context) * 0.8, child: noDataWidget(AppLocalizations.of(context)!.no_data))
-                    : ListView.builder(
-                        itemCount: state.invoiceDetailsList.length,
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
-                        itemBuilder: (context, index) => invoiceList(
-                            index: index,
-                            invoicesList: state.invoiceDetailsList,
-                            context: context,
-                            invoiceType: state.invoiceDetailsList[index].invoiceType.toString(),
-                            invoiceDate: state.invoiceDetailsList[index].invoiceDate.toString(),
-                            invoicePrice: state.invoiceDetailsList[index].invoiceAmount.toString(),
-                            invoiceNumber: state.invoiceDetailsList[index].invoiceNumber.toString(),
-                            invoiceStatus: state.statusList.isNotEmpty
-                                ? getStatus(state.statusList, state.invoiceDetailsList[index].paymentStatus.toString(), state.language)
-                                    .toCapitalized()
-                                : '',
-                            supplierName: state.invoiceDetailsList[index].supplierName ?? '',
-                            dueDate: state.invoiceDetailsList[index].dueDate.toString())),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.padding_5),
+            child: SmartRefresher(
+              enablePullDown: true,
+              controller: state.refreshController,
+              header: const RefreshWidget(),
+              footer: CustomFooter(builder: (context, mode) => const OrderSummaryScreenShimmerWidget(containerHeight: 140)),
+              enablePullUp: !state.isBottomOfProducts,
+              onRefresh: () {
+                context.read<InvoiceBloc>().add(InvoiceEvent.refreshListEvent(context: context));
+              },
+              onLoading: () {
+                context.read<InvoiceBloc>().add(InvoiceEvent.getInvoicesDataEvent(context: context));
+              },
+              child: state.isShimmering
+                  ? const OrderSummaryScreenShimmerWidget(containerHeight: 140)
+                  : !state.isShimmering && state.invoiceDetailsList.isEmpty
+                      ? SizedBox(height: getScreenHeight(context) * 0.8, child: noDataWidget(AppLocalizations.of(context)!.no_data))
+                      : ListView.builder(
+                          itemCount: state.invoiceDetailsList.length,
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          itemBuilder: (context, index) => invoiceList(
+                              index: index,
+                              invoicesList: state.invoiceDetailsList,
+                              context: context,
+                              invoiceType: state.invoiceDetailsList[index].invoiceType.toString(),
+                              invoiceDate: state.invoiceDetailsList[index].invoiceDate.toString(),
+                              invoicePrice: state.invoiceDetailsList[index].invoiceAmount.toString(),
+                              invoiceNumber: state.invoiceDetailsList[index].invoiceNumber.toString(),
+                              invoiceStatus: state.statusList.isNotEmpty
+                                  ? getStatus(state.statusList, state.invoiceDetailsList[index].paymentStatus.toString(), state.language)
+                                      .toCapitalized()
+                                  : '',
+                              supplierName: state.invoiceDetailsList[index].supplierName ?? '',
+                              dueDate: state.invoiceDetailsList[index].dueDate.toString())),
+            ),
           ),
-        )),
+        ),
       );
     });
   }

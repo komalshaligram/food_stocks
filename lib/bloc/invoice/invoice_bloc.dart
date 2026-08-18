@@ -14,7 +14,6 @@ import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-
 part 'invoice_state.dart';
 part 'invoice_event.dart';
 part 'invoice_bloc.freezed.dart';
@@ -35,16 +34,15 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
         try {
           final String statusData = preferences.getPaymentStatusInfo();
           final List<StatusData> statusList = StatusData.decode(statusData);
-
           final args = ModalRoute.of(event.context)!.settings.arguments as Map<String, dynamic>;
           screenTitleName = args[AppStrings.invoiceTitleNameString] as String;
           emit(state.copyWith(
-            statusList: statusList,
-            language: preferences.getAppLanguage(),
-            isShimmering: state.pageNum == 0 ? true : false,
-            isLoadMore: state.pageNum == 0 ? false : true,
-          ));
-          InvoicesReqModel request = InvoicesReqModel(pageLimit: AppConstants.recommendationProductPageLimit, pageNum: state.pageNum + 1, id: preferences.getUserId());
+              statusList: statusList,
+              language: preferences.getAppLanguage(),
+              isShimmering: state.pageNum == 0 ? true : false,
+              isLoadMore: state.pageNum == 0 ? false : true));
+          InvoicesReqModel request =
+              InvoicesReqModel(pageLimit: AppConstants.recommendationProductPageLimit, pageNum: state.pageNum + 1, id: preferences.getUserId());
           final res = await DioClient(event.context).post(AppUrlEndPoints.clientInvoicesUrl, data: request.toJson());
           InvoicesResModel response = InvoicesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -52,19 +50,20 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceState> {
             if (screenTitleName == AppLocalizations.of(event.context)!.my_invoices) {
               invoiceDetailsList.addAll(response.data?.orderInvoices?.invoices ?? []);
               emit(state.copyWith(invoiceDetailsList: invoiceDetailsList, pageNum: state.pageNum + 1, isShimmering: false, isLoadMore: false));
-              emit(state.copyWith(isBottomOfProducts: state.invoiceDetailsList.length >= (response.data?.orderInvoices?.totalRecords ?? 0) ? true : false));
+              emit(state.copyWith(
+                  isBottomOfProducts: state.invoiceDetailsList.length >= (response.data?.orderInvoices?.totalRecords ?? 0) ? true : false));
             } else {
               invoiceDetailsList.addAll(response.data?.refundInvoices?.invoices ?? []);
               emit(state.copyWith(invoiceDetailsList: invoiceDetailsList, pageNum: state.pageNum + 1, isShimmering: false, isLoadMore: false));
-              emit(state.copyWith(isBottomOfProducts: state.invoiceDetailsList.length >= (response.data?.refundInvoices?.totalRecords ?? 0) ? true : false));
+              emit(state.copyWith(
+                  isBottomOfProducts: state.invoiceDetailsList.length >= (response.data?.refundInvoices?.totalRecords ?? 0) ? true : false));
             }
           } else {
             emit(state.copyWith(isLoadMore: false, isShimmering: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false, isShimmering: false));

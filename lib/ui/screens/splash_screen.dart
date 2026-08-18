@@ -131,17 +131,11 @@ class SplashScreenWidget extends StatelessWidget {
         child: Align(
           alignment: AlignmentDirectional.centerStart,
           child: FractionallySizedBox(
-            widthFactor: 0.5,
-            child: Container(
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
+              widthFactor: 0.5, child: Container(decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)))),
         ),
       ),
     );
   }
-
-
 }
 
 class _PulseRings extends StatefulWidget {
@@ -169,9 +163,7 @@ class _PulseRingsState extends State<_PulseRings> with SingleTickerProviderState
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) => CustomPaint(size: Size.infinite, painter: _RingsPainter(_controller.value)),
-    );
+        animation: _controller, builder: (context, _) => CustomPaint(size: Size.infinite, painter: _RingsPainter(_controller.value)));
   }
 }
 

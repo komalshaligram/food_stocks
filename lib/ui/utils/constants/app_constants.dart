@@ -8,26 +8,11 @@ class AppConstants {
   static const double salesProductItemHeight = 300;
   static const double containerHeight_80 = 80;
   static const double containerHeight_60 = 60;
-  static const double containerHeight_65 = 65;
   static const double containerSize_50 = 50;
-  static const double containerSize_25 = 25;
   static const double containerSize_35 = 32;
-  static const double searchPesachHeight = 140;
-  static const double containerHeight_130 = 130;
   static const double containerHeight_100 = 100;
-  static const double relatedProductItemWidth = 140;
   static const double withoutSaleItemHeight = 285;
   static const double animationDuration = 8000;
-  static const double timeOutDuration = 18000;
-  static const double tabletImageHeight = 130;
-  static const double saleItemHeight = 370;
-  static const double bigTabItemHeight = 350;
-  static const double smallTabItemHeight = 260;
-  static const double bigTabImageHeight = 190;
-  static const double smallTabImageHeight = 125;
-  static const double bigTabImageWidth = 190;
-  static const double smallTabImageWidth = 160;
-  static const double normalImageWidth = 140;
 
   //padding
   static const double padding_5 = 5;
@@ -35,18 +20,12 @@ class AppConstants {
   static const double padding_15 = 15;
   static const double padding_20 = 20;
   static const double padding_30 = 30;
-  static const double padding_35 = 35;
   static const double padding_8 = 8;
   static const double padding_3 = 3;
   static const double padding_4 = 4;
   static const double padding_6 = 6;
   static const double padding_50 = 50;
-  static const double padding_55 = 55;
-  static const double padding_60 = 60;
-  static const double padding_65 = 65;
-  static const double padding_80 = 80;
   static const double padding_2 = 2;
-  static const double padding_40 = 40;
   static const double padding_70 = 70;
   static const double padding_11 = 11;
   static const double padding_85 = 85;
@@ -56,13 +35,11 @@ class AppConstants {
   static const double radius_3 = 3;
   static const double radius_4 = 4;
   static const double radius_5 = 5;
-  static const double radius_6 = 6;
   static const double radius_7 = 7;
   static const double radius_8 = 8;
   static const double radius_10 = 10;
   static const double radius_15 = 15;
   static const double radius_100 = 100;
-  static const double radius_200 = 200;
   static const double radius_50 = 50;
   static const double radius_40 = 40;
   static const double radius_30 = 30;
@@ -89,13 +66,9 @@ class AppConstants {
   static const int paidStatus = 7;
   static const int onTheWayStatus = 6;
   static const int deliveryStatus = 5;
-  static const int cancelStatus = 4;
 
   //blur
   static const double blur_10 = 10;
-
-  //file size cap
-  static const int fileSizeCap = 1024;
 
   //file quality
   static const int fileQuality = 50;
@@ -106,10 +79,6 @@ class AppConstants {
   //shimmer text height
   static const double shimmerTextHeight = 20;
 
-  //list item animation delay
-  static const int listAnimationDelay = 200;
-  static const int listAnimationItemDelay = 50;
-
   //product grid aspect ratio
   static const double productGridAspectRatio51 = 0.44;
   static const double productGridAspectRatio9 = 9.5 / 13;
@@ -119,27 +88,19 @@ class AppConstants {
   //bottom nav space
   static const double bottomNavSpace = 30;
 
-  //product details bottom sheet height
-  static const double bottomSheetInitHeight = 1;
-  static const double bottomSheetMaxHeight = 0.75;
-  static const double bottomSheetMaxHeight1 = 0.7;
-
   //pagination
   static const int defaultPageLimit = 6;
   static const int supplierListPageLimit = 20;
   static const int supplierPageLimit = 18;
   static const int companyPageLimit = 18;
-  static const int searchPageLimit = 6;
   static const int productCategoryPageLimit = 18;
   static const int productSubCategoryPageLimit = 18;
   static const int supplierProductPageLimit = 18;
   static const int recommendationProductPageLimit = 18;
   static const int saleProductPageLimit = 18;
-  static const int reorderPageLimit = 18;
   static const int planogramProductPageLimit = 4;
   static const int qnaPageLimit = 15;
   static const int messagePageLimit = 10;
-  static const int appContentPageLimit = 10;
   static const int orderPageLimit = 15;
   static const int walletLimit = 10;
 
@@ -152,7 +113,5 @@ class AppConstants {
   static const int code_403 = 403;
   static const int code_405 = 405;
   static const int code_424 = 424;
-  static const int code_500 = 500;
   static const int code_501 = 501;
-  static const int code_503 = 503;
 }

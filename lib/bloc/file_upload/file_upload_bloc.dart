@@ -26,7 +26,6 @@ import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'file_upload_state.dart';
 
 part 'file_upload_event.dart';
@@ -36,31 +35,23 @@ part 'file_upload_bloc.freezed.dart';
 class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
   FileUploadBloc() : super(FileUploadState.initial()) {
     on<FileUploadEvent>((event, emit) async {
-      SharedPreferencesHelper preferences =
-          SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
+      SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getFormsListEvent) {
-        emit(state.copyWith(
-            isLoading: true,
-            isShimmering: true,
-            isUpdate: event.isUpdate,
-            language: preferences.getAppLanguage()));
+        emit(state.copyWith(isLoading: true, isShimmering: true, isUpdate: event.isUpdate, language: preferences.getAppLanguage()));
         try {
-          final res = await DioClient(event.context)
-              .get(path: AppUrlEndPoints.formsListUrl);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.formsListUrl);
           FormsResModel response = FormsResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            List<FormAndFileModel> formsList =
-                state.formsAndFilesList.toList(growable: true);
+            List<FormAndFileModel> formsList = state.formsAndFilesList.toList(growable: true);
             int len = response.data?.clientForms?.toList().length ?? 0;
             for (int i = 0; i < len; i++) {
               if (response.data?.clientForms?[i].isShownInMobile ?? false) {
                 formsList.add(FormAndFileModel(
-                  id: response.data?.clientForms?[i].id,
-                  isForm: true,
-                  sampleUrl: response.data?.clientForms?[i].sample,
-                  name: response.data?.clientForms?[i].formName,
-                ));
+                    id: response.data?.clientForms?[i].id,
+                    isForm: true,
+                    sampleUrl: response.data?.clientForms?[i].sample,
+                    name: response.data?.clientForms?[i].formName));
               }
             }
             if (state.isUpdate) {
@@ -68,78 +59,49 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
 
             try {
-              final res = await DioClient(event.context)
-                  .get(path: AppUrlEndPoints.filesListUrl);
+              final res = await DioClient(event.context).get(path: AppUrlEndPoints.filesListUrl);
               FilesResModel response = FilesResModel.fromJson(res);
               if (response.status == AppConstants.code_200) {
-                List<FormAndFileModel> filesList =
-                    state.formsAndFilesList.toList(growable: true);
+                List<FormAndFileModel> filesList = state.formsAndFilesList.toList(growable: true);
                 int len = response.data?.clientFiles?.toList().length ?? 0;
                 for (int i = 0; i < len; i++) {
-                  filesList.add(FormAndFileModel(
-                      id: response.data?.clientFiles?[i].id,
-                      isForm: false,
-                      name: response.data?.clientFiles?[i].fileName));
+                  filesList
+                      .add(FormAndFileModel(id: response.data?.clientFiles?[i].id, isForm: false, name: response.data?.clientFiles?[i].fileName));
                 }
-                emit(state.copyWith(
-                    formsAndFilesList: filesList,
-                    isLoading: false,
-                    isShimmering: false));
+                emit(state.copyWith(formsAndFilesList: filesList, isLoading: false, isShimmering: false));
                 if (state.isUpdate) {
                   try {
                     emit(state.copyWith(isShimmering: true));
                     final res = await DioClient(event.context)
-                        .post(AppUrlEndPoints.getProfileDetailsUrl, data: {
-                      AppStrings.idParamString: preferences.getUserId()
-                    });
-                    ProfileDetailsResModel response =
-                        ProfileDetailsResModel.fromJson(res);
-                    Map<String, dynamic> newModel =
-                        res['data']['clients'][0]['clientDetail'];
+                        .post(AppUrlEndPoints.getProfileDetailsUrl, data: {AppStrings.idParamString: preferences.getUserId()});
+                    ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
+                    Map<String, dynamic> newModel = res['data']['clients'][0]['clientDetail'];
 
                     if (response.status == AppConstants.code_200) {
-                      if (newModel[AppStrings.formsString] != null ||
-                          newModel[AppStrings.filesString] != null) {
-                        List<FormAndFileModel> formsAndFilesList =
-                            state.formsAndFilesList.toList(growable: true);
+                      if (newModel[AppStrings.formsString] != null || newModel[AppStrings.filesString] != null) {
+                        List<FormAndFileModel> formsAndFilesList = state.formsAndFilesList.toList(growable: true);
 
                         for (int i = 0; i < formsAndFilesList.length; i++) {
                           if (newModel[AppStrings.filesString] != '' &&
                               newModel[AppStrings.filesString] != null &&
-                              (newModel[AppStrings.filesString]
-                                      .containsKey(formsAndFilesList[i].id) ??
-                                  false)) {
-                            formsAndFilesList[i] = formsAndFilesList[i]
-                                .copyWith(
-                                    url: newModel[AppStrings.filesString]
-                                        [formsAndFilesList[i].id]);
+                              (newModel[AppStrings.filesString].containsKey(formsAndFilesList[i].id) ?? false)) {
+                            formsAndFilesList[i] = formsAndFilesList[i].copyWith(url: newModel[AppStrings.filesString][formsAndFilesList[i].id]);
                           } else if (newModel[AppStrings.formsString] != '' &&
                               newModel[AppStrings.formsString] != null &&
-                              (newModel[AppStrings.formsString]
-                                      .containsKey(formsAndFilesList[i].id) ??
-                                  false)) {
-                            formsAndFilesList[i] = formsAndFilesList[i]
-                                .copyWith(
-                                    url: newModel[AppStrings.formsString]
-                                        [formsAndFilesList[i].id]);
+                              (newModel[AppStrings.formsString].containsKey(formsAndFilesList[i].id) ?? false)) {
+                            formsAndFilesList[i] = formsAndFilesList[i].copyWith(url: newModel[AppStrings.formsString][formsAndFilesList[i].id]);
                           }
                         }
-                        emit(state.copyWith(
-                            formsAndFilesList: formsAndFilesList,
-                            isShimmering: false));
+                        emit(state.copyWith(formsAndFilesList: formsAndFilesList, isShimmering: false));
                       } else {
                         emit(state.copyWith(isShimmering: false));
                       }
                     } else {
                       emit(state.copyWith(isShimmering: false));
                       CustomSnackBar.showSnackBar(
-                        context: event.context,
-                        title: AppStrings.getLocalizedStrings(
-                            response.message?.toLocalization() ??
-                                response.message!,
-                            event.context),
-                        type: SnackBarType.failure,
-                      );
+                          context: event.context,
+                          title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                          type: SnackBarType.failure);
                     }
                   } on ServerException {
                     emit(state.copyWith(isShimmering: false));
@@ -147,12 +109,9 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
                 }
               } else {
                 CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(
-                      response.message?.toLocalization() ?? response.message!,
-                      event.context),
-                  type: SnackBarType.failure,
-                );
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                    type: SnackBarType.failure);
                 emit(state.copyWith(isLoading: false));
               }
             } on ServerException {
@@ -160,57 +119,38 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ?? response.message!,
-                  event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false));
           CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: AppLocalizations.of(event.context)!
-                .something_is_wrong_try_again,
-            type: SnackBarType.failure,
-          );
+              context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
         }
       } else if (event is _getFilesListEvent) {
         emit(state.copyWith(isLoading: true));
         try {
-          final res = await DioClient(event.context)
-              .get(path: AppUrlEndPoints.filesListUrl);
+          final res = await DioClient(event.context).get(path: AppUrlEndPoints.filesListUrl);
           FilesResModel response = FilesResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            List<FormAndFileModel> filesList =
-                state.formsAndFilesList.toList(growable: true);
+            List<FormAndFileModel> filesList = state.formsAndFilesList.toList(growable: true);
             int len = response.data?.clientFiles?.toList().length ?? 0;
             for (int i = 0; i < len; i++) {
-              filesList.add(FormAndFileModel(
-                  id: response.data?.clientFiles?[i].id,
-                  isForm: false,
-                  name: response.data?.clientFiles?[i].fileName));
+              filesList.add(FormAndFileModel(id: response.data?.clientFiles?[i].id, isForm: false, name: response.data?.clientFiles?[i].fileName));
             }
-            emit(
-                state.copyWith(formsAndFilesList: filesList, isLoading: false));
+            emit(state.copyWith(formsAndFilesList: filesList, isLoading: false));
           } else {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ?? response.message!,
-                  event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isLoading: false));
           }
         } on ServerException {
           CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!
-                  .something_is_wrong_try_again,
-              type: SnackBarType.failure);
+              context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
           emit(state.copyWith(isLoading: false));
         }
       } else if (event is _pickDocumentEvent) {
@@ -221,8 +161,7 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
         File? file;
         if (event.isDocument) {
           if (Platform.isAndroid) {
-            pickedFile = await ImagePicker()
-                .pickMedia(imageQuality: AppConstants.fileQuality);
+            pickedFile = await ImagePicker().pickMedia(imageQuality: AppConstants.fileQuality);
           } else {
             FilePickerResult? result = await FilePicker.platform.pickFiles();
             if (result != null) {
@@ -230,22 +169,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
           }
         } else {
-          pickedFile = await ImagePicker().pickImage(
-              source: event.isFromCamera
-                  ? ImageSource.camera
-                  : ImageSource.gallery);
+          pickedFile = await ImagePicker().pickImage(source: event.isFromCamera ? ImageSource.camera : ImageSource.gallery);
         }
         if (pickedFile != null || file != null) {
-          String? fileType =
-              p.extension(pickedFile != null ? pickedFile.path : file!.path);
+          String? fileType = p.extension(pickedFile != null ? pickedFile.path : file!.path);
           CroppedFile? croppedImage;
-          if (fileType.contains('pdf') ||
-              fileType.contains('doc') ||
-              fileType.contains('docx')) {
-          } else if (fileType.contains('jpg') ||
-              fileType.contains('png') ||
-              fileType.contains('jpeg') ||
-              fileType.contains('heic')) {
+          if (fileType.contains('pdf') || fileType.contains('doc') || fileType.contains('docx')) {
+          } else if (fileType.contains('jpg') || fileType.contains('png') || fileType.contains('jpeg') || fileType.contains('heic')) {
             croppedImage = await cropImage(
                 path: pickedFile != null ? pickedFile.path : file!.path,
                 shape: CropStyle.rectangle,
@@ -257,40 +187,30 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
           } else {
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppLocalizations.of(event.context)!
-                    .select_valid_document_format,
-                type: SnackBarType.failure);
+                context: event.context, title: AppLocalizations.of(event.context)!.select_valid_document_format, type: SnackBarType.failure);
             return;
           }
           String? fileSize;
           if (pickedFile != null) {
             fileSize = getFileSizeString(
-                bytes: croppedImage?.path.isNotEmpty ?? false
-                    ? await File(croppedImage!.path).length()
-                    : await pickedFile.length());
+                bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await pickedFile.length());
           } else if (file != null) {
-            fileSize = getFileSizeString(
-                bytes: croppedImage?.path.isNotEmpty ?? false
-                    ? await File(croppedImage!.path).length()
-                    : await file.length());
+            fileSize =
+                getFileSizeString(bytes: croppedImage?.path.isNotEmpty ?? false ? await File(croppedImage!.path).length() : await file.length());
           }
 
           if (int.parse(fileSize!.split(' ').first) == 0) {
             return;
           }
 
-          List<FormAndFileModel> formAndFileList =
-              state.formsAndFilesList.toList(growable: true);
+          List<FormAndFileModel> formAndFileList = state.formsAndFilesList.toList(growable: true);
           FormData formData;
           String? contentType = 'png';
           String type = 'image';
           String? extension = 'png';
 
           if (pickedFile != null) {
-            extension = croppedImage?.path != null
-                ? croppedImage?.path.split(".")[1].toString()
-                : pickedFile.path.split(".")[1].toString();
+            extension = croppedImage?.path != null ? croppedImage?.path.split(".")[1].toString() : pickedFile.path.split(".")[1].toString();
             if (extension == 'pdf') {
               contentType = 'pdf';
               type = 'application';
@@ -303,19 +223,14 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
 
             formData = FormData.fromMap({
-              formAndFileList[event.fileIndex].isForm ?? false
-                  ? AppStrings.formString
-                  : AppStrings.fileString: await MultipartFile.fromFile(
-                croppedImage?.path ?? pickedFile.path,
-                filename:
-                    "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? pickedFile.path : pickedFile.path)}",
-                contentType: MediaType(type, contentType),
-              )
+              formAndFileList[event.fileIndex].isForm ?? false ? AppStrings.formString : AppStrings.fileString: await MultipartFile.fromFile(
+                  croppedImage?.path ?? pickedFile.path,
+                  filename:
+                      "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? pickedFile.path : pickedFile.path)}",
+                  contentType: MediaType(type, contentType))
             });
           } else {
-            extension = croppedImage?.path != null
-                ? croppedImage?.path.split(".")[1].toString()
-                : file?.path.split(".")[1].toString();
+            extension = croppedImage?.path != null ? croppedImage?.path.split(".")[1].toString() : file?.path.split(".")[1].toString();
             if (extension == 'pdf') {
               contentType = 'pdf';
               type = 'application';
@@ -328,49 +243,34 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             }
 
             formData = FormData.fromMap({
-              formAndFileList[event.fileIndex].isForm ?? false
-                  ? AppStrings.formString
-                  : AppStrings.fileString: await MultipartFile.fromFile(
-                croppedImage?.path ?? file!.path,
-                filename:
-                    "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}",
-                contentType: MediaType(type, contentType),
-              )
+              formAndFileList[event.fileIndex].isForm ?? false ? AppStrings.formString : AppStrings.fileString: await MultipartFile.fromFile(
+                  croppedImage?.path ?? file!.path,
+                  filename:
+                      "${formAndFileList[event.fileIndex].name}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(croppedImage?.path == null ? file!.path : file!.path)}",
+                  contentType: MediaType(type, contentType))
             });
           }
 
           try {
-            emit(state.copyWith(
-                isUploadLoading: true, uploadIndex: event.fileIndex));
-            final res = await DioClient(event.context)
-                .uploadFileProgressWithFormData(
-                    path: AppUrlEndPoints.fileUploadUrl, formData: formData);
+            emit(state.copyWith(isUploadLoading: true, uploadIndex: event.fileIndex));
+            final res = await DioClient(event.context).uploadFileProgressWithFormData(path: AppUrlEndPoints.fileUploadUrl, formData: formData);
             FileUploadResModel response = FileUploadResModel.fromJson(res);
             if (response.baseUrl?.isNotEmpty ?? false) {
               emit(state.copyWith(isUploadLoading: false));
-              formAndFileList[event.fileIndex] =
-                  formAndFileList[event.fileIndex]
-                      .copyWith(url: response.filepath);
+              formAndFileList[event.fileIndex] = formAndFileList[event.fileIndex].copyWith(url: response.filepath);
               if (pickedFile != null) {
-                formAndFileList[event.fileIndex] =
-                    formAndFileList[event.fileIndex].copyWith(
-                        localUrl: croppedImage?.path ?? pickedFile.path);
+                formAndFileList[event.fileIndex] = formAndFileList[event.fileIndex].copyWith(localUrl: croppedImage?.path ?? pickedFile.path);
               } else if (file != null) {
-                formAndFileList[event.fileIndex] =
-                    formAndFileList[event.fileIndex]
-                        .copyWith(localUrl: croppedImage?.path ?? file.path);
+                formAndFileList[event.fileIndex] = formAndFileList[event.fileIndex].copyWith(localUrl: croppedImage?.path ?? file.path);
               }
 
               emit(state.copyWith(formsAndFilesList: formAndFileList));
             } else {
               emit(state.copyWith(isUploadLoading: false));
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    res[AppStrings.messageString].toString().toLocalization(),
-                    event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(res[AppStrings.messageString].toString().toLocalization(), event.context),
+                  type: SnackBarType.failure);
             }
           } catch (e) {
             emit(state.copyWith(isUploadLoading: false));
@@ -379,16 +279,13 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
       } else if (event is _uploadApiEvent) {
         try {
           emit(state.copyWith(isApiLoading: true));
-          Map<String, Map<String, dynamic>> formsAndFiles = {
-            AppStrings.filesString: {}
-          };
+          Map<String, Map<String, dynamic>> formsAndFiles = {AppStrings.filesString: {}};
           Map<String, String> fileList = {};
           for (var formAndFile in state.formsAndFilesList) {
             if (formAndFile.url?.isNotEmpty ?? false) {
               if ((formAndFile.isForm ?? false)) {
               } else if ((formAndFile.isForm == false)) {
-                formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
-                    formAndFile.url ?? '';
+                formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] = formAndFile.url ?? '';
                 fileList[formAndFile.id ?? ''] = formAndFile.url ?? '';
               }
             }
@@ -398,124 +295,83 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
             if ((formsAndFiles[AppStrings.filesString]?.isEmpty ?? true)) {
               emit(state.copyWith(isApiLoading: false));
               CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppLocalizations.of(event.context)!
-                      .registered_successfully,
-                  type: SnackBarType.success);
-              Navigator.popUntil(event.context,
-                  (route) => route.name == RouteDefine.connectScreen.name);
+                  context: event.context, title: AppLocalizations.of(event.context)!.registered_successfully, type: SnackBarType.success);
+              Navigator.popUntil(event.context, (route) => route.name == RouteDefine.connectScreen.name);
               Navigator.pushNamed(event.context, RouteDefine.loginScreen.name);
               return;
             }
           }
 
-          final res = await DioClient(event.context).post(
-              "${AppUrlEndPoints.fileUpdateUrl}/${preferences.getUserId()}",
-              data: formsAndFiles);
+          final res = await DioClient(event.context).post("${AppUrlEndPoints.fileUpdateUrl}/${preferences.getUserId()}", data: formsAndFiles);
           FileUpdateResModel response = FileUpdateResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isApiLoading: false));
             if (state.isUpdate) {
               if (event.isFromDelete ?? false) {
                 CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title: AppLocalizations.of(event.context)!
-                        .removed_successfully,
-                    type: SnackBarType.success);
+                    context: event.context, title: AppLocalizations.of(event.context)!.removed_successfully, type: SnackBarType.success);
               } else {
                 emit(state.copyWith(isApiLoading: false));
                 Navigator.pop(event.context);
                 CustomSnackBar.showSnackBar(
-                    context: event.context,
-                    title: AppLocalizations.of(event.context)!
-                        .updated_successfully,
-                    type: SnackBarType.success);
+                    context: event.context, title: AppLocalizations.of(event.context)!.updated_successfully, type: SnackBarType.success);
               }
             } else {
-              add(FileUploadEvent.updateClientCreditEvent(
-                  context: event.context));
+              add(FileUploadEvent.updateClientCreditEvent(context: event.context));
             }
           } else {
             emit(state.copyWith(isApiLoading: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ?? response.message!,
-                  event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isApiLoading: false));
         }
       } else if (event is _deleteFileEvent) {
-        List<FormAndFileModel> formsAndFilesList =
-            state.formsAndFilesList.toList(growable: true);
+        List<FormAndFileModel> formsAndFilesList = state.formsAndFilesList.toList(growable: true);
         try {
           if (formsAndFilesList[event.index].url?.isEmpty ?? true) {
             return;
-          } else if (formsAndFilesList[event.index]
-                  .url
-                  ?.contains(AppStrings.tempString) ??
-              false) {
-            formsAndFilesList[event.index] =
-                formsAndFilesList[event.index].copyWith(localUrl: '', url: '');
+          } else if (formsAndFilesList[event.index].url?.contains(AppStrings.tempString) ?? false) {
+            formsAndFilesList[event.index] = formsAndFilesList[event.index].copyWith(localUrl: '', url: '');
             emit(state.copyWith(formsAndFilesList: formsAndFilesList));
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppLocalizations.of(event.context)!.removed_successfully,
-                type: SnackBarType.success);
+                context: event.context, title: AppLocalizations.of(event.context)!.removed_successfully, type: SnackBarType.success);
             return;
           }
-          emit(state.copyWith(
-              isRemoveProcess: true,
-              uploadIndex: event.index,
-              isLoading: false));
-          Map<String, Map<String, dynamic>> formsAndFiles = {
-            AppStrings.formsString: {},
-            AppStrings.filesString: {}
-          };
+          emit(state.copyWith(isRemoveProcess: true, uploadIndex: event.index, isLoading: false));
+          Map<String, Map<String, dynamic>> formsAndFiles = {AppStrings.formsString: {}, AppStrings.filesString: {}};
 
           for (var formAndFile in state.formsAndFilesList) {
             if (formAndFile.url?.isNotEmpty ?? false) {
               if ((formAndFile.isForm ?? false)) {
-                formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] =
-                    formAndFile.url ?? '';
+                formsAndFiles[AppStrings.formsString]?[formAndFile.id ?? ''] = formAndFile.url ?? '';
               } else if ((formAndFile.isForm == false)) {
-                formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] =
-                    formAndFile.url ?? '';
+                formsAndFiles[AppStrings.filesString]?[formAndFile.id ?? ''] = formAndFile.url ?? '';
               }
             }
           }
 
-          final res = await DioClient(event.context).post(
-              "${AppUrlEndPoints.fileUpdateUrl}/${preferences.getUserId()}",
-              data: formsAndFiles);
+          final res = await DioClient(event.context).post("${AppUrlEndPoints.fileUpdateUrl}/${preferences.getUserId()}", data: formsAndFiles);
           FileUpdateResModel response = FileUpdateResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isRemoveProcess: false));
-            formsAndFilesList[event.index] =
-                formsAndFilesList[event.index].copyWith(localUrl: '');
-            formsAndFilesList[event.index] =
-                formsAndFilesList[event.index].copyWith(url: '');
+            formsAndFilesList[event.index] = formsAndFilesList[event.index].copyWith(localUrl: '');
+            formsAndFilesList[event.index] = formsAndFilesList[event.index].copyWith(url: '');
             emit(state.copyWith(formsAndFilesList: formsAndFilesList));
           } else {
             emit(state.copyWith(isRemoveProcess: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ?? response.message!,
-                  event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } catch (e) {
           emit(state.copyWith(isRemoveProcess: false));
           CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!
-                  .something_is_wrong_try_again,
-              type: SnackBarType.failure);
+              context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
         }
       } else if (event is _downloadFileEvent) {
         try {
@@ -531,96 +387,64 @@ class FileUploadBloc extends Bloc<FileUploadEvent, FileUploadState> {
           String filePath =
               '${dir.path}/${state.formsAndFilesList[event.fileIndex].url?.split('/').last.split('.').first}_${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}_${DateTime.now().hour}-${DateTime.now().minute}-${DateTime.now().second}${p.extension(state.formsAndFilesList[event.fileIndex].url?.split('/').last ?? '')}';
 
-          await Dio().download(
-              "${AppUrlEndPoints.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}",
-              filePath, onReceiveProgress: (received, total) {
+          await Dio().download("${AppUrlEndPoints.baseFileUrl}${state.formsAndFilesList[event.fileIndex].url}", filePath,
+              onReceiveProgress: (received, total) {
             int progress = (received * 100) ~/ total;
             emit(state.copyWith(downloadProgress: progress));
           });
           CustomSnackBar.showSnackBar(
-              context: event.context,
-              title:
-                  AppLocalizations.of(event.context)!.downloaded_successfully,
-              type: SnackBarType.success);
+              context: event.context, title: AppLocalizations.of(event.context)!.downloaded_successfully, type: SnackBarType.success);
           emit(state.copyWith(downloadProgress: 0, isDownloading: false));
         } catch (e) {
           emit(state.copyWith(isDownloading: false));
-          CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppLocalizations.of(event.context)!.failed_download,
-              type: SnackBarType.failure);
+          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.failed_download, type: SnackBarType.failure);
         }
       } else if (event is _getProfileFilesAndFormsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
         if (state.isUpdate) {
           try {
-            final res = await DioClient(event.context).post(
-                AppUrlEndPoints.getProfileDetailsUrl,
-                data: {AppStrings.idParamString: preferences.getUserId()});
-            ProfileDetailsResModel response =
-                ProfileDetailsResModel.fromJson(res);
-            Map<String, dynamic> newModel =
-                res['data']['clients'][0]['clientDetail'];
+            final res =
+                await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: {AppStrings.idParamString: preferences.getUserId()});
+            ProfileDetailsResModel response = ProfileDetailsResModel.fromJson(res);
+            Map<String, dynamic> newModel = res['data']['clients'][0]['clientDetail'];
 
             if (response.status == AppConstants.code_200) {
-              List<FormAndFileModel> formsAndFilesList =
-                  state.formsAndFilesList.toList(growable: true);
+              List<FormAndFileModel> formsAndFilesList = state.formsAndFilesList.toList(growable: true);
               for (int i = 0; i < formsAndFilesList.length; i++) {
-                if (newModel[AppStrings.filesString]
-                        .containsKey(formsAndFilesList[i].id) ??
-                    false) {
-                  formsAndFilesList[i] = formsAndFilesList[i].copyWith(
-                      url: newModel[AppStrings.filesString]
-                          [formsAndFilesList[i].id]);
-                } else if (newModel[AppStrings.formsString]
-                        .containsKey(formsAndFilesList[i].id) ??
-                    false) {
-                  formsAndFilesList[i] = formsAndFilesList[i].copyWith(
-                      url: newModel[AppStrings.formsString]
-                          [formsAndFilesList[i].id]);
+                if (newModel[AppStrings.filesString].containsKey(formsAndFilesList[i].id) ?? false) {
+                  formsAndFilesList[i] = formsAndFilesList[i].copyWith(url: newModel[AppStrings.filesString][formsAndFilesList[i].id]);
+                } else if (newModel[AppStrings.formsString].containsKey(formsAndFilesList[i].id) ?? false) {
+                  formsAndFilesList[i] = formsAndFilesList[i].copyWith(url: newModel[AppStrings.formsString][formsAndFilesList[i].id]);
                 }
               }
               emit(state.copyWith(formsAndFilesList: formsAndFilesList));
             } else {
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                    response.message?.toLocalization() ?? response.message!,
-                    event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppLocalizations.of(event.context)!
-                    .something_is_wrong_try_again,
-                type: SnackBarType.failure);
+                context: event.context, title: AppLocalizations.of(event.context)!.something_is_wrong_try_again, type: SnackBarType.failure);
           }
         }
       } else if (event is _pdfPreviewEvent) {
         emit(state.copyWith(isPdfPreview: true));
       } else if (event is _updateClientCreditEvent) {
         try {
-          final res = await DioClient(event.context).post(
-              AppUrlEndPoints.updateClientCredits + preferences.getUserId());
+          final res = await DioClient(event.context).post(AppUrlEndPoints.updateClientCredits + preferences.getUserId());
           if (res[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isApiLoading: false));
-            Navigator.popUntil(event.context,
-                (route) => route.name == RouteDefine.fileUploadScreen.name);
+            Navigator.popUntil(event.context, (route) => route.name == RouteDefine.fileUploadScreen.name);
             preferences.setUserLoggedIn(isLoggedIn: true);
-            Navigator.pushNamed(
-                event.context, RouteDefine.bottomNavScreen.name);
+            Navigator.pushNamed(event.context, RouteDefine.bottomNavScreen.name);
           } else {
             emit(state.copyWith(isApiLoading: false));
-            Navigator.popUntil(event.context,
-                (route) => route.name == RouteDefine.connectScreen.name);
+            Navigator.popUntil(event.context, (route) => route.name == RouteDefine.connectScreen.name);
             Navigator.pushNamed(event.context, RouteDefine.connectScreen.name);
             CustomSnackBar.showSnackBar(
-                context: event.context,
-                title:
-                    AppLocalizations.of(event.context)!.registered_successfully,
-                type: SnackBarType.success);
+                context: event.context, title: AppLocalizations.of(event.context)!.registered_successfully, type: SnackBarType.success);
           }
         } catch (e) {
           emit(state.copyWith(isApiLoading: false));

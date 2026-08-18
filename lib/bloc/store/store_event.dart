@@ -16,13 +16,12 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.getPreviousOrderProductsListEvent({required BuildContext context}) = _getPreviousOrderProductsListEvent;
 
-  const factory StoreEvent.changeSearchListEvent({required List<SearchModel> newSearchList}) = _changeSearchListEvent;
-
   const factory StoreEvent.getSuppliersListEvent({required BuildContext context}) = _getSuppliersListEvent;
 
   const factory StoreEvent.getCompaniesListEvent({required BuildContext context}) = _getCompaniesListEvent;
 
-  const factory StoreEvent.getProductDetailsEvent({required BuildContext context, required String productId, required int productListIndex, bool? isBarcode}) = _getProductDetailsEvent;
+  const factory StoreEvent.getProductDetailsEvent(
+      {required BuildContext context, required String productId, required int productListIndex, bool? isBarcode}) = _getProductDetailsEvent;
 
   const factory StoreEvent.increaseQuantityOfProduct({required BuildContext context}) = _increaseQuantityOfProduct;
 
@@ -32,15 +31,14 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
 
-  const factory StoreEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
+  const factory StoreEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) =
+      _supplierSelectionEvent;
 
   const factory StoreEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 
   const factory StoreEvent.setCartCountEvent() = _setCartCountEvent;
 
   const factory StoreEvent.globalSearchEvent({required BuildContext context}) = _globalSearchEvent;
-
-  const factory StoreEvent.resetGlobalSearchEvent() = _resetGlobalSearchEvent;
 
   const factory StoreEvent.updateGlobalSearchEvent({required String search, required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
 
@@ -52,46 +50,38 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.userApproveEvent({required BuildContext context}) = _userApproveEvent;
 
-  const factory StoreEvent.generalSettings({required BuildContext context, required BuildContext dialogContext, required bool isRetryLoading}) = _generalSettings;
+  const factory StoreEvent.generalSettings({required BuildContext context, required BuildContext dialogContext, required bool isRetryLoading}) =
+      _generalSettings;
 
   const factory StoreEvent.updateMaintenanceEvent({required BuildContext context}) = _updateMaintenanceEvent;
 
-  const factory StoreEvent.updateListQuantityOfProduct({
-    required BuildContext context,
-    required String quantity,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _updateListQuantityOfProductEvent;
+  const factory StoreEvent.updateListQuantityOfProduct(
+      {required BuildContext context,
+      required String quantity,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _updateListQuantityOfProductEvent;
 
-  const factory StoreEvent.increaseListQuantityOfProduct({
-    required BuildContext context,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _increaseListQuantityOfProductEvent;
+  const factory StoreEvent.increaseListQuantityOfProduct(
+      {required BuildContext context,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _increaseListQuantityOfProductEvent;
 
-  const factory StoreEvent.decreaseListQuantityOfProduct({
-    required BuildContext context,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _decreaseListQuantityOfProductEvent;
+  const factory StoreEvent.decreaseListQuantityOfProduct(
+      {required BuildContext context,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _decreaseListQuantityOfProductEvent;
 
-  const factory StoreEvent.addToCartListProductEvent({
-    required BuildContext context,
-    required String productId,
-    required int productListIndex,
-    required int productStockUpdateIndex,
-    required String productSupplierIds,
-  }) = _addToCartListProductEvent;
+  const factory StoreEvent.addToCartListProductEvent(
+      {required BuildContext context,
+      required String productId,
+      required int productListIndex,
+      required int productStockUpdateIndex,
+      required String productSupplierIds}) = _addToCartListProductEvent;
 
   const factory StoreEvent.getCartCountEvent({required BuildContext context}) = _getCartCountEvent;
 
-  /// Re-applies fresh cart quantities (productId → quantity) onto the on-screen
-  /// product lists without a network reload. Used after the promotion sheet
-  /// changes the cart so the visible cards reflect the new quantities.
-  const factory StoreEvent.applyCartQuantitiesEvent({
-    required Map<String, int> cartQuantities,
-  }) = _applyCartQuantitiesEvent;
+  const factory StoreEvent.applyCartQuantitiesEvent({required Map<String, int> cartQuantities}) = _applyCartQuantitiesEvent;
 }

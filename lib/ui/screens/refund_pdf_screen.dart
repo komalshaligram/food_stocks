@@ -28,10 +28,9 @@ class RefundPdfScreen extends StatelessWidget {
     final Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
 
     return BlocProvider(
-      create: (context) =>
-          RefundPdfBloc()..add(RefundPdfEvent.getArgumentEvent(invoiceDetailsList: args?[AppStrings.invoiceListString], context: context)),
-      child: RefundPdfScreenWidget(invoiceDetailsList: args?[AppStrings.invoiceListString]),
-    );
+        create: (context) =>
+            RefundPdfBloc()..add(RefundPdfEvent.getArgumentEvent(invoiceDetailsList: args?[AppStrings.invoiceListString], context: context)),
+        child: RefundPdfScreenWidget(invoiceDetailsList: args?[AppStrings.invoiceListString]));
   }
 }
 
@@ -55,11 +54,10 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
     final res = await Dio().get<List<int>>(
       encodedUrl,
       options: Options(
-        responseType: ResponseType.bytes,
-        followRedirects: true,
-        receiveTimeout: const Duration(minutes: 2),
-        sendTimeout: const Duration(minutes: 2),
-      ),
+          responseType: ResponseType.bytes,
+          followRedirects: true,
+          receiveTimeout: const Duration(minutes: 2),
+          sendTimeout: const Duration(minutes: 2)),
     );
     final bytes = Uint8List.fromList(res.data ?? const <int>[]);
     if (bytes.isEmpty) throw Exception('Empty PDF bytes');
@@ -103,12 +101,7 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
     return bytes;
   }
 
-  Future<void> _sharePdf({
-    required BuildContext context,
-    required String url,
-    required String fileNameWithoutExt,
-    Rect? sharePositionOrigin,
-  }) async {
+  Future<void> _sharePdf({required BuildContext context, required String url, required String fileNameWithoutExt, Rect? sharePositionOrigin}) async {
     if (url.trim().isEmpty || _shareLocked) return;
 
     setState(() {
@@ -126,10 +119,7 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
 
       if (mounted) setState(() => _isPreparingShare = false);
 
-      await Share.shareXFiles(
-        [XFile(filePath, mimeType: 'application/pdf')],
-        sharePositionOrigin: sharePositionOrigin,
-      );
+      await Share.shareXFiles([XFile(filePath, mimeType: 'application/pdf')], sharePositionOrigin: sharePositionOrigin);
     } catch (_) {
       if (!context.mounted) return;
       CustomSnackBar.showSnackBar(context: context, title: AppLocalizations.of(context)!.unable_pdf, type: SnackBarType.failure);
@@ -155,33 +145,25 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
           child: CommonAppBar(
-            bgColor: AppColors.pageColor,
-            title: AppLocalizations.of(context)!.my_refunds,
-            iconData: Icons.arrow_back_ios_sharp,
-            onTap: () => Navigator.pop(context),
-            trailingWidget: showShareIcon
-                ? Builder(
-                    builder: (shareContext) => GestureDetector(
-                      onTap: _shareLocked
-                          ? null
-                          : () async {
-                              final box = shareContext.findRenderObject() as RenderBox?;
-                              final origin = box == null ? null : (box.localToGlobal(Offset.zero) & box.size);
-
-                              await _sharePdf(
-                                context: shareContext,
-                                url: fullUrl!,
-                                fileNameWithoutExt: 'refund',
-                                sharePositionOrigin: origin,
-                              );
-                            },
-                      child: _isPreparingShare
-                          ? SizedBox(width: 22, height: 22, child: CupertinoActivityIndicator(color: AppColors.mainColor))
-                          : Icon(Icons.share, color: AppColors.mainColor),
-                    ),
-                  )
-                : const SizedBox(),
-          ),
+              bgColor: AppColors.pageColor,
+              title: AppLocalizations.of(context)!.my_refunds,
+              iconData: Icons.arrow_back_ios_sharp,
+              onTap: () => Navigator.pop(context),
+              trailingWidget: showShareIcon
+                  ? Builder(
+                      builder: (shareContext) => GestureDetector(
+                          onTap: _shareLocked
+                              ? null
+                              : () async {
+                                  final box = shareContext.findRenderObject() as RenderBox?;
+                                  final origin = box == null ? null : (box.localToGlobal(Offset.zero) & box.size);
+                                  await _sharePdf(context: shareContext, url: fullUrl!, fileNameWithoutExt: 'refund', sharePositionOrigin: origin);
+                                },
+                          child: _isPreparingShare
+                              ? SizedBox(width: 22, height: 22, child: CupertinoActivityIndicator(color: AppColors.mainColor))
+                              : Icon(Icons.share, color: AppColors.mainColor)),
+                    )
+                  : const SizedBox()),
         ),
         body: Builder(builder: (_) {
           if (state.hasValidLink == null) {
@@ -194,15 +176,13 @@ class _RefundPdfScreenWidgetState extends State<RefundPdfScreenWidget> {
 
           _startCacheIfNeeded(fullUrl!);
 
-          return SfPdfViewer.network(
-            fullUrl,
-            key: ValueKey(fullUrl),
-            scrollDirection: PdfScrollDirection.vertical,
-            pageLayoutMode: PdfPageLayoutMode.continuous,
-            canShowScrollHead: true,
-            canShowScrollStatus: true,
-            canShowPaginationDialog: true,
-          );
+          return SfPdfViewer.network(fullUrl,
+              key: ValueKey(fullUrl),
+              scrollDirection: PdfScrollDirection.vertical,
+              pageLayoutMode: PdfPageLayoutMode.continuous,
+              canShowScrollHead: true,
+              canShowScrollStatus: true,
+              canShowPaginationDialog: true);
         }),
       );
     });

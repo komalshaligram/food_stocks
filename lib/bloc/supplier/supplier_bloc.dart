@@ -10,7 +10,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'supplier_event.dart';
 
 part 'supplier_state.dart';
@@ -30,35 +29,28 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
         try {
           emit(state.copyWith(isShimmering: state.pageNum == 0 ? true : false, isLoadMore: state.pageNum == 0 ? false : true));
           final res = await DioClient(event.context).post(AppUrlEndPoints.getSuppliersList,
-              data: SuppliersReqModel(
-                pageNum: state.pageNum + 1,
-                pageLimit: AppConstants.supplierPageLimit,
-                search: state.search,
-              ).toJson());
+              data: SuppliersReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.supplierPageLimit, search: state.search).toJson());
           SuppliersListResponseModel response = SuppliersListResponseModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
-              suppliersDataList: response.data?.supplierList ?? [],
-              pageNum: state.pageNum + 1,
-              isLoadMore: false,
-              isShimmering: false,
-              isBottomOfSuppliers: response.data?.supplierList?.length == (response.data?.totalRecords ?? 0),
-            ));
+                suppliersDataList: response.data?.supplierList ?? [],
+                pageNum: state.pageNum + 1,
+                isLoadMore: false,
+                isShimmering: false,
+                isBottomOfSuppliers: response.data?.supplierList?.length == (response.data?.totalRecords ?? 0)));
           } else {
             emit(state.copyWith(isLoadMore: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.success,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.success);
           }
         } on ServerException {
           emit(state.copyWith(isLoadMore: false));
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
-      }
-      else if (event is _refreshListEvent) {
+      } else if (event is _refreshListEvent) {
         emit(state.copyWith(pageNum: 0, suppliersDataList: [], isBottomOfSuppliers: false));
         add(SupplierEvent.getSuppliersListEvent(context: event.context));
       } else if (event is _setSearchEvent) {

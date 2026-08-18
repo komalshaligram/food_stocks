@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/model/req_model/terms_condition/terms_condition_req_model.dart';
 import '../../data/storage/shared_preferences_helper.dart';
-
 part 'way_of_payment_state.dart';
 part 'way_of_payment_event.dart';
 part 'way_of_payment_bloc.freezed.dart';

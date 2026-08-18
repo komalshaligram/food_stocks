@@ -37,70 +37,68 @@ class CategoriesPermissionScreenWidget extends StatelessWidget {
 
     return BlocBuilder<CategoriesPermissionBloc, CategoriesPermissionState>(builder: (context, state) {
       return Scaffold(
-        backgroundColor: AppColors.pageColor,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
-          child: CommonAppBar(
-              bgColor: AppColors.pageColor,
-              title: l10n.categories_permissions,
-              iconData: Icons.arrow_back_ios_new_rounded,
-              trailingWidget: PermissionScreenWidgets.appBarIcon(Icons.category_outlined),
-              onTap: () => Navigator.pop(context)),
-        ),
-        body: SafeArea(
-          child: state.isShimmering
-              ? const PermissionScreenShimmerWidget(itemCount: 6)
-              : state.categoriesPermissionList.isEmpty
-                  ? Center(child: noDataWidget(l10n.no_data))
-                  : SingleChildScrollView(
-                      padding:
-                          const EdgeInsets.fromLTRB(PermissionScreenWidgets.horizontalPadding, 8, PermissionScreenWidgets.horizontalPadding, 100),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                        PermissionScreenWidgets.selectAllButton(
-                            text: !state.isSelectAll ? l10n.select_all.toUpperCase() : l10n.select_none.toUpperCase(),
-                            onPressed: () {
-                              bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, subCategoriesIndex: -2, categoriesIndex: -2));
-                            }),
-                        16.height,
-                        ...List.generate(state.categoriesPermissionList.length, (index) {
-                          final category = state.categoriesPermissionList[index];
-                          final subCategories = category.subCategories ?? [];
-                          final tiles = <Widget>[
-                            PermissionScreenWidgets.switchTile(
-                                title: category.category?.categoryName ?? '',
-                                value: category.isAllowed ?? false,
-                                onChanged: (_) {
-                                  bloc.add(
-                                      CategoriesPermissionEvent.switchButtonEvent(context: context, categoriesIndex: index, subCategoriesIndex: -1));
-                                }),
-                            ...List.generate(subCategories.length, (subIndex) {
-                              return PermissionScreenWidgets.switchTile(
-                                  title: subCategories[subIndex].subCategoryData?.subCategoryName ?? '',
-                                  value: subCategories[subIndex].isAllowed ?? false,
-                                  isSubItem: true,
+          backgroundColor: AppColors.pageColor,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(AppConstants.appBarHeight),
+            child: CommonAppBar(
+                bgColor: AppColors.pageColor,
+                title: l10n.categories_permissions,
+                iconData: Icons.arrow_back_ios_new_rounded,
+                trailingWidget: PermissionScreenWidgets.appBarIcon(Icons.category_outlined),
+                onTap: () => Navigator.pop(context)),
+          ),
+          body: SafeArea(
+            child: state.isShimmering
+                ? const PermissionScreenShimmerWidget(itemCount: 6)
+                : state.categoriesPermissionList.isEmpty
+                    ? Center(child: noDataWidget(l10n.no_data))
+                    : SingleChildScrollView(
+                        padding:
+                            const EdgeInsets.fromLTRB(PermissionScreenWidgets.horizontalPadding, 8, PermissionScreenWidgets.horizontalPadding, 100),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                          PermissionScreenWidgets.selectAllButton(
+                              text: !state.isSelectAll ? l10n.select_all.toUpperCase() : l10n.select_none.toUpperCase(),
+                              onPressed: () {
+                                bloc.add(CategoriesPermissionEvent.switchButtonEvent(context: context, subCategoriesIndex: -2, categoriesIndex: -2));
+                              }),
+                          16.height,
+                          ...List.generate(state.categoriesPermissionList.length, (index) {
+                            final category = state.categoriesPermissionList[index];
+                            final subCategories = category.subCategories ?? [];
+                            final tiles = <Widget>[
+                              PermissionScreenWidgets.switchTile(
+                                  title: category.category?.categoryName ?? '',
+                                  value: category.isAllowed ?? false,
                                   onChanged: (_) {
                                     bloc.add(CategoriesPermissionEvent.switchButtonEvent(
-                                        context: context, categoriesIndex: index, subCategoriesIndex: subIndex));
-                                  });
-                            }),
-                          ];
+                                        context: context, categoriesIndex: index, subCategoriesIndex: -1));
+                                  }),
+                              ...List.generate(subCategories.length, (subIndex) {
+                                return PermissionScreenWidgets.switchTile(
+                                    title: subCategories[subIndex].subCategoryData?.subCategoryName ?? '',
+                                    value: subCategories[subIndex].isAllowed ?? false,
+                                    isSubItem: true,
+                                    onChanged: (_) {
+                                      bloc.add(CategoriesPermissionEvent.switchButtonEvent(
+                                          context: context, categoriesIndex: index, subCategoriesIndex: subIndex));
+                                    });
+                              }),
+                            ];
 
-                          return Padding(
-                              padding: EdgeInsets.only(bottom: index < state.categoriesPermissionList.length - 1 ? 12 : 0),
-                              child: PermissionScreenWidgets.formCard(
-                                child: Column(children: PermissionScreenWidgets.intersperseDividers(tiles, indent: 28)),
-                              ));
-                        }),
-                      ]),
-                    ),
-        ),
-        bottomNavigationBar: state.isShimmering || state.categoriesPermissionList.isEmpty
-            ? null
-            : PermissionScreenWidgets.bottomSaveBar(
-                text: l10n.save.toUpperCase(),
-                isLoading: state.isUpdateProcess,
-                onPressed: () => bloc.add(CategoriesPermissionEvent.updateCategoriesPermissionEvent(context: context))),
-      );
+                            return Padding(
+                                padding: EdgeInsets.only(bottom: index < state.categoriesPermissionList.length - 1 ? 12 : 0),
+                                child: PermissionScreenWidgets.formCard(
+                                    child: Column(children: PermissionScreenWidgets.intersperseDividers(tiles, indent: 28))));
+                          }),
+                        ]),
+                      ),
+          ),
+          bottomNavigationBar: state.isShimmering || state.categoriesPermissionList.isEmpty
+              ? null
+              : PermissionScreenWidgets.bottomSaveBar(
+                  text: l10n.save.toUpperCase(),
+                  isLoading: state.isUpdateProcess,
+                  onPressed: () => bloc.add(CategoriesPermissionEvent.updateCategoriesPermissionEvent(context: context))));
     });
   }
 }

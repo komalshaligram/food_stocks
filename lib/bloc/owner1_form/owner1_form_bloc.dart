@@ -7,7 +7,6 @@ import '../../data/model/res_model/business_name_model/business_name_model.dart'
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../routes/app_routes.dart';
 import '../../ui/utils/constants/app_strings.dart';
-
 part 'owner1_form_event.dart';
 part 'owner1_form_state.dart';
 part 'owner1_form_bloc.freezed.dart';
@@ -22,25 +21,26 @@ class Owner1FormBloc extends Bloc<Owner1FormEvent, Owner1FormState> {
         emit(state.copyWith(owner: event.owner, businessID: event.businessTypeId, haveMultiple: event.isFreelancer));
       } else if (event is _navigateToNextScreenEvent) {
         termsConditionReqModel = TermsConditionReqModel(
-          id: preferences.getUserId(),
-          businessTypeId: state.businessID,
-          owner1FullName: state.owner1NameController.text.toString(),
-          owner1IsraelId: state.owner1israelIdController.text.toString(),
-          owner2FullName: '',
-          owner2IsraelId: '',
-          guarantee1FullName: state.guarantee1NameController.text.toString(),
-          guarantee1IsraelId: state.guarantee1idController.text.toString(),
-          guarantee1Address: state.guarantee1addressController.text.toString(),
-          guarantee1PhoneNumber: state.guarantee1PhoneController.text.toString(),
-          guarantee2FullName: '',
-          guarantee2IsraelId: '',
-          guarantee2Address: '',
-          guarantee2PhoneNumber: '',
-        );
+            id: preferences.getUserId(),
+            businessTypeId: state.businessID,
+            owner1FullName: state.owner1NameController.text.toString(),
+            owner1IsraelId: state.owner1israelIdController.text.toString(),
+            owner2FullName: '',
+            owner2IsraelId: '',
+            guarantee1FullName: state.guarantee1NameController.text.toString(),
+            guarantee1IsraelId: state.guarantee1idController.text.toString(),
+            guarantee1Address: state.guarantee1addressController.text.toString(),
+            guarantee1PhoneNumber: state.guarantee1PhoneController.text.toString(),
+            guarantee2FullName: '',
+            guarantee2IsraelId: '',
+            guarantee2Address: '',
+            guarantee2PhoneNumber: '');
         if (state.owner == '2') {
-          Navigator.pushNamed(event.context, RouteDefine.owner2FormScreen.name, arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
+          Navigator.pushNamed(event.context, RouteDefine.owner2FormScreen.name,
+              arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
         } else {
-          Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name, arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
+          Navigator.pushNamed(event.context, RouteDefine.wayOfPaymentScreen.name,
+              arguments: {AppStrings.termsConditionParamString: termsConditionReqModel});
         }
       }
     });

@@ -16,7 +16,6 @@ import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-
 part 'my_clients_event.dart';
 part 'my_clients_state.dart';
 part 'my_clients_bloc.freezed.dart';
@@ -28,16 +27,16 @@ class MyClientsBloc extends Bloc<MyClientsEvent, MyClientsState> {
       if (event is _getAgentClientsListEvent) {
         emit(state.copyWith(isShimmering: true, clientsList: []));
         try {
-          GetAgentClientsPermittedSuppliersReqModel reqMap = GetAgentClientsPermittedSuppliersReqModel(agentPhoneNumber: preferences.getPhoneNumber());
+          GetAgentClientsPermittedSuppliersReqModel reqMap =
+              GetAgentClientsPermittedSuppliersReqModel(agentPhoneNumber: preferences.getPhoneNumber());
           final res = await DioClient(event.context).post(AppUrlEndPoints.getAgentStoresWithPermittedSuppliers, data: reqMap);
           GetAgentClientsPermittedSuppliersResModel response = GetAgentClientsPermittedSuppliersResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(
-              isShimmering: false,
-              clientsList: List.from(response.data?.agentStores ?? []),
-              filteredClientsList: List.from(response.data?.agentStores ?? []),
-              language: preferences.getAppLanguage(),
-            ));
+                isShimmering: false,
+                clientsList: List.from(response.data?.agentStores ?? []),
+                filteredClientsList: List.from(response.data?.agentStores ?? []),
+                language: preferences.getAppLanguage()));
             emit(state.copyWith(isBottomOfProducts: state.clientsList.length == List.from(response.data?.agentStores ?? []).length ? true : false));
           } else {
             emit(state.copyWith(isShimmering: false));
@@ -55,7 +54,8 @@ class MyClientsBloc extends Bloc<MyClientsEvent, MyClientsState> {
             preferences.setCartId(cartId: response.data?.cartId ?? '');
             preferences.setAuthToken(accToken: response.data?.authToken?.accessToken ?? '');
             preferences.setRefreshToken(refToken: response.data?.authToken?.refreshToken ?? '');
-            preferences.setUserId(id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
+            preferences.setUserId(
+                id: (response.data?.adminType == AppStrings.subUserString) ? response.data?.user?.createdBy ?? '' : response.data?.user?.id ?? '');
             if (response.data?.adminType == AppStrings.subUserString) {
               preferences.setUserName(name: response.data?.user?.contactName ?? '');
             } else {
@@ -87,30 +87,29 @@ class MyClientsBloc extends Bloc<MyClientsEvent, MyClientsState> {
             emit(state.copyWith(isLoading: false));
             Navigator.pushNamedAndRemoveUntil(event.context, RouteDefine.bottomNavScreen.name, (Route route) => route.isFirst);
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings('${AppLocalizations.of(event.context)!.switch_client_message}${event.clientName} , ${event.businessName!}', event.context),
-              type: SnackBarType.success,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(
+                    '${AppLocalizations.of(event.context)!.switch_client_message}${event.clientName} , ${event.businessName!}', event.context),
+                type: SnackBarType.success);
           } else if (response.status == AppConstants.code_400) {
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
             emit(state.copyWith(isShimmering: false));
           } else {
             emit(state.copyWith(isShimmering: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } catch (_) {}
       } else if (event is _updateAgentClientsNoMinimumEvent) {
         emit(state.copyWith(isShimmering: true, clientsList: []));
         try {
-          UpdateAgentStoresNoMinimumReqModel reqMap = UpdateAgentStoresNoMinimumReqModel(supplierId: event.supplierId, storeId: event.clientsId, isNoMinimum: event.isNoMinimum);
+          UpdateAgentStoresNoMinimumReqModel reqMap =
+              UpdateAgentStoresNoMinimumReqModel(supplierId: event.supplierId, storeId: event.clientsId, isNoMinimum: event.isNoMinimum);
           final res = await DioClient(event.context).post(AppUrlEndPoints.updateAgentStoresNoMinimumForPermittedSuppliers, data: reqMap);
           UpdateAgentStoresNoMinimumResModel response = UpdateAgentStoresNoMinimumResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
@@ -136,8 +135,10 @@ class MyClientsBloc extends Bloc<MyClientsEvent, MyClientsState> {
         }
 
         final filtered = state.clientsList.where((client) {
-          return (client.storeName ?? '').toLowerCase().contains(query) || (client.storeRepresentativeName ?? '').toLowerCase().contains(query) ||
-              (client.address ?? '').toLowerCase().contains(query) || (client.storePhoneNumber ?? '').toLowerCase().contains(query);
+          return (client.storeName ?? '').toLowerCase().contains(query) ||
+              (client.storeRepresentativeName ?? '').toLowerCase().contains(query) ||
+              (client.address ?? '').toLowerCase().contains(query) ||
+              (client.storePhoneNumber ?? '').toLowerCase().contains(query);
         }).toList();
 
         emit(state.copyWith(filteredClientsList: filtered, searchQuery: query));

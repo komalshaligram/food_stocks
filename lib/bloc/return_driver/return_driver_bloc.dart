@@ -20,7 +20,6 @@ import '../../repository/dio_client.dart';
 import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'return_driver_event.dart';
 part 'return_driver_state.dart';
 part 'return_driver_bloc.freezed.dart';
@@ -31,30 +30,32 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getOrderByIdEvent) {
-        emit(state.copyWith(isShimmering: true, isLoading: true, language: preferences.getAppLanguage(), isSubUserCreateDuplicateOrder: preferences.getCanDuplicateOrder()));
+        emit(state.copyWith(
+            isShimmering: true,
+            isLoading: true,
+            language: preferences.getAppLanguage(),
+            isSubUserCreateDuplicateOrder: preferences.getCanDuplicateOrder()));
         try {
           final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getOrderById}${preferences.getOrderId()}');
           GetOrderByIdModel response = GetOrderByIdModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(
               state.copyWith(
-                orderBySupplierProduct: response.data?.ordersBySupplier?.first ?? const OrdersBySupplier(),
-                orderData: response.data?.orderData?.first ?? const OrderDatum(),
-                isShimmering: false,
-                isLoading: false,
-                isRefresh: !state.isRefresh,
-                driverDeliveryProofImagesList: response.data?.orderData!.first.driverDeliveryDocumentsImages ?? [],
-                userId: preferences.getUserId(),
-              ),
+                  orderBySupplierProduct: response.data?.ordersBySupplier?.first ?? const OrdersBySupplier(),
+                  orderData: response.data?.orderData?.first ?? const OrderDatum(),
+                  isShimmering: false,
+                  isLoading: false,
+                  isRefresh: !state.isRefresh,
+                  driverDeliveryProofImagesList: response.data?.orderData!.first.driverDeliveryDocumentsImages ?? [],
+                  userId: preferences.getUserId()),
             );
             add(ReturnDriverEvent.getDriverReturnIdEvent(context: event.context, userId: state.userId!));
           } else {
             emit(state.copyWith(isShimmering: false, isLoading: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false, isLoading: false));
@@ -63,19 +64,23 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
           CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
       } else if (event is _getDriverReturnIdEvent) {
-        emit(state.copyWith(isShimmering: true, isLoading: true, language: preferences.getAppLanguage(), isSubUserCreateDuplicateOrder: preferences.getCanDuplicateOrder()));
+        emit(state.copyWith(
+            isShimmering: true,
+            isLoading: true,
+            language: preferences.getAppLanguage(),
+            isSubUserCreateDuplicateOrder: preferences.getCanDuplicateOrder()));
         try {
           final res = await DioClient(event.context).get(path: '${AppUrlEndPoints.getClientPendingReturnProducts}${preferences.getOrderId()}');
           GetClientWaitingForNewOrderReturnModel response = GetClientWaitingForNewOrderReturnModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
-            emit(state.copyWith(returnDriverData: response, isShimmering: false, isLoading: false, isRefresh: !state.isRefresh, userId: preferences.getUserId()));
+            emit(state.copyWith(
+                returnDriverData: response, isShimmering: false, isLoading: false, isRefresh: !state.isRefresh, userId: preferences.getUserId()));
           } else {
             emit(state.copyWith(isShimmering: false, isLoading: false));
             CustomSnackBar.showSnackBar(
-              context: event.context,
-              title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-              type: SnackBarType.failure,
-            );
+                context: event.context,
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isShimmering: false, isLoading: false));
@@ -111,10 +116,9 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
               preferences.setManageSubUser(isManageSubUser: res?.canManageSubUsers ?? false);
             } else {
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } catch (e) {
             CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
@@ -143,9 +147,9 @@ class ReturnDriverBloc extends Bloc<ReturnDriverEvent, ReturnDriverState> {
           if (int.parse(imageSize.split(' ').first) == 0) return;
 
           final response = await DioClient(event.context).uploadFileProgressWithFormData(
-            path: AppUrlEndPoints.fileUploadUrl,
-            formData: FormData.fromMap({AppStrings.returnImagesString: await MultipartFile.fromFile(croppedFile.path, contentType: MediaType('image', 'png'))}),
-          );
+              path: AppUrlEndPoints.fileUploadUrl,
+              formData: FormData.fromMap(
+                  {AppStrings.returnImagesString: await MultipartFile.fromFile(croppedFile.path, contentType: MediaType('image', 'png'))}));
           FileUploadModel signModel1 = FileUploadModel.fromJson(response);
           if (signModel1.filepath == '') return;
           Map<int, List<File?>> updatedMap1 = Map.from(state.driverDeliveryProofFilesMap);

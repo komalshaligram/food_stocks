@@ -25,10 +25,9 @@ class Owner2FormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<dynamic, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map?;
     return BlocProvider(
-      create: (context) => Owner2FormBloc()
-        ..add(Owner2FormEvent.getArgumentEvent(reqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
-      child: Owner2FormScreenWidget(),
-    );
+        create: (context) => Owner2FormBloc()
+          ..add(Owner2FormEvent.getArgumentEvent(reqModel: args?[AppStrings.termsConditionParamString] ?? const TermsConditionReqModel())),
+        child: Owner2FormScreenWidget());
   }
 }
 
@@ -47,23 +46,22 @@ class Owner2FormScreenWidget extends StatelessWidget {
         child: Scaffold(
           backgroundColor: AppColors.whiteColor,
           appBar: AppBar(
-            surfaceTintColor: AppColors.whiteColor,
-            leading: GestureDetector(
-                onTap: () async {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  }
-                },
-                child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
-            title: Align(
-              alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
-              child: Text(AppLocalizations.of(context)!.data_for_form,
-                  style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
-            ),
-            backgroundColor: AppColors.whiteColor,
-            titleSpacing: 0,
-            elevation: 0,
-          ),
+              surfaceTintColor: AppColors.whiteColor,
+              leading: GestureDetector(
+                  onTap: () async {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Icon(Icons.arrow_back_ios, color: AppColors.blackColor)),
+              title: Align(
+                alignment: context.rtl ? Alignment.centerRight : Alignment.centerLeft,
+                child: Text(AppLocalizations.of(context)!.data_for_form,
+                    style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor)),
+              ),
+              backgroundColor: AppColors.whiteColor,
+              titleSpacing: 0,
+              elevation: 0),
           body: SafeArea(
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
@@ -75,88 +73,80 @@ class Owner2FormScreenWidget extends StatelessWidget {
                     10.height,
                     CustomContainerWidget(name: AppLocalizations.of(context)!.owner2_full_name),
                     CustomFormField(
-                      context: context,
-                      controller: state.owner2NameController,
-                      keyboardType: TextInputType.text,
-                      hint: "",
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.next,
-                      validator: AppStrings.ownerName2ValString,
-                    ),
+                        context: context,
+                        controller: state.owner2NameController,
+                        keyboardType: TextInputType.text,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.ownerName2ValString),
                     7.height,
                     CustomContainerWidget(name: AppLocalizations.of(context)!.owner_2_israel_id),
                     CustomFormField(
-                      context: context,
-                      controller: state.owner2israelIdController,
-                      keyboardType: TextInputType.number,
-                      inputFormat: [FilteringTextInputFormatter.digitsOnly],
-                      hint: "",
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.next,
-                      validator: AppStrings.idValString,
-                    ),
+                        context: context,
+                        controller: state.owner2israelIdController,
+                        keyboardType: TextInputType.number,
+                        inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.idValString),
                     7.height,
                     CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_2_full_name),
                     CustomFormField(
-                      context: context,
-                      controller: state.guarantee2NameController,
-                      keyboardType: TextInputType.text,
-                      hint: "",
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.next,
-                      validator: AppStrings.guaranteeName2String,
-                    ),
+                        context: context,
+                        controller: state.guarantee2NameController,
+                        keyboardType: TextInputType.text,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.guaranteeName2String),
                     7.height,
                     CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_2_israel_id),
                     CustomFormField(
-                      context: context,
-                      controller: state.guarantee2idController,
-                      keyboardType: TextInputType.number,
-                      inputFormat: [FilteringTextInputFormatter.digitsOnly],
-                      hint: "",
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.next,
-                      validator: AppStrings.idValString,
-                    ),
+                        context: context,
+                        controller: state.guarantee2idController,
+                        keyboardType: TextInputType.number,
+                        inputFormat: [FilteringTextInputFormatter.digitsOnly],
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: AppStrings.idValString),
                     7.height,
                     CustomContainerWidget(
-                      name: state.language == AppStrings.hebrewString
-                          ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}'
-                          : AppLocalizations.of(context)!.guarantee_2_address,
-                    ),
+                        name: state.language == AppStrings.hebrewString
+                            ? '${AppLocalizations.of(context)!.guarantee_2_address}${2}'
+                            : AppLocalizations.of(context)!.guarantee_2_address),
                     CustomFormField(
-                      context: context,
-                      controller: state.guarantee2addressController,
-                      keyboardType: TextInputType.text,
-                      hint: "",
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.next,
-                      validator: '',
-                    ),
+                        context: context,
+                        controller: state.guarantee2addressController,
+                        keyboardType: TextInputType.text,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.next,
+                        validator: ''),
                     7.height,
                     CustomContainerWidget(name: AppLocalizations.of(context)!.guarantee_2_phone_number),
                     CustomFormField(
-                      inputFormat: [LengthLimitingTextInputFormatter(10)],
-                      context: context,
-                      controller: state.guarantee2PhoneController,
-                      keyboardType: TextInputType.number,
-                      hint: "",
-                      fillColor: Colors.transparent,
-                      textInputAction: TextInputAction.done,
-                      validator: AppStrings.mobileValString,
-                    ),
+                        inputFormat: [LengthLimitingTextInputFormatter(10)],
+                        context: context,
+                        controller: state.guarantee2PhoneController,
+                        keyboardType: TextInputType.number,
+                        hint: "",
+                        fillColor: Colors.transparent,
+                        textInputAction: TextInputAction.done,
+                        validator: AppStrings.mobileValString),
                     40.height,
                     CustomButtonWidget(
-                      buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
-                      bGColor: AppColors.mainColor,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          bloc.add(Owner2FormEvent.navigateToNextScreenEvent(context: context));
-                        }
-                      },
-                      fontColors: AppColors.whiteColor,
-                    ),
-                    20.height,
+                        buttonText: AppLocalizations.of(context)!.next.toUpperCase(),
+                        bGColor: AppColors.mainColor,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            bloc.add(Owner2FormEvent.navigateToNextScreenEvent(context: context));
+                          }
+                        },
+                        fontColors: AppColors.whiteColor),
+                    20.height
                   ]),
                 ),
               ),

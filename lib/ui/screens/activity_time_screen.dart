@@ -69,10 +69,9 @@ class ActivityTimeScreenWidget extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                   _buildFormCard(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [_buildTimeHeader(context), 12.height, operationTimeListWidget(state)]),
-                  ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [_buildTimeHeader(context), 12.height, operationTimeListWidget(state)])),
                   24.height,
                   CustomButtonWidget(
                       buttonText:
@@ -163,16 +162,15 @@ class ActivityTimeScreenWidget extends StatelessWidget {
         },
         borderRadius: BorderRadius.circular(14),
         child: Container(
-            height: AppConstants.buttonHeight,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.mainColor.withValues(alpha: 0.35))),
-            child: Text(
-              AppLocalizations.of(context)!.skip.toUpperCase(),
-              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.mainColor, fontWeight: FontWeight.w500),
-            )),
+          height: AppConstants.buttonHeight,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: AppColors.whiteColor,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.mainColor.withValues(alpha: 0.35))),
+          child: Text(AppLocalizations.of(context)!.skip.toUpperCase(),
+              style: AppStyles.rkRegularTextStyle(size: AppConstants.font_15, color: AppColors.mainColor, fontWeight: FontWeight.w500)),
+        ),
       ),
     );
   }
@@ -344,7 +342,7 @@ class TimeContainer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  8.height,
+                  8.height
                 ]),
               ),
             ),

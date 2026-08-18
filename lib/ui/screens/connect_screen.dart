@@ -86,9 +86,8 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: screenHeight),
-              child: IntrinsicHeight(child: Column(children: [_buildHero(context), Expanded(child: _buildCard(context))])),
-            ),
+                constraints: BoxConstraints(minHeight: screenHeight),
+                child: IntrinsicHeight(child: Column(children: [_buildHero(context), Expanded(child: _buildCard(context))]))),
           ),
         ),
       ),

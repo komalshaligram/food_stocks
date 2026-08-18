@@ -12,15 +12,10 @@ class AppStrings {
   static const cancelString = 'Cancel';
   static const doneString = 'Done';
   static const failedToLoadString = 'Failed to load';
-  static const outOfStockString = 'Out of Stock';
   static const clearString = 'Clear';
-  static const deleteString = 'Delete';
-  static const deliverString = 'deliver';
-  static const onTheWayString = 'onTheWay';
   static const statusString = 'status';
   static const updateString = 'Updating';
   static const pendingString = 'pending';
-  static const navigateToStore = 'true';
   static const orderStatusNo = 'orderStatusNo';
   static const subUserString = 'subuser';
   static const rivchitClientErrorString = 'MESSAGE.RIVCHITCLIENTERROR';
@@ -43,11 +38,6 @@ class AppStrings {
 
   //api req param strings
   static const profileImageString = 'profileImg';
-  static const profileUpdateString = 'profileImage';
-  static const promissoryNoteString = 'promissoryNote';
-  static const personalGuaranteeString = 'personalGuarantee';
-  static const israelIdImageString = 'israelIdImage';
-  static const businessCertificateString = 'businessCertificate';
   static const messageString = 'message';
   static const fileString = 'file';
   static const filesString = 'files';
@@ -55,17 +45,14 @@ class AppStrings {
   static const formsString = 'forms';
   static const idParamString = '_id';
   static const clientDetailString = 'clientDetail';
-  static const logoString = 'logo';
   static const supplierIdString = 'supplierId';
   static const companyIdString = 'companyId';
   static const companyName = 'companyName';
   static const companyLogo = 'companyLogo';
   static const ascendingString = 'asc';
-  static const descendingString = 'desc';
   static const planogramSortFieldString = 'planogramName';
   static const orderNumberString = 'orderNumber';
   static const signatureString = 'signature';
-  static const driverSignatureString = 'driverSignature';
   static const returnImagesString = 'returnimages';
   static const cartProductIdString = 'cartProductId';
   static const categoryIdString = 'catregoryId';
@@ -81,8 +68,6 @@ class AppStrings {
   static const isSubCategory = 'false';
   static const issueString = 'issue';
   static const isBasketScreenString = 'basketScreen';
-  static const isCartCountString = 'true';
-  static const homeScreenString = 'homeScreen';
   static const sortFieldString = 'productStock';
   static const sortOrderString = 'desc';
   static const userIdString = 'id';
@@ -126,10 +111,7 @@ class AppStrings {
   static const streetNameValString = 'streetNameVal';
   static const streetNumberValString = 'streetNumberVal';
   static const emailValString = 'emailVal';
-  static const faxValString = 'faxVal';
-  static const generalValString = 'generalVal';
   static const mobileValString = 'mobileVal';
-  static const cityValString = 'cityVal';
   static const branchValString = 'branchVal';
   static const accountValString = 'accountVal';
   static const surfaceValString = 'surfacesVal';
@@ -141,13 +123,10 @@ class AppStrings {
   static const agentCodeString = 'agentCodeVal';
 
   //page parameters strings
-  static const mobileParamString = 'mobileParam';
   static const profileParamString = 'profileParam';
   static const isUpdateParamString = 'isUpdateParam';
   static const planogramProductsParamString = 'planogramProductsParam';
   static const messageDataString = 'messageDataParam';
-  static const appContentIdString = 'appContentIdParam';
-  static const appContentNameString = 'appContentNameParam';
   static const messageReadString = 'messageReadSParam';
   static const messageDeleteString = 'messageDeleteParam';
   static const searchString = 'searchParam';
@@ -155,9 +134,6 @@ class AppStrings {
   static const searchResultString = 'searchResultParam';
   static const fromStoreCategoryString = 'fromStoreCategoryParam';
   static const pushNavigationString = 'pushNavigationParam';
-  static const monthlyCreditString = 'Monthly Credits';
-  static const orderString = 'Order';
-  static const companiesString = 'companies';
   static const searchType = 'searchType';
   static const termsConditionParamString = 'termsConditionParam';
   static const privacyPolicyPdfString = 'pdf';
@@ -167,7 +143,6 @@ class AppStrings {
   static const subUserPhoneNumberString = 'subUserPhoneNumber';
   static const subUserEmailString = 'subUserEmail';
   static const subUserIsraelIdString = 'subUserIsraelId';
-  static const isPopString = 'isPop';
   static const isPaymentFail = 'isPaymentFail';
   static const isFromRegFlow = 'isFromRegFlow';
   static const owner = 'owner';
@@ -198,7 +173,6 @@ class AppStrings {
   static const idString = 'id';
   static const orderIdString = 'orderId';
   static const mainProductIdString = 'mainProductId';
-  static const productDataString = 'productData';
   static const supplierNameString = 'supplierName';
   static const deliveryStatusString = 'deliveryStatus';
   static const totalOrderString = 'totalOrder';
@@ -227,9 +201,7 @@ class AppStrings {
   static const openText = "Open";
   static const closedText = "Closed";
   static const inProgressText = "In Progress";
-  static const partiallyClosedText = "Partially Closed";
   static const clubAgentIdText = "6989e25de86c03f1e8144404";
-  static const clubAgentCodeText = "998616";
   static const minimumOrderText = "Minimum Order";
   static const brandListText = "brandList";
   static const categoryListText = "categoryList";
@@ -237,12 +209,6 @@ class AppStrings {
   static const brandNameText = "brandName";
   static const isFromInvoicePayment = "isFromInvoicePayment";
   static const isFromBasketScreen = "isFromBasketScreen";
-
-  static String minSaleText(BuildContext context, String minBox) =>
-      '${AppLocalizations.of(context)?.minimum_box_title}$minBox \n${AppLocalizations.of(context)?.mix_sale_text}\n${AppLocalizations.of(context)?.mixed_sale_other_text}\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
-
-  static String otherSaleText(BuildContext context, String minBox) =>
-      '${AppLocalizations.of(context)?.minimum_box_title}$minBox\n${AppLocalizations.of(context)?.sale_other_text} $minBox ${AppLocalizations.of(context)?.sale_other_text1}';
 
   static String getLocalizedStrings(String key, BuildContext context) {
     switch (key) {

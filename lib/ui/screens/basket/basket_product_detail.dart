@@ -19,17 +19,15 @@ import '../../../bloc/basket/basket_bloc.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/constants/app_constants.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-import '../../utils/constants/app_strings.dart';
 
-void showProductDetails({
-  required BuildContext context,
-  bool isBarcode = false,
-  String productStock = '0',
-  int productListIndex = 0,
-  required bool isSaleOn,
-  required String cartProductId,
-  String? clubAgentId,
-}) async {
+void showProductDetails(
+    {required BuildContext context,
+    bool isBarcode = false,
+    String productStock = '0',
+    int productListIndex = 0,
+    required bool isSaleOn,
+    required String cartProductId,
+    String? clubAgentId}) async {
   context
       .read<BasketBloc>()
       .add(BasketEvent.getProductDetailsEvent(context: context, productId: cartProductId, isBarcode: isBarcode, productListIndex: productListIndex));
@@ -210,7 +208,9 @@ Widget relatedProductWidget(BuildContext prevContext, BasketState state, BuildCo
                   productStock: state.relatedProductList.elementAt(i).productStock.toString(),
                   lowStock: state.relatedProductList.elementAt(i).lowStock ?? '',
                   isPesach: state.relatedProductList.elementAt(i).isPesach,
-                  quantity: state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity,
+                  quantity: state.productStockList[1]
+                      .firstWhere((relatedProductStockList) => relatedProductStockList.productId == state.relatedProductList.elementAt(i).id)
+                      .quantity,
                   isMixedSale: state.relatedProductList.elementAt(i).sale?.isMixedSale,
                   numberOfUnits: state.relatedProductList.elementAt(i).numberOfUnit.toString(),
                   scaleType: state.relatedProductList.elementAt(i).scaleType,
@@ -218,45 +218,48 @@ Widget relatedProductWidget(BuildContext prevContext, BasketState state, BuildCo
                     context2.read<BasketBloc>().add(BasketEvent.updateListQuantityOfProduct(
                         context: context2,
                         quantity: state.productStockList[1]
-                            .firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id)
+                            .firstWhere((relatedProductStockList) => relatedProductStockList.productId == state.relatedProductList.elementAt(i).id)
                             .quantity
                             .toString(),
                         productListIndex: 1,
-                        productStockUpdateIndex:
-                            state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                        productStockUpdateIndex: state.productStockList[1]
+                            .indexWhere((relatedProductStockList) => relatedProductStockList.productId == state.relatedProductList.elementAt(i).id),
                         productSupplierIds: state.relatedProductList[i].supplierId.toString()));
                   },
                   onQuantityIncreaseTap: () {
                     context2.read<BasketBloc>().add(BasketEvent.increaseListQuantityOfProduct(
                         context: context2,
                         productListIndex: 1,
-                        productStockUpdateIndex:
-                            state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                        productStockUpdateIndex: state.productStockList[1]
+                            .indexWhere((relatedProductStockList) => relatedProductStockList.productId == state.relatedProductList.elementAt(i).id),
                         productSupplierIds: state.relatedProductList[i].supplierId.toString()));
 
                     context2.read<BasketBloc>().add(BasketEvent.addToCartListProductEvent(
                         context: context2,
                         productId: state.relatedProductList[i].id.toString(),
                         productListIndex: 1,
-                        productStockUpdateIndex:
-                            state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                        productStockUpdateIndex: state.productStockList[1]
+                            .indexWhere((relatedProductStockList) => relatedProductStockList.productId == state.relatedProductList.elementAt(i).id),
                         productSupplierIds: state.relatedProductList[i].supplierId.toString()));
                   },
                   onQuantityDecreaseTap: () {
-                    if (state.productStockList[1].firstWhere((test) => test.productId == state.relatedProductList.elementAt(i).id).quantity != 0) {
+                    if (state.productStockList[1]
+                            .firstWhere((relatedProductStockList) => relatedProductStockList.productId == state.relatedProductList.elementAt(i).id)
+                            .quantity !=
+                        0) {
                       context2.read<BasketBloc>().add(BasketEvent.decreaseListQuantityOfProduct(
                           context: context2,
                           productListIndex: 1,
-                          productStockUpdateIndex:
-                              state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                          productStockUpdateIndex: state.productStockList[1]
+                              .indexWhere((relatedProductStockList) => relatedProductStockList.productId == state.relatedProductList.elementAt(i).id),
                           productSupplierIds: state.relatedProductList[i].supplierId.toString()));
 
                       context2.read<BasketBloc>().add(BasketEvent.addToCartListProductEvent(
                           context: context2,
                           productId: state.relatedProductList[i].id.toString(),
                           productListIndex: 1,
-                          productStockUpdateIndex:
-                              state.productStockList[1].indexWhere((test) => test.productId == state.relatedProductList.elementAt(i).id),
+                          productStockUpdateIndex: state.productStockList[1]
+                              .indexWhere((relatedProductStockList) => relatedProductStockList.productId == state.relatedProductList.elementAt(i).id),
                           productSupplierIds: state.relatedProductList[i].supplierId.toString()));
                     }
                   },

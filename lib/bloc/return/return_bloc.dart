@@ -21,7 +21,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
-
 part 'return_state.dart';
 part 'return_event.dart';
 part 'return_bloc.freezed.dart';
@@ -39,21 +38,20 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           if (myList.isNotEmpty) {
             for (int i = 0; i < myList.length; i++) {
               tempList.add(ReturnProduct(
-                totalRefund: myList[i].totalRefund,
-                supplierName: myList[i].supplierName,
-                supplierId: myList[i].supplierId,
-                proofImages: myList[i].proofImages,
-                notes: myList[i].notes,
-                productName: myList[i].productName,
-                productImg: myList[i].productImg,
-                returnId: myList[i].returnId,
-                barcode: myList[i].barcode,
-                returnProductId: myList[i].returnProductId,
-                totalUnits: myList[i].totalUnits,
-                isApproved: myList[i].isApproved,
-                reasonToReturn: myList[i].reasonToReturn,
-                scaleType: myList[i].scaleType,
-              ));
+                  totalRefund: myList[i].totalRefund,
+                  supplierName: myList[i].supplierName,
+                  supplierId: myList[i].supplierId,
+                  proofImages: myList[i].proofImages,
+                  notes: myList[i].notes,
+                  productName: myList[i].productName,
+                  productImg: myList[i].productImg,
+                  returnId: myList[i].returnId,
+                  barcode: myList[i].barcode,
+                  returnProductId: myList[i].returnProductId,
+                  totalUnits: myList[i].totalUnits,
+                  isApproved: myList[i].isApproved,
+                  reasonToReturn: myList[i].reasonToReturn,
+                  scaleType: myList[i].scaleType));
             }
             emit(state.copyWith(returnProductList: tempList));
           }
@@ -61,8 +59,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         add(ReturnEvent.getReturnListEvent(context: event.context));
       } else if (event is _getReturnListEvent) {
         final String statusData = preferences.getReturnStatusInfo();
-        final List<StatusData> statusList =
-            statusData.isEmpty ? <StatusData>[] : StatusData.decode(statusData);
+        final List<StatusData> statusList = statusData.isEmpty ? <StatusData>[] : StatusData.decode(statusData);
         if (state.isLoadMore) {
           return;
         }
@@ -70,26 +67,19 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
           return;
         }
         emit(state.copyWith(
-          language: preferences.getAppLanguage(),
-          isLoading: state.pageNum == 0 ? true : false,
-          statusList: statusList,
-          isLoadMore: state.pageNum == 0 ? false : true,
-        ));
+            language: preferences.getAppLanguage(),
+            isLoading: state.pageNum == 0 ? true : false,
+            statusList: statusList,
+            isLoadMore: state.pageNum == 0 ? false : true));
         try {
-          final GetAllOrderReqModel reqMap = GetAllOrderReqModel(
-            pageNum: state.pageNum + 1,
-            pageLimit: AppConstants.orderPageLimit,
-            userId: preferences.getUserId(),
-          );
-          final dynamic res = await DioClient(event.context).post(
-            AppUrlEndPoints.getReturnListUrl,
-            data: reqMap.toJson(),
-          );
+          final GetAllOrderReqModel reqMap =
+          GetAllOrderReqModel(pageNum: state.pageNum + 1, pageLimit: AppConstants.orderPageLimit, userId: preferences.getUserId());
+          final dynamic res = await DioClient(event.context).post(AppUrlEndPoints.getReturnListUrl, data: reqMap.toJson());
           final Map<String, dynamic> jsonMap = switch (res) {
             final Map<String, dynamic> map => map,
             final Map map => Map<String, dynamic>.from(map),
             final String text => Map<String, dynamic>.from(json.decode(text)),
-            _ => throw const FormatException('Unexpected return list response'),
+            _ => throw const FormatException('Unexpected return list response')
           };
           final GetReturnListResModel response = GetReturnListResModel.fromJson(jsonMap);
           if (response.status == AppConstants.code_200) {
@@ -106,21 +96,14 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ?? '',
-                  event.context,
-                ),
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
                 type: SnackBarType.failure);
           }
         } on ServerException {
           emit(state.copyWith(isLoading: false, isLoadMore: false));
         } catch (e) {
           emit(state.copyWith(isLoading: false, isLoadMore: false));
-          CustomSnackBar.showSnackBar(
-            context: event.context,
-            title: e.toString(),
-            type: SnackBarType.failure,
-          );
+          CustomSnackBar.showSnackBar(context: event.context, title: e.toString(), type: SnackBarType.failure);
         }
         state.refreshController.refreshCompleted();
         state.refreshController.loadComplete();
@@ -128,31 +111,33 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
         preferences.setReturnProductList(returnList: '');
         Navigator.pushNamed(event.context, RouteDefine.scanReturnProduct.name, arguments: {'list': <ReturnProduct>[]});
       } else if (event is _openScannerEvent) {
-        String scanResult = await scanBarcodeOrQRCode(context: event.context, cancelText: AppLocalizations.of(event.context)!.cancel, scanMode: ScanMode.BARCODE);
+        String scanResult =
+        await scanBarcodeOrQRCode(context: event.context, cancelText: AppLocalizations.of(event.context)!.cancel, scanMode: ScanMode.BARCODE);
         if (scanResult != '-1') {
           emit(state.copyWith(barCodeController: TextEditingController(text: scanResult)));
         }
       } else if (event is _scanProductEvent) {
         try {
           emit(state.copyWith(isLoading: true));
-          final res = await DioClient(event.context).post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.barCode, isReturn: true).toJson());
+          final res = await DioClient(event.context)
+              .post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.barCode, isReturn: true).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
           if (response.status == AppConstants.code_200) {
             emit(state.copyWith(isLoading: false, barCodeController: TextEditingController(text: event.barCode)));
             if (response.product!.isEmpty) {
-              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.product_does_not_exist, type: SnackBarType.failure);
+              CustomSnackBar.showSnackBar(
+                  context: event.context, title: AppLocalizations.of(event.context)!.product_does_not_exist, type: SnackBarType.failure);
             } else {
               List<ReturnProduct> list = [];
               for (int i = 0; i < response.product!.length; i++) {
                 list.add(ReturnProduct(
-                  productName: response.product![i].productName,
-                  productImg: '${AppUrlEndPoints.baseFileUrl}${response.product![i].mainImage}',
-                  returnId: state.returnProductList.isNotEmpty ? state.returnProductList.first.returnId ?? '' : '',
-                  supplierName: response.product![i].supplierName,
-                  supplierId: response.product![i].supplierId,
-                  barcode: response.product![i].qrcode,
-                  scaleType: response.product![i].scaleType,
-                ));
+                    productName: response.product![i].productName,
+                    productImg: '${AppUrlEndPoints.baseFileUrl}${response.product![i].mainImage}',
+                    returnId: state.returnProductList.isNotEmpty ? state.returnProductList.first.returnId ?? '' : '',
+                    supplierName: response.product![i].supplierName,
+                    supplierId: response.product![i].supplierId,
+                    barcode: response.product![i].qrcode,
+                    scaleType: response.product![i].scaleType));
               }
               list.addAll(state.returnProductList);
               Navigator.pushNamed(event.context, RouteDefine.productReturnInfoScreen.name, arguments: {'list': list});
@@ -162,10 +147,7 @@ class ReturnBloc extends Bloc<ReturnEvent, ReturnState> {
             Navigator.pop(event.context);
             CustomSnackBar.showSnackBar(
                 context: event.context,
-                title: AppStrings.getLocalizedStrings(
-                  response.message?.toLocalization() ?? '',
-                  event.context,
-                ),
+                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? '', event.context),
                 type: SnackBarType.failure);
           }
         } on ServerException {

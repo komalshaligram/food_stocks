@@ -6,7 +6,8 @@ class ProductReturnInfoEvent with _$ProductReturnInfoEvent {
 
   factory ProductReturnInfoEvent.deleteEvent({required BuildContext context}) = _deleteEvent;
 
-  factory ProductReturnInfoEvent.pickDocumentEvent({required BuildContext context, required bool isFromCamera, required int value}) = _pickDocumentEvent;
+  factory ProductReturnInfoEvent.pickDocumentEvent({required BuildContext context, required bool isFromCamera, required int value}) =
+      _pickDocumentEvent;
 
   factory ProductReturnInfoEvent.deleteFileEvent({required int index, required BuildContext context}) = _deleteFileEvent;
 

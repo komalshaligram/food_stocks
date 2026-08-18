@@ -27,7 +27,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome_title => 'Welcome to Tavili';
 
   @override
-  String get app_slogan => 'An innovative retail platform connecting suppliers and manufacturers directly with food store owners, offering unique and innovative financial solutions';
+  String get app_slogan =>
+      'An innovative retail platform connecting suppliers and manufacturers directly with food store owners, offering unique and innovative financial solutions';
 
   @override
   String get splash_tagline => 'Connecting suppliers to food stores';
@@ -36,7 +37,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splash_brand => 'Tavili';
 
   @override
-  String get login_subtitle => 'Enter your phone number and we\'ll send you a verification code';
+  String get login_subtitle =>
+      'Enter your phone number and we\'ll send you a verification code';
 
   @override
   String get or => 'OR';
@@ -303,7 +305,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otp_sent_via_whatsapp_title => 'Code sent on WhatsApp';
 
   @override
-  String get otp_sent_via_whatsapp_message => 'We sent your verification code in a WhatsApp message to';
+  String get otp_sent_via_whatsapp_message =>
+      'We sent your verification code in a WhatsApp message to';
 
   @override
   String get otp_sent_via_whatsapp_action => 'Got it';
@@ -312,13 +315,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whatsappotpsent => 'The code was sent on WhatsApp';
 
   @override
-  String get whatsappotpsendfailed => 'Sending the code on WhatsApp failed, please try again';
+  String get whatsappotpsendfailed =>
+      'Sending the code on WhatsApp failed, please try again';
 
   @override
-  String get whatsappnotconfigured => 'WhatsApp delivery is not available right now';
+  String get whatsappnotconfigured =>
+      'WhatsApp delivery is not available right now';
 
   @override
-  String get whatsappotptoosoon => 'A WhatsApp code was just sent to you, please wait a moment';
+  String get whatsappotptoosoon =>
+      'A WhatsApp code was just sent to you, please wait a moment';
 
   @override
   String get log_out => 'Log Out';
@@ -597,16 +603,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phone_number_cant_be_empty => 'Phone number can\'t be Empty';
 
   @override
-  String get please_enter_valid_phone_number => 'Please enter valid phone number';
+  String get please_enter_valid_phone_number =>
+      'Please enter valid phone number';
 
   @override
   String get phone_number_must_be_10digit => 'Phone number must be 10-digit';
 
   @override
-  String get please_enter_your_business_name => 'Please enter your business name';
+  String get please_enter_your_business_name =>
+      'Please enter your business name';
 
   @override
-  String get please_enter_valid_business_name => 'Please enter valid business name';
+  String get please_enter_valid_business_name =>
+      'Please enter valid business name';
 
   @override
   String get please_enter_alphabets_only => 'Please enter alphabets only';
@@ -630,7 +639,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get please_enter_contact_name => 'Please enter contact name';
 
   @override
-  String get please_enter_contact_person_name => 'Please add full name, first name and last name';
+  String get please_enter_contact_person_name =>
+      'Please add full name, first name and last name';
 
   @override
   String get please_enter_address => 'Please enter address';
@@ -666,22 +676,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get image_not_set => 'Image not set';
 
   @override
-  String get file_size_must_be_less_then => 'File size must be less then 1024 KB';
+  String get file_size_must_be_less_then =>
+      'File size must be less then 1024 KB';
 
   @override
-  String get please_select_opening_time_after_previous_closing_time => 'Please select opening time after previous closing time';
+  String get please_select_opening_time_after_previous_closing_time =>
+      'Please select opening time after previous closing time';
 
   @override
-  String get please_select_opening_time_before_closing_time => 'Please select opening time before closing time';
+  String get please_select_opening_time_before_closing_time =>
+      'Please select opening time before closing time';
 
   @override
-  String get please_select_closing_time_after_opening_time => 'Please select closing time after opening time';
+  String get please_select_closing_time_after_opening_time =>
+      'Please select closing time after opening time';
 
   @override
   String get please_select_opening_time => 'Please select opening Time';
 
   @override
-  String get please_select_previous_shift_time => 'Please select previous shift time';
+  String get please_select_previous_shift_time =>
+      'Please select previous shift time';
 
   @override
   String get please_select_first_shift_time => 'Please select first shift time';
@@ -690,7 +705,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get please_enter_otp => 'Please enter otp';
 
   @override
-  String get please_select_time_grater_then_0 => 'Please select time grater then 00:00';
+  String get please_select_time_grater_then_0 =>
+      'Please select time grater then 00:00';
 
   @override
   String get please_fill_up_closing_time => 'Please fill up closing time';
@@ -723,13 +739,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get messages_not_found => 'Messages not found';
 
   @override
-  String get currently_this_Supplier_has_no_products => 'Currently this Supplier has no products';
+  String get currently_this_Supplier_has_no_products =>
+      'Currently this Supplier has no products';
 
   @override
-  String get currently_products_are_not_on_sale => 'Currently products are not on sale';
+  String get currently_products_are_not_on_sale =>
+      'Currently products are not on sale';
 
   @override
-  String get recommendation_products_are_not_available => 'Recommendation products are not available';
+  String get recommendation_products_are_not_available =>
+      'Recommendation products are not available';
 
   @override
   String get companies_not_available => 'Companies not available';
@@ -753,7 +772,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get product_added_to_cart => 'Product added to Cart';
 
   @override
-  String get you_have_reached_maximum_quantity => 'You have reached maximum quantity';
+  String get you_have_reached_maximum_quantity =>
+      'You have reached maximum quantity';
 
   @override
   String get downloaded_successfully => 'Downloaded successfully!';
@@ -765,7 +785,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get camera_permission => 'Camera access is required to take a photo.';
 
   @override
-  String get storage_permission => 'Storage access is required to choose a file.';
+  String get storage_permission =>
+      'Storage access is required to choose a file.';
 
   @override
   String get enter_4digit_otp => 'Please enter 4 digit otp code';
@@ -774,7 +795,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get you_want_clear_cart => 'Are you sure you want to clear cart?';
 
   @override
-  String get you_want_delete_product => 'Are you sure you want to delete product?';
+  String get you_want_delete_product =>
+      'Are you sure you want to delete product?';
 
   @override
   String get select_issue => 'Please select issue';
@@ -783,7 +805,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select_checkbox => 'Please select all checkbox';
 
   @override
-  String get select_atleast_one_checkbox => 'Please select atleast one checkbox';
+  String get select_atleast_one_checkbox =>
+      'Please select atleast one checkbox';
 
   @override
   String get signature_missing => 'Signature is missing';
@@ -792,7 +815,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driver_signature_missing => 'Missing driver signature';
 
   @override
-  String get surface_validation => 'The number of surfaces is too much it is more then what you received from this supplier';
+  String get surface_validation =>
+      'The number of surfaces is too much it is more then what you received from this supplier';
 
   @override
   String get connection_timed_out => 'Connection timed out';
@@ -870,34 +894,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalid_credentials => 'Invalid credentials';
 
   @override
-  String get verification_email_sent => 'A verification email has been sent to your registered email address. Please check your inbox';
+  String get verification_email_sent =>
+      'A verification email has been sent to your registered email address. Please check your inbox';
 
   @override
-  String get invalid_code => 'Invalid verification code. Please check the code and try again';
+  String get invalid_code =>
+      'Invalid verification code. Please check the code and try again';
 
   @override
   String get already_verified => 'Verification already completed';
 
   @override
-  String get expired_code => 'Verification code has expired. Please request a new verification code';
+  String get expired_code =>
+      'Verification code has expired. Please request a new verification code';
 
   @override
   String get verification_success => 'Verification successfully';
 
   @override
-  String get invalid_verification_code => 'Invalid verification code. Please check the code and try again';
+  String get invalid_verification_code =>
+      'Invalid verification code. Please check the code and try again';
 
   @override
-  String get expired_verification_code => 'Verification code has expired. Please request a new verification code';
+  String get expired_verification_code =>
+      'Verification code has expired. Please request a new verification code';
 
   @override
-  String get unverified_verification_code => 'Verification code has not been verified. Please verify first';
+  String get unverified_verification_code =>
+      'Verification code has not been verified. Please verify first';
 
   @override
   String get user_not_found => 'User not found';
 
   @override
-  String get new_password_same_as_old => 'New password must be different from the existing password';
+  String get new_password_same_as_old =>
+      'New password must be different from the existing password';
 
   @override
   String get reset_successful => 'Password reset successfully';
@@ -906,7 +937,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get set_successful => 'Password set successfully';
 
   @override
-  String get current_password_wrong => 'Your current password is wrong please enter the correct password';
+  String get current_password_wrong =>
+      'Your current password is wrong please enter the correct password';
 
   @override
   String get change_successful => 'Password change successfully';
@@ -921,7 +953,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get form_not_found => 'Form not found';
 
   @override
-  String get form_exists_with_name => 'Form name is already exists.Try new name';
+  String get form_exists_with_name =>
+      'Form name is already exists.Try new name';
 
   @override
   String get internal_server_error => 'Internal server error';
@@ -966,22 +999,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skus_are_not_registered => 'None Of The Skus Are Registered';
 
   @override
-  String get no_products_are_registered => 'None of the products are registered';
+  String get no_products_are_registered =>
+      'None of the products are registered';
 
   @override
-  String get supplier_product_is_not_registered => 'Supplier product is not registered';
+  String get supplier_product_is_not_registered =>
+      'Supplier product is not registered';
 
   @override
-  String get products_supplier_mismatch => 'None of the Products are matched with Supplier';
+  String get products_supplier_mismatch =>
+      'None of the Products are matched with Supplier';
 
   @override
-  String get product_removal_sale_success => 'Product Removed from Sale Successful';
+  String get product_removal_sale_success =>
+      'Product Removed from Sale Successful';
 
   @override
-  String get product_removal_sale_failure => 'Product Removed from Sale Failure';
+  String get product_removal_sale_failure =>
+      'Product Removed from Sale Failure';
 
   @override
-  String get insufficient_data_for_product_removal_from_sale => 'Insufficient Data For Product Removal From Sale';
+  String get insufficient_data_for_product_removal_from_sale =>
+      'Insufficient Data For Product Removal From Sale';
 
   @override
   String get product_not_found => 'Product Not Found';
@@ -1017,7 +1056,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get product_does_not_exist_in_cart => 'Product does not exist';
 
   @override
-  String get supplier_does_not_have_quantity => 'Supplier Does Not Have Enough Quantity';
+  String get supplier_does_not_have_quantity =>
+      'Supplier Does Not Have Enough Quantity';
 
   @override
   String get order_products_bad_request => 'At-least one product required';
@@ -1056,19 +1096,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get order_sale_exist => 'Order exists sale can not deleted';
 
   @override
-  String get supplier_product_exist => 'Product exists supplier can not deleted';
+  String get supplier_product_exist =>
+      'Product exists supplier can not deleted';
 
   @override
   String get question_id_does_not_exist => 'Question does not exist';
 
   @override
-  String get unique_question_and_answer => 'Question with the same text already exists';
+  String get unique_question_and_answer =>
+      'Question with the same text already exists';
 
   @override
   String get question_created_successfully => 'Question created successfully';
 
   @override
-  String get question_record_does_not_exist => 'No matching record found for update';
+  String get question_record_does_not_exist =>
+      'No matching record found for update';
 
   @override
   String get question_deleted_successfully => 'Question deleted successfully';
@@ -1077,16 +1120,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get product_already_in_cart => 'Product is already in cart';
 
   @override
-  String get product_or_supplier_not_exits => 'Product or supplier dosent exist';
+  String get product_or_supplier_not_exits =>
+      'Product or supplier dosent exist';
 
   @override
-  String get product_added_in_cart => 'Product has been successfully added to your cart';
+  String get product_added_in_cart =>
+      'Product has been successfully added to your cart';
 
   @override
-  String get product_updated_in_cart => 'Product has been successfully updated to your cart';
+  String get product_updated_in_cart =>
+      'Product has been successfully updated to your cart';
 
   @override
-  String get order_issue_created_notification_title => 'Issues Reported in SupplierOrderNumber#';
+  String get order_issue_created_notification_title =>
+      'Issues Reported in SupplierOrderNumber#';
 
   @override
   String get file_not_found => 'File not found';
@@ -1116,22 +1163,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get admin_type_already_exist => 'Admin Type already exists';
 
   @override
-  String get already_linked_with_user => 'You cannot delete this AdminType as it is associated with a user';
+  String get already_linked_with_user =>
+      'You cannot delete this AdminType as it is associated with a user';
 
   @override
-  String get qty_must_above_zero => 'Cant place order for product . Quantity must be above 0';
+  String get qty_must_above_zero =>
+      'Cant place order for product . Quantity must be above 0';
 
   @override
   String get not_enough_qty => 'Not enough quantity for product';
 
   @override
-  String get content_already_exist => 'Content with the same name already exists';
+  String get content_already_exist =>
+      'Content with the same name already exists';
 
   @override
   String get module_already_exist => 'Module name already exists';
 
   @override
-  String get product_or_supplier_not_exist => 'Product or supplier dosent exist.';
+  String get product_or_supplier_not_exist =>
+      'Product or supplier dosent exist.';
 
   @override
   String get issue_generated => 'Issues are generated.';
@@ -1140,7 +1191,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delivery_confirmed => 'Delivery has been confirmed.';
 
   @override
-  String get permission_already_exist => 'Permission Template name already exists';
+  String get permission_already_exist =>
+      'Permission Template name already exists';
 
   @override
   String get planogram_already_exist => 'Planogram already exists';
@@ -1152,7 +1204,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duplicate_or_invalid_sku => 'Duplicate Or Invalid SKU';
 
   @override
-  String get already_linked_with_sale => 'Sale is existing you cant remove the supplier';
+  String get already_linked_with_sale =>
+      'Sale is existing you cant remove the supplier';
 
   @override
   String get already_exist => 'Message with this content name already exists';
@@ -1167,10 +1220,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalid_amount => 'Invalid Amount';
 
   @override
-  String get deduction_is_negative => 'Deduction would result in a negative balance';
+  String get deduction_is_negative =>
+      'Deduction would result in a negative balance';
 
   @override
-  String get missing_quantity_not_more_than_original => 'missing quantity can\'t be more then original quantity';
+  String get missing_quantity_not_more_than_original =>
+      'missing quantity can\'t be more then original quantity';
 
   @override
   String get check_all => 'Check All';
@@ -1182,7 +1237,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otp_resend_success => 'OTP resend Successfully!';
 
   @override
-  String get select_valid_document_format => 'Please select only jpg, jpeg, png, heic, pdf and document files';
+  String get select_valid_document_format =>
+      'Please select only jpg, jpeg, png, heic, pdf and document files';
 
   @override
   String get select_next_day_shift => 'please select next day shift';
@@ -1206,7 +1262,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enter_valid_address => 'Please enter valid address';
 
   @override
-  String get this_company_has_no_product => 'Currently this company has no products';
+  String get this_company_has_no_product =>
+      'Currently this company has no products';
 
   @override
   String get out_of_stock1 => 'Out of stock';
@@ -1278,7 +1335,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get total_amount_subject_to_vat => 'Total Amount Subject to VAT';
 
   @override
-  String get total_amount_not_subject_to_vat => 'Total Amount Not Subject to VAT';
+  String get total_amount_not_subject_to_vat =>
+      'Total Amount Not Subject to VAT';
 
   @override
   String get vat => 'VAT';
@@ -1317,7 +1375,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get issue_removed => 'Issue removed successfully.';
 
   @override
-  String get wallet_information_sent_to_your_email => 'The wallet information was sent to your email';
+  String get wallet_information_sent_to_your_email =>
+      'The wallet information was sent to your email';
 
   @override
   String get form_date => 'From Date';
@@ -1332,13 +1391,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete_account => 'Delete account';
 
   @override
-  String get delete_pop_up_msg => 'We received your account deletion request and we will take care of it in a few days, thank you.';
+  String get delete_pop_up_msg =>
+      'We received your account deletion request and we will take care of it in a few days, thank you.';
 
   @override
   String get login_as_guest => 'Login as guest';
 
   @override
-  String get new_version_app_update => 'קיימת גירסה חדשה עבור האפליקציה אנא עדכן את האפליקציה';
+  String get new_version_app_update =>
+      'קיימת גירסה חדשה עבור האפליקציה אנא עדכן את האפליקציה';
 
   @override
   String get update => 'עדכן';
@@ -1353,7 +1414,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duplicate_order => 'Duplicate Order';
 
   @override
-  String get you_want_to_duplicate_this_order => 'Please note, products that no longer exist or are out of stock will not be added to the new order. Are you sure you want to duplicate the order?';
+  String get you_want_to_duplicate_this_order =>
+      'Please note, products that no longer exist or are out of stock will not be added to the new order. Are you sure you want to duplicate the order?';
 
   @override
   String get wallet_refund => 'Wallet refund';
@@ -1395,7 +1457,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get total_invoice_amount => 'Total invoice amount';
 
   @override
-  String get not_include_surfaces_price => 'This price does not include surfaces price';
+  String get not_include_surfaces_price =>
+      'This price does not include surfaces price';
 
   @override
   String get open => 'open';
@@ -1470,7 +1533,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bank_info => 'Bank information';
 
   @override
-  String get bank_info_note => 'The account details are used for collection only, on Net + 45 terms. We won\'t charge without your approval.';
+  String get bank_info_note =>
+      'The account details are used for collection only, on Net + 45 terms. We won\'t charge without your approval.';
 
   @override
   String get name_of_bank => 'Name of bank';
@@ -1605,13 +1669,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get approve_previous_order => 'need to approve previous order';
 
   @override
-  String get order_sign_dialog => 'It is not possible to transmit an order because there are orders that you received and did not sign\nPlease go through your order list and confirm that you have received them\nOnce you confirm you can broadcast the order\nThank you!';
+  String get order_sign_dialog =>
+      'It is not possible to transmit an order because there are orders that you received and did not sign\nPlease go through your order list and confirm that you have received them\nOnce you confirm you can broadcast the order\nThank you!';
 
   @override
   String get show_order => 'Show order';
 
   @override
-  String get please_enter_surfaces => 'Please enter the number of Returning surfaces';
+  String get please_enter_surfaces =>
+      'Please enter the number of Returning surfaces';
 
   @override
   String get please_enter_driverName => 'Please enter driver name';
@@ -1674,7 +1740,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get can_see_update_business_info => 'Can see and update business info';
 
   @override
-  String get can_see_update_additional_info => 'Can see and update additional info';
+  String get can_see_update_additional_info =>
+      'Can see and update additional info';
 
   @override
   String get can_see_update_times_info => 'Can see and update times info';
@@ -1698,7 +1765,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get not_sufficient_permission => 'Not sufficient permission';
 
   @override
-  String get phone_number_of_other_sub_user => 'The phone number is already associated with another user';
+  String get phone_number_of_other_sub_user =>
+      'The phone number is already associated with another user';
 
   @override
   String get delete_sub_user_account => 'Delete user';
@@ -1713,7 +1781,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get maximum_qty => 'Maximum Quantity';
 
   @override
-  String get not_add_more_than_max_qty => 'You can not add more than maximum quantity';
+  String get not_add_more_than_max_qty =>
+      'You can not add more than maximum quantity';
 
   @override
   String get apply => 'Apply';
@@ -1749,13 +1818,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_bank_title => 'Obligo & payment wallet';
 
   @override
-  String get payment_bank_subtitle => 'Open a credit line and digital wallet — pay all suppliers in one place, in convenient installments';
+  String get payment_bank_subtitle =>
+      'Open a credit line and digital wallet — pay all suppliers in one place, in convenient installments';
 
   @override
-  String get payment_card_subtitle => 'Enter card details — saved for future payments';
+  String get payment_card_subtitle =>
+      'Enter card details — saved for future payments';
 
   @override
-  String get payment_secure_note => 'Payment is secure and encrypted. Card details are saved for future payments.';
+  String get payment_secure_note =>
+      'Payment is secure and encrypted. Card details are saved for future payments.';
 
   @override
   String get credit_card_details => 'Credit card details';
@@ -1767,7 +1839,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validity => 'Validity';
 
   @override
-  String get some_products_out_of_stock_Do_you_want_submit_order => 'There are some products that are out of stock.Do you want to submit the order without products that are out of stock ?';
+  String get some_products_out_of_stock_Do_you_want_submit_order =>
+      'There are some products that are out of stock.Do you want to submit the order without products that are out of stock ?';
 
   @override
   String get enter_credit_card_number => 'Please enter credit card number';
@@ -1779,7 +1852,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manage_credit_card => 'Manage credit card';
 
   @override
-  String get israel_id_or_business_id_number_error => 'There is an error on Israel ID number or Business ID number';
+  String get israel_id_or_business_id_number_error =>
+      'There is an error on Israel ID number or Business ID number';
 
   @override
   String get rivchitclienterror => 'rivchitclienterror';
@@ -1806,7 +1880,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add_credit_card => 'Add credit card';
 
   @override
-  String get under_maintenance => 'TAVILI is under maintenance now, please try again later.';
+  String get under_maintenance =>
+      'TAVILI is under maintenance now, please try again later.';
 
   @override
   String get retry => 'Retry';
@@ -1818,34 +1893,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get agent_block => 'You are blocked, please try again in 30 minutes';
 
   @override
-  String get warning_agent_code => 'you have only 2 times to add a correct Agent code';
+  String get warning_agent_code =>
+      'you have only 2 times to add a correct Agent code';
 
   @override
-  String get please_enter_valid_israel_id_owner1 => 'Please enter valid israel ID for Owner1';
+  String get please_enter_valid_israel_id_owner1 =>
+      'Please enter valid israel ID for Owner1';
 
   @override
-  String get please_enter_valid_israel_id_owner2 => 'Please enter valid israel ID for Owner2';
+  String get please_enter_valid_israel_id_owner2 =>
+      'Please enter valid israel ID for Owner2';
 
   @override
-  String get please_enter_valid_israel_id_guarantee1 => 'Please enter valid israel ID for Guarantee1';
+  String get please_enter_valid_israel_id_guarantee1 =>
+      'Please enter valid israel ID for Guarantee1';
 
   @override
-  String get please_enter_valid_israel_id_guarantee2 => 'Please enter valid israel ID for Guarantee2';
+  String get please_enter_valid_israel_id_guarantee2 =>
+      'Please enter valid israel ID for Guarantee2';
 
   @override
-  String get please_enter_valid_guarantee_name1 => 'Please enter valid Guarantee1 Name';
+  String get please_enter_valid_guarantee_name1 =>
+      'Please enter valid Guarantee1 Name';
 
   @override
-  String get please_enter_valid_guarantee_name2 => 'Please enter valid Guarantee2 Name';
+  String get please_enter_valid_guarantee_name2 =>
+      'Please enter valid Guarantee2 Name';
 
   @override
-  String get approve_for_promotional_info => 'I approve TAVILI to send me promotional info in Email and SMS.';
+  String get approve_for_promotional_info =>
+      'I approve TAVILI to send me promotional info in Email and SMS.';
 
   @override
   String get delete_credit_card => 'Delete credit card';
 
   @override
-  String get payment_dialog_option_title => 'You can try again with these options:';
+  String get payment_dialog_option_title =>
+      'You can try again with these options:';
 
   @override
   String get understand_submit_order => 'Understood, Submit Order!';
@@ -1896,7 +1980,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get minimum_box => 'Minimum box';
 
   @override
-  String get minimum_box_title => 'The minimum number of packages for this sale is: ';
+  String get minimum_box_title =>
+      'The minimum number of packages for this sale is: ';
 
   @override
   String get mix_sale_text => 'This is a mixed sale';
@@ -1905,16 +1990,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sale_other_text => 'If you do not order at least';
 
   @override
-  String get sale_other_text1 => 'products, you will not receive the sale price';
+  String get sale_other_text1 =>
+      'products, you will not receive the sale price';
 
   @override
-  String get mixed_sale_other_text => 'You may also order from the other products participating in the sale';
+  String get mixed_sale_other_text =>
+      'You may also order from the other products participating in the sale';
 
   @override
-  String get mix_minimum_box_title => 'The minimum boxes for this mixed sale is: ';
+  String get mix_minimum_box_title =>
+      'The minimum boxes for this mixed sale is: ';
 
   @override
-  String get confirm_minimum_box => ', are you sure you don’t want to get the sale price?';
+  String get confirm_minimum_box =>
+      ', are you sure you don’t want to get the sale price?';
 
   @override
   String get productParticipatingSale => 'Product participating in the sale:';
@@ -2046,16 +2135,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add_proof_img => 'Add proof images';
 
   @override
-  String get add_driver_delivery_document_img => 'A photocopy of the delivery receipt you received';
+  String get add_driver_delivery_document_img =>
+      'A photocopy of the delivery receipt you received';
 
   @override
-  String get add_driver_delivery_document_img_note => 'The delivery note must be photographed as proof of receipt of the goods.';
+  String get add_driver_delivery_document_img_note =>
+      'The delivery note must be photographed as proof of receipt of the goods.';
 
   @override
-  String get driver_return_delivery_document_img => 'A photocopy of the return certificate you received';
+  String get driver_return_delivery_document_img =>
+      'A photocopy of the return certificate you received';
 
   @override
-  String get driver_return_delivery_document_img_note => 'The return receipt must be photographed as proof of returning the goods.';
+  String get driver_return_delivery_document_img_note =>
+      'The return receipt must be photographed as proof of returning the goods.';
 
   @override
   String get add_notes => 'Add your notes here';
@@ -2067,7 +2160,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get product_defective => 'The product is defective';
 
   @override
-  String get product_expiration_date_issue => 'The product has expiration date issue';
+  String get product_expiration_date_issue =>
+      'The product has expiration date issue';
 
   @override
   String get wrong_product => 'Wrong product';
@@ -2085,7 +2179,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get open_refund_invoice => 'Open refund invoice';
 
   @override
-  String get product_does_not_exist => 'The product doesn\'t exist in the system';
+  String get product_does_not_exist =>
+      'The product doesn\'t exist in the system';
 
   @override
   String get date_sent => 'Date Sent:';
@@ -2130,13 +2225,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get you_have => 'You have';
 
   @override
-  String get countdown => ' hours to create more orders without any minimum limit to the supplier Tavili.';
+  String get countdown =>
+      ' hours to create more orders without any minimum limit to the supplier Tavili.';
 
   @override
   String get call_the_agent => 'Call the Agent';
 
   @override
-  String get return_draft_not_sent => 'You have returns that haven\'t been sent yet.';
+  String get return_draft_not_sent =>
+      'You have returns that haven\'t been sent yet.';
 
   @override
   String get view_return => 'View Return';
@@ -2145,7 +2242,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get send_any_way => 'Send any way';
 
   @override
-  String get waiting_for_new_order_success_msg => 'The return has been successfully recorded. For convenience, your return will be sent on the day you place your next order. Until then, you can add more returns.';
+  String get waiting_for_new_order_success_msg =>
+      'The return has been successfully recorded. For convenience, your return will be sent on the day you place your next order. Until then, you can add more returns.';
 
   @override
   String get issue_text => 'issue: ';
@@ -2154,10 +2252,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get return_number_text => 'Return Number: ';
 
   @override
-  String get return_delivery_document_image => 'You must add delivery document image';
+  String get return_delivery_document_image =>
+      'You must add delivery document image';
 
   @override
-  String get driver_return_document_image => 'You must add return document image';
+  String get driver_return_document_image =>
+      'You must add return document image';
 
   @override
   String get basket_loader_text => 'Your order is being sent';
@@ -2166,7 +2266,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get please_wait_text => 'Please wait...';
 
   @override
-  String get order_confirmation_loader_text => 'Your order confirmation is being sent';
+  String get order_confirmation_loader_text =>
+      'Your order confirmation is being sent';
 
   @override
   String get open_text => 'Open';
@@ -2223,7 +2324,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select_date => 'Select Date';
 
   @override
-  String get maximum_three_month_date_range_required => 'Please select maximum of 3 months range';
+  String get maximum_three_month_date_range_required =>
+      'Please select maximum of 3 months range';
 
   @override
   String get date_range => 'Date range';
@@ -2247,10 +2349,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clients_no_minimum => 'NO MINIMUM';
 
   @override
-  String get confirmation_no_minimum => 'Are you sure you want to set to no minimum order for one hour?';
+  String get confirmation_no_minimum =>
+      'Are you sure you want to set to no minimum order for one hour?';
 
   @override
-  String get confirmation_minimum => 'Are you sure you want to set to minimum order?';
+  String get confirmation_minimum =>
+      'Are you sure you want to set to minimum order?';
 
   @override
   String get switch_client_message => 'You are now connected as: ';
@@ -2268,10 +2372,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get making_pay_with_credit_card => 'Pay with credit card';
 
   @override
-  String get credit_card_payment_error => 'An error occurred while processing the credit card payment for the invoice';
+  String get credit_card_payment_error =>
+      'An error occurred while processing the credit card payment for the invoice';
 
   @override
-  String get credit_card_payment_success => 'Success! Your invoice has been paid using your credit card.';
+  String get credit_card_payment_success =>
+      'Success! Your invoice has been paid using your credit card.';
 
   @override
   String get pdf_loading => 'PDF is still loading. Please wait.';
@@ -2314,13 +2420,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verify_data_correct => 'Verify that the data is correct';
 
   @override
-  String get verify_form_subtitle => 'Please review and update your details before continuing';
+  String get verify_form_subtitle =>
+      'Please review and update your details before continuing';
 
   @override
   String get validation_errors_title => 'Almost there!';
 
   @override
-  String get validation_errors_message => 'A few fields need to be completed or corrected before we continue with your order.';
+  String get validation_errors_message =>
+      'A few fields need to be completed or corrected before we continue with your order.';
 
   @override
   String get show_errors => 'Show errors';
@@ -2365,16 +2473,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customer_service_not_configured => 'Not configured';
 
   @override
-  String get customer_service_whatsapp_unavailable => 'Customer service WhatsApp number is not configured';
+  String get customer_service_whatsapp_unavailable =>
+      'Customer service WhatsApp number is not configured';
 
   @override
-  String get customer_service_phone_unavailable => 'Customer service phone number is not configured';
+  String get customer_service_phone_unavailable =>
+      'Customer service phone number is not configured';
 
   @override
   String get customer_service => 'Customer Service';
 
   @override
-  String get agent_code_help_message => 'Don\'t know your agent code or who your agent is? No problem — our customer service team is here to help.';
+  String get agent_code_help_message =>
+      'Don\'t know your agent code or who your agent is? No problem — our customer service team is here to help.';
 
   @override
   String get agent_code_contact_support => 'Contact customer service';
@@ -2383,7 +2494,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whatsapp_option_title => 'Let\'s stay in touch on WhatsApp';
 
   @override
-  String get whatsapp_option_body => 'I agree to receive WhatsApp messages from Tavili including updates, perks, promotions and service notices. I can withdraw this consent at any time.';
+  String get whatsapp_option_body =>
+      'I agree to receive WhatsApp messages from Tavili including updates, perks, promotions and service notices. I can withdraw this consent at any time.';
 
   @override
   String get whatsapp_option_approve => 'I agree';
@@ -2413,10 +2525,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get please_set_waze_location => 'Please add your Waze location';
 
   @override
-  String get please_upload_delivery_location_photo => 'Please add your Image of your location';
+  String get please_upload_delivery_location_photo =>
+      'Please add your Image of your location';
 
   @override
-  String get promo_sheet_reach_min_title => 'Complete the quantity for the sale price';
+  String get promo_sheet_reach_min_title =>
+      'Complete the quantity for the sale price';
 
   @override
   String get promo_sheet_min_reached => 'Great! You\'ve reached the sale price';

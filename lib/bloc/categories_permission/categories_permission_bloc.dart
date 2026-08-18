@@ -10,7 +10,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import '../../ui/utils/constants/app_urls.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-
 part 'categories_permission_event.dart';
 part 'categories_permission_state.dart';
 part 'categories_permission_bloc.freezed.dart';
@@ -64,11 +63,13 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
 
           if (categoriesPermissionList[event.categoriesIndex].isAllowed == false) {
             for (int i = 0; i < (categoriesPermissionList[event.categoriesIndex].subCategories?.length ?? 0); i++) {
-              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(isAllowed: false);
+              categoriesPermissionList[event.categoriesIndex].subCategories![i] =
+                  categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(isAllowed: false);
             }
           } else {
             for (int i = 0; i < (categoriesPermissionList[event.categoriesIndex].subCategories?.length ?? 0); i++) {
-              categoriesPermissionList[event.categoriesIndex].subCategories![i] = categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(isAllowed: true);
+              categoriesPermissionList[event.categoriesIndex].subCategories![i] =
+                  categoriesPermissionList[event.categoriesIndex].subCategories![i].copyWith(isAllowed: true);
             }
           }
           emit(state.copyWith(categoriesPermissionList: categoriesPermissionList, isRefresh: !state.isRefresh));
@@ -77,9 +78,7 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
             bool isAllowed = categoriesPermissionList[event.categoriesIndex].subCategories?[event.subCategoriesIndex].isAllowed ?? false;
 
             categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex] =
-                categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex].copyWith(
-                  isAllowed: !isAllowed,
-                );
+                categoriesPermissionList[event.categoriesIndex].subCategories![event.subCategoriesIndex].copyWith(isAllowed: !isAllowed);
           }
           emit(state.copyWith(categoriesPermissionList: categoriesPermissionList, isRefresh: !state.isRefresh));
         }
@@ -114,16 +113,14 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
             for (int j = 0; j < (state.categoriesPermissionList[i].subCategories?.length ?? 0); j++) {
               if (categories[i] == state.categoriesPermissionList[i].subCategories?[j].subCategoryData?.parentCategoryId) {
                 subCategoryList.add(update.SubCategory(
-                  subCategoryId: state.categoriesPermissionList[i].subCategories?[j].subCategoryId,
-                  isAllowed: state.categoriesPermissionList[i].subCategories?[j].isAllowed,
-                ));
+                    subCategoryId: state.categoriesPermissionList[i].subCategories?[j].subCategoryId,
+                    isAllowed: state.categoriesPermissionList[i].subCategories?[j].isAllowed));
               }
             }
             updateCategoryPermissionList.add(update.CategoryPermission(
-              subCategories: subCategoryList,
-              isAllowed: state.categoriesPermissionList[i].isAllowed,
-              categoryId: state.categoriesPermissionList[i].categoryId,
-            ));
+                subCategories: subCategoryList,
+                isAllowed: state.categoriesPermissionList[i].isAllowed,
+                categoryId: state.categoriesPermissionList[i].categoryId));
           }
 
           update.UpdatePermissionModel req = update.UpdatePermissionModel(categoryPermissions: updateCategoryPermissionList);
@@ -133,12 +130,14 @@ class CategoriesPermissionBloc extends Bloc<CategoriesPermissionEvent, Categorie
             return value == null;
           });
 
-          final response = await DioClient(event.context).put(path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
+          final response =
+              await DioClient(event.context).put(path: '${AppUrlEndPoints.updatePermissionUrl}${state.subUserId}', data: updatePermissionReq);
 
           if (response[AppStrings.statusString] == AppConstants.code_200) {
             emit(state.copyWith(isUpdateProcess: false));
             Navigator.pop(event.context);
-            CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
+            CustomSnackBar.showSnackBar(
+                context: event.context, title: AppLocalizations.of(event.context)!.success_message, type: SnackBarType.success);
           } else {
             emit(state.copyWith(isUpdateProcess: false));
           }

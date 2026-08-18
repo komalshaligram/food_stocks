@@ -105,7 +105,7 @@ class ProfileMenuScreenWidget extends StatelessWidget {
                 10.height,
                 Text('${AppLocalizations.of(context)!.application_version}${' '}${state.applicationVersion} (${state.buildNumber})',
                     style: AppStyles.rkRegularTextStyle(size: AppConstants.smallFont, color: AppColors.blackColor.withValues(alpha: 0.45))),
-                10.height,
+                10.height
               ]),
             ),
           ),
@@ -319,10 +319,6 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     );
   }
 
-  Widget profileMenuTiles({required title, required void Function() onTap, bool isDelete = false}) {
-    return profileMenuTile(title: title, onTap: onTap, icon: isDelete ? Icons.delete_outline : Icons.chevron_right, isDestructive: isDelete);
-  }
-
   Widget menuSwitchTile({required String title, required bool isHebrewLang, required void Function(bool)? onChanged}) {
     return Container(
       margin: const EdgeInsets.fromLTRB(_menuHorizontalMargin, 0, _menuHorizontalMargin, 12),
@@ -417,5 +413,3 @@ class ProfileMenuScreenWidget extends StatelessWidget {
     }
   }
 }
-
-

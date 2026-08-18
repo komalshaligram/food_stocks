@@ -18,7 +18,6 @@ import '../../ui/utils/app_utils.dart';
 import '../../ui/utils/constants/app_constants.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
-
 part 'more_details_bloc.freezed.dart';
 part 'more_details_event.dart';
 part 'more_details_state.dart';
@@ -32,17 +31,13 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
 
       if (event is _getProfileModelEvent) {
-        // During a PENDING resume we fetch the real values from the API (below),
-        // so don't overwrite them here with the (empty) cached preferences.
         if (!state.isUpdate && !preferences.getRegistrationIncomplete()) {
-
           emit(state.copyWith(
-            streetNameController: TextEditingController(text: preferences.getStreetName()),
-            streetNumberController: TextEditingController(text: preferences.getStreetNumber()),
-            emailController: TextEditingController(text: preferences.getEmailId()),
-            zipController: TextEditingController(text: preferences.getZip()),
-            selectCity: preferences.getCity(),
-          ));
+              streetNameController: TextEditingController(text: preferences.getStreetName()),
+              streetNumberController: TextEditingController(text: preferences.getStreetNumber()),
+              emailController: TextEditingController(text: preferences.getEmailId()),
+              zipController: TextEditingController(text: preferences.getZip()),
+              selectCity: preferences.getCity()));
         }
         profileModel = event.profileModel;
         try {
@@ -69,11 +64,10 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
             cityId: state.cityListResModel?.data?.cities?.firstWhere((city) => city.cityName == state.selectCity).id,
             email: state.emailController.text,
             clientDetail: ClientDetail(
-              approveSmsAndEmail: state.approveForSMS,
-              zip: state.zipController.text.trim(),
-              streetNumber: state.streetNumberController.text.trim(),
-              streetName: state.streetNameController.text.trim(),
-            ),
+                approveSmsAndEmail: state.approveForSMS,
+                zip: state.zipController.text.trim(),
+                streetNumber: state.streetNumberController.text.trim(),
+                streetName: state.streetNameController.text.trim()),
           );
           Map<String, dynamic> req = updatedProfileModel.toJson();
           Map<String, dynamic>? clientDetail = updatedProfileModel.clientDetail?.toJson();
@@ -97,14 +91,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 preferences.setUserName(name: response.data?.client?.clientDetail?.ownerName ?? '');
               }
               Navigator.pop(event.context);
-              CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.updated_successfully, type: SnackBarType.success);
+              CustomSnackBar.showSnackBar(
+                  context: event.context, title: AppLocalizations.of(event.context)!.updated_successfully, type: SnackBarType.success);
             } else {
               emit(state.copyWith(isLoading: false));
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             emit(state.copyWith(isLoading: false));
@@ -116,14 +110,14 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String version = packageInfo.version;
           ProfileModel reqMap = ProfileModel(
-              profileImage: profileModel.profileImage,
-              phoneNumber: profileModel.phoneNumber,
-              cityId: state.cityListResModel?.data?.cities?.firstWhere((element) => element.cityName == state.selectCity).id,
-              statusId: AppStrings.pendingString,
-              contactName: profileModel.contactName,
-              address: state.streetNumberController.text.trim(),
-              email: state.emailController.text,
-              clientDetail: ClientDetail(
+            profileImage: profileModel.profileImage,
+            phoneNumber: profileModel.phoneNumber,
+            cityId: state.cityListResModel?.data?.cities?.firstWhere((element) => element.cityName == state.selectCity).id,
+            statusId: AppStrings.pendingString,
+            contactName: profileModel.contactName,
+            address: state.streetNumberController.text.trim(),
+            email: state.emailController.text,
+            clientDetail: ClientDetail(
                 ownerName: '${profileModel.clientDetail!.ownerFirstName} ${profileModel.clientDetail?.ownerLastName}',
                 ownerFirstName: profileModel.clientDetail?.ownerFirstName,
                 ownerLastName: profileModel.clientDetail?.ownerLastName,
@@ -139,8 +133,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 streetNumber: state.streetNumberController.text.trim(),
                 zip: state.zipController.text.trim(),
                 applicationName: AppStrings.appName,
-                approveSmsAndEmail: state.approveForSMS,
-              ));
+                approveSmsAndEmail: state.approveForSMS),
+          );
 
           try {
             emit(state.copyWith(isLoading: true));
@@ -167,14 +161,16 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                 preferences.setStreetNumber(streetNumber: state.streetNumberController.text);
                 preferences.setZipCode(zipCode: state.zipController.text);
                 preferences.setCity(city: state.selectCity);
-                CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error, type: SnackBarType.failure);
+                CustomSnackBar.showSnackBar(
+                    context: event.context,
+                    title: AppLocalizations.of(event.context)!.israel_id_or_business_id_number_error,
+                    type: SnackBarType.failure);
                 Navigator.pop(event.context);
               } else {
                 CustomSnackBar.showSnackBar(
-                  context: event.context,
-                  title: AppStrings.getLocalizedStrings(profileResModel.message?.toLocalization() ?? profileResModel.message!, event.context),
-                  type: SnackBarType.failure,
-                );
+                    context: event.context,
+                    title: AppStrings.getLocalizedStrings(profileResModel.message?.toLocalization() ?? profileResModel.message!, event.context),
+                    type: SnackBarType.failure);
               }
             }
           } catch (e) {
@@ -189,13 +185,11 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
         emit(state.copyWith(selectCity: event.city));
       } else if (event is _getProfileMoreDetailsEvent) {
         emit(state.copyWith(isUpdate: event.isUpdate));
-        // Fetch + pre-fill from the API both when editing (isUpdate) and when a
-        // PENDING client resumes registration (registrationIncomplete).
         if (state.isUpdate || preferences.getRegistrationIncomplete()) {
-
           try {
             emit(state.copyWith(isUpdating: true));
-            final res = await DioClient(event.context).post(AppUrlEndPoints.getProfileDetailsUrl, data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
+            final res = await DioClient(event.context)
+                .post(AppUrlEndPoints.getProfileDetailsUrl, data: req.ProfileDetailsReqModel(id: preferences.getUserId()).toJson());
             res_get.ProfileDetailsResModel response = res_get.ProfileDetailsResModel.fromJson(res);
             if (response.status == AppConstants.code_200) {
               preferences.setPaymentMethod(method: response.data?.clients?.first.clientDetail?.paymentType ?? '');
@@ -207,16 +201,13 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
                   emailController: TextEditingController(text: response.data?.clients?.first.email),
                   streetNumberController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetNumber),
                   streetNameController: TextEditingController(text: response.data?.clients?.first.clientDetail?.streetName),
-                  zipController: TextEditingController(
-                    text: response.data?.clients?.first.clientDetail?.zip,
-                  )));
+                  zipController: TextEditingController(text: response.data?.clients?.first.clientDetail?.zip)));
             } else {
               emit(state.copyWith(isUpdating: false));
               CustomSnackBar.showSnackBar(
-                context: event.context,
-                title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
-                type: SnackBarType.failure,
-              );
+                  context: event.context,
+                  title: AppStrings.getLocalizedStrings(response.message?.toLocalization() ?? response.message!, event.context),
+                  type: SnackBarType.failure);
             }
           } on ServerException {
             emit(state.copyWith(isUpdating: false));
@@ -239,7 +230,8 @@ class MoreDetailsBloc extends Bloc<MoreDetailsEvent, MoreDetailsState> {
           emit(state.copyWith(isLoading: false));
           Navigator.pushNamed(event.context, RouteDefine.formDataScreen.name);
         } catch (e) {
-          CustomSnackBar.showSnackBar(context: event.context, title: AppLocalizations.of(event.context)!.internal_server_error, type: SnackBarType.failure);
+          CustomSnackBar.showSnackBar(
+              context: event.context, title: AppLocalizations.of(event.context)!.internal_server_error, type: SnackBarType.failure);
           emit(state.copyWith(isLoading: false));
         }
       }

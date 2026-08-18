@@ -14,5 +14,6 @@ class SubUsersProfileEvent with _$SubUsersProfileEvent {
 
   const factory SubUsersProfileEvent.updateSubUserEvent({required BuildContext context}) = _updateSubUserEvent;
 
-  const factory SubUsersProfileEvent.getSubUserByIdEvent({required BuildContext context, required String subUserId, required bool isUpdate}) = _getSubUserByIdEvent;
+  const factory SubUsersProfileEvent.getSubUserByIdEvent({required BuildContext context, required String subUserId, required bool isUpdate}) =
+      _getSubUserByIdEvent;
 }

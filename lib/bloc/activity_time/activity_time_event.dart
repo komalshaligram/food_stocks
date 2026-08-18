@@ -2,15 +2,14 @@ part of 'activity_time_bloc.dart';
 
 @freezed
 class ActivityTimeEvent with _$ActivityTimeEvent {
-  factory ActivityTimeEvent.timePickerEvent({
-    required BuildContext timePickerContext,
-    required int openingIndex,
-    required int rowIndex,
-    required int timeIndex,
-    required String time,
-    required BuildContext context,
-    required String previousTime,
-  }) = _timePickerEvent;
+  factory ActivityTimeEvent.timePickerEvent(
+      {required BuildContext timePickerContext,
+      required int openingIndex,
+      required int rowIndex,
+      required int timeIndex,
+      required String time,
+      required BuildContext context,
+      required String previousTime}) = _timePickerEvent;
 
   factory ActivityTimeEvent.defaultValueAddInListEvent({required BuildContext context}) = _defaultValueAddInListEvent;
 

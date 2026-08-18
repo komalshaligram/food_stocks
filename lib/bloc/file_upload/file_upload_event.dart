@@ -6,12 +6,8 @@ class FileUploadEvent with _$FileUploadEvent {
 
   factory FileUploadEvent.getFormsListEvent({required BuildContext context, required bool isUpdate}) = _getFormsListEvent;
 
-  factory FileUploadEvent.pickDocumentEvent({
-    required BuildContext context,
-    required int fileIndex,
-    required bool isFromCamera,
-    required bool isDocument,
-  }) = _pickDocumentEvent;
+  factory FileUploadEvent.pickDocumentEvent(
+      {required BuildContext context, required int fileIndex, required bool isFromCamera, required bool isDocument}) = _pickDocumentEvent;
 
   factory FileUploadEvent.uploadApiEvent({required BuildContext context, bool? isFromDelete}) = _uploadApiEvent;
 

@@ -79,50 +79,51 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                   trailingWidget: _buildAppBarIcon(),
                   onTap: () => Navigator.pop(context)),
             ),
-            body: SafeArea(child:  state.isShimmering
-                ? const MoreDetailsScreenShimmerWidget()
-                : Stack(children: [
-                    SingleChildScrollView(
-                      keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                      padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                          _buildFormCard(
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            _buildFieldLabel(context, AppLocalizations.of(context)!.city),
-                            _buildCityField(context: context, bloc: bloc, state: state, listNotifier: listNotifier),
-                            14.height,
-                            _buildFieldLabel(context, AppLocalizations.of(context)!.street_name),
-                            streetNameField(state, context),
-                            14.height,
-                            _buildFieldLabel(context, AppLocalizations.of(context)!.street_number),
-                            streetNumberField(state, context),
-                            14.height,
-                            _buildFieldLabel(context, AppLocalizations.of(context)!.email, required: false),
-                            emailField(state, context),
-                            14.height,
-                            _buildFieldLabel(context, AppLocalizations.of(context)!.zip, required: false),
-                            zipField(state, context),
-                            16.height,
-                            Divider(height: 1, color: AppColors.lightBorderColor.withValues(alpha: 0.6)),
-                            12.height,
-                            _buildSmsSwitchRow(context, bloc, state)
-                          ])),
-                          24.height,
-                          saveButtonWidget(context, bloc, state),
-                        ]),
+            body: SafeArea(
+              child: state.isShimmering
+                  ? const MoreDetailsScreenShimmerWidget()
+                  : Stack(children: [
+                      SingleChildScrollView(
+                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                        padding: const EdgeInsets.fromLTRB(_horizontalPadding, 8, _horizontalPadding, 32),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                            _buildFormCard(
+                                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              _buildFieldLabel(context, AppLocalizations.of(context)!.city),
+                              _buildCityField(context: context, bloc: bloc, state: state, listNotifier: listNotifier),
+                              14.height,
+                              _buildFieldLabel(context, AppLocalizations.of(context)!.street_name),
+                              streetNameField(state, context),
+                              14.height,
+                              _buildFieldLabel(context, AppLocalizations.of(context)!.street_number),
+                              streetNumberField(state, context),
+                              14.height,
+                              _buildFieldLabel(context, AppLocalizations.of(context)!.email, required: false),
+                              emailField(state, context),
+                              14.height,
+                              _buildFieldLabel(context, AppLocalizations.of(context)!.zip, required: false),
+                              zipField(state, context),
+                              16.height,
+                              Divider(height: 1, color: AppColors.lightBorderColor.withValues(alpha: 0.6)),
+                              12.height,
+                              _buildSmsSwitchRow(context, bloc, state)
+                            ])),
+                            24.height,
+                            saveButtonWidget(context, bloc, state)
+                          ]),
+                        ),
                       ),
-                    ),
-                    if (state.isUpdating)
-                      Positioned.fill(
-                        child: ColoredBox(
-                            color: Colors.black.withValues(alpha: 0.04),
-                            child: Center(child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20))),
-                      ),
-                  ]),
-          ),);
+                      if (state.isUpdating)
+                        Positioned.fill(
+                          child: ColoredBox(
+                              color: Colors.black.withValues(alpha: 0.04),
+                              child: Center(child: CupertinoActivityIndicator(color: AppColors.mainColor, radius: AppConstants.radius_20))),
+                        ),
+                    ]),
+            ),
+          );
         });
   }
 
@@ -180,7 +181,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       size: AppConstants.smallFont,
                       color: state.selectCity.isEmpty ? AppColors.blackColor.withValues(alpha: 0.4) : AppColors.blackColor)),
             ),
-            Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.blackColor.withValues(alpha: 0.45)),
+            Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.blackColor.withValues(alpha: 0.45))
           ]),
         ),
       ),
@@ -209,7 +210,7 @@ class MoreDetailsScreenWidget extends StatelessWidget {
                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                         Text(AppLocalizations.of(context)!.city,
                             style: AppStyles.rkBoldTextStyle(size: AppConstants.font_17, color: AppColors.blackColor)),
-                        IconButton(onPressed: () => Navigator.pop(context1), icon: const Icon(Icons.close_rounded)),
+                        IconButton(onPressed: () => Navigator.pop(context1), icon: const Icon(Icons.close_rounded))
                       ]),
                       12.height,
                       CustomFormField(
