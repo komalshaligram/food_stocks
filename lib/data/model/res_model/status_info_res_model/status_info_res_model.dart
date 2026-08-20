@@ -1,12 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
-
 part 'status_info_res_model.freezed.dart';
 part 'status_info_res_model.g.dart';
-
-StatusInfoResModel statusInfoResModelFromJson(String str) => StatusInfoResModel.fromJson(json.decode(str));
-
-String statusInfoResModelToJson(StatusInfoResModel data) => json.encode(data.toJson());
 
 @freezed
 class StatusInfoResModel with _$StatusInfoResModel {

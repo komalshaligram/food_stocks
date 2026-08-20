@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'file_upload_res_model.freezed.dart';
 
 part 'file_upload_res_model.g.dart';
-
-FileUploadResModel fileUploadResModelFromJson(String str) => FileUploadResModel.fromJson(json.decode(str));
-
-String fileUploadResModelToJson(FileUploadResModel data) => json.encode(data.toJson());
 
 @freezed
 class FileUploadResModel with _$FileUploadResModel {

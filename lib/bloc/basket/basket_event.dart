@@ -30,8 +30,6 @@ class BasketEvent with _$BasketEvent {
 
   const factory BasketEvent.setCartCountEvent({required bool isClearCart}) = _setCartCountEvent;
 
-  const factory BasketEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
-
   const factory BasketEvent.orderSendEvent(
       {required BuildContext context,
       required bool failPayment,

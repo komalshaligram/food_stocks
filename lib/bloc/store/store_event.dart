@@ -29,8 +29,6 @@ class StoreEvent with _$StoreEvent {
 
   const factory StoreEvent.updateQuantityOfProduct({required BuildContext context, required String quantity}) = _updateQuantityOfProduct;
 
-  const factory StoreEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
-
   const factory StoreEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) =
       _supplierSelectionEvent;
 

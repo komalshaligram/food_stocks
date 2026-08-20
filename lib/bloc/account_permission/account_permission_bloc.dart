@@ -21,7 +21,6 @@ class AccountPermissionBloc extends Bloc<AccountPermissionEvent, AccountPermissi
   AccountPermissionBloc() : super(AccountPermissionState.initial()) {
     on<AccountPermissionEvent>((event, emit) async {
       SharedPreferencesHelper preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
-
       final appLocalizations = AppLocalizations.of(event.context)!;
 
       if (event is _getPermissionList) {

@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'product_sales_res_model.freezed.dart';
 part 'product_sales_res_model.g.dart';
-
-ProductSalesResModel productSalesResModelFromJson(String str) => ProductSalesResModel.fromJson(json.decode(str));
-
-String productSalesResModelToJson(ProductSalesResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProductSalesResModel with _$ProductSalesResModel {

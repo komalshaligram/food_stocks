@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_stock/l10n/generated/app_localizations.dart';
 import '../../../bloc/basket/basket_bloc.dart';
-import '../../utils/basket_navigation_helper.dart';
+import '../../../data/services/basket_navigation_helper.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/constants/app_constants.dart';
 import '../../utils/constants/app_strings.dart';

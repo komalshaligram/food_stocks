@@ -1,14 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'supplier_list_products_response_model.freezed.dart';
 part 'supplier_list_products_response_model.g.dart';
-
-SupplierListProductsResponseModel supplierListProductsResponseModelFromJson(String str) =>
-    SupplierListProductsResponseModel.fromJson(json.decode(str));
-
-String supplierListProductsResponseModelToJson(SupplierListProductsResponseModel data) =>
-    json.encode(data.toJson());
 
 @freezed
 class SupplierListProductsResponseModel with _$SupplierListProductsResponseModel {

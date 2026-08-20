@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../bloc/basket/basket_bloc.dart';
 import '../../routes/app_routes.dart';
-import 'constants/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 import 'first_supplier_order_helper.dart';
 
 Future<void> navigateFromBasketContinue({required BuildContext context, required BasketState state, required String formattedTotal}) async {

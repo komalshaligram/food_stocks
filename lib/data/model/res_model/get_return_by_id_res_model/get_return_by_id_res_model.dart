@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'get_return_by_id_res_model.freezed.dart';
 part 'get_return_by_id_res_model.g.dart';
-
-GetReturnByIdResModel getReturnByIdResModelFromJson(String str) => GetReturnByIdResModel.fromJson(json.decode(str));
-
-String getReturnByIdResModelToJson(GetReturnByIdResModel data) => json.encode(data.toJson());
 
 @freezed
 class GetReturnByIdResModel with _$GetReturnByIdResModel {

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/basket/basket_bloc.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../screens/basket/basket_total_widget.dart';
-import '../../utils/basket_navigation_helper.dart';
+import '../../../data/services/basket_navigation_helper.dart';
 import 'custom_dialog.dart';
 import 'call_agent_dialog.dart';
 

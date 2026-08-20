@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'forms_res_model.freezed.dart';
 
 part 'forms_res_model.g.dart';
-
-FormsResModel formsResModelFromJson(String str) => FormsResModel.fromJson(json.decode(str));
-
-String formsResModelToJson(FormsResModel data) => json.encode(data.toJson());
 
 @freezed
 class FormsResModel with _$FormsResModel {

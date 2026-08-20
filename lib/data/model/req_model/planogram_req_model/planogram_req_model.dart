@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'planogram_req_model.freezed.dart';
 
 part 'planogram_req_model.g.dart';
-
-PlanogramReqModel planogramReqModelFromJson(String str) => PlanogramReqModel.fromJson(json.decode(str));
-
-String planogramReqModelToJson(PlanogramReqModel data) => json.encode(data.toJson());
 
 @freezed
 class PlanogramReqModel with _$PlanogramReqModel {

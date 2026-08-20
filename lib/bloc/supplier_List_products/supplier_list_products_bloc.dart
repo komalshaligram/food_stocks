@@ -226,7 +226,7 @@ class SupplierListProductsBloc extends Bloc<SupplierListProductsEvent, SupplierL
         _productQuantity = 0;
 
         try {
-          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
+          emit(state.copyWith(isProductLoading: true));
           final res = await DioClient(event.context)
               .post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
           ProductDetailsResModel response = ProductDetailsResModel.fromJson(res);
@@ -476,15 +476,6 @@ class SupplierListProductsBloc extends Bloc<SupplierListProductsEvent, SupplierL
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _changeNoteOfProduct) {
-        if (state.productStockUpdateIndex != -1) {
-          List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
-          productStockList[state.productListIndex][state.productStockUpdateIndex] =
-              productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(note: state.noteController.text);
-          emit(state.copyWith(productStockList: productStockList));
-        }
-      } else if (event is _changeSupplierSelectionExpansionEvent) {
-        emit(state.copyWith(isSelectSupplier: event.isSelectSupplier ?? !state.isSelectSupplier));
       } else if (event is _supplierSelectionEvent) {
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
@@ -630,8 +621,6 @@ class SupplierListProductsBloc extends Bloc<SupplierListProductsEvent, SupplierL
       } else if (event is _setCartCountEvent) {
         preferences.setCartCount(count: preferences.getCartCount() + 1);
         emit(state.copyWith(isSubUserAddToBasket: preferences.getCanAddToBasket()));
-      } else if (event is _updateImageIndexEvent) {
-        emit(state.copyWith(imageIndex: event.index));
       } else if (event is _getGridListView) {
         preferences.setSupplierProductGridListView(isSupplierProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));

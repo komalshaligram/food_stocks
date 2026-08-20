@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'invoices_req_model.freezed.dart';
 part 'invoices_req_model.g.dart';
-
-InvoicesReqModel invoicesReqModelFromJson(String str) => InvoicesReqModel.fromJson(json.decode(str));
-
-String invoicesReqModelToJson(InvoicesReqModel data) => json.encode(data.toJson());
 
 @freezed
 class InvoicesReqModel with _$InvoicesReqModel {

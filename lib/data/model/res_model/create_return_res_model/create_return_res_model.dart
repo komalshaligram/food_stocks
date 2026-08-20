@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'create_return_res_model.freezed.dart';
 part 'create_return_res_model.g.dart';
-
-CreateReturnResModel createReturnResModelFromJson(String str) => CreateReturnResModel.fromJson(json.decode(str));
-
-String createReturnResModelToJson(CreateReturnResModel data) => json.encode(data.toJson());
 
 @freezed
 class CreateReturnResModel with _$CreateReturnResModel {

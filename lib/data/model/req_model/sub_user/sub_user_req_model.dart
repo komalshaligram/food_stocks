@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'sub_user_req_model.freezed.dart';
 part 'sub_user_req_model.g.dart';
-
-SubUserReqModel subUserReqModelFromJson(String str) => SubUserReqModel.fromJson(json.decode(str));
-
-String subUserReqModelToJson(SubUserReqModel data) => json.encode(data.toJson());
 
 @freezed
 class SubUserReqModel with _$SubUserReqModel {

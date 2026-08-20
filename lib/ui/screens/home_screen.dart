@@ -1,4 +1,4 @@
-import '../../ui/utils/club_agent.dart';
+import '../../data/services/club_agent.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -42,7 +42,7 @@ import '../widget/dialogs/whatsapp_option_dialog.dart';
 import '../widget/common_marquee_widget.dart';
 import '../widget/common_product_list_widget.dart';
 import '../widget/common_search_widget.dart';
-import '../../ui/utils/push_notification_service.dart';
+import '../../data/services/push_notification_service.dart';
 import '../widget/common_shimmer_widget.dart';
 import '../widget/dialogs/multi_supplier_countdown_dialog.dart';
 import '../widget/no_data_bottom_sheet_widget.dart';

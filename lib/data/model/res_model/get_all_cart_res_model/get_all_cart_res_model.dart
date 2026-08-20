@@ -92,6 +92,9 @@ class Datum with _$Datum {
     @JsonKey(name: "lowStock")
     String? lowStock,
 
+    @JsonKey(name: "isFree")
+    bool? isFree,
+
     bool? isProcess,
   }) = _Datum;
 

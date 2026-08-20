@@ -1,4 +1,4 @@
-import 'constants/app_strings.dart';
+import '../../ui/utils/constants/app_strings.dart';
 
 class ClubAgent {
   ClubAgent._();

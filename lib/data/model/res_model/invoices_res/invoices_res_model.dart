@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'invoices_res_model.freezed.dart';
 part 'invoices_res_model.g.dart';
-
-InvoicesResModel invoicesResModelFromJson(String str) => InvoicesResModel.fromJson(json.decode(str));
-
-String invoicesResModelToJson(InvoicesResModel data) => json.encode(data.toJson());
 
 @freezed
 class InvoicesResModel with _$InvoicesResModel {

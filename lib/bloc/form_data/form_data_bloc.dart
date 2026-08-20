@@ -1,4 +1,4 @@
-import '../../ui/utils/club_agent.dart';
+import '../../data/services/club_agent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/model/res_model/setting_res_model/setting_res_model.dart';

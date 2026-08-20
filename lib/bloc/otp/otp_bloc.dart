@@ -1,4 +1,4 @@
-import '../../ui/utils/club_agent.dart';
+import '../../data/services/club_agent.dart';
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';

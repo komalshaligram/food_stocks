@@ -1,14 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 import '../../req_model/activity_time/activity_time_req_model.dart';
-
 part 'profile_details_res_model.freezed.dart';
 part 'profile_details_res_model.g.dart';
 
-ProfileDetailsResModel profileDetailsResModelFromJson(String str) => ProfileDetailsResModel.fromJson(json.decode(str));
-
-String profileDetailsResModelToJson(ProfileDetailsResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProfileDetailsResModel with _$ProfileDetailsResModel {

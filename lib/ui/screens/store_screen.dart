@@ -1,4 +1,4 @@
-import '../../ui/utils/club_agent.dart';
+import '../../data/services/club_agent.dart';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

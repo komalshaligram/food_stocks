@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../data/model/res_model/cart_product_supplier/cart_products_supplier_res_model.dart';
-import '../../data/model/res_model/setting_res_model/setting_res_model.dart';
-import '../../data/storage/shared_preferences_helper.dart';
+import '../model/res_model/cart_product_supplier/cart_products_supplier_res_model.dart';
+import '../model/res_model/setting_res_model/setting_res_model.dart';
+import '../storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../routes/app_routes.dart';
-import '../widget/dialogs/first_supplier_order_dialog.dart';
-import 'constants/app_constants.dart';
-import 'constants/app_strings.dart';
-import 'constants/app_urls.dart';
+import '../../ui/widget/dialogs/first_supplier_order_dialog.dart';
+import '../../ui/utils/constants/app_constants.dart';
+import '../../ui/utils/constants/app_strings.dart';
+import '../../ui/utils/constants/app_urls.dart';
 
 Future<void> navigateToVerifyClientDataScreen(
     {required BuildContext context, required String nextRouteName, required Map<dynamic, dynamic> nextRouteArgs}) async {

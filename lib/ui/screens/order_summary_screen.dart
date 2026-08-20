@@ -13,7 +13,7 @@ import '../widget/order_summary_card_widgets.dart';
 import '../widget/order_summary_screen_shimmer_widget.dart';
 import '../widget/supplier_delivery_schedule_widget.dart';
 import '../utils/app_utils.dart';
-import '../utils/first_supplier_order_helper.dart';
+import '../../data/services/first_supplier_order_helper.dart';
 
 class OrderSummaryRoute {
   static Widget get route => const OrderSummaryScreen();

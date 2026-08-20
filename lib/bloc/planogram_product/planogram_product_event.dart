@@ -16,10 +16,6 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
 
   const factory PlanogramProductEvent.updateQuantityOfProduct({required BuildContext context, required String quantity}) = _updateQuantityOfProduct;
 
-  const factory PlanogramProductEvent.changeNoteOfProduct({required String newNote}) = _changeNoteOfProduct;
-
-  const factory PlanogramProductEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
-
   const factory PlanogramProductEvent.supplierSelectionEvent(
       {required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
@@ -27,17 +23,11 @@ class PlanogramProductEvent with _$PlanogramProductEvent {
 
   const factory PlanogramProductEvent.setCartCountEvent() = _setCartCountEvent;
 
-  const factory PlanogramProductEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
-
-  const factory PlanogramProductEvent.toggleNoteEvent() = _ToggleNoteEvent;
-
   const factory PlanogramProductEvent.isCategoryEvent({required bool isSubCategory}) = _isCategoryEvent;
 
   const factory PlanogramProductEvent.getPlanogramByIdEvent({required BuildContext context}) = _getPlanogramByIdEvent;
 
   const factory PlanogramProductEvent.getPlanogramAllProductEvent({required BuildContext context}) = _getPlanogramAllProductEvent;
-
-  const factory PlanogramProductEvent.getSubCategoryProductEvent({required BuildContext context}) = _getSubCategoryProductEvent;
 
   const factory PlanogramProductEvent.getCartCountEvent() = _getCartCountEvent;
 

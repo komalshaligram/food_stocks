@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'update_permission_model.freezed.dart';
 part 'update_permission_model.g.dart';
-
-UpdatePermissionModel updatePermissionModelFromJson(String str) => UpdatePermissionModel.fromJson(json.decode(str));
-
-String updatePermissionModelToJson(UpdatePermissionModel data) => json.encode(data.toJson());
 
 @Freezed(makeCollectionsUnmodifiable: false)
 class UpdatePermissionModel with _$UpdatePermissionModel {

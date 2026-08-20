@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'insert_cart_req_model.freezed.dart';
 
 part 'insert_cart_req_model.g.dart';
-
-InsertCartReqModel insertCartReqModelFromJson(String str) => InsertCartReqModel.fromJson(json.decode(str));
-
-String insertCartReqModelToJson(InsertCartReqModel data) => json.encode(data.toJson());
 
 @freezed
 class InsertCartReqModel with _$InsertCartReqModel {

@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'global_search_res_model.freezed.dart';
 
 part 'global_search_res_model.g.dart';
-
-GlobalSearchResModel globalSearchResModelFromJson(String str) => GlobalSearchResModel.fromJson(json.decode(str));
-
-String globalSearchResModelToJson(GlobalSearchResModel data) => json.encode(data.toJson());
 
 @freezed
 class GlobalSearchResModel with _$GlobalSearchResModel {

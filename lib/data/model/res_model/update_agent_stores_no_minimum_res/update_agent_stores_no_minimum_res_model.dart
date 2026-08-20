@@ -1,16 +1,6 @@
-import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 part 'update_agent_stores_no_minimum_res_model.freezed.dart';
 part 'update_agent_stores_no_minimum_res_model.g.dart';
-
-
-
-UpdateAgentStoresNoMinimumResModel updateAgentStoresNoMinimumResModelFromJson(String str) =>
-    UpdateAgentStoresNoMinimumResModel.fromJson(json.decode(str));
-
-String updateAgentStoresNoMinimumResModelToJson(UpdateAgentStoresNoMinimumResModel data) =>
-    json.encode(data.toJson());
 
 @freezed
 class UpdateAgentStoresNoMinimumResModel with _$UpdateAgentStoresNoMinimumResModel {

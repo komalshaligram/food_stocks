@@ -362,7 +362,7 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
           _productQuantity = 0;
 
           try {
-            emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
+            emit(state.copyWith(isProductLoading: true));
 
             final res = await DioClient(event.context)
                 .post(AppUrlEndPoints.getProductDetailsUrl, data: ProductDetailsReqModel(params: event.productId).toJson());
@@ -644,8 +644,6 @@ class BasketBloc extends Bloc<BasketEvent, BasketState> {
         } else if (event is _setCartCountEvent) {
           await preferences.setCartCount(count: event.isClearCart ? 0 : preferences.getCartCount() - 1);
           emit(state.copyWith(isAnimation: true));
-        } else if (event is _updateImageIndexEvent) {
-          emit(state.copyWith(productImageIndex: event.index));
         } else if (event is _relatedProductsEvent) {
           emit(state.copyWith(isRelatedShimmering: true));
           final res =

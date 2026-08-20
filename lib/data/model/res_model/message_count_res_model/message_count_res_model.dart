@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'message_count_res_model.freezed.dart';
 
 part 'message_count_res_model.g.dart';
-
-MessageCountResModel messageCountResModelFromJson(String str) => MessageCountResModel.fromJson(json.decode(str));
-
-String messageCountResModelToJson(MessageCountResModel data) => json.encode(data.toJson());
 
 @freezed
 class MessageCountResModel with _$MessageCountResModel {

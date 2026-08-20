@@ -10,7 +10,7 @@ import '../../data/model/res_model/profile_details_update_res_model/profile_deta
 import '../../data/storage/shared_preferences_helper.dart';
 import '../../repository/dio_client.dart';
 import '../../ui/utils/constants/app_strings.dart';
-import '../../ui/utils/club_agent.dart';
+import '../../data/services/club_agent.dart';
 import '../../ui/utils/constants/app_urls.dart';
 part 'my_app_state.dart';
 part 'my_app_event.dart';

@@ -15,20 +15,12 @@ class ReorderEvent with _$ReorderEvent {
 
   const factory ReorderEvent.updateQuantityOfProduct({required BuildContext context, required String quantity}) = _updateQuantityOfProduct;
 
-  const factory ReorderEvent.changeNoteOfProduct({required String newNote}) = _changeNoteOfProduct;
-
-  const factory ReorderEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
-
   const factory ReorderEvent.supplierSelectionEvent({required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) =
       _supplierSelectionEvent;
 
   const factory ReorderEvent.addToCartProductEvent({required BuildContext context, required String productId}) = _addToCartProductEvent;
 
   const factory ReorderEvent.setCartCountEvent() = _setCartCountEvent;
-
-  const factory ReorderEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
-
-  const factory ReorderEvent.toggleNoteEvent() = _toggleNoteEvent;
 
   const factory ReorderEvent.refreshListEvent({required BuildContext context}) = _refreshListEvent;
 

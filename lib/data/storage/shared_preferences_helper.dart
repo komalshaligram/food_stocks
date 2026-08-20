@@ -1,4 +1,4 @@
-import '../../ui/utils/club_agent.dart';
+import '../services/club_agent.dart';
 import '../../ui/utils/constants/app_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

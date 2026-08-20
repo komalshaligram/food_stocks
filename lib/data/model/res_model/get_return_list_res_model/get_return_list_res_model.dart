@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'get_return_list_res_model.freezed.dart';
 part 'get_return_list_res_model.g.dart';
-
-GetReturnListResModel getReturnListResModelFromJson(String str) => GetReturnListResModel.fromJson(json.decode(str));
-
-String getReturnListResModelToJson(GetReturnListResModel data) => json.encode(data.toJson());
 
 @freezed
 class GetReturnListResModel with _$GetReturnListResModel {

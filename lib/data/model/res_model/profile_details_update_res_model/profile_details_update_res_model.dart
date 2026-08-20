@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'profile_details_update_res_model.freezed.dart';
 part 'profile_details_update_res_model.g.dart';
-
-ProfileDetailsUpdateResModel profileDetailsUpdateResModelFromJson(String str) => ProfileDetailsUpdateResModel.fromJson(json.decode(str));
-
-String profileDetailsUpdateResModelToJson(ProfileDetailsUpdateResModel data) => json.encode(data.toJson());
 
 @freezed
 class ProfileDetailsUpdateResModel with _$ProfileDetailsUpdateResModel {

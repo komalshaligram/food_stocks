@@ -399,8 +399,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _changeSupplierSelectionExpansionEvent) {
-        emit(state.copyWith(isSelectSupplier: event.isSelectSupplier ?? !state.isSelectSupplier));
       } else if (event is _supplierSelectionEvent) {
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
@@ -546,8 +544,6 @@ class PesachProductsBloc extends Bloc<PesachProductsEvent, PesachProductsState> 
         }
       } else if (event is _setCartCountEvent) {
         await preferences.setCartCount(count: preferences.getCartCount() + 1);
-      } else if (event is _updateImageIndexEvent) {
-        emit(state.copyWith(imageIndex: event.index));
       } else if (event is _getGridListView) {
         preferences.setSupplierProductGridListView(isSupplierProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));

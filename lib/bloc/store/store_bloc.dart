@@ -80,8 +80,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
         } else {
           emit(state.copyWith(isCategoryExpand: !state.isCategoryExpand));
         }
-      } else if (event is _changeSupplierSelectionExpansionEvent) {
-        emit(state.copyWith(isSelectSupplier: event.isSelectSupplier ?? !state.isSelectSupplier));
       } else if (event is _getProductCategoriesListEvent) {
         emit(state.copyWith(
             isGuestUser: preferences.getGuestUser(), isSubUserAddToBasket: preferences.getCanAddToBasket(), isSaleOn: preferences.getShowSale()));

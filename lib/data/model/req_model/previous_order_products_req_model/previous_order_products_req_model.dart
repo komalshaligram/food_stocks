@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'previous_order_products_req_model.freezed.dart';
 
 part 'previous_order_products_req_model.g.dart';
-
-PreviousOrderProductsReqModel previousOrderProductsReqModelFromJson(String str) => PreviousOrderProductsReqModel.fromJson(json.decode(str));
-
-String previousOrderProductsReqModelToJson(PreviousOrderProductsReqModel data) => json.encode(data.toJson());
 
 @freezed
 class PreviousOrderProductsReqModel with _$PreviousOrderProductsReqModel {

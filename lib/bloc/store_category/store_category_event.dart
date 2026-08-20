@@ -33,10 +33,6 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.updateQuantityOfProduct({required BuildContext context, required String quantity}) = _updateQuantityOfProduct;
 
-  const factory StoreCategoryEvent.changeNoteOfProduct({required String newNote}) = _changeNoteOfProduct;
-
-  const factory StoreCategoryEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
-
   const factory StoreCategoryEvent.supplierSelectionEvent(
       {required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
@@ -46,12 +42,8 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.globalSearchEvent({required BuildContext context}) = _globalSearchEvent;
 
-  const factory StoreCategoryEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
-
   const factory StoreCategoryEvent.updateGlobalSearchEvent(
       {required String search, required BuildContext context, required List<SearchModel> searchList}) = _updateGlobalSearchEvent;
-
-  const factory StoreCategoryEvent.toggleNoteEvent({required bool isBarcode}) = _toggleNoteEvent;
 
   const factory StoreCategoryEvent.subCategoryRefreshListEvent({required BuildContext context}) = _subCategoryRefreshListEvent;
 
@@ -63,11 +55,7 @@ class StoreCategoryEvent with _$StoreCategoryEvent {
 
   const factory StoreCategoryEvent.getPlanogramAllProductEvent({required BuildContext context}) = _getPlanogramAllProductEvent;
 
-  const factory StoreCategoryEvent.getSubCategoryProductEvent({required BuildContext context}) = _getSubCategoryProductEvent;
-
   const factory StoreCategoryEvent.changeGridToListViewEvent({required bool isGridView}) = _changeGridToListViewEvent;
-
-  const factory StoreCategoryEvent.allProductsRefreshListEvent({required BuildContext context}) = _allProductsRefreshListEvent;
 
   const factory StoreCategoryEvent.relatedProductsEvent({required BuildContext context, required String productId}) = _relatedProductsEvent;
   const factory StoreCategoryEvent.removeRelatedProductEvent() = _removeRelatedProductEvent;

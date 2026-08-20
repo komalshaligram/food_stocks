@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'get_messages_req_model.freezed.dart';
 
 part 'get_messages_req_model.g.dart';
-
-GetMessagesReqModel getMessagesReqModelFromJson(String str) => GetMessagesReqModel.fromJson(json.decode(str));
-
-String getMessagesReqModelToJson(GetMessagesReqModel data) => json.encode(data.toJson());
 
 @freezed
 class GetMessagesReqModel with _$GetMessagesReqModel {

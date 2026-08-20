@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'get_sub_user_res_model.freezed.dart';
 part 'get_sub_user_res_model.g.dart';
-
-GetSubUserResModel getSubUserResModelFromJson(String str) => GetSubUserResModel.fromJson(json.decode(str));
-
-String getSubUserResModelToJson(GetSubUserResModel data) => json.encode(data.toJson());
 
 @freezed
 class GetSubUserResModel with _$GetSubUserResModel {

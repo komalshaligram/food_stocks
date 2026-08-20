@@ -16,10 +16,6 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
   const factory RecommendationProductsEvent.updateQuantityOfProduct({required BuildContext context, required String quantity}) =
       _updateQuantityOfProduct;
 
-  const factory RecommendationProductsEvent.changeNoteOfProduct({required String newNote}) = _changeNoteOfProduct;
-
-  const factory RecommendationProductsEvent.changeSupplierSelectionExpansionEvent({bool? isSelectSupplier}) = _changeSupplierSelectionExpansionEvent;
-
   const factory RecommendationProductsEvent.supplierSelectionEvent(
       {required int supplierIndex, required BuildContext context, required int supplierSaleIndex}) = _supplierSelectionEvent;
 
@@ -27,10 +23,6 @@ class RecommendationProductsEvent with _$RecommendationProductsEvent {
       _addToCartProductEvent;
 
   const factory RecommendationProductsEvent.setCartCountEvent() = _setCartCountEvent;
-
-  const factory RecommendationProductsEvent.updateImageIndexEvent({required int index}) = _updateImageIndexEvent;
-
-  const factory RecommendationProductsEvent.toggleNoteEvent() = _toggleNoteEvent;
 
   const factory RecommendationProductsEvent.refreshListEvent({required BuildContext context}) = _refreshListEvent;
 

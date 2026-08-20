@@ -1,14 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 import '../refund_invoice_common_res/refund_invoice_common.dart';
-
 part 'refund_res_model.freezed.dart';
 part 'refund_res_model.g.dart';
-
-RefundResModel refundResModelFromJson(String str) => RefundResModel.fromJson(json.decode(str));
-
-String refundResModelToJson(RefundResModel data) => json.encode(data.toJson());
 
 @freezed
 class RefundResModel with _$RefundResModel {

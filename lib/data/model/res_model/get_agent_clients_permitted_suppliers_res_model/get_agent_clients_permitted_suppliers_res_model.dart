@@ -1,16 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'get_agent_clients_permitted_suppliers_res_model.freezed.dart';
 part 'get_agent_clients_permitted_suppliers_res_model.g.dart';
-
-GetAgentClientsPermittedSuppliersResModel
-getAgentClientsPermittedSuppliersResModelFromJson(String str) =>
-    GetAgentClientsPermittedSuppliersResModel.fromJson(json.decode(str));
-
-String getAgentClientsPermittedSuppliersResModelToJson(
-    GetAgentClientsPermittedSuppliersResModel data) =>
-    json.encode(data.toJson());
 
 @freezed
 class GetAgentClientsPermittedSuppliersResModel

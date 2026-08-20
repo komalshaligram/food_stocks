@@ -1,13 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'product_categories_req_model.freezed.dart';
 
 part 'product_categories_req_model.g.dart';
-
-ProductCategoriesReqModel productCategoriesReqModelFromJson(String str) => ProductCategoriesReqModel.fromJson(json.decode(str));
-
-String productCategoriesReqModelToJson(ProductCategoriesReqModel data) => json.encode(data.toJson());
 
 @freezed
 class ProductCategoriesReqModel with _$ProductCategoriesReqModel {

@@ -1,5 +1,5 @@
 import '../../widget/custom_button_widget.dart';
-import '../../utils/basket_navigation_helper.dart';
+import '../../../data/services/basket_navigation_helper.dart';
 import '../../widget/common_divider_widget.dart';
 import '../../widget/dialogs/call_agent_dialog.dart';
 import '../../widget/dialogs/remove_out_of_stock_product_dialog.dart';
@@ -16,7 +16,7 @@ import '../../widget/sized_box_widget.dart';
 Widget totalAmountCard(BasketState state, BuildContext context, BasketBloc bloc) {
   final grandTotal = basketGrandTotal(state);
   final formattedTotal =
-      formatNumber(value: state.isIncludedVat ? grandTotal.toString() : grandTotal.toStringAsFixed(2), local: AppStrings.hebrewLocal);
+  formatNumber(value: state.isIncludedVat ? grandTotal.toString() : grandTotal.toStringAsFixed(2), local: AppStrings.hebrewLocal);
 
   return Container(
       alignment: state.language == AppStrings.englishString ? Alignment.centerLeft : Alignment.centerRight,
@@ -33,29 +33,29 @@ Widget totalAmountCard(BasketState state, BuildContext context, BasketBloc bloc)
         5.height,
         state.isSubUserCanCreateOrder
             ? CustomButtonWidget(
-                buttonText: AppLocalizations.of(context)!.continues,
-                bGColor: AppColors.mainColor,
-                height: 45,
-                onPressed: () async {
-                  List<double> basketProductStockList = [];
-                  for (var element in state.basketProductList) {
-                    basketProductStockList.add(element.productStock ?? 0);
-                  }
-                  basketProductStockList.sort();
-                  if (basketProductStockList.first == 0.0 || basketProductStockList.first == 0) {
-                    removeOutOfStockProductDialog(context: context);
+            buttonText: AppLocalizations.of(context)!.continues,
+            bGColor: AppColors.mainColor,
+            height: 45,
+            onPressed: () async {
+              List<double> basketProductStockList = [];
+              for (var element in state.basketProductList) {
+                basketProductStockList.add(element.productStock ?? 0);
+              }
+              basketProductStockList.sort();
+              if (basketProductStockList.first == 0.0 || basketProductStockList.first == 0) {
+                removeOutOfStockProductDialog(context: context);
+              } else {
+                if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
+                  if (state.draftReturnExists) {
+                    await showDialog(
+                        context: context, builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc));
                   } else {
-                    if (!state.isRemoveProcess && !state.isLoading && !state.isShimmering) {
-                      if (state.draftReturnExists) {
-                        await showDialog(
-                            context: context, builder: (_) => CallAgentDialog(language: state.language, state: state, context1: context, bloc: bloc));
-                      } else {
-                        await navigateFromBasketContinue(context: context, state: state, formattedTotal: formattedTotal);
-                      }
-                    }
+                    await navigateFromBasketContinue(context: context, state: state, formattedTotal: formattedTotal);
                   }
-                },
-                fontColors: AppColors.whiteColor)
+                }
+              }
+            },
+            fontColors: AppColors.whiteColor)
             : 0.width,
         10.height
       ]));
@@ -63,8 +63,9 @@ Widget totalAmountCard(BasketState state, BuildContext context, BasketBloc bloc)
 
 double basketGrandTotal(BasketState state) {
   final products = state.cartItemList.data?.data ?? [];
+
   return calculateBasketGrandTotal(
-      productsTotalWithVat: sumProductTotalVatAmounts(products.map((product) => product.totalVatAmount)),
+      productsTotalWithVat: sumProductTotalVatAmounts(products.map((product) => (product.isFree ?? false) ? 0.0 : product.totalVatAmount)),
       bottleTax: state.bottleTax,
       vatPercentage: state.vatPercentage,
       bottleQuantities: state.bottleQty ?? 0);

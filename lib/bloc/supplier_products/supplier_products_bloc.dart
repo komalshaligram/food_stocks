@@ -220,7 +220,7 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
         _productQuantity = 0;
 
         try {
-          emit(state.copyWith(isProductLoading: true, isSelectSupplier: false));
+          emit(state.copyWith(isProductLoading: true));
           final res = await DioClient(event.context).post(
             AppUrlEndPoints.getProductDetailsUrl,
             data: ProductDetailsReqModel(params: event.productId).toJson(),
@@ -335,18 +335,11 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
                   }).toList() ??
                   []);
               supplierList.removeWhere((supplier) => supplier.stock == '0');
-
-              String note = productStockList.isEmpty
-                  ? ''
-                  : productStockList.indexOf(state.productStockList.last) == productListIndex
-                      ? ''
-                      : productStockList[productListIndex][0].note;
               emit(state.copyWith(productStockList: []));
               emit(state.copyWith(
                   productDetails: response.product ?? [],
                   productStockList: productStockList,
                   productStockUpdateIndex: productStockUpdateIndex,
-                  noteController: TextEditingController(text: note),
                   productSupplierList: supplierList,
                   productListIndex: productListIndex));
               if (supplierList.isNotEmpty) {
@@ -467,15 +460,6 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _changeNoteOfProduct) {
-        if (state.productStockUpdateIndex != -1) {
-          List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
-          productStockList[state.productListIndex][state.productStockUpdateIndex] =
-              productStockList[state.productListIndex][state.productStockUpdateIndex].copyWith(note: state.noteController.text);
-          emit(state.copyWith(productStockList: productStockList));
-        }
-      } else if (event is _changeSupplierSelectionExpansionEvent) {
-        emit(state.copyWith(isSelectSupplier: event.isSelectSupplier ?? !state.isSelectSupplier));
       } else if (event is _supplierSelectionEvent) {
         if (event.supplierIndex >= 0) {
           List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
@@ -620,8 +604,6 @@ class SupplierProductsBloc extends Bloc<SupplierProductsEvent, SupplierProductsS
       } else if (event is _setCartCountEvent) {
         preferences.setCartCount(count: preferences.getCartCount() + 1);
         emit(state.copyWith(isSubUserAddToBasket: preferences.getCanAddToBasket()));
-      } else if (event is _updateImageIndexEvent) {
-        emit(state.copyWith(imageIndex: event.index));
       } else if (event is _getGridListView) {
         preferences.setSupplierProductGridListView(isSupplierProductGrid: !state.isGridView);
         emit(state.copyWith(isGridView: !state.isGridView));

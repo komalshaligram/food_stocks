@@ -1,4 +1,4 @@
-import '../../../ui/utils/club_agent.dart';
+import '../../../data/services/club_agent.dart';
 import 'dart:io';
 import 'package:food_stock/routes/app_routes.dart';
 import 'package:food_stock/ui/widget/sized_box_widget.dart';

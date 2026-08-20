@@ -278,17 +278,6 @@ Future<void> _waitForUpdateCheckSlot() async {
   }
 }
 
-Future<void> scheduleAppUpdateCheckIfNeeded() async {
-  final preferences = SharedPreferencesHelper(
-    prefs: await SharedPreferences.getInstance(),
-  );
-  for (var attempt = 0; attempt < 5; attempt++) {
-    if (_resolveUpdateDialogContext(null) != null) break;
-    await Future<void>.delayed(const Duration(milliseconds: 300));
-  }
-  await checkAndShowAppUpdateIfNeeded(language: preferences.getAppLanguage());
-}
-
 Future<void> scheduleScreenUpdateCheck(BuildContext? context) async {
   await _waitForNavigatorReady();
   final preferences = SharedPreferencesHelper(prefs: await SharedPreferences.getInstance());
@@ -390,10 +379,6 @@ Future<bool> _presentUpdateDialog({required BuildContext? context, required Stri
   }
 
   return false;
-}
-
-void customShowUpdateDialog(BuildContext context, String directionality, String storeUrl) {
-  _showUpdateDialogOrQueue(context: context, language: directionality, storeUrl: storeUrl);
 }
 
 void showUpdateDialogIfStoreNewer(
@@ -727,12 +712,6 @@ Future<String> scanBarcodeOrQRCode({required BuildContext context, required Stri
   return barcodeSOrQRScanRes;
 }
 
-bool isRTLContent({required BuildContext context}) {
-  Locale locale = Localizations.localeOf(context);
-  List<Locale> rtlLocales = [const Locale(AppStrings.hebrewString)];
-  return rtlLocales.contains(locale) ? true : false;
-}
-
 extension RTLExtension on BuildContext {
   bool get rtl => [const Locale(AppStrings.hebrewString)].contains(Localizations.localeOf(this)) ? true : false;
 }
@@ -766,14 +745,6 @@ String formatSignedNumber(dynamic value) {
   return amount.isNegative ? '-$formatted ₪' : '$formatted ₪';
 }
 
-String formatNumberPositiveToNegative({required String value, required String local}) {
-  final double number = double.parse(value);
-  final bool isNegative = number < 0;
-  String formatted = NumberFormat.simpleCurrency(locale: local).format(number.abs());
-  formatted = formatted.replaceAll(RegExp(r'\s+'), '');
-  return isNegative ? ' -$formatted' : formatted;
-}
-
 String formatNumberForWallet({required String value, required String local, required BuildContext context}) {
   final currency = AppLocalizations.of(context)?.currency ?? '₪';
   final parsed = double.tryParse(value) ?? 0;
@@ -783,30 +754,6 @@ String formatNumberForWallet({required String value, required String local, requ
 
 double vatCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
   double result = price + ((price * vat) / 100) + (qty * deposit) + ((qty * deposit * vat) / 100);
-  return result;
-}
-
-double vatCalculationRefund({required double price, required double vat, double qty = 0, double deposit = 0, double? refund}) {
-  double priceWithVat = price + ((price * vat) / 100);
-  double depositWithVat = (qty * deposit) + ((qty * deposit * vat) / 100);
-  double total = priceWithVat + depositWithVat;
-
-  if (refund != null) {
-    if (total <= -refund) {
-      return 0;
-    } else {
-      if (total <= -refund) {
-        return total + refund;
-      } else {
-        return total + refund;
-      }
-    }
-  }
-  return total;
-}
-
-double totalVatAmountCalculation({required double price, required double vat, double qty = 0, double deposit = 0}) {
-  double result = ((price * vat) / 100) + ((qty * deposit * vat) / 100);
   return result;
 }
 
@@ -834,7 +781,6 @@ double calculateBasketGrandTotal(
   if (bottleQuantities <= 0) {
     return productsTotalWithVat;
   }
-
   return productsTotalWithVat + bottleDepositCalculationWithVat(deposit: bottleTax, qty: bottleQuantities.toDouble(), vatPercentage: vatPercentage);
 }
 

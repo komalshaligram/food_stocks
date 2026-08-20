@@ -1,14 +1,7 @@
-import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 import '../refund_invoice_common_res/refund_invoice_common.dart';
-
 part 'my_account_card_refund_res_model.freezed.dart';
 part 'my_account_card_refund_res_model.g.dart';
-
-MyAccountCardRefundResModel myAccountCardRefundResModelFromJson(String str) => MyAccountCardRefundResModel.fromJson(json.decode(str));
-
-String myAccountCardRefundResModelToJson(MyAccountCardRefundResModel data) => json.encode(data.toJson());
 
 @freezed
 class MyAccountCardRefundResModel with _$MyAccountCardRefundResModel {

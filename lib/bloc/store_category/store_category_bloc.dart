@@ -557,15 +557,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
             emit(state.copyWith(productStockList: productStockList));
           }
         }
-      } else if (event is _changeNoteOfProduct) {
-        if (state.productStockUpdateIndex != -1) {
-          List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: false);
-          productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex] =
-              productStockList[state.planoGramUpdateIndex][state.productStockUpdateIndex].copyWith(note: /*event.newNote*/ state.noteController.text);
-          emit(state.copyWith(productStockList: productStockList));
-        }
-      } else if (event is _changeSupplierSelectionExpansionEvent) {
-        emit(state.copyWith(isSelectSupplier: event.isSelectSupplier ?? !state.isSelectSupplier));
       } else if (event is _supplierSelectionEvent) {
         List<ProductSupplierModel> supplierList = state.productSupplierList.toList(growable: true);
         List<List<ProductStockModel>> productStockList = state.productStockList.toList(growable: true);
@@ -784,8 +775,6 @@ class StoreCategoryBloc extends Bloc<StoreCategoryEvent, StoreCategoryState> {
         } catch (e) {
           emit(state.copyWith(isSearching: false));
         }
-      } else if (event is _updateImageIndexEvent) {
-        emit(state.copyWith(imageIndex: event.index));
       } else if (event is _updateGlobalSearchEvent) {
         emit(state.copyWith(searchController: TextEditingController(text: event.search), searchList: event.searchList));
         if (state.searchController.text == '') {

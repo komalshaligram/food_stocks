@@ -1,12 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
-
 part 'sub_user_delete_req_model.freezed.dart';
 part 'sub_user_delete_req_model.g.dart';
-
-SubUserDeleteReqModel subUserDeleteReqModelFromJson(String str) => SubUserDeleteReqModel.fromJson(json.decode(str));
-
-String subUserDeleteReqModelToJson(SubUserDeleteReqModel data) => json.encode(data.toJson());
 
 @freezed
 class SubUserDeleteReqModel with _$SubUserDeleteReqModel {
