@@ -2,22 +2,19 @@ import 'package:food_stock/data/model/supplier_sale_model/supplier_sale_model.da
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_supplier_model.freezed.dart';
-
 part 'product_supplier_model.g.dart';
 
 @freezed
 class ProductSupplierModel with _$ProductSupplierModel {
-  const factory ProductSupplierModel({
-    required String supplierId,
-    required String companyName,
-    @Default([]) List<SupplierSaleModel> supplierSales,
-    @Default(0) int quantity,
-    @Default(0.0) double basePrice,
-    @Default('0') String stock,
-    @Default(-1) int selectedIndex,
-    @Default(0) int maxQty,
-  }) = _ProductSupplierModel;
+  const factory ProductSupplierModel(
+      {required String supplierId,
+      required String companyName,
+      @Default([]) List<SupplierSaleModel> supplierSales,
+      @Default(0) int quantity,
+      @Default(0.0) double basePrice,
+      @Default('0') String stock,
+      @Default(-1) int selectedIndex,
+      @Default(0) int maxQty}) = _ProductSupplierModel;
 
-  factory ProductSupplierModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductSupplierModelFromJson(json);
+  factory ProductSupplierModel.fromJson(Map<String, dynamic> json) => _$ProductSupplierModelFromJson(json);
 }

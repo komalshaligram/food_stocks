@@ -51,10 +51,8 @@ class _OrderSuccessfulScreenWidgetState extends State<OrderSuccessfulScreenWidge
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrderSuccessfulBloc, OrderSuccessfulState>(builder: (context, state) {
-      return WillPopScope(
-        onWillPop: () {
-          return Future.value(false);
-        },
+      return PopScope(
+        canPop: false,
         child: Scaffold(
           backgroundColor: AppColors.pageColor,
           body: FocusDetector(

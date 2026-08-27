@@ -60,10 +60,8 @@ class _RegistrationSuccessScreenWidgetState extends State<RegistrationSuccessScr
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationSuccessBloc, RegistrationSuccessState>(builder: (context, state) {
-      return WillPopScope(
-        onWillPop: () {
-          return Future.value(false);
-        },
+      return PopScope(
+        canPop: false,
         child: Scaffold(
           backgroundColor: AppColors.pageColor,
           body: FocusDetector(

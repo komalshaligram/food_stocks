@@ -42,10 +42,7 @@ class FormDataScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     FormDataBloc bloc = context.read<FormDataBloc>();
     return BlocBuilder<FormDataBloc, FormDataState>(builder: (context, state) {
-      return WillPopScope(
-        onWillPop: () async {
-          return Future.value(Navigator.canPop(context));
-        },
+      return PopScope(canPop: Navigator.canPop(context),
         child: Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(

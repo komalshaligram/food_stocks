@@ -63,10 +63,11 @@ class _ClientFormDetailsScreenWidgetState extends State<ClientFormDetailsScreenW
   Widget build(BuildContext context) {
     ClientFormDetailsBloc bloc = context.read<ClientFormDetailsBloc>();
     return BlocBuilder<ClientFormDetailsBloc, ClientFormDetailsState>(builder: (context, state) {
-      return WillPopScope(
-        onWillPop: () async {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
           Navigator.pop(context);
-          return Future.value(false);
         },
         child: Scaffold(
           backgroundColor: AppColors.whiteColor,

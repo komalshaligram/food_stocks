@@ -1,27 +1,24 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_stock_model.freezed.dart';
-
 part 'product_stock_model.g.dart';
 
 @freezed
 class ProductStockModel with _$ProductStockModel {
-  const factory ProductStockModel({
-    required String productId,
-    @Default('') String productSupplierIds,
-    @Default('') String cartProductId,
-    @Default('') String productSaleId,
-    @Default(0) int quantity,
-    @Default(0) int relatedQuantity,
-    @Default('') String note,
-    @Default(false) bool productIsInCart,
-    @Default('0') String stock,
-    @Default(0.0) double totalPrice,
-    @Default('') String lowStock,
-    @Default(0) int maxQty,
-    @Default(0) int minQty,
-  }) = _ProductStockModel;
+  const factory ProductStockModel(
+      {required String productId,
+      @Default('') String productSupplierIds,
+      @Default('') String cartProductId,
+      @Default('') String productSaleId,
+      @Default(0) int quantity,
+      @Default(0) int relatedQuantity,
+      @Default('') String note,
+      @Default(false) bool productIsInCart,
+      @Default('0') String stock,
+      @Default(0.0) double totalPrice,
+      @Default('') String lowStock,
+      @Default(0) int maxQty,
+      @Default(0) int minQty}) = _ProductStockModel;
 
-  factory ProductStockModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductStockModelFromJson(json);
+  factory ProductStockModel.fromJson(Map<String, dynamic> json) => _$ProductStockModelFromJson(json);
 }

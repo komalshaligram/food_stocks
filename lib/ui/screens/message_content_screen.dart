@@ -51,14 +51,15 @@ class MessageContentScreenWidget extends StatelessWidget {
     return BlocListener<MessageContentBloc, MessageContentState>(
       listener: (context, state) {},
       child: BlocBuilder<MessageContentBloc, MessageContentState>(builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
             Navigator.pop(context, {
               AppStrings.messageIdString: state.message.id,
               AppStrings.messageReadString: !(state.message.isRead ?? true),
               AppStrings.messageDeleteString: false
             });
-            return Future.value(false);
           },
           child: Scaffold(
             backgroundColor: AppColors.pageColor,

@@ -75,11 +75,12 @@ class StoreCategoryScreenWidget extends StatelessWidget {
     return BlocListener<StoreCategoryBloc, StoreCategoryState>(
       listener: (context, state) {},
       child: BlocBuilder<StoreCategoryBloc, StoreCategoryState>(builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () {
-            Navigator.pop(context, {AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
-            return Future.value(false);
-          },
+        return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) {
+              if (didPop) return;
+              Navigator.pop(context, {AppStrings.searchString: state.searchController.text, AppStrings.searchResultString: state.searchList});
+            },
           child: FocusDetector(
             onFocusGained: () {
               bloc.add(StoreCategoryEvent.userApproveEvent(context: context));

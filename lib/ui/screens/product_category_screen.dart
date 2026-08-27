@@ -46,10 +46,11 @@ class ProductCategoryScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProductCategoryBloc, ProductCategoryState>(builder: (context, state) {
-      return WillPopScope(
-        onWillPop: () {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
           Navigator.pop(context, {AppStrings.searchString: state.search, AppStrings.searchResultString: state.searchList});
-          return Future.value(false);
         },
         child: Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endContained,

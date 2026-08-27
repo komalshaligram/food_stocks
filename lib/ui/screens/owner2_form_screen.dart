@@ -39,10 +39,7 @@ class Owner2FormScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Owner2FormBloc bloc = context.read<Owner2FormBloc>();
     return BlocBuilder<Owner2FormBloc, Owner2FormState>(builder: (context, state) {
-      return WillPopScope(
-        onWillPop: () async {
-          return Future.value(Navigator.canPop(context));
-        },
+      return PopScope(canPop: Navigator.canPop(context),
         child: Scaffold(
           backgroundColor: AppColors.whiteColor,
           appBar: AppBar(

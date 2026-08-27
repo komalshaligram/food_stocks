@@ -19,25 +19,24 @@ class ProductDetailsModel {
   String? numberOfUnits;
   String? scaleType;
 
-  ProductDetailsModel({
-    this.isProductIssue = false,
-    required this.mainImage,
-    required this.productName,
-    required this.totalPayment,
-    required this.totalQuantity,
-    this.isDelete = false,
-    this.cartProductId = '',
-    required this.scales,
-    required this.weight,
-    this.isProcess = false,
-    this.lowStock = '',
-    this.productStock = 0,
-    required this.isPesach,
-    required this.saleDesc,
-    required this.discountPrice,
-    this.isSale = false,
-    this.supplierName = '',
-    required this.numberOfUnits,
-    required this.scaleType,
-  });
+  ProductDetailsModel(
+      {this.isProductIssue = false,
+      required this.mainImage,
+      required this.productName,
+      required this.totalPayment,
+      required this.totalQuantity,
+      this.isDelete = false,
+      this.cartProductId = '',
+      required this.scales,
+      required this.weight,
+      this.isProcess = false,
+      this.lowStock = '',
+      this.productStock = 0,
+      required this.isPesach,
+      required this.saleDesc,
+      required this.discountPrice,
+      this.isSale = false,
+      this.supplierName = '',
+      required this.numberOfUnits,
+      required this.scaleType});
 }

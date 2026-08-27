@@ -41,10 +41,11 @@ class MessageScreenWidget extends StatelessWidget {
     return BlocListener<MessageBloc, MessageState>(
       listener: (context, state) {},
       child: BlocBuilder<MessageBloc, MessageState>(builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
             Navigator.pop(context, {AppStrings.messageIdListString: state.deletedMessageList});
-            return Future.value(false);
           },
           child: Scaffold(
             backgroundColor: AppColors.pageColor,

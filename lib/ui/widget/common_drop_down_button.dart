@@ -21,14 +21,6 @@ class CommonDropDownButton extends StatelessWidget {
       this.focusedBorderColor,
       this.useFilledBackground = false});
 
-  String? get _selectedValue {
-    if (value.isEmpty || items == null || items!.isEmpty) {
-      return null;
-    }
-    final hasMatch = items!.any((item) => item.value == value);
-    return hasMatch ? value : null;
-  }
-
   @override
   Widget build(BuildContext context) {
     final focusColor = focusedBorderColor ?? (useFilledBackground ? AppColors.mainColor : color);
@@ -49,9 +41,8 @@ class CommonDropDownButton extends StatelessWidget {
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius), borderSide: BorderSide(color: color))),
         isExpanded: true,
         elevation: 0,
-        value: _selectedValue,
         style: TextStyle(fontSize: AppConstants.smallFont, color: AppColors.blackColor),
-        // initialValue: hasMatch ? value : null,
+        initialValue: hasMatch ? value : null,
         items: items,
         onChanged: onChanged,
         dropdownColor: AppColors.pageColor);

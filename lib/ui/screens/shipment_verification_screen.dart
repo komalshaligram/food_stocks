@@ -74,8 +74,8 @@ class _ShipmentVerificationScreenWidgetState extends State<ShipmentVerificationS
       final availableQty = widget.args?[AppStrings.availableSurfaceQuantityToReturn] ?? 0;
 
       return Stack(children: [
-        WillPopScope(
-          onWillPop: () async => false,
+        PopScope(
+          canPop: false,
           child: Scaffold(
             backgroundColor: AppColors.pageColor,
             appBar: PreferredSize(

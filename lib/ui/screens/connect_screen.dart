@@ -75,8 +75,8 @@ class _ConnectScreenWidgetState extends State<ConnectScreenWidget> {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = getScreenHeight(context);
-    return WillPopScope(
-      onWillPop: () => Future.value(false),
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         body: Container(

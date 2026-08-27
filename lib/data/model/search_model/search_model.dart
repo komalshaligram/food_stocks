@@ -1,46 +1,37 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'search_model.freezed.dart';
-
 part 'search_model.g.dart';
 
 @freezed
 class SearchModel with _$SearchModel {
-  const factory SearchModel({
-    required String searchId,
-    required String name,
-    @Default('') lowStock,
-    required SearchTypes searchType,
-    @Default('') String image,
-    @Default('') String categoryId,
-    @Default('') String categoryName,
-    @Default('0') String productStock,
-    @Default(0) int numberOfUnits,
-    @Default('') String scaleType,
-    @Default(0.0) double priceParUnit,
-    @Default(0.0) double priceOfBox,
-    @Default(false) bool isPesach,
-    @Default('') String salesDesc,
-    @Default(0.0) double salePrice,
-    @JsonKey(name: "isSale") bool? isSale,
-    @JsonKey(name: "saleMaxQuantity") String? saleMaxQuantity,
-    @JsonKey(name: "saleMinQuantity") String? saleMinQuantity,
-    @JsonKey(name: "isMixedSale") bool? isMixedSale,
-    @JsonKey(name: "sameSaleProducts") List<dynamic>? sameSaleProducts,
-    @JsonKey(name: "_id") String? id,
-    @JsonKey(name: "supplierId") String? supplierId,
-    @JsonKey(name: "recommendedRetailPrice") String? recommendedRetailPrice,
-    @JsonKey(name: "recommendedConsumerOffer") String? recommendedConsumerOffer,
-  }) = _SearchModel;
+  const factory SearchModel(
+      {required String searchId,
+      required String name,
+      @Default('') lowStock,
+      required SearchTypes searchType,
+      @Default('') String image,
+      @Default('') String categoryId,
+      @Default('') String categoryName,
+      @Default('0') String productStock,
+      @Default(0) int numberOfUnits,
+      @Default('') String scaleType,
+      @Default(0.0) double priceParUnit,
+      @Default(0.0) double priceOfBox,
+      @Default(false) bool isPesach,
+      @Default('') String salesDesc,
+      @Default(0.0) double salePrice,
+      @JsonKey(name: "isSale") bool? isSale,
+      @JsonKey(name: "saleMaxQuantity") String? saleMaxQuantity,
+      @JsonKey(name: "saleMinQuantity") String? saleMinQuantity,
+      @JsonKey(name: "isMixedSale") bool? isMixedSale,
+      @JsonKey(name: "sameSaleProducts") List<dynamic>? sameSaleProducts,
+      @JsonKey(name: "_id") String? id,
+      @JsonKey(name: "supplierId") String? supplierId,
+      @JsonKey(name: "recommendedRetailPrice") String? recommendedRetailPrice,
+      @JsonKey(name: "recommendedConsumerOffer") String? recommendedConsumerOffer}) = _SearchModel;
 
   factory SearchModel.fromJson(Map<String, dynamic> json) => _$SearchModelFromJson(json);
 }
 
-enum SearchTypes {
-  category,
-  subCategory,
-  company,
-  supplier,
-  product,
-  sale,
-}
+enum SearchTypes { category, subCategory, company, supplier, product, sale }

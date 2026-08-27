@@ -107,10 +107,7 @@ class _Owner1FormScreenWidgetState extends State<Owner1FormScreenWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<Owner1FormBloc, Owner1FormState>(builder: (context, state) {
-      return WillPopScope(
-        onWillPop: () async {
-          return Future.value(Navigator.canPop(context));
-        },
+      return PopScope(canPop: Navigator.canPop(context),
         child: Scaffold(
           backgroundColor: AppColors.pageColor,
           appBar: PreferredSize(
